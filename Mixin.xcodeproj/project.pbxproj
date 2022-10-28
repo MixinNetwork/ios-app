@@ -617,6 +617,8 @@
 		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
 		7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */; };
 		7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */; };
+		7CB227862907CE060034F9FD /* DepositNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB227842907CE060034F9FD /* DepositNetworkCell.swift */; };
+		7CB227872907CE060034F9FD /* DepositNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB227852907CE060034F9FD /* DepositNetworkCell.xib */; };
 		7CB2A57F27C386F0007D9DEE /* GroupsInCommonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2A57E27C386F0007D9DEE /* GroupsInCommonViewController.swift */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
@@ -882,8 +884,8 @@
 		DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */; };
 		DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFD294481FA7145F00FADAAD /* Contact.storyboard */; };
 		DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */; };
-		DFDD89E922C4B8E600128991 /* DepositTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */; };
-		DFDD89EB22C4D5F900128991 /* DepositTipWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDD89EA22C4D5F900128991 /* DepositTipWindow.swift */; };
+		DFDD89E922C4B8E600128991 /* DepositChooseNetworkWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFDD89E822C4B8E600128991 /* DepositChooseNetworkWindow.xib */; };
+		DFDD89EB22C4D5F900128991 /* DepositChooseNetworkWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDD89EA22C4D5F900128991 /* DepositChooseNetworkWindow.swift */; };
 		DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9801FAB40A800537D43 /* CornerButton.swift */; };
 		DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE1F9821FAB51DA00537D43 /* Common.storyboard */; };
 		DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */; };
@@ -1627,6 +1629,8 @@
 		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
 		7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountConfirmWindow.swift; sourceTree = "<group>"; };
 		7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountConfirmWindow.xib; sourceTree = "<group>"; };
+		7CB227842907CE060034F9FD /* DepositNetworkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNetworkCell.swift; sourceTree = "<group>"; };
+		7CB227852907CE060034F9FD /* DepositNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositNetworkCell.xib; sourceTree = "<group>"; };
 		7CB2A57E27C386F0007D9DEE /* GroupsInCommonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsInCommonViewController.swift; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
@@ -1903,8 +1907,8 @@
 		DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUpgradeViewController.swift; sourceTree = "<group>"; };
 		DFD294481FA7145F00FADAAD /* Contact.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Contact.storyboard; sourceTree = "<group>"; };
 		DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
-		DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositTipWindow.xib; sourceTree = "<group>"; };
-		DFDD89EA22C4D5F900128991 /* DepositTipWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositTipWindow.swift; sourceTree = "<group>"; };
+		DFDD89E822C4B8E600128991 /* DepositChooseNetworkWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositChooseNetworkWindow.xib; sourceTree = "<group>"; };
+		DFDD89EA22C4D5F900128991 /* DepositChooseNetworkWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositChooseNetworkWindow.swift; sourceTree = "<group>"; };
 		DFE1F9801FAB40A800537D43 /* CornerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerButton.swift; sourceTree = "<group>"; };
 		DFE1F9821FAB51DA00537D43 /* Common.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Common.storyboard; sourceTree = "<group>"; };
 		DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -2930,8 +2934,8 @@
 				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
 				DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */,
 				DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */,
-				DFDD89EA22C4D5F900128991 /* DepositTipWindow.swift */,
-				DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */,
+				DFDD89EA22C4D5F900128991 /* DepositChooseNetworkWindow.swift */,
+				DFDD89E822C4B8E600128991 /* DepositChooseNetworkWindow.xib */,
 				DF846CD823694A2E00AA1197 /* MultisigUsersWindow.swift */,
 				DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */,
 				7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */,
@@ -2991,6 +2995,8 @@
 				DF2A0D942295721200CA0280 /* AddressView.xib */,
 				7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */,
 				7B833E9822C4904F0063929D /* AppLoadingIndicatorView.swift */,
+				7CB227842907CE060034F9FD /* DepositNetworkCell.swift */,
+				7CB227852907CE060034F9FD /* DepositNetworkCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3995,12 +4001,13 @@
 				DF2A0D952295721200CA0280 /* AddressView.xib in Resources */,
 				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
 				7C2DEFF32824FF0600758208 /* ic_time_animation@3x.gif in Resources */,
+				7CB227872907CE060034F9FD /* DepositNetworkCell.xib in Resources */,
 				E0BC7BB7238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
 				7B36920A233B3650007321A7 /* MediaTypeOverlayView.xib in Resources */,
 				944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
-				DFDD89E922C4B8E600128991 /* DepositTipWindow.xib in Resources */,
+				DFDD89E922C4B8E600128991 /* DepositChooseNetworkWindow.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
 				DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */,
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
@@ -4725,6 +4732,7 @@
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
+				7CB227862907CE060034F9FD /* DepositNetworkCell.swift in Sources */,
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
 				E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,
@@ -5032,7 +5040,7 @@
 				94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */,
 				E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
-				DFDD89EB22C4D5F900128991 /* DepositTipWindow.swift in Sources */,
+				DFDD89EB22C4D5F900128991 /* DepositChooseNetworkWindow.swift in Sources */,
 				94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* VerifyPinViewController.swift in Sources */,
 				7BA24D7325342575004906AD /* HomeOverlaysCoordinator.swift in Sources */,

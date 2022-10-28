@@ -12,7 +12,7 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     
     private var asset: AssetItem!
-    private var hasDepositTipWindowPresented = false
+    private var hasDepositChooseNetworkWindowPresented = false
     
     private lazy var depositWindow = QrcodeWindow.instance()
     
@@ -31,7 +31,7 @@ class DepositViewController: UIViewController {
         if let entry = asset.preferredDepositEntry {
             stopLoading()
             show(entry: entry)
-            showDepositTipWindowIfNeeded()
+            showDepositChooseNetworkWindowIfNeeded()
         } else {
             startLoading()
         }
@@ -104,7 +104,7 @@ extension DepositViewController {
                     UIView.performWithoutAnimation {
                         self.show(entry: entry)
                     }
-                    self.showDepositTipWindowIfNeeded()
+                    self.showDepositChooseNetworkWindowIfNeeded()
                 }
             }
         }
@@ -142,12 +142,12 @@ extension DepositViewController {
         hintLabel.text = asset.depositTips
     }
     
-    private func showDepositTipWindowIfNeeded() {
-        guard !hasDepositTipWindowPresented else {
+    private func showDepositChooseNetworkWindowIfNeeded() {
+        guard !hasDepositChooseNetworkWindowPresented, let chain = asset.chain else {
             return
         }
-        hasDepositTipWindowPresented = true
-        DepositTipWindow.instance().render(asset: asset).presentPopupControllerAnimated()
+        hasDepositChooseNetworkWindowPresented = true
+        DepositChooseNetworkWindow.instance().render(chain: chain).presentPopupControllerAnimated()
     }
     
     private func startLoading() {

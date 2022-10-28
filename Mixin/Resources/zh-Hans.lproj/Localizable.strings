@@ -171,6 +171,8 @@
 "chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
 "chat_waiting" = "等待%1$@上线后建立加密会话。%2$@。";
 "chats" = "会话";
+"choose_network" = "选择充值网络";
+"choose_network_tip" = "请选择 Mixin 支持的网络进行充值，否则您的充值将不会到账。";
 "choose_photo" = "选择照片";
 "circle_info" = "新建一个圈子可以过滤会话";
 "circle_no_conversation_hint" = "您可以添加联系人或者群组到当前圈子";

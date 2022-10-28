@@ -171,6 +171,8 @@
 "chat_restore_subtitle" = "現在復元しない場合、後で復元はできません。メディアファイルはメッセージに続いて復元されます。";
 "chat_waiting" = "オンラインで暗号化されたやりとりを開始するまであと%1$@。%2$@";
 "chats" = "チャット";
+"choose_network" = "Choose Network";
+"choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your deposit will not be credited.";
 "choose_photo" = "画像を選ぶ";
 "circle_info" = "グループリストを作成し、種類の異なるチャットを切り替えましょう";
 "circle_no_conversation_hint" = "友人またはグループを既に作成したのグループリストに追加できます";

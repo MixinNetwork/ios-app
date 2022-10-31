@@ -401,6 +401,9 @@ extension WebRTCClient {
             peerConnection?.delegate = self
             
             DispatchQueue.main.sync {
+                defer {
+                    semaphore.signal()
+                }
                 guard let self = self, self.session == session else {
                     return
                 }
@@ -416,7 +419,6 @@ extension WebRTCClient {
                 self.audioTrack = audioTrack
                 result = peerConnection
             }
-            semaphore.signal()
         }
         semaphore.wait()
         return result

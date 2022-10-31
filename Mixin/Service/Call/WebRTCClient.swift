@@ -336,7 +336,7 @@ extension WebRTCClient {
     // Complete with nil when session is invalidated
     private func loadIceServers(session: Session, completion: @escaping ([RTCIceServer]?) -> Void) {
         Logger.call.info(category: "WebRTCClient", message: "Fetch ICE Server, session: \(session)")
-        CallAPI.turn(queue: queue) { [weak self] result in
+        CallAPI.turn(queue: .global(qos: .userInitiated)) { [weak self] result in
             switch result {
             case let .success(servers):
                 let iceServers = servers.map {

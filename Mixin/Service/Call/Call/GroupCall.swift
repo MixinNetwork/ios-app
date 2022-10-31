@@ -341,9 +341,12 @@ extension GroupCall {
                     Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to make offer: \(error)")
                     completion(error)
                 case .success(let sdp):
+                    Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Will fetch track ID")
+                    let trackId = self.queue.sync { self.trackId }
+                    Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Track ID ready")
                     let publish = KrakenRequest(callUUID: self.uuid,
                                                 conversationId: self.conversationId,
-                                                trackId: self.queue.sync { self.trackId },
+                                                trackId: trackId,
                                                 action: isRestarting ? .restart(sdp: sdp) : .publish(sdp: sdp),
                                                 retryOnFailure: true)
                     switch self.request(publish) {

@@ -173,29 +173,23 @@ class WebRTCClient: NSObject {
             // See self.tracksUserId for queue dispatching
             self.queue.async {
                 var audioLevels: [String: Double] = [:]
-                for (key, value) in report.statistics {
-                    if key.hasPrefix("RTCMediaStreamTrack_sender_") {
-                        if isAudioTrackEnabled {
-                            guard
-                                let mediaSourceId = value.values["mediaSourceId"] as? String,
-                                let source = report.statistics[mediaSourceId],
-                                let level = source.values["audioLevel"] as? Double
-                            else {
-                                continue
-                            }
+                for statistic in report.statistics.values {
+                    switch statistic.type {
+                    case "inbound-rtp":
+                        if let trackId = statistic.values["trackIdentifier"] as? String,
+                           let userId = self.tracksUserId[trackId],
+                           let level = statistic.values["audioLevel"] as? Double
+                        {
+                            audioLevels[userId] = level
+                        }
+                    case "media-source":
+                        if isAudioTrackEnabled, let level = statistic.values["audioLevel"] as? Double {
                             audioLevels[myUserId] = level
                         } else {
                             audioLevels[myUserId] = 0
                         }
-                    } else if key.hasPrefix("RTCMediaStreamTrack_receiver_") {
-                        guard
-                            let trackId = value.values["trackIdentifier"] as? String,
-                            let userId = self.tracksUserId[trackId],
-                            let level = value.values["audioLevel"] as? Double
-                        else {
-                            continue
-                        }
-                        audioLevels[userId] = level
+                    default:
+                        break
                     }
                 }
                 DispatchQueue.main.async {
@@ -327,7 +321,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
                 self.tracksUserId[trackId] = id.userId
             }
             if disableTrack {
-                DispatchQueue.main.sync {
+                DispatchQueue.main.async {
                     _ = self.trackDisabledUserIds.insert(id.userId)
                 }
             }
@@ -407,6 +401,9 @@ extension WebRTCClient {
             peerConnection?.delegate = self
             
             DispatchQueue.main.sync {
+                defer {
+                    semaphore.signal()
+                }
                 guard let self = self, self.session == session else {
                     return
                 }
@@ -422,7 +419,6 @@ extension WebRTCClient {
                 self.audioTrack = audioTrack
                 result = peerConnection
             }
-            semaphore.signal()
         }
         semaphore.wait()
         return result

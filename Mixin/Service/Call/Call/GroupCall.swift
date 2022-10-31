@@ -323,7 +323,9 @@ extension GroupCall {
             // after internalState is updated. Therefore, if any UI components access `state` synchornouly
             // after connect, it will find an `incoming` as state.
             // For correct UI display, change `state` here first
-            self.state = isRestarting ? .restarting : .connecting
+            if self.state != .disconnecting {
+                self.state = isRestarting ? .restarting : .connecting
+            }
             invalidateUnansweredTimer()
             self.localizedName = self.conversationName
         }

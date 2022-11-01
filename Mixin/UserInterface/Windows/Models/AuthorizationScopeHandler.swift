@@ -1,18 +1,6 @@
 import MixinServices
 
-protocol AuthorizationScopeHandlerDelegate: AnyObject {
-    
-    func authorizationScopeHandlerDeselectLastScope(_ handler: AuthorizationScopeHandler)
-    
-}
-
 class AuthorizationScopeHandler {
-    
-    weak var delegate: AuthorizationScopeHandlerDelegate?
-    
-    var canDeselect: Bool {
-        selectedItems.count > 1
-    }
     
     var selectedItems: [Scope.ItemInfo] {
         scopeGroups.map(\.items).reduce(into: []) { result, items in
@@ -26,22 +14,18 @@ class AuthorizationScopeHandler {
         scopeGroups = scopeInfos
     }
     
-    func selectScope(item: Scope.ItemInfo) {
+    func select(item: Scope.ItemInfo) {
         guard let index = index(for: item) else {
             return
         }
         scopeGroups[index.groupIndex].items[index.itemIndex].isSelected = true
     }
     
-    func deselectScope(item: Scope.ItemInfo) {
+    func deselect(item: Scope.ItemInfo) {
         guard let index = index(for: item) else {
             return
         }
         scopeGroups[index.groupIndex].items[index.itemIndex].isSelected = false
-    }
-    
-    func deselectLastScope() {
-        delegate?.authorizationScopeHandlerDeselectLastScope(self)
     }
     
     private func index(for item: Scope.ItemInfo) -> (groupIndex: Int, itemIndex: Int)? {

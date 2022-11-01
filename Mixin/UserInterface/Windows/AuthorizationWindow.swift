@@ -57,7 +57,6 @@ class AuthorizationWindow: BottomSheetView {
             }
         })
         scopeHandler = AuthorizationScopeHandler(scopeInfos: Scope.getCompleteScopeInfos(authInfo: authInfo))
-        scopeHandler.delegate = self
         scopeDetailView.delegate = self
         scopeDetailView.render(with: scopeHandler)
         scopeConfirmationView.delegate = self
@@ -66,14 +65,6 @@ class AuthorizationWindow: BottomSheetView {
     
     @IBAction func backAction(_ sender: Any) {
         dismissPopupController(animated: true)
-    }
-    
-}
-
-extension AuthorizationWindow: AuthorizationScopeHandlerDelegate {
-    
-    func authorizationScopeHandlerDeselectLastScope(_ handler: AuthorizationScopeHandler) {
-        alert(R.string.localizable.select_at_least_one_permission())
     }
     
 }
@@ -110,10 +101,10 @@ extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
                 }
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):
-                view.resetInput()
                 PINVerificationFailureHandler.handle(error: error) { description in
                     self.alert(description)
                 }
+                view.resetInput()
             }
         }
     }

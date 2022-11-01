@@ -51,7 +51,8 @@ extension AuthorizationScopeTableView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.authorization_scope_list, for: indexPath)!
-        cell.render(item: scopeItems[indexPath.row])
+        let item = scopeItems[indexPath.row]
+        cell.render(item: item, forceChecked: item.scope == Scope.PROFILE.rawValue)
         return cell
     }
     
@@ -60,16 +61,11 @@ extension AuthorizationScopeTableView: UITableViewDataSource {
 extension AuthorizationScopeTableView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        scopeHandler.selectScope(item: scopeItems[indexPath.row])
+        scopeHandler.select(item: scopeItems[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if scopeHandler.canDeselect {
-            scopeHandler.deselectScope(item: scopeItems[indexPath.row])
-        } else {
-            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-            scopeHandler.deselectLastScope()
-        }
+        scopeHandler.deselect(item: scopeItems[indexPath.row])
     }
     
 }

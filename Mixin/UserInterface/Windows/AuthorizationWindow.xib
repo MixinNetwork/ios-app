@@ -159,7 +159,7 @@
                 <constraint firstItem="8gQ-MM-YrK" firstAttribute="bottom" secondItem="rph-I6-ZA7" secondAttribute="bottom" id="ySF-th-lCA"/>
             </constraints>
             <connections>
-                <outlet property="descLabel" destination="dq3-4O-SV0" id="2jv-Fm-aB6"/>
+                <outlet property="descriptionLabel" destination="dq3-4O-SV0" id="2jv-Fm-aB6"/>
                 <outlet property="popupView" destination="rph-I6-ZA7" id="tFj-71-DwN"/>
                 <outlet property="scopeConfirmationView" destination="g6z-m3-tTk" id="s9W-yb-Lp3"/>
                 <outlet property="scopeDetailView" destination="8gQ-MM-YrK" id="wZa-4g-mpz"/>

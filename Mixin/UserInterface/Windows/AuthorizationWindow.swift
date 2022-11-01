@@ -4,7 +4,7 @@ import SDWebImage
 
 class AuthorizationWindow: BottomSheetView {
     
-    @IBOutlet weak var descLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var scopeDetailView: AuthorizationScopeDetailView!
     @IBOutlet weak var scopeConfirmationView: AuthorizationScopeConfirmationView!
     
@@ -53,7 +53,7 @@ class AuthorizationWindow: BottomSheetView {
             fullString.append(NSAttributedString(string: "\(authInfo.app.name) (\(authInfo.app.appNumber))"))
             
             DispatchQueue.main.async {
-                self.descLabel.attributedText = fullString
+                self.descriptionLabel.attributedText = fullString
             }
         })
         scopeHandler = AuthorizationScopeHandler(scopeInfos: Scope.getCompleteScopeInfos(authInfo: authInfo))

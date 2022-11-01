@@ -69,8 +69,8 @@
 "allow_bot_access_number" = "Allow bot to access your phone number.";
 "allow_bot_access_profile" = "Allow bot to access your public profile such as name, Mixin ID, avatar, etc.";
 "allow_bot_access_snapshots" = "Allow bot to access your transfer records, including deposits and withdrawals.";
-"allow_bot_manager_bots" = "Allow bot to add or modify your bots.";
-"allow_bot_manager_circles" = "Allow bot to add, modify and delete your circles.";
+"allow_bot_manage_bots" = "Allow bot to add or modify your bots.";
+"allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
 "allow_bot_send_messages" = "Allow bot to send messages represent of you.";
 "allow_manual_report_message" = "Allow Manual Report Message";
 "amount" = "Amount";
@@ -483,8 +483,8 @@
 "lost_your_mobile_number" = "Lost your mobile number?";
 "make_group_admin" = "Make group admin";
 "manage" = "Manage";
-"manager_your_apps" = "Manager your bots";
-"manager_your_circles" = "Manager your circles";
+"manage_your_apps" = "Manage your bots";
+"manage_your_circles" = "Manage your circles";
 "media" = "Media";
 "memo" = "Memo";
 "message_e2ee" = "Messages to this conversation are encrypted end-to-end, tap for more info.";

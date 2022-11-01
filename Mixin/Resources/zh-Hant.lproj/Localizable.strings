@@ -69,8 +69,8 @@
 "allow_bot_access_number" = "允許機器人讀取你的手機號。";
 "allow_bot_access_profile" = "允許機器人訪問你的個人資料，如：名字、Mixin ID、頭像，等。";
 "allow_bot_access_snapshots" = "允許機器人訪問你的轉賬記錄，包括充值和提現。";
-"allow_bot_manager_bots" = "允許機器人新增或修改你的機器人列表。";
-"allow_bot_manager_circles" = "允許機器人新增、修改和刪除你的所有圈子。";
+"allow_bot_manage_bots" = "允許機器人新增或修改你的機器人列表。";
+"allow_bot_manage_circles" = "允許機器人新增、修改和刪除你的所有圈子。";
 "allow_bot_send_messages" = "允許機器人代表你發訊息。";
 "allow_manual_report_message" = "允許手動上報訊息";
 "amount" = "金額";
@@ -483,8 +483,8 @@
 "lost_your_mobile_number" = "手機丟失？";
 "make_group_admin" = "設定為群組管理員";
 "manage" = "管理";
-"manager_your_apps" = "管理你的所有的機器人";
-"manager_your_circles" = "管理你的所有的圈子";
+"manage_your_apps" = "管理你的所有的機器人";
+"manage_your_circles" = "管理你的所有的圈子";
 "media" = "媒體";
 "memo" = "備註";
 "message_e2ee" = "此對話中的訊息使用端對端加密。點選瞭解更多。";

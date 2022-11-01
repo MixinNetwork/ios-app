@@ -64,8 +64,8 @@ enum Scope: String {
                                  scope: Scope.APPS_READ.rawValue))
         }
         if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
-            bots.append(ItemInfo(title: R.string.localizable.manager_your_apps(),
-                                 desc: R.string.localizable.allow_bot_manager_bots(),
+            bots.append(ItemInfo(title: R.string.localizable.manage_your_apps(),
+                                 desc: R.string.localizable.allow_bot_manage_bots(),
                                  scope: Scope.APPS_WRITE.rawValue))
         }
         
@@ -75,8 +75,8 @@ enum Scope: String {
                                     scope: Scope.CIRCLES_READ.rawValue))
         }
         if authInfo.scopes.contains(Scope.CIRCLES_WRITE.rawValue) {
-            circles.append(ItemInfo(title: R.string.localizable.read_your_circles(),
-                                    desc: R.string.localizable.allow_bot_manager_circles(),
+            circles.append(ItemInfo(title: R.string.localizable.manage_your_circles(),
+                                    desc: R.string.localizable.allow_bot_manage_circles(),
                                     scope: Scope.CIRCLES_WRITE.rawValue))
         }
         

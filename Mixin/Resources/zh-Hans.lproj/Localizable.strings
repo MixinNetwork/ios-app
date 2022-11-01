@@ -69,8 +69,8 @@
 "allow_bot_access_number" = "允许机器人读取你的手机号。";
 "allow_bot_access_profile" = "允许机器人访问你的个人资料，如：名字、Mixin ID、头像，等。";
 "allow_bot_access_snapshots" = "允许机器人访问你的转账记录，包括充值和提现。";
-"allow_bot_manager_bots" = "允许机器人添加或修改你的机器人列表。";
-"allow_bot_manager_circles" = "允许机器人添加、修改和删除你的所有圈子。";
+"allow_bot_manage_bots" = "允许机器人添加或修改你的机器人列表。";
+"allow_bot_manage_circles" = "允许机器人添加、修改和删除你的所有圈子。";
 "allow_bot_send_messages" = "允许机器人代表你发消息。";
 "allow_manual_report_message" = "允许手动上报消息";
 "amount" = "金额";
@@ -483,8 +483,8 @@
 "lost_your_mobile_number" = "手机丢失？";
 "make_group_admin" = "设定为群组管理员";
 "manage" = "管理";
-"manager_your_apps" = "管理你的所有的机器人";
-"manager_your_circles" = "管理你的所有的圈子";
+"manage_your_apps" = "管理你的所有的机器人";
+"manage_your_circles" = "管理你的所有的圈子";
 "media" = "媒体";
 "memo" = "备注";
 "message_e2ee" = "此对话中的消息使用端对端加密。点击了解更多。";

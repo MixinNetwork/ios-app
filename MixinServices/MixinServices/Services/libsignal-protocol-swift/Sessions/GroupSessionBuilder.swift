@@ -164,7 +164,8 @@ public final class GroupSessionBuilder {
             get_sender_key_public(builder, $0, localAddress.pointer)
         }
         guard result == 0 else { throw SignalError(value: result) }
-
+        defer { signal_type_unref(message) }
+        
         var pubBuffer: OpaquePointer? = nil
         result = withUnsafeMutablePointer(to: &pubBuffer) {
             ec_public_key_serialize($0, message)

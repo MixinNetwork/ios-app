@@ -265,7 +265,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   libsignal-protocol-c:
-    :commit: f55d4e7b94f388a1ad5e3c6835c3bf4c335283d4
+    :commit: 53e446e27b55283f026e14606e21b112349e4c75
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   PhoneNumberKit:
     :commit: 3d311169dbfe7bff87a149a19e370c592f7782b5

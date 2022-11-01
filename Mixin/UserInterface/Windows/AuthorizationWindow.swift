@@ -17,8 +17,7 @@ class AuthorizationWindow: BottomSheetView {
         guard !loginSuccess else {
             return
         }
-        let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: [])
-        AuthorizeAPI.authorize(authorization: request) { (result) in
+        AuthorizeAPI.authorize(authorizationId: authInfo.authorizationId, scopes: [], pin: nil) { (result) in
             switch result {
             case let .success(response):
                 UIApplication.shared.tryOpenThirdApp(response: response)
@@ -94,42 +93,15 @@ extension AuthorizationWindow: AuthorizationScopeDetailViewDelegate {
 extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
     
     func authorizationScopeConfirmationView(_ view: AuthorizationScopeConfirmationView, validate pin: String) {
-        AccountAPI.verify(pin: pin) { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .success:
-                let interval = min(PeriodicPinVerificationInterval.max, AppGroupUserDefaults.Wallet.periodicPinVerificationInterval * 2)
-                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = interval
-                AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                self.authoriseAction()
-            case let .failure(error):
-                view.loadingIndicator.stopAnimating()
-                view.isUserInteractionEnabled = true
-                view.pinField.clear()
-                PINVerificationFailureHandler.handle(error: error) { description in
-                    self.alert(description)
-                }
-            }
-        }
-    }
-    
-}
-
-extension AuthorizationWindow {
-    
-    private func authoriseAction() {
         let scopes = scopeHandler.selectedItems.map(\.scope)
-        let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: scopes)
-        AuthorizeAPI.authorize(authorization: request, completion: { [weak self] (result) in
+        AuthorizeAPI.authorize(authorizationId: authInfo.authorizationId, scopes: scopes, pin: pin) { [weak self] result in
             guard let self = self else {
                 return
             }
-            self.scopeConfirmationView.loadingIndicator.stopAnimating()
-            self.scopeConfirmationView.isUserInteractionEnabled = true
+            view.loadingIndicator.stopAnimating()
             switch result {
             case let .success(response):
+                AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                 self.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: R.string.localizable.authorized())
                 self.dismissPopupController(animated: true)
@@ -138,9 +110,12 @@ extension AuthorizationWindow {
                 }
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                view.resetInput()
+                PINVerificationFailureHandler.handle(error: error) { description in
+                    self.alert(description)
+                }
             }
-        })
+        }
     }
     
 }

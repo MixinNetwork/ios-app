@@ -42,6 +42,13 @@ class AuthorizationScopeConfirmationView: UIView, XibDesignable {
         pinField.receivesInput = false
         delegate?.authorizationScopeConfirmationView(self, validate: pinField.text)
     }
+
+    func resetInput() {
+        pinField.clear()
+        pinField.isHidden = false
+        pinField.receivesInput = true
+        isUserInteractionEnabled = true
+    }
     
 }
 

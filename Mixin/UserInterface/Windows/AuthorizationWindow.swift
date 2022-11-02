@@ -1,6 +1,5 @@
 import Foundation
 import MixinServices
-import SDWebImage
 
 class AuthorizationWindow: BottomSheetView {
     
@@ -33,29 +32,18 @@ class AuthorizationWindow: BottomSheetView {
     
     func render(authInfo: AuthorizationResponse) -> AuthorizationWindow {
         self.authInfo = authInfo
-        SDWebImageManager.shared.loadImage(with: URL(string: authInfo.app.iconUrl), options: [], progress: nil, completed: { (image, _, error, _, _, _) in
-            let avatar: UIImage?
-            if error == nil, let image = image {
-                avatar = image
-            } else {
-                avatar = R.image.ic_place_holder()
-            }
-            let avatarAttachment = NSTextAttachment()
-            avatarAttachment.image = avatar
-            avatarAttachment.bounds = CGRect(x: 0, y: -3, width: 16, height: 16)
-            
-            let padding = NSTextAttachment()
-            padding.bounds = CGRect(x: 0, y: 0, width: 4, height: 0)
-            
-            let fullString = NSMutableAttributedString(string: "")
-            fullString.append(NSAttributedString(attachment: avatarAttachment))
-            fullString.append(NSAttributedString(attachment: padding))
-            fullString.append(NSAttributedString(string: "\(authInfo.app.name) (\(authInfo.app.appNumber))"))
-            
-            DispatchQueue.main.async {
-                self.descriptionLabel.attributedText = fullString
-            }
-        })
+        let avatarImageView = AvatarImageView()
+        avatarImageView.setImage(app: authInfo.app)
+        let avatarAttachment = NSTextAttachment()
+        avatarAttachment.image = avatarImageView.image
+        avatarAttachment.bounds = CGRect(x: 0, y: -3, width: 16, height: 16)
+        let padding = NSTextAttachment()
+        padding.bounds = CGRect(x: 0, y: 0, width: 4, height: 0)
+        let fullString = NSMutableAttributedString(string: "")
+        fullString.append(NSAttributedString(attachment: avatarAttachment))
+        fullString.append(NSAttributedString(attachment: padding))
+        fullString.append(NSAttributedString(string: "\(authInfo.app.name) (\(authInfo.app.appNumber))"))
+        descriptionLabel.attributedText = fullString
         scopeHandler = AuthorizationScopeHandler(scopeInfos: Scope.getCompleteScopeInfos(authInfo: authInfo))
         scopeDetailView.delegate = self
         scopeDetailView.render(with: scopeHandler)

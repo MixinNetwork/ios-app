@@ -147,7 +147,7 @@ extension DepositViewController {
             return
         }
         hasDepositChooseNetworkWindowPresented = true
-        DepositChooseNetworkWindow.instance().render(chain: chain).presentPopupControllerAnimated()
+        DepositChooseNetworkWindow.instance().render(asset: asset, chain: chain).presentPopupControllerAnimated()
     }
     
     private func startLoading() {

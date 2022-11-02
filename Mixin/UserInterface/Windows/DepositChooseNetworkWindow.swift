@@ -6,6 +6,7 @@ class DepositChooseNetworkWindow: BottomSheetView {
     @IBOutlet weak var tableView: UITableView!
     
     private var canDismiss = false
+    private var asset: AssetItem!
     private var chain: AssetItem.ChainInfo!
     
     override func dismissPopupController(animated: Bool) {
@@ -15,7 +16,8 @@ class DepositChooseNetworkWindow: BottomSheetView {
         super.dismissPopupController(animated: animated)
     }
     
-    func render(chain: AssetItem.ChainInfo) -> DepositChooseNetworkWindow {
+    func render(asset: AssetItem, chain: AssetItem.ChainInfo) -> DepositChooseNetworkWindow {
+        self.asset = asset
         self.chain = chain
         tableView.register(R.nib.depositNetworkCell)
         tableView.delegate = self
@@ -43,7 +45,7 @@ extension DepositChooseNetworkWindow: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.deposit_network, for: indexPath)!
-        cell.label.text = chain.name
+        cell.label.text = asset.depositNetworkName ?? chain.name
         cell.iconImageView.sd_setImage(with: URL(string: chain.iconUrl))
         return cell
     }

@@ -11,9 +11,9 @@ class AuthorizationScopeConfirmationView: UIView, XibDesignable {
     
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var numberPadView: NumberPadView!
-    @IBOutlet weak var tableView: AuthorizationScopeTableView!
+    @IBOutlet weak var scopeView: AuthorizationScopeTableView!
     @IBOutlet weak var loadingIndicator: ActivityIndicatorView!
-
+    
     weak var delegate: AuthorizationScopeConfirmationViewDelegate?
     
     override init(frame: CGRect) {
@@ -28,8 +28,12 @@ class AuthorizationScopeConfirmationView: UIView, XibDesignable {
     
     func render(with scopeHandler: AuthorizationScopeHandler) {
         numberPadView.target = pinField
-        tableView.render(scopeItems: scopeHandler.selectedItems, scopeHandler: scopeHandler)
-        tableView.layoutIfNeeded()
+        scopeView.render(scopeItems: scopeHandler.selectedItems, scopeHandler: scopeHandler)
+        scopeView.layoutIfNeeded()
+        let height = min(ceil(scopeView.tableView.contentSize.height), scopeView.bounds.height)
+        scopeView.tableView.snp.updateConstraints { make in
+            make.height.equalTo(height)
+        }
     }
     
     @IBAction func pinEditingChangedAction(_ sender: Any) {
@@ -42,7 +46,7 @@ class AuthorizationScopeConfirmationView: UIView, XibDesignable {
         pinField.receivesInput = false
         delegate?.authorizationScopeConfirmationView(self, validate: pinField.text)
     }
-
+    
     func resetInput() {
         pinField.clear()
         pinField.isHidden = false

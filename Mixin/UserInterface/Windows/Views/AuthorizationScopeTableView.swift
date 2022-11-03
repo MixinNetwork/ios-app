@@ -16,9 +16,8 @@ class AuthorizationScopeTableView: UIView {
         tableView.layer.cornerRadius = 13
         tableView.alwaysBounceVertical = false
         tableView.estimatedRowHeight = 70
-        tableView.showsVerticalScrollIndicator = false
-        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 10))
-        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 10))
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 16))
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 16))
         tableView.register(R.nib.authorizationScopeCell)
         addSubview(tableView)
         tableView.snp.makeConstraints { make in

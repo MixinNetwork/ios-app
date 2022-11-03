@@ -903,7 +903,7 @@
 		DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */; };
 		DFE861BC2422673B009B1833 /* ShareRecipientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE861BB2422673B009B1833 /* ShareRecipientViewController.swift */; };
 		DFE861BF2422673B009B1833 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE861BD2422673B009B1833 /* MainInterface.storyboard */; };
-		DFE861C32422673B009B1833 /* MixinShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DFE861B92422673B009B1833 /* MixinShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DFE861C32422673B009B1833 /* MixinShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DFE861B92422673B009B1833 /* MixinShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DFE8629124227F91009B1833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE8629024227F91009B1833 /* Assets.xcassets */; };
 		DFE8635A242282D3009B1833 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE86359242282D3009B1833 /* R.generated.swift */; };
 		DFE864E624228753009B1833 /* RecipientCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE864E524228753009B1833 /* RecipientCell.swift */; };
@@ -943,7 +943,7 @@
 		E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */; };
 		E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */; };
 		E090B9FA23B3957E0088355B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B9F923B3957E0088355B /* NotificationService.swift */; };
-		E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E090B9F723B3957E0088355B /* MixinNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E090B9F723B3957E0088355B /* MixinNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
 		E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB72370057B0095F729 /* UserProfileViewController.swift */; };
 		E09C5EBD237007650095F729 /* ProfileDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EBB237007650095F729 /* ProfileDescriptionView.swift */; };
@@ -1002,16 +1002,16 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E090B9FF23B3957E0088355B /* Embed App Extensions */ = {
+		E090B9FF23B3957E0088355B /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				DFE861C32422673B009B1833 /* MixinShare.appex in Embed App Extensions */,
-				E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed App Extensions */,
+				DFE861C32422673B009B1833 /* MixinShare.appex in Embed Foundation Extensions */,
+				E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -3788,7 +3788,7 @@
 				F5646909209AA0566E934C2C /* [CP] Embed Pods Frameworks */,
 				273E29431FCBED580043A6F9 /* Embed Frameworks */,
 				DF1BD0B42292AF2900EBDC22 /* Crashlytics */,
-				E090B9FF23B3957E0088355B /* Embed App Extensions */,
+				E090B9FF23B3957E0088355B /* Embed Foundation Extensions */,
 				DF21616C24ECD0FE0087D7B0 /* Check Bundle */,
 			);
 			buildRules = (
@@ -3866,7 +3866,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1410;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
 					277FF6FE1F909A1200DBB2EB = {
@@ -4183,7 +4183,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinNotificationService/R.generated.swift",
+				$SRCROOT/MixinNotificationService/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4305,7 +4305,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinShare/R.generated.swift",
+				$SRCROOT/MixinShare/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4325,7 +4325,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

@@ -1,11 +1,18 @@
 import Foundation
 import MixinServices
+import SDWebImage
 
 class AuthorizationWindow: BottomSheetView {
     
-    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var scopeDetailView: AuthorizationScopeDetailView!
     @IBOutlet weak var scopeConfirmationView: AuthorizationScopeConfirmationView!
+    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var avatarImageView: AvatarImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var appNumberLabel: UILabel!
+    
+    @IBOutlet weak var avatarWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stackViewWidthConstraint: NSLayoutConstraint!
     
     private var scopeHandler: AuthorizationScopeHandler!
     private var authInfo: AuthorizationResponse!
@@ -32,22 +39,11 @@ class AuthorizationWindow: BottomSheetView {
     
     func render(authInfo: AuthorizationResponse) -> AuthorizationWindow {
         self.authInfo = authInfo
-        let avatarImageView = AvatarImageView()
         avatarImageView.setImage(app: authInfo.app)
-        let avatarAttachment = NSTextAttachment()
-        avatarAttachment.image = avatarImageView.image
-        avatarAttachment.bounds = CGRect(x: 0, y: -3, width: 16, height: 16)
-        let padding = NSTextAttachment()
-        padding.bounds = CGRect(x: 0, y: 0, width: 4, height: 0)
-        let fullString = NSMutableAttributedString(string: "")
-        fullString.append(NSAttributedString(attachment: avatarAttachment))
-        fullString.append(NSAttributedString(attachment: padding))
-        fullString.append(NSAttributedString(string: "\(authInfo.app.name) (\(authInfo.app.appNumber))"))
-        descriptionLabel.attributedText = fullString
+        setupLabels()
         scopeHandler = AuthorizationScopeHandler(scopeInfos: Scope.getCompleteScopeInfos(authInfo: authInfo))
         scopeDetailView.delegate = self
         scopeDetailView.render(with: scopeHandler)
-        scopeConfirmationView.delegate = self
         return self
     }
     
@@ -55,11 +51,32 @@ class AuthorizationWindow: BottomSheetView {
         dismissPopupController(animated: true)
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        DispatchQueue.main.async(execute: setupLabels)
+    }
+    
+    private func setupLabels() {
+        nameLabel.text = "\(authInfo.app.name) (\(authInfo.app.appNumber))"
+        let avaliableWidth = stackViewWidthConstraint.constant - avatarWidthConstraint.constant - stackView.spacing
+        let sizeToFitLabel = CGSize(width: UIView.layoutFittingExpandedSize.width, height: nameLabel.bounds.height)
+        let nameLabelWidth = nameLabel.sizeThatFits(sizeToFitLabel).width
+        if nameLabelWidth > avaliableWidth {
+            nameLabel.text = "\(authInfo.app.name)"
+            appNumberLabel.text = "(\(authInfo.app.appNumber))"
+            appNumberLabel.isHidden = false
+        } else {
+            appNumberLabel.text = ""
+            appNumberLabel.isHidden = true
+        }
+    }
+    
 }
 
 extension AuthorizationWindow: AuthorizationScopeDetailViewDelegate {
     
     func authorizationScopeDetailViewDidReviewScopes(_ controller: AuthorizationScopeDetailView) {
+        scopeConfirmationView.delegate = self
         scopeConfirmationView.render(with: scopeHandler)
         UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve, animations: {
             self.scopeDetailView.isHidden = true

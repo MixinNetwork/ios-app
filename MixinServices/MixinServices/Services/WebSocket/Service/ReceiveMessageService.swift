@@ -189,7 +189,17 @@ public class ReceiveMessageService: MixinService {
             } while true
         }
     }
-
+    
+    public func requestResendKey(conversationId: String, recipientId: String, sessionId: String?) {
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_KEY.rawValue, messages: nil, ackMessages: nil)
+        let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
+        let messageId = UUID().uuidString.lowercased()
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
+        let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
+        SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
+        RatchetSenderKeyDAO.shared.setRatchetSenderKeyStatus(groupId: conversationId, senderId: recipientId, status: RatchetStatus.REQUESTING.rawValue, sessionId: sessionId)
+    }
+    
     private func processReceiveMessage(data: BlazeMessageData) {
         guard LoginManager.shared.isLoggedIn else {
             return
@@ -514,7 +524,7 @@ public class ReceiveMessageService: MixinService {
                 refreshKeys(conversationId: data.conversationId)
                 let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
                 if status == nil {
-                    requestResendKey(conversationId: data.conversationId, recipientId: data.userId, messageId: data.messageId, sessionId: data.sessionId)
+                    requestResendKey(conversationId: data.conversationId, recipientId: data.userId, sessionId: data.sessionId)
                 }
             }
         }
@@ -1102,25 +1112,14 @@ public class ReceiveMessageService: MixinService {
         }
 
         Logger.conversation(id: conversationId).info(category: "ReceiveMessageService", message: "Request resend messages: [\(messages.joined(separator: ","))]")
-        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages, ackMessages: nil)
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_MESSAGES.rawValue, messages: messages, ackMessages: nil)
         let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_MESSAGES)
     }
-
-    private func requestResendKey(conversationId: String, recipientId: String, messageId: String, sessionId: String?) {
-        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil, ackMessages: nil)
-        let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
-        let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
-        let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
-        SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
-
-        RatchetSenderKeyDAO.shared.setRatchetSenderKeyStatus(groupId: conversationId, senderId: recipientId, status: RatchetStatus.REQUESTING.rawValue, sessionId: sessionId)
-    }
-
+    
     private func updateRemoteMessageStatus(messageId: String, status: MessageStatus) {
         SendMessageService.shared.sendAckMessage(messageId: messageId, status: status)
     }

@@ -720,7 +720,6 @@
 "security" = "セキュリティ";
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";
-"select_at_least_one_permission" = "You must select at least one permission.";
 "select_emergency_contact" = "緊急連絡先を選択";
 "select_more_photos" = "さらに選択";
 "selected_count" = "%@を選択しています。";

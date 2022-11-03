@@ -67,7 +67,7 @@
 "allow_bot_access_contact" = "允许机器人访问你的联系人列表和屏蔽列表。";
 "allow_bot_access_nfts" = "允许机器人访问你的 NFT 列表和余额。";
 "allow_bot_access_number" = "允许机器人读取你的手机号。";
-"allow_bot_access_profile" = "允许机器人访问你的个人资料，如：名字、Mixin ID、头像，等。";
+"allow_bot_access_profile" = "允许机器人访问你的个人资料，如：名字、Mixin ID、头像等。";
 "allow_bot_access_snapshots" = "允许机器人访问你的转账记录，包括充值和提现。";
 "allow_bot_manage_bots" = "允许机器人添加或修改你的机器人列表。";
 "allow_bot_manage_circles" = "允许机器人添加、修改和删除你的所有圈子。";
@@ -720,7 +720,6 @@
 "security" = "安全";
 "select" = "选择";
 "select_a_country_or_region" = "选择一个国家或地区";
-"select_at_least_one_permission" = "你必须至少选择一个权限。";
 "select_emergency_contact" = "选择紧急联系人";
 "select_more_photos" = "选择更多照片";
 "selected_count" = "选择了 %@ 个消息";

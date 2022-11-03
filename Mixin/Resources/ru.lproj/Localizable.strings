@@ -720,7 +720,6 @@
 "security" = "Безопасность";
 "select" = "Выбрать";
 "select_a_country_or_region" = "Выберите страну или регион";
-"select_at_least_one_permission" = "You must select at least one permission.";
 "select_emergency_contact" = "Выберите экстренный контакт";
 "select_more_photos" = "Выберите больше фотографий";
 "selected_count" = "%@ Выбрано";

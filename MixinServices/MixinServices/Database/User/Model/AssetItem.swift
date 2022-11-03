@@ -116,13 +116,13 @@ extension AssetItem {
     public var depositNetworkName: String? {
         switch chainId {
         case "43d61dcd-e413-450d-80b8-101d5e903357":
-            return "Ethereum (ERC20)"
+            return "Ethereum (ERC-20)"
         case "cbc77539-0a20-4666-8c8a-4ded62b36f0a":
-            return "Avalanche X-Chain"
+            return "Avalanche C-Chain"
         case "17f78d7c-ed96-40ff-980c-5dc62fecbc85":
-            return "BNB Beancon Chain (BEP2)"
+            return "BNB Beacon Chain (BEP-2)"
         case "25dabac5-056a-48ff-b9f9-f67395dc407c":
-            return "Tron (TRC20)"
+            return "Tron (TRC-20)"
         case "05891083-63d2-4f3d-bfbe-d14d7fb9b25a":
             return "BitShares"
         default:

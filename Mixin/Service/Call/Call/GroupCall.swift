@@ -641,7 +641,7 @@ extension GroupCall: WebRTCClientDelegate {
         }
         if trackDisabled {
             Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Request resend key for track disabled stream: \(streamId)")
-            ReceiveMessageService.shared.requestResendKey(conversationId: conversationId, recipientId: streamId.userId, messageId: nil, sessionId: streamId.sessionId)
+            ReceiveMessageService.shared.requestResendKey(conversationId: conversationId, recipientId: streamId.userId, sessionId: streamId.sessionId)
         }
     }
     

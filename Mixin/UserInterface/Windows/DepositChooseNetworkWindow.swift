@@ -22,7 +22,6 @@ class DepositChooseNetworkWindow: BottomSheetView {
         tableView.register(R.nib.depositNetworkCell)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableHeaderView = UIView()
         tableView.reloadData()
         return self
     }
@@ -57,10 +56,6 @@ extension DepositChooseNetworkWindow: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         canDismiss = true
         dismissPopupController(animated: true)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        .leastNormalMagnitude
     }
     
 }

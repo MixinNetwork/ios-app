@@ -2,7 +2,6 @@
 "access_contacts_hint" = "Mixin синхронизирует вашу адресную книгу с серверами Mixin, чтобы помочь вам связаться с другими пользователями Mixin.";
 "access_denied" = "В доступе отказано";
 "access_to_contacts" = "Доступ к контактам";
-"access_your_circle_list" = "доступ к вашему списку кругов";
 "account" = "Аккаунт";
 "acknowledgements" = "Благодарности";
 "add" = "Добавить";
@@ -579,6 +578,7 @@
 "optimize_database" = "Оптимизировать базу данных";
 "optimized" = "Оптимизировано";
 "other" = "Другой";
+"others" = "Others";
 "owner" = "Владелец";
 "participants" = "Участники";
 "participants_count" = "%@ УЧАСТНИКОВ";

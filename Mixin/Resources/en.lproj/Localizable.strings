@@ -2,7 +2,6 @@
 "access_contacts_hint" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users";
 "access_denied" = "Access denied";
 "access_to_contacts" = "Access to Contacts";
-"access_your_circle_list" = "access your circle list";
 "account" = "Account";
 "acknowledgements" = "Acknowledgements";
 "add" = "Add";
@@ -579,6 +578,7 @@
 "optimize_database" = "Optimize Database";
 "optimized" = "Optimized";
 "other" = "Other";
+"others" = "Others";
 "owner" = "Owner";
 "participants" = "Participants";
 "participants_count" = "%@ PARTICIPANTS";

@@ -2,7 +2,6 @@
 "access_contacts_hint" = "同步通訊錄到 Mixin 發現更多好友";
 "access_denied" = "禁止訪問";
 "access_to_contacts" = "訪問通訊錄";
-"access_your_circle_list" = "訪問你的圈子列表";
 "account" = "賬號";
 "acknowledgements" = "許可證";
 "add" = "新增";
@@ -579,6 +578,7 @@
 "optimize_database" = "最佳化查詢索引";
 "optimized" = "已最佳化";
 "other" = "其他";
+"others" = "其他";
 "owner" = "群主";
 "participants" = "成員";
 "participants_count" = "%@ 位群組成員";

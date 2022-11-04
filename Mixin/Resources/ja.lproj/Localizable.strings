@@ -2,7 +2,6 @@
 "access_contacts_hint" = "MixinはあなたのアドレスをMixinサーバーに同期させ、Mixinユーザーを自動追加します";
 "access_denied" = "アクセスが拒否されました";
 "access_to_contacts" = "連絡先へのアクセス";
-"access_your_circle_list" = "グループリスト一覧へのアクセス";
 "account" = "アカウント";
 "acknowledgements" = "謝辞";
 "add" = "追加";
@@ -579,6 +578,7 @@
 "optimize_database" = "データベースの最適化";
 "optimized" = "最適化済みです";
 "other" = "その他";
+"others" = "Others";
 "owner" = "オーナー";
 "participants" = "参加者";
 "participants_count" = "%@人のメンバー";

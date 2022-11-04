@@ -4,12 +4,12 @@ class AuthorizationScopeDetailCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var scopeView: AuthorizationScopeTableView!
+    @IBOutlet weak var scopesView: AuthorizationScopesView!
     
-    func render(scopeGroup: Scope.GroupInfo, scopeHandler: AuthorizationScopeHandler) {
-        imageView.image = scopeGroup.icon
-        titleLabel.text = scopeGroup.title
-        scopeView.render(scopeItems: scopeGroup.items, scopeHandler: scopeHandler)
+    func render(group: AuthorizationScope.Group, scopes: [AuthorizationScope], dataSource: AuthorizationScopeDataSource) {
+        imageView.image = group.icon
+        titleLabel.text = group.title
+        scopesView.render(scopes: scopes, dataSource: dataSource)
     }
     
 }

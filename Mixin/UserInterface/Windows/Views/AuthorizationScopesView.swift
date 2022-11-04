@@ -1,9 +1,9 @@
 import UIKit
 
-class AuthorizationScopeTableView: UIView {
+class AuthorizationScopesView: UIView {
     
-    private var scopeItems: [Scope.ItemInfo] = []
-    private var scopeHandler: AuthorizationScopeHandler!
+    private var scopes: [AuthorizationScope] = []
+    private var dataSource: AuthorizationScopeDataSource!
     
     private(set) lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -27,13 +27,13 @@ class AuthorizationScopeTableView: UIView {
         return tableView
     }()
     
-    func render(scopeItems: [Scope.ItemInfo], scopeHandler: AuthorizationScopeHandler) {
-        self.scopeHandler = scopeHandler
-        self.scopeItems = scopeItems
+    func render(scopes: [AuthorizationScope], dataSource: AuthorizationScopeDataSource) {
+        self.dataSource = dataSource
+        self.scopes = scopes
         tableView.reloadData()
         DispatchQueue.main.async {
-            for index in 0..<self.scopeItems.count {
-                if self.scopeItems[index].isSelected {
+            for index in 0..<self.scopes.count {
+                if dataSource.isSelected(self.scopes[index]) {
                     self.tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .none)
                 }
             }
@@ -42,29 +42,31 @@ class AuthorizationScopeTableView: UIView {
     
 }
 
-extension AuthorizationScopeTableView: UITableViewDataSource {
+extension AuthorizationScopesView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        scopeItems.count
+        scopes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.authorization_scope_list, for: indexPath)!
-        let item = scopeItems[indexPath.row]
-        cell.render(item: item, forceChecked: item.scope == Scope.PROFILE.rawValue)
+        let scope = scopes[indexPath.row]
+        cell.render(scope: scope,
+                    isSelected: dataSource.isSelected(scope),
+                    forceChecked: dataSource.arbitraryScopes.contains(scope))
         return cell
     }
     
 }
 
-extension AuthorizationScopeTableView: UITableViewDelegate {
+extension AuthorizationScopesView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        scopeHandler.select(item: scopeItems[indexPath.row])
+        dataSource.select(scopes[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        scopeHandler.deselect(item: scopeItems[indexPath.row])
+        dataSource.deselect(scopes[indexPath.row])
     }
     
 }

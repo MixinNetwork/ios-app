@@ -14,7 +14,10 @@ class AuthorizationWindow: BottomSheetView {
     @IBOutlet weak var avatarWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var stackViewWidthConstraint: NSLayoutConstraint!
     
-    private var scopeHandler: AuthorizationScopeHandler!
+    @IBOutlet weak var showScopeDetailViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showScopeConfirmationViewConstraint: NSLayoutConstraint!
+    
+    private var dataSource: AuthorizationScopeDataSource!
     private var authInfo: AuthorizationResponse!
     private var loginSuccess = false
     
@@ -41,9 +44,9 @@ class AuthorizationWindow: BottomSheetView {
         self.authInfo = authInfo
         avatarImageView.setImage(app: authInfo.app)
         setupLabels()
-        scopeHandler = AuthorizationScopeHandler(scopeInfos: Scope.getCompleteScopeInfos(authInfo: authInfo))
+        dataSource = AuthorizationScopeDataSource(response: authInfo)
         scopeDetailView.delegate = self
-        scopeDetailView.render(with: scopeHandler)
+        scopeDetailView.render(dataSource: dataSource)
         return self
     }
     
@@ -76,12 +79,25 @@ class AuthorizationWindow: BottomSheetView {
 extension AuthorizationWindow: AuthorizationScopeDetailViewDelegate {
     
     func authorizationScopeDetailViewDidReviewScopes(_ controller: AuthorizationScopeDetailView) {
-        scopeConfirmationView.delegate = self
-        scopeConfirmationView.render(with: scopeHandler)
-        UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve, animations: {
-            self.scopeDetailView.isHidden = true
-            self.scopeConfirmationView.isHidden = false
-        })
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            scopeConfirmationView.delegate = self
+            scopeConfirmationView.render(dataSource: dataSource)
+            showScopeDetailViewConstraint.priority = .defaultLow
+            showScopeConfirmationViewConstraint.priority = .defaultHigh
+            UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                self.scopeDetailView.isHidden = true
+                self.scopeConfirmationView.isHidden = false
+            })
+        case .needsInitialize:
+            guard let navigationController = UIApplication.homeNavigationController else {
+                return
+            }
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            navigationController.present(tip, animated: true)
+        case .unknown:
+            break
+        }
     }
     
 }
@@ -89,7 +105,7 @@ extension AuthorizationWindow: AuthorizationScopeDetailViewDelegate {
 extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
     
     func authorizationScopeConfirmationView(_ view: AuthorizationScopeConfirmationView, validate pin: String) {
-        let scopes = scopeHandler.selectedItems.map(\.scope)
+        let scopes = dataSource.selectedScopes.map(\.rawValue)
         AuthorizeAPI.authorize(authorizationId: authInfo.authorizationId, scopes: scopes, pin: pin) { [weak self] result in
             guard let self = self else {
                 return

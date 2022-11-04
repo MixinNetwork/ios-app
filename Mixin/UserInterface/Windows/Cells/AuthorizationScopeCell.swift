@@ -22,11 +22,11 @@ class AuthorizationScopeCell: UITableViewCell {
         }
     }
     
-    func render(item: Scope.ItemInfo, forceChecked: Bool) {
-        titleLabel.text = item.title
-        descLabel.text = item.desc
+    func render(scope: AuthorizationScope, isSelected: Bool, forceChecked: Bool) {
+        titleLabel.text = scope.title
+        descLabel.text = scope.description
         self.forceChecked = forceChecked
-        setSelected(item.isSelected, animated: false)
+        setSelected(isSelected, animated: false)
         isUserInteractionEnabled = !forceChecked
     }
     

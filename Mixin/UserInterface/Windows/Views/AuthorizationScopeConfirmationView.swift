@@ -11,7 +11,7 @@ class AuthorizationScopeConfirmationView: UIView, XibDesignable {
     
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var numberPadView: NumberPadView!
-    @IBOutlet weak var scopeView: AuthorizationScopeTableView!
+    @IBOutlet weak var scopesView: AuthorizationScopesView!
     @IBOutlet weak var loadingIndicator: ActivityIndicatorView!
     
     weak var delegate: AuthorizationScopeConfirmationViewDelegate?
@@ -26,12 +26,12 @@ class AuthorizationScopeConfirmationView: UIView, XibDesignable {
         loadXib()
     }
     
-    func render(with scopeHandler: AuthorizationScopeHandler) {
+    func render(dataSource: AuthorizationScopeDataSource) {
         numberPadView.target = pinField
-        scopeView.render(scopeItems: scopeHandler.selectedItems, scopeHandler: scopeHandler)
-        scopeView.layoutIfNeeded()
-        let height = min(ceil(scopeView.tableView.contentSize.height), scopeView.bounds.height)
-        scopeView.tableView.snp.updateConstraints { make in
+        scopesView.render(scopes: dataSource.selectedScopes, dataSource: dataSource)
+        scopesView.layoutIfNeeded()
+        let height = min(ceil(scopesView.tableView.contentSize.height), scopesView.bounds.height)
+        scopesView.tableView.snp.updateConstraints { make in
             make.height.equalTo(height)
         }
     }

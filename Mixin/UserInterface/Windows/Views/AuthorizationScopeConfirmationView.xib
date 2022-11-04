@@ -13,7 +13,7 @@
                 <outlet property="loadingIndicator" destination="jMz-cq-hsz" id="33v-UF-DER"/>
                 <outlet property="numberPadView" destination="MJR-L9-NlP" id="IBd-de-YkO"/>
                 <outlet property="pinField" destination="Wkx-k4-oQd" id="s8Z-1f-rBv"/>
-                <outlet property="scopeView" destination="fc9-cO-ISZ" id="DzG-la-rcN"/>
+                <outlet property="scopesView" destination="fc9-cO-ISZ" id="DzG-la-rcN"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -21,7 +21,7 @@
             <rect key="frame" x="0.0" y="0.0" width="390" height="404"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fc9-cO-ISZ" customClass="AuthorizationScopeTableView" customModule="Mixin" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fc9-cO-ISZ" customClass="AuthorizationScopesView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="32" y="0.0" width="326" height="210"/>
                     <color key="backgroundColor" name="background"/>
                 </view>
@@ -75,7 +75,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

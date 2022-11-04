@@ -20,7 +20,7 @@ final class PermissionsViewController: UIViewController {
     
     private var isDataLoaded = false
     private var app: App?
-    private var scopes = [Scope.ItemInfo]()
+    private var scopes = [AuthorizationScope]()
     private var dateDescription: String?
     
     override func viewDidLoad() {
@@ -107,9 +107,7 @@ final class PermissionsViewController: UIViewController {
         let accessedDate = DateFormatter.dateFull.string(from: response.accessedAt.toUTCDate())
         
         app = response.app
-        scopes = Scope.getCompleteScopeInfos(authInfo: response).reduce(into: [], { result, group in
-            result.append(contentsOf: group.items)
-        })
+        scopes = AuthorizationScopeDataSource(response: response).selectedScopes
         dateDescription = R.string.localizable.setting_auth_access(createDate, accessedDate)
         isDataLoaded = true
         tableView.reloadData()
@@ -171,7 +169,7 @@ extension PermissionsViewController: UITableViewDataSource {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permission, for: indexPath)!
             let scope = scopes[indexPath.row]
-            cell.render(name: scope.title, desc: scope.desc)
+            cell.render(name: scope.title, desc: scope.description)
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permissions_action, for: indexPath)!

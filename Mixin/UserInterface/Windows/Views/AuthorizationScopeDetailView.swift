@@ -17,7 +17,7 @@ class AuthorizationScopeDetailView: UIView, XibDesignable {
     
     weak var delegate: AuthorizationScopeDetailViewDelegate?
     
-    private var scopeHandler: AuthorizationScopeHandler!
+    private var dataSource: AuthorizationScopeDataSource!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,15 +34,15 @@ class AuthorizationScopeDetailView: UIView, XibDesignable {
         layout.itemSize = CGSize(width: bounds.width - 64, height: collectionViewHeightConstraint.constant)
     }
     
-    func render(with scopeHandler: AuthorizationScopeHandler) {
-        self.scopeHandler = scopeHandler
-        pageControl.numberOfPages = scopeHandler.scopeGroups.count
+    func render(dataSource: AuthorizationScopeDataSource) {
+        self.dataSource = dataSource
+        pageControl.numberOfPages = dataSource.groups.count
         collectionView.reloadData()
     }
     
     @IBAction func nextAction(_ sender: Any) {
         let nextPage = pageControl.currentPage + 1
-        if nextPage == scopeHandler.scopeGroups.count {
+        if nextPage == dataSource.groups.count {
             delegate?.authorizationScopeDetailViewDidReviewScopes(self)
         } else {
             let offset = CGPoint(x: CGFloat(nextPage) * collectionView.frame.width, y: 0)
@@ -55,12 +55,14 @@ class AuthorizationScopeDetailView: UIView, XibDesignable {
 extension AuthorizationScopeDetailView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        scopeHandler.scopeGroups.count
+        dataSource.groups.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.authorization_scope_detail, for: indexPath)!
-        cell.render(scopeGroup: scopeHandler.scopeGroups[indexPath.row], scopeHandler: scopeHandler)
+        if let detail = dataSource.scopeDetail(at: indexPath) {
+            cell.render(group: detail.group, scopes: detail.scopes, dataSource: dataSource)
+        }
         return cell
     }
     
@@ -77,7 +79,7 @@ extension AuthorizationScopeDetailView: UIScrollViewDelegate, UICollectionViewDe
         guard let cell = cell as? AuthorizationScopeDetailCell else {
             return
         }
-        let tableView = cell.scopeView.tableView
+        let tableView = cell.scopesView.tableView
         tableView.layoutIfNeeded()
         let maxHeight: CGFloat
         switch ScreenHeight.current {

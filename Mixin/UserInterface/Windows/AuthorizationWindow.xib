@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rph-I6-ZA7" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="239.5" width="414" height="656.5"/>
+                    <rect key="frame" x="0.0" y="205.5" width="414" height="690.5"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1RF-kj-XBd">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -183,9 +183,9 @@
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="rph-I6-ZA7" secondAttribute="trailing" id="0qw-D7-NiJ"/>
                 <constraint firstAttribute="bottom" secondItem="rph-I6-ZA7" secondAttribute="bottom" id="K1m-zD-4D7"/>
+                <constraint firstItem="rph-I6-ZA7" firstAttribute="bottom" secondItem="g6z-m3-tTk" secondAttribute="bottom" priority="250" id="KcS-8b-8Tn"/>
+                <constraint firstItem="8gQ-MM-YrK" firstAttribute="bottom" secondItem="hQj-XO-iMW" secondAttribute="bottom" priority="750" id="aJT-Cc-w4z"/>
                 <constraint firstItem="rph-I6-ZA7" firstAttribute="leading" secondItem="WPn-rX-5IO" secondAttribute="leading" id="eHP-yW-E18"/>
-                <constraint firstItem="rph-I6-ZA7" firstAttribute="bottom" secondItem="g6z-m3-tTk" secondAttribute="bottom" id="oD8-eZ-fP2"/>
-                <constraint firstItem="8gQ-MM-YrK" firstAttribute="bottom" secondItem="rph-I6-ZA7" secondAttribute="bottom" id="ySF-th-lCA"/>
             </constraints>
             <connections>
                 <outlet property="appNumberLabel" destination="ja9-m3-UeY" id="cOq-as-mzC"/>
@@ -195,6 +195,8 @@
                 <outlet property="popupView" destination="rph-I6-ZA7" id="tFj-71-DwN"/>
                 <outlet property="scopeConfirmationView" destination="g6z-m3-tTk" id="s9W-yb-Lp3"/>
                 <outlet property="scopeDetailView" destination="8gQ-MM-YrK" id="wZa-4g-mpz"/>
+                <outlet property="showScopeConfirmationViewConstraint" destination="KcS-8b-8Tn" id="AtZ-Vb-Dru"/>
+                <outlet property="showScopeDetailViewConstraint" destination="aJT-Cc-w4z" id="qNq-33-nKa"/>
                 <outlet property="stackView" destination="WNn-OT-775" id="e6v-lH-deA"/>
                 <outlet property="stackViewWidthConstraint" destination="JhC-TF-mdA" id="8SH-QT-IiN"/>
             </connections>

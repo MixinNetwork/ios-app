@@ -1,10 +1,9 @@
 import Foundation
 import MixinServices
-import SDWebImage
 
 class AuthorizationWindow: BottomSheetView {
     
-    @IBOutlet weak var scopeDetailView: AuthorizationScopeDetailView!
+    @IBOutlet weak var scopePreviewView: AuthorizationScopePreviewView!
     @IBOutlet weak var scopeConfirmationView: AuthorizationScopeConfirmationView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
@@ -13,8 +12,7 @@ class AuthorizationWindow: BottomSheetView {
     
     @IBOutlet weak var avatarWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var stackViewWidthConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var showScopeDetailViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showScopePreviewViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var showScopeConfirmationViewConstraint: NSLayoutConstraint!
     
     private var dataSource: AuthorizationScopeDataSource!
@@ -45,8 +43,8 @@ class AuthorizationWindow: BottomSheetView {
         avatarImageView.setImage(app: authInfo.app)
         setupLabels()
         dataSource = AuthorizationScopeDataSource(response: authInfo)
-        scopeDetailView.delegate = self
-        scopeDetailView.render(dataSource: dataSource)
+        scopePreviewView.delegate = self
+        scopePreviewView.dataSource = dataSource
         return self
     }
     
@@ -76,17 +74,18 @@ class AuthorizationWindow: BottomSheetView {
     
 }
 
-extension AuthorizationWindow: AuthorizationScopeDetailViewDelegate {
+extension AuthorizationWindow: AuthorizationScopePreviewViewDelegate {
     
-    func authorizationScopeDetailViewDidReviewScopes(_ controller: AuthorizationScopeDetailView) {
+    func authorizationScopePreviewViewDidReviewScopes(_ controller: AuthorizationScopePreviewView) {
         switch TIP.status {
         case .ready, .needsMigrate:
+            scopeConfirmationView.dataSource = dataSource
             scopeConfirmationView.delegate = self
-            scopeConfirmationView.render(dataSource: dataSource)
-            showScopeDetailViewConstraint.priority = .defaultLow
+            scopeConfirmationView.resetInput()
+            showScopePreviewViewConstraint.priority = .defaultLow
             showScopeConfirmationViewConstraint.priority = .defaultHigh
             UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                self.scopeDetailView.isHidden = true
+                self.scopePreviewView.isHidden = true
                 self.scopeConfirmationView.isHidden = false
             })
         case .needsInitialize:
@@ -104,8 +103,9 @@ extension AuthorizationWindow: AuthorizationScopeDetailViewDelegate {
 
 extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
     
-    func authorizationScopeConfirmationView(_ view: AuthorizationScopeConfirmationView, validate pin: String) {
-        let scopes = dataSource.selectedScopes.map(\.rawValue)
+    func authorizationScopeConfirmationView(_ view: AuthorizationScopeConfirmationView, didConfirmWith pin: String) {
+        let scopes = dataSource.confirmedScopes.map(\.rawValue)
+        Logger.general.debug(category: "Authorization", message: "Will authorize scopes: \(scopes)")
         AuthorizeAPI.authorize(authorizationId: authInfo.authorizationId, scopes: scopes, pin: pin) { [weak self] result in
             guard let self = self else {
                 return

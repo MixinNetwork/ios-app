@@ -94,7 +94,7 @@
                                 <constraint firstAttribute="width" constant="275" id="JhC-TF-mdA"/>
                             </constraints>
                         </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8gQ-MM-YrK" customClass="AuthorizationScopeDetailView" customModule="Mixin" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8gQ-MM-YrK" customClass="AuthorizationScopePreviewView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="131.5" width="414" height="525"/>
                             <color key="backgroundColor" name="background"/>
                             <constraints>
@@ -194,9 +194,9 @@
                 <outlet property="nameLabel" destination="a1w-fq-L4p" id="P0R-O6-s1Z"/>
                 <outlet property="popupView" destination="rph-I6-ZA7" id="tFj-71-DwN"/>
                 <outlet property="scopeConfirmationView" destination="g6z-m3-tTk" id="s9W-yb-Lp3"/>
-                <outlet property="scopeDetailView" destination="8gQ-MM-YrK" id="wZa-4g-mpz"/>
+                <outlet property="scopePreviewView" destination="8gQ-MM-YrK" id="wZa-4g-mpz"/>
                 <outlet property="showScopeConfirmationViewConstraint" destination="KcS-8b-8Tn" id="AtZ-Vb-Dru"/>
-                <outlet property="showScopeDetailViewConstraint" destination="aJT-Cc-w4z" id="qNq-33-nKa"/>
+                <outlet property="showScopePreviewViewConstraint" destination="aJT-Cc-w4z" id="qNq-33-nKa"/>
                 <outlet property="stackView" destination="WNn-OT-775" id="e6v-lH-deA"/>
                 <outlet property="stackViewWidthConstraint" destination="JhC-TF-mdA" id="8SH-QT-IiN"/>
             </connections>

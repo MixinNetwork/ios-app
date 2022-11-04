@@ -577,13 +577,13 @@
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
 		7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */; };
-		7C53049528FE6DDE00567CF6 /* AuthorizationScopeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049428FE6DDE00567CF6 /* AuthorizationScopeDetailView.swift */; };
-		7C53049728FE6F4400567CF6 /* AuthorizationScopeDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049628FE6F4400567CF6 /* AuthorizationScopeDetailView.xib */; };
-		7C53049A28FE753400567CF6 /* AuthorizationScopeDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049828FE753400567CF6 /* AuthorizationScopeDetailCell.swift */; };
-		7C53049B28FE753400567CF6 /* AuthorizationScopeDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049928FE753400567CF6 /* AuthorizationScopeDetailCell.xib */; };
+		7C53049528FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049428FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift */; };
+		7C53049728FE6F4400567CF6 /* AuthorizationScopePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049628FE6F4400567CF6 /* AuthorizationScopePreviewView.xib */; };
+		7C53049A28FE753400567CF6 /* AuthorizationScopeGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049828FE753400567CF6 /* AuthorizationScopeGroupCell.swift */; };
+		7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049928FE753400567CF6 /* AuthorizationScopeGroupCell.xib */; };
 		7C53049D28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */; };
 		7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */; };
-		7C5304A129014F6800567CF6 /* AuthorizationScopesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A029014F6800567CF6 /* AuthorizationScopesView.swift */; };
+		7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */; };
 		7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
@@ -1597,13 +1597,13 @@
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
 		7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageManager.swift; sourceTree = "<group>"; };
-		7C53049428FE6DDE00567CF6 /* AuthorizationScopeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeDetailView.swift; sourceTree = "<group>"; };
-		7C53049628FE6F4400567CF6 /* AuthorizationScopeDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeDetailView.xib; sourceTree = "<group>"; };
-		7C53049828FE753400567CF6 /* AuthorizationScopeDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeDetailCell.swift; sourceTree = "<group>"; };
-		7C53049928FE753400567CF6 /* AuthorizationScopeDetailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeDetailCell.xib; sourceTree = "<group>"; };
+		7C53049428FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopePreviewView.swift; sourceTree = "<group>"; };
+		7C53049628FE6F4400567CF6 /* AuthorizationScopePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopePreviewView.xib; sourceTree = "<group>"; };
+		7C53049828FE753400567CF6 /* AuthorizationScopeGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeGroupCell.swift; sourceTree = "<group>"; };
+		7C53049928FE753400567CF6 /* AuthorizationScopeGroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeGroupCell.xib; sourceTree = "<group>"; };
 		7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeConfirmationView.swift; sourceTree = "<group>"; };
 		7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeConfirmationView.xib; sourceTree = "<group>"; };
-		7C5304A029014F6800567CF6 /* AuthorizationScopesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopesView.swift; sourceTree = "<group>"; };
+		7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopesTableView.swift; sourceTree = "<group>"; };
 		7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeDataSource.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
@@ -3015,9 +3015,9 @@
 		DF53BB6620233647002BF028 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7C5304A029014F6800567CF6 /* AuthorizationScopesView.swift */,
-				7C53049428FE6DDE00567CF6 /* AuthorizationScopeDetailView.swift */,
-				7C53049628FE6F4400567CF6 /* AuthorizationScopeDetailView.xib */,
+				7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */,
+				7C53049428FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift */,
+				7C53049628FE6F4400567CF6 /* AuthorizationScopePreviewView.xib */,
 				7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */,
 				7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */,
 				7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */,
@@ -3038,8 +3038,8 @@
 				DF846CDE2369551D00AA1197 /* MultisigUserCell.xib */,
 				DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */,
 				DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */,
-				7C53049828FE753400567CF6 /* AuthorizationScopeDetailCell.swift */,
-				7C53049928FE753400567CF6 /* AuthorizationScopeDetailCell.xib */,
+				7C53049828FE753400567CF6 /* AuthorizationScopeGroupCell.swift */,
+				7C53049928FE753400567CF6 /* AuthorizationScopeGroupCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4047,7 +4047,7 @@
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
-				7C53049728FE6F4400567CF6 /* AuthorizationScopeDetailView.xib in Resources */,
+				7C53049728FE6F4400567CF6 /* AuthorizationScopePreviewView.xib in Resources */,
 				7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
 				DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */,
@@ -4091,7 +4091,7 @@
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */,
-				7C53049B28FE753400567CF6 /* AuthorizationScopeDetailCell.xib in Resources */,
+				7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */,
 				E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4581,7 +4581,7 @@
 				945AA6582567B18200B39415 /* Country.swift in Sources */,
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
-				7C5304A129014F6800567CF6 /* AuthorizationScopesView.swift in Sources */,
+				7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */,
 				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
@@ -4761,7 +4761,7 @@
 				944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */,
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				7C4C03A828532D2F003DE0C0 /* PhoneContactCell.swift in Sources */,
-				7C53049528FE6DDE00567CF6 /* AuthorizationScopeDetailView.swift in Sources */,
+				7C53049528FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift in Sources */,
 				7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */,
 				7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */,
 				7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */,
@@ -4965,7 +4965,7 @@
 				DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
-				7C53049A28FE753400567CF6 /* AuthorizationScopeDetailCell.swift in Sources */,
+				7C53049A28FE753400567CF6 /* AuthorizationScopeGroupCell.swift in Sources */,
 				7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,
 				7C0FAAC527E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift in Sources */,

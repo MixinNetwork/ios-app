@@ -8,10 +8,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AuthorizationScopeDetailView" customModule="Mixin" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AuthorizationScopePreviewView" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="lvm-Iq-sjs" id="Mpe-gY-EXq"/>
-                <outlet property="collectionViewHeightConstraint" destination="v94-zl-qOZ" id="DgN-08-2OG"/>
                 <outlet property="layout" destination="JJ4-4d-ZfB" id="TDa-I0-HEh"/>
                 <outlet property="pageControl" destination="9AA-Ez-dmN" id="Jwf-qB-R5u"/>
             </connections>
@@ -22,20 +21,8 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="lvm-Iq-sjs">
-                    <rect key="frame" x="0.0" y="0.0" width="390" height="438"/>
+                    <rect key="frame" x="0.0" y="0.0" width="390" height="450"/>
                     <color key="backgroundColor" name="background"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="438" id="v94-zl-qOZ" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
-                                    <real key="value" value="438"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
-                                    <real key="value" value="400"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                    </constraints>
                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="64" minimumInteritemSpacing="0.0" id="JJ4-4d-ZfB" customClass="SnapCenterFlowLayout" customModule="Mixin" customModuleProvider="target">
                         <size key="itemSize" width="230" height="258"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -76,6 +63,7 @@
                 <constraint firstItem="gXl-8a-uuU" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="OGO-fz-761"/>
                 <constraint firstItem="9AA-Ez-dmN" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="QcQ-Sk-Rsb"/>
                 <constraint firstAttribute="trailing" secondItem="lvm-Iq-sjs" secondAttribute="trailing" id="SjZ-nw-MKP"/>
+                <constraint firstItem="9AA-Ez-dmN" firstAttribute="top" secondItem="lvm-Iq-sjs" secondAttribute="bottom" constant="22" id="YuT-FH-nuS"/>
                 <constraint firstItem="lvm-Iq-sjs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ZxD-Rw-ADP"/>
                 <constraint firstItem="lvm-Iq-sjs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="gs3-cS-1n4"/>
                 <constraint firstItem="gXl-8a-uuU" firstAttribute="top" secondItem="9AA-Ez-dmN" secondAttribute="bottom" constant="22" id="v73-8x-Z9s"/>

@@ -59,7 +59,7 @@
             <color key="backgroundColor" name="background_input"/>
             <connections>
                 <outlet property="checkmarkView" destination="zeM-fe-8RW" id="Uk5-ax-jIs"/>
-                <outlet property="descLabel" destination="Wcb-1b-HZg" id="xJl-44-QOh"/>
+                <outlet property="descriptionLabel" destination="Wcb-1b-HZg" id="xJl-44-QOh"/>
                 <outlet property="titleLabel" destination="Cw4-vf-0RO" id="Fbi-bu-7jV"/>
             </connections>
             <point key="canvasLocation" x="-50.399999999999999" y="90.854572713643179"/>
@@ -67,7 +67,7 @@
     </objects>
     <resources>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -35,6 +35,10 @@ class AuthorizationScopeDataSource {
         self.confirmedScopes = Set(scopesInGroupOrder)
     }
     
+    func startConfirmation() {
+        confirmedScopes = Set(pendingConfirmationScopes)
+    }
+    
     func isScope(_ scope: AuthorizationScope, selectedBy modifier: Modifier) -> Bool {
         switch modifier {
         case .preview:

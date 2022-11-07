@@ -15,7 +15,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rph-I6-ZA7" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rph-I6-ZA7" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="205.5" width="414" height="690.5"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1RF-kj-XBd">
@@ -171,11 +171,6 @@
                         <constraint firstItem="8gQ-MM-YrK" firstAttribute="top" secondItem="WNn-OT-775" secondAttribute="bottom" constant="16" id="p1y-GO-AHC"/>
                         <constraint firstItem="1RF-kj-XBd" firstAttribute="leading" secondItem="rph-I6-ZA7" secondAttribute="leading" id="uMI-E7-6Gb"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="13"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="hQj-XO-iMW"/>

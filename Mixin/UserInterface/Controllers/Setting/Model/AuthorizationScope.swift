@@ -5,19 +5,19 @@ enum AuthorizationScope: String {
     
     enum Group: CaseIterable {
         
-        case circle
-        case bot
         case wallet
+        case bot
+        case circle
         case other
         
         var icon: UIImage {
             switch self {
-            case .circle:
-                return R.image.web.ic_authorization_circle()!
-            case .bot:
-                return R.image.web.ic_authorization_bot()!
             case .wallet:
                 return R.image.web.ic_authorization_wallet()!
+            case .bot:
+                return R.image.web.ic_authorization_bot()!
+            case .circle:
+                return R.image.web.ic_authorization_circle()!
             case .other:
                 return R.image.web.ic_authorization_other()!
             }
@@ -25,12 +25,12 @@ enum AuthorizationScope: String {
         
         var title: String {
             switch self {
-            case .circle:
-                return R.string.localizable.circles()
-            case .bot:
-                return R.string.localizable.bots()
             case .wallet:
                 return R.string.localizable.wallet()
+            case .bot:
+                return R.string.localizable.bots()
+            case .circle:
+                return R.string.localizable.circles()
             case .other:
                 return R.string.localizable.others()
             }
@@ -38,12 +38,12 @@ enum AuthorizationScope: String {
         
         var scopes: [AuthorizationScope] {
             switch self {
-            case .circle:
-                return [.readCircles, .writeCircles]
-            case .bot:
-                return [.readApps, .writeApps]
             case .wallet:
                 return [.readAssets, .readSnapshots, .readCollectibles]
+            case .bot:
+                return [.readApps, .writeApps]
+            case .circle:
+                return [.readCircles, .writeCircles]
             case .other:
                 return [.readProfile, .readPhone, .readContacts, .representMessages]
             }
@@ -62,7 +62,7 @@ enum AuthorizationScope: String {
     case readCircles = "CIRCLES:READ"
     case writeCircles = "CIRCLES:WRITE"
     case readCollectibles = "COLLECTIBLES:READ"
-        
+    
     var title: String {
         switch self {
         case .readProfile:

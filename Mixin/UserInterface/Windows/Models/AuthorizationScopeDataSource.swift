@@ -35,10 +35,6 @@ class AuthorizationScopeDataSource {
         self.confirmedScopes = Set(scopesInGroupOrder)
     }
     
-    func startConfirmation() {
-        confirmedScopes = Set(pendingConfirmationScopes)
-    }
-    
     func isScope(_ scope: AuthorizationScope, selectedBy modifier: Modifier) -> Bool {
         switch modifier {
         case .preview:
@@ -49,18 +45,14 @@ class AuthorizationScopeDataSource {
     }
     
     func select(scope: AuthorizationScope, by modifier: Modifier) {
-        switch modifier {
-        case .preview:
-            if !pendingConfirmationScopes.contains(scope) {
-                var selectedScopes = Set(pendingConfirmationScopes)
-                selectedScopes.insert(scope)
-                pendingConfirmationScopes = self.scopes.flatMap { scopes in
-                    scopes.filter(selectedScopes.contains)
-                }
+        if modifier == .preview, !pendingConfirmationScopes.contains(scope) {
+            var selectedScopes = Set(pendingConfirmationScopes)
+            selectedScopes.insert(scope)
+            pendingConfirmationScopes = self.scopes.flatMap { scopes in
+                scopes.filter(selectedScopes.contains)
             }
-        case .confirmation:
-            confirmedScopes.insert(scope)
         }
+        confirmedScopes.insert(scope)
     }
     
     // Return false if the scope cannot be deselected
@@ -68,14 +60,10 @@ class AuthorizationScopeDataSource {
         if arbitraryScopes.contains(scope) {
             return false
         } else {
-            switch modifier {
-            case .preview:
-                if let index = pendingConfirmationScopes.firstIndex(of: scope) {
-                    pendingConfirmationScopes.remove(at: index)
-                }
-            case .confirmation:
-                confirmedScopes.remove(scope)
+            if modifier == .preview, let index = pendingConfirmationScopes.firstIndex(of: scope) {
+                pendingConfirmationScopes.remove(at: index)
             }
+            confirmedScopes.remove(scope)
             return true
         }
     }

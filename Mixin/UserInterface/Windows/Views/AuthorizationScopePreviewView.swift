@@ -41,7 +41,6 @@ class AuthorizationScopePreviewView: UIView, XibDesignable {
         let nextPage = pageControl.currentPage + 1
         if nextPage == dataSource.groups.count {
             Logger.general.debug(category: "Authorization", message: "Will confirm scopes: \(dataSource.pendingConfirmationScopes.map(\.rawValue))")
-            dataSource.startConfirmation()
             delegate?.authorizationScopePreviewViewDidReviewScopes(self)
         } else {
             let offset = CGPoint(x: CGFloat(nextPage) * collectionView.frame.width, y: 0)

@@ -14,7 +14,7 @@ enum AuthorizationScope: String {
         var icon: UIImage {
             switch self {
             case .profile:
-                return R.image.web.ic_authorization_other()!
+                return R.image.web.ic_authorization_profile()!
             case .wallet:
                 return R.image.web.ic_authorization_wallet()!
             case .bot:

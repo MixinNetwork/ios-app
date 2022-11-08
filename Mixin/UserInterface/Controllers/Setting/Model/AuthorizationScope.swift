@@ -5,47 +5,54 @@ enum AuthorizationScope: String {
     
     enum Group: CaseIterable {
         
+        case profile
         case wallet
         case bot
+        case message
         case circle
-        case other
         
         var icon: UIImage {
             switch self {
+            case .profile:
+                return R.image.web.ic_authorization_other()!
             case .wallet:
                 return R.image.web.ic_authorization_wallet()!
             case .bot:
                 return R.image.web.ic_authorization_bot()!
+            case .message:
+                return R.image.web.ic_authorization_message()!
             case .circle:
                 return R.image.web.ic_authorization_circle()!
-            case .other:
-                return R.image.web.ic_authorization_other()!
             }
         }
         
         var title: String {
             switch self {
+            case .profile:
+                return R.string.localizable.profile()
             case .wallet:
                 return R.string.localizable.wallet()
             case .bot:
                 return R.string.localizable.bots()
+            case .message:
+                return R.string.localizable.messages()
             case .circle:
                 return R.string.localizable.circles()
-            case .other:
-                return R.string.localizable.others()
             }
         }
         
         var scopes: [AuthorizationScope] {
             switch self {
+            case .profile:
+                return [.readProfile, .readPhone, .readContacts]
             case .wallet:
                 return [.readAssets, .readSnapshots, .readCollectibles]
             case .bot:
                 return [.readApps, .writeApps]
+            case .message:
+                return [.representMessages]
             case .circle:
                 return [.readCircles, .writeCircles]
-            case .other:
-                return [.readProfile, .readPhone, .readContacts, .representMessages]
             }
         }
         

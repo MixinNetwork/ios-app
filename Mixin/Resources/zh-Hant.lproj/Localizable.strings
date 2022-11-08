@@ -578,7 +578,6 @@
 "optimize_database" = "最佳化查詢索引";
 "optimized" = "已最佳化";
 "other" = "其他";
-"others" = "其他";
 "owner" = "群主";
 "participants" = "成員";
 "participants_count" = "%@ 位群組成員";

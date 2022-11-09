@@ -679,7 +679,7 @@
 "report" = "Report";
 "report_and_block" = "Report and block?";
 "report_title" = "Send the conversation log to developers?";
-"represent_send_messages " = "Represent send messages";
+"represent_send_messages" = "Represent send messages";
 "request_authorization" = "Request Authorization";
 "resend_code" = "Resend code";
 "resend_code_pending" = "Resend code in %@";

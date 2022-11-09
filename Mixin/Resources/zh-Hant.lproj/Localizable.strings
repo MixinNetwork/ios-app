@@ -679,7 +679,7 @@
 "report" = "舉報";
 "report_and_block" = "舉報並封鎖？";
 "report_title" = "給開發人員傳送聊天日誌？";
-"represent_send_messages " = "代表你發訊息";
+"represent_send_messages" = "代表你發訊息";
 "request_authorization" = "請求授權";
 "resend_code" = "重發驗證碼";
 "resend_code_pending" = "%@ 後重新發送驗證碼";

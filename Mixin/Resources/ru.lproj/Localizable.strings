@@ -679,7 +679,7 @@
 "report" = "Отчет";
 "report_and_block" = "Пожаловаться и заблокировать?";
 "report_title" = "Отправить журнал бесед разработчикам?";
-"represent_send_messages " = "Represent send messages";
+"represent_send_messages" = "Represent send messages";
 "request_authorization" = "Request Authorization";
 "resend_code" = "Отправить код еще раз";
 "resend_code_pending" = "Повторно отправить код в %@";

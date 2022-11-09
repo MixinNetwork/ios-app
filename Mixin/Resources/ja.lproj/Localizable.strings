@@ -679,7 +679,7 @@
 "report" = "報告";
 "report_and_block" = "報告してブロックしますか?";
 "report_title" = "Mixinの開発者へ会話記録を送信しますか?";
-"represent_send_messages " = "Represent send messages";
+"represent_send_messages" = "Represent send messages";
 "request_authorization" = "Request Authorization";
 "resend_code" = "コードを再送する";
 "resend_code_pending" = "%@ 後にコードを再送";

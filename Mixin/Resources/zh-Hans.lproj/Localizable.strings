@@ -482,8 +482,8 @@
 "lost_your_mobile_number" = "手机丢失？";
 "make_group_admin" = "设定为群组管理员";
 "manage" = "管理";
-"manage_your_apps" = "管理你的所有的机器人";
-"manage_your_circles" = "管理你的所有的圈子";
+"manage_your_apps" = "管理你所有的机器人";
+"manage_your_circles" = "管理你所有的圈子";
 "media" = "媒体";
 "memo" = "备注";
 "message_e2ee" = "此对话中的消息使用端对端加密。点击了解更多。";

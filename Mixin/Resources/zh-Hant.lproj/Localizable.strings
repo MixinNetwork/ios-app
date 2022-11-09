@@ -482,8 +482,8 @@
 "lost_your_mobile_number" = "手機丟失？";
 "make_group_admin" = "設定為群組管理員";
 "manage" = "管理";
-"manage_your_apps" = "管理你的所有的機器人";
-"manage_your_circles" = "管理你的所有的圈子";
+"manage_your_apps" = "管理你所有的機器人";
+"manage_your_circles" = "管理你所有的圈子";
 "media" = "媒體";
 "memo" = "備註";
 "message_e2ee" = "此對話中的訊息使用端對端加密。點選瞭解更多。";

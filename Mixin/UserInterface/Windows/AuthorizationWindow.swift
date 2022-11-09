@@ -104,7 +104,7 @@ extension AuthorizationWindow: AuthorizationScopePreviewViewDelegate {
 extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
     
     func authorizationScopeConfirmationView(_ view: AuthorizationScopeConfirmationView, didConfirmWith pin: String) {
-        let scopes = dataSource.confirmedScopes.map(\.rawValue)
+        let scopes = dataSource.selectedScopes.map(\.rawValue)
         Logger.general.debug(category: "Authorization", message: "Will authorize scopes: \(scopes)")
         AuthorizeAPI.authorize(authorizationId: authInfo.authorizationId, scopes: scopes, pin: pin) { [weak self] result in
             guard let self = self else {

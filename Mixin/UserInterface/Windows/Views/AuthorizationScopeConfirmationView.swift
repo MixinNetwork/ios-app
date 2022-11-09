@@ -66,7 +66,7 @@ class AuthorizationScopeConfirmationView: UIView, XibDesignable {
 extension AuthorizationScopeConfirmationView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        dataSource?.pendingConfirmationScopes.count ?? 0
+        dataSource?.scopes.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -74,12 +74,12 @@ extension AuthorizationScopeConfirmationView: UITableViewDataSource {
         guard let dataSource else {
             return cell
         }
-        let scope = dataSource.pendingConfirmationScopes[indexPath.row]
+        let scope = dataSource.scopes[indexPath.row]
         cell.titleLabel.text = scope.title
         cell.descriptionLabel.text = scope.description
         if dataSource.arbitraryScopes.contains(scope) {
             cell.checkmarkView.status = .nonSelectable
-        } else if dataSource.confirmedScopes.contains(scope) {
+        } else if dataSource.selectedScopes.contains(scope) {
             cell.checkmarkView.status = .selected
         } else {
             cell.checkmarkView.status = .deselected
@@ -96,14 +96,14 @@ extension AuthorizationScopeConfirmationView: UITableViewDelegate {
             return
         }
         tableView.deselectRow(at: indexPath, animated: false)
-        let scope = dataSource.pendingConfirmationScopes[indexPath.row]
-        let wasSelected = dataSource.isScope(scope, selectedBy: .confirmation)
+        let scope = dataSource.scopes[indexPath.row]
+        let wasSelected = dataSource.selectedScopes.contains(scope)
         if wasSelected {
-            if dataSource.deselect(scope: scope, by: .confirmation) {
+            if dataSource.deselect(scope: scope) {
                 cell.checkmarkView.status = .deselected
             }
         } else {
-            dataSource.select(scope: scope, by: .confirmation)
+            dataSource.select(scope: scope)
             cell.checkmarkView.status = .selected
         }
     }

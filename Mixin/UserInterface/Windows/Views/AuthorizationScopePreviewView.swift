@@ -40,7 +40,7 @@ class AuthorizationScopePreviewView: UIView, XibDesignable {
         }
         let nextPage = pageControl.currentPage + 1
         if nextPage == dataSource.groups.count {
-            Logger.general.debug(category: "Authorization", message: "Will confirm scopes: \(dataSource.pendingConfirmationScopes.map(\.rawValue))")
+            Logger.general.debug(category: "Authorization", message: "Will confirm scopes: \(dataSource.selectedScopes.map(\.rawValue))")
             delegate?.authorizationScopePreviewViewDidReviewScopes(self)
         } else {
             let offset = CGPoint(x: CGFloat(nextPage) * collectionView.frame.width, y: 0)
@@ -73,6 +73,7 @@ extension AuthorizationScopePreviewView: UICollectionViewDataSource {
         scopesTableViewIndices[cell.tableView] = indexPath.item
         cell.tableView.dataSource = self
         cell.tableView.delegate = self
+        cell.tableView.reloadData()
         let maxHeight: CGFloat
         switch ScreenHeight.current {
         case .short, .medium:
@@ -117,18 +118,18 @@ extension AuthorizationScopePreviewView: UITableViewDataSource {
         guard let groupIndex = scopesTableViewIndices[tableView] else {
             return 0
         }
-        return dataSource?.scopes[groupIndex].count ?? 0
+        return dataSource?.groupedScopes[groupIndex].count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.authorization_scope_list, for: indexPath)!
         if let dataSource, let groupIndex = scopesTableViewIndices[tableView] {
-            let scope = dataSource.scopes[groupIndex][indexPath.row]
+            let scope = dataSource.groupedScopes[groupIndex][indexPath.row]
             cell.titleLabel.text = scope.title
             cell.descriptionLabel.text = scope.description
             if dataSource.arbitraryScopes.contains(scope) {
                 cell.checkmarkView.status = .nonSelectable
-            } else if dataSource.pendingConfirmationScopes.contains(scope) {
+            } else if dataSource.selectedScopes.contains(scope) {
                 cell.checkmarkView.status = .selected
             } else {
                 cell.checkmarkView.status = .deselected
@@ -149,14 +150,14 @@ extension AuthorizationScopePreviewView: UITableViewDelegate {
             return
         }
         tableView.deselectRow(at: indexPath, animated: false)
-        let scope = dataSource.scopes[groupIndex][indexPath.row]
-        let wasSelected = dataSource.isScope(scope, selectedBy: .preview)
+        let scope = dataSource.groupedScopes[groupIndex][indexPath.row]
+        let wasSelected = dataSource.selectedScopes.contains(scope)
         if wasSelected {
-            if dataSource.deselect(scope: scope, by: .preview) {
+            if dataSource.deselect(scope: scope) {
                 cell.checkmarkView.status = .deselected
             }
         } else {
-            dataSource.select(scope: scope, by: .preview)
+            dataSource.select(scope: scope)
             cell.checkmarkView.status = .selected
         }
     }

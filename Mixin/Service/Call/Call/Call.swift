@@ -68,10 +68,10 @@ class Call: NSObject {
         fatalError("")
     }
     
-    var localizedState: String? {
+    var localizedState: String {
         switch state {
         case .connected:
-            return formattedConnectionDuration
+            return formattedConnectionDuration ?? state.localizedDescription
         default:
             return state.localizedDescription
         }

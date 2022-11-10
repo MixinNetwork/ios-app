@@ -1152,7 +1152,7 @@ extension CallService {
         if let call = call(with: uuid) as? GroupCall {
             return call
         } else {
-            Logger.call.error(category: "CallService", message: "Inconsistent group call with cid: \(conversationId), uuid: \(uuid)")
+            Logger.call.warn(category: "CallService", message: "No group call with cid: \(conversationId), uuid: \(uuid)")
             return nil
         }
     }

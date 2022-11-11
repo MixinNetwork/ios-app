@@ -107,7 +107,7 @@ final class PermissionsViewController: UIViewController {
         let accessedDate = DateFormatter.dateFull.string(from: response.accessedAt.toUTCDate())
         
         app = response.app
-        scopes = response.scopes.compactMap(AuthorizationScope.init(rawValue:))
+        scopes = AuthorizationScopeDataSource(response: response).scopes
         dateDescription = R.string.localizable.setting_auth_access(createDate, accessedDate)
         isDataLoaded = true
         tableView.reloadData()

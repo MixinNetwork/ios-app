@@ -84,10 +84,12 @@ extension AuthorizationWindow: AuthorizationScopePreviewViewDelegate {
             scopeConfirmationView.resetInput()
             showScopePreviewViewConstraint.priority = .defaultLow
             showScopeConfirmationViewConstraint.priority = .defaultHigh
-            UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) {
                 self.scopePreviewView.isHidden = true
                 self.scopeConfirmationView.isHidden = false
-            })
+            } completion: { _ in
+                self.scopeConfirmationView.tableView.flashScrollIndicators()
+            }
         case .needsInitialize:
             guard let navigationController = UIApplication.homeNavigationController else {
                 return

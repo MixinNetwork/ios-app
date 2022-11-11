@@ -72,6 +72,10 @@ enum TIPBody {
         try hashData("TIP:TRANSACTION:CREATE:", assetID, opponentKey, opponentReceivers.joined(), String(opponentThreshold), amount, traceID, memo)
     }
     
+    static func authorizeRequest(authorizationId: String) throws -> Data {
+        try hashData("TIP:OAUTH:APPROVE:", authorizationId)
+    }
+    
     @inline(__always)
     private static func hashData(_ arguments: String?...) throws -> Data {
         let string = arguments.compactMap({ $0 }).joined()

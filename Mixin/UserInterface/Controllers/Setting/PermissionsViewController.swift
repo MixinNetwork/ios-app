@@ -20,7 +20,7 @@ final class PermissionsViewController: UIViewController {
     
     private var isDataLoaded = false
     private var app: App?
-    private var scopes = [(scope: Scope, name: String, desc: String)]()
+    private var scopes = [AuthorizationScope]()
     private var dateDescription: String?
     
     override func viewDidLoad() {
@@ -107,7 +107,7 @@ final class PermissionsViewController: UIViewController {
         let accessedDate = DateFormatter.dateFull.string(from: response.accessedAt.toUTCDate())
         
         app = response.app
-        scopes = Scope.getCompleteScopeInfo(authInfo: response).0
+        scopes = AuthorizationScopeDataSource(response: response).scopes
         dateDescription = R.string.localizable.setting_auth_access(createDate, accessedDate)
         isDataLoaded = true
         tableView.reloadData()
@@ -165,33 +165,16 @@ extension PermissionsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        func roundCornersIfNeeded(cell: UITableViewCell) {
-            let roundTop = indexPath.row == 0
-            let roundBottom = indexPath.section == 1 || indexPath.row == scopes.count - 1
-            var maskedCorners: CACornerMask = []
-            if roundTop {
-                maskedCorners.formUnion([.layerMinXMinYCorner, .layerMaxXMinYCorner])
-            }
-            if roundBottom {
-                maskedCorners.formUnion([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
-            }
-            cell.layer.maskedCorners = maskedCorners
-            cell.layer.cornerRadius = (roundTop || roundBottom) ? 10 : 0
-        }
-        
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permission, for: indexPath)!
             let scope = scopes[indexPath.row]
-            cell.render(name: scope.name, desc: scope.desc)
-            roundCornersIfNeeded(cell: cell)
+            cell.render(name: scope.title, desc: scope.description)
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permissions_action, for: indexPath)!
             cell.contentLabel.text = R.string.localizable.revoke_access()
             cell.contentLabel.textColor = R.color.red()
-            roundCornersIfNeeded(cell: cell)
             return cell
         }
     }

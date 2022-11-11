@@ -249,8 +249,7 @@ extension MixinWebViewController: WKNavigationDelegate {
                 switch result {
                 case let .success(code):
                     if let auth = code.authorization {
-                        let request = AuthorizationRequest(authorizationId: auth.authorizationId, scopes: [])
-                        AuthorizeAPI.authorize(authorization: request) { _ in }
+                        AuthorizeAPI.authorize(authorizationId: auth.authorizationId, scopes: [], pin: nil) { _ in }
                     }
                 case .failure:
                     break

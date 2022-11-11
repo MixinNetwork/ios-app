@@ -577,6 +577,14 @@
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
 		7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */; };
+		7C53049528FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049428FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift */; };
+		7C53049728FE6F4400567CF6 /* AuthorizationScopePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049628FE6F4400567CF6 /* AuthorizationScopePreviewView.xib */; };
+		7C53049A28FE753400567CF6 /* AuthorizationScopeGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049828FE753400567CF6 /* AuthorizationScopeGroupCell.swift */; };
+		7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049928FE753400567CF6 /* AuthorizationScopeGroupCell.xib */; };
+		7C53049D28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */; };
+		7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */; };
+		7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */; };
+		7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
@@ -754,7 +762,7 @@
 		ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */; };
 		ABCB87E023F1A56B00780E60 /* PermissionsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */; };
 		ABCB87E123F1A56B00780E60 /* PermissionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */; };
-		ABE865BE23F2455800C0167D /* Scope.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865BD23F2455800C0167D /* Scope.swift */; };
+		ABE865BE23F2455800C0167D /* AuthorizationScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865BD23F2455800C0167D /* AuthorizationScope.swift */; };
 		ABE865C123F260FE00C0167D /* PermissionsActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABE865BF23F260FE00C0167D /* PermissionsActionCell.xib */; };
 		ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */; };
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
@@ -895,7 +903,7 @@
 		DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */; };
 		DFE861BC2422673B009B1833 /* ShareRecipientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE861BB2422673B009B1833 /* ShareRecipientViewController.swift */; };
 		DFE861BF2422673B009B1833 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE861BD2422673B009B1833 /* MainInterface.storyboard */; };
-		DFE861C32422673B009B1833 /* MixinShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DFE861B92422673B009B1833 /* MixinShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DFE861C32422673B009B1833 /* MixinShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DFE861B92422673B009B1833 /* MixinShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DFE8629124227F91009B1833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE8629024227F91009B1833 /* Assets.xcassets */; };
 		DFE8635A242282D3009B1833 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE86359242282D3009B1833 /* R.generated.swift */; };
 		DFE864E624228753009B1833 /* RecipientCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE864E524228753009B1833 /* RecipientCell.swift */; };
@@ -935,7 +943,7 @@
 		E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */; };
 		E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */; };
 		E090B9FA23B3957E0088355B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E090B9F923B3957E0088355B /* NotificationService.swift */; };
-		E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E090B9F723B3957E0088355B /* MixinNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E090B9F723B3957E0088355B /* MixinNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */; };
 		E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EB72370057B0095F729 /* UserProfileViewController.swift */; };
 		E09C5EBD237007650095F729 /* ProfileDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E09C5EBB237007650095F729 /* ProfileDescriptionView.swift */; };
@@ -994,16 +1002,16 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E090B9FF23B3957E0088355B /* Embed App Extensions */ = {
+		E090B9FF23B3957E0088355B /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				DFE861C32422673B009B1833 /* MixinShare.appex in Embed App Extensions */,
-				E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed App Extensions */,
+				DFE861C32422673B009B1833 /* MixinShare.appex in Embed Foundation Extensions */,
+				E090B9FE23B3957E0088355B /* MixinNotificationService.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1589,6 +1597,14 @@
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
 		7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageManager.swift; sourceTree = "<group>"; };
+		7C53049428FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopePreviewView.swift; sourceTree = "<group>"; };
+		7C53049628FE6F4400567CF6 /* AuthorizationScopePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopePreviewView.xib; sourceTree = "<group>"; };
+		7C53049828FE753400567CF6 /* AuthorizationScopeGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeGroupCell.swift; sourceTree = "<group>"; };
+		7C53049928FE753400567CF6 /* AuthorizationScopeGroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeGroupCell.xib; sourceTree = "<group>"; };
+		7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeConfirmationView.swift; sourceTree = "<group>"; };
+		7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeConfirmationView.xib; sourceTree = "<group>"; };
+		7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopesTableView.swift; sourceTree = "<group>"; };
+		7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeDataSource.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
@@ -1770,7 +1786,7 @@
 		ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsViewController.swift; sourceTree = "<group>"; };
 		ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PermissionsTableViewCell.xib; sourceTree = "<group>"; };
 		ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsTableViewCell.swift; sourceTree = "<group>"; };
-		ABE865BD23F2455800C0167D /* Scope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scope.swift; sourceTree = "<group>"; };
+		ABE865BD23F2455800C0167D /* AuthorizationScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScope.swift; sourceTree = "<group>"; };
 		ABE865BF23F260FE00C0167D /* PermissionsActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PermissionsActionCell.xib; sourceTree = "<group>"; };
 		ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsActionCell.swift; sourceTree = "<group>"; };
 		BD555D0ADB2F0ED629DB90DA /* Pods-MixinDebug.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinDebug.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinDebug/Pods-MixinDebug.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2562,6 +2578,14 @@
 			path = ExpiredMessage;
 			sourceTree = "<group>";
 		};
+		7C5304A62902AA8000567CF6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		7C5823D326896601003AA142 /* Apps */ = {
 			isa = PBXGroup;
 			children = (
@@ -2877,7 +2901,7 @@
 		ABE865BC23F2453D00C0167D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				ABE865BD23F2455800C0167D /* Scope.swift */,
+				ABE865BD23F2455800C0167D /* AuthorizationScope.swift */,
 				7BEED06E244D457000F3A2B9 /* SettingsDataSource.swift */,
 				7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */,
 				7BB78727245136850057B4ED /* SettingsRadioSection.swift */,
@@ -2910,8 +2934,11 @@
 		DF016B2C2098B35F00B8FFDE /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				7C5304A62902AA8000567CF6 /* Models */,
 				DF53BB6D202362A9002BF028 /* Cells */,
 				DF53BB6620233647002BF028 /* Views */,
+				DF8A7520236301C500765A82 /* AuthorizationWindow.swift */,
+				DF8A7522236301DB00765A82 /* AuthorizationWindow.xib */,
 				DF43304422648B32006D971D /* AssetInfoWindow.swift */,
 				DF43304622648B4E006D971D /* AssetInfoWindow.xib */,
 				DF8CECD61FC2EE4200E40064 /* PayWindow.swift */,
@@ -2928,8 +2955,6 @@
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
 				DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */,
 				DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */,
-				DF8A7520236301C500765A82 /* AuthorizationWindow.swift */,
-				DF8A7522236301DB00765A82 /* AuthorizationWindow.xib */,
 				DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */,
 				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
 				DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */,
@@ -2990,6 +3015,11 @@
 		DF53BB6620233647002BF028 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */,
+				7C53049428FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift */,
+				7C53049628FE6F4400567CF6 /* AuthorizationScopePreviewView.xib */,
+				7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */,
+				7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */,
 				7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */,
 				DF2A0D962295734C00CA0280 /* AddressView.swift */,
 				DF2A0D942295721200CA0280 /* AddressView.xib */,
@@ -3004,10 +3034,12 @@
 		DF53BB6D202362A9002BF028 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */,
-				DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */,
 				DF846CDC2369550B00AA1197 /* MultisigUserCell.swift */,
 				DF846CDE2369551D00AA1197 /* MultisigUserCell.xib */,
+				DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */,
+				DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */,
+				7C53049828FE753400567CF6 /* AuthorizationScopeGroupCell.swift */,
+				7C53049928FE753400567CF6 /* AuthorizationScopeGroupCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3756,7 +3788,7 @@
 				F5646909209AA0566E934C2C /* [CP] Embed Pods Frameworks */,
 				273E29431FCBED580043A6F9 /* Embed Frameworks */,
 				DF1BD0B42292AF2900EBDC22 /* Crashlytics */,
-				E090B9FF23B3957E0088355B /* Embed App Extensions */,
+				E090B9FF23B3957E0088355B /* Embed Foundation Extensions */,
 				DF21616C24ECD0FE0087D7B0 /* Check Bundle */,
 			);
 			buildRules = (
@@ -3834,7 +3866,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1410;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
 					277FF6FE1F909A1200DBB2EB = {
@@ -3957,6 +3989,7 @@
 				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
+				7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
@@ -4014,6 +4047,7 @@
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
+				7C53049728FE6F4400567CF6 /* AuthorizationScopePreviewView.xib in Resources */,
 				7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
 				DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */,
@@ -4057,6 +4091,7 @@
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */,
+				7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */,
 				E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4148,7 +4183,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinNotificationService/R.generated.swift",
+				$SRCROOT/MixinNotificationService/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4270,7 +4305,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinShare/R.generated.swift",
+				$SRCROOT/MixinShare/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4290,7 +4325,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4530,6 +4565,7 @@
 				7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */,
 				DF06D91F222FAE1400FE7FBC /* TransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
+				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
@@ -4545,6 +4581,7 @@
 				945AA6582567B18200B39415 /* Country.swift in Sources */,
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
+				7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */,
 				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
@@ -4573,7 +4610,7 @@
 				7B2E56B2244EC44E0073102C /* PinSettingsViewController.swift in Sources */,
 				7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */,
 				7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */,
-				ABE865BE23F2455800C0167D /* Scope.swift in Sources */,
+				ABE865BE23F2455800C0167D /* AuthorizationScope.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
@@ -4605,6 +4642,7 @@
 				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
 				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
 				7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */,
+				7C53049D28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
 				7BD00F2625597229004D8814 /* WalletSearchTableViewController.swift in Sources */,
 				DFB6CE2123C485AB00FB6615 /* SendMessageService+Sending.swift in Sources */,
@@ -4723,6 +4761,7 @@
 				944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */,
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				7C4C03A828532D2F003DE0C0 /* PhoneContactCell.swift in Sources */,
+				7C53049528FE6DDE00567CF6 /* AuthorizationScopePreviewView.swift in Sources */,
 				7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */,
 				7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */,
 				7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */,
@@ -4926,6 +4965,7 @@
 				DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
+				7C53049A28FE753400567CF6 /* AuthorizationScopeGroupCell.swift in Sources */,
 				7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,
 				7C0FAAC527E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift in Sources */,

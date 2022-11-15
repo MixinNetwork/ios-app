@@ -245,6 +245,13 @@ class PayWindow: BottomSheetView {
             collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
             renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
             payLabel.text = R.string.localizable.pay_with_pin()
+            if !showError && showBiometric {
+                if biometryType == .faceID {
+                    biometricButton.setTitle(R.string.localizable.use_face_pay(), for: .normal)
+                } else {
+                    biometricButton.setTitle(R.string.localizable.use_touch_pay(), for: .normal)
+                }
+            }
         }
 
         dismissButton.isEnabled = true

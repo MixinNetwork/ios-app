@@ -90,7 +90,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 }
                 return
             }
-            AppGroupKeychain.sessionSecret = key.rfc8032Representation
+            AppGroupKeychain.sessionSecret = key.rawRepresentation
             AppGroupKeychain.pinToken = pinToken
             LoginManager.shared.setAccount(account, updateUserTable: false)
             if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {

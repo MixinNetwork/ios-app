@@ -55,9 +55,7 @@ enum Jwt {
         guard let dataToSign = headerAndPayload.data(using: .utf8) else {
             throw Error.building
         }
-        guard let signature = key.signature(for: dataToSign) else {
-            throw Error.sign(underlying: nil)
-        }
+        let signature = try key.signature(for: dataToSign)
         let base64EncodedSignature = signature.base64RawURLEncodedString()
         return headerAndPayload + "." + base64EncodedSignature
     }

@@ -35,7 +35,6 @@ Mixin Core Services.
   s.dependency 'SocketRocket'
   s.dependency 'GRDB.swift/SQLCipher'
   s.dependency 'SQLCipher', '~> 4.0'
-  s.dependency 'BoringSSL'
   s.dependency 'Sodium'
   s.dependency 'SignalArgon2'
 

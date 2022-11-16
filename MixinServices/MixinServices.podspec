@@ -36,7 +36,6 @@ Mixin Core Services.
   s.dependency 'GRDB.swift/SQLCipher'
   s.dependency 'SQLCipher', '~> 4.0'
   s.dependency 'Sodium'
-  s.dependency 'SignalArgon2'
 
   s.test_spec 'Tests' do |tests|
     tests.source_files = 'MixinServicesTests/**/*'

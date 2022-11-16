@@ -77,4 +77,8 @@ class DatabaseDiagnosticViewController: UIViewController {
         UIPasteboard.general.string = outputTextView.text
     }
     
+    @IBAction func cleanInput(_ sender: Any) {
+        inputTextView.text = ""
+        outputTextView.text = ""
+    }
 }

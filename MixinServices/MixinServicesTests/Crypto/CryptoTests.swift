@@ -14,7 +14,7 @@ class CryptoTests: XCTestCase {
     func testAESGCMCryptor() throws {
         let plain = "L".data(using: .utf8)!
         let key = Ed25519PrivateKey().rawRepresentation
-        let iv = Data(withNumberOfSecuredRandomBytes: 16)!
+        let iv = Data(withNumberOfSecuredRandomBytes: 12)!
         let encrypted = try AESGCMCryptor.encrypt(plain, with: key, iv: iv)
         let decrypted = try AESGCMCryptor.decrypt(encrypted, with: key, iv: iv)
         XCTAssertEqual(plain, decrypted)

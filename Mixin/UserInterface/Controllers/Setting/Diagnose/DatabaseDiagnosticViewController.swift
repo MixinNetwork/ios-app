@@ -40,7 +40,20 @@ class DatabaseDiagnosticViewController: UIViewController {
                 return TaskDatabase.current
             }
         }()
+        
+        func execute(_ db: GRDB.Database) throws -> String {
+            let startTime = CACurrentMediaTime()
+            var rows: [String] = []
+            let cursor = try Row.fetchCursor(db, sql: sql)
+            while let row = try cursor.next() {
+                rows.append(row.description)
+            }
+            let endTime = CACurrentMediaTime()
+            return "\(rows.count) rows in \(endTime - startTime)s\n\n" + rows.joined(separator: "\n")
+        }
+        
         queue.async {
+#if RELEASE
             let prefix = sql.prefix(6).uppercased()
             guard prefix == "SELECT" || prefix == "EXPLAI" else {
                 DispatchQueue.main.sync {
@@ -48,18 +61,14 @@ class DatabaseDiagnosticViewController: UIViewController {
                 }
                 return
             }
+#endif
             let output: String
             do {
-                output = try database.read { db in
-                    let startTime = CACurrentMediaTime()
-                    var rows: [String] = []
-                    let cursor = try Row.fetchCursor(db, sql: sql)
-                    while let row = try cursor.next() {
-                        rows.append(row.description)
-                    }
-                    let endTime = CACurrentMediaTime()
-                    return "\(rows.count) rows in \(endTime - startTime)s\n\n" + rows.joined(separator: "\n")
-                }
+#if DEBUG
+                output = try database.writeAndReturnError(execute(_:))
+#else
+                output = try database.read(execute(_:))
+#endif
             } catch {
                 output = "\(error)"
             }

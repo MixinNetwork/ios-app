@@ -15,6 +15,8 @@
                 <outlet property="databaseSwitcher" destination="7CO-9D-3sK" id="thY-RJ-n74"/>
                 <outlet property="inputTextView" destination="6Xy-6B-HGH" id="s2M-tX-yhJ"/>
                 <outlet property="outputTextView" destination="amz-rh-cDb" id="cHt-gn-7GE"/>
+                <outlet property="pasteButton" destination="UKN-un-OOw" id="leL-XC-5Yf"/>
+                <outlet property="runButton" destination="xuj-ng-kb2" id="0oh-N5-Ytg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

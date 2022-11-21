@@ -249,6 +249,7 @@ extension CallService: PKPushRegistryDelegate {
                 } else {
                     inviters = []
                 }
+                Logger.call.info(category: "CallService", message: "New group call from PushKit")
                 let call = GroupCall(conversation: conversation,
                                      isOutgoing: false,
                                      inviters: inviters,
@@ -600,6 +601,7 @@ extension CallService {
     
     func makeGroupCall(conversation: ConversationItem, invitees: [UserItem]) {
         assert(Thread.isMainThread)
+        Logger.call.info(category: "CallService", message: "New group call from user action")
         let call = GroupCall(conversation: conversation,
                              isOutgoing: true,
                              inviters: [],
@@ -1069,6 +1071,7 @@ extension CallService {
         } else {
             inviters = []
         }
+        Logger.call.info(category: "CallService", message: "New group call from WebSocket")
         let call = GroupCall(conversation: conversation,
                              isOutgoing: false,
                              inviters: inviters,
@@ -1152,7 +1155,7 @@ extension CallService {
         if let call = call(with: uuid) as? GroupCall {
             return call
         } else {
-            Logger.call.error(category: "CallService", message: "Inconsistent group call with cid: \(conversationId), uuid: \(uuid)")
+            Logger.call.warn(category: "CallService", message: "No group call with cid: \(conversationId), uuid: \(uuid)")
             return nil
         }
     }

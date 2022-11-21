@@ -8,12 +8,11 @@ class GroupCall: Call {
     enum Subscription: Equatable {
         
         case myself
-        case periodic
         case user(String)
         
         var userId: String {
             switch self {
-            case .myself, .periodic:
+            case .myself:
                 return myUserId
             case .user(let id):
                 return id
@@ -31,7 +30,6 @@ class GroupCall: Call {
     
     private let retryInterval: DispatchTimeInterval = .seconds(3)
     private let speakingStatusPollingInterval: TimeInterval = 0.6
-    private let periodicSubscriptionInterval: TimeInterval = 3
     private let messenger = KrakenMessageRetriever()
     
     private var frameKey: Data?
@@ -55,7 +53,6 @@ class GroupCall: Call {
     }
     
     private weak var speakingTimer: Timer?
-    private weak var periodicSubscriptionTimer: Timer?
     
     override var cxHandle: CXHandle {
         CXHandle(type: .generic, value: conversationId)
@@ -102,7 +99,6 @@ class GroupCall: Call {
                 for timer in self.inviteeTimers {
                     timer.invalidate()
                 }
-                self.periodicSubscriptionTimer?.invalidate()
                 self.rtcClient.close(permanently: true)
             }
             if side == .local {
@@ -414,7 +410,7 @@ extension GroupCall {
                                           conversationId: self.conversationId,
                                           trackId: self.trackId,
                                           action: .subscribe,
-                                          retryOnFailure: subscription != .periodic)
+                                          retryOnFailure: true)
             switch self.request(subscribe) {
             case let .success((_, sdp)) where sdp.type == .offer:
                 self.rtcClient.setRemoteSDP(sdp) { error in
@@ -448,9 +444,7 @@ extension GroupCall {
                     Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with \(error)")
                 default:
                     Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] subscribing result reports \(error)")
-                    if subscription != .periodic {
-                        self.end(reason: .failed, by: .local)
-                    }
+                    self.end(reason: .failed, by: .local)
                 }
             }
         }
@@ -567,17 +561,6 @@ extension GroupCall: WebRTCClientDelegate {
                 if self.connectedDate == nil {
                     self.connectedDate = Date()
                 }
-                self.periodicSubscriptionTimer?.invalidate()
-                let uuid = self.uuidString
-                self.periodicSubscriptionTimer = Timer.scheduledTimer(withTimeInterval: self.periodicSubscriptionInterval, repeats: true) { [weak self] timer in
-                    guard let self = self else {
-                        timer.invalidate()
-                        Logger.call.error(category: "GroupCall", message: "[\(uuid)] Periodic subscription fired without call")
-                        return
-                    }
-                    Logger.call.info(category: "GroupCall", message: "[\(uuid)] Periodic subscription fired")
-                    self.subscribe(to: .periodic)
-                }
             }
             self.internalState = .connected
         }
@@ -616,9 +599,6 @@ extension GroupCall: WebRTCClientDelegate {
             }
             Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Restarting call because ICE connection failed")
             self.internalState = .restarting
-            DispatchQueue.main.sync {
-                self.periodicSubscriptionTimer?.invalidate()
-            }
             self.connect(isRestarting: true) { error in
                 guard let error = error else {
                     return

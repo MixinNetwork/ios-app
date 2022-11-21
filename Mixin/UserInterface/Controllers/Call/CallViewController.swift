@@ -75,6 +75,11 @@ class CallViewController: ResizablePopupViewController {
     
     private var isShowingContentView = false
     
+    // Call signaling may take a while. In order to achieve best responsiveness, whenever user
+    // taps hang up button, this var will be set to true, thus any further state update of the
+    // call will be ignored, the interface will always be disconnecting.
+    private var isDisconnecting = false
+    
     private var membersCountFont: UIFont {
         let font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular)
         return UIFontMetrics.default.scaledFont(for: font)
@@ -250,6 +255,7 @@ class CallViewController: ResizablePopupViewController {
         self.call = call
         
         guard let call = call else {
+            isDisconnecting = false
             return
         }
         notificationCenter.addObserver(self,
@@ -260,6 +266,7 @@ class CallViewController: ResizablePopupViewController {
                                        selector: #selector(callStateDidChange(_:)),
                                        name: Call.stateDidChangeNotification,
                                        object: call)
+        isDisconnecting = call.state == .disconnecting
         if let call = call as? PeerCall {
             titleLabel.text = R.string.localizable.call()
             if let user = call.remoteUser {
@@ -283,7 +290,7 @@ class CallViewController: ResizablePopupViewController {
         view.setNeedsLayout()
         view.layoutIfNeeded()
         updateMembersCountLabel()
-        updateViews(call: call)
+        updateViews()
         muteSwitch.isSelected = call.isMuted
     }
     
@@ -341,7 +348,8 @@ class CallViewController: ResizablePopupViewController {
         guard let call = call else {
             return
         }
-        updateViews(call: call, overrideStateWith: .disconnecting) // Signaling may take a while, update views first
+        isDisconnecting = true
+        updateViews()
         service.requestEndCall(with: call.uuid)
     }
     
@@ -480,7 +488,7 @@ extension CallViewController {
         guard let call = (notification.object as? Call), call == self.call else {
             return
         }
-        updateViews(call: call)
+        updateViews()
         if let call = call as? GroupCall {
             if call.state == .connected {
                 call.beginSpeakingStatusPolling()
@@ -517,10 +525,7 @@ extension CallViewController {
         timer?.invalidate()
         if enabled {
             let timer = Timer(timeInterval: 1, repeats: true) { (_) in
-                guard let call = self.call else {
-                    return
-                }
-                self.updateStatusLabel(call: call)
+                self.updateStatusLabel()
             }
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer
@@ -542,15 +547,32 @@ extension CallViewController {
         }
     }
     
-    private func updateStatusLabel(call: Call, overrideStateWith overridingState: Call.State? = nil) {
-        statusLabel.text = overridingState?.localizedDescription ?? call.localizedState
+    private func updateStatusLabel() {
+        guard let call else {
+            return
+        }
+        if isDisconnecting {
+            statusLabel.text = Call.State.disconnecting.localizedDescription
+        } else {
+            statusLabel.text = call.localizedState
+        }
         trayView.layoutIfNeeded()
     }
     
-    private func updateViews(call: Call, overrideStateWith overridingState: Call.State? = nil) {
-        updateStatusLabel(call: call, overrideStateWith: overridingState)
+    private func updateViews() {
+        guard let call else {
+            return
+        }
+        updateStatusLabel()
+        if isDisconnecting {
+            updateStateViews(state: .disconnecting)
+        } else {
+            updateStateViews(state: call.state)
+        }
+    }
+    
+    private func updateStateViews(state: Call.State) {
         let animationDuration: TimeInterval = 0.3
-        let state = overridingState ?? call.state
         switch state {
         case .incoming:
             minimizeButton.isHidden = true

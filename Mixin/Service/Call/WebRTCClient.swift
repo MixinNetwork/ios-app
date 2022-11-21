@@ -249,7 +249,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
-        
+        Logger.call.info(category: "WebRTCClient", message: "PeerConnection: \(peerConnection) didAdd: \(stream.streamId)")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
@@ -292,16 +292,13 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd rtpReceiver: RTCRtpReceiver, streams mediaStreams: [RTCMediaStream]) {
-        let streamIds = mediaStreams
-            .map(\.streamId)
+        let rawStreamIDs = mediaStreams.map(\.streamId)
+        Logger.call.info(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) comes with streams: \(rawStreamIDs)")
+        let streamIds = rawStreamIDs
             .compactMap(StreamId.init(rawValue:))
             .filter({ $0.userId != myUserId })
         assert(streamIds.count <= 1)
-        if streamIds.count > 1 {
-            Logger.call.warn(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) comes with multiple streams: \(streamIds)")
-        }
         guard let id = streamIds.first else {
-            Logger.call.error(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) comes with empty stream")
             return
         }
         let frameKey = delegate?.webRTCClient(self, senderPublicKeyForUserWith: id.userId, sessionId: id.sessionId)

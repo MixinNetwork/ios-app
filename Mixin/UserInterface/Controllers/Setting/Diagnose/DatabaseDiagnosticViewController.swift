@@ -5,6 +5,8 @@ import MixinServices
 class DatabaseDiagnosticViewController: UIViewController {
     
     @IBOutlet weak var databaseSwitcher: UISegmentedControl!
+    @IBOutlet weak var runButton: UIButton!
+    @IBOutlet weak var pasteButton: UIButton!
     @IBOutlet weak var inputTextView: UITextView!
     @IBOutlet weak var outputTextView: UITextView!
     
@@ -29,6 +31,9 @@ class DatabaseDiagnosticViewController: UIViewController {
     
     @IBAction func run(_ sender: Any) {
         AppDelegate.current.mainWindow.endEditing(true)
+        runButton.isEnabled = false
+        runButton.setTitle("Executing", for: .normal)
+        pasteButton.isEnabled = false
         let sql = inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         let database: MixinServices.Database = {
             switch databaseSwitcher.selectedSegmentIndex {
@@ -73,6 +78,9 @@ class DatabaseDiagnosticViewController: UIViewController {
                 output = "\(error)"
             }
             DispatchQueue.main.sync {
+                self.runButton.isEnabled = true
+                self.runButton.setTitle("Run", for: .normal)
+                self.pasteButton.isEnabled = true
                 self.outputTextView.text = output
             }
         }

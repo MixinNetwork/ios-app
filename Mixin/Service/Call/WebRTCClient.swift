@@ -249,11 +249,17 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
-        Logger.call.info(category: "WebRTCClient", message: "PeerConnection: \(peerConnection) didAdd: \(stream.streamId)")
+        queue.async {
+            let receiver = self.rtpReceivers[stream.streamId].debugDescription
+            Logger.call.info(category: "WebRTCClient", message: "PeerConnection: \(peerConnection) didAdd: \(stream.streamId), receiver: \(receiver)")
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
-        
+        queue.async {
+            let receiver = self.rtpReceivers[stream.streamId].debugDescription
+            Logger.call.info(category: "WebRTCClient", message: "PeerConnection: \(peerConnection) didRemove: \(stream.streamId), receiver: \(receiver)")
+        }
     }
     
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
@@ -324,6 +330,18 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
             }
         }
         delegate?.webRTCClient(self, didAddReceiverWith: id, trackDisabled: disableTrack)
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove rtpReceiver: RTCRtpReceiver) {
+        queue.sync {
+            Logger.call.info(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) did remove")
+            self.rtpReceivers.filter { (_, value) in
+                value == rtpReceiver
+            }.forEach { (key, _) in
+                Logger.call.info(category: "WebRTCClient", message: "Removed receiver for: \(key)")
+                self.rtpReceivers.removeValue(forKey: key)
+            }
+        }
     }
     
 }

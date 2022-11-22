@@ -319,7 +319,7 @@ extension ShareRecipientViewController {
                                 return
                             }
                             let thumbnail = image.imageByScaling(to: CGSize(width: 48, height: 48)) ?? image
-                            weakSelf.sharePhotoMessage(thumbnail: thumbnail, imageData: data, size: image.size, conversation: conversation, typeIdentifier: inUTI)
+                            weakSelf.sharePhotoMessage(thumbnail: thumbnail, imageData: data, size: image.size * image.scale, conversation: conversation, typeIdentifier: inUTI)
                         } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
                             if let content = item as? String {
                                 weakSelf.shareTextMessage(content: content, conversation: conversation)

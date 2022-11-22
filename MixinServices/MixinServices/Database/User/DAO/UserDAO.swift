@@ -86,7 +86,12 @@ public final class UserDAO: UserDatabaseDAO {
             return []
         }
         let keys = ids.map { _ in "?" }.joined(separator: ",")
-        let sql = "\(UserDAO.sqlQueryColumns) WHERE u.app_id in (\(keys))"
+        let sql = """
+            SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, '' AS role, a.creator_id as appCreatorId
+            FROM apps a
+            INNER JOIN users u ON a.app_id = u.app_id
+            WHERE a.app_id in (\(keys))
+        """
         let users: [UserItem] = db.select(with: sql, arguments: StatementArguments(ids))
         var userMap = [String: UserItem]()
         users.forEach { (user) in

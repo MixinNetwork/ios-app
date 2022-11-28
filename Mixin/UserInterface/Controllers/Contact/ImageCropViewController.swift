@@ -32,17 +32,11 @@ class ImageCropViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.snp.makeEdgesEqualToSuperview()
         
-        let diameter = view.bounds.width - highlightMargin * 2
-        let highlightBounds = CGRect(x: highlightMargin, y: (view.bounds.height - diameter) / 2, width: diameter, height: diameter)
-        highlightPath = UIBezierPath(ovalIn: highlightBounds)
-        let path = UIBezierPath(rect: view.bounds)
-        path.append(highlightPath)
-        path.usesEvenOddFillRule = true
         highlightingLayer.fillRule = .evenOdd
         highlightingLayer.fillColor = UIColor.black.withAlphaComponent(0.7).cgColor
         highlightingLayer.lineWidth = 1
-        highlightingLayer.path = path.cgPath
         view.layer.addSublayer(highlightingLayer)
+        layoutHightlightingLayer()
         
         let instructionLabel = UILabel()
         instructionLabel.text = R.string.localizable.move_and_scale()
@@ -57,8 +51,9 @@ class ImageCropViewController: UIViewController {
         cancelButton.setTitle(R.string.localizable.cancel(), for: .normal)
         view.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(20)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).offset(20)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.width.height.greaterThanOrEqualTo(44)
         }
         cancelButton.addTarget(self, action: #selector(cancelCropping), for: .touchUpInside)
         
@@ -66,10 +61,16 @@ class ImageCropViewController: UIViewController {
         confirmButton.setTitle(R.string.localizable.confirm(), for: .normal)
         view.addSubview(confirmButton)
         confirmButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-20)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-20)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.width.height.greaterThanOrEqualTo(44)
         }
         confirmButton.addTarget(self, action: #selector(performCropping), for: .touchUpInside)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layoutHightlightingLayer()
     }
     
     func load(image: UIImage) {
@@ -160,6 +161,16 @@ extension ImageCropViewController: UIScrollViewDelegate {
 }
 
 extension ImageCropViewController {
+    
+    private func layoutHightlightingLayer() {
+        let diameter = view.bounds.width - highlightMargin * 2
+        let highlightBounds = CGRect(x: highlightMargin, y: (view.bounds.height - diameter) / 2, width: diameter, height: diameter)
+        highlightPath = UIBezierPath(ovalIn: highlightBounds)
+        let path = UIBezierPath(rect: view.bounds)
+        path.usesEvenOddFillRule = true
+        path.append(highlightPath)
+        highlightingLayer.path = path.cgPath
+    }
     
     private func centerZoomView() {
         let verticalInset: CGFloat

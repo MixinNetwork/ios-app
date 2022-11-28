@@ -94,7 +94,7 @@ extension ImagePickerController: UIImagePickerControllerDelegate {
             if weakSelf.cropImageAfterPicked {
                 picker.dismiss(animated: true, completion: {
                     let cropController = ImageCropViewController()
-                    cropController.image = image
+                    cropController.load(image: image)
                     cropController.delegate = self
                     cropController.modalPresentationStyle = .fullScreen
                     weakSelf.present(viewController: cropController)

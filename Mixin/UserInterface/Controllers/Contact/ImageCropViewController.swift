@@ -39,7 +39,7 @@ class ImageCropViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.clipsToBounds = true
         view.backgroundColor = .black
         imageView.contentMode = .scaleToFill
         scrollView.alwaysBounceVertical = true

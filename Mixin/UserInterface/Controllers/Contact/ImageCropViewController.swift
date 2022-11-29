@@ -1,6 +1,15 @@
 import UIKit
 import MixinServices
 
+#if DEBUG
+fileprivate var debugCropping = false
+fileprivate var orientation: UIImage.Orientation = .up {
+    didSet {
+        Logger.general.debug(category: "ImageCropViewController", message: "Testing orientation: \(orientation)")
+    }
+}
+#endif
+
 protocol ImageCropViewControllerDelegate: AnyObject {
     
     func imageCropViewController(_ controller: ImageCropViewController, didCropImage croppedImage: UIImage)
@@ -11,26 +20,44 @@ class ImageCropViewController: UIViewController {
     
     weak var delegate: ImageCropViewControllerDelegate?
     
-    private let scrollView = UIScrollView()
+    private let scrollView = ScrollView()
     private let imageView = UIImageView()
     private let highlightingLayer = CAShapeLayer()
     
     private let highlightMargin: CGFloat = 15
+    private let maximumZoomScale: CGFloat = 3
     
-    private var highlightPath: UIBezierPath!
+    private var lastScrollViewFrameWhenReset: CGRect?
+    
+    private var highlightBounds: CGRect {
+        let diameter = view.bounds.width - highlightMargin * 2
+        return CGRect(x: highlightMargin,
+                      y: (view.bounds.height - diameter) / 2,
+                      width: diameter,
+                      height: diameter)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .black
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleToFill
+        scrollView.alwaysBounceVertical = true
+        scrollView.alwaysBounceHorizontal = true
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.decelerationRate = .fast
         scrollView.delegate = self
         scrollView.addSubview(imageView)
+        scrollView.clipsToBounds = false
         view.addSubview(scrollView)
-        scrollView.snp.makeEdgesEqualToSuperview()
+        scrollView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.leading.equalToSuperview().offset(highlightMargin)
+            make.trailing.equalToSuperview().offset(-highlightMargin)
+            make.width.equalTo(scrollView.snp.height)
+        }
         
         highlightingLayer.fillRule = .evenOdd
         highlightingLayer.fillColor = UIColor.black.withAlphaComponent(0.7).cgColor
@@ -71,29 +98,24 @@ class ImageCropViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         layoutHightlightingLayer()
+        layoutImageView()
+        resetScrollView(force: false)
     }
     
     func load(image: UIImage) {
         loadViewIfNeeded()
-        
-        let imageSize = image.size * image.scale
-        let fittingSize = view.bounds.size
-        let imageFrame = imageSize.rect(fittingSize: fittingSize)
-        let fittingScale: CGFloat
-        if imageSize.width / imageSize.height > 1 {
-            fittingScale = max(1, fittingSize.height / imageFrame.height)
-        } else {
-            fittingScale = max(1, fittingSize.width / imageFrame.width)
+#if DEBUG
+        var image = image
+        if debugCropping {
+            image = UIImage(cgImage: image.cgImage!, scale: image.scale, orientation: orientation)
         }
-        imageView.frame = imageFrame
-        scrollView.contentSize = imageFrame.size
-        scrollView.maximumZoomScale = max(fittingScale, 3)
-        scrollView.contentOffset = .zero
-        UIGraphicsBeginImageContextWithOptions(imageFrame.size, false, UIScreen.main.scale)
-        image.draw(in: CGRect(origin: .zero, size: imageFrame.size))
-        imageView.image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        centerZoomView()
+#endif
+        imageView.image = image
+        imageView.bounds.size = image.size.sizeThatFills(highlightBounds.size)
+        imageView.center = .zero
+        scrollView.zoomScale = 1
+        scrollView.contentSize = imageView.frame.size
+        resetScrollView(force: true)
     }
     
 }
@@ -102,31 +124,74 @@ extension ImageCropViewController {
     
     @objc private func performCropping() {
         if let image = imageView.image {
-            let area = {
-                let factor = max(image.size.height * image.scale / view.frame.height, image.size.width * image.scale / view.frame.width)
-                let scale = 1 / scrollView.zoomScale
-                let imageFrame = imageView.frame
-                let x: CGFloat
-                if imageFrame.width <= highlightPath.bounds.width {
-                    x = scrollView.contentOffset.x * scale * factor
-                } else {
-                    x = (scrollView.contentOffset.x + highlightPath.bounds.origin.x - imageFrame.origin.x) * scale * factor
-                }
-                let y: CGFloat
-                if imageFrame.height <= highlightPath.bounds.height {
-                    y = scrollView.contentOffset.y * scale * factor
-                } else {
-                    y = (scrollView.contentOffset.y + highlightPath.bounds.origin.y - imageFrame.origin.y) * scale * factor
-                }
-                let width = highlightPath.bounds.width * scale * factor
-                let height = highlightPath.bounds.height * scale * factor
-                return CGRect(x: x, y: y, width: width, height: height)
-            }()
-            guard let croppedCGImage = image.cgImage?.cropping(to: area) else {
-                return
+            let visibleRect = scrollView.convert(scrollView.bounds, to: imageView)
+            let mirrorTransform: CGAffineTransform = .identity
+                .translatedBy(x: image.size.width, y: 0)
+                .scaledBy(x: -1, y: 1)
+            let rotatedMirrorTransform: CGAffineTransform = .identity
+                .translatedBy(x: image.size.height, y: 0)
+                .scaledBy(x: -1, y: 1)
+            var transform = CGAffineTransform(scaleX: image.size.width / imageView.bounds.width,
+                                              y: image.size.height / imageView.bounds.height)
+            switch image.imageOrientation {
+            case .up:
+                break
+            case .down:
+                let t = CGAffineTransform(rotationAngle: -.pi)
+                    .translatedBy(x: -image.size.width, y: -image.size.height)
+                transform = transform.concatenating(t)
+            case .left:
+                let t = CGAffineTransform(rotationAngle: .pi / 2)
+                    .translatedBy(x: 0, y: -image.size.height)
+                transform = transform.concatenating(t)
+            case .right:
+                let t = CGAffineTransform(rotationAngle: -.pi / 2)
+                    .translatedBy(x: -image.size.width, y: 0)
+                transform = transform.concatenating(t)
+            case .upMirrored:
+                transform = transform.concatenating(mirrorTransform)
+            case .downMirrored:
+                let t = CGAffineTransform(rotationAngle: -.pi)
+                    .translatedBy(x: -image.size.width, y: -image.size.height)
+                transform = transform.concatenating(mirrorTransform).concatenating(t)
+            case .leftMirrored:
+                let t = CGAffineTransform(rotationAngle: .pi / 2)
+                    .translatedBy(x: 0, y: -image.size.height)
+                transform = transform.concatenating(t).concatenating(rotatedMirrorTransform)
+            case .rightMirrored:
+                let t = CGAffineTransform(rotationAngle: -.pi / 2)
+                    .translatedBy(x: -image.size.width, y: 0)
+                transform = transform.concatenating(t).concatenating(rotatedMirrorTransform)
+            @unknown default:
+                break
             }
-            let croppedImage = UIImage(cgImage: croppedCGImage, scale: image.scale, orientation: image.imageOrientation)
-            delegate?.imageCropViewController(self, didCropImage: croppedImage)
+            let croppingRect = visibleRect.applying(transform)
+            if let cgImage = image.cgImage?.cropping(to: croppingRect) {
+                let cropped = UIImage(cgImage: cgImage, scale: image.scale, orientation: image.imageOrientation)
+#if DEBUG
+                if debugCropping {
+                    let debugImageView = UIImageView(image: cropped)
+                    view.addSubview(debugImageView)
+                    debugImageView.snp.makeConstraints { make in
+                        make.width.equalTo(debugImageView.snp.height)
+                        make.leading.equalToSuperview().offset(highlightMargin)
+                        make.trailing.equalToSuperview().offset(-highlightMargin)
+                        make.center.equalToSuperview()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        debugImageView.removeFromSuperview()
+                        var next = orientation.rawValue + 1
+                        if next > UIImage.Orientation.rightMirrored.rawValue {
+                            next = UIImage.Orientation.up.rawValue
+                        }
+                        orientation = UIImage.Orientation(rawValue: next) ?? .up
+                        self.load(image: image)
+                    }
+                    return
+                }
+#endif
+                delegate?.imageCropViewController(self, didCropImage: cropped)
+            }
         }
         dismiss(animated: true)
     }
@@ -140,6 +205,34 @@ extension ImageCropViewController {
 extension ImageCropViewController: UIScrollViewDelegate {
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        layoutImageView()
+    }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        imageView
+    }
+    
+}
+
+extension ImageCropViewController {
+    
+    private class ScrollView: UIScrollView {
+        
+        override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+            true
+        }
+        
+    }
+    
+    private func layoutHightlightingLayer() {
+        let highlightPath = UIBezierPath(ovalIn: highlightBounds)
+        let path = UIBezierPath(rect: view.bounds)
+        path.usesEvenOddFillRule = true
+        path.append(highlightPath)
+        highlightingLayer.path = path.cgPath
+    }
+    
+    private func layoutImageView() {
         let visibleSize = scrollView.frame.size
         if scrollView.contentSize.width < visibleSize.width {
             imageView.center.x = visibleSize.width / 2
@@ -151,41 +244,20 @@ extension ImageCropViewController: UIScrollViewDelegate {
         } else {
             imageView.center.y = scrollView.contentSize.height / 2
         }
-        centerZoomView()
     }
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        imageView
-    }
-    
-}
-
-extension ImageCropViewController {
-    
-    private func layoutHightlightingLayer() {
-        let diameter = view.bounds.width - highlightMargin * 2
-        let highlightBounds = CGRect(x: highlightMargin, y: (view.bounds.height - diameter) / 2, width: diameter, height: diameter)
-        highlightPath = UIBezierPath(ovalIn: highlightBounds)
-        let path = UIBezierPath(rect: view.bounds)
-        path.usesEvenOddFillRule = true
-        path.append(highlightPath)
-        highlightingLayer.path = path.cgPath
-    }
-    
-    private func centerZoomView() {
-        let verticalInset: CGFloat
-        let horizontalInset: CGFloat
-        if scrollView.contentSize.width >= view.bounds.width {
-            horizontalInset = highlightMargin
-        } else {
-            horizontalInset = 0
+    private func resetScrollView(force: Bool) {
+        guard force || scrollView.frame != lastScrollViewFrameWhenReset else {
+            return
         }
-        if scrollView.contentSize.height >= view.bounds.height {
-            verticalInset = (view.bounds.height - highlightPath.bounds.height) / 2
-        } else {
-            verticalInset = 0
-        }
-        scrollView.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+        scrollView.maximumZoomScale = {
+            let verticalScale = max(1, view.bounds.height / imageView.frame.height)
+            let horizontalScale = max(1, view.bounds.width / imageView.frame.width)
+            return max(maximumZoomScale, verticalScale, horizontalScale)
+        }()
+        scrollView.contentOffset = CGPoint(x: (scrollView.contentSize.width - scrollView.frame.width) / 2,
+                                           y: (scrollView.contentSize.height - scrollView.frame.height) / 2)
+        lastScrollViewFrameWhenReset = scrollView.frame
     }
     
 }

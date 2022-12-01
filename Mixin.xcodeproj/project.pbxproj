@@ -625,6 +625,16 @@
 		7CA26D3F2935A59800E8D7FD /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D3E2935A59800E8D7FD /* PhoneNumberParser.swift */; };
 		7CA26F542935ECAD00E8D7FD /* PhoneNumberExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26F532935ECAD00E8D7FD /* PhoneNumberExtension.swift */; };
 		7CA26F562935EE9B00E8D7FD /* PhoneNumberTerritory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26F552935EE9B00E8D7FD /* PhoneNumberTerritory.swift */; };
+		7CA2716D2937629D00E8D7FD /* PhoneNumberParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2716C2937629D00E8D7FD /* PhoneNumberParserTests.swift */; };
+		7CA2717C29384C9600E8D7FD /* PhoneNumberConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D362934BC0300E8D7FD /* PhoneNumberConstants.swift */; };
+		7CA2717D29384C9600E8D7FD /* PhoneNumberRegexper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D342934BB9F00E8D7FD /* PhoneNumberRegexper.swift */; };
+		7CA2717E29384C9600E8D7FD /* PhoneNumberExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26F532935ECAD00E8D7FD /* PhoneNumberExtension.swift */; };
+		7CA2717F29384C9600E8D7FD /* PhoneNumberDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26C872934B5D400E8D7FD /* PhoneNumberDataSource.swift */; };
+		7CA2718029384C9600E8D7FD /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D3C293595BD00E8D7FD /* PhoneNumber.swift */; };
+		7CA2718129384C9600E8D7FD /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D3E2935A59800E8D7FD /* PhoneNumberParser.swift */; };
+		7CA2718229384C9600E8D7FD /* PhoneNumberError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26C852934B4DA00E8D7FD /* PhoneNumberError.swift */; };
+		7CA2718329384C9600E8D7FD /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 7CA26C832934B48D00E8D7FD /* PhoneNumberMetadata.json */; };
+		7CA2718429384C9600E8D7FD /* PhoneNumberTerritory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26F552935EE9B00E8D7FD /* PhoneNumberTerritory.swift */; };
 		7CA5EE58280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
 		7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */; };
@@ -983,6 +993,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		7CA2716E2937629D00E8D7FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 277FF6FE1F909A1200DBB2EB;
+			remoteInfo = Mixin;
+		};
 		DFE861C12422673B009B1833 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
@@ -1654,6 +1671,8 @@
 		7CA26D3E2935A59800E8D7FD /* PhoneNumberParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberParser.swift; sourceTree = "<group>"; };
 		7CA26F532935ECAD00E8D7FD /* PhoneNumberExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberExtension.swift; sourceTree = "<group>"; };
 		7CA26F552935EE9B00E8D7FD /* PhoneNumberTerritory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTerritory.swift; sourceTree = "<group>"; };
+		7CA2716A2937629D00E8D7FD /* MixinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MixinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CA2716C2937629D00E8D7FD /* PhoneNumberParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberParserTests.swift; sourceTree = "<group>"; };
 		7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockTimeFormatter.swift; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
 		7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinMessageBannerView.xib; sourceTree = "<group>"; };
@@ -2050,6 +2069,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7CA271672937629D00E8D7FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		94656C142795395D006C3F1D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2094,6 +2120,7 @@
 				E090B9F823B3957E0088355B /* MixinNotificationService */,
 				DFE861BA2422673B009B1833 /* MixinShare */,
 				94656C182795395D006C3F1D /* MixinDebug */,
+				7CA2716B2937629D00E8D7FD /* MixinTests */,
 				277FF7001F909A1200DBB2EB /* Products */,
 				506A45AFF37DF0AFA7DD4EEE /* Pods */,
 				DBADD0FED15BCB65F6FF70EB /* Frameworks */,
@@ -2107,6 +2134,7 @@
 				E090B9F723B3957E0088355B /* MixinNotificationService.appex */,
 				DFE861B92422673B009B1833 /* MixinShare.appex */,
 				94656C172795395D006C3F1D /* MixinDebug.app */,
+				7CA2716A2937629D00E8D7FD /* MixinTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2658,6 +2686,14 @@
 				7CA26D3E2935A59800E8D7FD /* PhoneNumberParser.swift */,
 			);
 			path = PhoneNumberParser;
+			sourceTree = "<group>";
+		};
+		7CA2716B2937629D00E8D7FD /* MixinTests */ = {
+			isa = PBXGroup;
+			children = (
+				7CA2716C2937629D00E8D7FD /* PhoneNumberParserTests.swift */,
+			);
+			path = MixinTests;
 			sourceTree = "<group>";
 		};
 		7CB9B4CE269C3934007B6604 /* PinTips */ = {
@@ -3837,6 +3873,24 @@
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7CA271692937629D00E8D7FD /* MixinTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7CA271702937629D00E8D7FD /* Build configuration list for PBXNativeTarget "MixinTests" */;
+			buildPhases = (
+				7CA271662937629D00E8D7FD /* Sources */,
+				7CA271672937629D00E8D7FD /* Frameworks */,
+				7CA271682937629D00E8D7FD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7CA2716F2937629D00E8D7FD /* PBXTargetDependency */,
+			);
+			name = MixinTests;
+			productName = MixinTests;
+			productReference = 7CA2716A2937629D00E8D7FD /* MixinTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		94656C162795395D006C3F1D /* MixinDebug */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 94656C222795395E006C3F1D /* Build configuration list for PBXNativeTarget "MixinDebug" */;
@@ -3900,7 +3954,7 @@
 		277FF6F71F909A1200DBB2EB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1320;
+				LastSwiftUpdateCheck = 1410;
 				LastUpgradeCheck = 1410;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
@@ -3919,6 +3973,10 @@
 								enabled = 1;
 							};
 						};
+					};
+					7CA271692937629D00E8D7FD = {
+						CreatedOnToolsVersion = 14.1;
+						TestTargetID = 277FF6FE1F909A1200DBB2EB;
 					};
 					94656C162795395D006C3F1D = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -3954,6 +4012,7 @@
 				E090B9F623B3957E0088355B /* MixinNotificationService */,
 				DFE861B82422673B009B1833 /* MixinShare */,
 				94656C162795395D006C3F1D /* MixinDebug */,
+				7CA271692937629D00E8D7FD /* MixinTests */,
 			);
 		};
 /* End PBXProject section */
@@ -4129,6 +4188,14 @@
 				7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */,
 				7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */,
 				E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CA271682937629D00E8D7FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CA2718329384C9600E8D7FD /* PhoneNumberMetadata.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5230,6 +5297,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7CA271662937629D00E8D7FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CA2717F29384C9600E8D7FD /* PhoneNumberDataSource.swift in Sources */,
+				7CA2716D2937629D00E8D7FD /* PhoneNumberParserTests.swift in Sources */,
+				7CA2717E29384C9600E8D7FD /* PhoneNumberExtension.swift in Sources */,
+				7CA2718429384C9600E8D7FD /* PhoneNumberTerritory.swift in Sources */,
+				7CA2718129384C9600E8D7FD /* PhoneNumberParser.swift in Sources */,
+				7CA2717C29384C9600E8D7FD /* PhoneNumberConstants.swift in Sources */,
+				7CA2717D29384C9600E8D7FD /* PhoneNumberRegexper.swift in Sources */,
+				7CA2718229384C9600E8D7FD /* PhoneNumberError.swift in Sources */,
+				7CA2718029384C9600E8D7FD /* PhoneNumber.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		94656C132795395D006C3F1D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5276,6 +5359,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		7CA2716F2937629D00E8D7FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 277FF6FE1F909A1200DBB2EB /* Mixin */;
+			targetProxy = 7CA2716E2937629D00E8D7FD /* PBXContainerItemProxy */;
+		};
 		DFE861C22422673B009B1833 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DFE861B82422673B009B1833 /* MixinShare */;
@@ -5661,6 +5749,51 @@
 			};
 			name = Release;
 		};
+		7CA271712937629D00E8D7FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mixin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mixin";
+			};
+			name = Debug;
+		};
+		7CA271722937629D00E8D7FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mixin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mixin";
+			};
+			name = Release;
+		};
 		94656C232795395E006C3F1D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BD555D0ADB2F0ED629DB90DA /* Pods-MixinDebug.debug.xcconfig */;
@@ -5863,6 +5996,15 @@
 			buildConfigurations = (
 				277FF7141F909A1200DBB2EB /* Debug */,
 				277FF7151F909A1200DBB2EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7CA271702937629D00E8D7FD /* Build configuration list for PBXNativeTarget "MixinTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7CA271712937629D00E8D7FD /* Debug */,
+				7CA271722937629D00E8D7FD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

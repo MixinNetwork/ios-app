@@ -1,6 +1,5 @@
 import Foundation
 import Contacts
-import PhoneNumberKit
 import MixinServices
 
 class ContactsManager {
@@ -21,7 +20,7 @@ class ContactsManager {
     }
     
     private let lock = NSLock()
-    private let phoneNumberKit = PhoneNumberKit()
+    private let phoneNumberParser = PhoneNumberParser()
     
     private lazy var _contacts: [PhoneContact] = {
         guard let containers = try? store.containers(matching: nil) else {
@@ -45,9 +44,9 @@ class ContactsManager {
                 continue
             }
             let phoneNumberStrings = cnContact.phoneNumbers.map({ $0.value.stringValue })
-            let phoneNumbers = phoneNumberStrings.compactMap({ try? phoneNumberKit.parse($0) })
+            let phoneNumbers = phoneNumberStrings.compactMap({ try? phoneNumberParser.parse($0) })
             let mobilePhoneNumbers = phoneNumbers.filter({ $0.type == .mobile })
-            let e164MobilePhoneNumbers = mobilePhoneNumbers.map({ phoneNumberKit.format($0, toType: .e164) })
+            let e164MobilePhoneNumbers = mobilePhoneNumbers.map({ phoneNumberParser.format($0, toType: .e164) })
             result += e164MobilePhoneNumbers.map({ PhoneContact(fullName: fullName, phoneNumber: $0) })
         }
         return result

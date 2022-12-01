@@ -616,6 +616,15 @@
 		7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
+		7CA26C842934B48D00E8D7FD /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 7CA26C832934B48D00E8D7FD /* PhoneNumberMetadata.json */; };
+		7CA26C862934B4DA00E8D7FD /* PhoneNumberError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26C852934B4DA00E8D7FD /* PhoneNumberError.swift */; };
+		7CA26C882934B5D400E8D7FD /* PhoneNumberDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26C872934B5D400E8D7FD /* PhoneNumberDataSource.swift */; };
+		7CA26D352934BB9F00E8D7FD /* PhoneNumberRegexper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D342934BB9F00E8D7FD /* PhoneNumberRegexper.swift */; };
+		7CA26D372934BC0300E8D7FD /* PhoneNumberConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D362934BC0300E8D7FD /* PhoneNumberConstants.swift */; };
+		7CA26D3D293595BD00E8D7FD /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D3C293595BD00E8D7FD /* PhoneNumber.swift */; };
+		7CA26D3F2935A59800E8D7FD /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26D3E2935A59800E8D7FD /* PhoneNumberParser.swift */; };
+		7CA26F542935ECAD00E8D7FD /* PhoneNumberExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26F532935ECAD00E8D7FD /* PhoneNumberExtension.swift */; };
+		7CA26F562935EE9B00E8D7FD /* PhoneNumberTerritory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA26F552935EE9B00E8D7FD /* PhoneNumberTerritory.swift */; };
 		7CA5EE58280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
 		7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */; };
@@ -1636,6 +1645,15 @@
 		7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpiredMessageTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
+		7CA26C832934B48D00E8D7FD /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
+		7CA26C852934B4DA00E8D7FD /* PhoneNumberError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberError.swift; sourceTree = "<group>"; };
+		7CA26C872934B5D400E8D7FD /* PhoneNumberDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberDataSource.swift; sourceTree = "<group>"; };
+		7CA26D342934BB9F00E8D7FD /* PhoneNumberRegexper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberRegexper.swift; sourceTree = "<group>"; };
+		7CA26D362934BC0300E8D7FD /* PhoneNumberConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberConstants.swift; sourceTree = "<group>"; };
+		7CA26D3C293595BD00E8D7FD /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
+		7CA26D3E2935A59800E8D7FD /* PhoneNumberParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberParser.swift; sourceTree = "<group>"; };
+		7CA26F532935ECAD00E8D7FD /* PhoneNumberExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberExtension.swift; sourceTree = "<group>"; };
+		7CA26F552935EE9B00E8D7FD /* PhoneNumberTerritory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTerritory.swift; sourceTree = "<group>"; };
 		7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockTimeFormatter.swift; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
 		7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinMessageBannerView.xib; sourceTree = "<group>"; };
@@ -2624,6 +2642,22 @@
 				7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */,
 			);
 			path = Drag;
+			sourceTree = "<group>";
+		};
+		7CA26C802934B24F00E8D7FD /* PhoneNumberParser */ = {
+			isa = PBXGroup;
+			children = (
+				7CA26C832934B48D00E8D7FD /* PhoneNumberMetadata.json */,
+				7CA26F552935EE9B00E8D7FD /* PhoneNumberTerritory.swift */,
+				7CA26D3C293595BD00E8D7FD /* PhoneNumber.swift */,
+				7CA26C852934B4DA00E8D7FD /* PhoneNumberError.swift */,
+				7CA26D362934BC0300E8D7FD /* PhoneNumberConstants.swift */,
+				7CA26F532935ECAD00E8D7FD /* PhoneNumberExtension.swift */,
+				7CA26D342934BB9F00E8D7FD /* PhoneNumberRegexper.swift */,
+				7CA26C872934B5D400E8D7FD /* PhoneNumberDataSource.swift */,
+				7CA26D3E2935A59800E8D7FD /* PhoneNumberParser.swift */,
+			);
+			path = PhoneNumberParser;
 			sourceTree = "<group>";
 		};
 		7CB9B4CE269C3934007B6604 /* PinTips */ = {
@@ -3715,6 +3749,7 @@
 		E090B90C23B0B1FA0012C7E9 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				7CA26C802934B24F00E8D7FD /* PhoneNumberParser */,
 				E01BC6E423ACD7D1005D3FF3 /* Job */,
 				7BB788BB216CD1DA00EDE7B4 /* Call */,
 				7BC8502120CBA68700A57B83 /* Audio */,
@@ -3727,8 +3762,8 @@
 				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,
 				7B8261D024D9548E00A39635 /* PINVerificationFailureHandler.swift */,
 				94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */,
-				94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */,
 				7C695D55285B25AB0042177C /* SpotlightManager.swift */,
+				94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -3942,6 +3977,7 @@
 				7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
+				7CA26C842934B48D00E8D7FD /* PhoneNumberMetadata.json in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
 				7C0FAAC927E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib in Resources */,
 				7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */,
@@ -4469,6 +4505,7 @@
 				7B5E9B4824373380000AE24E /* AlertEditorController.swift in Sources */,
 				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
+				7CA26D3F2935A59800E8D7FD /* PhoneNumberParser.swift in Sources */,
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */,
@@ -4574,6 +4611,7 @@
 				7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
+				7CA26D372934BC0300E8D7FD /* PhoneNumberConstants.swift in Sources */,
 				7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */,
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
@@ -4720,6 +4758,7 @@
 				94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */,
 				7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */,
 				E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */,
+				7CA26F562935EE9B00E8D7FD /* PhoneNumberTerritory.swift in Sources */,
 				7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */,
 				7CB2A57F27C386F0007D9DEE /* GroupsInCommonViewController.swift in Sources */,
 				7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */,
@@ -4839,6 +4878,7 @@
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
 				7BD3860224DC55A000A3035C /* UNMutableNotificationContent+Convenience.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
+				7CA26D3D293595BD00E8D7FD /* PhoneNumber.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
 				7C695D56285B25AB0042177C /* SpotlightManager.swift in Sources */,
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
@@ -4938,6 +4978,7 @@
 				E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
+				7CA26F542935ECAD00E8D7FD /* PhoneNumberExtension.swift in Sources */,
 				7B710BE5233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
 				7B2C8B312524D6C100347AC3 /* ClipThumbnailCell.swift in Sources */,
@@ -5083,6 +5124,7 @@
 				DFDD89EB22C4D5F900128991 /* DepositChooseNetworkWindow.swift in Sources */,
 				94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* VerifyPinViewController.swift in Sources */,
+				7CA26D352934BB9F00E8D7FD /* PhoneNumberRegexper.swift in Sources */,
 				7BA24D7325342575004906AD /* HomeOverlaysCoordinator.swift in Sources */,
 				7B81BF2822893F8B00266A77 /* GroupParticipantCell.swift in Sources */,
 				E0B53A6D23B0C4D3008DA9F1 /* MessageItem+Quote.swift in Sources */,
@@ -5109,6 +5151,7 @@
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,
+				7CA26C882934B5D400E8D7FD /* PhoneNumberDataSource.swift in Sources */,
 				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
 				94438D57252DAD73005760AF /* Clip.swift in Sources */,
 				7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */,
@@ -5144,6 +5187,7 @@
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
+				7CA26C862934B4DA00E8D7FD /* PhoneNumberError.swift in Sources */,
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
 				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,

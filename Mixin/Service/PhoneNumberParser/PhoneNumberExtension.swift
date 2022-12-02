@@ -23,7 +23,7 @@ extension NSRegularExpression {
         let nsRange = string.nsRange(from: range)
         return matches(in: string, options: options, range: nsRange)
     }
-
+    
     func rangeOfFirstMatch(in string: String, options: NSRegularExpression.MatchingOptions = [], range: Range<String.Index>? = nil) -> Range<String.Index>? {
         let range = range ?? string.startIndex..<string.endIndex
         let nsRange = string.nsRange(from: range)

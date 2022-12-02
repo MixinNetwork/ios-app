@@ -46,7 +46,7 @@ class ContactsManager {
             let phoneNumberStrings = cnContact.phoneNumbers.map({ $0.value.stringValue })
             let phoneNumbers = phoneNumberStrings.compactMap({ try? phoneNumberParser.parse($0) })
             let mobilePhoneNumbers = phoneNumbers.filter({ $0.type == .mobile })
-            let e164MobilePhoneNumbers = mobilePhoneNumbers.map({ phoneNumberParser.format($0, toType: .e164) })
+            let e164MobilePhoneNumbers = mobilePhoneNumbers.map({ phoneNumberParser.format($0) })
             result += e164MobilePhoneNumbers.map({ PhoneContact(fullName: fullName, phoneNumber: $0) })
         }
         return result

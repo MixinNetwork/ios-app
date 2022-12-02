@@ -9,72 +9,17 @@ class PhoneNumberParser {
     func parse(_ numberString: String, withRegion region: String = CNContactsUserDefaults.shared().countryCode) throws -> PhoneNumber {
         var numberStringWithPlus = numberString
         do {
-            return try parse(numberString, withRegion: region, ignoreType: false)
+            return try parse(numberString, region: region)
         } catch {
             if numberStringWithPlus.first != "+" {
                 numberStringWithPlus = "+" + numberStringWithPlus
             }
         }
-        return try parse(numberStringWithPlus, withRegion: region, ignoreType: false)
+        return try parse(numberStringWithPlus, region: region)
     }
     
-    func format(_ phoneNumber: PhoneNumber, toType formatType: PhoneNumberFormat, withPrefix prefix: Bool = true) -> String {
-        if formatType == .e164 {
-            let formattedNationalNumber = phoneNumber.adjustedNationalNumber()
-            if prefix == false {
-                return formattedNationalNumber
-            }
-            return "+\(phoneNumber.countryCode)\(formattedNationalNumber)"
-        } else {
-            var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
-            if let regionMetadata = dataSource.mainTerritory(forCode: phoneNumber.countryCode) {
-                var selectedFormat: MetadataPhoneNumberFormat?
-                for format in regionMetadata.numberFormats {
-                    if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
-                        if regexper.stringPositionByRegex(leadingDigitPattern, string: String(formattedNationalNumber)) == 0 {
-                            if regexper.matchesEntirely(format.pattern, string: String(formattedNationalNumber)) {
-                                selectedFormat = format
-                                break
-                            }
-                        }
-                    } else {
-                        if regexper.matchesEntirely(format.pattern, string: String(formattedNationalNumber)) {
-                            selectedFormat = format
-                            break
-                        }
-                    }
-                }
-                if let selectedFormat,
-                   let numberFormatRule = (formatType == PhoneNumberFormat.international && selectedFormat.intlFormat != nil) ? selectedFormat.intlFormat : selectedFormat.format,
-                   let pattern = selectedFormat.pattern {
-                    var prefixFormattingRule = String()
-                    if let nationalPrefixFormattingRule = selectedFormat.nationalPrefixFormattingRule, let nationalPrefix = regionMetadata.nationalPrefix {
-                        prefixFormattingRule = regexper.replaceStringByRegex(PhoneNumberPatterns.npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
-                        prefixFormattingRule = regexper.replaceStringByRegex(PhoneNumberPatterns.fgPattern, string: prefixFormattingRule, template: "\\$1")
-                    }
-                    if formatType == PhoneNumberFormat.national, regexper.hasValue(prefixFormattingRule) {
-                        let replacePattern = regexper.replaceFirstStringByRegex(PhoneNumberPatterns.firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
-                        formattedNationalNumber = regexper.replaceStringByRegex(pattern, string: formattedNationalNumber, template: replacePattern)
-                    } else {
-                        formattedNationalNumber = regexper.replaceStringByRegex(pattern, string: formattedNationalNumber, template: numberFormatRule)
-                    }
-                }
-                if let numberExtension = phoneNumber.numberExtension {
-                    let formattedExtension: String
-                    if let preferredExtnPrefix = regionMetadata.preferredExtnPrefix {
-                        formattedExtension = "\(preferredExtnPrefix)\(numberExtension)"
-                    } else {
-                        formattedExtension = "\(PhoneNumberConstants.defaultExtnPrefix)\(numberExtension)"
-                    }
-                    formattedNationalNumber = formattedNationalNumber + formattedExtension
-                }
-            }
-            if formatType == .international, prefix == true {
-                return "+\(phoneNumber.countryCode) \(formattedNationalNumber)"
-            } else {
-                return formattedNationalNumber
-            }
-        }
+    func format(_ phoneNumber: PhoneNumber) -> String {
+        "+\(phoneNumber.countryCode)\(phoneNumber.adjustedNationalNumber())"
     }
     
 }
@@ -82,8 +27,7 @@ class PhoneNumberParser {
 extension PhoneNumberParser {
     
     private func normalizePhoneNumber(_ number: String) -> String {
-        let normalizationMappings = PhoneNumberPatterns.allNormalizationMappings
-        return regexper.stringByReplacingOccurrences(number, map: normalizationMappings)
+        regexper.stringByReplacingOccurrences(number, map: PhoneNumberPatterns.allNormalizationMappings)
     }
     
     private func isNumberMatchingDesc(_ nationalNumber: String, numberDesc: MetadataPhoneNumberDesc?) -> Bool {
@@ -101,10 +45,10 @@ extension PhoneNumberParser {
                 let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
                 let firstMatchString = number.substring(with: firstMatch.range)
                 let numOfGroups = firstMatch.numberOfRanges - 1
-                var transformedNumber: String = String()
                 let firstRange = firstMatch.range(at: numOfGroups)
                 let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.count) ? number.substring(with: firstRange) : String()
                 let firstMatchStringWithGroupHasValue = regexper.hasValue(firstMatchStringWithGroup)
+                var transformedNumber: String = String()
                 if let transformRule = metadata.nationalPrefixTransformRule, firstMatchStringWithGroupHasValue == true {
                     transformedNumber = regexper.replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule)
                 } else {
@@ -174,30 +118,23 @@ extension PhoneNumberParser {
         return .unknown
     }
     
-    private func validPhoneNumber(from nationalNumber: String, using regionMetadata: MetadataPhoneNumberTerritory, countryCode: UInt64, ignoreType: Bool, numberString: String, numberExtension: String?) throws -> PhoneNumber? {
+    private func validPhoneNumber(from nationalNumber: String, using regionMetadata: MetadataPhoneNumberTerritory, countryCode: UInt64, numberString: String, numberExtension: String?) throws -> PhoneNumber? {
         var nationalNumber = nationalNumber
         var regionMetadata = regionMetadata
-        // National Prefix Strip
         stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
-        // Test number against general number description for correct metadata
         if let generalNumberDesc = regionMetadata.generalDesc, regexper.hasValue(generalNumberDesc.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false {
             return nil
         }
-        // Finalize remaining parameters and create phone number object
         let leadingZero = nationalNumber.hasPrefix("0")
         guard let finalNationalNumber = UInt64(nationalNumber) else {
             throw PhoneNumberError.notANumber
         }
-        // Check if the number if of a known type
-        var type: PhoneNumberType = .unknown
-        if ignoreType == false {
-            if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = dataSource.filterTerritories(byCountry: regionCode) {
-                regionMetadata = foundMetadata
-            }
-            type = checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
-            if type == .unknown {
-                throw PhoneNumberError.unknownType
-            }
+        if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = dataSource.filterTerritories(byCountry: regionCode) {
+            regionMetadata = foundMetadata
+        }
+        let type = checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
+        if type == .unknown {
+            throw PhoneNumberError.unknownType
         }
         return PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type, regionID: regionMetadata.codeID)
     }
@@ -207,19 +144,19 @@ extension PhoneNumberParser {
         guard let possibleCountryIddPrefix = metadata.internationalPrefix else {
             return 0
         }
-        let countryCodeSource: PhoneNumberCountryCodeSource
+        let isDefaultCountryCode: Bool
         if regexper.matchesAtStart(PhoneNumberPatterns.leadingPlusCharsPattern, string: fullNumber) {
             fullNumber = regexper.replaceStringByRegex(PhoneNumberPatterns.leadingPlusCharsPattern, string: fullNumber)
-            countryCodeSource = .numberWithPlusSign
+            isDefaultCountryCode = false
         } else {
             fullNumber = normalizePhoneNumber(fullNumber)
             if parsePrefixAsIdd(&fullNumber, possibleCountryIddPrefix: possibleCountryIddPrefix) {
-                countryCodeSource = .numberWithIDD
+                isDefaultCountryCode = false
             } else {
-                countryCodeSource = .defaultCountry
+                isDefaultCountryCode = true
             }
         }
-        if countryCodeSource != .defaultCountry {
+        if !isDefaultCountryCode {
             if fullNumber.count <= PhoneNumberConstants.minLengthForNSN {
                 throw PhoneNumberError.tooShort
             }
@@ -234,7 +171,7 @@ extension PhoneNumberParser {
                 }
                 stripNationalPrefix(&potentialNationalNumber, metadata: metadata)
                 let potentialNationalNumberStr = potentialNationalNumber
-                if (!regexper.matchesEntirely(validNumberPattern, string: fullNumber) && regexper.matchesEntirely(validNumberPattern, string: potentialNationalNumberStr)) || regexper.testStringLengthAgainstPattern(possibleNumberPattern, string: fullNumber as String) == false {
+                if (!regexper.matchesEntirely(validNumberPattern, string: fullNumber) && regexper.matchesEntirely(validNumberPattern, string: potentialNationalNumberStr)) || regexper.testStringLengthAgainstPattern(possibleNumberPattern, string: fullNumber) == false {
                     nationalNumber = potentialNationalNumberStr
                     if let countryCode = UInt64(defaultCountryCode) {
                         return UInt64(countryCode)
@@ -245,16 +182,11 @@ extension PhoneNumberParser {
         return 0
     }
     
-    private func parse(_ numberString: String, withRegion region: String, ignoreType: Bool) throws -> PhoneNumber {
-        // Make sure region is in uppercase so that it matches metadata
-        let region = region.uppercased()
-        // Extract number
+    private func parse(_ numberString: String, region: String) throws -> PhoneNumber {
         var nationalNumber = numberString
         let match = try regexper.phoneDataDetectorMatch(numberString)
         let matchedNumber = nationalNumber.substring(with: match.range)
-        // Replace Arabic and Persian numerals and let the rest unchanged
         nationalNumber = regexper.stringByReplacingOccurrences(matchedNumber, map: PhoneNumberPatterns.allNormalizationMappings, keepUnmapped: true)
-        // Strip and extract extension
         let numberExtension: String?
         let matches = try? regexper.regexMatches(PhoneNumberPatterns.extnPattern, string: nationalNumber)
         if let match = matches?.first {
@@ -266,8 +198,7 @@ extension PhoneNumberParser {
         } else {
             numberExtension = nil
         }
-        // Country code parse
-        guard var regionMetadata = dataSource.filterTerritories(byCountry: region) else {
+        guard var regionMetadata = dataSource.filterTerritories(byCountry: region.uppercased()) else {
             throw PhoneNumberError.invalidCountryCode
         }
         let countryCode: UInt64
@@ -277,26 +208,23 @@ extension PhoneNumberParser {
             let plusRemovedNumberString = regexper.replaceStringByRegex(PhoneNumberPatterns.leadingPlusCharsPattern, string: nationalNumber as String)
             countryCode = try extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
         }
-        // Normalized number
         nationalNumber = normalizePhoneNumber(nationalNumber)
         if countryCode == 0 {
-            if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: regionMetadata.countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
+            if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: regionMetadata.countryCode, numberString: numberString, numberExtension: numberExtension) {
                 return result
             }
             throw PhoneNumberError.notANumber
         }
-        // If country code is not default, grab correct metadata
         if countryCode != regionMetadata.countryCode, let countryMetadata = dataSource.mainTerritory(forCode: countryCode) {
             regionMetadata = countryMetadata
         }
-        if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
+        if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: countryCode, numberString: numberString, numberExtension: numberExtension) {
             return result
         }
-        // If everything fails, iterate through other territories with the same country code
         var possibleResults = [PhoneNumber]()
         if let metadataList = dataSource.filterTerritories(byCode: countryCode) {
             for metadata in metadataList where regionMetadata.codeID != metadata.codeID {
-                if let result = try validPhoneNumber(from: nationalNumber, using: metadata, countryCode: countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
+                if let result = try validPhoneNumber(from: nationalNumber, using: metadata, countryCode: countryCode, numberString: numberString, numberExtension: numberExtension) {
                     possibleResults.append(result)
                 }
             }

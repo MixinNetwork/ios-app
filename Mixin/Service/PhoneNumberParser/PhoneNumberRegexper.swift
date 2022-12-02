@@ -134,7 +134,7 @@ class PhoneNumberRegexper {
             return false
         }
     }
-
+    
     private func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
         var cached: NSRegularExpression?
         cached = regularExpressionPoolQueue.sync {

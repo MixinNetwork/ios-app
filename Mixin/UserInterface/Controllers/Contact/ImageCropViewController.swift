@@ -125,46 +125,30 @@ extension ImageCropViewController {
     @objc private func performCropping() {
         if let image = imageView.image {
             let visibleRect = scrollView.convert(scrollView.bounds, to: imageView)
-            let mirrorTransform: CGAffineTransform = .identity
-                .translatedBy(x: image.size.width, y: 0)
-                .scaledBy(x: -1, y: 1)
-            let rotatedMirrorTransform: CGAffineTransform = .identity
-                .translatedBy(x: image.size.height, y: 0)
-                .scaledBy(x: -1, y: 1)
-            var transform = CGAffineTransform(scaleX: image.size.width / imageView.bounds.width,
-                                              y: image.size.height / imageView.bounds.height)
-            switch image.imageOrientation {
-            case .up:
-                break
-            case .down:
-                let t = CGAffineTransform(rotationAngle: -.pi)
-                    .translatedBy(x: -image.size.width, y: -image.size.height)
-                transform = transform.concatenating(t)
-            case .left:
-                let t = CGAffineTransform(rotationAngle: .pi / 2)
-                    .translatedBy(x: 0, y: -image.size.height)
-                transform = transform.concatenating(t)
-            case .right:
-                let t = CGAffineTransform(rotationAngle: -.pi / 2)
-                    .translatedBy(x: -image.size.width, y: 0)
-                transform = transform.concatenating(t)
-            case .upMirrored:
-                transform = transform.concatenating(mirrorTransform)
-            case .downMirrored:
-                let t = CGAffineTransform(rotationAngle: -.pi)
-                    .translatedBy(x: -image.size.width, y: -image.size.height)
-                transform = transform.concatenating(mirrorTransform).concatenating(t)
-            case .leftMirrored:
-                let t = CGAffineTransform(rotationAngle: .pi / 2)
-                    .translatedBy(x: 0, y: -image.size.height)
-                transform = transform.concatenating(t).concatenating(rotatedMirrorTransform)
-            case .rightMirrored:
-                let t = CGAffineTransform(rotationAngle: -.pi / 2)
-                    .translatedBy(x: -image.size.width, y: 0)
-                transform = transform.concatenating(t).concatenating(rotatedMirrorTransform)
-            @unknown default:
-                break
-            }
+            let transform: CGAffineTransform = {
+                let widthScale = image.size.width / imageView.bounds.width
+                let heightScale = image.size.height / imageView.bounds.height
+                switch image.imageOrientation {
+                case .up:
+                    return CGAffineTransform(widthScale, 0, 0, heightScale, 0, 0)
+                case .down:
+                    return CGAffineTransform(-widthScale, 0, 0, -heightScale, image.size.width, image.size.height)
+                case .left:
+                    return CGAffineTransform(0, widthScale, -heightScale, 0, image.size.height, 0)
+                case .right:
+                    return CGAffineTransform(0, -widthScale, heightScale, 0, 0, image.size.width)
+                case .upMirrored:
+                    return CGAffineTransform(-widthScale, 0, 0, heightScale, image.size.width, 0)
+                case .downMirrored:
+                    return CGAffineTransform(widthScale, 0, 0, -heightScale, 0, image.size.height)
+                case .leftMirrored:
+                    return CGAffineTransform(0, widthScale, heightScale, 0, 0, 0)
+                case .rightMirrored:
+                    return CGAffineTransform(0, -widthScale, -heightScale, 0, image.size.height, image.size.width)
+                @unknown default:
+                    return CGAffineTransform(widthScale, 0, 0, heightScale, 0, 0)
+                }
+            }()
             let croppingRect = visibleRect.applying(transform)
             if let cgImage = image.cgImage?.cropping(to: croppingRect) {
                 let cropped = UIImage(cgImage: cgImage, scale: image.scale, orientation: image.imageOrientation)

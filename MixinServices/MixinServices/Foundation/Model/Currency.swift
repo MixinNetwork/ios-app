@@ -35,17 +35,18 @@ public extension Currency {
     private(set) static var all: [Currency] = {
         let currencies = [
             Currency(code: "USD", symbol: "$", rate: 1),
-            Currency(code: "CNY", symbol: "¥", rate: 6.4560692),
-            Currency(code: "JPY", symbol: "¥", rate: 110.0238494),
-            Currency(code: "EUR", symbol: "€", rate: 0.8533881),
-            Currency(code: "KRW", symbol: "₩", rate: 1173.420644),
-            Currency(code: "HKD", symbol: "HK$", rate: 7.7893878),
-            Currency(code: "GBP", symbol: "£", rate: 0.7289103),
-            Currency(code: "AUD", symbol: "A$", rate: 1.3734184),
-            Currency(code: "SGD", symbol: "S$", rate: 1.3433436),
-            Currency(code: "MYR", symbol: "RM", rate: 4.180405),
-            Currency(code: "PHP", symbol: "₱", rate: 50.24506),
-            Currency(code: "AED", symbol: "AED ", rate: 3.6691325),
+            Currency(code: "CNY", symbol: "¥", rate: 6.98),
+            Currency(code: "JPY", symbol: "¥", rate: 137.1),
+            Currency(code: "EUR", symbol: "€", rate: 0.953886),
+            Currency(code: "KRW", symbol: "₩", rate: 1316.49),
+            Currency(code: "HKD", symbol: "HK$", rate: 7.78),
+            Currency(code: "GBP", symbol: "£", rate: 0.820904),
+            Currency(code: "AUD", symbol: "A$", rate: 1.49),
+            Currency(code: "SGD", symbol: "S$", rate: 1.36),
+            Currency(code: "MYR", symbol: "RM", rate: 4.38),
+            Currency(code: "PHP", symbol: "₱", rate: 56.0),
+            Currency(code: "AED", symbol: "AED ", rate: 3.67),
+            Currency(code: "TWD", symbol: "NT$", rate: 30.63),
         ]
         let rates = AppGroupUserDefaults.currencyRates
         for currency in currencies {

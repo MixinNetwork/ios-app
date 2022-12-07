@@ -631,6 +631,7 @@
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
+		7CCC801C292DC68E000B4200 /* ImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCC801A292DC68E000B4200 /* ImageCropViewController.swift */; };
 		7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCE65A628D69D1D00FE944A /* TransferActionView.swift */; };
 		7CCE65A928D69D1D00FE944A /* TransferActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CCE65A728D69D1D00FE944A /* TransferActionView.xib */; };
 		7CDBA58A28F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */; };
@@ -1651,6 +1652,7 @@
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
+		7CCC801A292DC68E000B4200 /* ImageCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropViewController.swift; sourceTree = "<group>"; };
 		7CCE65A628D69D1D00FE944A /* TransferActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferActionView.swift; sourceTree = "<group>"; };
 		7CCE65A728D69D1D00FE944A /* TransferActionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransferActionView.xib; sourceTree = "<group>"; };
 		7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferSearchResultsViewController.swift; sourceTree = "<group>"; };
@@ -3533,6 +3535,7 @@
 				7C4C03A228532AC2003DE0C0 /* PhoneContactViewController.swift */,
 				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
 				7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */,
+				7CCC801A292DC68E000B4200 /* ImageCropViewController.swift */,
 				DF46B4041FA9B48500243A8B /* ContactsManager.swift */,
 				7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */,
 				7BADC83D204BD01D0016B0FC /* ChangeNumberViewController.swift */,
@@ -4354,7 +4357,6 @@
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
-				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImageLottieCoder/SDWebImageLottieCoder.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
@@ -4386,7 +4388,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageLottieCoder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
@@ -4938,6 +4939,7 @@
 				E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
+				7CCC801C292DC68E000B4200 /* ImageCropViewController.swift in Sources */,
 				7B710BE5233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
 				7B2C8B312524D6C100347AC3 /* ClipThumbnailCell.swift in Sources */,
@@ -5451,7 +5453,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/PhoneNumberKit/PhoneNumberKit.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/R.swift.Library/Rswift.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/RSKImageCropper/RSKImageCropper.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SnapKit/SnapKit.framework/Headers\"",
@@ -5552,7 +5553,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/PhoneNumberKit/PhoneNumberKit.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/R.swift.Library/Rswift.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/RSKImageCropper/RSKImageCropper.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SnapKit/SnapKit.framework/Headers\"",

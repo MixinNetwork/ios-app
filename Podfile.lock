@@ -184,7 +184,6 @@ PODS:
   - R.swift (6.1.0):
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
-  - RSKImageCropper (4.0.0)
   - SDWebImage (5.14.0):
     - SDWebImage/Core (= 5.14.0)
   - SDWebImage/Core (5.14.0)
@@ -215,7 +214,6 @@ DEPENDENCIES:
   - MixinServices/Tests (from `./MixinServices`)
   - PhoneNumberKit (from `https://github.com/marmelroy/PhoneNumberKit`)
   - R.swift
-  - RSKImageCropper
   - SDWebImageLottieCoder
   - SnapKit
 
@@ -245,7 +243,6 @@ SPEC REPOS:
     - PromisesObjC
     - R.swift
     - R.swift.Library
-    - RSKImageCropper
     - SDWebImage
     - SDWebImageLottieCoder
     - SignalArgon2
@@ -299,7 +296,6 @@ SPEC CHECKSUMS:
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   R.swift: ec98ff71c4ab2f6fd01dd077e5afd15e63a4834c
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
-  RSKImageCropper: 90dfe482402fb8a40cabd5fea65186d9102cc425
   SDWebImage: 9e391cf38577742f501055dca17e4987f6713fe1
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
   SignalArgon2: 1c24183835ca861e6af06631c18b1671cdf35571
@@ -309,6 +305,6 @@ SPEC CHECKSUMS:
   SQLCipher: f5b4857434158b571a3ed3b10b3b43cd18ef5f67
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 7031ffd7f491bc901dbcf8d47ffe97bff4a18c1d
+PODFILE CHECKSUM: f4032ca1f790e523af4464dbb786629c933de1bc
 
 COCOAPODS: 1.11.3

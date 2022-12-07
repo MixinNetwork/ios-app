@@ -503,6 +503,7 @@
 "mobile_contacts" = "連絡先";
 "monthly" = "月";
 "more" = "もっとみる";
+"move_and_scale" = "移動と拡大縮小";
 "multisig_by_pin" = "PINコードでマルチシグウォレットを使用する";
 "multisig_state_signed" = "このマルチシグリンクはすでにあなたが署名しているため、重複した操作を行うことはできません";
 "multisig_state_unlocked" = "このマルチシグリンクは既に他のユーザーによってロック解除されています。重複した操作を行うことはできません。";

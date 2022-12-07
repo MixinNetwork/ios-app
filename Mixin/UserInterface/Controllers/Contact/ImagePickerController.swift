@@ -1,6 +1,5 @@
 import UIKit
 import MobileCoreServices
-import RSKImageCropper
 import Photos
 
 protocol ImagePickerControllerDelegate: AnyObject {
@@ -83,12 +82,6 @@ class ImagePickerController: NSObject {
         viewController?.present(vcToPresent, animated: true, completion: nil)
     }
     
-    private func cropController(image: UIImage) -> RSKImageCropViewController {
-        let cropController = RSKImageCropViewController(image: image, cropMode: .circle)
-        cropController.delegate = self
-        return cropController
-    }
-
 }
 
 extension ImagePickerController: UIImagePickerControllerDelegate {
@@ -100,7 +93,11 @@ extension ImagePickerController: UIImagePickerControllerDelegate {
             }
             if weakSelf.cropImageAfterPicked {
                 picker.dismiss(animated: true, completion: {
-                    weakSelf.present(viewController: weakSelf.cropController(image: image))
+                    let cropController = ImageCropViewController()
+                    cropController.load(image: image)
+                    cropController.delegate = self
+                    cropController.modalPresentationStyle = .fullScreen
+                    weakSelf.present(viewController: cropController)
                 })
             } else {
                 picker.dismiss(animated: true, completion: nil)
@@ -121,15 +118,10 @@ extension ImagePickerController: UIImagePickerControllerDelegate {
 
 }
 
-extension ImagePickerController: RSKImageCropViewControllerDelegate {
-    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
-        controller.dismiss(animated: true, completion: nil)
+extension ImagePickerController: ImageCropViewControllerDelegate {
+    
+    func imageCropViewController(_ controller: ImageCropViewController, didCropImage croppedImage: UIImage) {
         delegate?.imagePickerController(self, didPickImage: croppedImage)
-    }
-
- 
-    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
-        controller.dismiss(animated: true, completion: nil)
     }
     
 }

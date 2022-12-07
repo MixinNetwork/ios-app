@@ -503,6 +503,7 @@
 "mobile_contacts" = "通訊錄";
 "monthly" = "每月";
 "more" = "更多";
+"move_and_scale" = "移動和縮放";
 "multisig_by_pin" = "透過 PIN 簽名";
 "multisig_state_signed" = "您已經對這筆交易進行了簽名，您無法再次簽名。";
 "multisig_state_unlocked" = "這筆交易已經被其他人撤銷了，您無法再次撤銷。";

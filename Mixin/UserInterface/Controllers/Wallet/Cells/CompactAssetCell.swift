@@ -9,6 +9,12 @@ class CompactAssetCell: UITableViewCell {
     @IBOutlet weak var changeLabel: InsetLabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var noValueIndicator: UILabel!
+    @IBOutlet weak var chainTagLabel: InsetLabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        chainTagLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -19,7 +25,12 @@ class CompactAssetCell: UITableViewCell {
         assetIconView.setIcon(asset: asset)
         nameLabel.text = asset.symbol
         descriptionLabel.text = asset.name
-        
+        if let tag = asset.chainTag {
+            chainTagLabel.text = tag
+            chainTagLabel.isHidden = false
+        } else {
+            chainTagLabel.isHidden = true
+        }
         // TODO: Update these after decimal calculation is merged
         if asset.priceUsd.doubleValue > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"

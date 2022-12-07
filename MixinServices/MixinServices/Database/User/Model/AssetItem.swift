@@ -130,4 +130,21 @@ extension AssetItem {
         }
     }
     
+    public var chainTag: String? {
+        switch chainId {
+        case "43d61dcd-e413-450d-80b8-101d5e903357":
+            return "ERC-20"
+        case "17f78d7c-ed96-40ff-980c-5dc62fecbc85":
+            return "BEP-2"
+        case "1949e683-6a08-49e2-b087-d6b72398588f":
+            return "BEP-20"
+        case "25dabac5-056a-48ff-b9f9-f67395dc407c":
+            return "TRC-20"
+        case "6cfe566e-4aad-470b-8c9a-2fd35b49c68d":
+            return "EOS"
+        default:
+            return nil
+        }
+    }
+    
 }

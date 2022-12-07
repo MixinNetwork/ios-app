@@ -121,6 +121,8 @@ extension AssetItem {
             return "Avalanche X-Chain"
         case "17f78d7c-ed96-40ff-980c-5dc62fecbc85":
             return "BNB Beacon Chain (BEP-2)"
+        case "1949e683-6a08-49e2-b087-d6b72398588f":
+            return "BNB Smart Chain (BEP-20)"
         case "25dabac5-056a-48ff-b9f9-f67395dc407c":
             return "Tron (TRC-20)"
         case "05891083-63d2-4f3d-bfbe-d14d7fb9b25a":

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -24,7 +24,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="7CO-9D-3sK">
-                    <rect key="frame" x="120.5" y="44" width="173" height="32"/>
+                    <rect key="frame" x="120.5" y="48" width="173" height="32"/>
                     <segments>
                         <segment title="Signal"/>
                         <segment title="User"/>
@@ -35,10 +35,10 @@
                     </connections>
                 </segmentedControl>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bYi-xr-8ed">
-                    <rect key="frame" x="0.0" y="75" width="414" height="178"/>
+                    <rect key="frame" x="0.0" y="79" width="414" height="177"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EX9-NX-UEd">
-                            <rect key="frame" x="292" y="0.0" width="114" height="42"/>
+                            <rect key="frame" x="229" y="0.0" width="177" height="42"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuj-ng-kb2">
                                     <rect key="frame" x="0.0" y="0.0" width="51" height="42"/>
@@ -58,10 +58,19 @@
                                         <action selector="pasteInput:" destination="-1" eventType="touchUpInside" id="0Mp-3t-Dwk"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pxZ-kd-Nbo">
+                                    <rect key="frame" x="114" y="0.0" width="63" height="42"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                                    <state key="normal" title="Clean"/>
+                                    <connections>
+                                        <action selector="cleanInput:" destination="-1" eventType="touchUpInside" id="lgP-B9-dhY"/>
+                                    </connections>
+                                </button>
                             </subviews>
                         </stackView>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6Xy-6B-HGH">
-                            <rect key="frame" x="8" y="42" width="398" height="136"/>
+                            <rect key="frame" x="8" y="42" width="398" height="135"/>
                             <color key="backgroundColor" name="button_background_secondary"/>
                             <color key="textColor" systemColor="labelColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -84,7 +93,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jtp-59-v6Q">
-                    <rect key="frame" x="0.0" y="261" width="414" height="593"/>
+                    <rect key="frame" x="0.0" y="264" width="414" height="590"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESN-Qd-JWk">
                             <rect key="frame" x="346" y="0.0" width="60" height="42"/>
@@ -96,7 +105,7 @@
                             </connections>
                         </button>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Output" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="amz-rh-cDb">
-                            <rect key="frame" x="8" y="42" width="398" height="551"/>
+                            <rect key="frame" x="8" y="42" width="398" height="548"/>
                             <color key="backgroundColor" name="button_background_secondary"/>
                             <color key="textColor" systemColor="labelColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -144,7 +153,7 @@
             <color red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

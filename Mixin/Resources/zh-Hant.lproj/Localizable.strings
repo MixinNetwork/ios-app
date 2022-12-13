@@ -927,7 +927,7 @@
 "wallet_hide_asset_confirmation" = "您確定要隱藏%@嗎？";
 "wallet_password_not_equal" = "PIN 不一致, 請重新輸入";
 "wallet_password_unsafe" = "PIN 過於簡單不安全";
-"wallet_pin_pay_interval_tips" = "為了您的資產安全，距離上次輸入支付 PIN 的時間超過以上指定時間時，再次轉賬時已然需要支付 PIN";
+"wallet_pin_pay_interval_tips" = "為了您的資產安全，距離上次輸入支付 PIN 的時間超過以上指定時間時，再次轉賬時依然需要支付 PIN";
 "wallet_pin_tops_desc" = "注意 PIN 丟失無法找回，6 位數字 PIN 是基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
 "wallet_refresh_address_failed" = "手續費已變更且重新整理失敗，請重試。";
 "wallet_transaction_continue_count_down" = "繼續 （%d）";

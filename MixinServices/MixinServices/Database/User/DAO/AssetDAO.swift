@@ -18,7 +18,7 @@ public final class AssetDAO: UserDatabaseDAO {
     FROM assets a
     LEFT JOIN assets chain ON a.chain_id = chain.asset_id
     """
-    private static let sqlOrder = "a.balance * a.price_usd DESC, a.price_usd DESC, cast(a.balance AS REAL) DESC, a.name DESC"
+    private static let sqlOrder = "a.balance * a.price_usd DESC, cast(a.balance AS REAL) DESC, a.price_usd DESC, a.name DESC"
     private static let sqlQuery = "\(sqlQueryTable) ORDER BY \(sqlOrder)"
     private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a.balance > 0 ORDER BY \(sqlOrder) LIMIT 1"
     private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a.balance > 0 ORDER BY \(sqlOrder)"

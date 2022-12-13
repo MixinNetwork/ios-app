@@ -144,6 +144,8 @@ extension AssetItem {
             return "TRC-20"
         case "6cfe566e-4aad-470b-8c9a-2fd35b49c68d":
             return "EOS"
+        case "b7938396-3f94-4e0a-9179-d3440718156f":
+            return "Polygon"
         default:
             return nil
         }

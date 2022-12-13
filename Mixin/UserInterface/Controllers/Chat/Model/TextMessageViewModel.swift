@@ -1,4 +1,5 @@
 import UIKit
+import PhoneNumberKit
 import MixinServices
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
@@ -17,7 +18,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     private static let appIdentityNumberRegex = try? NSRegularExpression(pattern: #"(?<=^|\D)7000\d{6}(?=$|\D)"#, options: [])
     private static let phoneNumberDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
-    private static let phoneNumberValidator = PhoneNumberValidator()
+    private static let phoneNumberKit = PhoneNumberKit()
     
     var content: CoreTextLabel.Content?
     var contentLabelFrame = CGRect.zero
@@ -385,11 +386,17 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             guard !ranges.contains(where: { $0.range.intersection(range) != nil }) else {
                 return
             }
-            let number = nsString.substring(with: range)
-            guard Self.phoneNumberValidator.isValid(number) else {
+            let rawNumber = nsString.substring(with: range)
+            guard let phoneNumber = try? Self.phoneNumberKit.parse(rawNumber) else {
                 return
             }
-            guard let url = MixinInternalURL.phoneNumber(number).url else {
+            let outputNumber: String
+            if rawNumber.hasPrefix("+") {
+                outputNumber = Self.phoneNumberKit.format(phoneNumber, toType: .e164)
+            } else {
+                outputNumber = phoneNumber.adjustedNationalNumber()
+            }
+            guard let url = MixinInternalURL.phoneNumber(outputNumber).url else {
                 return
             }
             let linkRange = Link.Range(range: range, url: url)

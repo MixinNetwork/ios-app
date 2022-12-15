@@ -6,6 +6,10 @@ public extension String {
 
     private static var hashCodeMaps = SafeDictionary<String, Int>()
     
+    var isDigitsOnly: Bool {
+        range(of: "^[0-9]*$", options: .regularExpression) != nil
+    }
+    
     var isGenericNumber: Bool {
         let number = NumberFormatter.usLocalizedDecimal.number(from: self)
         return number != nil

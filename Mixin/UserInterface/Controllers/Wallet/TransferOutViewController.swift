@@ -105,6 +105,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
+        view.layoutIfNeeded()
         let keyboardHeight = view.frame.height - keyboardFrame.origin.y
         continueWrapperBottomConstraint.constant = keyboardHeight
         scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height

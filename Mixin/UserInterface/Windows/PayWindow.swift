@@ -71,6 +71,9 @@ class PayWindow: BottomSheetView {
     private var asset: AssetItem?
     private var amount = ""
     private var memo = ""
+    private var fiatMoneyAmount: String?
+    private var amountToken = ""
+    private var amountExchange = ""
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
     private var processing = false
@@ -124,6 +127,7 @@ class PayWindow: BottomSheetView {
         self.memo = memo
         self.pinAction = action
         self.textfield = textfield
+        self.fiatMoneyAmount = fiatMoneyAmount
 
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
@@ -135,12 +139,12 @@ class PayWindow: BottomSheetView {
             mixinIDPlaceView.isHidden = false
             amountLabelPlaceHeightConstraint.constant = 10
             resultViewPlaceHeightConstraint.constant = 30
-            let amountToken = CurrencyFormatter.localizedString(from: amount,
-                                                                locale: isAmountLocalized ? .current : .us,
-                                                                format: .precision,
-                                                                sign: .whenNegative,
-                                                                symbol: .custom(asset.symbol)) ?? amount
-            let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
+            amountToken = CurrencyFormatter.localizedString(from: amount,
+                                                            locale: isAmountLocalized ? .current : .us,
+                                                            format: .precision,
+                                                            sign: .whenNegative,
+                                                            symbol: .custom(asset.symbol)) ?? amount
+            amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
             if let fiatMoneyAmount = fiatMoneyAmount {
                 amountLabel.text = fiatMoneyAmount + " " + Currency.current.code
                 amountExchangeLabel.text = amountToken
@@ -169,14 +173,7 @@ class PayWindow: BottomSheetView {
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.withdrawal_to(address.label)
                 mixinIDLabel.text = address.fullAddress
-                let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .us, format: .precision, sign: .whenNegative, symbol: .custom(feeAsset.symbol)) ?? address.fee
-                let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: feeAsset.priceUsd)
-                if let fiatMoneyAmount = fiatMoneyAmount {
-                    amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
-                } else {
-                    amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, amountExchange, feeToken, feeExchange)
-                }
-                self.withdrawlFee = feeToken
+                withdrawlFee = updateAmountExchangeForWithdraw(address: address, feeAsset: feeAsset)
                 
                 if !showError {
                     payLabel.text = R.string.localizable.withdraw_by_pin()
@@ -566,6 +563,17 @@ extension PayWindow: PinFieldDelegate {
         transferAction(pin: pin)
     }
 
+    private func updateAmountExchangeForWithdraw(address: Address, feeAsset: AssetItem) -> String {
+        let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .us, format: .precision, sign: .whenNegative, symbol: .custom(feeAsset.symbol)) ?? address.fee
+        let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: feeAsset.priceUsd)
+        if let fiatMoneyAmount = fiatMoneyAmount {
+            amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
+        } else {
+            amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, amountExchange, feeToken, feeExchange)
+        }
+        return feeToken
+    }
+    
     private func failedHandler(error: MixinAPIError) {
         PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
             guard let self = self else {
@@ -575,15 +583,42 @@ extension PayWindow: PinFieldDelegate {
             switch error {
             case .malformedPin, .incorrectPin, .insufficientPool, .internalServerError:
                 self.errorContinueAction = .retryPin
+                self.failedHandler(errorMsg: message)
             case .insufficientFee:
                 if let fee = self.withdrawlFee {
                     message = R.string.localizable.error_insufficient_transaction_fee_with_amount(fee)
                 }
-                fallthrough
+                self.errorContinueAction = .close
+                self.failedHandler(errorMsg: message)
+            case .withdrawFeeTooSmall:
+                if let oldFee = self.withdrawlFee, case let .withdraw(trackId, address, feeAsset, fromWeb) = self.pinAction {
+                    let request = AddressRequest(assetId: address.assetId,
+                                                 destination: address.destination,
+                                                 tag: address.tag,
+                                                 label: address.label,
+                                                 pin: self.pinField.text)
+                    WithdrawalAPI.save(address: request) { result in
+                        if case let .success(address) = result {
+                            AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
+                            let newFee = self.updateAmountExchangeForWithdraw(address: address, feeAsset: feeAsset)
+                            message = R.string.localizable.wallet_withdrawal_changed(oldFee, newFee)
+                            self.pinAction = .withdraw(trackId: trackId, address: address, feeAsset: feeAsset, fromWeb: fromWeb)
+                            self.withdrawlFee = newFee
+                            self.errorContinueAction = .retryPin
+                            self.failedHandler(errorMsg: message)
+                        } else {
+                            self.errorContinueAction = .close
+                            self.failedHandler(errorMsg: message)
+                        }
+                    }
+                } else {
+                    self.errorContinueAction = .close
+                    self.failedHandler(errorMsg: message)
+                }
             default:
                 self.errorContinueAction = .close
+                self.failedHandler(errorMsg: message)
             }
-            self.failedHandler(errorMsg: message)
         }
     }
 

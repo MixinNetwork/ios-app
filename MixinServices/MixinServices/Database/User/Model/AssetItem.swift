@@ -133,24 +133,26 @@ extension AssetItem {
     }
     
     public var chainTag: String? {
-        guard assetId != chainId else {
-            return nil
-        }
-        switch chainId {
-        case "43d61dcd-e413-450d-80b8-101d5e903357":
-            return "ERC-20"
-        case "17f78d7c-ed96-40ff-980c-5dc62fecbc85":
+        // Show chain tag for BNB on BEP-2/BEP-20
+        if chainId == "17f78d7c-ed96-40ff-980c-5dc62fecbc85" {
             return "BEP-2"
-        case "1949e683-6a08-49e2-b087-d6b72398588f":
+        } else if chainId == "1949e683-6a08-49e2-b087-d6b72398588f" {
             return "BEP-20"
-        case "25dabac5-056a-48ff-b9f9-f67395dc407c":
-            return assetKey.isDigitsOnly ? "TRC-10" : "TRC-20"
-        case "6cfe566e-4aad-470b-8c9a-2fd35b49c68d":
-            return "EOS"
-        case "b7938396-3f94-4e0a-9179-d3440718156f":
-            return "Polygon"
-        default:
+        } else if assetId == chainId {
             return nil
+        } else {
+            switch chainId {
+            case "43d61dcd-e413-450d-80b8-101d5e903357":
+                return "ERC-20"
+            case "25dabac5-056a-48ff-b9f9-f67395dc407c":
+                return assetKey.isDigitsOnly ? "TRC-10" : "TRC-20"
+            case "6cfe566e-4aad-470b-8c9a-2fd35b49c68d":
+                return "EOS"
+            case "b7938396-3f94-4e0a-9179-d3440718156f":
+                return "Polygon"
+            default:
+                return nil
+            }
         }
     }
     

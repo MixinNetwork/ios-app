@@ -54,6 +54,7 @@ class KeyboardBasedLayoutViewController: UIViewController {
     
     private func askForLayout(for keyboardFrame: CGRect) {
         let frame = view.convert(keyboardFrame, from: UIScreen.main.coordinateSpace)
+        UIView.performWithoutAnimation(view.layoutIfNeeded)
         if viewHasAppeared {
             layout(for: frame)
         } else {

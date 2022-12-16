@@ -592,12 +592,7 @@ extension PayWindow: PinFieldDelegate {
                 self.failedHandler(errorMsg: message)
             case .withdrawFeeTooSmall:
                 if let oldFee = self.withdrawlFee, case let .withdraw(trackId, address, feeAsset, fromWeb) = self.pinAction {
-                    let request = AddressRequest(assetId: address.assetId,
-                                                 destination: address.destination,
-                                                 tag: address.tag,
-                                                 label: address.label,
-                                                 pin: self.pinField.text)
-                    WithdrawalAPI.save(address: request) { result in
+                    WithdrawalAPI.address(addressId: address.addressId) { result in
                         if case let .success(address) = result {
                             AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                             let newFee = self.updateAmountExchangeForWithdraw(address: address, feeAsset: feeAsset)

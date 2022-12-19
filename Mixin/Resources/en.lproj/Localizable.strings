@@ -934,7 +934,7 @@
 "wallet_transaction_tip" = "Are you sure you want to transfer %3$@ worth %2$@ to %1$@?";
 "wallet_transactions_asset_key_warning" = "Asset key is NOT a deposit address!";
 "wallet_transfer_recent_tip" = "You have already transferred %3$@ to %2$@ %1$@ ago. Do you want to transfer it again?";
-"wallet_withdrawal_changed" = "The withdrawal fee has been changed from %1$@ to %2$@, would you like to proceed  with the request?";
+"wallet_withdrawal_changed" = "The withdrawal fee has been changed from %1$@ to %2$@, would you like to proceed with the request?";
 "wallet_withdrawal_recent_tip" = "You have already withdrawn %3$@ to %2$@ %1$@ ago, Do you want to withdraw it again?";
 "web_cannot_reached_desc" = "%@ took too long to respond. Please check your network and try to switch 4G, Wi-Fi or VPN to reload the page.";
 "web_cannot_reached_title" = "This webpage can't be reached";

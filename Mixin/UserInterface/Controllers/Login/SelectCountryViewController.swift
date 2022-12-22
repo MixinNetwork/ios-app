@@ -61,7 +61,7 @@ class SelectCountryViewController: UIViewController {
         } else {
             filteredCountries = sections
                 .flatMap{ $0 }
-                .filter{ $0.localizedName.uppercased().hasPrefix(searchText) }
+                .filter{ $0.localizedName.uppercased().hasPrefix(searchText) || $0.callingCode.hasPrefix(searchText) }
         }
         tableView.reloadData()
         DispatchQueue.main.async {

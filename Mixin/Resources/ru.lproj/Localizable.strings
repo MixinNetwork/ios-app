@@ -84,6 +84,7 @@
 "assets" = "АКТИВЫ";
 "assets_title" = "Активы";
 "audio" = "Аудио";
+"audio_shareable_false" = "The audio has been set to not allow sharing";
 "audios" = "Аудио";
 "authorization" = "авторизация";
 "authorizations" = "Авторизации";
@@ -420,6 +421,7 @@
 "how_are_you" = "Привет, как дела?";
 "i_am_good" = "Я в порядке.";
 "image" = "изображение";
+"image_shareable_false" = "The image has been set to not allow sharing";
 "immediately" = "Немедленно";
 "in_connecting" = "Подключение...";
 "include_files" = "Включить файлы";
@@ -915,6 +917,7 @@
 "verify_pin" = "Подтвердить PIN-код";
 "version_update" = "Обновление версии";
 "video" = "Видео";
+"video_shareable_false" = "The video has been set to not allow sharing";
 "videos" = "Видео";
 "view_authorization" = "Просмотр авторизации";
 "view_emergency_contact" = "Посмотреть экстренный контакт";

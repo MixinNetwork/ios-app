@@ -84,6 +84,7 @@
 "assets" = "資産";
 "assets_title" = "資産";
 "audio" = "音声メッセージ";
+"audio_shareable_false" = "The audio has been set to not allow sharing";
 "audios" = "音声メッセージ";
 "authorization" = "認証";
 "authorizations" = "許可";
@@ -420,6 +421,7 @@
 "how_are_you" = "こんにちは、調子はどうですか";
 "i_am_good" = "いい気分";
 "image" = "画像";
+"image_shareable_false" = "The image has been set to not allow sharing";
 "immediately" = "すぐに";
 "in_connecting" = "接続中...";
 "include_files" = "ファイルが含まれています";
@@ -915,6 +917,7 @@
 "verify_pin" = "PINコードを認証";
 "version_update" = "アップデート";
 "video" = "動画";
+"video_shareable_false" = "The video has been set to not allow sharing";
 "videos" = "動画";
 "view_authorization" = "閲覧権限";
 "view_emergency_contact" = "緊急連絡先を確認";

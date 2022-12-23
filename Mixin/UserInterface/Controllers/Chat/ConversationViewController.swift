@@ -2802,6 +2802,27 @@ extension ConversationViewController {
                         let reason = R.string.localizable.live_shareable_false()
                         return .visibleButUnavailable(reason: reason)
                     }
+                } else if viewModel.message.category.hasSuffix("_IMAGE") {
+                    if viewModel.message.isShareable {
+                        return .available
+                    } else {
+                        let reason = R.string.localizable.image_shareable_false()
+                        return .visibleButUnavailable(reason: reason)
+                    }
+                } else if viewModel.message.category.hasSuffix("_AUDIO") {
+                    if viewModel.message.isShareable {
+                        return .available
+                    } else {
+                        let reason = R.string.localizable.audio_shareable_false()
+                        return .visibleButUnavailable(reason: reason)
+                    }
+                } else if viewModel.message.category.hasSuffix("_VIDEO") {
+                    if viewModel.message.isShareable {
+                        return .available
+                    } else {
+                        let reason = R.string.localizable.video_shareable_false()
+                        return .visibleButUnavailable(reason: reason)
+                    }
                 } else {
                     return .available
                 }

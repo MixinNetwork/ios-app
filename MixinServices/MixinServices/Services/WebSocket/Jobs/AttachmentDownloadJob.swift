@@ -129,20 +129,24 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
                 }
                 thumbnail?.saveToFile(path: thumbnailURL)
             }
-            let content: String? = {
-                guard let response = attachResponse else {
-                    return nil
-                }
-                guard let createdAt = response.createdAt else {
-                    return nil
-                }
-                let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt)
-                guard let json = try? JSONEncoder.default.encode(extra) else {
-                    return nil
-                }
-                return json.base64EncodedString()
-            }()
-            updateMediaMessage(mediaUrl: fileName, status: .DONE, content: content)
+            if let content = owner.content, let data = Data(base64Encoded: content), let _ = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data) {
+                updateMediaMessage(mediaUrl: fileName, status: .DONE)
+            } else {
+                let content: String? = {
+                    guard let response = attachResponse else {
+                        return nil
+                    }
+                    guard let createdAt = response.createdAt else {
+                        return nil
+                    }
+                    let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt, isShareable: true)
+                    guard let json = try? JSONEncoder.default.encode(extra) else {
+                        return nil
+                    }
+                    return json.base64EncodedString()
+                }()
+                updateMediaMessage(mediaUrl: fileName, status: .DONE, content: content)
+            }
             let userInfo = [
                 Self.UserInfoKey.transcriptId: transcriptId,
                 Self.UserInfoKey.messageId: messageId,
@@ -243,7 +247,7 @@ extension AttachmentDownloadJob {
         guard owner.category != MessageCategory.MESSAGE_RECALL.rawValue else {
             return nil
         }
-        guard let attachmentId = owner.content, !attachmentId.isEmpty else {
+        guard let attachmentId = owner.attachmentId, !attachmentId.isEmpty else {
             return nil
         }
         guard UUID(uuidString: attachmentId) != nil else {

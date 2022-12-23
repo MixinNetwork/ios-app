@@ -300,6 +300,14 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             alert(R.string.localizable.live_shareable_false())
             return
         }
+        if message.category.hasSuffix("_VIDEO"), !message.isShareable {
+            alert(R.string.localizable.video_shareable_false())
+            return
+        }
+        if message.category.hasSuffix("_IMAGE"), !message.isShareable {
+            alert(R.string.localizable.image_shareable_false())
+            return
+        }
         let content: MessageReceiverViewController.MessageContent
         if let transcriptId = item.transcriptId {
             content = .transcriptMessage(transcriptId: transcriptId, item: message)

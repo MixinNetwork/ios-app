@@ -84,6 +84,7 @@
 "assets" = "資產";
 "assets_title" = "資產";
 "audio" = "語音";
+"audio_shareable_false" = "該語音已被設定為不允許轉發";
 "audios" = "音訊";
 "authorization" = "授權";
 "authorizations" = "授權";
@@ -420,6 +421,7 @@
 "how_are_you" = "嗨，你好嗎？";
 "i_am_good" = "我很好。";
 "image" = "圖片";
+"image_shareable_false" = "該圖片已被設定為不允許轉發";
 "immediately" = "立刻";
 "in_connecting" = "正在連線...";
 "include_files" = "包括檔案";
@@ -915,6 +917,7 @@
 "verify_pin" = "驗證 PIN";
 "version_update" = "版本更新";
 "video" = "影片";
+"video_shareable_false" = "該影片已被設定為不允許轉發";
 "videos" = "影片";
 "view_authorization" = "檢視授權";
 "view_emergency_contact" = "檢視緊急聯絡人";

@@ -84,6 +84,7 @@
 "assets" = "资产";
 "assets_title" = "资产";
 "audio" = "语音";
+"audio_shareable_false" = "该语音已被设置为不允许转发";
 "audios" = "音频";
 "authorization" = "授权";
 "authorizations" = "授权";
@@ -420,6 +421,7 @@
 "how_are_you" = "嗨，你好吗？";
 "i_am_good" = "我很好。";
 "image" = "图片";
+"image_shareable_false" = "该图片已被设置为不允许转发";
 "immediately" = "立刻";
 "in_connecting" = "正在连接...";
 "include_files" = "包括文件";
@@ -915,6 +917,7 @@
 "verify_pin" = "验证 PIN";
 "version_update" = "版本更新";
 "video" = "视频";
+"video_shareable_false" = "该视频已被设置为不允许转发";
 "videos" = "视频";
 "view_authorization" = "查看授权";
 "view_emergency_contact" = "查看紧急联系人";

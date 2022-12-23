@@ -129,12 +129,12 @@ extension Message {
                              createdAt: data.createdAt)
     }
     
-    public static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {
+    public static func createMessage(mediaData: TransferAttachmentData, content: String?, data: BlazeMessageData) -> Message {
         return createMessage(messageId: data.messageId,
                              conversationId: data.conversationId,
                              userId: data.getSenderId(),
                              category: data.category,
-                             content: mediaData.attachmentId,
+                             content: content,
                              mediaMimeType: mediaData.mimeType,
                              mediaSize: mediaData.size,
                              mediaDuration: mediaData.duration,

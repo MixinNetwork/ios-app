@@ -181,7 +181,7 @@ public enum TIPNode {
                         do {
                             let request = TIPWatchRequest(watcher: watcher)
                             Logger.tip.info(category: "TIPNode", message: "Watch node: \(signer.index)")
-                            let response = try await TIPAPI.watch(url: signer.api,
+                            let response = try await TIPAPI.watch(url: signer.apiURL,
                                                                   request: request,
                                                                   timeoutInterval: timeoutInterval)
                             if response.counter >= 0 {
@@ -310,7 +310,7 @@ public enum TIPNode {
                                          nonce: nonce,
                                          grace: grace,
                                          assignee: assignee)
-        let response = try await TIPAPI.sign(url: signer.api, request: request)
+        let response = try await TIPAPI.sign(url: signer.apiURL, request: request)
         switch response {
         case .failure(let response):
             throw response.error

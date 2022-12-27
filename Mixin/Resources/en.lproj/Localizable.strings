@@ -89,6 +89,7 @@
 "authorization" = "authorization";
 "authorizations" = "Authorizations";
 "authorize" = "Authorize";
+"authorize_desktop_login" = "Authorize desktop login via %@";
 "authorize_payment_via" = "Authorize payment via %@";
 "authorized" = "Authorized";
 "auto_back_up_hint" = "Automatically back up to iCloud only over Wi-Fi.";

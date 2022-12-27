@@ -89,6 +89,7 @@
 "authorization" = "授权";
 "authorizations" = "授权";
 "authorize" = "授权";
+"authorize_desktop_login" = "通过%@授权桌面登录";
 "authorize_payment_via" = "通过%@验证支付";
 "authorized" = "已授权";
 "auto_back_up_hint" = "只会在 Wi-Fi 下自动备份聊天记录。";

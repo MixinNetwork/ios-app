@@ -76,6 +76,10 @@ enum TIPBody {
         try hashData("TIP:OAUTH:APPROVE:", authorizationId)
     }
     
+    static func updateProvisioning(id: String, secret: String) throws -> Data {
+        try hashData("TIP:PROVISIONING:UPDATE:", id, secret)
+    }
+    
     @inline(__always)
     private static func hashData(_ arguments: String?...) throws -> Data {
         let string = arguments.compactMap({ $0 }).joined()

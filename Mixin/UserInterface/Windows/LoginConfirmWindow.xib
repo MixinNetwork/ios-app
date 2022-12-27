@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x">
-                    <rect key="frame" x="0.0" y="36" width="375" height="644"/>
+                    <rect key="frame" x="0.0" y="229" width="375" height="451"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXJ-y2-8uH">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -46,27 +46,10 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_desktop" translatesAutoresizingMaskIntoConstraints="NO" id="c8a-W9-LfK">
-                            <rect key="frame" x="121.5" y="132" width="132" height="76"/>
+                            <rect key="frame" x="121.5" y="70" width="132" height="76"/>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oH0-FK-y9T" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="129.5" y="443" width="116" height="42"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="42" id="ete-Ss-aOS"/>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="sc4-jz-UwM"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                            <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
-                            <state key="normal" title="Log In"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="log_in"/>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="loginAction:" destination="o1N-Mm-Tns" eventType="touchUpInside" id="iDc-qK-wXR"/>
-                            </connections>
-                        </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTp-rW-A9R">
-                            <rect key="frame" x="50" y="234" width="275" height="43"/>
+                            <rect key="frame" x="50" y="172" width="275" height="43"/>
                             <string key="text">Confirm login to 
 Mixin Messenger Desktop</string>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
@@ -77,45 +60,65 @@ Mixin Messenger Desktop</string>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiW-MT-YrZ">
-                            <rect key="frame" x="140.5" y="515" width="94" height="40"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
-                            <state key="normal" title="Cancel">
-                                <color key="titleColor" name="text_accessory"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                            </userDefinedRuntimeAttributes>
+                        <view contentMode="scaleToFill" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0MH-HX-CKF" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="101.5" y="235" width="172" height="24"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" name="text_accessory"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="24" id="HKr-i5-gJV"/>
+                                <constraint firstAttribute="width" constant="172" id="RtS-dA-Trh"/>
+                            </constraints>
                             <connections>
-                                <action selector="dismissAction:" destination="o1N-Mm-Tns" eventType="touchUpInside" id="ody-GH-izh"/>
+                                <action selector="pinEditingChangedAction:" destination="o1N-Mm-Tns" eventType="editingChanged" id="WKb-5s-l9f"/>
+                            </connections>
+                        </view>
+                        <view hidden="YES" contentMode="scaleToFill" verticalHuggingPriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="UaR-Ju-09K" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="175.5" y="235" width="24" height="24"/>
+                            <color key="backgroundColor" name="background"/>
+                            <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="24" id="4Lt-Qa-oIi"/>
+                                <constraint firstAttribute="height" constant="24" id="FXb-TO-f7Z"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fcr-f7-woa">
+                            <rect key="frame" x="136" y="273" width="103" height="20"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="-6" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Use Face ID" image="ic_pay_face">
+                                <color key="titleColor" name="theme"/>
+                            </state>
+                            <connections>
+                                <action selector="biometricAction:" destination="o1N-Mm-Tns" eventType="touchUpInside" id="42V-2O-qdH"/>
                             </connections>
                         </button>
+                        <view contentMode="scaleToFill" verticalHuggingPriority="750" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="04e-4m-LCg" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="323" width="375" height="128"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="EXJ-y2-8uH" secondAttribute="trailing" id="0Mw-YQ-DUL"/>
-                        <constraint firstItem="oH0-FK-y9T" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="Ec7-Lk-pmS"/>
+                        <constraint firstItem="UaR-Ju-09K" firstAttribute="centerX" secondItem="0MH-HX-CKF" secondAttribute="centerX" id="0uJ-yM-ii9"/>
+                        <constraint firstItem="04e-4m-LCg" firstAttribute="top" secondItem="Fcr-f7-woa" secondAttribute="bottom" priority="750" constant="30" id="2de-Ol-brn"/>
+                        <constraint firstItem="UaR-Ju-09K" firstAttribute="centerY" secondItem="0MH-HX-CKF" secondAttribute="centerY" id="4tK-JL-f5E"/>
+                        <constraint firstItem="04e-4m-LCg" firstAttribute="leading" secondItem="4af-Sc-29x" secondAttribute="leading" id="89T-lM-Z4e"/>
                         <constraint firstItem="EXJ-y2-8uH" firstAttribute="leading" secondItem="4af-Sc-29x" secondAttribute="leading" id="GcF-Ty-Osc"/>
                         <constraint firstItem="EXJ-y2-8uH" firstAttribute="top" secondItem="4af-Sc-29x" secondAttribute="top" id="P24-lQ-eo4"/>
+                        <constraint firstItem="0MH-HX-CKF" firstAttribute="top" secondItem="hTp-rW-A9R" secondAttribute="bottom" constant="20" id="QOb-PQ-Q0m"/>
+                        <constraint firstAttribute="bottom" secondItem="04e-4m-LCg" secondAttribute="bottom" id="Whx-fT-EBe"/>
                         <constraint firstAttribute="trailing" secondItem="hTp-rW-A9R" secondAttribute="trailing" constant="50" id="WrZ-Mk-TOp"/>
                         <constraint firstItem="c8a-W9-LfK" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="aGj-6u-X1O"/>
+                        <constraint firstItem="Fcr-f7-woa" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="bD5-7M-F6v"/>
+                        <constraint firstAttribute="trailing" secondItem="04e-4m-LCg" secondAttribute="trailing" id="cdG-n4-hWO"/>
+                        <constraint firstItem="0MH-HX-CKF" firstAttribute="bottom" secondItem="Fcr-f7-woa" secondAttribute="top" constant="-14" id="n8Y-6I-Axv"/>
                         <constraint firstItem="hTp-rW-A9R" firstAttribute="leading" secondItem="4af-Sc-29x" secondAttribute="leading" constant="50" id="nkz-9A-nuJ"/>
-                        <constraint firstItem="c8a-W9-LfK" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="bottom" constant="62" id="ofY-lD-Xh7"/>
+                        <constraint firstItem="0MH-HX-CKF" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="obf-cq-yjH"/>
+                        <constraint firstItem="c8a-W9-LfK" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="bottom" id="ofY-lD-Xh7"/>
                         <constraint firstItem="hTp-rW-A9R" firstAttribute="top" secondItem="c8a-W9-LfK" secondAttribute="bottom" constant="26" id="qNE-0b-nbf"/>
-                        <constraint firstItem="fiW-MT-YrZ" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="t2P-9g-vAG"/>
-                        <constraint firstItem="oH0-FK-y9T" firstAttribute="top" secondItem="hTp-rW-A9R" secondAttribute="bottom" constant="166" id="tXy-ce-TjU" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                                    <real key="value" value="83"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
-                                    <real key="value" value="103"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                        <constraint firstItem="fiW-MT-YrZ" firstAttribute="top" secondItem="oH0-FK-y9T" secondAttribute="bottom" constant="30" id="y24-Lo-Xb7"/>
+                        <constraint firstItem="04e-4m-LCg" firstAttribute="top" secondItem="0MH-HX-CKF" secondAttribute="bottom" priority="250" constant="20" id="v98-8m-mma"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -127,23 +130,18 @@ Mixin Messenger Desktop</string>
             <viewLayoutGuide key="safeArea" id="1N0-u4-BA5"/>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="1N0-u4-BA5" firstAttribute="bottom" secondItem="fiW-MT-YrZ" secondAttribute="bottom" constant="76" id="834-cF-nYR" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                            <real key="value" value="38"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
-                            <real key="value" value="50"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </constraint>
                 <constraint firstItem="4af-Sc-29x" firstAttribute="leading" secondItem="1N0-u4-BA5" secondAttribute="leading" id="NXL-wA-NYz"/>
                 <constraint firstAttribute="bottom" secondItem="4af-Sc-29x" secondAttribute="bottom" constant="-13" id="Tb2-fv-LUk"/>
                 <constraint firstItem="1N0-u4-BA5" firstAttribute="trailing" secondItem="4af-Sc-29x" secondAttribute="trailing" id="yOM-sR-ldf"/>
             </constraints>
             <connections>
-                <outlet property="loginButton" destination="oH0-FK-y9T" id="8yH-Rb-lW5"/>
+                <outlet property="biometricButton" destination="Fcr-f7-woa" id="dsK-ik-Dg9"/>
+                <outlet property="hideBiometricButtonConstraint" destination="v98-8m-mma" id="RFA-hk-8dJ"/>
+                <outlet property="loadingIndicator" destination="UaR-Ju-09K" id="JRT-yX-vkV"/>
+                <outlet property="numberPadView" destination="04e-4m-LCg" id="8Mz-nn-95Y"/>
+                <outlet property="pinField" destination="0MH-HX-CKF" id="nyY-bm-Ah8"/>
                 <outlet property="popupView" destination="4af-Sc-29x" id="6m7-lB-pHo"/>
+                <outlet property="showBiometricButtonConstraint" destination="2de-Ol-brn" id="h5p-Z6-xRj"/>
             </connections>
             <point key="canvasLocation" x="25.5" y="52.5"/>
         </view>
@@ -151,11 +149,15 @@ Mixin Messenger Desktop</string>
     <resources>
         <image name="Setting/ic_desktop" width="132" height="76"/>
         <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="ic_pay_face" width="20" height="20"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

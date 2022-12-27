@@ -89,6 +89,7 @@
 "authorization" = "授權";
 "authorizations" = "授權";
 "authorize" = "授權";
+"authorize_desktop_login" = "透過%@驗證桌面版登入";
 "authorize_payment_via" = "透過%@驗證支付";
 "authorized" = "已授權";
 "auto_back_up_hint" = "只會在 Wi-Fi 下自動備份聊天記錄。";

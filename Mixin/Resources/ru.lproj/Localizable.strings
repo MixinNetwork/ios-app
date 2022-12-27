@@ -89,6 +89,7 @@
 "authorization" = "авторизация";
 "authorizations" = "Авторизации";
 "authorize" = "Разрешить";
+"authorize_desktop_login" = "Authorize desktop login via %@";
 "authorize_payment_via" = "Авторизовать платеж через %@";
 "authorized" = "Авторизованный";
 "auto_back_up_hint" = "Автоматическое резервное копирование в iCloud только через Wi-Fi.";

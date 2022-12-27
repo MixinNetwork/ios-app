@@ -694,7 +694,6 @@
 "revoke_multisig_transaction" = "マルチシグトランザクションを取り消す";
 "room_is_full" = "ルームが満員です";
 "save" = "保存";
-"save_by_pin" = "ピンで保存";
 "save_image" = "画像を保存する";
 "save_to_camera_roll" = "カメラロールに保存する";
 "saved" = "保存しました";

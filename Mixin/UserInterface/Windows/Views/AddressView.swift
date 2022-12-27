@@ -6,7 +6,6 @@ class AddressView: UIStackView {
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var loadingView: ActivityIndicatorView!
-    @IBOutlet weak var pinTipLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
@@ -89,7 +88,6 @@ extension AddressView: PinFieldDelegate {
         dismissButton.isEnabled = false
         UIView.animate(withDuration: 0.15) {
             self.pinField.isHidden = true
-            self.pinTipLabel.isHidden = true
             self.loadingView.isHidden = false
         }
         loadingView.startAnimating()

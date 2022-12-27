@@ -694,7 +694,6 @@
 "revoke_multisig_transaction" = "撤銷多重簽名交易";
 "room_is_full" = "房間已滿";
 "save" = "儲存";
-"save_by_pin" = "透過 PIN 儲存";
 "save_image" = "儲存圖片";
 "save_to_camera_roll" = "儲存到相簿";
 "saved" = "已儲存";

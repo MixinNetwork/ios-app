@@ -504,7 +504,6 @@
 "monthly" = "Ежемесячно";
 "more" = "Больше";
 "move_and_scale" = "Cдвиг и масштаб";
-"multisig_by_pin" = "Мультиподпись по PIN-коду";
 "multisig_state_signed" = "Эта мультиподписная ссылка уже подписана вами, вы не можете сделать дублирующую операцию.";
 "multisig_state_unlocked" = "Эта мультиподписная ссылка уже кем-то разблокирована, дублировать операцию нельзя.";
 "multisig_transaction" = "Мультиподписная транзакция";
@@ -584,7 +583,6 @@
 "participants_count" = "%@ УЧАСТНИКОВ";
 "pay_paid" = "Эта платежная ссылка уже кем-то оплачена, повторный платеж сделать нельзя.";
 "pay_with" = "Платить с помощью %@";
-"pay_with_pin" = "Оплатить PIN-кодом";
 "pay_with_pin_interval" = "Оплата с интервалом PIN";
 "pay_withdrawal_memo" = "Сумма %@ %@\nКомиссия %@ %@";
 "peer_closed" = "Пир закрыт";
@@ -899,12 +897,6 @@
 "uploading_progress" = "Загрузка: %@ из %@ (%@)";
 "url_unrecognized_hint" = "%@ не удалось распознать, обновите Mixin до последней версии или свяжитесь с разработчиком, чтобы проверить ссылку";
 "use_biometry" = "Использовать %@";
-"use_face_multisig" = "Используйте Face Multisig";
-"use_face_pay" = "Используйте Face Pay";
-"use_face_withdraw" = "Используйте Face Withdraw";
-"use_touch_multisig" = "Используйте сенсорную мультиподпись";
-"use_touch_pay" = "Используйте сенсорную оплату";
-"use_touch_withdraw" = "Используйте сенсорный вывод";
 "user_is_reported" = "Сообщено о пользователе";
 "user_not_found" = "Пользователь не найден";
 "validation_timed_out" = "Время проверки истекло";
@@ -944,7 +936,6 @@
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi и сотовая связь";
 "withdraw_address" = "Адрес";
-"withdraw_by_pin" = "Вывод по PIN-коду";
 "withdrawal" = "Вывести";
 "withdrawal_addr_memo" = "Тег назначения или идентификационный номер или примечания. Если нет, вы можете установить Нет памятки.";
 "withdrawal_addr_new" = "Новый адрес %@";

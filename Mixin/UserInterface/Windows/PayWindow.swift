@@ -33,7 +33,6 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var paySuccessImageView: UIImageView!
     @IBOutlet weak var enableBiometricAuthButton: UIButton!
-    @IBOutlet weak var payLabel: UILabel!
     @IBOutlet weak var biometricButton: UIButton!
     @IBOutlet weak var multisigView: UIView!
     @IBOutlet weak var dismissButton: UIButton!
@@ -128,10 +127,6 @@ class PayWindow: BottomSheetView {
         self.pinAction = action
         self.textfield = textfield
         self.fiatMoneyAmount = fiatMoneyAmount
-
-        let showError = !(error?.isEmpty ?? true)
-        let showBiometric = isAllowBiometricPay
-        
         if let asset = asset {
             assetIconView.isHidden = false
             collectibleView.isHidden = true
@@ -159,32 +154,11 @@ class PayWindow: BottomSheetView {
                 mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
                 mixinIDLabel.textColor = .accessoryText
                 pinView.isHidden = false
-                if !showError {
-                    payLabel.text = R.string.localizable.pay_with_pin()
-                    if showBiometric {
-                        if biometryType == .faceID {
-                            biometricButton.setTitle(R.string.localizable.use_face_pay(), for: .normal)
-                        } else {
-                            biometricButton.setTitle(R.string.localizable.use_touch_pay(), for: .normal)
-                        }
-                    }
-                }
             case let .withdraw(_, address, feeAsset, _):
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.withdrawal_to(address.label)
                 mixinIDLabel.text = address.fullAddress
                 withdrawlFee = updateAmountExchangeForWithdraw(address: address, feeAsset: feeAsset)
-                
-                if !showError {
-                    payLabel.text = R.string.localizable.withdraw_by_pin()
-                    if showBiometric {
-                        if biometryType == .faceID {
-                            biometricButton.setTitle(R.string.localizable.use_face_withdraw(), for: .normal)
-                        } else {
-                            biometricButton.setTitle(R.string.localizable.use_touch_withdraw(), for: .normal)
-                        }
-                    }
-                }
             case let .payment(payment, receivers):
                 guard let account = LoginManager.shared.account else {
                     break
@@ -193,7 +167,7 @@ class PayWindow: BottomSheetView {
                 multisigActionView.image = R.image.multisig_sign()
                 nameLabel.text = R.string.localizable.multisig_transaction()
                 mixinIDLabel.text = payment.memo
-                renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: [UserItem.createUser(from: account)], receivers: receivers)
+                renderMultisigInfo(senders: [UserItem.createUser(from: account)], receivers: receivers)
             case let .multisig(multisig, senders, receivers):
                 multisigView.isHidden = false
                 switch multisig.action {
@@ -207,7 +181,7 @@ class PayWindow: BottomSheetView {
                     break
                 }
                 mixinIDLabel.text = multisig.memo
-                renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
+                renderMultisigInfo(senders: senders, receivers: receivers)
             case .collectible:
                 break
             }
@@ -240,43 +214,26 @@ class PayWindow: BottomSheetView {
             amountExchangeLabel.text = R.string.localizable.collectible_token_id(token.tokenKey)
             tokenNameLabel.text = token.meta.tokenName
             collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
-            renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
-            payLabel.text = R.string.localizable.pay_with_pin()
-            if !showError && showBiometric {
-                if biometryType == .faceID {
-                    biometricButton.setTitle(R.string.localizable.use_face_pay(), for: .normal)
-                } else {
-                    biometricButton.setTitle(R.string.localizable.use_touch_pay(), for: .normal)
-                }
-            }
+            renderMultisigInfo(senders: senders, receivers: receivers)
         }
-
         dismissButton.isEnabled = true
-        if let err = error, !err.isEmpty {
+        if let error, !error.isEmpty {
             errorContinueAction = .close
             pinView.isHidden = true
             biometricButton.isHidden = true
             successView.isHidden = true
             errorView.isHidden = false
-            errorLabel.text = err
+            errorLabel.text = error
         } else {
             resetPinInput()
+            if isAllowBiometricPay {
+                biometricButton.setTitle(R.string.localizable.use_biometry(biometryType.localizedName), for: .normal)
+            }
         }
         return self
     }
 
-    private func renderMultisigInfo(showError: Bool, showBiometric: Bool, senders: [UserItem], receivers: [UserItem]) {
-        if !showError {
-            payLabel.text = R.string.localizable.multisig_by_pin()
-            if showBiometric {
-                if biometryType == .faceID {
-                    biometricButton.setTitle(R.string.localizable.use_face_multisig(), for: .normal)
-                } else {
-                    biometricButton.setTitle(R.string.localizable.use_touch_multisig(), for: .normal)
-                }
-            }
-        }
-
+    private func renderMultisigInfo(senders: [UserItem], receivers: [UserItem]) {
         for view in multisigStackView.arrangedSubviews {
             multisigStackView.sendSubviewToBack(view)
         }
@@ -331,7 +288,6 @@ class PayWindow: BottomSheetView {
 
     private func resetPinInput() {
         pinField.isHidden = false
-        payLabel.isHidden = false
         pinView.isHidden = false
         errorView.isHidden = true
         successView.isHidden = true
@@ -687,7 +643,6 @@ extension PayWindow: PinFieldDelegate {
             biometricButton.isHidden = true
         }
         pinField.isHidden = true
-        payLabel.isHidden = true
         loadingView.startAnimating()
         
         let assetId = asset?.assetId ?? ""

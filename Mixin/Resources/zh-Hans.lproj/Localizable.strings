@@ -504,7 +504,6 @@
 "monthly" = "每月";
 "more" = "更多";
 "move_and_scale" = "移动和缩放";
-"multisig_by_pin" = "通过 PIN 签名";
 "multisig_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 "multisig_transaction" = "多重签名交易";
@@ -584,7 +583,6 @@
 "participants_count" = "%@ 位群组成员";
 "pay_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_with" = "%@支付";
-"pay_with_pin" = "用 PIN 支付";
 "pay_with_pin_interval" = "PIN 使用间隔";
 "pay_withdrawal_memo" = "数量 %@ %@\n手续费 %@ %@";
 "peer_closed" = "Peer 已关闭";
@@ -899,12 +897,6 @@
 "uploading_progress" = "上传中：%@ / %@（%@）";
 "url_unrecognized_hint" = "%@ 识别失败，请升级至 Mixin 最新版本或联系开发者检查链接";
 "use_biometry" = "采用%@";
-"use_face_multisig" = "使用面容签名";
-"use_face_pay" = "使用面容支付";
-"use_face_withdraw" = "使用面容提现";
-"use_touch_multisig" = "使用指纹签名";
-"use_touch_pay" = "使用指纹支付";
-"use_touch_withdraw" = "使用指纹提现";
 "user_is_reported" = "已举报";
 "user_not_found" = "找不到这个用户";
 "validation_timed_out" = "验证超时";
@@ -944,7 +936,6 @@
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 与蜂窝移动网";
 "withdraw_address" = "提现地址";
-"withdraw_by_pin" = "通过 PIN 提现";
 "withdrawal" = "提现";
 "withdrawal_addr_memo" = "地址标签、数字 ID 或备注。如果没有，点击不使用 Memo（备注）。";
 "withdrawal_addr_new" = "新 %@ 地址";

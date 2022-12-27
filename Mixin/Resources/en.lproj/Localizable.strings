@@ -504,7 +504,6 @@
 "monthly" = "Monthly";
 "more" = "More";
 "move_and_scale" = "Move and Scale";
-"multisig_by_pin" = "Multisig by PIN";
 "multisig_state_signed" = "This multisig link has already been signed by yourself, you can not make a duplicate operation.";
 "multisig_state_unlocked" = "This multisig link has already been unlocked by someone, you can not make a duplicate operation.";
 "multisig_transaction" = "Multisig Transaction";
@@ -584,7 +583,6 @@
 "participants_count" = "%@ PARTICIPANTS";
 "pay_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "pay_with" = "Pay with %@";
-"pay_with_pin" = "Pay with PIN";
 "pay_with_pin_interval" = "Pay with PIN interval";
 "pay_withdrawal_memo" = "Amount %@ %@\nFee %@ %@";
 "peer_closed" = "Peer closed";
@@ -899,12 +897,6 @@
 "uploading_progress" = "Uploading: %@ of %@ (%@)";
 "url_unrecognized_hint" = "%@ failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link";
 "use_biometry" = "Use %@";
-"use_face_multisig" = "Use Face Multisig";
-"use_face_pay" = "Use Face Pay";
-"use_face_withdraw" = "Use Face Withdraw";
-"use_touch_multisig" = "Use Touch Multisig";
-"use_touch_pay" = "Use Touch Pay";
-"use_touch_withdraw" = "Use Touch Withdraw";
 "user_is_reported" = "User has been reported";
 "user_not_found" = "User not found";
 "validation_timed_out" = "Validation timed out";
@@ -944,7 +936,6 @@
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi and Cellular";
 "withdraw_address" = "Address";
-"withdraw_by_pin" = "Withdraw by PIN";
 "withdrawal" = "Withdraw";
 "withdrawal_addr_memo" = "Destination Tag or ID Number or notes. If not, you can set it No Memo.";
 "withdrawal_addr_new" = "New %@ Address";

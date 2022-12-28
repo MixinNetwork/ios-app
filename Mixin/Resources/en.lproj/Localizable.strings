@@ -385,6 +385,7 @@
 "fee" = "Fee";
 "feedback" = "Feedback";
 "file" = "File";
+"file_shareable_false" = "The file has been set to not allow sharing";
 "files" = "Files";
 "filter" = "Filter";
 "filter_by" = "FILTER BY";

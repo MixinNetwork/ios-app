@@ -385,6 +385,7 @@
 "fee" = "手数料";
 "feedback" = "フィードバック";
 "file" = "ファイル";
+"file_shareable_false" = "The file has been set to not allow sharing";
 "files" = "ファイル";
 "filter" = "フィルター";
 "filter_by" = "絞り込み：";

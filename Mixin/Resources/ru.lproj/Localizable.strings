@@ -385,6 +385,7 @@
 "fee" = "Комиссия";
 "feedback" = "Обратная связь";
 "file" = "Файл";
+"file_shareable_false" = "The file has been set to not allow sharing";
 "files" = "Файлы";
 "filter" = "Фильтр";
 "filter_by" = "СОРТИРОВАТЬ ПО";

@@ -162,7 +162,7 @@ class AttachmentUploadJob: AttachmentLoadingJob {
                                                        duration: message.mediaDuration,
                                                        waveform: message.mediaWaveform,
                                                        createdAt: createdAt,
-                                                       isShareable: nil)
+                                                       isShareable: true)
         let content = (try? JSONEncoder.default.encode(transferMediaData).base64EncodedString()) ?? ""
         message.content = content
         message.mediaKey = key

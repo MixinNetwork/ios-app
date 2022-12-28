@@ -385,6 +385,7 @@
 "fee" = "手续费";
 "feedback" = "反馈";
 "file" = "文件";
+"file_shareable_false" = "该文件已被设置为不允许转发";
 "files" = "文档";
 "filter" = "筛选";
 "filter_by" = "筛选";

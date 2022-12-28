@@ -619,17 +619,7 @@ public class ReceiveMessageService: MixinService {
                 let error = MixinServicesError.nilMimeType(userInfo)
                 reporter.report(error: error)
             }
-            let content: String? = {
-                guard let createdAt = transferMediaData.createdAt else {
-                    return nil
-                }
-                let extra = AttachmentExtra(attachmentId: transferMediaData.attachmentId, createdAt: createdAt, isShareable: transferMediaData.isShareable)
-                guard let json = try? JSONEncoder.default.encode(extra) else {
-                    return nil
-                }
-                return json.base64EncodedString()
-            }()
-            let message = Message.createMessage(mediaData: transferMediaData, content: content, data: data)
+            let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_LIVE") {
             guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: decryptedData)) else {
@@ -651,7 +641,7 @@ public class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            let message = Message.createMessage(mediaData: transferMediaData, content: transferMediaData.attachmentId, data: data)
+            let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_AUDIO") {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
@@ -659,17 +649,7 @@ public class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            let content: String? = {
-                guard let createdAt = transferMediaData.createdAt else {
-                    return nil
-                }
-                let extra = AttachmentExtra(attachmentId: transferMediaData.attachmentId, createdAt: createdAt, isShareable: transferMediaData.isShareable)
-                guard let json = try? JSONEncoder.default.encode(extra) else {
-                    return nil
-                }
-                return json.base64EncodedString()
-            }()
-            let message = Message.createMessage(mediaData: transferMediaData, content: content, data: data)
+            let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
             let job = AttachmentDownloadJob(message: message)
             ConcurrentJobQueue.shared.addJob(job: job)

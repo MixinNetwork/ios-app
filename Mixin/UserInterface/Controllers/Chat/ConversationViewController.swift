@@ -2823,6 +2823,13 @@ extension ConversationViewController {
                         let reason = R.string.localizable.video_shareable_false()
                         return .visibleButUnavailable(reason: reason)
                     }
+                } else if viewModel.message.category.hasSuffix("_DATA") {
+                    if viewModel.message.isShareable {
+                        return .available
+                    } else {
+                        let reason = R.string.localizable.file_shareable_false()
+                        return .visibleButUnavailable(reason: reason)
+                    }
                 } else {
                     return .available
                 }

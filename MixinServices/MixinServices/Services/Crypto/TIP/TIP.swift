@@ -63,18 +63,12 @@ public enum TIP {
         case unableToGenerateSecuredRandom
         case invalidPIN
         case identitySeedHash
-        case invalidSignature
         case incorrectPIN
         case missingSessionSecret
         case generateSTSeed
-        case invalidSTSeed
-        case unableToSignTimestamp
         case generateTIPPrivKey
         case hashAggSigToPrivSeed
-        case invalidAggSig
         case noAccount
-        case invalidTIPPriv
-        case unableToSignTarget
         case unableToHashTIPPrivKey
         case tipCounterExceedsNodeCounter
         case invalidCounterGroups
@@ -136,9 +130,7 @@ extension TIP {
         guard let privSeed = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
-        guard let priv = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
-            throw Error.invalidSignature
-        }
+        let priv = try Ed25519PrivateKey(rawRepresentation: privSeed)
         let pub = priv.publicKey.rawRepresentation
         if let localPub = LoginManager.shared.account?.tipKey, !localPub.isEmpty, pub != localPub {
             throw Error.incorrectPIN
@@ -246,9 +238,7 @@ extension TIP {
         guard let privSeed = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
-        guard let privateKey = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
-            throw Error.invalidAggSig
-        }
+        let privateKey = try Ed25519PrivateKey(rawRepresentation: privSeed)
         let pub = privateKey.publicKey.rawRepresentation
         guard let counter = LoginManager.shared.account?.tipCounter else {
             throw Error.noAccount
@@ -372,12 +362,8 @@ extension TIP {
         guard let privSeed = SHA3_256.hash(data: tipPriv) else {
             throw Error.hashTIPPrivToPrivSeed
         }
-        guard let privateKey = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
-            throw Error.invalidTIPPriv
-        }
-        guard let sig = privateKey.signature(for: target) else {
-            throw Error.unableToSignTarget
-        }
+        let privateKey = try Ed25519PrivateKey(rawRepresentation: privSeed)
+        let sig = try privateKey.signature(for: target)
         let pinData = sig
             + UInt64(Date().timeIntervalSince1970).data(endianness: .little)
             + pinIterator().data(endianness: .little)
@@ -474,9 +460,7 @@ extension TIP {
         guard let stSeed = SHA3_256.hash(data: sessionPriv + pinData) else {
             throw Error.generateSTSeed
         }
-        guard let stPriv = Ed25519PrivateKey(rfc8032Representation: stSeed) else {
-            throw Error.invalidSTSeed
-        }
+        let stPriv = try Ed25519PrivateKey(rawRepresentation: stSeed)
         let stPub = stPriv.publicKey.rawRepresentation
         guard let key = Data(withNumberOfSecuredRandomBytes: 32) else {
             throw Error.unableToGenerateSecuredRandom
@@ -503,9 +487,7 @@ extension TIP {
         guard let stSeed = SHA3_256.hash(data: sessionPriv + pinData) else {
             throw Error.generateSTSeed
         }
-        guard let stPriv = Ed25519PrivateKey(rfc8032Representation: stSeed) else {
-            throw Error.invalidSTSeed
-        }
+        let stPriv = try Ed25519PrivateKey(rawRepresentation: stSeed)
         let timestamp = UInt64(Date().timeIntervalSince1970) * UInt64(NSEC_PER_SEC)
         
         let sigBase64 = try sign(timestamp: timestamp, with: stPriv)
@@ -524,9 +506,7 @@ extension TIP {
     
     private static func sign(timestamp: UInt64, with key: Ed25519PrivateKey) throws -> String {
         let body = try TIPBody.verify(timestamp: timestamp)
-        guard let signature = key.signature(for: body) else {
-            throw Error.unableToSignTimestamp
-        }
+        let signature = try key.signature(for: body)
         return signature.base64RawURLEncodedString()
     }
     

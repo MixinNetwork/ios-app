@@ -24,7 +24,7 @@ extension EdDSAMigration {
                 }
                 AppGroupUserDefaults.Account.sessionSecret = nil
                 AppGroupUserDefaults.Account.pinToken = nil
-                AppGroupKeychain.sessionSecret = key.rfc8032Representation
+                AppGroupKeychain.sessionSecret = key.rawRepresentation
                 AppGroupKeychain.pinToken = pinToken
                 return
             case .failure(.unauthorized), .failure(.forbidden):

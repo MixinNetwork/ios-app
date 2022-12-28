@@ -14,7 +14,6 @@ public final class ProvisioningAPI: MixinAPI {
     }
     
     public static func update(id: String, secret: String, pin: String, completion: @escaping (MixinAPI.Result<ProvisioningResponse>) -> Void) {
-        let timestamp = UInt64(Date().timeIntervalSince1970) * UInt64(NSEC_PER_SEC)
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.updateProvisioning(id: id, secret: secret)
         }, onFailure: completion) { (encryptedPin) in

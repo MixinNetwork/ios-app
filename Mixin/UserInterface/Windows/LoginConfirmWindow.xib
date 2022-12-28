@@ -15,8 +15,8 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x">
-                    <rect key="frame" x="0.0" y="229" width="375" height="451"/>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="216" width="375" height="451"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXJ-y2-8uH">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -116,22 +116,32 @@ Mixin Messenger Desktop</string>
                         <constraint firstItem="0MH-HX-CKF" firstAttribute="bottom" secondItem="Fcr-f7-woa" secondAttribute="top" constant="-14" id="n8Y-6I-Axv"/>
                         <constraint firstItem="hTp-rW-A9R" firstAttribute="leading" secondItem="4af-Sc-29x" secondAttribute="leading" constant="50" id="nkz-9A-nuJ"/>
                         <constraint firstItem="0MH-HX-CKF" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="obf-cq-yjH"/>
-                        <constraint firstItem="c8a-W9-LfK" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="bottom" id="ofY-lD-Xh7"/>
+                        <constraint firstItem="c8a-W9-LfK" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="bottom" id="ofY-lD-Xh7" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="-30"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                                    <real key="value" value="0.0"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
+                                    <real key="value" value="0.0"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                                    <real key="value" value="0.0"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="hTp-rW-A9R" firstAttribute="top" secondItem="c8a-W9-LfK" secondAttribute="bottom" constant="26" id="qNE-0b-nbf"/>
                         <constraint firstItem="04e-4m-LCg" firstAttribute="top" secondItem="0MH-HX-CKF" secondAttribute="bottom" priority="250" constant="20" id="v98-8m-mma"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="13"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="1N0-u4-BA5"/>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="4af-Sc-29x" firstAttribute="leading" secondItem="1N0-u4-BA5" secondAttribute="leading" id="NXL-wA-NYz"/>
-                <constraint firstAttribute="bottom" secondItem="4af-Sc-29x" secondAttribute="bottom" constant="-13" id="Tb2-fv-LUk"/>
+                <constraint firstAttribute="bottom" secondItem="4af-Sc-29x" secondAttribute="bottom" id="Tb2-fv-LUk"/>
                 <constraint firstItem="1N0-u4-BA5" firstAttribute="trailing" secondItem="4af-Sc-29x" secondAttribute="trailing" id="yOM-sR-ldf"/>
             </constraints>
             <connections>
@@ -154,7 +164,7 @@ Mixin Messenger Desktop</string>
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

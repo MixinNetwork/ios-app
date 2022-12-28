@@ -15,7 +15,7 @@ class LoginConfirmWindow: BottomSheetView {
     private var publicKey: String!
     private var isAutoFillPIN = false
     
-    private var isAllowBiometric: Bool {
+    private var canAuthorizeWithBiometric: Bool {
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
             return false
         }
@@ -111,7 +111,7 @@ class LoginConfirmWindow: BottomSheetView {
         self.id = id
         self.publicKey = publicKey
         numberPadView.target = pinField
-        if isAllowBiometric {
+        if canAuthorizeWithBiometric {
             let image = biometryType == .faceID ? R.image.ic_pay_face() : R.image.ic_pay_touch()
             biometricButton.setImage(image, for: .normal)
             biometricButton.setTitle(R.string.localizable.use_biometry(biometryType.localizedName), for: .normal)

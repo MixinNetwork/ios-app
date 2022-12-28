@@ -510,8 +510,16 @@ extension TIP {
         
         let sigBase64 = try sign(timestamp: timestamp, with: stPriv)
         let request = TIPSecretReadRequest(signature: sigBase64, timestamp: timestamp)
-        let seed = try await TIPAPI.readSecret(request: request).seed
-        return try AESCryptor.decrypt(seed, with: pinToken)
+        do {
+            let seed = try await TIPAPI.readSecret(request: request).seed
+            return try AESCryptor.decrypt(seed, with: pinToken)
+        } catch {
+            if case DecodingError.dataCorrupted = error {
+                AppGroupKeychain.tipPriv = nil
+                Logger.tip.warn(category: "TIP", message: "TIP Priv is removed due to invalid secret")
+            }
+            throw error
+        }
     }
     
     private static func sign(timestamp: UInt64, with key: Ed25519PrivateKey) throws -> String {

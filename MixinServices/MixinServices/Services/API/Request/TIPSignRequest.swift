@@ -12,7 +12,16 @@ struct TIPSignRequest: Encodable {
         case cryptoEncrypt
     }
     
-    struct SignData: Encodable {
+    enum CodingKeys: CodingKey {
+        // `id` will not be encoded but send with headers
+        case signature
+        case identity
+        case data
+        case watcher
+        case action
+    }
+    
+    private struct SignData: Encodable {
         let identity: String
         let assignee: String?
         let ephemeral: String
@@ -22,13 +31,14 @@ struct TIPSignRequest: Encodable {
         let rotate: String?
     }
     
+    let id: String
     let signature: String
     let identity: String
     let data: String
     let watcher: String
     let action = "SIGN"
     
-    init(userSk: CryptoScalar, signer: TIPSigner, ephemeral: Data, watcher: Data, nonce: UInt64, grace: UInt64, assignee: Data?) throws {
+    init(id: String, userSk: CryptoScalar, signer: TIPSigner, ephemeral: Data, watcher: Data, nonce: UInt64, grace: UInt64, assignee: Data?) throws {
         var error: NSError?
         guard let signerPk = CryptoPubKeyFromBase58(signer.identity, &error) else {
             throw InitError.signerPk(error)
@@ -66,6 +76,7 @@ struct TIPSignRequest: Encodable {
             throw InitError.cryptoEncrypt
         }
         
+        self.id = id
         self.signature = sig
         self.identity = userPkString
         self.data = cipher.base64RawURLEncodedString()

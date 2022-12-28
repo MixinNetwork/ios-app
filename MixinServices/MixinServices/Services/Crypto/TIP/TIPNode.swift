@@ -181,7 +181,7 @@ public enum TIPNode {
                         do {
                             let request = TIPWatchRequest(watcher: watcher)
                             Logger.tip.info(category: "TIPNode", message: "Watch node: \(signer.index)")
-                            let response = try await TIPAPI.watch(url: signer.api,
+                            let response = try await TIPAPI.watch(url: signer.apiURL,
                                                                   request: request,
                                                                   timeoutInterval: timeoutInterval)
                             if response.counter >= 0 {
@@ -245,8 +245,10 @@ public enum TIPNode {
                     }
 #endif
                     repeat {
+                        let requestID = UUID().uuidString.lowercased()
                         do {
-                            let sig = try await signTIPNode(userSk: userSk,
+                            let sig = try await signTIPNode(requestID: requestID,
+                                                            userSk: userSk,
                                                             signer: signer,
                                                             ephemeral: ephemeral,
                                                             watcher: watcher,
@@ -258,14 +260,14 @@ public enum TIPNode {
                         } catch {
                             switch error {
                             case let AFError.responseValidationFailed(reason: .unacceptableStatusCode(code)):
-                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(code)")
+                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(code), id: \(requestID)")
                                 if code == 429 || code == 500 {
                                     return .failure(error)
                                 } else {
                                     continue
                                 }
                             default:
-                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with: \(error)")
+                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with: \(error), id: \(requestID)")
                                 continue
                             }
                         }
@@ -291,6 +293,7 @@ public enum TIPNode {
     }
     
     private static func signTIPNode(
+        requestID: String,
         userSk: CryptoScalar,
         signer: TIPSigner,
         ephemeral: Data,
@@ -299,48 +302,53 @@ public enum TIPNode {
         grace: UInt64,
         assignee: Data?
     ) async throws -> TIPSignResponseData {
-        let request = try TIPSignRequest(userSk: userSk,
+        let request = try TIPSignRequest(id: requestID,
+                                         userSk: userSk,
                                          signer: signer,
                                          ephemeral: ephemeral,
                                          watcher: watcher,
                                          nonce: nonce,
                                          grace: grace,
                                          assignee: assignee)
-        let response = try await TIPAPI.sign(url: signer.api, request: request)
-        
-        var error: NSError?
-        guard let signerPk = CryptoPubKeyFromBase58(signer.identity, &error) else {
-            throw Error.signTIPNode(error)
-        }
-        let msg = try JSONEncoder.default.encode(response.data)
-        guard let responseSignature = Data(hexEncodedString: response.signature) else {
-            throw Error.decodeResponseSignature
-        }
-        try signerPk.verify(msg, sig: responseSignature)
-        
-        guard let responseCipher = Data(hexEncodedString: response.data.cipher) else {
-            throw Error.decodeResponseCipher
-        }
-        guard let plain = CryptoDecrypt(signerPk, userSk, responseCipher) else {
-            throw Error.decryptResponseCipher
-        }
-        guard plain.count == 218 else {
-            throw Error.invalidSignResponse(plain.count)
-        }
-        let partial = plain[8...8+65]
-        let assignor = plain[8+66...8+66+127]
-        let counter: UInt64 = {
-            var raw: UInt64 = 0
-            withUnsafeMutableBytes(of: &raw) { counter in
-                plain[211...].withUnsafeBytes { plain in
-                    plain.copyBytes(to: counter) // Copy bytes to avoid unaligned access
-                }
+        let response = try await TIPAPI.sign(url: signer.apiURL, request: request)
+        switch response {
+        case .failure(let response):
+            throw response.error
+        case .success(let response):
+            var error: NSError?
+            guard let signerPk = CryptoPubKeyFromBase58(signer.identity, &error) else {
+                throw Error.signTIPNode(error)
             }
-            return UInt64(bigEndian: raw)
-        }()
-        return TIPSignResponseData(partial: partial,
-                                   assignor: assignor.hexEncodedString(),
-                                   counter: counter)
+            let msg = try JSONEncoder.default.encode(response.data)
+            guard let responseSignature = Data(hexEncodedString: response.signature) else {
+                throw Error.decodeResponseSignature
+            }
+            try signerPk.verify(msg, sig: responseSignature)
+            
+            guard let responseCipher = Data(hexEncodedString: response.data.cipher) else {
+                throw Error.decodeResponseCipher
+            }
+            guard let plain = CryptoDecrypt(signerPk, userSk, responseCipher) else {
+                throw Error.decryptResponseCipher
+            }
+            guard plain.count == 218 else {
+                throw Error.invalidSignResponse(plain.count)
+            }
+            let partial = plain[8...8+65]
+            let assignor = plain[8+66...8+66+127]
+            let counter: UInt64 = {
+                var raw: UInt64 = 0
+                withUnsafeMutableBytes(of: &raw) { counter in
+                    plain[211...].withUnsafeBytes { plain in
+                        plain.copyBytes(to: counter) // Copy bytes to avoid unaligned access
+                    }
+                }
+                return UInt64(bigEndian: raw)
+            }()
+            return TIPSignResponseData(partial: partial,
+                                       assignor: assignor.hexEncodedString(),
+                                       counter: counter)
+        }
     }
     
 }

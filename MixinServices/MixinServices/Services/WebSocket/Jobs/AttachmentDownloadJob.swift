@@ -129,24 +129,27 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
                 }
                 thumbnail?.saveToFile(path: thumbnailURL)
             }
-            if let content = owner.content, let data = Data(base64Encoded: content), let _ = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data) {
-                updateMediaMessage(mediaUrl: fileName, status: .DONE)
+            let isShareable: Bool?
+            if let content = owner.content, let data = Data(base64Encoded: content), let extra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data) {
+                isShareable = extra.isShareable
             } else {
-                let content: String? = {
-                    guard let response = attachResponse else {
-                        return nil
-                    }
-                    guard let createdAt = response.createdAt else {
-                        return nil
-                    }
-                    let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt, isShareable: true)
-                    guard let json = try? JSONEncoder.default.encode(extra) else {
-                        return nil
-                    }
-                    return json.base64EncodedString()
-                }()
-                updateMediaMessage(mediaUrl: fileName, status: .DONE, content: content)
+                isShareable = true
             }
+            let content: String? = {
+                guard let response = attachResponse else {
+                    return nil
+                }
+                guard let createdAt = response.createdAt else {
+                    return nil
+                }
+                let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt, isShareable: isShareable)
+                guard let json = try? JSONEncoder.default.encode(extra) else {
+                    return nil
+                }
+                return json.base64EncodedString()
+            }()
+            updateMediaMessage(mediaUrl: fileName, status: .DONE, content: content)
+            
             let userInfo = [
                 Self.UserInfoKey.transcriptId: transcriptId,
                 Self.UserInfoKey.messageId: messageId,

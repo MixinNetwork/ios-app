@@ -36,7 +36,11 @@ class ConversationCell: ModernSelectedBackgroundCell {
             avatarView.setGroupImage(with: item.iconUrl)
         }
         nameLabel.text = item.getConversationName()
-        timeLabel.text = item.createdAt.toUTCDate().timeAgo()
+        if item.createdAt.isEmpty {
+            timeLabel.text = ""
+        } else {
+            timeLabel.text = item.createdAt.toUTCDate().timeAgo()
+        }
 
         if item.ownerIsVerified {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")

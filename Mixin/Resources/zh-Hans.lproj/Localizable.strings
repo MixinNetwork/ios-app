@@ -69,7 +69,7 @@
 "allow_bot_access_profile" = "允许机器人访问你的个人资料，如：名字、Mixin ID、头像等。";
 "allow_bot_access_snapshots" = "允许机器人访问你的转账记录，包括充值和提现。";
 "allow_bot_manage_bots" = "允许机器人添加或修改你的机器人列表。";
-"allow_bot_manage_circles" = "允许机器人添加、修改和删除你的所有圈子。";
+"allow_bot_manage_circles" = "允许机器人添加、修改和删除你所有的圈子。";
 "allow_bot_send_messages" = "允许机器人代表你发消息。";
 "allow_manual_report_message" = "允许手动上报消息";
 "amount" = "金额";
@@ -555,7 +555,7 @@
 "not_enough_partials" = "没有足够的节点返回密钥分片";
 "not_found" = "没有找到相应的消息";
 "not_playing" = "未在播放";
-"not_supported_deposit" = "Mixin 钱包现已不支持 %1$@ 充值，注意已转入的 %2$@ 资产可以继续转账或提现，阅读文档了解更多";
+"not_supported_deposit" = "Mixin 钱包现已不支持 %1$@ 充值，注意已转入的 %2$@ 资产可以继续转账或提现，阅读文档了解更多。";
 "notification_and_confirmation" = "通知和确认";
 "notification_content" = "不再遗漏好友的消息。";
 "notification_message_preview_description" = "在推送通知中显示消息内容。";

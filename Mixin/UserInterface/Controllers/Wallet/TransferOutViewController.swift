@@ -353,6 +353,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     private func fillFeeHint(address: Address, onFinished: (() -> Void)?) {
+        let asset = self.asset
         DispatchQueue.global().async { [weak self] in
             guard let feeAsset = AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
                 DispatchQueue.main.async {
@@ -374,8 +375,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             let range = (hint as NSString).range(of: feeRepresentation)
             highlightRanges.append(range)
             
-            if address.dust.doubleValue > 0 {
-                let dustRepresentation = address.dust + " " + feeAsset.symbol
+            if let asset, address.dust.doubleValue > 0 {
+                let dustRepresentation = address.dust + " " + asset.symbol
                 let dustHint = R.string.localizable.withdrawal_minimum_withdrawal() + dustRepresentation
                 hint += "\n" + dustHint
                 let range = (hint as NSString).range(of: dustRepresentation, options: .backwards)

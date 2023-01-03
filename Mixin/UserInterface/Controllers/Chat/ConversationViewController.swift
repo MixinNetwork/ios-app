@@ -2802,6 +2802,13 @@ extension ConversationViewController {
                         let reason = R.string.localizable.live_shareable_false()
                         return .visibleButUnavailable(reason: reason)
                     }
+                } else if viewModel.message.category.hasSuffix("_AUDIO") {
+                    if viewModel.message.isShareable {
+                        return .available
+                    } else {
+                        let reason = R.string.localizable.audio_shareable_false()
+                        return .visibleButUnavailable(reason: reason)
+                    }
                 } else {
                     return .available
                 }

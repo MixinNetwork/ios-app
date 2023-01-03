@@ -114,6 +114,13 @@ public final class MessageItem {
         return try? JSONDecoder.default.decode(TransferLiveData.self, from: data)
     }()
     
+    public lazy var isShareable: Bool = {
+        guard let content, let data = Data(base64Encoded: content) else {
+            return true
+        }
+        return (try? JSONDecoder.default.decode(AttachmentExtra.self, from: data))?.isShareable ?? true
+    }()
+    
     public var isExpiredMessage: Bool {
         expireIn != nil
     }

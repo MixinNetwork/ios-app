@@ -129,6 +129,12 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
                 }
                 thumbnail?.saveToFile(path: thumbnailURL)
             }
+            let isShareable: Bool?
+            if owner.category.hasSuffix("_AUDIO"), let content = owner.content, let data = Data(base64Encoded: content), let extra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data) {
+                isShareable = extra.isShareable
+            } else {
+                isShareable = true
+            }
             let content: String? = {
                 guard let response = attachResponse else {
                     return nil
@@ -136,7 +142,7 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
                 guard let createdAt = response.createdAt else {
                     return nil
                 }
-                let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt)
+                let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt, isShareable: isShareable)
                 guard let json = try? JSONEncoder.default.encode(extra) else {
                     return nil
                 }
@@ -243,7 +249,7 @@ extension AttachmentDownloadJob {
         guard owner.category != MessageCategory.MESSAGE_RECALL.rawValue else {
             return nil
         }
-        guard let attachmentId = owner.content, !attachmentId.isEmpty else {
+        guard let attachmentId = owner.attachmentId, !attachmentId.isEmpty else {
             return nil
         }
         guard UUID(uuidString: attachmentId) != nil else {

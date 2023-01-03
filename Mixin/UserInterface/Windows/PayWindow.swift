@@ -60,6 +60,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var successViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var amountLabelPlaceHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
     @IBOutlet weak var resultViewPlaceHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
+    @IBOutlet weak var pinViewHeightConstraint: NSLayoutConstraint!
     
     private lazy var biometricAuthQueue = DispatchQueue(label: "one.mixin.messenger.PayWindow.BioAuth")
     private lazy var context = LAContext()
@@ -228,6 +229,8 @@ class PayWindow: BottomSheetView {
             resetPinInput()
             if isAllowBiometricPay {
                 biometricButton.setTitle(R.string.localizable.use_biometry(biometryType.localizedName), for: .normal)
+            } else {
+                pinViewHeightConstraint.constant = 36
             }
         }
         return self

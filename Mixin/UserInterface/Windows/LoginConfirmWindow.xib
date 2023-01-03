@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="216" width="375" height="451"/>
+                    <rect key="frame" x="0.0" y="222" width="375" height="445"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXJ-y2-8uH">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -49,7 +49,7 @@
                             <rect key="frame" x="121.5" y="70" width="132" height="76"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTp-rW-A9R">
-                            <rect key="frame" x="50" y="172" width="275" height="43"/>
+                            <rect key="frame" x="50" y="170" width="275" height="43"/>
                             <string key="text">Confirm login to 
 Mixin Messenger Desktop</string>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
@@ -61,7 +61,7 @@ Mixin Messenger Desktop</string>
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0MH-HX-CKF" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="101.5" y="235" width="172" height="24"/>
+                            <rect key="frame" x="101.5" y="233" width="172" height="24"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" name="text_accessory"/>
                             <constraints>
@@ -73,7 +73,7 @@ Mixin Messenger Desktop</string>
                             </connections>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" verticalHuggingPriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="UaR-Ju-09K" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="175.5" y="235" width="24" height="24"/>
+                            <rect key="frame" x="175.5" y="233" width="24" height="24"/>
                             <color key="backgroundColor" name="background"/>
                             <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
@@ -82,7 +82,7 @@ Mixin Messenger Desktop</string>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fcr-f7-woa">
-                            <rect key="frame" x="136" y="273" width="103" height="20"/>
+                            <rect key="frame" x="136" y="267" width="103" height="20"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <inset key="imageEdgeInsets" minX="-6" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -94,7 +94,7 @@ Mixin Messenger Desktop</string>
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" verticalHuggingPriority="750" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="04e-4m-LCg" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="323" width="375" height="128"/>
+                            <rect key="frame" x="0.0" y="317" width="375" height="128"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                     </subviews>
@@ -113,7 +113,7 @@ Mixin Messenger Desktop</string>
                         <constraint firstItem="c8a-W9-LfK" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="aGj-6u-X1O"/>
                         <constraint firstItem="Fcr-f7-woa" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="bD5-7M-F6v"/>
                         <constraint firstAttribute="trailing" secondItem="04e-4m-LCg" secondAttribute="trailing" id="cdG-n4-hWO"/>
-                        <constraint firstItem="0MH-HX-CKF" firstAttribute="bottom" secondItem="Fcr-f7-woa" secondAttribute="top" constant="-14" id="n8Y-6I-Axv"/>
+                        <constraint firstItem="0MH-HX-CKF" firstAttribute="bottom" secondItem="Fcr-f7-woa" secondAttribute="top" constant="-10" id="n8Y-6I-Axv"/>
                         <constraint firstItem="hTp-rW-A9R" firstAttribute="leading" secondItem="4af-Sc-29x" secondAttribute="leading" constant="50" id="nkz-9A-nuJ"/>
                         <constraint firstItem="0MH-HX-CKF" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="obf-cq-yjH"/>
                         <constraint firstItem="c8a-W9-LfK" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="bottom" id="ofY-lD-Xh7" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -132,8 +132,8 @@ Mixin Messenger Desktop</string>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </constraint>
-                        <constraint firstItem="hTp-rW-A9R" firstAttribute="top" secondItem="c8a-W9-LfK" secondAttribute="bottom" constant="26" id="qNE-0b-nbf"/>
-                        <constraint firstItem="04e-4m-LCg" firstAttribute="top" secondItem="0MH-HX-CKF" secondAttribute="bottom" priority="250" constant="20" id="v98-8m-mma"/>
+                        <constraint firstItem="hTp-rW-A9R" firstAttribute="top" secondItem="c8a-W9-LfK" secondAttribute="bottom" constant="24" id="qNE-0b-nbf"/>
+                        <constraint firstItem="04e-4m-LCg" firstAttribute="top" secondItem="0MH-HX-CKF" secondAttribute="bottom" priority="250" constant="22" id="v98-8m-mma"/>
                     </constraints>
                 </view>
             </subviews>

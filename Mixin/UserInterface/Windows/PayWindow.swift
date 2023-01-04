@@ -13,6 +13,7 @@ class PayWindow: BottomSheetView {
         case withdraw(trackId: String, address: Address, feeAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
         case collectible(collectible: CollectibleResponse, senders: [UserItem], receivers: [UserItem])
+        case externalTransfer(trackId: String, addressId: String, destination: String, fee: String, feeAsset: AssetItem, tag: String?)
     }
 
     enum ErrorContinueAction {
@@ -159,7 +160,7 @@ class PayWindow: BottomSheetView {
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.withdrawal_to(address.label)
                 mixinIDLabel.text = address.fullAddress
-                withdrawlFee = updateAmountExchangeForWithdraw(address: address, feeAsset: feeAsset)
+                withdrawlFee = updateAmountExchangeForWithdraw(fee: address.fee, feeAsset: feeAsset)
             case let .payment(payment, receivers):
                 guard let account = LoginManager.shared.account else {
                     break
@@ -183,6 +184,11 @@ class PayWindow: BottomSheetView {
                 }
                 mixinIDLabel.text = multisig.memo
                 renderMultisigInfo(senders: senders, receivers: receivers)
+            case let .externalTransfer(_, _, destination, fee, feeAsset, _):
+                multisigView.isHidden = true
+                nameLabel.text = R.string.localizable.withdrawal()
+                mixinIDLabel.text = destination
+                withdrawlFee = updateAmountExchangeForWithdraw(fee: fee, feeAsset: feeAsset)
             case .collectible:
                 break
             }
@@ -522,9 +528,9 @@ extension PayWindow: PinFieldDelegate {
         transferAction(pin: pin)
     }
 
-    private func updateAmountExchangeForWithdraw(address: Address, feeAsset: AssetItem) -> String {
-        let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .us, format: .precision, sign: .whenNegative, symbol: .custom(feeAsset.symbol)) ?? address.fee
-        let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: feeAsset.priceUsd)
+    private func updateAmountExchangeForWithdraw(fee: String, feeAsset: AssetItem) -> String {
+        let feeToken = CurrencyFormatter.localizedString(from: fee, locale: .us, format: .precision, sign: .whenNegative, symbol: .custom(feeAsset.symbol)) ?? fee
+        let feeExchange = CurrencyFormatter.localizedPrice(price: fee, priceUsd: feeAsset.priceUsd)
         if let fiatMoneyAmount = fiatMoneyAmount {
             amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
         } else {
@@ -554,7 +560,7 @@ extension PayWindow: PinFieldDelegate {
                     WithdrawalAPI.address(addressId: address.addressId) { result in
                         if case let .success(address) = result {
                             AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-                            let newFee = self.updateAmountExchangeForWithdraw(address: address, feeAsset: feeAsset)
+                            let newFee = self.updateAmountExchangeForWithdraw(fee: address.fee, feeAsset: feeAsset)
                             message = R.string.localizable.wallet_withdrawal_changed(oldFee, newFee)
                             self.pinAction = .withdraw(trackId: trackId, address: address, feeAsset: feeAsset, fromWeb: fromWeb)
                             self.withdrawlFee = newFee
@@ -704,7 +710,7 @@ extension PayWindow: PinFieldDelegate {
         case let .withdraw(trackId, address, _, _):
             trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
             TraceDAO.shared.saveTrace(trace: trace)
-            let request = WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo, fee: address.fee)
+            let request = WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo, fee: address.fee, assetId: nil, destination: nil, tag: nil)
             WithdrawalAPI.withdrawal(withdrawal: request, completion: completion)
         case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
@@ -746,6 +752,11 @@ extension PayWindow: PinFieldDelegate {
             default:
                 break
             }
+        case let .externalTransfer(trackId, addressId, destination, fee, _, tag):
+            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: destination, tag: tag)
+            TraceDAO.shared.saveTrace(trace: trace)
+            let request = WithdrawalRequest(addressId: "", amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo, fee: fee, assetId: assetId, destination: destination, tag: tag)
+            WithdrawalAPI.externalWithdrawal(addressId: addressId, withdrawal: request, completion: completion)
         }
     }
 
@@ -796,6 +807,8 @@ extension PayWindow: PinFieldDelegate {
                 break
             case .collectible:
                 break
+            case .externalTransfer:
+                break
             }
         }
     }
@@ -821,6 +834,8 @@ extension PayWindow {
                 response = PaymentAPI.payments(assetId: asset.assetId, opponentId: opponentId, amount: amount, traceId: traceId)
             } else if let addressId = addressId {
                 response = PaymentAPI.payments(assetId: asset.assetId, addressId: addressId, amount: amount, traceId: traceId)
+            } else if let destination {
+                response = PaymentAPI.payments(assetId: asset.assetId, destination: destination, tag: tag ?? "", amount: amount, traceId: traceId)
             }
 
             if let result = response {

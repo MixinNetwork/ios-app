@@ -18,6 +18,11 @@ public final class PaymentAPI: MixinAPI {
         return request(method: .post, path: Path.payments, parameters: param)
     }
     
+    public static func payments(assetId: String, destination: String, tag: String, amount: String, traceId: String) -> MixinAPI.Result<PaymentResponse> {
+        let param: [String : Any] = ["asset_id": assetId, "destination": destination, "amount": amount, "trace_id": traceId, "tag": tag]
+        return request(method: .post, path: Path.payments, parameters: param)
+    }
+    
     public static func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
         var transactionRequest = transactionRequest
         PINEncryptor.encrypt(pin: pin, tipBody: {

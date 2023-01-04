@@ -49,6 +49,13 @@ target 'MixinDebug' do
   mixin_services
 end
 
+target 'MixinTests' do
+  use_frameworks!
+  inhibit_all_warnings!
+
+  mixin_services
+end
+
 # Prevent sqlite3 being linked to system integrated binary
 # https://discuss.zetetic.net/t/important-advisory-sqlcipher-with-xcode-8-and-new-sdks/1688
 post_install do |installer|

@@ -649,6 +649,9 @@ extension CameraViewController {
             if let delegate = self.delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
                 return
             }
+            if UrlWindow.checkExternalTransferUrl(url: string) {
+                return
+            }
             if UrlWindow.checkPayUrl(url: string) {
                 return
             }

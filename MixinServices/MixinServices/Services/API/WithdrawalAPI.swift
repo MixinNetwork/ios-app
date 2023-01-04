@@ -59,6 +59,20 @@ public final class WithdrawalAPI: MixinAPI {
         }
     }
     
+    public static func externalWithdrawal(addressId: String, withdrawal: WithdrawalRequest, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
+        PINEncryptor.encrypt(pin: withdrawal.pin, tipBody: {
+            try TIPBody.createWithdrawal(addressID: addressId, amount: withdrawal.amount, fee: withdrawal.fee, traceID: withdrawal.traceId, memo: withdrawal.memo)
+        }, onFailure: completion) { (encryptedPin) in
+            var withdrawal = withdrawal
+            withdrawal.pin = encryptedPin
+            self.request(method: .post,
+                         path: Path.withdrawals,
+                         parameters: withdrawal,
+                         options: .disableRetryOnRequestSigningTimeout,
+                         completion: completion)
+        }
+    }
+    
     public static func delete(addressId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.removeAddress(addressID: addressId)

@@ -76,6 +76,8 @@ class UrlWindow {
                 UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
                 return true
             }
+        } else if let externalUrl = ExternalTransferUrl(url: url.absoluteString) {
+            return checkExternalTransferUrl(url: externalUrl, originalURL: url.absoluteString)
         } else {
             return false
         }
@@ -399,6 +401,76 @@ class UrlWindow {
         return true
     }
 
+    class func checkExternalTransferUrl(url: String) -> Bool {
+        guard let externalUrl = ExternalTransferUrl(url: url) else {
+            return false
+        }
+        return checkExternalTransferUrl(url: externalUrl, originalURL: url)
+    }
+    
+    class func checkExternalTransferUrl(url: ExternalTransferUrl, originalURL: String) -> Bool {
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            break
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            UIApplication.homeNavigationController?.present(tip, animated: true)
+            return true
+        case .unknown:
+            return true
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            if url.needsCheckPrecision {
+                if case let .success(response) = AssetAPI.assetPrecision(assetId: url.assetId), let value = Decimal(string: url.amount) {
+                    url.amount = "\(value / pow(Decimal(10), response.precision))"
+                } else {
+                    hud.hideInMainThread()
+                    return
+                }
+            }
+            guard let asset = syncAsset(assetId: url.assetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(originalURL)")
+                hud.hideInMainThread()
+                return
+            }
+            guard let feeAsset = syncAsset(assetId: url.assetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(originalURL)")
+                hud.hideInMainThread()
+                return
+            }
+            switch ExternalSchemeAPI.addressFee(assetId: url.assetId, destination: url.destination, tag: url.tag) {
+            case .success(let response):
+                let fee = response.fee
+                let destination = response.destination
+                let traceId = UUID().uuidString.lowercased()
+                let addressId = (myUserId + url.assetId + destination + (url.tag ?? "")).uuidDigest()
+                let action: PayWindow.PinAction = .externalTransfer(trackId: traceId, addressId: addressId, destination: destination, fee: fee, feeAsset: feeAsset, tag: url.tag)
+                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: destination, tag: nil, addressId: nil, amount: url.amount, memo: "", fromWeb: true) { (canPay, errorMsg) in
+                    DispatchQueue.main.async {
+                        if canPay {
+                            hud.hide()
+                            PayWindow.instance().render(asset: asset, action: action, amount: url.amount, memo: "").presentPopupControllerAnimated()
+                        } else if let error = errorMsg {
+                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(originalURL)")
+                            hud.set(style: .error, text: error)
+                            hud.scheduleAutoHidden()
+                        } else {
+                            hud.hide()
+                        }
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
+        return true
+    }
+    
     class func checkWithdrawal(url: URL) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:

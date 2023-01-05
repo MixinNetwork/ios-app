@@ -505,7 +505,6 @@
 "monthly" = "每月";
 "more" = "更多";
 "move_and_scale" = "移動和縮放";
-"multisig_by_pin" = "透過 PIN 簽名";
 "multisig_state_signed" = "您已經對這筆交易進行了簽名，您無法再次簽名。";
 "multisig_state_unlocked" = "這筆交易已經被其他人撤銷了，您無法再次撤銷。";
 "multisig_transaction" = "多重簽名交易";
@@ -585,7 +584,6 @@
 "participants_count" = "%@ 位群組成員";
 "pay_paid" = "此付款連結已由某人支付，您無法進行重複付款。";
 "pay_with" = "%@支付";
-"pay_with_pin" = "用 PIN 支付";
 "pay_with_pin_interval" = "PIN 使用間隔";
 "pay_withdrawal_memo" = "數量 %@ %@\n手續費 %@ %@";
 "peer_closed" = "Peer 已關閉";
@@ -695,7 +693,6 @@
 "revoke_multisig_transaction" = "撤銷多重簽名交易";
 "room_is_full" = "房間已滿";
 "save" = "儲存";
-"save_by_pin" = "透過 PIN 儲存";
 "save_image" = "儲存圖片";
 "save_to_camera_roll" = "儲存到相簿";
 "saved" = "已儲存";
@@ -901,12 +898,6 @@
 "uploading_progress" = "上傳中：%@ / %@（%@）";
 "url_unrecognized_hint" = "%@ 識別失敗，請升級至 Mixin 最新版本或聯絡開發者檢查連結";
 "use_biometry" = "採用%@";
-"use_face_multisig" = "使用面容簽名";
-"use_face_pay" = "使用面容支付";
-"use_face_withdraw" = "使用面容提現";
-"use_touch_multisig" = "使用指紋簽名";
-"use_touch_pay" = "使用指紋支付";
-"use_touch_withdraw" = "使用指紋提現";
 "user_is_reported" = "已舉報";
 "user_not_found" = "找不到這個使用者";
 "validation_timed_out" = "驗證超時";
@@ -946,7 +937,6 @@
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 與行動數據";
 "withdraw_address" = "提現地址";
-"withdraw_by_pin" = "透過 PIN 提現";
 "withdrawal" = "提現";
 "withdrawal_addr_memo" = "地址標籤、數字 ID 或備註。如果沒有，點選不使用 Memo（備註）。";
 "withdrawal_addr_new" = "新 %@ 地址";

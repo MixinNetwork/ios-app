@@ -505,7 +505,6 @@
 "monthly" = "月";
 "more" = "もっとみる";
 "move_and_scale" = "移動と拡大縮小";
-"multisig_by_pin" = "PINコードでマルチシグウォレットを使用する";
 "multisig_state_signed" = "このマルチシグリンクはすでにあなたが署名しているため、重複した操作を行うことはできません";
 "multisig_state_unlocked" = "このマルチシグリンクは既に他のユーザーによってロック解除されています。重複した操作を行うことはできません。";
 "multisig_transaction" = "マルチシグトランザクション";
@@ -585,7 +584,6 @@
 "participants_count" = "%@人のメンバー";
 "pay_paid" = "この支払いリンクはすでに使用済みです。重複して支払いを行うことはできません。";
 "pay_with" = "%@で支払う";
-"pay_with_pin" = "PINコードで支払う";
 "pay_with_pin_interval" = "PINコードの再確認間隔";
 "pay_withdrawal_memo" = "額 %@ %@\n手数料 %@ %@";
 "peer_closed" = "ピアが閉じています";
@@ -695,7 +693,6 @@
 "revoke_multisig_transaction" = "マルチシグトランザクションを取り消す";
 "room_is_full" = "ルームが満員です";
 "save" = "保存";
-"save_by_pin" = "ピンで保存";
 "save_image" = "画像を保存する";
 "save_to_camera_roll" = "カメラロールに保存する";
 "saved" = "保存しました";
@@ -901,12 +898,6 @@
 "uploading_progress" = "アップロード: %@ / %@ (%@)";
 "url_unrecognized_hint" = "%@を認識できません、Mixinを最新版にアップデートするか、もしくは開発陣に連絡してリンクを確認してください。";
 "use_biometry" = "%@を使用する";
-"use_face_multisig" = "顔認証マルチシグを使用";
-"use_face_pay" = "顔認証で支払う";
-"use_face_withdraw" = "顔認証で出金する";
-"use_touch_multisig" = "指紋認証マルチシグを使用";
-"use_touch_pay" = "指紋認証で支払う";
-"use_touch_withdraw" = "指紋認証で出金する";
 "user_is_reported" = "報告しました。";
 "user_not_found" = "ユーザーが見つかりませんでした";
 "validation_timed_out" = "認証時間切れ";
@@ -946,7 +937,6 @@
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fiとデータ通信";
 "withdraw_address" = "アドレス";
-"withdraw_by_pin" = "PINコードを使って出金する";
 "withdrawal" = "出金";
 "withdrawal_addr_memo" = "宛先タグやID番号やメモがない場合は、「メモなし」に設定することができます。";
 "withdrawal_addr_new" = "新しい%@アドレス";

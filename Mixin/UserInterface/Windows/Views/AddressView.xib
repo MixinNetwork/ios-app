@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -83,7 +83,7 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="BigONE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPc-zy-MvJ">
-                    <rect key="frame" x="0.0" y="176" width="414" height="21.5"/>
+                    <rect key="frame" x="0.0" y="176" width="414" height="71.5"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                     <color key="textColor" name="title"/>
@@ -93,7 +93,7 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z5c-V8-TPg">
-                    <rect key="frame" x="0.0" y="197.5" width="414" height="59.5"/>
+                    <rect key="frame" x="0.0" y="247.5" width="414" height="59.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="0x0074709077B8AE5a245E4ED161C971Dc4c3C8E2B" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FpA-VY-TU6">
                             <rect key="frame" x="107" y="4" width="200" height="55.5"/>
@@ -114,27 +114,18 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mw0-oC-Knv" userLabel="Payment Password">
-                    <rect key="frame" x="0.0" y="257" width="414" height="130"/>
+                    <rect key="frame" x="0.0" y="307" width="414" height="80"/>
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvc-OW-wKl" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="121" y="26.5" width="172" height="10"/>
+                            <rect key="frame" x="121" y="35" width="172" height="10"/>
                             <color key="tintColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="172" id="Vhi-P1-tnk"/>
                                 <constraint firstAttribute="height" constant="10" id="wTR-XT-O66"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save by PIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="niE-Ec-UPE">
-                            <rect key="frame" x="176" y="52.5" width="62.5" height="13.5"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                            <color key="textColor" name="text_accessory"/>
-                            <nil key="highlightedColor"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="save_by_pin"/>
-                            </userDefinedRuntimeAttributes>
-                        </label>
                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0k5-MV-RVU" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="191" y="15.5" width="32" height="32"/>
+                            <rect key="frame" x="191" y="24" width="32" height="32"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
@@ -151,12 +142,10 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="cvc-OW-wKl" firstAttribute="centerX" secondItem="mw0-oC-Knv" secondAttribute="centerX" id="6Db-hK-aRn"/>
-                        <constraint firstAttribute="bottom" secondItem="niE-Ec-UPE" secondAttribute="bottom" constant="64" id="FBq-bH-Zv1"/>
-                        <constraint firstAttribute="height" constant="130" id="L88-3w-3pH"/>
+                        <constraint firstAttribute="height" constant="80" id="L88-3w-3pH"/>
                         <constraint firstItem="0k5-MV-RVU" firstAttribute="centerY" secondItem="cvc-OW-wKl" secondAttribute="centerY" id="Vma-Ns-xpP"/>
-                        <constraint firstItem="niE-Ec-UPE" firstAttribute="centerX" secondItem="mw0-oC-Knv" secondAttribute="centerX" id="Wl7-Mf-C6v"/>
+                        <constraint firstItem="cvc-OW-wKl" firstAttribute="centerY" secondItem="mw0-oC-Knv" secondAttribute="centerY" id="X62-cq-mcC"/>
                         <constraint firstItem="0k5-MV-RVU" firstAttribute="centerX" secondItem="cvc-OW-wKl" secondAttribute="centerX" id="a7M-0q-FDc"/>
-                        <constraint firstItem="niE-Ec-UPE" firstAttribute="top" secondItem="cvc-OW-wKl" secondAttribute="bottom" constant="16" id="rV0-TR-rvc"/>
                     </constraints>
                 </view>
             </subviews>
@@ -169,7 +158,6 @@
                 <outlet property="loadingView" destination="0k5-MV-RVU" id="Qwa-RB-qPE"/>
                 <outlet property="nameLabel" destination="UPc-zy-MvJ" id="nqB-YE-iye"/>
                 <outlet property="pinField" destination="cvc-OW-wKl" id="xtW-gO-T5Y"/>
-                <outlet property="pinTipLabel" destination="niE-Ec-UPE" id="5BI-hp-A1l"/>
                 <outlet property="titleLabel" destination="tq0-lr-hPQ" id="sed-Yw-SCA"/>
             </connections>
             <point key="canvasLocation" x="139" y="154"/>
@@ -181,7 +169,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -14,6 +14,7 @@ public struct TransferAttachmentData: Encodable {
     public let duration: Int64?
     public let waveform: Data?
     public let createdAt: String?
+    public let isShareable: Bool?
     
     enum CodingKeys: String, CodingKey {
         case key
@@ -28,9 +29,10 @@ public struct TransferAttachmentData: Encodable {
         case duration
         case waveform
         case createdAt = "created_at"
+        case isShareable = "shareable"
     }
     
-    public init(key: Data?, digest: Data?, attachmentId: String, mimeType: String?, width: Int?, height: Int?, size: Int64, thumbnail: String?, name: String?, duration: Int64?, waveform: Data?, createdAt: String?) {
+    public init(key: Data?, digest: Data?, attachmentId: String, mimeType: String?, width: Int?, height: Int?, size: Int64, thumbnail: String?, name: String?, duration: Int64?, waveform: Data?, createdAt: String?, isShareable: Bool?) {
         self.key = key
         self.digest = digest
         self.attachmentId = attachmentId
@@ -43,6 +45,7 @@ public struct TransferAttachmentData: Encodable {
         self.duration = duration
         self.waveform = waveform
         self.createdAt = createdAt
+        self.isShareable = isShareable
     }
     
 }
@@ -63,6 +66,7 @@ extension TransferAttachmentData: Decodable {
         duration = try Self.safeDecodeInt64(container: container, key: .duration)
         waveform = try container.decodeIfPresent(Data.self, forKey: .waveform)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
+        isShareable = try container.decodeIfPresent(Bool.self, forKey: .isShareable)
     }
 
     private static func safeDecodeInt(container: KeyedDecodingContainer<CodingKeys>, key: KeyedDecodingContainer<CodingKeys>.Key) throws -> Int? {

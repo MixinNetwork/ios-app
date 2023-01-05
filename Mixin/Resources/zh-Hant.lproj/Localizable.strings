@@ -84,6 +84,7 @@
 "assets" = "資產";
 "assets_title" = "資產";
 "audio" = "語音";
+"audio_shareable_false" = "該語音已被設定為不允許轉發";
 "audios" = "音訊";
 "authorization" = "授權";
 "authorizations" = "授權";

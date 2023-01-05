@@ -88,6 +88,20 @@ extension AttachmentDownloadJob {
             }
         }
         
+        
+        var attachmentId: String? {
+            switch self {
+            case .message(let message):
+                if let content = message.content, let data = Data(base64Encoded: content), let extra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data) {
+                    return extra.attachmentId
+                } else {
+                    return message.content
+                }
+            case .transcriptMessage(let message):
+                return message.content
+            }
+        }
+        
     }
     
 }

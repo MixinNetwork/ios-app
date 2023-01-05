@@ -16,28 +16,29 @@ class ExternalTransferURL {
     private let ethereumChainIds: [String: String] = [
         "1": "43d61dcd-e413-450d-80b8-101d5e903357"
     ]
-
+    
+    let raw: String
     var amount: String
     let assetId: String
     let destination: String
     let tag: String? = nil // no value for now
     let needsCheckPrecision: Bool
     
-    init?(url: String) {
-        guard let prefix = supportedAssetChainIds.keys.first(where: { url.hasPrefix($0) }) else {
+    init?(string raw: String) {
+        guard let prefix = supportedAssetChainIds.keys.first(where: raw.hasPrefix) else {
             return nil
         }
-        var string = url
+        var string = raw
         if !string[prefix.endIndex...].hasPrefix("//") {
             string.insert(contentsOf: "//", at: prefix.endIndex)
         }
-        guard let url = URLComponents(string: string), let host = url.host else {
+        guard let components = URLComponents(string: string), let host = components.host else {
             return nil
         }
-        let query = url.getKeyVals()
+        let query = components.getKeyVals()
         if prefix == "ethereum:" {
             var targetAddress: String
-            if let user = url.user {
+            if let user = components.user {
                 targetAddress = user
             } else {
                 targetAddress = host
@@ -57,7 +58,7 @@ class ExternalTransferURL {
                 }
                 destination = targetAddress
                 needsCheckPrecision = false
-            } else if url.path == "/transfer" {
+            } else if components.path == "/transfer" {
                 if let id = AssetDAO.shared.getAssetIdByAssetKey(targetAddress) {
                     assetId = id
                 } else {
@@ -112,6 +113,7 @@ class ExternalTransferURL {
             destination = host
             needsCheckPrecision = false
         }
+        self.raw = raw
     }
     
 }

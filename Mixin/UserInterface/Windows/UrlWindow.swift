@@ -76,8 +76,8 @@ class UrlWindow {
                 UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
                 return true
             }
-        } else if let externalUrl = ExternalTransferURL(url: url.absoluteString) {
-            return checkExternalTransferUrl(url: externalUrl, originalURL: url.absoluteString)
+        } else if let url = ExternalTransferURL(string: url.absoluteString) {
+            return checkExternalTransfer(url: url)
         } else {
             return false
         }
@@ -400,15 +400,8 @@ class UrlWindow {
         }
         return true
     }
-
-    class func checkExternalTransferUrl(url: String) -> Bool {
-        guard let externalUrl = ExternalTransferURL(url: url) else {
-            return false
-        }
-        return checkExternalTransferUrl(url: externalUrl, originalURL: url)
-    }
     
-    class func checkExternalTransferUrl(url: ExternalTransferURL, originalURL: String) -> Bool {
+    class func checkExternalTransfer(url: ExternalTransferURL) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
@@ -431,12 +424,12 @@ class UrlWindow {
                 }
             }
             guard let asset = syncAsset(assetId: url.assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(originalURL)")
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.raw)")
                 hud.hideInMainThread()
                 return
             }
             guard let feeAsset = syncAsset(assetId: url.assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(originalURL)")
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.raw)")
                 hud.hideInMainThread()
                 return
             }
@@ -453,7 +446,7 @@ class UrlWindow {
                             hud.hide()
                             PayWindow.instance().render(asset: asset, action: action, amount: url.amount, isAmountLocalized: false, memo: "").presentPopupControllerAnimated()
                         } else if let error = errorMsg {
-                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(originalURL)")
+                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url.raw)")
                             hud.set(style: .error, text: error)
                             hud.scheduleAutoHidden()
                         } else {
@@ -537,7 +530,14 @@ class UrlWindow {
         guard let components = URLComponents(string: url) else {
             return false
         }
-        return checkPayUrl(url: url, query: components.getKeyVals())
+        let query = components.getKeyVals()
+        guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased() else {
+            return false
+        }
+        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil else {
+            return false
+        }
+        return checkPayUrl(url: url, query: query)
     }
 
     class func checkPayUrl(url: String, query: [String: String]) -> Bool {

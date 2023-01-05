@@ -41,8 +41,13 @@ class LoginConfirmWindow: BottomSheetView {
             pinField.isHidden = false
             pinField.receivesInput = true
             if let error {
-                PINVerificationFailureHandler.handle(error: error) { description in
-                    self.alert(description)
+                if case .forbidden = error {
+                    alert(error.localizedDescription)
+                    dismissPopupController(animated: true)
+                } else {
+                    PINVerificationFailureHandler.handle(error: error) { description in
+                        self.alert(description)
+                    }
                 }
             }
         }

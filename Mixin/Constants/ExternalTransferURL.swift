@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-class ExternalTransferUrl {
+class ExternalTransferURL {
     
     private let supportedAssetChainIds: [String: String] = [
         "bitcoin:"   : "c6d0c728-2624-429b-8e0d-d9d19b6592fa",

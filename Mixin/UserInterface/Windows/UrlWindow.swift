@@ -76,7 +76,7 @@ class UrlWindow {
                 UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
                 return true
             }
-        } else if let externalUrl = ExternalTransferUrl(url: url.absoluteString) {
+        } else if let externalUrl = ExternalTransferURL(url: url.absoluteString) {
             return checkExternalTransferUrl(url: externalUrl, originalURL: url.absoluteString)
         } else {
             return false
@@ -402,13 +402,13 @@ class UrlWindow {
     }
 
     class func checkExternalTransferUrl(url: String) -> Bool {
-        guard let externalUrl = ExternalTransferUrl(url: url) else {
+        guard let externalUrl = ExternalTransferURL(url: url) else {
             return false
         }
         return checkExternalTransferUrl(url: externalUrl, originalURL: url)
     }
     
-    class func checkExternalTransferUrl(url: ExternalTransferUrl, originalURL: String) -> Bool {
+    class func checkExternalTransferUrl(url: ExternalTransferURL, originalURL: String) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
@@ -451,7 +451,7 @@ class UrlWindow {
                     DispatchQueue.main.async {
                         if canPay {
                             hud.hide()
-                            PayWindow.instance().render(asset: asset, action: action, amount: url.amount, memo: "").presentPopupControllerAnimated()
+                            PayWindow.instance().render(asset: asset, action: action, amount: url.amount, isAmountLocalized: false, memo: "").presentPopupControllerAnimated()
                         } else if let error = errorMsg {
                             Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(originalURL)")
                             hud.set(style: .error, text: error)

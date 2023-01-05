@@ -188,6 +188,7 @@ public final class UserDAO: UserDatabaseDAO {
         WHERE (u.user_id in (SELECT m.user_id FROM messages m WHERE conversation_id = :cid AND m.created_at > :cat)
         OR u.user_id in (SELECT f.user_id FROM users f WHERE relationship = 'FRIEND'))
         AND u.user_id != :uid
+        AND u.identity_number != '0'
         AND (u.full_name LIKE '%' || :keyword || '%' ESCAPE '/' OR u.identity_number like '%' || :keyword || '%' ESCAPE '/')
         ORDER BY CASE u.relationship WHEN 'FRIEND' THEN 1 ELSE 2 END,
         u.relationship OR u.full_name = :keyword COLLATE NOCASE OR u.identity_number = :keyword COLLATE NOCASE DESC

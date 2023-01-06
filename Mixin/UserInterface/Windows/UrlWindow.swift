@@ -738,6 +738,21 @@ class UrlWindow {
         return false
     }
     
+    class func checkDeepLinking(url: URL) -> Bool {
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
+        if ScreenLockManager.shared.isLocked {
+            ScreenLockManager.shared.screenLockViewDidHide = {
+                _ = checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
+                ScreenLockManager.shared.screenLockViewDidHide = nil
+            }
+            return true
+        } else {
+            return checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
+        }
+    }
+    
 }
 
 extension UrlWindow {

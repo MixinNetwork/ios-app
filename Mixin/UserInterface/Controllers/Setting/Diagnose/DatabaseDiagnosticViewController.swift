@@ -5,6 +5,8 @@ import MixinServices
 class DatabaseDiagnosticViewController: UIViewController {
     
     @IBOutlet weak var databaseSwitcher: UISegmentedControl!
+    @IBOutlet weak var runButton: UIButton!
+    @IBOutlet weak var pasteButton: UIButton!
     @IBOutlet weak var inputTextView: UITextView!
     @IBOutlet weak var outputTextView: UITextView!
     
@@ -29,6 +31,9 @@ class DatabaseDiagnosticViewController: UIViewController {
     
     @IBAction func run(_ sender: Any) {
         AppDelegate.current.mainWindow.endEditing(true)
+        runButton.isEnabled = false
+        runButton.setTitle("Executing", for: .normal)
+        pasteButton.isEnabled = false
         let sql = inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         let database: MixinServices.Database = {
             switch databaseSwitcher.selectedSegmentIndex {
@@ -40,7 +45,20 @@ class DatabaseDiagnosticViewController: UIViewController {
                 return TaskDatabase.current
             }
         }()
+        
+        func execute(_ db: GRDB.Database) throws -> String {
+            let startTime = CACurrentMediaTime()
+            var rows: [String] = []
+            let cursor = try Row.fetchCursor(db, sql: sql)
+            while let row = try cursor.next() {
+                rows.append(row.description)
+            }
+            let endTime = CACurrentMediaTime()
+            return "\(rows.count) rows in \(endTime - startTime)s\n\n" + rows.joined(separator: "\n")
+        }
+        
         queue.async {
+#if RELEASE
             let prefix = sql.prefix(6).uppercased()
             guard prefix == "SELECT" || prefix == "EXPLAI" else {
                 DispatchQueue.main.sync {
@@ -48,22 +66,21 @@ class DatabaseDiagnosticViewController: UIViewController {
                 }
                 return
             }
+#endif
             let output: String
             do {
-                output = try database.read { db in
-                    let startTime = CACurrentMediaTime()
-                    var rows: [String] = []
-                    let cursor = try Row.fetchCursor(db, sql: sql)
-                    while let row = try cursor.next() {
-                        rows.append(row.description)
-                    }
-                    let endTime = CACurrentMediaTime()
-                    return "\(rows.count) rows in \(endTime - startTime)s\n\n" + rows.joined(separator: "\n")
-                }
+#if DEBUG
+                output = try database.writeAndReturnError(execute(_:))
+#else
+                output = try database.read(execute(_:))
+#endif
             } catch {
                 output = "\(error)"
             }
             DispatchQueue.main.sync {
+                self.runButton.isEnabled = true
+                self.runButton.setTitle("Run", for: .normal)
+                self.pasteButton.isEnabled = true
                 self.outputTextView.text = output
             }
         }

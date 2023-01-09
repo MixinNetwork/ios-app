@@ -48,6 +48,7 @@ public extension Currency {
             Currency(code: "AED", symbol: "AED ", rate: 3.6704845),
             Currency(code: "TWD", symbol: "NT$", rate: 30.5140279),
             Currency(code: "CAD", symbol: "C$", rate: 1.3401769),
+            Currency(code: "IDR", symbol: "Rp", rate: 15595.878656),
         ]
         let rates = AppGroupUserDefaults.currencyRates
         for currency in currencies {

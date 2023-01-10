@@ -235,7 +235,7 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        if isViewLoaded && parent != nil && (UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayUrl(url: url.absoluteString)) {
+        if isViewLoaded && parent != nil && (UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayment(string: url.absoluteString)) {
             decisionHandler(.cancel)
         } else if "file" == url.scheme {
             decisionHandler(.allow)

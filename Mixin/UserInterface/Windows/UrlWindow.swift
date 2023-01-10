@@ -21,7 +21,7 @@ class UrlWindow {
             case let .codes(code):
                 result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
             case .pay:
-                result = checkPayUrl(url: url.absoluteString, query: url.getKeyVals())
+                result = checkPayUrl(url: url.absoluteString, queries: url.getKeyVals())
             case .withdrawal:
                 result = checkWithdrawal(url: url)
             case .address:
@@ -76,8 +76,6 @@ class UrlWindow {
                 UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
                 return true
             }
-        } else if let url = ExternalTransferURL(string: url.absoluteString) {
-            return checkExternalTransfer(url: url)
         } else {
             return false
         }
@@ -401,7 +399,89 @@ class UrlWindow {
         return true
     }
     
-    class func checkExternalTransfer(url: ExternalTransferURL) -> Bool {
+    class func checkWithdrawal(url: URL) -> Bool {
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            break
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            UIApplication.homeNavigationController?.present(tip, animated: true)
+            return true
+        case .unknown:
+            return true
+        }
+        let query = url.getKeyVals()
+        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
+            return false
+        }
+        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty && AmountFormatter.isValid(amount) else {
+            return false
+        }
+        var memo = query["memo"]
+        if let urlDecodeMemo = memo?.removingPercentEncoding {
+            memo = urlDecodeMemo
+        }
+
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.absoluteString)")
+                return
+            }
+            guard let address = syncAddress(addressId: addressId, hud: hud) else {
+                return
+            }
+            guard let feeAsset = syncAsset(assetId: address.feeAssetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.absoluteString)")
+                return
+            }
+            
+            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: true)
+            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
+
+                DispatchQueue.main.async {
+                    if canPay {
+                        hud.hide()
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                    } else if let error = errorMsg {
+                        Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url.absoluteString)")
+                        hud.set(style: .error, text: error)
+                        hud.scheduleAutoHidden()
+                    } else {
+                        hud.hide()
+                    }
+                }
+            }
+        }
+
+        return true
+    }
+
+    class func checkQrCodeDetection(string: String, clearNavigationStack: Bool = true) {
+        if checkPayment(string: string) {
+            return
+        }
+        if checkExternalScheme(url: string) {
+            return
+        }
+        if let url = URL(string: string), checkUrl(url: url, clearNavigationStack: clearNavigationStack) {
+            return
+        }
+        RecognizeWindow.instance().presentWindow(text: string)
+    }
+    
+    class func checkPayment(string: String) -> Bool {
+        if let url = MixinTransferURL(string: string) {
+            return checkPayUrl(url: url.raw, queries: url.queries)
+        } else if let url = ExternalTransferURL(string: string) {
+            return checkExternalTransfer(url: url)
+        } else {
+            return false
+        }
+    }
+    
+    private class func checkExternalTransfer(url: ExternalTransferURL) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
@@ -464,7 +544,7 @@ class UrlWindow {
         return true
     }
     
-    class func checkWithdrawal(url: URL) -> Bool {
+    private class func checkPayUrl(url: String, queries: [String: String]) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
@@ -475,83 +555,7 @@ class UrlWindow {
         case .unknown:
             return true
         }
-        let query = url.getKeyVals()
-        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
-            return false
-        }
-        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty && AmountFormatter.isValid(amount) else {
-            return false
-        }
-        var memo = query["memo"]
-        if let urlDecodeMemo = memo?.removingPercentEncoding {
-            memo = urlDecodeMemo
-        }
-
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        DispatchQueue.global().async {
-            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.absoluteString)")
-                return
-            }
-            guard let address = syncAddress(addressId: addressId, hud: hud) else {
-                return
-            }
-            guard let feeAsset = syncAsset(assetId: address.feeAssetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.absoluteString)")
-                return
-            }
-            
-            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: true)
-            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
-
-                DispatchQueue.main.async {
-                    if canPay {
-                        hud.hide()
-                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
-                    } else if let error = errorMsg {
-                        Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url.absoluteString)")
-                        hud.set(style: .error, text: error)
-                        hud.scheduleAutoHidden()
-                    } else {
-                        hud.hide()
-                    }
-                }
-            }
-        }
-
-        return true
-    }
-
-    class func checkPayUrl(url: String) -> Bool {
-        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:", "mobilecoin:"].contains(where: url.lowercased().hasPrefix) else {
-            return false
-        }
-        guard let components = URLComponents(string: url) else {
-            return false
-        }
-        let query = components.getKeyVals()
-        guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased() else {
-            return false
-        }
-        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil else {
-            return false
-        }
-        return checkPayUrl(url: url, query: query)
-    }
-
-    class func checkPayUrl(url: String, query: [String: String]) -> Bool {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            return true
-        case .unknown:
-            return true
-        }
-        guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased(), let amount = query["amount"] else {
+        guard let recipientId = queries["recipient"]?.lowercased(), let assetId = queries["asset"]?.lowercased(), let amount = queries["amount"] else {
             Logger.general.error(category: "PayURL", message: "Invalid URL: \(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
             return true
@@ -562,8 +566,8 @@ class UrlWindow {
             return true
         }
 
-        let traceId = query["trace"].uuidString ?? UUID().uuidString.lowercased()
-        var memo = query["memo"]
+        let traceId = queries["trace"].uuidString ?? UUID().uuidString.lowercased()
+        var memo = queries["memo"]
         if let urlDecodeMemo = memo?.removingPercentEncoding {
             memo = urlDecodeMemo
         }

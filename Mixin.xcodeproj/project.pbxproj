@@ -586,6 +586,7 @@
 		7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */; };
 		7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */; };
 		7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */; };
+		7C54083D296C0CFA0082368C /* MixinTransferURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C54083C296C0CFA0082368C /* MixinTransferURL.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
@@ -1620,6 +1621,7 @@
 		7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeConfirmationView.xib; sourceTree = "<group>"; };
 		7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopesTableView.swift; sourceTree = "<group>"; };
 		7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeDataSource.swift; sourceTree = "<group>"; };
+		7C54083C296C0CFA0082368C /* MixinTransferURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTransferURL.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
@@ -3132,6 +3134,7 @@
 				7B3936CE20C15BA00075A97A /* MixinKeys.swift */,
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
 				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
+				7C54083C296C0CFA0082368C /* MixinTransferURL.swift */,
 				7CF1236A29598D210028EA7B /* ExternalTransferURL.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,
 				DFF1AD7B22254C6E0087173D /* R.generated.swift */,
@@ -5058,6 +5061,7 @@
 				DF8A7521236301C500765A82 /* AuthorizationWindow.swift in Sources */,
 				E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
+				7C54083D296C0CFA0082368C /* MixinTransferURL.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
 				7CCC801C292DC68E000B4200 /* ImageCropViewController.swift in Sources */,
 				7B710BE5233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift in Sources */,

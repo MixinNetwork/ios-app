@@ -469,14 +469,36 @@ extension TransferOutViewController: UITextFieldDelegate {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         switch textField {
         case amountTextField:
+            var sanitizedText = newText.replacingOccurrences(of: " ", with: "")
+            if currentDecimalSeparator == "." {
+                sanitizedText = sanitizedText.replacingOccurrences(of: ",", with: "")
+            } else if currentDecimalSeparator == "," {
+                sanitizedText = sanitizedText.replacingOccurrences(of: ".", with: "")
+            }
+            let hasTextChangedDuringSanitization = newText.count != sanitizedText.count
+            
             if newText.isEmpty {
                 return true
-            } else if newText.isNumeric {
-                let components = newText.components(separatedBy: currentDecimalSeparator)
+            } else if sanitizedText.isNumeric {
+                let components = sanitizedText.components(separatedBy: currentDecimalSeparator)
+                let isDecimalLegit: Bool
                 if isInputAssetAmount {
-                    return components.count == 1 || components[1].count <= 8
+                    isDecimalLegit = components.count == 1 || components[1].count <= 8
                 } else {
-                    return components.count == 1 || components[1].count <= 2
+                    isDecimalLegit = components.count == 1 || components[1].count <= 2
+                }
+                if !isDecimalLegit {
+                    return false
+                }
+                if hasTextChangedDuringSanitization {
+                    DispatchQueue.main.async {
+                        textField.text = sanitizedText
+                        textField.selectedTextRange = textField.textRange(from: textField.endOfDocument, to: textField.endOfDocument)
+                        self.amountEditingChanged(self)
+                    }
+                    return false
+                } else {
+                    return true
                 }
             } else {
                 return false

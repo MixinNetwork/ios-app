@@ -139,18 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        guard LoginManager.shared.isLoggedIn else {
-            return false
-        }
-        if ScreenLockManager.shared.isLocked {
-            ScreenLockManager.shared.screenLockViewDidHide = {
-                _ = UrlWindow.checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
-                ScreenLockManager.shared.screenLockViewDidHide = nil
-            }
-            return true
-        } else {
-            return UrlWindow.checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
-        }
+        UrlWindow.checkDeepLinking(url: url)
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
@@ -189,6 +178,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         if SpotlightManager.isAvailable && SpotlightManager.shared.canContinue(activity: userActivity) {
             SpotlightManager.shared.contiune(activity: userActivity)
+            return true
+        } else if userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL {
+            _ = UrlWindow.checkDeepLinking(url: url)
             return true
         } else {
             return false

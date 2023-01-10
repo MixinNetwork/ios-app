@@ -56,8 +56,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
             {
                 continue
             } else if let content = child.content,
-                      let data = Data(base64Encoded: content),
-                      let extra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data),
+                      let extra = AttachmentExtra.decode(from: content),
                       abs(extra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
             {
                 child.content = extra.attachmentId

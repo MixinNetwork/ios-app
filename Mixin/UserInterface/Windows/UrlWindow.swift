@@ -76,8 +76,6 @@ class UrlWindow {
                 UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
                 return true
             }
-        } else if let url = ExternalTransferURL(string: url.absoluteString) {
-            return checkExternalTransfer(url: url)
         } else {
             return false
         }
@@ -413,7 +411,7 @@ class UrlWindow {
         }
     }
     
-    class func checkExternalTransfer(url: ExternalTransferURL) -> Bool {
+    class func checkExternalTransfer(url:String, amount: String, assetId: String, destination: String, needsCheckPrecision: Bool, tag: String?) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
@@ -427,38 +425,39 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            if url.needsCheckPrecision {
-                if case let .success(response) = AssetAPI.assetPrecision(assetId: url.assetId), let value = Decimal(string: url.amount) {
-                    url.amount = "\(value / pow(Decimal(10), response.precision))"
+            var amount = amount
+            if needsCheckPrecision {
+                if case let .success(response) = AssetAPI.assetPrecision(assetId: assetId), let value = Decimal(string: amount) {
+                    amount = "\(value / pow(Decimal(10), response.precision))"
                 } else {
                     hud.hideInMainThread()
                     return
                 }
             }
-            guard let asset = syncAsset(assetId: url.assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.raw)")
+            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url)")
                 hud.hideInMainThread()
                 return
             }
-            guard let feeAsset = syncAsset(assetId: url.assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.raw)")
+            guard let feeAsset = syncAsset(assetId: assetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url)")
                 hud.hideInMainThread()
                 return
             }
-            switch ExternalSchemeAPI.addressFee(assetId: url.assetId, destination: url.destination, tag: url.tag) {
+            switch ExternalSchemeAPI.addressFee(assetId: assetId, destination: destination, tag: tag) {
             case .success(let response):
                 let fee = response.fee
                 let destination = response.destination
                 let traceId = UUID().uuidString.lowercased()
-                let addressId = (myUserId + url.assetId + destination + (url.tag ?? "")).uuidDigest()
-                let action: PayWindow.PinAction = .externalTransfer(trackId: traceId, addressId: addressId, destination: destination, fee: fee, feeAsset: feeAsset, tag: url.tag)
-                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: destination, tag: nil, addressId: nil, amount: url.amount, memo: "", fromWeb: true) { (canPay, errorMsg) in
+                let addressId = (myUserId + assetId + destination + (tag ?? "")).uuidDigest()
+                let action: PayWindow.PinAction = .externalTransfer(trackId: traceId, addressId: addressId, destination: destination, fee: fee, feeAsset: feeAsset, tag: tag)
+                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: destination, tag: nil, addressId: nil, amount: amount, memo: "", fromWeb: true) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         if canPay {
                             hud.hide()
-                            PayWindow.instance().render(asset: asset, action: action, amount: url.amount, isAmountLocalized: false, memo: "").presentPopupControllerAnimated()
+                            PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: "").presentPopupControllerAnimated()
                         } else if let error = errorMsg {
-                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url.raw)")
+                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url)")
                             hud.set(style: .error, text: error)
                             hud.scheduleAutoHidden()
                         } else {
@@ -536,20 +535,14 @@ class UrlWindow {
     }
 
     class func checkPayUrl(url: String) -> Bool {
-        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:", "mobilecoin:"].contains(where: url.lowercased().hasPrefix) else {
+        switch TransferURL(url: url) {
+        case let .mixin(queries):
+            return checkPayUrl(url: url, query: queries)
+        case let .external(amount, assetId, destination, needsCheckPrecision, tag):
+            return checkExternalTransfer(url: url, amount: amount, assetId: assetId, destination: destination, needsCheckPrecision: needsCheckPrecision, tag: tag)
+        case .none:
             return false
         }
-        guard let components = URLComponents(string: url) else {
-            return false
-        }
-        let query = components.getKeyVals()
-        guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased() else {
-            return false
-        }
-        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil else {
-            return false
-        }
-        return checkPayUrl(url: url, query: query)
     }
 
     class func checkPayUrl(url: String, query: [String: String]) -> Bool {

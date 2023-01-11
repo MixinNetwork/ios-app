@@ -34,12 +34,19 @@ class LoginConfirmWindow: BottomSheetView {
         loadingIndicator.startAnimating()
         pinField.isHidden = true
         pinField.receivesInput = false
+        if canAuthorizeWithBiometric {
+            biometricButton.isHidden = true
+        }
         
         func handleError(error: MixinAPIError?) {
             loadingIndicator.stopAnimating()
             pinField.clear()
             pinField.isHidden = false
             pinField.receivesInput = true
+            if canAuthorizeWithBiometric {
+                biometricButton.isHidden = false
+            }
+            
             if let error {
                 if case .forbidden = error {
                     alert(error.localizedDescription)

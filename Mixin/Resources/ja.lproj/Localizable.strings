@@ -89,6 +89,7 @@
 "authorization" = "認証";
 "authorizations" = "許可";
 "authorize" = "許可する";
+"authorize_desktop_login" = "Authorize desktop login via %@";
 "authorize_payment_via" = "%@で支払いを承認してください";
 "authorized" = "許可しました";
 "auto_back_up_hint" = "Wi-Fiの使用時に自動でiCloudにバックアップする";

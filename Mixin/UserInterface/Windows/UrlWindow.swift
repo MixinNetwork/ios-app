@@ -39,7 +39,7 @@ class UrlWindow {
             case let .send(context):
                 result = checkSendUrl(sharingContext: context, webContext: webContext)
             case let .device(id, publicKey):
-                LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
+                checkDevice(id: id, publicKey: publicKey)
                 result = true
             case .upgradeDesktop:
                 UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
@@ -399,6 +399,18 @@ class UrlWindow {
         return true
     }
 
+    class func checkDevice(id: String, publicKey: String) {
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            LoginConfirmWindow.instance().render(id: id, publicKey: publicKey).presentView()
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            UIApplication.homeNavigationController?.present(tip, animated: true)
+        case .unknown:
+            break
+        }
+    }
+    
     class func checkWithdrawal(url: URL) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:

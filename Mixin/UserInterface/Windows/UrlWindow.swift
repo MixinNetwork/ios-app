@@ -411,7 +411,7 @@ class UrlWindow {
         }
     }
     
-    class func checkExternalTransfer(url:String, amount: String, assetId: String, destination: String, needsCheckPrecision: Bool, tag: String?) -> Bool {
+    class func checkExternalTransfer(string: String, amount: String, assetId: String, destination: String, needsCheckPrecision: Bool, tag: String?) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
@@ -435,12 +435,12 @@ class UrlWindow {
                 }
             }
             guard let asset = syncAsset(assetId: assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url)")
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(string)")
                 hud.hideInMainThread()
                 return
             }
             guard let feeAsset = syncAsset(assetId: assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url)")
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(string)")
                 hud.hideInMainThread()
                 return
             }
@@ -457,7 +457,7 @@ class UrlWindow {
                             hud.hide()
                             PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: "").presentPopupControllerAnimated()
                         } else if let error = errorMsg {
-                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url)")
+                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(string)")
                             hud.set(style: .error, text: error)
                             hud.scheduleAutoHidden()
                         } else {
@@ -534,12 +534,12 @@ class UrlWindow {
         return true
     }
 
-    class func checkPayUrl(url: String) -> Bool {
-        switch TransferURL(url: url) {
+    class func checkPayment(string: String) -> Bool {
+        switch TransferURL(string: string) {
         case let .mixin(queries):
-            return checkPayUrl(url: url, query: queries)
+            return checkPayUrl(url: string, query: queries)
         case let .external(amount, assetId, destination, needsCheckPrecision, tag):
-            return checkExternalTransfer(url: url, amount: amount, assetId: assetId, destination: destination, needsCheckPrecision: needsCheckPrecision, tag: tag)
+            return checkExternalTransfer(string: string, amount: amount, assetId: assetId, destination: destination, needsCheckPrecision: needsCheckPrecision, tag: tag)
         case .none:
             return false
         }

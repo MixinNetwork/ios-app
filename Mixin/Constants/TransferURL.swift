@@ -22,17 +22,17 @@ enum TransferURL {
     case mixin(queries: [String: String])
     case external(amount: String, assetId: String, destination: String, needsCheckPrecision: Bool, tag: String?)
     
-    init?(url: String) {
-        if Self.mixinTransferSupportedAssets.contains(where: url.lowercased().hasPrefix),
-           let queries = URLComponents(string: url)?.getKeyVals(),
+    init?(string: String) {
+        if Self.mixinTransferSupportedAssets.contains(where: string.lowercased().hasPrefix),
+           let queries = URLComponents(string: string)?.getKeyVals(),
            let recipientId = queries["recipient"]?.lowercased(), let assetId = queries["asset"]?.lowercased(),
            !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil {
             self = .mixin(queries: queries)
         } else {
-            guard let prefix = Self.externalTransferSupportedAssetChainIds.keys.first(where: url.hasPrefix) else {
+            guard let prefix = Self.externalTransferSupportedAssetChainIds.keys.first(where: string.hasPrefix) else {
                 return nil
             }
-            var string = url
+            var string = string
             if !string[prefix.endIndex...].hasPrefix("//") {
                 string.insert(contentsOf: "//", at: prefix.endIndex)
             }

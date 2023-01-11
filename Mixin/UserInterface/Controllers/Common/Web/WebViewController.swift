@@ -132,7 +132,7 @@ class WebViewController: FullscreenPopupViewController {
                     if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                         return
                     }
-                    if UrlWindow.checkPayUrl(url: string) {
+                    if UrlWindow.checkPayment(string: string) {
                         return
                     }
                     RecognizeWindow.instance().presentWindow(text: string)

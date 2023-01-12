@@ -29,22 +29,22 @@ enum TransferURL {
            !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil {
             self = .mixin(queries: queries)
         } else {
-            guard let prefix = Self.externalTransferSupportedAssetChainIds.keys.first(where: string.hasPrefix) else {
+            guard let chain = Self.externalTransferSupportedAssetChainIds.keys.first(where: string.hasPrefix) else {
                 return nil
             }
-            var string = string
-            if !string[prefix.endIndex...].hasPrefix("//") {
-                string.insert(contentsOf: "//", at: prefix.endIndex)
+            var transferString = string
+            if !transferString[chain.endIndex...].hasPrefix("//") {
+                transferString.insert(contentsOf: "//", at: chain.endIndex)
             }
-            guard let components = URLComponents(string: string), let host = components.host else {
+            guard let components = URLComponents(string: transferString), let host = components.host else {
                 return nil
             }
             let amount: String
             let assetId: String
             let destination: String
             let needsCheckPrecision: Bool
-            let query = components.getKeyVals()
-            if prefix == "ethereum:" {
+            let queries = components.getKeyVals()
+            if chain == "ethereum:" {
                 var targetAddress: String
                 if let user = components.user {
                     targetAddress = user
@@ -55,9 +55,12 @@ enum TransferURL {
                 if targetAddress.hasPrefix(payPrefix) {
                     targetAddress = String(targetAddress[payPrefix.endIndex...])
                 }
-                let number: String
-                if let value = query["value"] {
-                    number = value
+                if let value = queries["value"] {
+                    if let ether = value.toEther() {
+                        amount = ether
+                    } else {
+                        return nil
+                    }
                     let chainId = "1"
                     if let id = Self.externalTransferEthereumChainIds[chainId] {
                         assetId = id
@@ -72,19 +75,19 @@ enum TransferURL {
                     } else {
                         return nil
                     }
-                    if let address = query["address"] {
+                    if let address = queries["address"] {
                         destination = address
                     } else {
                         return nil
                     }
-                    if let value = query["amount"] {
+                    if let value = queries["amount"] {
                         if value.isScientificNotation() {
                             return nil
                         }
-                        number = value
+                        amount = value
                         needsCheckPrecision = false
-                    } else if let value = query["uint256"] {
-                        number = value
+                    } else if let value = queries["uint256"] {
+                        amount = value
                         needsCheckPrecision = true
                     } else {
                         return nil
@@ -92,20 +95,13 @@ enum TransferURL {
                 } else {
                     return nil
                 }
-                if needsCheckPrecision {
-                    amount = number
-                } else if let ether = number.toEther() {
-                    amount = ether
-                } else {
-                    return nil
-                }
             } else {
-                if prefix == "solana:", query["spl-token"] != nil {
+                if chain == "solana:", queries["spl-token"] != nil {
                     return nil
                 }
-                if let number = query["amount"] {
+                if let number = queries["amount"] {
                     amount = number
-                } else if let number = query["tx_amount"] {
+                } else if let number = queries["tx_amount"] {
                     amount = number
                 } else {
                     return nil
@@ -113,7 +109,7 @@ enum TransferURL {
                 if amount.isScientificNotation() {
                     return nil
                 }
-                if let id = Self.externalTransferSupportedAssetChainIds[prefix] {
+                if let id = Self.externalTransferSupportedAssetChainIds[chain] {
                     assetId = id
                 } else {
                     return nil
@@ -138,8 +134,10 @@ fileprivate extension String {
             } else {
                 return nil
             }
+        } else if let value = Decimal(string: self) {
+            return "\(value / pow(Decimal(10), 18))"
         } else {
-            return self
+            return nil
         }
     }
     

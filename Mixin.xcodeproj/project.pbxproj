@@ -587,6 +587,7 @@
 		7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */; };
 		7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */; };
 		7C541069296EDA5A0082368C /* TransferURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C541068296EDA5A0082368C /* TransferURL.swift */; };
+		7C54136B296FE8A10082368C /* TransferURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C541068296EDA5A0082368C /* TransferURL.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
@@ -630,7 +631,7 @@
 		7CB227862907CE060034F9FD /* DepositNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB227842907CE060034F9FD /* DepositNetworkCell.swift */; };
 		7CB227872907CE060034F9FD /* DepositNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB227852907CE060034F9FD /* DepositNetworkCell.xib */; };
 		7CB2A57F27C386F0007D9DEE /* GroupsInCommonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2A57E27C386F0007D9DEE /* GroupsInCommonViewController.swift */; };
-		7CBA956E295C253600CD063B /* ExternalTransferURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA956D295C253600CD063B /* ExternalTransferURLTests.swift */; };
+		7CBA956E295C253600CD063B /* TransferURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA956D295C253600CD063B /* TransferURLTests.swift */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
@@ -1663,7 +1664,7 @@
 		7CB227852907CE060034F9FD /* DepositNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositNetworkCell.xib; sourceTree = "<group>"; };
 		7CB2A57E27C386F0007D9DEE /* GroupsInCommonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsInCommonViewController.swift; sourceTree = "<group>"; };
 		7CBA956B295C253500CD063B /* MixinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MixinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7CBA956D295C253600CD063B /* ExternalTransferURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalTransferURLTests.swift; sourceTree = "<group>"; };
+		7CBA956D295C253600CD063B /* TransferURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferURLTests.swift; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
@@ -2666,7 +2667,7 @@
 		7CBA956C295C253600CD063B /* MixinTests */ = {
 			isa = PBXGroup;
 			children = (
-				7CBA956D295C253600CD063B /* ExternalTransferURLTests.swift */,
+				7CBA956D295C253600CD063B /* TransferURLTests.swift */,
 			);
 			path = MixinTests;
 			sourceTree = "<group>";
@@ -5308,7 +5309,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CBA956E295C253600CD063B /* ExternalTransferURLTests.swift in Sources */,
+				7CBA956E295C253600CD063B /* TransferURLTests.swift in Sources */,
+				7C54136B296FE8A10082368C /* TransferURL.swift in Sources */,
 				942E17202966963000D540F9 /* URLExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

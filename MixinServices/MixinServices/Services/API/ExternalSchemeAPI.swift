@@ -7,7 +7,7 @@ public final class ExternalSchemeAPI: MixinAPI {
         
         static func address(assetId: String, destination: String, tag: String?)  -> String {
             var path = "/external/addresses/check?asset=\(assetId)&destination=\(destination)"
-            if let tag {
+            if let tag, !tag.isEmpty {
                 path += "&tag=\(tag)"
             }
             return path

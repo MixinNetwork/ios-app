@@ -585,6 +585,8 @@
 		7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */; };
 		7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */; };
 		7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */; };
+		7C54078D296BD8430082368C /* ChatTextSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C54078C296BD8430082368C /* ChatTextSizeViewController.swift */; };
+		7C54078F296BDD7B0082368C /* TextSizeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C54078E296BDD7B0082368C /* TextSizeSlider.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
@@ -1605,6 +1607,8 @@
 		7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeConfirmationView.xib; sourceTree = "<group>"; };
 		7C5304A029014F6800567CF6 /* AuthorizationScopesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopesTableView.swift; sourceTree = "<group>"; };
 		7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeDataSource.swift; sourceTree = "<group>"; };
+		7C54078C296BD8430082368C /* ChatTextSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTextSizeViewController.swift; sourceTree = "<group>"; };
+		7C54078E296BDD7B0082368C /* TextSizeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeSlider.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
@@ -2324,6 +2328,7 @@
 				7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */,
 				7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */,
 				7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */,
+				7C54078E296BDD7B0082368C /* TextSizeSlider.swift */,
 				7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */,
 				7B2E5881244F10FB0073102C /* EmergencyContactTableHeaderView.xib */,
 				7BB7872A24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib */,
@@ -3637,6 +3642,7 @@
 				94DF7E0D28DC1697006E415B /* AcknowledgementViewController.swift */,
 				7BB8E2D024529E910098B1E8 /* AppearanceSettingsViewController.swift */,
 				7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */,
+				7C54078C296BD8430082368C /* ChatTextSizeViewController.swift */,
 				940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
@@ -4474,6 +4480,7 @@
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
+				7C54078F296BDD7B0082368C /* TextSizeSlider.swift in Sources */,
 				7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */,
 				941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */,
 				7BBCEC242523332200F270DF /* PopupTitleView.swift in Sources */,
@@ -4863,6 +4870,7 @@
 				7C0FAAC727E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
+				7C54078D296BD8430082368C /* ChatTextSizeViewController.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
 				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,

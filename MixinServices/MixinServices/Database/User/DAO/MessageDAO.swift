@@ -426,16 +426,26 @@ public final class MessageDAO: UserDatabaseDAO {
         guard hasUnreadMessage(conversationId: conversationId) else {
             return nil
         }
-        let statuses = [
-            MessageStatus.SENDING.rawValue,
-            MessageStatus.DELIVERED.rawValue,
-            MessageStatus.SENT.rawValue,
-            MessageStatus.READ.rawValue
-        ]
-        let myLastMessage: Message? = db.select(where: Message.column(of: .conversationId) == conversationId
-                                                     && statuses.contains(Message.column(of: .status))
-                                                     && Message.column(of: .userId) == myUserId,
-                                                order: [Message.column(of: .createdAt).desc])
+        let myLastMessage: Message? = {
+            let sql = """
+            SELECT *
+            FROM messages INDEXED BY index_messages_pick
+            WHERE conversation_id = ?
+                AND status IN (?, ?, ?, ?)
+                AND user_id = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+            """
+            let arguments: StatementArguments = [
+                conversationId,
+                MessageStatus.SENDING.rawValue,
+                MessageStatus.DELIVERED.rawValue,
+                MessageStatus.SENT.rawValue,
+                MessageStatus.READ.rawValue,
+                myUserId
+            ]
+            return db.select(with: sql, arguments: arguments)
+        }()
         let lastReadCondition: SQLSpecificExpressible
         if let myLastMessage = myLastMessage {
             lastReadCondition = Message.column(of: .conversationId) == conversationId

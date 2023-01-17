@@ -446,6 +446,13 @@ class UrlWindow {
             }
             switch ExternalSchemeAPI.addressFee(assetId: assetId, destination: destination, tag: tag) {
             case .success(let response):
+                guard destination.lowercased() == response.destination.lowercased() else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
                 let fee = response.fee
                 let destination = response.destination
                 let traceId = UUID().uuidString.lowercased()

@@ -92,6 +92,16 @@ enum TransferURL {
                     } else {
                         return nil
                     }
+                } else if let requestedAmount = queries["amount"] {
+                    amount = requestedAmount
+                    let chainId = "1"
+                    if let id = Self.externalTransferEthereumChainIds[chainId] {
+                        assetId = id
+                    } else {
+                        return nil
+                    }
+                    destination = targetAddress
+                    needsCheckPrecision = false
                 } else {
                     return nil
                 }

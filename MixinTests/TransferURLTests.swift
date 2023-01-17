@@ -1,136 +1,161 @@
 import XCTest
 
+fileprivate let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
+fileprivate let eth = "43d61dcd-e413-450d-80b8-101d5e903357"
+fileprivate let ltc = "76c802a2-7c88-447f-a93e-c29c9e5dd9c8"
+fileprivate let dash = "6472e7e3-75fd-48b6-b1dc-28d294ee1476"
+fileprivate let doge = "6770a1e5-6086-44d5-b60f-545f9d9e8ffd"
+fileprivate let xmr = "05c5ac01-31f9-4a69-aa8a-ab796de1d041"
+fileprivate let sol = "64692c23-8971-4cf4-84a7-4dd1271dd887"
+fileprivate let xin = "c94ac88f-4671-3976-b60a-09064f1811e8"
+fileprivate let usdt = "4d8c508b-91c5-375b-92b0-ee702ed2dac5"
+
 final class TransferURLTests: XCTestCase {
     
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    struct Case {
+        let raw: String
+        let expected: TransferURL?
     }
     
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+    // MARK: - BTC
+    let btcCases = [
+        Case(raw: "bitcoin:BC1QA7A84SQ2NNKPXUA5DLY6FG553D5V06NSL608SS?amount=0.00186487",
+             expected: .external(amount: "0.00186487",
+                                 assetId: btc,
+                                 destination: "BC1QA7A84SQ2NNKPXUA5DLY6FG553D5V06NSL608SS",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "bitcoin:35pkcZ531UWYwVWRGeMG6eXkWbPptFg6AG?amount=0.00173492&fee=5&rbf=false&lightning=LNBC1734920N1P3EC8DGPP5NTUUNWS3GF9XUE4EZ2NCPEJCZHAJRVALFW8ALWFPN29LEE76NV5SDZ2GF5HGUN9VE5KCMPQV9SNYCMZVE3RWTF3XVMK2TF5XGMRJTFCXSCNSTF4VCCXYERYXQ6N2VRPVVCQZX7XQRP9SSP5Q4JSN54FHFQ8TRGHQGDQW2PUV790PXNSFVZG20CW322K0E6L7M8Q9QYYSSQA42ZJEMX44Y6PEW3YHWHXV9JUXTM96DMHKEPMD3LXUQTPH0HGSKX9TVZD2XVG7DETCVN450JXN25FM8G80GRYGU9ZHXC3XURSJ4Z20GPF8SQT7",
+             expected: .external(amount: "0.00173492",
+                                 assetId: btc,
+                                 destination: "35pkcZ531UWYwVWRGeMG6eXkWbPptFg6AG",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "LIGHTNING:LNBC1197710N1P36QPY7PP5NZT3GTZMZP00E8NAR0C40DQVS5JT7PWCF7Z4MLXKH6F988QT08MSDZ2GF5HGUN9VE5KCMPQXGENSVFKXPNRXTTRV43NWTF5V4SKVTFEVCUXYTTXXAJNZVM9X4JRGETY8YCQZX7XQRP9SSP5EU7UUK9E5VKGQ2KYTW68D2JHTK7ALWSTFKYFMMSL2FGT22ZLMW9Q9QYYSSQAWC3VFFRPEGE79NLXKRMPVVR8Q9NVUMD4LFF3U2QRJ23A0RUUTGKJ7UCQQTE3RV93JYH20GJFPQHGLL7K2RPJMNYFXAP9NXPC4XQ80GPFE00SQ",
+             expected: nil),
+        Case(raw: "bitcoin:BC1QA7A84SQ2NNKPXUA5DLY6FG553D5V06NSL608SS?amount=0.12e3",
+             expected: nil),
+    ]
     
-    private let bitcoin = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
-    private let ethereum = "43d61dcd-e413-450d-80b8-101d5e903357"
-    private let litecoin = "76c802a2-7c88-447f-a93e-c29c9e5dd9c8"
-    private let dash = "6472e7e3-75fd-48b6-b1dc-28d294ee1476"
-    private let dogcoin = "6770a1e5-6086-44d5-b60f-545f9d9e8ffd"
-    private let monero = "05c5ac01-31f9-4a69-aa8a-ab796de1d041"
-    private let solana = "64692c23-8971-4cf4-84a7-4dd1271dd887"
-    private let xin = "c94ac88f-4671-3976-b60a-09064f1811e8"
-    private let usdt = "4d8c508b-91c5-375b-92b0-ee702ed2dac5"
+    // MARK: - ETH
+    let ethCases = [
+        Case(raw: "ethereum:0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359?value=2.014e18",
+             expected: .external(amount: "2.014",
+                                 assetId: eth,
+                                 destination: "0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "ethereum:pay-0xdAC17F958D2ee523a2206206994597C13D831ec7@1/transfer?address=0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc&uint256=2e7&gasPrice=14",
+             expected: .external(amount: "2e7", // This amount will be fixed outside TransferURL
+                                 assetId: usdt,
+                                 destination: "0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc",
+                                 needsCheckPrecision: true,
+                                 tag: nil)),
+        Case(raw: "ethereum:0xD994790d2905b073c438457c9b8933C0148862db@1?value=1.697e16&gasPrice=14&label=Bitrefill%2008cba4ee-b6cd-47c8-9768-c82959c0edce",
+             expected: .external(amount: "0.01697",
+                                 assetId: eth,
+                                 destination: "0xD994790d2905b073c438457c9b8933C0148862db",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&amount=1&uint256=1.24e18",
+             expected: .external(amount: "1",
+                                 assetId: xin,
+                                 destination: "0xB38F2E40e82F0AE5613D55203d84953aE4d5181B",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "ethereum:pay-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48@1/transfer?address=0x50bF16E33E892F1c9Aa7C7FfBaF710E971b86Dd1&gasPrice=14",
+             expected: nil),
+        Case(raw: "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?a=b&c=d&uint256=1.24e18&e=f&amount=1&g=h&address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&i=j&k=m&n=o&p=q",
+             expected: .external(amount: "1",
+                                 assetId: xin,
+                                 destination: "0xB38F2E40e82F0AE5613D55203d84953aE4d5181B",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&amount=1e7&uint256=1.24e18",
+             expected: nil),
+    ]
     
-    func testParseBitcoin() throws {
-        let url1 = "bitcoin:BC1QA7A84SQ2NNKPXUA5DLY6FG553D5V06NSL608SS?amount=0.00186487"
-        let result1 = TransferURL(string: url1)
-        checkResult(result: result1, assetId: bitcoin, destination: "BC1QA7A84SQ2NNKPXUA5DLY6FG553D5V06NSL608SS", amount: "0.00186487", needsCheckPrecision: false)
-        
-        let url2 = "bitcoin:35pkcZ531UWYwVWRGeMG6eXkWbPptFg6AG?amount=0.00173492&fee=5&rbf=false&lightning=LNBC1734920N1P3EC8DGPP5NTUUNWS3GF9XUE4EZ2NCPEJCZHAJRVALFW8ALWFPN29LEE76NV5SDZ2GF5HGUN9VE5KCMPQV9SNYCMZVE3RWTF3XVMK2TF5XGMRJTFCXSCNSTF4VCCXYERYXQ6N2VRPVVCQZX7XQRP9SSP5Q4JSN54FHFQ8TRGHQGDQW2PUV790PXNSFVZG20CW322K0E6L7M8Q9QYYSSQA42ZJEMX44Y6PEW3YHWHXV9JUXTM96DMHKEPMD3LXUQTPH0HGSKX9TVZD2XVG7DETCVN450JXN25FM8G80GRYGU9ZHXC3XURSJ4Z20GPF8SQT7"
-        let result2 = TransferURL(string: url2)
-        checkResult(result: result2, assetId: bitcoin, destination: "35pkcZ531UWYwVWRGeMG6eXkWbPptFg6AG", amount: "0.00173492", needsCheckPrecision: false)
-        
-        let url3 = "LIGHTNING:LNBC1197710N1P36QPY7PP5NZT3GTZMZP00E8NAR0C40DQVS5JT7PWCF7Z4MLXKH6F988QT08MSDZ2GF5HGUN9VE5KCMPQXGENSVFKXPNRXTTRV43NWTF5V4SKVTFEVCUXYTTXXAJNZVM9X4JRGETY8YCQZX7XQRP9SSP5EU7UUK9E5VKGQ2KYTW68D2JHTK7ALWSTFKYFMMSL2FGT22ZLMW9Q9QYYSSQAWC3VFFRPEGE79NLXKRMPVVR8Q9NVUMD4LFF3U2QRJ23A0RUUTGKJ7UCQQTE3RV93JYH20GJFPQHGLL7K2RPJMNYFXAP9NXPC4XQ80GPFE00SQ"
-        let result3 = TransferURL(string: url3)
-        XCTAssertNil(result3)
-    }
+    // MARK: - LTC
+    let ltcCases = [
+        Case(raw: "litecoin:MAA5rAYDJcfpGShL2fHHyqdH5Sum4hC9My?amount=0.31837321",
+             expected: .external(amount: "0.31837321",
+                                 assetId: ltc,
+                                 destination: "MAA5rAYDJcfpGShL2fHHyqdH5Sum4hC9My",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "litecoin:MAA5rAYDJcfpGShL2fHHyqdH5Sum4hC9My?amount=0.31e5",
+             expected: nil),
+    ]
     
-    func testParseLitecoin() {
-        let url = "litecoin:MAA5rAYDJcfpGShL2fHHyqdH5Sum4hC9My?amount=0.31837321"
-        let result = TransferURL(string: url)
-        checkResult(result: result, assetId: litecoin, destination: "MAA5rAYDJcfpGShL2fHHyqdH5Sum4hC9My", amount: "0.31837321", needsCheckPrecision: false)
-    }
+    // MARK: - DOGE
+    let dogeCases = [
+        Case(raw: "dogecoin:DQDHx7KcDjq1uDR5MC8tHQPiUp1C3eQHcd?amount=258.69",
+             expected: .external(amount: "258.69",
+                                 assetId: doge,
+                                 destination: "DQDHx7KcDjq1uDR5MC8tHQPiUp1C3eQHcd",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "dogecoin:DQDHx7KcDjq1uDR5MC8tHQPiUp1C3eQHcd?amount=258.6e5",
+             expected: nil),
+    ]
     
-    func testParseDash() {
-        let url = "dash:XimNHukVq5PFRkadrwybyuppbree51mByS?amount=0.47098703&IS=1"
-        let result = TransferURL(string: url)
-        checkResult(result: result, assetId: dash, destination: "XimNHukVq5PFRkadrwybyuppbree51mByS", amount: "0.47098703", needsCheckPrecision: false)
-    }
+    // MARK: - DASH
+    let dashCases = [
+        Case(raw: "dash:XimNHukVq5PFRkadrwybyuppbree51mByS?amount=0.47098703&IS=1",
+             expected: .external(amount: "0.47098703",
+                                 assetId: dash,
+                                 destination: "XimNHukVq5PFRkadrwybyuppbree51mByS",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "dash:XimNHukVq5PFRkadrwybyuppbree51mByS?amount=0.47e5&IS=1",
+             expected: nil),
+    ]
     
-    func testParseDogcoin() {
-        let url = "dogecoin:DQDHx7KcDjq1uDR5MC8tHQPiUp1C3eQHcd?amount=258.69"
-        let result = TransferURL(string: url)
-        checkResult(result: result, assetId: dogcoin, destination: "DQDHx7KcDjq1uDR5MC8tHQPiUp1C3eQHcd", amount: "258.69", needsCheckPrecision: false)
-    }
+    // MARK: - XMR
+    let xmrCases = [
+        Case(raw: "monero:83sfoqWFNrsGTAyuC3PxHeS9stn8TQiTkiBcizHwjyHN57NczsRJE8UfrnhTUxT5PLBWLnq5yXrtPKeAjWeoDTkCPHGVe1Y?tx_amount=1.61861962",
+             expected: .external(amount: "1.61861962",
+                                 assetId: xmr,
+                                 destination: "83sfoqWFNrsGTAyuC3PxHeS9stn8TQiTkiBcizHwjyHN57NczsRJE8UfrnhTUxT5PLBWLnq5yXrtPKeAjWeoDTkCPHGVe1Y",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "monero:83sfoqWFNrsGTAyuC3PxHeS9stn8TQiTkiBcizHwjyHN57NczsRJE8UfrnhTUxT5PLBWLnq5yXrtPKeAjWeoDTkCPHGVe1Y?tx_amount=1.61e6",
+             expected: nil),
+    ]
     
-    func testParseMonero() {
-        let url = "monero:83sfoqWFNrsGTAyuC3PxHeS9stn8TQiTkiBcizHwjyHN57NczsRJE8UfrnhTUxT5PLBWLnq5yXrtPKeAjWeoDTkCPHGVe1Y?tx_amount=1.61861962"
-        let result = TransferURL(string: url)
-        checkResult(result: result, assetId: monero, destination: "83sfoqWFNrsGTAyuC3PxHeS9stn8TQiTkiBcizHwjyHN57NczsRJE8UfrnhTUxT5PLBWLnq5yXrtPKeAjWeoDTkCPHGVe1Y", amount: "1.61861962", needsCheckPrecision: false)
-    }
+    // MARK: - SOL
+    let solCases = [
+        Case(raw: "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1&label=Michael&message=Thanks%20for%20all%20the%20fish&memo=OrderId12345",
+             expected: .external(amount: "1",
+                                 assetId: sol,
+                                 destination: "mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN",
+                                 needsCheckPrecision: false,
+                                 tag: nil)),
+        Case(raw: "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.01&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+             expected: nil),
+        Case(raw: "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1e7&label=Michael&message=Thanks%20for%20all%20the%20fish&memo=OrderId12345",
+             expected: nil),
+    ]
     
-    func testParseSolana() {
-        let url1 = "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1&label=Michael&message=Thanks%20for%20all%20the%20fish&memo=OrderId12345"
-        let result1 = TransferURL(string: url1)
-        checkResult(result: result1, assetId: solana, destination: "mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN", amount: "1", needsCheckPrecision: false)
-        
-        let url2 = "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.01&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-        let result2 = TransferURL(string: url2)
-        XCTAssertNil(result2)
-        
-        let url3 = "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1e7&label=Michael&message=Thanks%20for%20all%20the%20fish&memo=OrderId12345"
-        let result3 = TransferURL(string: url3)
-        XCTAssertNil(result3)
-    }
-    
-    func testParseEthereum() {
-        let url1 = "ethereum:0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359?value=2.014e18"
-        let result1 = TransferURL(string: url1)
-        checkResult(result: result1, assetId: ethereum, destination: "0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359", amount: "2.014", needsCheckPrecision: false)
-        
-        // xin
-        let url2 = "ethereum:pay-0xa974c709cfb4566686553a20790685a47aceaa33@1/transfer?address=0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc&uint256=2e17&gasPrice=14"
-        let result2 = TransferURL(string: url2)
-        checkResult(result: result2, assetId: xin, destination: "0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc", amount: "0.2", needsCheckPrecision: true)
-        
-        let url3 = "ethereum:43d61dcd-e413-450d-80b8-101d5e903357@1?value=1.697e16&gasPrice=14&label=Bitrefill%2008cba4ee-b6cd-47c8-9768-c82959c0edce"
-        let result3 = TransferURL(string: url3)
-        checkResult(result: result3, assetId: ethereum, destination: "43d61dcd-e413-450d-80b8-101d5e903357", amount: "0.01697", needsCheckPrecision: false)
-        
-        // xin
-        let url4 = "ethereum:0xa974c709cfb4566686553a20790685a47aceaa33@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&amount=66&uint256=1e18"
-        let result4 = TransferURL(string: url4)
-        checkResult(result: result4, assetId: xin, destination: "0xB38F2E40e82F0AE5613D55203d84953aE4d5181B", amount: "66", needsCheckPrecision: false)
-        
-        // usdt
-        let url5 = "ethereum:0xdac17f958d2ee523a2206206994597c13d831ec7@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&uint256=5e7"
-        let result5 = TransferURL(string: url5)
-        checkResult(result: result5, assetId: usdt, destination: "0xB38F2E40e82F0AE5613D55203d84953aE4d5181B", amount: "50", needsCheckPrecision: true)
-        
-        let url6 = "ethereum:pay-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48@1/transfer?address=0x50bF16E33E892F1c9Aa7C7FfBaF710E971b86Dd1&gasPrice=14"
-        let result6 = TransferURL(string: url6)
-        XCTAssertNil(result6)
-        
-        let url7 = "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&amount=66e10&uint256=1e18"
-        let result7 = TransferURL(string: url7)
-        XCTAssertNil(result7)
-        
-        let url8 = "ethereum:0x06cFb0e20024604dDe1c8Ed894d0c70913927cf4?decimal=18&value=10000000000000000000"
-        let result8 = TransferURL(string: url8)
-        checkResult(result: result8, assetId: ethereum, destination: "0x06cFb0e20024604dDe1c8Ed894d0c70913927cf4", amount: "10", needsCheckPrecision: false)
-    }
-    
-    func checkResult(result: TransferURL!, assetId: String, destination: String, amount: String, needsCheckPrecision: Bool) {
-        guard case let .external(amountResult, assetIdResult, destinationResult, needsCheckPrecisionResult, _) = result else {
-            return
-        }
-        XCTAssertEqual(assetIdResult, assetId)
-        XCTAssertEqual(destinationResult, destination)
-        XCTAssertEqual(needsCheckPrecisionResult, needsCheckPrecision)
-        if needsCheckPrecisionResult {
-            let precision: Int
-            if assetId == xin {
-                precision = 18
-            } else if assetId == usdt {
-                precision = 6
-            } else {
-                precision = 1
+    func testAll() {
+        let allCases = btcCases + ethCases + ltcCases + dogeCases + dashCases + xmrCases + solCases
+        for testCase in allCases {
+            let output = TransferURL(string: testCase.raw)
+            switch (output, testCase.expected) {
+            case (nil, nil):
+                break
+            case let (.mixin(outputQueries), .mixin(expectedQueries)):
+                XCTAssertEqual(outputQueries, expectedQueries, testCase.raw)
+            case let (.external(outputAmount, outputAssetId, outputDestination, outputNeedsCheckPrecision, outputTag),
+                      .external(expectedAmount, expectedAssetId, expectedDestination, expectedNeedsCheckPrecision, expectedTag)):
+                XCTAssertEqual(outputAmount, expectedAmount, testCase.raw)
+                XCTAssertEqual(outputAssetId, expectedAssetId, testCase.raw)
+                XCTAssertEqual(outputDestination, expectedDestination, testCase.raw)
+                XCTAssertEqual(outputNeedsCheckPrecision, expectedNeedsCheckPrecision, testCase.raw)
+                XCTAssertEqual(outputTag, expectedTag, testCase.raw)
+            default:
+                XCTFail(testCase.raw)
             }
-            if let value = Decimal(string: amountResult) {
-                let newAmount = "\(value / pow(Decimal(10), precision))"
-                XCTAssertEqual(newAmount, amount)
-            }
-        } else {
-            XCTAssertEqual(amountResult, amount)
         }
     }
     

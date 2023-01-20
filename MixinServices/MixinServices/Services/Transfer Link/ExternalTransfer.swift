@@ -71,6 +71,13 @@ public struct ExternalTransfer {
                 chainID = "1"
             }
             
+            let addtionalAmount: Decimal?
+            if let amount = queries["amount"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                addtionalAmount = decimalAmount
+            } else {
+                addtionalAmount = nil
+            }
+            
             if let range = Range(match.range(at: 3), in: path) {
                 // ERC-20 Tokens
                 let functionName = String(path[range])
@@ -80,33 +87,37 @@ public struct ExternalTransfer {
                 guard let assetID = assetIDFinder(targetAddress) else {
                     throw TransferLinkError.missingAssetKey
                 }
-                guard let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) else {
+                if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                    self.amount = decimalAmount
+                    self.resolvedAmount = nil
+                } else if let addtionalAmount {
+                    self.amount = addtionalAmount
+                    self.resolvedAmount = addtionalAmount.description
+                } else {
                     throw TransferLinkError.invalidFormat
                 }
                 self.assetID = assetID
                 self.destination = address
-                self.amount = decimalAmount
-                self.resolvedAmount = nil
             } else {
                 // ETH the native token
                 guard let assetID = Self.ethChainIds[chainID] else {
                     throw TransferLinkError.invalidFormat
                 }
-                guard let amount = parameters["value"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) else {
+                if let amount = parameters["value"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                    self.amount = decimalAmount
+                    self.resolvedAmount = Self.resolve(atomicAmount: decimalAmount, with: 18)
+                } else if let addtionalAmount {
+                    self.amount = addtionalAmount
+                    self.resolvedAmount = addtionalAmount.description
+                } else {
                     throw TransferLinkError.invalidFormat
                 }
                 self.assetID = assetID
                 self.destination = targetAddress
-                self.amount = decimalAmount
-                self.resolvedAmount = Self.resolve(atomicAmount: decimalAmount, with: 18)
             }
             
             self.raw = raw
-            if let amount = queries["amount"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                self.addtionalAmount = decimalAmount.description
-            } else {
-                self.addtionalAmount = nil
-            }
+            self.addtionalAmount = addtionalAmount?.description
             self.memo = nil
         } else {
             guard let assetID = Self.supportedAssetIds[scheme] else {

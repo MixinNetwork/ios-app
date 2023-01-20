@@ -480,7 +480,7 @@ class UrlWindow {
             let transfer = try InternalTransfer(string: string)
             checkInternalTransfer(transfer)
             return true
-        } catch {
+        } catch TransferLinkError.notTransferLink {
             do {
                 let transfer = try ExternalTransfer(string: string)
                 checkExternalTransfer(transfer)
@@ -492,6 +492,10 @@ class UrlWindow {
                 showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
                 return true
             }
+        } catch {
+            Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
+            showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+            return true
         }
     }
     
@@ -577,25 +581,24 @@ class UrlWindow {
                 hud.hideInMainThread()
                 return
             }
-            guard let feeAsset = syncAsset(assetId: assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(transfer.raw)")
-                hud.hideInMainThread()
-                return
-            }
-            switch ExternalSchemeAPI.addressFee(assetId: assetId, destination: transfer.destination, tag: nil) {
+            switch ExternalSchemeAPI.checkAddress(assetId: assetId, destination: transfer.destination, tag: nil) {
             case .success(let response):
-                guard transfer.destination.lowercased() == response.destination.lowercased() else {
+                guard response.tag.isNilOrEmpty, transfer.destination.lowercased() == response.destination.lowercased() else {
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.scheduleAutoHidden()
                     }
                     return
                 }
-                let fee = response.fee
+                guard let feeAsset = syncAsset(assetId: response.feeAssetId, hud: hud) else {
+                    Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(transfer.raw)")
+                    hud.hideInMainThread()
+                    return
+                }
                 let destination = response.destination
                 let traceId = UUID().uuidString.lowercased()
                 let addressId = (myUserId + assetId + destination).uuidDigest()
-                let action: PayWindow.PinAction = .externalTransfer(destination: destination, fee: fee, feeAsset: feeAsset, addressId: addressId, traceId: traceId)
+                let action: PayWindow.PinAction = .externalTransfer(destination: destination, fee: response.fee, feeAsset: feeAsset, addressId: addressId, traceId: traceId)
                 PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: destination, tag: nil, addressId: nil, amount: resolvedAmount, memo: memo, fromWeb: true) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         if canPay {

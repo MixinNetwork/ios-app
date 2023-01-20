@@ -18,7 +18,7 @@ public final class ExternalSchemeAPI: MixinAPI {
         request(method: .get, path: Path.schemes, completion: completion)
     }
     
-    public static func addressFee(assetId: String, destination: String, tag: String?) -> MixinAPI.Result<AddressFeeResponse> {
+    public static func checkAddress(assetId: String, destination: String, tag: String?) -> MixinAPI.Result<AddressFeeResponse> {
         request(method: .get, path: Path.address(assetId: assetId, destination: destination, tag: tag))
     }
     

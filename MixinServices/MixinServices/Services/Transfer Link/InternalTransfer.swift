@@ -35,13 +35,12 @@ public struct InternalTransfer {
         let queries = queryItems.reduce(into: [:]) { queries, item in
             queries[item.name] = item.value
         }
-        guard let recipientID = queries["recipient"], UUID.isValidUUIDString(recipientID) else {
-            throw TransferLinkError.invalidFormat
-        }
-        guard let assetID = queries["asset"], UUID.isValidUUIDString(assetID) else {
-            throw TransferLinkError.invalidFormat
+        guard let recipientID = queries["recipient"], let assetID = queries["asset"] else {
+            throw TransferLinkError.notTransferLink
         }
         guard
+            UUID.isValidUUIDString(recipientID),
+            UUID.isValidUUIDString(assetID),
             let amount = queries["amount"],
             !amount.isEmpty,
             amount.isGenericNumber,

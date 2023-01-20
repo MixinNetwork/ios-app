@@ -39,7 +39,8 @@ class ServicesTests: XCTestCase {
         }
         userSk.setBytes(key)
         
-        let request = try TIPSignRequest(userSk: userSk,
+        let request = try TIPSignRequest(id: UUID().uuidString.lowercased(),
+                                         userSk: userSk,
                                          signer: signer,
                                          ephemeral: ephemeral,
                                          watcher: watcher,

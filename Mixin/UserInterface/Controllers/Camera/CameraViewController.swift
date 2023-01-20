@@ -649,7 +649,7 @@ extension CameraViewController {
             if let delegate = self.delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
                 return
             }
-            if UrlWindow.checkPayUrl(url: string) {
+            if UrlWindow.checkPayment(string: string) {
                 return
             }
             if UrlWindow.checkExternalScheme(url: string) {
@@ -741,7 +741,7 @@ extension CameraViewController: NotificationControllerDelegate {
         guard let string = localObject as? String else {
             return
         }
-        if UrlWindow.checkPayUrl(url: string) {
+        if UrlWindow.checkPayment(string: string) {
             return
         }
         if let url = URL(string: string), UrlWindow.checkUrl(url: url) {

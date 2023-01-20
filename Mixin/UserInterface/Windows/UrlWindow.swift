@@ -21,7 +21,12 @@ class UrlWindow {
             case let .codes(code):
                 result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
             case .pay:
-                result = checkPayUrl(url: url.absoluteString, query: url.getKeyVals())
+                if let transfer = try? InternalTransfer(string: url.absoluteString) {
+                    performInternalTransfer(transfer)
+                    result = true
+                } else {
+                    result = false
+                }
             case .withdrawal:
                 result = checkWithdrawal(url: url)
             case .address:
@@ -470,60 +475,60 @@ class UrlWindow {
         return true
     }
 
-    class func checkPayUrl(url: String) -> Bool {
-        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:", "mobilecoin:"].contains(where: url.lowercased().hasPrefix) else {
-            return false
+    class func checkPayment(string: String) -> Bool {
+        do {
+            let transfer = try InternalTransfer(string: string)
+            performInternalTransfer(transfer)
+            return true
+        } catch TransferLinkError.notTransferLink {
+            do {
+                let transfer = try ExternalTransfer(string: string)
+                performExternalTransfer(transfer)
+                return true
+            } catch TransferLinkError.notTransferLink {
+                return false
+            } catch {
+                Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
+                showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                return true
+            }
+        } catch {
+            Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
+            showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+            return true
         }
-        guard let components = URLComponents(string: url) else {
-            return false
-        }
-        return checkPayUrl(url: url, query: components.getKeyVals())
     }
-
-    class func checkPayUrl(url: String, query: [String: String]) -> Bool {
+    
+    class func performInternalTransfer(_ transfer: InternalTransfer) {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
-            return true
+            return
         case .unknown:
-            return true
+            return
         }
-        guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased(), let amount = query["amount"] else {
-            Logger.general.error(category: "PayURL", message: "Invalid URL: \(url)")
-            showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-            return true
-        }
-        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isGenericNumber && AmountFormatter.isValid(amount) else {
-            Logger.general.error(category: "PayURL", message: "Invalid URL: \(url)")
-            showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-            return true
-        }
-
-        let traceId = query["trace"].uuidString ?? UUID().uuidString.lowercased()
-        var memo = query["memo"]
-        if let urlDecodeMemo = memo?.removingPercentEncoding {
-            memo = urlDecodeMemo
-        }
-
+        let memo = transfer.memo ?? ""
+        let traceId = transfer.traceID
+        let recipientId = transfer.recipientID
+        let amount = transfer.amount
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
+            guard let asset = syncAsset(assetId: transfer.assetID, hud: hud) else {
                 return
             }
             guard let (user, _) = syncUser(userId: recipientId, hud: hud) else {
                 return
             }
-
             let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: true)
-            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: recipientId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
+            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: recipientId, amount: amount, memo: memo, fromWeb: true) { (canPay, errorMsg) in
                 DispatchQueue.main.async {
                     if canPay {
                         hud.hide()
-                        PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo ?? "").presentPopupControllerAnimated()
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
                     } else if let error = errorMsg {
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()
@@ -533,9 +538,92 @@ class UrlWindow {
                 }
             }
         }
-        return true
     }
-
+    
+    class func performExternalTransfer(_ transfer: ExternalTransfer) {
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            break
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            UIApplication.homeNavigationController?.present(tip, animated: true)
+            return
+        case .unknown:
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            let resolvedAmount: String
+            if let amount = transfer.resolvedAmount {
+                resolvedAmount = amount
+            } else {
+                switch AssetAPI.assetPrecision(assetId: transfer.assetID) {
+                case let .success(response):
+                    resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: response.precision)
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+            }
+            if let additionalAmount = transfer.addtionalAmount, additionalAmount != resolvedAmount {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+            let assetId = transfer.assetID
+            let memo = transfer.memo ?? ""
+            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(transfer.raw)")
+                hud.hideInMainThread()
+                return
+            }
+            switch ExternalSchemeAPI.checkAddress(assetId: assetId, destination: transfer.destination, tag: nil) {
+            case .success(let response):
+                guard response.tag.isNilOrEmpty, transfer.destination.lowercased() == response.destination.lowercased() else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                guard let feeAsset = syncAsset(assetId: response.feeAssetId, hud: hud) else {
+                    Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(transfer.raw)")
+                    hud.hideInMainThread()
+                    return
+                }
+                let destination = response.destination
+                let traceId = UUID().uuidString.lowercased()
+                let addressId = (myUserId + assetId + destination).uuidDigest()
+                let action: PayWindow.PinAction = .externalTransfer(destination: destination, fee: response.fee, feeAsset: feeAsset, addressId: addressId, traceId: traceId)
+                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: destination, tag: nil, addressId: nil, amount: resolvedAmount, memo: memo, fromWeb: true) { (canPay, errorMsg) in
+                    DispatchQueue.main.async {
+                        if canPay {
+                            hud.hide()
+                            PayWindow.instance().render(asset: asset, action: action, amount: resolvedAmount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
+                        } else if let error = errorMsg {
+                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(transfer.raw)")
+                            hud.set(style: .error, text: error)
+                            hud.scheduleAutoHidden()
+                        } else {
+                            hud.hide()
+                        }
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
+    }
+    
     class func checkAddress(url: URL) -> Bool {
         switch TIP.status {
         case .ready, .needsMigrate:

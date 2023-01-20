@@ -25,6 +25,12 @@ public final class AssetDAO: UserDatabaseDAO {
     
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a.asset_id = ?"
     
+    public func getAssetIdByAssetKey(_ assetKey: String) -> String? {
+        db.select(column: Asset.column(of: .assetId),
+                  from: Asset.self,
+                  where: Asset.column(of: .assetKey).collating(.caseInsensitiveCompare) == assetKey)
+    }
+    
     public func getAsset(assetId: String) -> AssetItem? {
         db.select(with: AssetDAO.sqlQueryById, arguments: [assetId])
     }

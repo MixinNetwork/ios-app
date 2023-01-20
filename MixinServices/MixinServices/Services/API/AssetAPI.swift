@@ -59,6 +59,11 @@ public final class AssetAPI: MixinAPI {
     public static func asset(assetId: String) -> MixinAPI.Result<Asset> {
         return request(method: .get, path: Path.assets(assetId: assetId))
     }
+    
+    public static func assetPrecision(assetId: String) -> MixinAPI.Result<AssetPrecisionResponse> {
+        return request(method: .get, path: Path.assets(assetId: assetId))
+    }
+    
     public static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil, opponentId: String? = nil, destination: String? = nil, tag: String? = nil) -> MixinAPI.Result<[Snapshot]> {
         assert(limit <= 500)
         return request(method: .get, path: Path.snapshots(limit: limit, offset: offset, assetId: assetId, opponentId: opponentId, destination: destination, tag: tag))

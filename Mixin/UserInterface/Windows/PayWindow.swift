@@ -13,7 +13,7 @@ class PayWindow: BottomSheetView {
         case withdraw(trackId: String, address: Address, feeAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
         case collectible(collectible: CollectibleResponse, senders: [UserItem], receivers: [UserItem])
-        case externalTransfer(trackId: String, addressId: String, destination: String, fee: String, feeAsset: AssetItem, tag: String?)
+        case externalTransfer(destination: String, fee: String, feeAsset: AssetItem, addressId: String, traceId: String)
     }
 
     enum ErrorContinueAction {
@@ -184,7 +184,7 @@ class PayWindow: BottomSheetView {
                 }
                 mixinIDLabel.text = multisig.memo
                 renderMultisigInfo(senders: senders, receivers: receivers)
-            case let .externalTransfer(_, _, destination, fee, feeAsset, _):
+            case let .externalTransfer(destination, fee, feeAsset, _, _):
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.withdrawal()
                 mixinIDLabel.text = destination
@@ -752,10 +752,10 @@ extension PayWindow: PinFieldDelegate {
             default:
                 break
             }
-        case let .externalTransfer(trackId, addressId, destination, fee, _, tag):
-            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: destination, tag: tag)
+        case let .externalTransfer(destination, fee, _, addressId, traceId):
+            trace = Trace(traceId: traceId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: destination, tag: nil)
             TraceDAO.shared.saveTrace(trace: trace)
-            let request = WithdrawalRequest(addressId: "", amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo, fee: fee, assetId: assetId, destination: destination, tag: tag)
+            let request = WithdrawalRequest(addressId: "", amount: generalizedAmount, traceId: traceId, pin: pin, memo: memo, fee: fee, assetId: assetId, destination: destination, tag: nil)
             WithdrawalAPI.externalWithdrawal(addressId: addressId, withdrawal: request, completion: completion)
         }
     }

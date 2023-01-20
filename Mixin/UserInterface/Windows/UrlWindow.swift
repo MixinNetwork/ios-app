@@ -595,7 +595,7 @@ class UrlWindow {
                 let destination = response.destination
                 let traceId = UUID().uuidString.lowercased()
                 let addressId = (myUserId + assetId + destination).uuidDigest()
-                let action: PayWindow.PinAction = .externalTransfer(trackId: traceId, addressId: addressId, destination: destination, fee: fee, feeAsset: feeAsset, tag: nil)
+                let action: PayWindow.PinAction = .externalTransfer(destination: destination, fee: fee, feeAsset: feeAsset, addressId: addressId, traceId: traceId)
                 PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: destination, tag: nil, addressId: nil, amount: resolvedAmount, memo: memo, fromWeb: true) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         if canPay {

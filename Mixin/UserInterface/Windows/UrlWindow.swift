@@ -22,7 +22,7 @@ class UrlWindow {
                 result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
             case .pay:
                 if let transfer = try? InternalTransfer(string: url.absoluteString) {
-                    checkInternalTransfer(transfer)
+                    performInternalTransfer(transfer)
                     result = true
                 } else {
                     result = false
@@ -478,12 +478,12 @@ class UrlWindow {
     class func checkPayment(string: String) -> Bool {
         do {
             let transfer = try InternalTransfer(string: string)
-            checkInternalTransfer(transfer)
+            performInternalTransfer(transfer)
             return true
         } catch TransferLinkError.notTransferLink {
             do {
                 let transfer = try ExternalTransfer(string: string)
-                checkExternalTransfer(transfer)
+                performExternalTransfer(transfer)
                 return true
             } catch TransferLinkError.notTransferLink {
                 return false
@@ -499,13 +499,14 @@ class UrlWindow {
         }
     }
     
-    class func checkInternalTransfer(_ transfer: InternalTransfer) {
+    class func performInternalTransfer(_ transfer: InternalTransfer) {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
+            return
         case .unknown:
             return
         }
@@ -539,13 +540,14 @@ class UrlWindow {
         }
     }
     
-    class func checkExternalTransfer(_ transfer: ExternalTransfer) {
+    class func performExternalTransfer(_ transfer: ExternalTransfer) {
         switch TIP.status {
         case .ready, .needsMigrate:
             break
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
+            return
         case .unknown:
             return
         }

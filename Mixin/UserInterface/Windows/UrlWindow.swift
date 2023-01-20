@@ -569,7 +569,7 @@ class UrlWindow {
                     return
                 }
             }
-            if let additionalAmount = transfer.addtionalAmount, additionalAmount != resolvedAmount {
+            if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
                 DispatchQueue.main.async {
                     hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                     hud.scheduleAutoHidden()

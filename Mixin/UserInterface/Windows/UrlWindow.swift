@@ -475,6 +475,19 @@ class UrlWindow {
         return true
     }
 
+    class func checkQrCodeDetection(string: String, clearNavigationStack: Bool = true) {
+        if checkPayment(string: string) {
+            return
+        }
+        if checkExternalScheme(url: string) {
+            return
+        }
+        if let url = URL(string: string), checkUrl(url: url, clearNavigationStack: clearNavigationStack) {
+            return
+        }
+        RecognizeWindow.instance().presentWindow(text: string)
+    }
+    
     class func checkPayment(string: String) -> Bool {
         do {
             let transfer = try InternalTransfer(string: string)

@@ -175,6 +175,7 @@
 "chat_pin_message" = "%1$@置顶了%2$@";
 "chat_recall_delete_alert" = "所有使用最新版本 Mixin Messenger 的设备都将删除被选中的消息";
 "chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
+"chat_text_size" = "聊天字体大小";
 "chat_waiting" = "等待%1$@上线后建立加密会话。%2$@。";
 "chats" = "会话";
 "choose_network" = "选择充值网络";
@@ -902,6 +903,7 @@
 "uploading_progress" = "上传中：%@ / %@（%@）";
 "url_unrecognized_hint" = "%@ 识别失败，请升级至 Mixin 最新版本或联系开发者检查链接";
 "use_biometry" = "采用%@";
+"use_system_text_size" = "跟隨系統字型大小";
 "user_is_reported" = "已举报";
 "user_not_found" = "找不到这个用户";
 "validation_timed_out" = "验证超时";

@@ -175,6 +175,7 @@
 "chat_pin_message" = "%1$@ pinned %2$@";
 "chat_recall_delete_alert" = "Messages you selected will be deleted for everyone on the latest version of Mixin in this chat.";
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
+"chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Waiting for %1$@ to get online and establish an encrypted session. %2$@.";
 "chats" = "CHATS";
 "choose_network" = "Choose Network";
@@ -902,6 +903,7 @@
 "uploading_progress" = "Uploading: %@ of %@ (%@)";
 "url_unrecognized_hint" = "%@ failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link";
 "use_biometry" = "Use %@";
+"use_system_text_size" = "Use System Text Size";
 "user_is_reported" = "User has been reported";
 "user_not_found" = "User not found";
 "validation_timed_out" = "Validation timed out";

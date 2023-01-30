@@ -195,6 +195,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 vc.playAction(self)
             }
         })
+        setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded()
     }
     
     func show(itemViewController viewController: GalleryItemViewController) {
@@ -220,6 +221,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             viewController.isFocused = true
             viewControllerToHide?.view.alpha = 1
         })
+        setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded()
     }
     
     func dismiss(transitionViewInitialOffsetY: CGFloat, completion: (() -> Void)? = nil) {
@@ -412,6 +414,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         present(alert, animated: true, completion: nil)
     }
     
+    private func setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded() {
+        if #available(iOS 16.0, *) {
+            setNeedsUpdateOfSupportedInterfaceOrientations()
+        }
+    }
 }
 
 extension GalleryViewController: UIPageViewControllerDelegate {
@@ -426,6 +433,7 @@ extension GalleryViewController: UIPageViewControllerDelegate {
         if let focus = focus {
             focus.isFocused = true
         }
+        setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded()
     }
     
 }

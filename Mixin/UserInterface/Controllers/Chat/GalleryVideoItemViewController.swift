@@ -425,6 +425,9 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
             removeFromParent()
         }
         view.alpha = 1
+        if #available(iOS 16.0, *) {
+            setNeedsUpdateOfSupportedInterfaceOrientations()
+        }
     }
     
     func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
@@ -622,8 +625,14 @@ extension GalleryVideoItemViewController {
     
     private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
         if UIApplication.shared.isLandscape {
-            let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
-            UIDevice.current.setValue(portrait, forKey: "orientation")
+            if #available(iOS 16.0, *) {
+                if let windowScene = view.window?.windowScene {
+                    windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                }
+            } else {
+                let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
+                UIDevice.current.setValue(portrait, forKey: "orientation")
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: work)
         } else {
             work()

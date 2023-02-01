@@ -419,6 +419,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             setNeedsUpdateOfSupportedInterfaceOrientations()
         }
     }
+    
 }
 
 extension GalleryViewController: UIPageViewControllerDelegate {

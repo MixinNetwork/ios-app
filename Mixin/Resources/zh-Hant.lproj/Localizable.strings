@@ -97,6 +97,7 @@
 "auto_download_hint" = "媒體自動下載設定，所有語音訊息將自動下載。";
 "auto_lock" = "自動鎖定";
 "automatic" = "自動";
+"back_to_merchant" = "返回商家";
 "back_to_chat" = "返回聊天";
 "back_up_now" = "立即備份";
 "background_preview" = "背景預覽";
@@ -804,6 +805,7 @@
 "start_messaging" = "開始聊天";
 "started_group_call" = "%@ 開始了群通話";
 "status" = "交易狀態";
+"stay_in_mixin" = "留在 Mixin";
 "sticker" = "貼紙";
 "sticker_add_requirements" = "貼紙要求大於 %@KB 且小於 %@KB，寬高大於 %@ 畫素且小於 %@ 畫素。";
 "sticker_store" = "表情商店";
@@ -812,6 +814,7 @@
 "stop_playing_this_list" = "確定要停止並關閉播放列表？";
 "storage_usage" = "儲存空間";
 "stranger_hint" = "對方不是你的聯絡人";
+"successful" = "成功";
 "suspicious_link" = "可疑連結";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";

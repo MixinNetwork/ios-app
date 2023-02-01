@@ -97,6 +97,7 @@
 "auto_download_hint" = "メディアを自動ダウンロードする設定に変更する：音声メッセージは常に自動ダウンロードされます";
 "auto_lock" = "自動ロック";
 "automatic" = "自動";
+"back_to_merchant" = "Back to Merchant";
 "back_to_chat" = "チャットに戻る";
 "back_up_now" = "今すぐバックアップ";
 "background_preview" = "背景のプレビュー";
@@ -804,6 +805,7 @@
 "start_messaging" = "メッセージを開始";
 "started_group_call" = "%@がグループ通話を開始しました";
 "status" = "ステータス";
+"stay_in_mixin" = "Stay in Mixin";
 "sticker" = "スタンプ";
 "sticker_add_requirements" = "スタンプのサイズは%@KB以上%@KB未満、 幅と高さは%@ピクセルから%@ピクセルである必要があります";
 "sticker_store" = "スタンプストア";
@@ -812,6 +814,7 @@
 "stop_playing_this_list" = "再生を止めて、プレイリストを閉じますか？";
 "storage_usage" = "ストレージ使用率";
 "stranger_hint" = "連絡先にない相手からのメッセージです";
+"successful" = "Successful";
 "suspicious_link" = "不審なリンクです";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";

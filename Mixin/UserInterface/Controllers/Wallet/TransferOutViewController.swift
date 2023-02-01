@@ -199,7 +199,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         switch opponent! {
         case .contact(let user):
             DispatchQueue.global().async { [weak self] in
-                let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false)
+                let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false, returnTo: nil)
                 PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         guard let weakSelf = self else {

@@ -97,6 +97,7 @@
 "auto_download_hint" = "Измените настройки автоматической загрузки для медиафайлов. Голосовые сообщения всегда загружаются автоматически.";
 "auto_lock" = "Автоматическая блокировка";
 "automatic" = "Автоматический";
+"back_to_merchant" = "Back to Merchant";
 "back_to_chat" = "Вернуться к чату";
 "back_up_now" = "Резервное копирование сейчас";
 "background_preview" = "Фоновый просмотр";
@@ -804,6 +805,7 @@
 "start_messaging" = "Начать обмен сообщениями";
 "started_group_call" = "%@ начал групповой вызов";
 "status" = "Статус";
+"stay_in_mixin" = "Stay in Mixin";
 "sticker" = "Наклейка";
 "sticker_add_requirements" = "Требуется размер файла наклеек больше %@KB и меньше %@KB, ширина и высота от %@ до %@ пикселей.";
 "sticker_store" = "Магазин наклеек";
@@ -812,6 +814,7 @@
 "stop_playing_this_list" = "Прекратить воспроизведение этого списка?";
 "storage_usage" = "Использование хранилища";
 "stranger_hint" = "Этого отправителя нет в ваших контактах";
+"successful" = "Successful";
 "suspicious_link" = "Подозрительная ссылка";
 "symbol" = "Символ";
 "symbol_withdrawal" = "%@ Снятие средств";

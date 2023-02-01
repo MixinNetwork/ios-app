@@ -22,6 +22,8 @@ public struct InternalTransfer {
     
     public let memo: String?
     
+    public let returnTo: URL?
+    
     public init(string raw: String) throws {
         guard let components = URLComponents(string: raw) else {
             throw TransferLinkError.notTransferLink
@@ -63,12 +65,20 @@ public struct InternalTransfer {
                 return memo
             }
         }()
-        
+        let returnTo: URL? = {
+            let returnTo = queries["return_to"]
+            if let encoded = returnTo?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                return URL(string: encoded)
+            } else {
+                return nil
+            }
+        }()
         self.recipientID = recipientID.lowercased()
         self.assetID = assetID.lowercased()
         self.traceID = traceID.lowercased()
         self.amount = amount
         self.memo = memo
+        self.returnTo = returnTo
     }
     
 }

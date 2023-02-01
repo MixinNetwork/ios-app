@@ -129,13 +129,7 @@ class WebViewController: FullscreenPopupViewController {
                     continue
                 }
                 controller.addAction(UIAlertAction(title: R.string.localizable.scan_qr_code(), style: .default, handler: { (_) in
-                    if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
-                        return
-                    }
-                    if UrlWindow.checkPayment(string: string) {
-                        return
-                    }
-                    RecognizeWindow.instance().presentWindow(text: string)
+                    UrlWindow.checkQrCodeDetection(string: string, clearNavigationStack: false)
                 }))
                 break
             }

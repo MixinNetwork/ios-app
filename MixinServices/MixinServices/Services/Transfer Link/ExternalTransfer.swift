@@ -20,14 +20,16 @@ public struct ExternalTransfer {
     public let assetID: String
     public let destination: String
     
-    // In atomic units.
+    // Raw amount provided by string. For Ethereum this amount is
+    // in atomic units, for other chains this is in decimal
     public let amount: Decimal
     
-    // In decimal. Will be nil for ERC-20 tokens since lack of unit value.
+    // Decimal amount resolved with decimal value of atomic unit.
+    // Will be nil for ERC-20 tokens due to lack of the atomic value.
     public let resolvedAmount: String?
     
-    // Some non-standard ethereum URLs provides an `amount` field in addition
-    public let addtionalAmount: String?
+    // Some non-standard ethereum URLs specify an amount in decimal.
+    public let arbitraryAmount: String?
     
     public let memo: String?
     
@@ -71,11 +73,11 @@ public struct ExternalTransfer {
                 chainID = "1"
             }
             
-            let addtionalAmount: Decimal?
+            let arbitraryAmount: Decimal?
             if let amount = queries["amount"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                addtionalAmount = decimalAmount
+                arbitraryAmount = decimalAmount
             } else {
-                addtionalAmount = nil
+                arbitraryAmount = nil
             }
             
             if let range = Range(match.range(at: 3), in: path) {
@@ -90,9 +92,9 @@ public struct ExternalTransfer {
                 if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
                     self.amount = decimalAmount
                     self.resolvedAmount = nil
-                } else if let addtionalAmount {
-                    self.amount = addtionalAmount
-                    self.resolvedAmount = addtionalAmount.description
+                } else if let arbitraryAmount {
+                    self.amount = arbitraryAmount
+                    self.resolvedAmount = arbitraryAmount.description
                 } else {
                     throw TransferLinkError.invalidFormat
                 }
@@ -106,9 +108,9 @@ public struct ExternalTransfer {
                 if let amount = parameters["value"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
                     self.amount = decimalAmount
                     self.resolvedAmount = Self.resolve(atomicAmount: decimalAmount, with: 18)
-                } else if let addtionalAmount {
-                    self.amount = addtionalAmount
-                    self.resolvedAmount = addtionalAmount.description
+                } else if let arbitraryAmount {
+                    self.amount = arbitraryAmount
+                    self.resolvedAmount = arbitraryAmount.description
                 } else {
                     throw TransferLinkError.invalidFormat
                 }
@@ -117,7 +119,7 @@ public struct ExternalTransfer {
             }
             
             self.raw = raw
-            self.addtionalAmount = addtionalAmount?.description
+            self.arbitraryAmount = arbitraryAmount?.description
             self.memo = nil
         } else {
             guard let assetID = Self.supportedAssetIds[scheme] else {
@@ -137,7 +139,7 @@ public struct ExternalTransfer {
             self.destination = components.path
             self.amount = decimalAmount
             self.resolvedAmount = decimalAmount.description
-            self.addtionalAmount = nil
+            self.arbitraryAmount = nil
             self.memo = {
                 let memo = queries["memo"]
                 if let decoded = memo?.removingPercentEncoding {

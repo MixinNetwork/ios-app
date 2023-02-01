@@ -71,7 +71,7 @@ final class ExternalTransferTests: XCTestCase {
                     resolvedAmount: nil,
                     memo: nil)
         XCTAssertEqual(ExternalTransfer.resolve(atomicAmount: c4.amount, with: 18), "1.24")
-        XCTAssertEqual(c4.addtionalAmount, "1")
+        XCTAssertEqual(c4.arbitraryAmount, "1")
         
         let c5 = try? ExternalTransfer(string: "ethereum:pay-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48@1/transfer?address=0x50bF16E33E892F1c9Aa7C7FfBaF710E971b86Dd1&gasPrice=14",
                                        assetIDFinder: mockAssetIDFinder(_:))
@@ -88,7 +88,7 @@ final class ExternalTransferTests: XCTestCase {
         
         let c7 = try! ExternalTransfer(string: "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&amount=1e7&uint256=1.24e18",
                                        assetIDFinder: mockAssetIDFinder(_:))
-        XCTAssertEqual(c7.addtionalAmount, "10000000")
+        XCTAssertEqual(c7.arbitraryAmount, "10000000")
     }
     
     // MARK: - LTC

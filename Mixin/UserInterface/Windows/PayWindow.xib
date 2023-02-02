@@ -382,7 +382,7 @@
                                             </constraints>
                                         </view>
                                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MtN-so-wKF" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="104" y="10" width="32" height="32"/>
+                                            <rect key="frame" x="104" y="15" width="32" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="tintColor" name="text_accessory"/>
                                             <constraints>
@@ -400,7 +400,7 @@
                                     <constraints>
                                         <constraint firstItem="MtN-so-wKF" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="8vG-wj-ExD"/>
                                         <constraint firstItem="GhP-FQ-P0s" firstAttribute="top" secondItem="oXe-5X-NEr" secondAttribute="top" constant="26" id="Bm1-sJ-u0j"/>
-                                        <constraint firstItem="MtN-so-wKF" firstAttribute="centerY" secondItem="oXe-5X-NEr" secondAttribute="centerY" id="LJe-2K-5Rp"/>
+                                        <constraint firstItem="MtN-so-wKF" firstAttribute="centerY" secondItem="GhP-FQ-P0s" secondAttribute="centerY" id="UD9-Bj-Blx"/>
                                         <constraint firstAttribute="height" constant="52" id="XVN-0R-Bs7"/>
                                         <constraint firstItem="GhP-FQ-P0s" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="x3V-ed-5MN"/>
                                     </constraints>
@@ -671,7 +671,7 @@
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

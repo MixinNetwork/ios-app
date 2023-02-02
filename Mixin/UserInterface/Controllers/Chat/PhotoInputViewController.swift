@@ -322,10 +322,10 @@ extension PhotoInputViewController {
         guard let controller = conversationInputViewController else {
             return
         }
-        assets.forEach(controller.send(asset:))
         selectedAssets.removeAll()
         gridViewController.updateVisibleCellBadge()
         dismissSelectedPhotoInputItemsViewControllerAnimated()
+        assets.forEach(controller.send(asset:))
     }
     
     private func sendAsFiles(assets: [PHAsset]) {
@@ -339,10 +339,10 @@ extension PhotoInputViewController {
             guard let self = self else {
                 return
             }
-            urls.forEach(controller.sendFile(url:))
             self.selectedAssets.removeAll()
             self.gridViewController.updateVisibleCellBadge()
             self.dismissSelectedPhotoInputItemsViewControllerAnimated()
+            urls.forEach(controller.sendFile(url:))
         }
     }
     

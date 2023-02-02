@@ -105,7 +105,12 @@ class ConversationViewController: UIViewController {
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
-    private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
+    private lazy var multipleSelectionActionView: MultipleSelectionActionView = {
+        let view = R.nib.multipleSelectionActionView(owner: self)!
+        view.delegate = self
+        view.showCancelButton = false
+        return view
+    }()
     private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
     
     private lazy var strangerHintView: StrangerHintView = {
@@ -508,52 +513,7 @@ class ConversationViewController: UIViewController {
             reloadWithMessageId(id, scrollUpwards: true)
         }
     }
-    
-    @IBAction func multipleSelectionAction(_ sender: Any) {
-        switch multipleSelectionActionView.intent {
-        case .forward:
-            let messages = dataSource.selectedViewModels.values
-                .map({ $0.message })
-                .sorted(by: { $0.createdAt < $1.createdAt })
-            let containsTranscriptMessage = messages.contains {
-                $0.category.hasSuffix("_TRANSCRIPT")
-            }
-            if messages.count == 1 || containsTranscriptMessage {
-                let vc = MessageReceiverViewController.instance(content: .messages(messages))
-                navigationController?.pushViewController(vc, animated: true)
-            } else {
-                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: R.string.localizable.one_by_one_forward(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .messages(messages))
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }))
-                alert.addAction(UIAlertAction(title: R.string.localizable.combine_and_forward(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .transcript(messages))
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }))
-                alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-                present(alert, animated: true, completion: nil)
-            }
-        case .delete:
-            let viewModels = dataSource.selectedViewModels.values.map({ $0 })
-            let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            if !viewModels.contains(where: { $0.message.userId != myUserId || !$0.message.canRecall }) {
-                controller.addAction(UIAlertAction(title: R.string.localizable.delete_for_everyone(), style: .destructive, handler: { (_) in
-                    if AppGroupUserDefaults.User.hasShownRecallTips {
-                        self.deleteForEveryone(viewModels: viewModels)
-                    } else {
-                        self.showRecallTips(viewModels: viewModels)
-                    }
-                }))
-            }
-            controller.addAction(UIAlertAction(title: R.string.localizable.delete_for_me(), style: .destructive, handler: { (_) in
-                self.deleteForMe(viewModels: viewModels)
-            }))
-            controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-            self.present(controller, animated: true, completion: nil)
-        }
-    }
-    
+        
     @IBAction func dismissAnnouncementBadgeAction(_ sender: Any) {
         if dataSource.category == .group {
             AppGroupUserDefaults.User.hasUnreadAnnouncement.removeValue(forKey: conversationId)
@@ -783,9 +743,10 @@ class ConversationViewController: UIViewController {
             let isImageOrVideo = message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO")
             let mediaStatusIsReady = message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue
             if let quoteMessageId = viewModel.message.quoteMessageId, !quoteMessageId.isEmpty, let quote = cell.quotedMessageViewIfLoaded, quote.bounds.contains(recognizer.location(in: quote)) {
+                let messageId = displayedMessageId(for: quoteMessageId)
                 if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                     quotingMessageId = message.messageId
-                    scheduleCellBackgroundFlash(messageId: quoteMessageId)
+                    scheduleCellBackgroundFlash(messageId: messageId)
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
                 } else if MessageDAO.shared.hasMessage(id: quoteMessageId) {
                     quotingMessageId = message.messageId
@@ -869,6 +830,9 @@ class ConversationViewController: UIViewController {
                 conversationInputViewController.dismiss()
                 let vc = StickerPreviewViewController.instance(message: message)
                 vc.presentAsChild(of: self)
+            }  else if message.category == MessageCategory.STACKED_PHOTO.rawValue {
+                let vc = StackedPhotoPreviewViewController(conversationId: conversationId, stackedPhotoMessage: message)
+                vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -909,7 +873,7 @@ class ConversationViewController: UIViewController {
                 cell.messageContentView.frame.origin.x = 0
             }
             if shouldQuote, let viewModel = cell.viewModel {
-                conversationInputViewController.quote = (viewModel.message, viewModel.thumbnail)
+                conversationInputViewController.quote = (displayedMessage(for: viewModel.message), viewModel.thumbnail)
             }
         case .cancelled, .failed:
             tableView.isScrollEnabled = true
@@ -1375,8 +1339,9 @@ class ConversationViewController: UIViewController {
     }
     
     func scrollToMessage(messageId: String) {
-        if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
-            scheduleCellBackgroundFlash(messageId: messageId)
+        let msgId = displayedMessageId(for: messageId)
+        if let indexPath = dataSource.indexPath(where: { $0.messageId == msgId }) {
+            scheduleCellBackgroundFlash(messageId: msgId)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         } else if MessageDAO.shared.hasMessage(id: messageId) {
             messageIdToFlashAfterAnimationFinished = messageId
@@ -1385,6 +1350,55 @@ class ConversationViewController: UIViewController {
     }
     
 }
+
+extension ConversationViewController: MultipleSelectionActionViewDelegate {
+
+     func multipleSelectionActionViewDidTapIntent(_ view: MultipleSelectionActionView) {
+         switch view.intent {
+         case .forward:
+             let messages = dataSource.selectedMessageViewModels
+                 .map({ $0.message })
+                 .sorted(by: { $0.createdAt < $1.createdAt })
+             let containsTranscriptMessage = messages.contains {
+                 $0.category.hasSuffix("_TRANSCRIPT")
+             }
+             if messages.count == 1 || containsTranscriptMessage {
+                 let vc = MessageReceiverViewController.instance(content: .messages(messages))
+                 navigationController?.pushViewController(vc, animated: true)
+             } else {
+                 let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                 alert.addAction(UIAlertAction(title: R.string.localizable.one_by_one_forward(), style: .default, handler: { (_) in
+                     let vc = MessageReceiverViewController.instance(content: .messages(messages))
+                     self.navigationController?.pushViewController(vc, animated: true)
+                 }))
+                 alert.addAction(UIAlertAction(title: R.string.localizable.combine_and_forward(), style: .default, handler: { (_) in
+                     let vc = MessageReceiverViewController.instance(content: .transcript(messages))
+                     self.navigationController?.pushViewController(vc, animated: true)
+                 }))
+                 alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+                 present(alert, animated: true, completion: nil)
+             }
+         case .delete:
+             let viewModels = dataSource.selectedMessageViewModels
+             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+             if !viewModels.contains(where: { $0.message.userId != myUserId || !$0.message.canRecall }) {
+                 controller.addAction(UIAlertAction(title: R.string.localizable.delete_for_everyone(), style: .destructive, handler: { (_) in
+                     if AppGroupUserDefaults.User.hasShownRecallTips {
+                         self.deleteForEveryone(viewModels: viewModels)
+                     } else {
+                         self.showRecallTips(viewModels: viewModels)
+                     }
+                 }))
+             }
+             controller.addAction(UIAlertAction(title: R.string.localizable.delete_for_me(), style: .destructive, handler: { (_) in
+                 self.deleteForMe(viewModels: self.dataSource.selectedViewModels.values.map({ $0 }))
+             }))
+             controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+             self.present(controller, animated: true, completion: nil)
+         }
+     }
+
+ }
 
 // MARK: - UIGestureRecognizerDelegate
 extension ConversationViewController: UIGestureRecognizerDelegate {
@@ -1933,6 +1947,8 @@ extension ConversationViewController {
             actions = [.delete]
         } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
             actions = [.delete]
+        } else if category == MessageCategory.STACKED_PHOTO.rawValue {
+            actions = [.reply, .forward, .delete]
         } else {
             actions = []
         }
@@ -1949,6 +1965,7 @@ extension ConversationViewController {
                 index = nil
             }
             if let index = index {
+                let message = displayedMessage(for: message)
                 let action: MessageAction = pinnedMessageIds.contains(message.messageId) ? .unpin : .pin
                 actions.insert(action, at: index)
             }
@@ -1978,7 +1995,7 @@ extension ConversationViewController {
         case .forward:
             beginMultipleSelection(on: indexPath, intent: .forward)
         case .reply:
-            conversationInputViewController.quote = (message, viewModel.thumbnail)
+            conversationInputViewController.quote = (displayedMessage(for: message), viewModel.thumbnail)
         case .addToStickers:
             if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
                 StickerAPI.addSticker(stickerId: stickerId, completion: { (result) in
@@ -2000,10 +2017,10 @@ extension ConversationViewController {
             report(conversationId: conversationId, message: message)
         case .pin:
             dataSource.postponeMessagePinningUpdate(with: message.messageId)
-            SendMessageService.shared.sendPinMessages(items: [message], conversationId: conversationId, action: .pin)
+            SendMessageService.shared.sendPinMessages(items: [displayedMessage(for: message)], conversationId: conversationId, action: .pin)
         case .unpin:
             dataSource.postponeMessagePinningUpdate(with: message.messageId)
-            SendMessageService.shared.sendPinMessages(items: [message], conversationId: conversationId, action: .unpin)
+            SendMessageService.shared.sendPinMessages(items: [displayedMessage(for: message)], conversationId: conversationId, action: .unpin)
         }
     }
     
@@ -2699,9 +2716,13 @@ extension ConversationViewController {
                 guard let weakSelf = self, let indexPath = weakSelf.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
                     return
                 }
-                let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
-                if deleted {
-                    ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
+                if message.category == MessageCategory.STACKED_PHOTO.rawValue {
+                    message.stackedMessageItems?.forEach({ MessageDAO.shared.deleteMessage(id: $0.messageId) })
+                } else {
+                    let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
+                    if deleted {
+                        ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
+                    }
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
@@ -2746,7 +2767,8 @@ extension ConversationViewController {
         let flashingId = self.messageIdToFlashAfterAnimationFinished
         self.messageIdToFlashAfterAnimationFinished = nil
         scroll(messageId, {
-            guard let indexPath = self.dataSource?.indexPath(where: { $0.messageId == messageId }) else {
+            let msgId = self.displayedMessageId(for: messageId)
+            guard let indexPath = self.dataSource?.indexPath(where: { $0.messageId == msgId }) else {
                 return
             }
             if scrollUpwards {
@@ -2754,7 +2776,7 @@ extension ConversationViewController {
             } else {
                 self.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
             }
-            self.messageIdToFlashAfterAnimationFinished = flashingId
+            self.messageIdToFlashAfterAnimationFinished = flashingId != nil ? msgId : flashingId
             self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         })
     }
@@ -2878,6 +2900,9 @@ extension ConversationViewController {
         } else if let viewModel = viewModel as? AppButtonGroupViewModel {
             param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
                                              cornerRadius: AppButtonView.cornerRadius)
+        } else if let viewModel = viewModel as? StackedPhotoMessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.stackedPhotoViewFrame,
+                                             cornerRadius: StackedPhotoMessageCell.contentCornerRadius)
         } else {
             if viewModel.style.contains(.received) {
                 if viewModel.style.contains(.tail) {
@@ -2896,6 +2921,30 @@ extension ConversationViewController {
         
         return UITargetedPreview(view: cell.messageContentView, parameters: param)
     }
+    
+    private func displayedMessageId(for messageId: String) -> String {
+         guard !dataSource.stackedPhotoMessages.isEmpty else {
+             return messageId
+         }
+         let msgId: String
+         let stackedPhotoMessage = dataSource.stackedPhotoMessages.first { message in
+             message.stackedMessageItems?.contains(where: { $0.messageId == messageId }) ?? false
+         }
+         if let stackedPhotoMessageId = stackedPhotoMessage?.messageId {
+             msgId = stackedPhotoMessageId
+         } else {
+             msgId = messageId
+         }
+         return msgId
+     }
+
+     private func displayedMessage(for message: MessageItem) -> MessageItem {
+         if message.category == MessageCategory.STACKED_PHOTO.rawValue, let photoMessage = message.stackedMessageItems?.first {
+             return photoMessage
+         } else {
+             return message
+         }
+     }
     
 }
 

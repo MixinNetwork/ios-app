@@ -621,39 +621,41 @@ extension PayWindow: PinFieldDelegate {
         }
         loadingView.stopAnimating()
         pinView.isHidden = true
+        dismissButton.isHidden = true
         var successViewHeight = 151.0
-        if isAllowBiometricPay || biometryType == .none {
-            enableBiometricAuthButton.isHidden = true
-        } else {
-            switch biometryType {
-            case .touchID:
-                let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_id())
-                UIView.performWithoutAnimation {
-                    enableBiometricAuthButton.setImage(R.image.ic_pay_touch(), for: .normal)
-                    enableBiometricAuthButton.setTitle(title, for: .normal)
-                    enableBiometricAuthButton.layoutIfNeeded()
-                }
-            case .faceID:
-                let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.face_id())
-                UIView.performWithoutAnimation {
-                    enableBiometricAuthButton.setImage(R.image.ic_pay_face(), for: .normal)
-                    enableBiometricAuthButton.setTitle(title, for: .normal)
-                    enableBiometricAuthButton.layoutIfNeeded()
-                }
-            case .none:
-                break
-            }
-            enableBiometricAuthButton.isHidden = false
-            successViewHeight = successViewHeight + 30 + enableBiometricAuthButton.frame.height
-        }
         if case let .transfer(_, _, _, returnTo) = pinAction!, returnTo != nil {
             UIView.performWithoutAnimation {
                 successButton.setTitle(R.string.localizable.back_to_merchant(), for: .normal)
                 successButton.layoutIfNeeded()
             }
             stayInMixinButton.isHidden = false
+            enableBiometricAuthButton.isHidden = true
             successViewHeight = successViewHeight + successButtonBottomConstraint.constant + stayInMixinButton.frame.height
         } else {
+            if isAllowBiometricPay || biometryType == .none {
+                enableBiometricAuthButton.isHidden = true
+            } else {
+                switch biometryType {
+                case .touchID:
+                    let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_id())
+                    UIView.performWithoutAnimation {
+                        enableBiometricAuthButton.setImage(R.image.ic_pay_touch(), for: .normal)
+                        enableBiometricAuthButton.setTitle(title, for: .normal)
+                        enableBiometricAuthButton.layoutIfNeeded()
+                    }
+                case .faceID:
+                    let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.face_id())
+                    UIView.performWithoutAnimation {
+                        enableBiometricAuthButton.setImage(R.image.ic_pay_face(), for: .normal)
+                        enableBiometricAuthButton.setTitle(title, for: .normal)
+                        enableBiometricAuthButton.layoutIfNeeded()
+                    }
+                case .none:
+                    break
+                }
+                enableBiometricAuthButton.isHidden = false
+                successViewHeight = successViewHeight + 30 + enableBiometricAuthButton.frame.height
+            }
             stayInMixinButton.isHidden = true
         }
         successViewHeightConstraint.constant = successViewHeight

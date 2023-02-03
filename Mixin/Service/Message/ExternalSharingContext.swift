@@ -99,8 +99,14 @@ struct ExternalSharingContext {
                 return nil
             }
         case "sticker":
-            if let stickerId = data.removingPercentEncoding?.base64Decoded().uuidString {
-                self.content = .sticker(stickerId, nil)
+            if let encoded = data.removingPercentEncoding {
+                if let data: TransferStickerData = Self.decode(base64Encoded: encoded) {
+                    self.content = .sticker(data.stickerId, nil)
+                } else if let stickerId = encoded.base64Decoded().uuidString {
+                    self.content = .sticker(stickerId, nil)
+                } else {
+                    return nil
+                }
             } else {
                 return nil
             }

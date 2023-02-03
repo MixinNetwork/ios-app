@@ -9,7 +9,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     class var font: UIFont {
-        UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16))
+        MessageFontSet.normalContent.scaled
     }
     
     class var textColor: UIColor {

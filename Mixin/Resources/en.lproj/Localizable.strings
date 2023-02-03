@@ -822,6 +822,7 @@
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
 "syncing_progress" = "Syncing %d%%";
 "syncs_contact_hint" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
+"system" = "System";
 "system_time_is_unusual" = "System time is unusual";
 "tag" = "Tag";
 "tap_to_join" = "Tap to join";

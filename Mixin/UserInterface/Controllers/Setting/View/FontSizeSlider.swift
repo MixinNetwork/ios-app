@@ -1,20 +1,21 @@
 import UIKit
+import MixinServices
 
-protocol TextSizeSliderDelegate: AnyObject {
+protocol FontSizeSliderDelegate: AnyObject {
     
-    func textSizeSlider(_ slider: TextSizeSlider, didChangeTextSize size: CGFloat)
+    func fontSizeSlider(_ slider: FontSizeSlider, didChangeFontSize size: ChatFontSize)
     
 }
 
-class TextSizeSlider: UIControl {
+class FontSizeSlider: UIControl {
     
-    var textSize: CGFloat = 17 {
+    var textSize: ChatFontSize = .regular {
         didSet {
-            currentIndex = fontSizeRange.firstIndex(of: textSize) ?? 4
+            currentIndex = textSize.rawValue
         }
     }
     
-    weak var delegate: TextSizeSliderDelegate?
+    weak var delegate: FontSizeSliderDelegate?
     
     private let feedback = UISelectionFeedbackGenerator()
     private let track = CAShapeLayer()
@@ -29,7 +30,6 @@ class TextSizeSlider: UIControl {
     private let minimumTrackTintColor = R.color.text_accessory()!
     private let disableTrackTintColor = R.color.line()!
     private let transactionDuration = CATransaction.animationDuration()
-    private let fontSizeRange: [CGFloat] = [14, 15, 16, 17, 19, 21, 23]
     
     private var currentIndex = 3
     private var startTouchPosition = CGPoint.zero
@@ -62,14 +62,14 @@ class TextSizeSlider: UIControl {
         layoutLayers(animated: true)
     }
     
-    func updateInteraction(enabled: Bool, animated: Bool) {
+    func updateUserInteraction(enabled: Bool, animated: Bool) {
         isUserInteractionEnabled = enabled
         layoutLayers(animated: animated)
     }
     
 }
 
-extension TextSizeSlider {
+extension FontSizeSlider {
     
     private func prepare() {
         thumb.shadowColor = UIColor.black.withAlphaComponent(0.06).cgColor
@@ -177,7 +177,8 @@ extension TextSizeSlider {
             currentIndex = newIndex
             sendActions(for: .valueChanged)
         }
-        delegate?.textSizeSlider(self, didChangeTextSize: fontSizeRange[Int(currentIndex)])
+        let fontSize = ChatFontSize(rawValue: currentIndex) ?? .regular
+        delegate?.fontSizeSlider(self, didChangeFontSize: fontSize)
         setNeedsLayout()
     }
     
@@ -188,7 +189,7 @@ extension TextSizeSlider {
     
 }
 
-extension TextSizeSlider {
+extension FontSizeSlider {
     
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         startTouchPosition = touch.location(in: self)
@@ -196,14 +197,14 @@ extension TextSizeSlider {
         if thumb.frame.contains(startTouchPosition) {
             return true
         }
-        feedback.prepare()
         for (index, mark) in marks.enumerated() {
             let validMarkTouchFrame = mark.frame.insetBy(dx: -14, dy: -10)
             if validMarkTouchFrame.contains(startTouchPosition) {
                 let oldIndex = currentIndex
                 currentIndex = index
                 if oldIndex != index {
-                    delegate?.textSizeSlider(self, didChangeTextSize: fontSizeRange[Int(currentIndex)])
+                    let fontSize = ChatFontSize(rawValue: currentIndex) ?? .regular
+                    delegate?.fontSizeSlider(self, didChangeFontSize: fontSize)
                     sendActions(for: .valueChanged)
                     feedback.selectionChanged()
                     feedback.prepare()

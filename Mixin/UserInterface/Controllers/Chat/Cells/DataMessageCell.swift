@@ -48,10 +48,10 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
                                   action: #selector(operationAction(_:)),
                                   for: .touchUpInside)
         titleLabel.textColor = .text
-        titleLabel.font = .preferredFont(forTextStyle: .body)
+        titleLabel.font = MessageFontSet.cardTitle.scaled
         titleLabel.adjustsFontForContentSizeCategory = true
         subtitleLabel.textColor = .accessoryText
-        subtitleLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
         subtitleLabel.adjustsFontForContentSizeCategory = true
     }
     

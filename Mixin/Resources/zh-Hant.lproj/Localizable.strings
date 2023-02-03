@@ -822,6 +822,7 @@
 "syncing_and_verifying_tip" = "正在驗證並同步金鑰分片到 TIP 網路，請保持應用在前臺，設定過程中不要強制關閉應用";
 "syncing_progress" = "正在同步 %d%%";
 "syncs_contact_hint" = "同步通訊錄到 Mixin 發現更多好友。";
+"system" = "跟隨系統";
 "system_time_is_unusual" = "系統時間異常";
 "tag" = "Tag（標籤）";
 "tap_to_join" = "點選加入";
@@ -903,7 +904,7 @@
 "uploading_progress" = "上傳中：%@ / %@（%@）";
 "url_unrecognized_hint" = "%@ 識別失敗，請升級至 Mixin 最新版本或聯絡開發者檢查連結";
 "use_biometry" = "採用%@";
-"use_system_text_size" = "Use System Text Size";
+"use_system_text_size" = "跟隨系統字型大小";
 "user_is_reported" = "已舉報";
 "user_not_found" = "找不到這個使用者";
 "validation_timed_out" = "驗證超時";

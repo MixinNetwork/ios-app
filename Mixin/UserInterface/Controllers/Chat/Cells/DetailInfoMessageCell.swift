@@ -30,6 +30,7 @@ class DetailInfoMessageCell: MessageCell {
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
+        timeLabel.font = MessageFontSet.time.scaled
         forwarderImageView.tintColor = viewModel.trailingInfoColor
         encryptedImageView.tintColor = viewModel.trailingInfoColor
         pinnedImageView.tintColor = viewModel.trailingInfoColor

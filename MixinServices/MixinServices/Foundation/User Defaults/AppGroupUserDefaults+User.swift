@@ -66,6 +66,8 @@ extension AppGroupUserDefaults {
             case externalSchemesRefreshDate = "external_schemes_refresh_date"
             
             case wallpapers = "wallpapers"
+            case chatFontSize = "chat_font_size"
+            case useSystemFont = "use_system_font"
         }
         
         public static let version = 31
@@ -247,6 +249,20 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.wallpapers, defaultValue: [:])
         public static var wallpapers: [String: String]
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.chatFontSize, defaultValue: .regular)
+        public static var chatFontSize: ChatFontSize {
+            didSet {
+                NotificationCenter.default.post(name: UIContentSizeCategory.didChangeNotification, object: nil)
+            }
+        }
+        
+        @Default(namespace: .user, key: Key.useSystemFont, defaultValue: true)
+        public static var useSystemFont: Bool {
+            didSet {
+                NotificationCenter.default.post(name: UIContentSizeCategory.didChangeNotification, object: nil)
+            }
+        }
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

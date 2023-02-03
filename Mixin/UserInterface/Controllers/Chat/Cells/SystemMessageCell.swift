@@ -9,7 +9,7 @@ class SystemMessageCell: MessageCell {
     
     override func prepare() {
         super.prepare()
-        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        label.font = MessageFontSet.systemMessage.scaled
         label.textColor = .black
         label.backgroundColor = .clear
         label.numberOfLines = 0

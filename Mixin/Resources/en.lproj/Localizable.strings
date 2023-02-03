@@ -465,6 +465,7 @@
 "line_busy_remote" = "Line busy";
 "link_recognition_failure" = "Link recognition failure";
 "link_shareable_false" = "The link has been set to not allow sharing";
+"links" = "Links";
 "live" = "Live";
 "live_shareable_false" = "The live has been set to not allow sharing";
 "live_stream" = "live stream";
@@ -541,6 +542,7 @@
 "no_files" = "NO FILES";
 "no_hidden_assets" = "No hidden assets";
 "no_items_selected" = "No Items Selected";
+"no_links" = "NO LINKS";
 "no_logs" = "No logs";
 "no_media" = "NO MEDIA";
 "no_memo" = "No Memo";

@@ -465,6 +465,7 @@
 "line_busy_remote" = "對方忙";
 "link_recognition_failure" = "連結識別失敗";
 "link_shareable_false" = "該連結已被設定為不允許分享";
+"links" = "連結";
 "live" = "直播";
 "live_shareable_false" = "該直播已被設定為不允許轉發";
 "live_stream" = "直播卡片";
@@ -541,6 +542,7 @@
 "no_files" = "沒有檔案";
 "no_hidden_assets" = "沒有隱藏的資產";
 "no_items_selected" = "未選定專案";
+"no_links" = "沒有連結";
 "no_logs" = "沒有日誌";
 "no_media" = "沒有媒體";
 "no_memo" = "沒有 Memo（備註）";

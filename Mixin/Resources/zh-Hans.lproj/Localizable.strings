@@ -465,6 +465,7 @@
 "line_busy_remote" = "对方忙";
 "link_recognition_failure" = "链接识别失败";
 "link_shareable_false" = "该链接已被设置为不允许分享";
+"links" = "链接";
 "live" = "直播";
 "live_shareable_false" = "该直播已被设置为不允许转发";
 "live_stream" = "直播卡片";
@@ -541,6 +542,7 @@
 "no_files" = "没有文件";
 "no_hidden_assets" = "没有隐藏的资产";
 "no_items_selected" = "未选定项目";
+"no_links" = "没有链接";
 "no_logs" = "没有日志";
 "no_media" = "没有媒体";
 "no_memo" = "没有 Memo（备注）";

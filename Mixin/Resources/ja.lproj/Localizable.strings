@@ -465,6 +465,7 @@
 "line_busy_remote" = "お話中です";
 "link_recognition_failure" = "リンクの認識に失敗しました";
 "link_shareable_false" = "このリンクを共有することはできません";
+"links" = "リンク";
 "live" = "配信";
 "live_shareable_false" = "この配信を共有することはできません";
 "live_stream" = "配信";
@@ -541,6 +542,7 @@
 "no_files" = "ファイルがありません";
 "no_hidden_assets" = "非表示資産はありません";
 "no_items_selected" = "選択してください";
+"no_links" = "リンクがありません";
 "no_logs" = "ログがありません";
 "no_media" = "メディアがありません";
 "no_memo" = "メモなし";

@@ -622,7 +622,7 @@ extension PayWindow: PinFieldDelegate {
         loadingView.stopAnimating()
         pinView.isHidden = true
         dismissButton.isHidden = true
-        var successViewHeight = 151.0
+        var successViewHeight = 171.0
         if case let .transfer(_, _, _, returnTo) = pinAction!, returnTo != nil {
             UIView.performWithoutAnimation {
                 successButton.setTitle(R.string.localizable.back_to_merchant(), for: .normal)
@@ -654,7 +654,7 @@ extension PayWindow: PinFieldDelegate {
                     break
                 }
                 enableBiometricAuthButton.isHidden = false
-                successViewHeight = successViewHeight + 30 + enableBiometricAuthButton.frame.height
+                successViewHeight = successViewHeight + 24 + enableBiometricAuthButton.frame.height
             }
             stayInMixinButton.isHidden = true
         }

@@ -486,16 +486,17 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Successful" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eJ3-kB-QvU">
-                                            <rect key="frame" x="106.5" y="74" width="62" height="14.5"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                            <rect key="frame" x="102" y="74" width="71" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="successful"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CnK-KV-eN2" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="98" y="118.5" width="79" height="42"/>
+                                            <rect key="frame" x="98" y="131" width="79" height="42"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="42" id="Zzq-BH-d6a"/>
                                             </constraints>
@@ -529,7 +530,7 @@
                                             </connections>
                                         </button>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjW-Ly-QyB">
-                                            <rect key="frame" x="96.5" y="180.5" width="82" height="29"/>
+                                            <rect key="frame" x="96.5" y="189" width="82" height="29"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                             <state key="normal" title="Stay in Mixin">
@@ -550,9 +551,9 @@
                                         <constraint firstItem="BSf-bK-UvH" firstAttribute="leading" secondItem="gQV-om-Skc" secondAttribute="leading" id="30G-NU-0Zo"/>
                                         <constraint firstItem="eJ3-kB-QvU" firstAttribute="top" secondItem="gfw-v1-eUv" secondAttribute="bottom" constant="12" id="3T2-cC-vOw"/>
                                         <constraint firstItem="CnK-KV-eN2" firstAttribute="centerX" secondItem="eJ3-kB-QvU" secondAttribute="centerX" id="FlK-Zn-OSv"/>
-                                        <constraint firstItem="CnK-KV-eN2" firstAttribute="top" secondItem="eJ3-kB-QvU" secondAttribute="bottom" constant="30" id="Gzn-RA-sDs"/>
+                                        <constraint firstItem="CnK-KV-eN2" firstAttribute="top" secondItem="eJ3-kB-QvU" secondAttribute="bottom" constant="40" id="Gzn-RA-sDs"/>
                                         <constraint firstAttribute="trailing" secondItem="BSf-bK-UvH" secondAttribute="trailing" id="Hy3-73-gfA"/>
-                                        <constraint firstItem="fjW-Ly-QyB" firstAttribute="top" secondItem="CnK-KV-eN2" secondAttribute="bottom" constant="20" id="Mr3-eD-5PT"/>
+                                        <constraint firstItem="fjW-Ly-QyB" firstAttribute="top" secondItem="CnK-KV-eN2" secondAttribute="bottom" constant="16" id="Mr3-eD-5PT"/>
                                         <constraint firstAttribute="height" constant="232" id="P1B-SA-R2I"/>
                                         <constraint firstItem="gfw-v1-eUv" firstAttribute="centerX" secondItem="gQV-om-Skc" secondAttribute="centerX" id="QFm-Op-BYI"/>
                                         <constraint firstItem="eJ3-kB-QvU" firstAttribute="centerX" secondItem="gQV-om-Skc" secondAttribute="centerX" id="VWz-1J-DBd"/>
@@ -668,10 +669,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

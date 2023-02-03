@@ -3,10 +3,19 @@ import Photos
 import MobileCoreServices
 import MixinServices
 
+protocol PhotoInputGridViewControllerDelegate: AnyObject {
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didSelect asset: PHAsset)
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didDeselect asset: PHAsset)
+    func photoInputGridViewControllerDidTapCamera(_ controller: PhotoInputGridViewController)
+}
+
 class PhotoInputGridViewController: UIViewController, ConversationAccessible, ConversationInputAccessible {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
+    
+    weak var delegate: PhotoInputGridViewControllerDelegate?
+    weak var photoInputViewController: PhotoInputViewController?
     
     var fetchResult: PHFetchResult<PHAsset>? {
         didSet {
@@ -20,10 +29,14 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     
     var firstCellIsCamera = true
     
+    private let maxSelectedCount = 99
     private let interitemSpacing: CGFloat = 0
     private let columnCount: CGFloat = 3
     private let imageManager = PHCachingImageManager()
     
+    private var selectedAssets: [PHAsset] {
+        photoInputViewController?.selectedAssets ?? []
+    }
     private lazy var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.version = .current
@@ -71,6 +84,18 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     
 }
 
+extension PhotoInputGridViewController {
+    
+    func updateVisibleCellBadge() {
+        for indexPath in collectionView.indexPathsForVisibleItems {
+            if let asset = asset(at: indexPath), let cell = collectionView.cellForItem(at: indexPath) as? PhotoInputGridCell {
+                cell.updateBadge(with: selectedAssets.firstIndex(of: asset))
+            }
+        }
+    }
+    
+}
+
 extension PhotoInputGridViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -89,10 +114,15 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             cell.imageView.image = R.image.conversation.ic_camera()
             cell.imageView.backgroundColor = R.color.camera_background()
             cell.mediaTypeView.style = .hidden
+            cell.indexLabel.isHidden = true
+            cell.statusImageView.isHidden = true
         } else if let asset = asset(at: indexPath) {
             cell.identifier = asset.localIdentifier
             cell.imageView.contentMode = .scaleAspectFill
             cell.imageView.backgroundColor = .background
+            cell.indexLabel.isHidden = false
+            cell.statusImageView.isHidden = false
+            cell.updateBadge(with: selectedAssets.firstIndex(of: asset))
             imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak cell] (image, _) in
                 guard let cell = cell, cell.identifier == asset.localIdentifier else {
                     return
@@ -125,13 +155,15 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
         if firstCellIsCamera && indexPath.item == 0 {
             UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
             conversationViewController?.imagePickerController.presentCamera()
+            delegate?.photoInputGridViewControllerDidTapCamera(self)
         } else if let asset = asset(at: indexPath) {
-            let vc = R.storyboard.chat.media_preview()!
-            vc.load(asset: asset)
-            vc.conversationInputViewController = conversationInputViewController
-            vc.transitioningDelegate = PopupPresentationManager.shared
-            vc.modalPresentationStyle = .custom
-            present(vc, animated: true, completion: nil)
+            if selectedAssets.contains(asset) {
+                delegate?.photoInputGridViewController(self, didDeselect: asset)
+                updateVisibleCellBadge()
+            } else if selectedAssets.count < maxSelectedCount {
+                delegate?.photoInputGridViewController(self, didSelect: asset)
+                updateVisibleCellBadge()
+            }
         }
     }
     

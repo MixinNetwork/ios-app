@@ -21,11 +21,19 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
         }
     }
     
+    private weak var selectedPhotoInputItemsViewControllerIfLoaded: SelectedPhotoInputItemsViewController?
+    private lazy var selectedPhotoInputItemsViewController: SelectedPhotoInputItemsViewController = {
+        let controller = R.storyboard.chat.selected_photo_input_items()!
+        controller.delegate = self
+        selectedPhotoInputItemsViewControllerIfLoaded = controller
+        return controller
+    }()
     private var allPhotos: PHFetchResult<PHAsset>?
     private var smartAlbums: PHFetchResult<PHAssetCollection>?
     private var sortedSmartAlbums: [PHAssetCollection]?
     private var userCollections: PHFetchResult<PHCollection>?
     private var gridViewController: PhotoInputGridViewController!
+    private(set) var selectedAssets: [PHAsset] = []
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
@@ -70,6 +78,8 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
         if let vc = segue.destination as? PhotoInputGridViewController {
             vc.fetchResult = allPhotos
             gridViewController = vc
+            gridViewController.delegate = self
+            gridViewController.photoInputViewController = self
         }
     }
     
@@ -182,6 +192,7 @@ extension PhotoInputViewController: PHPhotoLibraryChangeObserver {
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.sync {
+            self.dismissSelectedPhotoInputItemsViewControllerIfNeeded()
             if let allPhotos = self.allPhotos, let changeDetails = changeInstance.changeDetails(for: allPhotos) {
                 self.allPhotos = changeDetails.fetchResultAfterChanges
             }
@@ -215,6 +226,233 @@ extension PhotoInputViewController: PHPickerViewControllerDelegate {
             vc.transitioningDelegate = PopupPresentationManager.shared
             vc.modalPresentationStyle = .custom
             self.present(vc, animated: true, completion: nil)
+        }
+    }
+    
+}
+
+extension PhotoInputViewController: PhotoInputGridViewControllerDelegate {
+    
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didSelect asset: PHAsset) {
+        guard !selectedAssets.contains(asset) else {
+            return
+        }
+        if selectedAssets.isEmpty {
+            presentSelectedPhotoInputItemsViewControllerAnimated()
+        }
+        selectedAssets.append(asset)
+        selectedPhotoInputItemsViewController.add(asset)
+    }
+    
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didDeselect asset: PHAsset) {
+        guard let index = selectedAssets.firstIndex(of: asset) else {
+            return
+        }
+        selectedAssets.remove(at: index)
+        if selectedAssets.isEmpty {
+            dismissSelectedPhotoInputItemsViewControllerAnimated()
+        } else {
+            selectedPhotoInputItemsViewController.remove(asset)
+        }
+    }
+    
+    func photoInputGridViewControllerDidTapCamera(_ controller: PhotoInputGridViewController) {
+        dismissSelectedPhotoInputItemsViewControllerIfNeeded()
+    }
+    
+}
+
+extension PhotoInputViewController: SelectedPhotoInputItemsViewControllerDelegate {
+    
+    func selectedPhotoInputItemsViewController(_ controller: SelectedPhotoInputItemsViewController, didSend assets: [PHAsset]) {
+        sendItems(assets: assets)
+    }
+    
+    func selectedPhotoInputItemsViewController(_ controller: SelectedPhotoInputItemsViewController, didCancelSend assets: [PHAsset]) {
+        conversationInputViewController?.dismiss()
+    }
+    
+    func selectedPhotoInputItemsViewController(_ controller: SelectedPhotoInputItemsViewController, didDeselect asset: PHAsset) {
+        guard let index = selectedAssets.firstIndex(of: asset) else {
+            return
+        }
+        selectedAssets.remove(at: index)
+        gridViewController.updateVisibleCellBadge()
+        if selectedAssets.isEmpty {
+            dismissSelectedPhotoInputItemsViewControllerAnimated()
+        }
+    }
+   
+    func selectedPhotoInputItemsViewController(_ controller: SelectedPhotoInputItemsViewController, didSelectAssetAt index: Int) {
+        conversationInputViewController?.setPreferredContentHeightAnimated(.regular)
+        let window = SelectedPhotoInputItemsPreviewWindow.instance()
+        window.load(assets: selectedAssets, initIndex: index)
+        window.delegate = self
+        window.presentPopupControllerAnimated()
+    }
+    
+}
+
+extension PhotoInputViewController: SelectedPhotoInputItemsPreviewWindowDelegate {
+
+    func selectedPhotoInputItemsPreviewWindow(_ window: SelectedPhotoInputItemsPreviewWindow, willDismissWindow assets: [PHAsset]) {
+        if assets.isEmpty {
+            selectedAssets.removeAll()
+            dismissSelectedPhotoInputItemsViewControllerAnimated()
+        } else {
+            selectedAssets = assets
+            selectedPhotoInputItemsViewController.updateAssets(assets)
+        }
+        gridViewController.updateVisibleCellBadge()
+    }
+    
+    func selectedPhotoInputItemsPreviewWindow(_ window: SelectedPhotoInputItemsPreviewWindow, didTapSendItems assets: [PHAsset]) {
+        sendItems(assets: assets)
+    }
+    
+    func selectedPhotoInputItemsPreviewWindow(_ window: SelectedPhotoInputItemsPreviewWindow, didTapSendFiles assets: [PHAsset]) {
+        sendAsFiles(assets: assets)
+    }
+    
+}
+
+extension PhotoInputViewController {
+    
+    private func sendItems(assets: [PHAsset]) {
+        guard let controller = conversationInputViewController else {
+            return
+        }
+        assets.forEach(controller.send(asset:))
+        selectedAssets.removeAll()
+        gridViewController.updateVisibleCellBadge()
+        dismissSelectedPhotoInputItemsViewControllerAnimated()
+    }
+    
+    private func sendAsFiles(assets: [PHAsset]) {
+        guard let controller = conversationInputViewController else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        requestURLs(for: assets) { [weak self] urls in
+            hud.hide()
+            guard let self = self else {
+                return
+            }
+            urls.forEach(controller.sendFile(url:))
+            self.selectedAssets.removeAll()
+            self.gridViewController.updateVisibleCellBadge()
+            self.dismissSelectedPhotoInputItemsViewControllerAnimated()
+        }
+    }
+    
+    func dismissSelectedPhotoInputItemsViewControllerIfNeeded() {
+        guard let controller = selectedPhotoInputItemsViewControllerIfLoaded, controller.parent != nil else {
+            return
+        }
+        selectedAssets.removeAll()
+        gridViewController.updateVisibleCellBadge()
+        gridViewController.view.isUserInteractionEnabled = false
+        controller.removeAllAssets()
+        controller.view.removeFromSuperview()
+        controller.removeFromParent()
+        controller.view.snp.removeConstraints()
+        gridViewController.view.isUserInteractionEnabled = true
+    }
+    
+    private func presentSelectedPhotoInputItemsViewControllerAnimated() {
+        guard
+            selectedPhotoInputItemsViewController.parent == nil,
+            let conversationInputViewController = conversationInputViewController,
+            let inputBarView = conversationInputViewController.inputBarView,
+            let conversationViewController = conversationInputViewController.parent
+        else {
+            return
+        }
+        gridViewController.view.isUserInteractionEnabled = false
+        let controller = selectedPhotoInputItemsViewController
+        let viewHeight = selectedPhotoInputItemsViewController.viewHeight
+        addChild(controller)
+        view.insertSubview(controller.view, at: 0)
+        controller.view.snp.makeConstraints({ (make) in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(inputBarView.snp.bottom).offset(0)
+        })
+        view.layoutIfNeeded()
+        controller.view.snp.updateConstraints { make in
+            make.top.equalTo(inputBarView.snp.bottom).offset(-viewHeight)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .overdampedCurve) {
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            conversationViewController.addChild(controller)
+            conversationViewController.view.addSubview(controller.view)
+            controller.view.snp.remakeConstraints({ (make) in
+                make.left.right.equalToSuperview()
+                make.top.equalTo(inputBarView.snp.bottom).offset(-viewHeight)
+            })
+            self.gridViewController.view.isUserInteractionEnabled = true
+        }
+    }
+    
+    private func dismissSelectedPhotoInputItemsViewControllerAnimated() {
+        guard
+            selectedPhotoInputItemsViewController.parent != nil,
+            let conversationInputViewController = conversationInputViewController,
+            let inputBarView = conversationInputViewController.inputBarView
+        else {
+            return
+        }
+        gridViewController.view.isUserInteractionEnabled = false
+        let controller = selectedPhotoInputItemsViewController
+        let viewHeight = selectedPhotoInputItemsViewController.viewHeight
+        addChild(controller)
+        view.insertSubview(controller.view, at: 0)
+        controller.view.snp.remakeConstraints({ (make) in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(inputBarView.snp.bottom).offset(-viewHeight)
+        })
+        view.layoutIfNeeded()
+        controller.view.snp.updateConstraints { make in
+            make.top.equalTo(inputBarView.snp.bottom).offset(0)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .overdampedCurve) {
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            controller.removeAllAssets()
+            controller.view.removeFromSuperview()
+            controller.removeFromParent()
+            controller.view.snp.removeConstraints()
+            self.gridViewController.view.isUserInteractionEnabled = true
+        }
+    }
+    
+    private func requestURLs(for assets: [PHAsset], completion: @escaping ((_ urls : [URL]) -> Void)) {
+        let group = DispatchGroup()
+        let queue = DispatchQueue(label: "one.mixin.messager.PhotoInputViewController.requestPHAssetsURLs", attributes: .concurrent)
+        var urls: [URL?] = Array(repeating: nil, count: assets.count)
+        for (index, asset) in assets.enumerated() {
+            group.enter()
+            queue.async(group: group) {
+                if asset.mediaType == .image {
+                    let options = PHContentEditingInputRequestOptions()
+                    options.canHandleAdjustmentData = { (adjustmeta: PHAdjustmentData) -> Bool in true }
+                    asset.requestContentEditingInput(with: options, completionHandler: { (contentEditingInput, info) in
+                        urls.insert(contentEditingInput?.fullSizeImageURL, at: index)
+                        group.leave()
+                    })
+                } else if asset.mediaType == .video {
+                    let options: PHVideoRequestOptions = PHVideoRequestOptions()
+                    options.version = .original
+                    PHImageManager.default().requestAVAsset(forVideo: asset, options: options, resultHandler: { (asset, audioMix, info) in
+                        urls.insert((asset as? AVURLAsset)?.url, at: index)
+                        group.leave()
+                    })
+                }
+            }
+        }
+        group.notify(queue: .main) {
+            completion(urls.compactMap { $0 })
         }
     }
     

@@ -43,11 +43,12 @@ class AttachmentUploadJob: AttachmentLoadingJob {
         if let content = message.content,
            !content.isEmpty,
            isAttachmentMetadataReady,
-           let data = Data(base64Encoded: content),
-           let attachmentExtra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data),
+           let attachmentExtra = AttachmentExtra.decode(from: content),
            UUID(uuidString: attachmentExtra.attachmentId) != nil,
            !attachmentExtra.createdAt.isEmpty,
-           abs(attachmentExtra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay {
+           abs(attachmentExtra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
+        {
+            Logger.general.debug(category: "AttachmentUploadJob", message: "Using existed attachment ID: \(attachmentExtra.attachmentId)")
             uploadFinished(attachmentId: attachmentExtra.attachmentId, key: message.mediaKey, digest: message.mediaDigest, createdAt: attachmentExtra.createdAt)
             finishJob()
             return true

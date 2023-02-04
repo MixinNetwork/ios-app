@@ -130,7 +130,7 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
                 thumbnail?.saveToFile(path: thumbnailURL)
             }
             let isShareable: Bool?
-            if owner.category.hasSuffix("_AUDIO"), let content = owner.content, let data = Data(base64Encoded: content), let extra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data) {
+            if let content = owner.content, let extra = AttachmentExtra.decode(from: content) {
                 isShareable = extra.isShareable
             } else {
                 isShareable = true
@@ -143,10 +143,10 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
                     return nil
                 }
                 let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt, isShareable: isShareable)
-                guard let json = try? JSONEncoder.default.encode(extra) else {
+                guard let data = try? JSONEncoder.default.encode(extra) else {
                     return nil
                 }
-                return json.base64EncodedString()
+                return String(data: data, encoding: .utf8)
             }()
             updateMediaMessage(mediaUrl: fileName, status: .DONE, content: content)
             let userInfo = [

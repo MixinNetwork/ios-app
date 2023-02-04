@@ -382,7 +382,7 @@
                                             </constraints>
                                         </view>
                                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MtN-so-wKF" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="104" y="10" width="32" height="32"/>
+                                            <rect key="frame" x="104" y="15" width="32" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="tintColor" name="text_accessory"/>
                                             <constraints>
@@ -400,7 +400,7 @@
                                     <constraints>
                                         <constraint firstItem="MtN-so-wKF" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="8vG-wj-ExD"/>
                                         <constraint firstItem="GhP-FQ-P0s" firstAttribute="top" secondItem="oXe-5X-NEr" secondAttribute="top" constant="26" id="Bm1-sJ-u0j"/>
-                                        <constraint firstItem="MtN-so-wKF" firstAttribute="centerY" secondItem="oXe-5X-NEr" secondAttribute="centerY" id="LJe-2K-5Rp"/>
+                                        <constraint firstItem="MtN-so-wKF" firstAttribute="centerY" secondItem="GhP-FQ-P0s" secondAttribute="centerY" id="UD9-Bj-Blx"/>
                                         <constraint firstAttribute="height" constant="52" id="XVN-0R-Bs7"/>
                                         <constraint firstItem="GhP-FQ-P0s" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="x3V-ed-5MN"/>
                                     </constraints>
@@ -476,7 +476,7 @@
                                     </constraints>
                                 </view>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gQV-om-Skc" userLabel="ResultView">
-                                    <rect key="frame" x="10" y="255.5" width="275" height="119"/>
+                                    <rect key="frame" x="10" y="255.5" width="275" height="232"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pay_success" translatesAutoresizingMaskIntoConstraints="NO" id="gfw-v1-eUv">
                                             <rect key="frame" x="117.5" y="22" width="40" height="40"/>
@@ -485,17 +485,37 @@
                                                 <constraint firstAttribute="width" constant="40" id="fkt-a9-m2J"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Done" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eJ3-kB-QvU">
-                                            <rect key="frame" x="122.5" y="74" width="30" height="14.5"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Successful" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eJ3-kB-QvU">
+                                            <rect key="frame" x="102" y="74" width="71" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="done"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="successful"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CnK-KV-eN2" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="98" y="131" width="79" height="42"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="42" id="Zzq-BH-d6a"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                            <inset key="contentEdgeInsets" minX="20" minY="12" maxX="20" maxY="12"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="Done">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="done"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="successAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="C2d-MO-pTJ"/>
+                                            </connections>
+                                        </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BSf-bK-UvH">
-                                            <rect key="frame" x="0.0" y="128.5" width="275" height="17"/>
+                                            <rect key="frame" x="0.0" y="215" width="275" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="tintColor" name="theme"/>
                                             <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -509,17 +529,37 @@
                                                 <action selector="enableBiometricAuth:" destination="iN0-l3-epB" eventType="touchUpInside" id="Jve-qK-A87"/>
                                             </connections>
                                         </button>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjW-Ly-QyB">
+                                            <rect key="frame" x="96.5" y="189" width="82" height="29"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="Stay in Mixin">
+                                                <color key="titleColor" name="theme"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="stay_in_mixin"/>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="stayInMixinAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="D1I-oz-5Bm"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="BSf-bK-UvH" firstAttribute="leading" secondItem="gQV-om-Skc" secondAttribute="leading" id="30G-NU-0Zo"/>
                                         <constraint firstItem="eJ3-kB-QvU" firstAttribute="top" secondItem="gfw-v1-eUv" secondAttribute="bottom" constant="12" id="3T2-cC-vOw"/>
+                                        <constraint firstItem="CnK-KV-eN2" firstAttribute="centerX" secondItem="eJ3-kB-QvU" secondAttribute="centerX" id="FlK-Zn-OSv"/>
+                                        <constraint firstItem="CnK-KV-eN2" firstAttribute="top" secondItem="eJ3-kB-QvU" secondAttribute="bottom" constant="40" id="Gzn-RA-sDs"/>
                                         <constraint firstAttribute="trailing" secondItem="BSf-bK-UvH" secondAttribute="trailing" id="Hy3-73-gfA"/>
-                                        <constraint firstAttribute="height" constant="119" id="P1B-SA-R2I"/>
+                                        <constraint firstItem="fjW-Ly-QyB" firstAttribute="top" secondItem="CnK-KV-eN2" secondAttribute="bottom" constant="16" id="Mr3-eD-5PT"/>
+                                        <constraint firstAttribute="height" constant="232" id="P1B-SA-R2I"/>
                                         <constraint firstItem="gfw-v1-eUv" firstAttribute="centerX" secondItem="gQV-om-Skc" secondAttribute="centerX" id="QFm-Op-BYI"/>
                                         <constraint firstItem="eJ3-kB-QvU" firstAttribute="centerX" secondItem="gQV-om-Skc" secondAttribute="centerX" id="VWz-1J-DBd"/>
-                                        <constraint firstItem="BSf-bK-UvH" firstAttribute="top" secondItem="eJ3-kB-QvU" secondAttribute="bottom" constant="40" id="Wru-Ea-zRb"/>
                                         <constraint firstItem="gfw-v1-eUv" firstAttribute="top" secondItem="gQV-om-Skc" secondAttribute="top" constant="22" id="eYz-bG-8im"/>
+                                        <constraint firstAttribute="bottom" secondItem="BSf-bK-UvH" secondAttribute="bottom" id="ob3-eU-1f2"/>
+                                        <constraint firstItem="fjW-Ly-QyB" firstAttribute="centerX" secondItem="gQV-om-Skc" secondAttribute="centerX" id="qmF-cx-ixw"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE3-uC-G3Z">
@@ -606,6 +646,9 @@
                 <outlet property="senderViewOne" destination="Edj-oR-Zbb" id="WGX-zb-XZ4"/>
                 <outlet property="senderViewTwo" destination="i5P-mM-a8u" id="zRk-Yn-Lbq"/>
                 <outlet property="sendersButtonWidthConstraint" destination="qRO-lC-QnD" id="iP4-cv-VfI"/>
+                <outlet property="stayInMixinButton" destination="fjW-Ly-QyB" id="dlI-Qj-usV"/>
+                <outlet property="successButton" destination="CnK-KV-eN2" id="INI-wz-mKg"/>
+                <outlet property="successButtonBottomConstraint" destination="Mr3-eD-5PT" id="Xnt-un-8h7"/>
                 <outlet property="successView" destination="gQV-om-Skc" id="JOT-5o-AFb"/>
                 <outlet property="successViewHeightConstraint" destination="P1B-SA-R2I" id="qzX-Yv-ga4"/>
                 <outlet property="tokenNameLabel" destination="8VZ-xH-pcV" id="WSK-8t-Szz"/>
@@ -629,7 +672,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

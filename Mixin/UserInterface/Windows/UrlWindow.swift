@@ -536,7 +536,7 @@ class UrlWindow {
             guard let (user, _) = syncUser(userId: recipientId, hud: hud) else {
                 return
             }
-            let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: true)
+            let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: true, returnTo: transfer.returnTo)
             PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: recipientId, amount: amount, memo: memo, fromWeb: true) { (canPay, errorMsg) in
                 DispatchQueue.main.async {
                     if canPay {

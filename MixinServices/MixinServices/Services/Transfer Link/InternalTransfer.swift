@@ -66,9 +66,15 @@ public struct InternalTransfer {
             }
         }()
         let returnTo: URL? = {
-            let returnTo = queries["return_to"]
-            if let encoded = returnTo?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                return URL(string: encoded)
+            if var returnTo = queries["return_to"] {
+                if !returnTo.hasPrefix("http") {
+                    returnTo = "https://" + returnTo
+                }
+                if let encoded = returnTo.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                    return URL(string: encoded)
+                } else {
+                    return nil
+                }
             } else {
                 return nil
             }

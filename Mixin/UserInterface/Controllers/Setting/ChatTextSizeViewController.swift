@@ -40,6 +40,8 @@ class ChatTextSizeViewController: UIViewController {
         fontSizeSlider.delegate = self
         fontSizeSlider.textSize = defaultFontSize
         fontSizeSlider.updateUserInteraction(enabled: !defaultUseSystemFont, animated: false)
+        container?.titleLabel.font = .systemFont(ofSize: 16)
+        container?.rightButton.titleLabel?.font = .systemFont(ofSize: 16)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

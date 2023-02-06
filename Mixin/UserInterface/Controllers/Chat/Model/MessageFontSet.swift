@@ -10,6 +10,7 @@ class MessageFontSet: PresentationFontSize {
     static let systemMessage = MessageFontSet(size: 14, weight: .regular)
     static let appButtonTitle = MessageFontSet(size: 16, weight: .regular)
     static let quoteTitle = MessageFontSet(size: 15, weight: .regular)
+    static let inputPlaceholder = MessageFontSet(size: 13, weight: .regular)
     static let normalQuoteSubtitle = MessageFontSet(size: 13, weight: .light)
     static let cardTitle = MessageFontSet(size: 17, weight: .regular)
     static let cardSubtitle = MessageFontSet(size: 14, weight: .regular)

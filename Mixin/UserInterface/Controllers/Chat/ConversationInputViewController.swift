@@ -158,6 +158,7 @@ class ConversationInputViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        textView.font = MessageFontSet.normalContent.scaled
         lastSelectedRange = textView.selectedRange
         lastTextCountWhenMentionRangeChanges = textView.text.count
         typingAttributes[.font] = textView.font
@@ -170,7 +171,7 @@ class ConversationInputViewController: UIViewController {
         textView.textContainer.lineFragmentPadding = 0
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-        textView.placeholderLabel.font = .systemFont(ofSize: 13)
+        textView.placeholderLabel.font = MessageFontSet.inputPlaceholder.scaled
         textView.placeholderLabel.adjustsFontSizeToFitWidth = true
         textView.placeholderPadding = UIEdgeInsets(top: textView.textContainerInset.top,
                                                    left: textView.textContainerInset.left,

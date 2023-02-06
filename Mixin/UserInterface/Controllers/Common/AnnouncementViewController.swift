@@ -24,7 +24,6 @@ class AnnouncementViewController: KeyboardBasedLayoutViewController {
         textView.layer.cornerRadius = 8
         textView.layer.masksToBounds = true
         textView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
-        textView.becomeFirstResponder()
         textView.delegate = self
         textView.text = announcement
     }
@@ -39,6 +38,11 @@ class AnnouncementViewController: KeyboardBasedLayoutViewController {
             // v is found to be (windowHeight - xibHeight) / 2
             view.frame.origin = .zero // Set it back to {0, 0}
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        textView.becomeFirstResponder()
     }
     
     override func layout(for keyboardFrame: CGRect) {

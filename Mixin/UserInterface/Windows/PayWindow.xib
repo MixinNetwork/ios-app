@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bst-np-9j8" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="313.5" width="375" height="366.5"/>
+                    <rect key="frame" x="0.0" y="309.5" width="375" height="370.5"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cRa-Yx-aWD" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -50,7 +50,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qOs-Lg-MP3">
-                            <rect key="frame" x="40" y="70" width="295" height="283.5"/>
+                            <rect key="frame" x="40" y="70" width="295" height="287.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transfer to Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xfg-Lf-zjd">
                                     <rect key="frame" x="56.5" y="0.0" width="182" height="21.5"/>
@@ -78,7 +78,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QTE-p7-9Tt">
-                                    <rect key="frame" x="45.5" y="46.5" width="204" height="76"/>
+                                    <rect key="frame" x="45.5" y="46.5" width="204" height="66"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="-8" translatesAutoresizingMaskIntoConstraints="NO" id="qGj-IP-qzY">
                                             <rect key="frame" x="0.0" y="19" width="204" height="34"/>
@@ -227,7 +227,7 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </constraint>
-                                        <constraint firstAttribute="height" constant="76" id="b81-eR-JM0" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                        <constraint firstAttribute="height" constant="66" id="b81-eR-JM0" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                                     <real key="value" value="42"/>
@@ -238,6 +238,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </constraint>
                                         <constraint firstAttribute="width" secondItem="qGj-IP-qzY" secondAttribute="width" id="dN9-lW-KDP"/>
+                                        <constraint firstAttribute="bottom" secondItem="qGj-IP-qzY" secondAttribute="bottom" constant="13" id="xMM-mj-ICe"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AaG-Kg-6yE">
@@ -371,10 +372,10 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oXe-5X-NEr" userLabel="PINView">
-                                    <rect key="frame" x="27.5" y="203.5" width="240" height="52"/>
+                                    <rect key="frame" x="27.5" y="203.5" width="240" height="56"/>
                                     <subviews>
                                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhP-FQ-P0s" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="34" y="26" width="172" height="10"/>
+                                            <rect key="frame" x="34" y="30" width="172" height="10"/>
                                             <color key="tintColor" name="text_accessory"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="10" id="Cws-Zl-Dib"/>
@@ -382,7 +383,7 @@
                                             </constraints>
                                         </view>
                                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MtN-so-wKF" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="104" y="15" width="32" height="32"/>
+                                            <rect key="frame" x="104" y="19" width="32" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="tintColor" name="text_accessory"/>
                                             <constraints>
@@ -399,14 +400,14 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="MtN-so-wKF" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="8vG-wj-ExD"/>
-                                        <constraint firstItem="GhP-FQ-P0s" firstAttribute="top" secondItem="oXe-5X-NEr" secondAttribute="top" constant="26" id="Bm1-sJ-u0j"/>
+                                        <constraint firstItem="GhP-FQ-P0s" firstAttribute="top" secondItem="oXe-5X-NEr" secondAttribute="top" constant="30" id="Bm1-sJ-u0j"/>
                                         <constraint firstItem="MtN-so-wKF" firstAttribute="centerY" secondItem="GhP-FQ-P0s" secondAttribute="centerY" id="UD9-Bj-Blx"/>
-                                        <constraint firstAttribute="height" constant="52" id="XVN-0R-Bs7"/>
+                                        <constraint firstAttribute="height" constant="56" id="XVN-0R-Bs7"/>
                                         <constraint firstItem="GhP-FQ-P0s" firstAttribute="centerX" secondItem="oXe-5X-NEr" secondAttribute="centerX" id="x3V-ed-5MN"/>
                                     </constraints>
                                 </view>
                                 <button hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9LC-YO-0cd">
-                                    <rect key="frame" x="91" y="255.5" width="113" height="0.0"/>
+                                    <rect key="frame" x="91" y="259.5" width="113" height="0.0"/>
                                     <color key="backgroundColor" name="background"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -419,7 +420,7 @@
                                     </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mes-3z-Cyg">
-                                    <rect key="frame" x="-170.5" y="255.5" width="636" height="118"/>
+                                    <rect key="frame" x="-170.5" y="259.5" width="636" height="118"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C06-9U-gZk" userLabel="ErrorView" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="16" width="636" height="28"/>
@@ -476,7 +477,7 @@
                                     </constraints>
                                 </view>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gQV-om-Skc" userLabel="ResultView">
-                                    <rect key="frame" x="10" y="255.5" width="275" height="232"/>
+                                    <rect key="frame" x="10" y="259.5" width="275" height="232"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pay_success" translatesAutoresizingMaskIntoConstraints="NO" id="gfw-v1-eUv">
                                             <rect key="frame" x="117.5" y="22" width="40" height="40"/>
@@ -562,7 +563,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE3-uC-G3Z">
-                                    <rect key="frame" x="10" y="255.5" width="275" height="28"/>
+                                    <rect key="frame" x="10" y="259.5" width="275" height="28"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="28" id="Blo-vS-RNo" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -674,7 +675,7 @@
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

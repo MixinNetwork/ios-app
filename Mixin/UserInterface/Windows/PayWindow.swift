@@ -137,7 +137,6 @@ class PayWindow: BottomSheetView {
             tokenNameLabel.isHidden = true
             mixinIDPlaceView.isHidden = false
             amountLabelPlaceHeightConstraint.constant = 10
-            resultViewPlaceHeightConstraint.constant = 30
             amountToken = CurrencyFormatter.localizedString(from: amount,
                                                             locale: isAmountLocalized ? .current : .us,
                                                             format: .precision,
@@ -207,7 +206,6 @@ class PayWindow: BottomSheetView {
             memoPlaceView.isHidden = false
             mixinIDPlaceView.isHidden = true
             amountLabelPlaceHeightConstraint.constant = 6
-            resultViewPlaceHeightConstraint.constant = 10
             switch collectible.action {
             case CollectibleAction.sign.rawValue:
                 multisigActionView.image = R.image.multisig_sign()
@@ -227,6 +225,7 @@ class PayWindow: BottomSheetView {
         }
         dismissButton.isEnabled = true
         if let error, !error.isEmpty {
+            resultViewPlaceHeightConstraint.constant = 30
             errorContinueAction = .close
             pinView.isHidden = true
             biometricButton.isHidden = true
@@ -237,8 +236,9 @@ class PayWindow: BottomSheetView {
             resetPinInput()
             if isAllowBiometricPay {
                 biometricButton.setTitle(R.string.localizable.use_biometry(biometryType.localizedName), for: .normal)
+                pinViewHeightConstraint.constant = 56
             } else {
-                pinViewHeightConstraint.constant = 36
+                pinViewHeightConstraint.constant = 60
             }
         }
         return self
@@ -303,6 +303,7 @@ class PayWindow: BottomSheetView {
         errorView.isHidden = true
         successView.isHidden = true
         pinField.clear()
+        let needsInitializeTIP = TIP.status == .needsInitialize
         if isAllowBiometricPay {
             if biometryType == .faceID {
                 biometricButton.setImage(R.image.ic_pay_face(), for: .normal)
@@ -310,8 +311,10 @@ class PayWindow: BottomSheetView {
                 biometricButton.setImage(R.image.ic_pay_touch(), for: .normal)
             }
             biometricButton.isHidden = false
+            resultViewPlaceHeightConstraint.constant = needsInitializeTIP ? 30 : 20
         } else {
             biometricButton.isHidden = true
+            resultViewPlaceHeightConstraint.constant = needsInitializeTIP ? 10 : 0
         }
         pinField.becomeFirstResponder()
     }
@@ -612,6 +615,7 @@ extension PayWindow: PinFieldDelegate {
         pinView.isHidden = true
         successView.isHidden = true
         errorView.isHidden = false
+        resultViewPlaceHeightConstraint.constant = 30
         pinField.resignFirstResponder()
     }
 
@@ -622,6 +626,7 @@ extension PayWindow: PinFieldDelegate {
         loadingView.stopAnimating()
         pinView.isHidden = true
         dismissButton.isHidden = true
+        resultViewPlaceHeightConstraint.constant = 30
         var successViewHeight = 171.0
         if case let .transfer(_, _, _, returnTo) = pinAction!, returnTo != nil {
             UIView.performWithoutAnimation {

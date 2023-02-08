@@ -38,9 +38,9 @@ class ChatTextSizeViewController: UIViewController {
         wallpaperImageView.wallpaper = .symbol
         textSizeSwitch.onTintColor = .theme
         textSizeSwitch.isOn = useSystemFontBefore
-        fontSizeSlider.delegate = self
-        fontSizeSlider.textSize = chatFontSizeBefore
+        fontSizeSlider.updateFontSize(chatFontSizeBefore)
         fontSizeSlider.updateUserInteraction(enabled: !useSystemFontBefore, animated: false)
+        fontSizeSlider.addTarget(self, action: #selector(fontSizeChanged), for: .valueChanged)
         container?.titleLabel.font = .systemFont(ofSize: 16)
         container?.rightButton.titleLabel?.font = .systemFont(ofSize: 16)
     }
@@ -66,12 +66,8 @@ class ChatTextSizeViewController: UIViewController {
         tableView.reloadData()
     }
     
-}
-
-extension ChatTextSizeViewController: FontSizeSliderDelegate {
-    
-    func fontSizeSlider(_ slider: FontSizeSlider, didChangeFontSize size: ChatFontSize) {
-        AppGroupUserDefaults.User.chatFontSize = size
+    @IBAction func fontSizeChanged(_ sender: FontSizeSlider) {
+        AppGroupUserDefaults.User.chatFontSize = sender.fontSize
         tableView.reloadData()
     }
     

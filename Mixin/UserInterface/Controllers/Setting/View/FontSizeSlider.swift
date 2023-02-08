@@ -1,21 +1,9 @@
 import UIKit
 import MixinServices
 
-protocol FontSizeSliderDelegate: AnyObject {
-    
-    func fontSizeSlider(_ slider: FontSizeSlider, didChangeFontSize size: ChatFontSize)
-    
-}
-
 class FontSizeSlider: UIControl {
     
-    var textSize: ChatFontSize = .regular {
-        didSet {
-            currentIndex = textSize.rawValue
-        }
-    }
-    
-    weak var delegate: FontSizeSliderDelegate?
+    private(set) var fontSize: ChatFontSize = .regular
     
     private let feedback = UISelectionFeedbackGenerator()
     private let track = CAShapeLayer()
@@ -34,7 +22,7 @@ class FontSizeSlider: UIControl {
     private var currentIndex = 3
     private var startTouchPosition = CGPoint.zero
     private var startThumbPosition = CGPoint.zero
-
+    
     private var thumbPosition: CGFloat {
         thumb.position.x - thumbRadius
     }
@@ -66,6 +54,10 @@ class FontSizeSlider: UIControl {
     func updateUserInteraction(enabled: Bool, animated: Bool) {
         isUserInteractionEnabled = enabled
         layoutLayers(animated: animated)
+    }
+    
+    func updateFontSize(_ fontSize: ChatFontSize) {
+        currentIndex = fontSize.rawValue
     }
     
 }
@@ -176,16 +168,21 @@ extension FontSizeSlider {
         let newIndex = thumbIndex
         if newIndex != currentIndex {
             currentIndex = newIndex
-            sendActions(for: .valueChanged)
+            didChangeFontSize()
         }
-        let fontSize = ChatFontSize(rawValue: currentIndex) ?? .regular
-        delegate?.fontSizeSlider(self, didChangeFontSize: fontSize)
         setNeedsLayout()
     }
     
     private func trackPath() -> CGPath {
         let fillRect = CGRect(origin: .zero, size: CGSize(width: thumbPosition, height: track.bounds.height))
         return UIBezierPath(rect: fillRect).cgPath
+    }
+    
+    private func didChangeFontSize() {
+        fontSize = ChatFontSize(rawValue: currentIndex) ?? .regular
+        sendActions(for: .valueChanged)
+        feedback.selectionChanged()
+        feedback.prepare()
     }
     
 }
@@ -204,11 +201,7 @@ extension FontSizeSlider {
                 let oldIndex = currentIndex
                 currentIndex = index
                 if oldIndex != index {
-                    let fontSize = ChatFontSize(rawValue: currentIndex) ?? .regular
-                    delegate?.fontSizeSlider(self, didChangeFontSize: fontSize)
-                    sendActions(for: .valueChanged)
-                    feedback.selectionChanged()
-                    feedback.prepare()
+                    didChangeFontSize()
                 }
                 setNeedsLayout()
                 return false
@@ -225,12 +218,10 @@ extension FontSizeSlider {
         thumb.position.x = limitedPosition
         track.path = trackPath()
         let newIndex = thumbIndex
+        marks.forEach { $0.fillColor = markColor($0) }
         if currentIndex != newIndex {
-            marks.forEach { $0.fillColor = markColor($0) }
             currentIndex = newIndex
-            sendActions(for: .valueChanged)
-            feedback.selectionChanged()
-            feedback.prepare()
+            didChangeFontSize()
         }
         CATransaction.commit()
         return true

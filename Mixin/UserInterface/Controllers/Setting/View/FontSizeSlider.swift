@@ -38,6 +38,7 @@ class FontSizeSlider: UIControl {
     private var thumbPosition: CGFloat {
         thumb.position.x - thumbRadius
     }
+    
     private var thumbIndex: Int {
         let width = track.bounds.size.width
         if width == 0 {

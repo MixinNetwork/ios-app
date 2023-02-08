@@ -8,7 +8,7 @@ public enum ChatFontSize: Int {
     case regular = 3
     case large = 4
     case extraLarge = 5
-    case extraLargeX2 = 6
+    case extraExtraLarge = 6
     
     public init(size: CGFloat) {
         switch size {
@@ -18,7 +18,7 @@ public enum ChatFontSize: Int {
         case 17: self = .regular
         case 19: self = .large
         case 21: self = .extraLarge
-        case 23: self = .extraLargeX2
+        case 23: self = .extraExtraLarge
         default: self = .regular
         }
     }
@@ -37,7 +37,7 @@ public enum ChatFontSize: Int {
             return 19
         case .extraLarge:
             return 21
-        case .extraLargeX2:
+        case .extraExtraLarge:
             return 23
         }
     }

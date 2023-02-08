@@ -8,10 +8,11 @@ class ChatTextSizeViewController: UIViewController {
     @IBOutlet weak var fontSizeSlider: FontSizeSlider!
     @IBOutlet weak var textSizeSwitch: UISwitch!
     
+    private let chatFontSizeBefore = AppGroupUserDefaults.User.chatFontSize
+    private let useSystemFontBefore = AppGroupUserDefaults.User.useSystemFont
+    
     private var fontSizeDidChange: (() -> Void)?
-    private var isSetted = false
-    private let defaultFontSize = AppGroupUserDefaults.User.chatFontSize
-    private let defaultUseSystemFont = AppGroupUserDefaults.User.useSystemFont
+    private var isConfirmed = false
     
     private var mockViewModels: [String: [MessageViewModel]] {
         let contents = [
@@ -36,19 +37,19 @@ class ChatTextSizeViewController: UIViewController {
         view.backgroundColor = .white
         wallpaperImageView.wallpaper = .symbol
         textSizeSwitch.onTintColor = .theme
-        textSizeSwitch.isOn = defaultUseSystemFont
+        textSizeSwitch.isOn = useSystemFontBefore
         fontSizeSlider.delegate = self
-        fontSizeSlider.textSize = defaultFontSize
-        fontSizeSlider.updateUserInteraction(enabled: !defaultUseSystemFont, animated: false)
+        fontSizeSlider.textSize = chatFontSizeBefore
+        fontSizeSlider.updateUserInteraction(enabled: !useSystemFontBefore, animated: false)
         container?.titleLabel.font = .systemFont(ofSize: 16)
         container?.rightButton.titleLabel?.font = .systemFont(ofSize: 16)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if !isSetted {
-            AppGroupUserDefaults.User.chatFontSize = defaultFontSize
-            AppGroupUserDefaults.User.useSystemFont = defaultUseSystemFont
+        if !isConfirmed {
+            AppGroupUserDefaults.User.chatFontSize = chatFontSizeBefore
+            AppGroupUserDefaults.User.useSystemFont = useSystemFontBefore
         }
     }
     
@@ -79,7 +80,7 @@ extension ChatTextSizeViewController: FontSizeSliderDelegate {
 extension ChatTextSizeViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        isSetted = true
+        isConfirmed = true
         fontSizeDidChange?()
         navigationController?.popViewController(animated: true)
     }

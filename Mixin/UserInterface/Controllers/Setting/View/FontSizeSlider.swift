@@ -26,7 +26,6 @@ class FontSizeSlider: UIControl {
     private var thumbPosition: CGFloat {
         thumb.position.x - thumbRadius
     }
-    
     private var thumbIndex: Int {
         let width = track.bounds.size.width
         if width == 0 {
@@ -215,12 +214,13 @@ extension FontSizeSlider {
         let limitedPosition = min(max(thumbRadius, position), bounds.width - thumbRadius)
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        thumb.position.x = limitedPosition
-        track.path = trackPath()
-        let newIndex = thumbIndex
-        marks.forEach { $0.fillColor = markColor($0) }
-        if currentIndex != newIndex {
-            currentIndex = newIndex
+        let stepWidth = track.bounds.size.width / CGFloat(marksCount - 1)
+        let index = Int(floor(limitedPosition / stepWidth))
+        if currentIndex != index {
+            thumb.position.x = CGFloat(thumbRadius) + stepWidth * CGFloat(index)
+            marks.forEach { $0.fillColor = markColor($0) }
+            track.path = trackPath()
+            currentIndex = index
             didChangeFontSize()
         }
         CATransaction.commit()

@@ -3,6 +3,7 @@ import MixinServices
 
 class MinimizedCallViewController: HomeOverlayViewController {
     
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var statusLabel: UILabel!
     
     weak var call: Call? {
@@ -20,7 +21,7 @@ class MinimizedCallViewController: HomeOverlayViewController {
                                    object: call)
             }
             loadViewIfNeeded()
-            updateLabel(call: call)
+            updateUI(call: call)
         }
     }
     
@@ -40,7 +41,7 @@ class MinimizedCallViewController: HomeOverlayViewController {
     }
     
     @objc private func callStateDidChange(_ notification: Notification) {
-        updateLabel(call: call)
+        updateUI(call: call)
     }
     
     private func beginUpdatingDuration() {
@@ -60,7 +61,7 @@ class MinimizedCallViewController: HomeOverlayViewController {
         timer?.invalidate()
     }
     
-    private func updateLabel(call: Call?) {
+    private func updateUI(call: Call?) {
         defer {
             updateViewSize()
             panningController.stickViewToEdgeIfNotPanning(animated: true)
@@ -75,6 +76,7 @@ class MinimizedCallViewController: HomeOverlayViewController {
         statusLabel.text = call.briefLocalizedState
         if call.state == .connected {
             beginUpdatingDuration()
+            imageView.image = call.isMuted ? R.image.call.ic_minimized_call_muted() : R.image.call.ic_minimized_call_encrypted()
         } else {
             endUpdatingDuration()
         }

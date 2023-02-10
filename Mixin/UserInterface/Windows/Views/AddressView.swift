@@ -9,8 +9,12 @@ class AddressView: UIStackView {
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var subtitlePlaceView: UIView!
     @IBOutlet weak var dismissButton: UIButton!
-
+    
+    @IBOutlet weak var passwordViewHeightConstraint: NSLayoutConstraint!
+    
     enum action {
         case add
         case update
@@ -59,6 +63,19 @@ class AddressView: UIStackView {
         case .delete:
             titleLabel.text = R.string.localizable.delete_withdraw_address(asset.symbol)
         }
+        if let chainName = asset.depositNetworkName {
+            subtitleLabel.text = chainName
+            subtitleLabel.isHidden = false
+            subtitlePlaceView.isHidden = false
+        } else {
+            subtitleLabel.isHidden = true
+            subtitlePlaceView.isHidden = true
+        }
+        if TIP.status == .needsInitialize {
+            passwordViewHeightConstraint.constant = 70
+        } else {
+            passwordViewHeightConstraint.constant = 60
+        }
         if let address = addressRequest {
             nameLabel.text = address.label
             addressLabel.text = address.fullAddress
@@ -68,7 +85,6 @@ class AddressView: UIStackView {
         }
         assetIconView.setIcon(asset: asset)
         pinField.clear()
-
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
     }

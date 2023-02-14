@@ -676,10 +676,6 @@ extension GalleryVideoItemViewController {
     }
     
     private func load(playableAsset asset: AVURLAsset, playAfterLoaded: Bool) {
-        guard asset.isPlayable else {
-            // TODO: UI Update
-            return
-        }
         removeAllObservers()
         
         let item = AVPlayerItem(asset: asset)

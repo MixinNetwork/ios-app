@@ -25,7 +25,7 @@
                     <rect key="frame" x="10" y="10" width="60" height="60"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Call/ic_minimized_call_encrypted" translatesAutoresizingMaskIntoConstraints="NO" id="qVd-tv-LcG">
-                            <rect key="frame" x="20.5" y="14" width="19" height="21"/>
+                            <rect key="frame" x="16" y="8" width="28" height="28"/>
                             <color key="tintColor" name="green"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:01" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="odt-x1-Qfc">
@@ -45,7 +45,7 @@
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="odt-x1-Qfc" secondAttribute="bottom" constant="6" id="1Oj-Si-SZ9"/>
                         <constraint firstAttribute="height" constant="60" id="HOZ-7o-g4i"/>
-                        <constraint firstItem="qVd-tv-LcG" firstAttribute="top" secondItem="Icf-vi-CBF" secondAttribute="top" constant="14" id="Ifu-up-CIv"/>
+                        <constraint firstItem="qVd-tv-LcG" firstAttribute="top" secondItem="Icf-vi-CBF" secondAttribute="top" constant="8" id="Ifu-up-CIv"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Mb6-tD-uSK"/>
                         <constraint firstAttribute="bottom" secondItem="QR0-wq-5SN" secondAttribute="bottom" id="Ucs-rR-N74"/>
                         <constraint firstAttribute="trailing" secondItem="odt-x1-Qfc" secondAttribute="trailing" constant="8" id="fca-wK-38i"/>
@@ -73,7 +73,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Call/ic_minimized_call_encrypted" width="18.5" height="21"/>
+        <image name="Call/ic_minimized_call_encrypted" width="28" height="28"/>
         <namedColor name="green">
             <color red="0.36470588235294116" green="0.73725490196078436" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

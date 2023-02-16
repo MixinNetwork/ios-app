@@ -18,15 +18,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2g8-hq-We2" userLabel="User">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Add XIN Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tq0-lr-hPQ">
-                            <rect key="frame" x="20" y="24.5" width="142.5" height="21.5"/>
-                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                            <color key="textColor" name="title"/>
-                            <nil key="highlightedColor"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                            </userDefinedRuntimeAttributes>
-                        </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D4R-nd-Cid">
                             <rect key="frame" x="358" y="0.0" width="56" height="56"/>
                             <constraints>
@@ -41,19 +32,38 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="D4R-nd-Cid" firstAttribute="top" secondItem="2g8-hq-We2" secondAttribute="top" id="59C-zm-700"/>
-                        <constraint firstItem="D4R-nd-Cid" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tq0-lr-hPQ" secondAttribute="trailing" id="Cc3-fb-X4a"/>
                         <constraint firstItem="D4R-nd-Cid" firstAttribute="width" secondItem="D4R-nd-Cid" secondAttribute="height" multiplier="1:1" id="Wod-MC-dXU"/>
                         <constraint firstAttribute="height" constant="70" id="eKK-jQ-pzr"/>
-                        <constraint firstItem="tq0-lr-hPQ" firstAttribute="leading" secondItem="2g8-hq-We2" secondAttribute="leading" constant="20" id="qQO-6M-wuk"/>
                         <constraint firstAttribute="trailing" secondItem="D4R-nd-Cid" secondAttribute="trailing" id="rHE-O6-0zi"/>
-                        <constraint firstItem="tq0-lr-hPQ" firstAttribute="centerY" secondItem="2g8-hq-We2" secondAttribute="centerY" id="ueI-NW-sIH"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uIs-S6-Gno">
-                    <rect key="frame" x="0.0" y="70" width="414" height="106"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" ambiguous="YES" text="Add XIN Address" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tq0-lr-hPQ">
+                    <rect key="frame" x="0.0" y="70" width="414" height="65.5"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="title"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NEF-iM-LfQ">
+                    <rect key="frame" x="0.0" y="135.5" width="414" height="8"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="8" id="dcd-Qb-44S"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BtY-f3-bEY">
+                    <rect key="frame" x="0.0" y="143.5" width="414" height="16"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" name="text_desc"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uIs-S6-Gno">
+                    <rect key="frame" x="0.0" y="159.5" width="414" height="96"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wWX-Fz-Q0B" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="172" y="26" width="70" height="70"/>
+                            <rect key="frame" x="172" y="16" width="70" height="70"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="70" id="diX-8X-4OM"/>
@@ -72,8 +82,8 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="wWX-Fz-Q0B" firstAttribute="centerX" secondItem="uIs-S6-Gno" secondAttribute="centerX" id="78r-Fo-eHx"/>
-                        <constraint firstItem="wWX-Fz-Q0B" firstAttribute="top" secondItem="uIs-S6-Gno" secondAttribute="top" constant="26" id="ZSV-MJ-2RM"/>
-                        <constraint firstAttribute="height" constant="106" id="mxl-w9-Eeo" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstItem="wWX-Fz-Q0B" firstAttribute="top" secondItem="uIs-S6-Gno" secondAttribute="top" constant="16" id="ZSV-MJ-2RM"/>
+                        <constraint firstAttribute="height" constant="96" id="mxl-w9-Eeo" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                     <real key="value" value="73"/>
@@ -83,7 +93,7 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="BigONE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPc-zy-MvJ">
-                    <rect key="frame" x="0.0" y="176" width="414" height="71.5"/>
+                    <rect key="frame" x="0.0" y="255.49999999999997" width="414" height="21.500000000000028"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                     <color key="textColor" name="title"/>
@@ -93,10 +103,10 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z5c-V8-TPg">
-                    <rect key="frame" x="0.0" y="247.5" width="414" height="59.5"/>
+                    <rect key="frame" x="0.0" y="277" width="414" height="50"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="0x0074709077B8AE5a245E4ED161C971Dc4c3C8E2B" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FpA-VY-TU6">
-                            <rect key="frame" x="107" y="4" width="200" height="55.5"/>
+                            <rect key="frame" x="107" y="4" width="200" height="30.5"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="Qzi-jF-btH"/>
@@ -114,10 +124,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mw0-oC-Knv" userLabel="Payment Password">
-                    <rect key="frame" x="0.0" y="307" width="414" height="80"/>
+                    <rect key="frame" x="0.0" y="327" width="414" height="60"/>
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvc-OW-wKl" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="121" y="35" width="172" height="10"/>
+                            <rect key="frame" x="121" y="30" width="172" height="10"/>
                             <color key="tintColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="172" id="Vhi-P1-tnk"/>
@@ -125,7 +135,7 @@
                             </constraints>
                         </view>
                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0k5-MV-RVU" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="191" y="24" width="32" height="32"/>
+                            <rect key="frame" x="191" y="19" width="32" height="32"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
@@ -141,10 +151,10 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstItem="cvc-OW-wKl" firstAttribute="top" secondItem="mw0-oC-Knv" secondAttribute="top" constant="30" id="5Fh-Xn-mRe"/>
                         <constraint firstItem="cvc-OW-wKl" firstAttribute="centerX" secondItem="mw0-oC-Knv" secondAttribute="centerX" id="6Db-hK-aRn"/>
-                        <constraint firstAttribute="height" constant="80" id="L88-3w-3pH"/>
+                        <constraint firstAttribute="height" constant="60" id="L88-3w-3pH"/>
                         <constraint firstItem="0k5-MV-RVU" firstAttribute="centerY" secondItem="cvc-OW-wKl" secondAttribute="centerY" id="Vma-Ns-xpP"/>
-                        <constraint firstItem="cvc-OW-wKl" firstAttribute="centerY" secondItem="mw0-oC-Knv" secondAttribute="centerY" id="X62-cq-mcC"/>
                         <constraint firstItem="0k5-MV-RVU" firstAttribute="centerX" secondItem="cvc-OW-wKl" secondAttribute="centerX" id="a7M-0q-FDc"/>
                     </constraints>
                 </view>
@@ -157,7 +167,10 @@
                 <outlet property="dismissButton" destination="D4R-nd-Cid" id="Boh-JU-xPV"/>
                 <outlet property="loadingView" destination="0k5-MV-RVU" id="Qwa-RB-qPE"/>
                 <outlet property="nameLabel" destination="UPc-zy-MvJ" id="nqB-YE-iye"/>
+                <outlet property="passwordViewHeightConstraint" destination="L88-3w-3pH" id="vDe-h0-oB7"/>
                 <outlet property="pinField" destination="cvc-OW-wKl" id="xtW-gO-T5Y"/>
+                <outlet property="subtitleLabel" destination="BtY-f3-bEY" id="H7O-q2-yUd"/>
+                <outlet property="subtitlePlaceView" destination="NEF-iM-LfQ" id="ZSQ-SH-GUZ"/>
                 <outlet property="titleLabel" destination="tq0-lr-hPQ" id="sed-Yw-SCA"/>
             </connections>
             <point key="canvasLocation" x="139" y="154"/>
@@ -169,7 +182,10 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

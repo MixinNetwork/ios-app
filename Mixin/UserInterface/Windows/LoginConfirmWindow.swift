@@ -123,6 +123,13 @@ class LoginConfirmWindow: BottomSheetView {
         self.id = id
         self.publicKey = publicKey
         numberPadView.target = pinField
+        if TIP.status == .needsInitialize {
+            hideBiometricButtonConstraint.constant = 23
+            showBiometricButtonConstraint.constant = 30
+        } else {
+            hideBiometricButtonConstraint.constant = 13
+            showBiometricButtonConstraint.constant = 20
+        }
         if canAuthorizeWithBiometric {
             let image = biometryType == .faceID ? R.image.ic_pay_face() : R.image.ic_pay_touch()
             biometricButton.setImage(image, for: .normal)

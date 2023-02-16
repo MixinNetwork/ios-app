@@ -14,6 +14,8 @@ class MessageFontSet: PresentationFontSize {
     static let normalQuoteSubtitle = MessageFontSet(size: 13, weight: .light)
     static let cardTitle = MessageFontSet(size: 17, weight: .regular)
     static let cardSubtitle = MessageFontSet(size: 14, weight: .regular)
+    static let mapName = MessageFontSet(size: 15, weight: .regular)
+    static let mapAddress = MessageFontSet(size: 13, weight: .regular)
     static let transferAmount = MessageFontSet(size: 20, weight: .regular)
     static let recalledQuoteSubtitle: MessageFontSet = {
         let descriptor = UIFont.systemFont(ofSize: 13, weight: .light).fontDescriptor.withMatrix(.italic)

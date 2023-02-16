@@ -8,6 +8,8 @@ class LocationMessageCell: ImageMessageCell {
     
     private lazy var informationView: LocationInformationView = {
         let view = LocationInformationView()
+        view.nameLabel.font = MessageFontSet.mapName.scaled
+        view.addressLabel.font = MessageFontSet.mapAddress.scaled
         informationViewIfLoaded = view
         return view
     }()

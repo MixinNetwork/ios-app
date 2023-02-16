@@ -158,10 +158,9 @@ class ConversationInputViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        textView.font = MessageFontSet.normalContent.scaled
+        updateTextViewFontSize()
         lastSelectedRange = textView.selectedRange
         lastTextCountWhenMentionRangeChanges = textView.text.count
-        typingAttributes[.font] = textView.font
         typingAttributes[.foregroundColor] = textView.textColor
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
@@ -171,7 +170,6 @@ class ConversationInputViewController: UIViewController {
         textView.textContainer.lineFragmentPadding = 0
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-        textView.placeholderLabel.font = MessageFontSet.inputPlaceholder.scaled
         textView.placeholderLabel.adjustsFontSizeToFitWidth = true
         textView.placeholderPadding = UIEdgeInsets(top: textView.textContainerInset.top,
                                                    left: textView.textContainerInset.left,
@@ -244,6 +242,12 @@ class ConversationInputViewController: UIViewController {
                 inputBarView.layoutIfNeeded()
             }
         }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateTextViewFontSize()
+        textViewDidChange(textView)
     }
     
     // MARK: - Actions
@@ -775,7 +779,14 @@ extension ConversationInputViewController: UITextViewDelegate {
             + textView.textContainerInset.bottom)
         let sizeToFit = CGSize(width: textView.bounds.width,
                                height: UIView.layoutFittingExpandedSize.height)
-        let contentHeight = ceil(textView.sizeThatFits(sizeToFit).height)
+        let contentHeight: CGFloat
+        if textView.text.isEmpty {
+            textView.text = " "
+            contentHeight = ceil(textView.sizeThatFits(sizeToFit).height)
+            textView.text = nil
+        } else {
+            contentHeight = ceil(textView.sizeThatFits(sizeToFit).height)
+        }
         textView.isScrollEnabled = contentHeight > maxHeight
         let newHeight = min(contentHeight, maxHeight)
         let diff = newHeight - textViewHeightConstraint.constant
@@ -1131,6 +1142,12 @@ extension ConversationInputViewController {
         textView.text = ""
         textViewDidChange(textView)
         quote = nil
+    }
+    
+    private func updateTextViewFontSize() {
+        textView.font = MessageFontSet.normalContent.scaled
+        textView.placeholderLabel.font = MessageFontSet.inputPlaceholder.scaled
+        typingAttributes[.font] = textView.font
     }
     
 }

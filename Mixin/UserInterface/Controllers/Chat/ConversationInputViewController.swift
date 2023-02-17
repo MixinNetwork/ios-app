@@ -187,6 +187,8 @@ class ConversationInputViewController: UIViewController {
                 textViewDidChange(textView)
                 textView.contentOffset.y = textView.contentSize.height - textView.frame.height
             }
+        } else {
+            layoutTextView()
         }
     }
     

@@ -13,6 +13,7 @@ class TransferSearchViewController: PopupSearchableTableViewController {
     weak var delegate: TransferSearchViewControllerDelegate?
     
     var assets = [AssetItem]()
+    var sendableAssets = [AssetItem]()
     var showEmptyHintIfNeeded = false
     var searchResultsFromServer = false
     
@@ -60,7 +61,7 @@ class TransferSearchViewController: PopupSearchableTableViewController {
             if keyword.isEmpty {
                 results = assets
             } else {
-                results = assets.filter({ (asset) -> Bool in
+                results = sendableAssets.filter({ (asset) -> Bool in
                     asset.symbol.lowercased().contains(keyword) || asset.name.lowercased().contains(keyword)
                 })
             }

@@ -15,6 +15,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
 
     private var isSearchViewControllerPreloaded = false
     private var assets = [AssetItem]()
+    private var sendableAssets = [AssetItem]()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -190,6 +191,7 @@ extension WalletViewController: TransferActionViewDelegate {
             controller.showEmptyHintIfNeeded = true
             controller.searchResultsFromServer = false
             controller.assets = assets.filter { $0.balance != "0" }
+            controller.sendableAssets = sendableAssets
         case .receive:
             controller.showEmptyHintIfNeeded = false
             controller.searchResultsFromServer = true
@@ -258,18 +260,19 @@ extension WalletViewController {
     
     @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
-            let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
-            let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
-                return hiddenAssets[asset.assetId] == nil
-            })
+            let allAssets = AssetDAO.shared.getAssets()
+            let hiddenAssetIds = AppGroupUserDefaults.Wallet.hiddenAssetIds
+            let assets = allAssets.filter { hiddenAssetIds[$0.assetId] == nil }
+            let sendableAssets = allAssets.filter { $0.balance != "0" }
             DispatchQueue.main.async {
-                guard let weakSelf = self else {
+                guard let self = self else {
                     return
                 }
-                weakSelf.assets = assets
-                weakSelf.tableHeaderView.render(assets: assets)
-                weakSelf.tableHeaderView.sizeToFit()
-                weakSelf.tableView.reloadData()
+                self.assets = assets
+                self.sendableAssets = sendableAssets
+                self.tableHeaderView.render(assets: assets)
+                self.tableHeaderView.sizeToFit()
+                self.tableView.reloadData()
             }
         }
     }

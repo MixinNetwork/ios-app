@@ -61,13 +61,12 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func updateExpireAts(expireIns: [String: Int64], database: GRDB.Database) throws {
-        guard !expireIns.isEmpty else {
+    public func updateExpireAts(expireAts: [String: Int64], database: GRDB.Database) throws {
+        guard !expireAts.isEmpty else {
             return
         }
         var hasUpdated = false
-        for (messageId, expireIn) in expireIns {
-            let expireAt = Int64(Date().addingTimeInterval(TimeInterval(expireIn)).timeIntervalSince1970)
+        for (messageId, expireAt) in expireAts {
             let updateCount = try ExpiredMessage
                 .filter(ExpiredMessage.column(of: .messageId) == messageId)
                 .updateAll(database, [ExpiredMessage.column(of: .expireAt).set(to: expireAt)])

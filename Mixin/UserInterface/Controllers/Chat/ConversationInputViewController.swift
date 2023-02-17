@@ -1021,9 +1021,14 @@ extension ConversationInputViewController {
     }
     
     private func layoutForTextViewIsEmpty(_ isEmpty: Bool, animated: Bool) {
-        
+        // If text is empty, update text view constraint without animation
+        // to eliminate placeholder flicker issue when adjusting size to fit width
         func layout() {
             if isEmpty {
+                if !animated {
+                    beginEditingTextViewTrailingConstraint.priority = .almostInexist
+                    endEditingTextViewTrailingConstraint.priority = .almostRequired
+                }
                 beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
                 endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
                 sendButton.alpha = 0
@@ -1043,9 +1048,11 @@ extension ConversationInputViewController {
             inputBarView.layoutIfNeeded()
         }
         if animated {
-            beginEditingTextViewTrailingConstraint.priority = .almostInexist
-            endEditingTextViewTrailingConstraint.priority = .almostRequired
-            inputBarView.layoutIfNeeded()
+            if isEmpty {
+                beginEditingTextViewTrailingConstraint.priority = .almostInexist
+                endEditingTextViewTrailingConstraint.priority = .almostRequired
+                inputBarView.layoutIfNeeded()
+            }
             UIView.animate(withDuration: 0.2, animations: layout)
         } else {
             layout()

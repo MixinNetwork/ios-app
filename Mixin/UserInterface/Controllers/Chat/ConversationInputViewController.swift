@@ -1022,9 +1022,7 @@ extension ConversationInputViewController {
         
         func layout() {
             if isEmpty {
-                beginEditingTextViewTrailingConstraint.priority = .almostInexist
                 beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
-                endEditingTextViewTrailingConstraint.priority = .almostRequired
                 endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
                 sendButton.alpha = 0
                 rightActionsStackView.alpha = 1
@@ -1042,8 +1040,10 @@ extension ConversationInputViewController {
             }
             inputBarView.layoutIfNeeded()
         }
-        
         if animated {
+            beginEditingTextViewTrailingConstraint.priority = .almostInexist
+            endEditingTextViewTrailingConstraint.priority = .almostRequired
+            inputBarView.layoutIfNeeded()
             UIView.animate(withDuration: 0.2, animations: layout)
         } else {
             layout()

@@ -132,13 +132,17 @@ extension Message {
     public static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {
         let content: String? = {
             guard let createdAt = mediaData.createdAt else {
+                Logger.general.error(category: "Message", message: "`createdAt` is nil")
                 return nil
             }
-            let extra = AttachmentExtra(attachmentId: mediaData.attachmentId, createdAt: createdAt, isShareable: mediaData.isShareable)
-            guard let data = try? JSONEncoder.default.encode(extra) else {
+            do {
+                let extra = AttachmentExtra(attachmentId: mediaData.attachmentId, createdAt: createdAt, isShareable: mediaData.isShareable)
+                let data = try JSONEncoder.default.encode(extra)
+                return String(data: data, encoding: .utf8)
+            } catch {
+                Logger.general.error(category: "Message", message: "Unable to encode AttachmentExtra: \(error)")
                 return nil
             }
-            return String(data: data, encoding: .utf8)
         }()
         return createMessage(messageId: data.messageId,
                              conversationId: data.conversationId,

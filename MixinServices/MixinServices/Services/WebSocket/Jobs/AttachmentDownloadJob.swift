@@ -247,6 +247,7 @@ extension AttachmentDownloadJob {
             return nil
         }
         guard let attachmentId = owner.attachmentId, !attachmentId.isEmpty else {
+            Logger.general.error(category: "AttachmentDownloadJob", message: "Message has no attachmentId: \(owner.content)")
             return nil
         }
         guard UUID(uuidString: attachmentId) != nil else {

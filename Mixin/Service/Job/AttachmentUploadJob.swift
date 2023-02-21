@@ -150,7 +150,7 @@ class AttachmentUploadJob: AttachmentLoadingJob {
         uploadFinished(attachmentId: attachResponse.attachmentId, key: key, digest: digest, createdAt: attachResponse.createdAt)
     }
     
-    private func uploadFinished(attachmentId: String, key: Data?, digest: Data?, createdAt: String?) {
+    private func uploadFinished(attachmentId: String, key: Data?, digest: Data?, createdAt: String) {
         let transferMediaData = TransferAttachmentData(key: key,
                                                        digest: digest,
                                                        attachmentId: attachmentId,

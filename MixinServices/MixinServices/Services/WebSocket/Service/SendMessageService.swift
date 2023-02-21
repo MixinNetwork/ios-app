@@ -196,9 +196,15 @@ public class SendMessageService: MixinService {
                 else {
                     return
                 }
+                let expireAts: [String: Int64] = messages.reduce(into: [:]) { result, message in
+                    if message.expireAt == nil, let expireIn = message.expireIn {
+                        let expireAt = Int64(Date().timeIntervalSince1970) + expireIn
+                        result[message.id] = expireAt
+                    }
+                }
                 if messages.count == 1 {
                     let message = messages[0]
-                    let transferMessage = TransferMessage(messageId: message.id, status: MessageStatus.READ.rawValue, expireAt: message.expireAt)
+                    let transferMessage = TransferMessage(messageId: message.id, status: MessageStatus.READ.rawValue, expireAt: message.expireAt ?? expireAts[message.id])
                     let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: [transferMessage]), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                     jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
                     
@@ -208,7 +214,7 @@ public class SendMessageService: MixinService {
                 } else {
                     for i in stride(from: 0, to: messages.count, by: 100) {
                         let by = i + 100 > messages.count ? messages.count : i + 100
-                        let transferMessages: [TransferMessage] = messages[i..<by].map { TransferMessage(messageId: $0.id, status: MessageStatus.READ.rawValue, expireAt: $0.expireAt) }
+                        let transferMessages: [TransferMessage] = messages[i..<by].map { TransferMessage(messageId: $0.id, status: MessageStatus.READ.rawValue, expireAt: $0.expireAt ?? expireAts[$0.id]) }
                         let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: transferMessages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
                         
@@ -226,12 +232,7 @@ public class SendMessageService: MixinService {
                                    arguments: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId, lastRowID])
                     try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
                     try ConversationDAO.shared.updateLastReadMessageId(lastMessageId, conversationId: conversationId, database: db)
-                    let expireIns: [String: Int64] = messages.reduce(into: [:]) { result, message in
-                        if message.expireAt == nil, let expireIn = message.expireIn {
-                            result[message.id] = expireIn
-                        }
-                    }
-                    try ExpiredMessageDAO.shared.updateExpireAts(expireIns: expireIns, database: db)
+                    try ExpiredMessageDAO.shared.updateExpireAts(expireAts: expireAts, database: db)
                     if isLastLoop {
                         db.afterNextTransaction { (_) in
                             NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)

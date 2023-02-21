@@ -247,7 +247,7 @@ extension TranscriptAttachmentUploadJob {
                             let metadata = Metadata(mediaKey: key,
                                                     mediaDigest: digest,
                                                     attachmentId: attachmentResponse.attachmentId)
-                            let createdAt = attachmentResponse.createdAt ?? Date().toUTCString()
+                            let createdAt = attachmentResponse.createdAt
                             self.job?.request(self, succeedWith: metadata, createdAt: createdAt)
                         } else {
                             let error = Error.missingMetadata(hasKey: !stream.key.isNilOrEmpty,
@@ -258,7 +258,7 @@ extension TranscriptAttachmentUploadJob {
                         let metadata = Metadata(mediaKey: nil,
                                                 mediaDigest: nil,
                                                 attachmentId: attachmentResponse.attachmentId)
-                        let createdAt = attachmentResponse.createdAt ?? Date().toUTCString()
+                        let createdAt = attachmentResponse.createdAt
                         self.job?.request(self, succeedWith: metadata, createdAt: createdAt)
                     }
                 case .failure(let error):

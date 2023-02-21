@@ -139,10 +139,7 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
                 guard let response = attachResponse else {
                     return nil
                 }
-                guard let createdAt = response.createdAt else {
-                    return nil
-                }
-                let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: createdAt, isShareable: isShareable)
+                let extra = AttachmentExtra(attachmentId: response.attachmentId, createdAt: response.createdAt, isShareable: isShareable)
                 guard let data = try? JSONEncoder.default.encode(extra) else {
                     return nil
                 }

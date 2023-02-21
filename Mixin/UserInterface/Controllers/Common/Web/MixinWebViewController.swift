@@ -241,10 +241,12 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         } else if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
             decisionHandler(.allow)
-        } else if parent != nil && UIApplication.shared.canOpenURL(url) {
+        } else if parent != nil {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             decisionHandler(.cancel)
         } else if parent == nil, let url = MixinURL(url: url), case .codes(let code) = url {
+            // Call `AuthorizeAPI.authorize` with an empty scope will cancel the auth request
+            // Cancel the request when webview is not visible, mostly because user has chosen to close it
             UserAPI.codes(codeId: code) { (result) in
                 switch result {
                 case let .success(code):

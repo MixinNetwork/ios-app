@@ -131,10 +131,7 @@ extension Message {
     
     public static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {
         let content: String? = {
-            guard let createdAt = mediaData.createdAt else {
-                return nil
-            }
-            let extra = AttachmentExtra(attachmentId: mediaData.attachmentId, createdAt: createdAt, isShareable: mediaData.isShareable)
+            let extra = AttachmentExtra(attachmentId: mediaData.attachmentId, createdAt: "", isShareable: mediaData.isShareable)
             guard let data = try? JSONEncoder.default.encode(extra) else {
                 return nil
             }

@@ -7,10 +7,10 @@ class AppCardMessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
         leftView.layer.cornerRadius = 5
         leftView.clipsToBounds = true
         titleLabel.textColor = .text
-        titleLabel.font = AppCardMessageViewModel.titleFontSet.scaled
+        titleLabel.font = MessageFontSet.cardTitle.scaled
         titleLabel.adjustsFontForContentSizeCategory = true
         subtitleLabel.textColor = .accessoryText
-        subtitleLabel.font = AppCardMessageViewModel.descriptionFontSet.scaled
+        subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
         subtitleLabel.adjustsFontForContentSizeCategory = true
     }
     

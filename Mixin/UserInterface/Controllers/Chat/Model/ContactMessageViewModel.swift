@@ -4,8 +4,6 @@ import MixinServices
 class ContactMessageViewModel: CardMessageViewModel {
     
     static let titleSpacing: CGFloat = 6
-    static let fullnameFontSet = MessageFontSet(style: .body)
-    static let idFontSet = MessageFontSet(size: 14, weight: .regular)
     
     override class var supportsQuoting: Bool {
         true
@@ -26,7 +24,7 @@ class ContactMessageViewModel: CardMessageViewModel {
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         let fullnameWidth = ((message.sharedUserFullName ?? "") as NSString)
-            .size(withAttributes: [NSAttributedString.Key.font: Self.fullnameFontSet.scaled])
+            .size(withAttributes: [NSAttributedString.Key.font: MessageFontSet.cardTitle.scaled])
             .width
         let iconWidth: CGFloat = {
             if let image = verifiedImage {
@@ -36,7 +34,7 @@ class ContactMessageViewModel: CardMessageViewModel {
             }
         }()
         let idWidth = ((message.sharedUserIdentityNumber ?? "") as NSString)
-            .size(withAttributes: [NSAttributedString.Key.font: Self.idFontSet.scaled])
+            .size(withAttributes: [NSAttributedString.Key.font: MessageFontSet.cardSubtitle.scaled])
             .width
         contentWidth = Self.leftViewSideLength
             + Self.spacing

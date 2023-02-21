@@ -27,7 +27,7 @@ class ContactMessageCellRightView: UIStackView {
         fullnameStackView.alignment = .center
         fullnameStackView.spacing = ContactMessageViewModel.titleSpacing
         
-        fullnameLabel.font = ContactMessageViewModel.fullnameFontSet.scaled
+        fullnameLabel.font = MessageFontSet.cardTitle.scaled
         fullnameLabel.textColor = .text
         fullnameLabel.adjustsFontForContentSizeCategory = true
         fullnameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -37,7 +37,7 @@ class ContactMessageCellRightView: UIStackView {
         badgeImageView.contentMode = .left
         [fullnameLabel, badgeImageView].forEach(fullnameStackView.addArrangedSubview(_:))
         
-        idLabel.font = ContactMessageViewModel.idFontSet.scaled
+        idLabel.font = MessageFontSet.cardSubtitle.scaled
         idLabel.textColor = .accessoryText
         idLabel.adjustsFontForContentSizeCategory = true
         [fullnameStackView, idLabel].forEach(addArrangedSubview(_:))

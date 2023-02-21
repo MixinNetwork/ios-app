@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class ConversationDateHeaderView: UITableViewHeaderFooterView {
     
@@ -12,11 +13,17 @@ class ConversationDateHeaderView: UITableViewHeaderFooterView {
         if #available(iOS 14.0, *) {
             backgroundConfiguration = UIBackgroundConfiguration.clear()
         }
+        updateFontSize()
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         alpha = 1
+        updateFontSize()
+    }
+    
+    private func updateFontSize() {
+        label.font = MessageFontSet.systemMessage.scaled
     }
     
 }

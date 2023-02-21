@@ -16,7 +16,7 @@ class AudioMessageProgressView: UIStackView {
         spacing = 4
         
         lengthLabel.textColor = .accessoryText
-        lengthLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        lengthLabel.font = MessageFontSet.cardSubtitle.scaled
         lengthLabel.adjustsFontForContentSizeCategory = true
         
         highlightedWaveformView.tintColor = R.color.audio_waveform_progress()!

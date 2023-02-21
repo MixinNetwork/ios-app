@@ -9,10 +9,10 @@ class TransferMessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
         leftView.clipsToBounds = true
         statusImageView.isHidden = true
         titleLabel.textColor = .text
-        titleLabel.font = TransferMessageViewModel.amountFontSet.scaled
+        titleLabel.font = MessageFontSet.transferAmount.scaled
         titleLabel.adjustsFontForContentSizeCategory = true
         subtitleLabel.textColor = .accessoryText
-        subtitleLabel.font = TransferMessageViewModel.symbolFontSet.scaled
+        subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
         subtitleLabel.adjustsFontForContentSizeCategory = true
     }
     

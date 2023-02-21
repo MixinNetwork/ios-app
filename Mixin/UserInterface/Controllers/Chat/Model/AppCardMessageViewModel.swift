@@ -2,10 +2,7 @@ import UIKit
 import MixinServices
 
 class AppCardMessageViewModel: CardMessageViewModel, TitledCardContentWidthCalculable {
-    
-    static let titleFontSet = MessageFontSet(style: .body)
-    static let descriptionFontSet = MessageFontSet(size: 14, weight: .regular)
-    
+        
     override class var bubbleImageSet: BubbleImageSet.Type {
         return AppCardBubbleImageSet.self
     }
@@ -16,9 +13,9 @@ class AppCardMessageViewModel: CardMessageViewModel, TitledCardContentWidthCalcu
     
     override func layout(width: CGFloat, style: Style) {
         updateContentWidth(title: message.appCard?.title,
-                           titleFont: Self.titleFontSet.scaled,
+                           titleFont: MessageFontSet.cardTitle.scaled,
                            subtitle: message.appCard?.description,
-                           subtitleFont: Self.descriptionFontSet.scaled)
+                           subtitleFont: MessageFontSet.cardSubtitle.scaled)
         super.layout(width: width, style: style)
     }
     

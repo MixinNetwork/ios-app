@@ -175,6 +175,7 @@
 "chat_pin_message" = "%1$@ закрепил %2$@";
 "chat_recall_delete_alert" = "Выбранные вами сообщения будут удалены для всех в последней версии Mixin в этом чате.";
 "chat_restore_subtitle" = "Вы не сможете восстановить позже, если откажетесь от восстановления сейчас. Медиафайлы будут продолжать восстанавливаться в фоновом режиме после восстановления сообщений.";
+"chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Ожидание, пока %1$@ подключится к сети и установит зашифрованный сеанс. %2$@.";
 "chats" = "ЧАТЫ";
 "choose_network" = "Choose Network";
@@ -821,6 +822,7 @@
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
 "syncing_progress" = "Синхронизация %d%%";
 "syncs_contact_hint" = "Mixin синхронизирует вашу адресную книгу с серверами Mixin, чтобы помочь вам связаться с другими пользователями Mixin.";
+"system" = "System";
 "system_time_is_unusual" = "Системное время необычно";
 "tag" = "Ярлык";
 "tap_to_join" = "Нажмите, чтобы присоединиться";
@@ -902,6 +904,7 @@
 "uploading_progress" = "Загрузка: %@ из %@ (%@)";
 "url_unrecognized_hint" = "%@ не удалось распознать, обновите Mixin до последней версии или свяжитесь с разработчиком, чтобы проверить ссылку";
 "use_biometry" = "Использовать %@";
+"use_system_text_size" = "Use System Text Size";
 "user_is_reported" = "Сообщено о пользователе";
 "user_not_found" = "Пользователь не найден";
 "validation_timed_out" = "Время проверки истекло";

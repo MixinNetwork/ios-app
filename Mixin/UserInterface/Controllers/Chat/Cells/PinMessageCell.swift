@@ -12,7 +12,7 @@ class PinMessageCell: MessageCell {
     override func prepare() {
         super.prepare()
         [contentLabel, closingQuoteLabel].forEach { label in
-            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+            label.font = MessageFontSet.systemMessage.scaled
             label.textColor = .black
             label.backgroundColor = .clear
             label.numberOfLines = 1

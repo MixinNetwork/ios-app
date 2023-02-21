@@ -28,9 +28,8 @@ class LocationInformationView: SolidBackgroundColoredView {
         contentLeadingConstraint = view.leadingAnchor.constraint(equalTo: self.leadingAnchor)
         contentLeadingConstraint.isActive = true
         view.snp.makeConstraints { (make) in
-            make.top.greaterThanOrEqualToSuperview()
             make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-9)
+            make.center.equalToSuperview()
         }
     }
     

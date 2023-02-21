@@ -232,8 +232,8 @@ class ConversationCell: ModernSelectedBackgroundCell {
     
     private func setContentLabelFontItalic(_ isItalic: Bool) {
         contentLabel.font = isItalic
-            ? MessageFontSet.recalledConversationContent.scaled
-            : MessageFontSet.normalConversationContent.scaled
+            ? ConversationFontSet.recalledContent.scaled
+            : ConversationFontSet.normalContent.scaled
     }
     
 }

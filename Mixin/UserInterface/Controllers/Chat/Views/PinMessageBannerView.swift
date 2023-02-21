@@ -27,6 +27,11 @@ final class PinMessageBannerView: UIView {
         delegate?.pinMessageBannerViewDidTapPreview(self)
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        messageLabel.font = MessageFontSet.cardSubtitle.scaled
+    }
+    
 }
 
 extension PinMessageBannerView {

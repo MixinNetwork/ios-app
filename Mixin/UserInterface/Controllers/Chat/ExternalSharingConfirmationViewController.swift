@@ -300,10 +300,10 @@ extension ExternalSharingConfirmationViewController {
         
         let contentView = CardMessageTitleView()
         contentView.titleLabel.textColor = .text
-        contentView.titleLabel.font = AppCardMessageViewModel.titleFontSet.scaled
+        contentView.titleLabel.font = MessageFontSet.cardTitle.scaled
         contentView.titleLabel.adjustsFontForContentSizeCategory = true
         contentView.subtitleLabel.textColor = .accessoryText
-        contentView.subtitleLabel.font = AppCardMessageViewModel.descriptionFontSet.scaled
+        contentView.subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
         contentView.subtitleLabel.adjustsFontForContentSizeCategory = true
         imageView.addSubview(contentView)
         contentView.snp.makeConstraints { (make) in

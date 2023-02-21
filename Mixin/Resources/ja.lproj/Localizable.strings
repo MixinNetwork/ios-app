@@ -175,6 +175,7 @@
 "chat_pin_message" = "%1$@は%2$@をピン留めしました";
 "chat_recall_delete_alert" = "選択したメッセージは、最新版のMixinを使用している全員のチャットから削除されます。";
 "chat_restore_subtitle" = "現在復元しない場合、後で復元はできません。メディアファイルはメッセージに続いて復元されます。";
+"chat_text_size" = "Chat Text Size";
 "chat_waiting" = "オンラインで暗号化されたやりとりを開始するまであと%1$@。%2$@";
 "chats" = "チャット";
 "choose_network" = "Choose Network";
@@ -821,6 +822,7 @@
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
 "syncing_progress" = "同期中 %d%%";
 "syncs_contact_hint" = "あなたのアドレス帳をMixinと同期し、他のMixinユーザーと連携します。";
+"system" = "System";
 "system_time_is_unusual" = "システム時刻に問題があります";
 "tag" = "タグ";
 "tap_to_join" = "タップして参加";
@@ -902,6 +904,7 @@
 "uploading_progress" = "アップロード: %@ / %@ (%@)";
 "url_unrecognized_hint" = "%@を認識できません、Mixinを最新版にアップデートするか、もしくは開発陣に連絡してリンクを確認してください。";
 "use_biometry" = "%@を使用する";
+"use_system_text_size" = "Use System Text Size";
 "user_is_reported" = "報告しました。";
 "user_not_found" = "ユーザーが見つかりませんでした";
 "validation_timed_out" = "認証時間切れ";

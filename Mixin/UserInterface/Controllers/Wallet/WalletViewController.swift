@@ -63,6 +63,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         tableView.reloadData()
         updateTableHeaderVisualEffect()
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: ChainDAO.chainsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         fetchAssets()

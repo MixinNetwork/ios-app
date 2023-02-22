@@ -37,6 +37,7 @@ class DepositViewController: UIViewController {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
         let job = RefreshAssetsJob(request: .asset(id: asset.assetId, untilDepositEntriesNotEmpty: true))
         self.job = job
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -89,6 +90,20 @@ extension DepositViewController {
         guard id == asset.assetId else {
             return
         }
+        reloadAsset()
+    }
+    
+    @objc private func chainsDidChange(_ notification: Notification) {
+        guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
+            return
+        }
+        guard id == asset.chainId else {
+            return
+        }
+        reloadAsset()
+    }
+    
+    private func reloadAsset() {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
             guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {

@@ -954,7 +954,12 @@ extension UrlWindow {
                 return nil
             }
         }
-        
+        if let chainId = asset?.chainId, case let .success(chain) = AssetAPI.chain(chainId: chainId) {
+            ChainDAO.shared.insertOrUpdateChains([chain])
+            asset = AssetDAO.shared.getAsset(assetId: assetId)
+        } else {
+            return nil
+        }
         if asset == nil {
             DispatchQueue.main.async {
                 hud.set(style: .error, text: R.string.localizable.asset_not_found())

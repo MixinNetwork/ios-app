@@ -517,6 +517,20 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("chians") { db in
+            let sql =  """
+                CREATE TABLE IF NOT EXISTS chains(
+                    chain_id TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    symbol TEXT NOT NULL,
+                    icon_url TEXT NOT NULL,
+                    threshold INTEGER NOT NULL,
+                    PRIMARY KEY (chain_id)
+                )
+            """
+            try db.execute(sql: sql)
+        }
+        
         return migrator
     }
     

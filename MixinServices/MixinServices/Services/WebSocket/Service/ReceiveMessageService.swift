@@ -1201,15 +1201,24 @@ extension ReceiveMessageService {
         if let opponentId = snapshot.opponentId {
             checkUser(userId: opponentId, tryAgain: true)
         }
-
+        let requestFailed: Bool
         switch AssetAPI.asset(assetId: snapshot.assetId) {
         case let .success(asset):
+            switch AssetAPI.chain(chainId: asset.chainId) {
+            case let .success(chain):
+                ChainDAO.shared.insertOrUpdateChains([chain])
+                requestFailed = false
+            case let .failure:
+                requestFailed = true
+            }
             AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
         case .failure:
+            requestFailed = true
+        }
+        if requestFailed {
             let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
             ConcurrentJobQueue.shared.addJob(job: job)
         }
-
         if snapshot.type == SnapshotType.deposit.rawValue, let transactionHash = snapshot.transactionHash {
             SnapshotDAO.shared.removePendingDeposits(assetId: snapshot.assetId, transactionHash: transactionHash)
         }

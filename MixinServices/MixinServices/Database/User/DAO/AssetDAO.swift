@@ -14,9 +14,10 @@ public final class AssetDAO: UserDatabaseDAO {
     private static let sqlQueryTable = """
     SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.destination, a.tag, a.price_btc,
         a.price_usd, a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve, a.deposit_entries,
-        chain.icon_url as chain_icon_url, chain.name as chain_name, chain.symbol as chain_symbol
+        c.icon_url as chain_icon_url, c.name as chain_name, c.symbol as chain_symbol
     FROM assets a
     LEFT JOIN assets chain ON a.chain_id = chain.asset_id
+    LEFT JOIN chains c ON a.chain_id = c.chain_id
     """
     private static let sqlOrder = "a.balance * a.price_usd DESC, cast(a.balance AS REAL) DESC, a.price_usd DESC, a.name DESC"
     private static let sqlQuery = "\(sqlQueryTable) ORDER BY \(sqlOrder)"

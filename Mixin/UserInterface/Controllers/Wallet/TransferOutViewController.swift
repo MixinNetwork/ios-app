@@ -76,6 +76,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                    selector: #selector(fetchAvailableAssets),
                                                    name: AssetDAO.assetsDidChangeNotification,
                                                    object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(fetchAvailableAssets),
+                                                   name: ChainDAO.chainsDidChangeNotification,
+                                                   object: nil)
             ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
             fetchAvailableAssets()
         }

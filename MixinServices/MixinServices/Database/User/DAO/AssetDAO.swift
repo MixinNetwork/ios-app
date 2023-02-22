@@ -16,7 +16,6 @@ public final class AssetDAO: UserDatabaseDAO {
         a.price_usd, a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve, a.deposit_entries,
         c.icon_url as chainIconUrl, c.name as chainName, c.symbol as chainSymbol, c.chain_id as chainId, c.threshold as chainThreshold
     FROM assets a
-    LEFT JOIN assets chain ON a.chain_id = chain.asset_id
     LEFT JOIN chains c ON a.chain_id = c.chain_id
     """
     private static let sqlOrder = "a.balance * a.price_usd DESC, cast(a.balance AS REAL) DESC, a.price_usd DESC, a.name DESC"

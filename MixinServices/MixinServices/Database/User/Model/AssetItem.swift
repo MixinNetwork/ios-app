@@ -3,7 +3,7 @@ import GRDB
 
 public final class AssetItem: Asset, NumberStringLocalizable {
     
-    public let chain: Chain?
+    public var chain: Chain?
     
     public lazy var localizedBalance = localizedNumberString(balance)
     

@@ -517,7 +517,7 @@ public final class UserDatabase: Database {
             }
         }
         
-        migrator.registerMigration("chians") { db in
+        migrator.registerMigration("chains") { db in
             let sql =  """
                 CREATE TABLE IF NOT EXISTS chains(
                     chain_id TEXT NOT NULL,

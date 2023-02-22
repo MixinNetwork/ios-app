@@ -14,7 +14,7 @@ public final class AssetDAO: UserDatabaseDAO {
     private static let sqlQueryTable = """
     SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.destination, a.tag, a.price_btc,
         a.price_usd, a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve, a.deposit_entries,
-        c.icon_url as chain_icon_url, c.name as chain_name, c.symbol as chain_symbol
+        c.icon_url as chainIconUrl, c.name as chainName, c.symbol as chainSymbol, c.chain_id as chainId, c.threshold as chainThreshold
     FROM assets a
     LEFT JOIN assets chain ON a.chain_id = chain.asset_id
     LEFT JOIN chains c ON a.chain_id = c.chain_id

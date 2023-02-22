@@ -3,7 +3,7 @@ import GRDB
 
 public final class AssetItem: Asset, NumberStringLocalizable {
     
-    public let chain: ChainInfo?
+    public let chain: Chain?
     
     public lazy var localizedBalance = localizedNumberString(balance)
     
@@ -26,7 +26,7 @@ public final class AssetItem: Asset, NumberStringLocalizable {
         return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
     }()
     
-    public init(asset: Asset, chain: ChainInfo?) {
+    public init(asset: Asset, chain: Chain) {
         self.chain = chain
         super.init(assetId: asset.assetId,
                    type: asset.type,
@@ -49,39 +49,17 @@ public final class AssetItem: Asset, NumberStringLocalizable {
     required init(from decoder: Decoder) throws {
         // GRDB does not support singleValueContainer
         // Decode it in nasty way
-        if let container = try? decoder.container(keyedBy: ChainInfo.CodingKeys.self),
+        if let container = try? decoder.container(keyedBy: Chain.JoinQueryCodingKeys.self),
            let iconUrl = try? container.decodeIfPresent(String.self, forKey: .iconUrl),
            let name = try? container.decodeIfPresent(String.self, forKey: .name),
-           let symbol = try? container.decodeIfPresent(String.self, forKey: .symbol) {
-            self.chain = ChainInfo(iconUrl: iconUrl, name: name, symbol: symbol)
+           let symbol = try? container.decodeIfPresent(String.self, forKey: .symbol),
+           let chainId = try? container.decodeIfPresent(String.self, forKey: .chainId),
+           let threshold = try? container.decodeIfPresent(Int.self, forKey: .threshold) {
+            self.chain = Chain(chainId: chainId, name: name, symbol: symbol, iconUrl: iconUrl, threshold: threshold)
         } else {
             self.chain = nil
         }
         try super.init(from: decoder)
-    }
-    
-}
-
-extension AssetItem {
-    
-    public struct ChainInfo: Codable {
-        
-        public enum CodingKeys: String, CodingKey {
-            case iconUrl = "chain_icon_url"
-            case name = "chain_name"
-            case symbol = "chain_symbol"
-        }
-        
-        public let iconUrl: String
-        public let name: String
-        public let symbol: String
-        
-        public init(iconUrl: String, name: String, symbol: String) {
-            self.iconUrl = iconUrl
-            self.name = name
-            self.symbol = symbol
-        }
-        
     }
     
 }
@@ -105,8 +83,12 @@ extension AssetItem {
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
                           reserve: "0",
                           depositEntries: [])
-        let info = ChainInfo(iconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128", name: "Ether", symbol: "ETH")
-        return AssetItem(asset: asset, chain: info)
+        let chain = Chain(chainId: asset.chainId,
+                          name: "Ether",
+                          symbol: "ETH",
+                          iconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128",
+                          threshold: 0)
+        return AssetItem(asset: asset, chain: chain)
     }()
     
 }

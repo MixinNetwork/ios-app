@@ -29,6 +29,14 @@ extension Chain: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         case threshold
     }
     
+    public enum JoinQueryCodingKeys: String, CodingKey {
+        case chainId
+        case name = "chainName"
+        case symbol = "chainSymbol"
+        case iconUrl = "chainIconUrl"
+        case threshold = "chainThreshold"
+    }
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         chainId = try container.decode(String.self, forKey: .chainId)

@@ -7,7 +7,7 @@ class DepositChooseNetworkWindow: BottomSheetView {
     
     private var canDismiss = false
     private var asset: AssetItem!
-    private var chain: AssetItem.ChainInfo!
+    private var chain: Chain!
     
     override func dismissPopupController(animated: Bool) {
         guard canDismiss else {
@@ -16,7 +16,7 @@ class DepositChooseNetworkWindow: BottomSheetView {
         super.dismissPopupController(animated: animated)
     }
     
-    func render(asset: AssetItem, chain: AssetItem.ChainInfo) -> DepositChooseNetworkWindow {
+    func render(asset: AssetItem, chain: Chain) -> DepositChooseNetworkWindow {
         self.asset = asset
         self.chain = chain
         tableView.register(R.nib.depositNetworkCell)

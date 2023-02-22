@@ -106,10 +106,12 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 guard let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
                     return nil
                 }
-                let chainInfo = AssetItem.ChainInfo(iconUrl: chainAsset.iconUrl,
-                                                    name: chainAsset.name,
-                                                    symbol: chainAsset.symbol)
-                let item = AssetItem(asset: asset, chain: chainInfo)
+                let chain = Chain(chainId: chainAsset.chainId,
+                                  name: chainAsset.name,
+                                  symbol: chainAsset.symbol,
+                                  iconUrl: chainAsset.iconUrl,
+                                  threshold: 0)
+                let item = AssetItem(asset: asset, chain: chain)
                 return item
             })
             

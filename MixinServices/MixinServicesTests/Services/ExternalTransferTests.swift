@@ -10,6 +10,7 @@ fileprivate let xmr = "05c5ac01-31f9-4a69-aa8a-ab796de1d041"
 fileprivate let sol = "64692c23-8971-4cf4-84a7-4dd1271dd887"
 fileprivate let xin = "c94ac88f-4671-3976-b60a-09064f1811e8"
 fileprivate let usdt = "4d8c508b-91c5-375b-92b0-ee702ed2dac5"
+fileprivate let usdc = "80b65786-7c75-3523-bc03-fb25378eae41"
 
 final class ExternalTransferTests: XCTestCase {
     
@@ -89,6 +90,15 @@ final class ExternalTransferTests: XCTestCase {
         let c7 = try! ExternalTransfer(string: "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&amount=1e7&uint256=1.24e18",
                                        assetIDFinder: mockAssetIDFinder(_:))
         XCTAssertEqual(c7.arbitraryAmount, "10000000")
+        
+        let c8 = try! ExternalTransfer(string: "ethereum:0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174@137/transfer?address=0x1DB766A18aB5b70A38e2A8a8819Ba6472029E9Ac&uint256=3.27e6&gas=250000",
+                                       assetIDFinder: mockAssetIDFinder(_:))
+        assertEqual(transfer: c8,
+                    assetID: usdc,
+                    destination: "0x1DB766A18aB5b70A38e2A8a8819Ba6472029E9Ac",
+                    resolvedAmount: nil,
+                    memo: nil)
+        XCTAssertEqual(ExternalTransfer.resolve(atomicAmount: c8.amount, with: 6), "3.27")
     }
     
     // MARK: - LTC
@@ -176,6 +186,8 @@ extension ExternalTransferTests {
             return usdt
         case "0xA974c709cFb4566686553a20790685A47acEAA33":
             return xin
+        case "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174":
+            return usdc
         default:
             return nil
         }

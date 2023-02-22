@@ -13,7 +13,8 @@ public struct ExternalTransfer {
     ]
     
     private static let ethChainIds = [
-        "1": "43d61dcd-e413-450d-80b8-101d5e903357"
+        "1"   : "43d61dcd-e413-450d-80b8-101d5e903357",
+        "137" : "b7938396-3f94-4e0a-9179-d3440718156f",
     ]
     
     public let raw: String

@@ -138,6 +138,8 @@ extension AssetItem {
             return "BEP-2"
         } else if chainId == "1949e683-6a08-49e2-b087-d6b72398588f" {
             return "BEP-20"
+        } else if chainId == "a0ffd769-5850-4b48-9651-d2ae44a3e64d" {
+            return "MVM"
         } else if assetId == chainId {
             return nil
         } else {

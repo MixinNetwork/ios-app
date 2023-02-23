@@ -88,7 +88,7 @@ public struct ExternalTransfer {
                     throw TransferLinkError.invalidFormat
                 }
                 guard let assetID = assetIDFinder(targetAddress) else {
-                    throw TransferLinkError.missingAssetKey
+                    throw TransferLinkError.assetNotFound
                 }
                 if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
                     self.amount = decimalAmount

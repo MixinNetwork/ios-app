@@ -37,15 +37,6 @@ extension Chain: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         case threshold = "chainThreshold"
     }
     
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        chainId = try container.decode(String.self, forKey: .chainId)
-        name = try container.decode(String.self, forKey: .name)
-        symbol = try container.decode(String.self, forKey: .symbol)
-        iconUrl = try container.decode(String.self, forKey: .iconUrl)
-        threshold = try container.decode(Int.self, forKey: .threshold)
-    }
-    
 }
 
 extension Chain: TableRecord, PersistableRecord {

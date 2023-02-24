@@ -107,6 +107,9 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 if let chain = ChainDAO.shared.chain(chainId: asset.chainId) {
                     assetChain = chain
                 } else if case let .success(chain) = AssetAPI.chain(chainId: asset.chainId) {
+                    DispatchQueue.global().async {
+                        ChainDAO.shared.insertOrUpdateChains([chain])
+                    }
                     assetChain = chain
                 } else {
                     return nil

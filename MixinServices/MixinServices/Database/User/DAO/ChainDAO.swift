@@ -31,4 +31,8 @@ public final class ChainDAO: UserDatabaseDAO {
         }
     }
     
+    public func chain(chainId: String) -> Chain? {
+        db.select(where: Chain.column(of: .chainId) == chainId)
+    }
+    
 }

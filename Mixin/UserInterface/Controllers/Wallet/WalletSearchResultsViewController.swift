@@ -103,15 +103,15 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 guard !localIds.contains(asset.assetId) else {
                     return nil
                 }
-                guard let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+                let assetChain: Chain
+                if let chain = ChainDAO.shared.chain(chainId: asset.chainId) {
+                    assetChain = chain
+                } else if case let .success(chain) = AssetAPI.chain(chainId: asset.chainId) {
+                    assetChain = chain
+                } else {
                     return nil
                 }
-                let chain = Chain(chainId: chainAsset.chainId,
-                                  name: chainAsset.name,
-                                  symbol: chainAsset.symbol,
-                                  iconUrl: chainAsset.iconUrl,
-                                  threshold: 0)
-                let item = AssetItem(asset: asset, chain: chain)
+                let item = AssetItem(asset: asset, chain: assetChain)
                 return item
             })
             

@@ -948,15 +948,15 @@ extension UrlWindow {
                 return nil
             }
         }
-        if let asset, asset.assetId != asset.chainId {
-            let chainAsset = syncAsset(assetId: asset.chainId, hud: hud)
-            if chainAsset == nil {
+        if let chainId = asset?.chainId {
+            if let chain = ChainDAO.shared.chain(chainId: chainId) {
+                asset?.chain = chain
+            } else if case let .success(chain) = AssetAPI.chain(chainId: chainId) {
+                ChainDAO.shared.insertOrUpdateChains([chain])
+                asset?.chain = chain
+            } else {
                 return nil
             }
-        }
-        if let chainId = asset?.chainId, case let .success(chain) = AssetAPI.chain(chainId: chainId) {
-            ChainDAO.shared.insertOrUpdateChains([chain])
-            asset?.chain = chain
         } else {
             return nil
         }
@@ -966,7 +966,6 @@ extension UrlWindow {
                 hud.scheduleAutoHidden()
             }
         }
-
         return asset
     }
 

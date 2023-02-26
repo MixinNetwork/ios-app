@@ -28,10 +28,10 @@ class DepositViewController: UIViewController {
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
         
-        if let entry = asset.preferredDepositEntry {
+        if let entry = asset.preferredDepositEntry, let chain = asset.chain {
             stopLoading()
             show(entry: entry)
-            showDepositChooseNetworkWindowIfNeeded()
+            showDepositChooseNetworkWindowIfNeeded(chain: chain)
         } else {
             startLoading()
         }
@@ -106,7 +106,7 @@ extension DepositViewController {
     private func reloadAsset() {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+            guard let asset = AssetDAO.shared.getAsset(assetId: assetId), let chain = asset.chain else {
                 return
             }
             DispatchQueue.main.sync {
@@ -119,7 +119,7 @@ extension DepositViewController {
                     UIView.performWithoutAnimation {
                         self.show(entry: entry)
                     }
-                    self.showDepositChooseNetworkWindowIfNeeded()
+                    self.showDepositChooseNetworkWindowIfNeeded(chain: chain)
                 }
             }
         }
@@ -157,25 +157,12 @@ extension DepositViewController {
         hintLabel.text = asset.depositTips
     }
     
-    private func showDepositChooseNetworkWindowIfNeeded() {
+    private func showDepositChooseNetworkWindowIfNeeded(chain: Chain) {
         guard !hasDepositChooseNetworkWindowPresented else {
             return
         }
-        let assetChain: Chain
-        if let chain = asset.chain {
-            assetChain = chain
-        } else if let chain = ChainDAO.shared.chain(chainId: asset.chainId) {
-            assetChain = chain
-        } else if case let .success(chain) = AssetAPI.chain(chainId: asset.chainId) {
-            DispatchQueue.global().async {
-                ChainDAO.shared.insertOrUpdateChains([chain])
-            }
-            assetChain = chain
-        } else {
-            return
-        }
         hasDepositChooseNetworkWindowPresented = true
-        DepositChooseNetworkWindow.instance().render(asset: asset, chain: assetChain).presentPopupControllerAnimated()
+        DepositChooseNetworkWindow.instance().render(asset: asset, chain: chain).presentPopupControllerAnimated()
     }
     
     private func startLoading() {

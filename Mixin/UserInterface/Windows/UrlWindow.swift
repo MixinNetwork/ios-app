@@ -500,6 +500,10 @@ class UrlWindow {
                 return true
             } catch TransferLinkError.notTransferLink {
                 return false
+            } catch TransferLinkError.assetNotFound {
+                Logger.general.error(category: "URLWindow", message: "Asset not found: \(string)")
+                showAutoHiddenHud(style: .error, text: R.string.localizable.asset_not_found())
+                return true
             } catch {
                 Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
                 showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())

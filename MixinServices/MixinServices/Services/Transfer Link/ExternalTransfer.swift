@@ -12,8 +12,9 @@ public struct ExternalTransfer {
         "solana"    : "64692c23-8971-4cf4-84a7-4dd1271dd887",
     ]
     
-    private static let ethChainIds = [
-        "1": "43d61dcd-e413-450d-80b8-101d5e903357"
+    private static let chainIds = [
+        "1"   : "43d61dcd-e413-450d-80b8-101d5e903357",
+        "137" : "b7938396-3f94-4e0a-9179-d3440718156f",
     ]
     
     public let raw: String
@@ -87,7 +88,7 @@ public struct ExternalTransfer {
                     throw TransferLinkError.invalidFormat
                 }
                 guard let assetID = assetIDFinder(targetAddress) else {
-                    throw TransferLinkError.missingAssetKey
+                    throw TransferLinkError.assetNotFound
                 }
                 if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
                     self.amount = decimalAmount
@@ -102,7 +103,7 @@ public struct ExternalTransfer {
                 self.destination = address
             } else {
                 // ETH the native token
-                guard let assetID = Self.ethChainIds[chainID] else {
+                guard let assetID = Self.chainIds[chainID] else {
                     throw TransferLinkError.invalidFormat
                 }
                 if let amount = parameters["value"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {

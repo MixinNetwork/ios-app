@@ -56,7 +56,20 @@ public class RefreshAssetsJob: AsynchronousJob {
                         }
                         AssetDAO.shared.insertOrUpdateAssets(assets: assets)
                     }
-                    self.updateFiats()
+                    AssetAPI.chains { result in
+                        switch result {
+                        case let .success(chains):
+                            DispatchQueue.global().async {
+                                guard !MixinService.isStopProcessMessages else {
+                                    return
+                                }
+                                ChainDAO.shared.insertOrUpdateChains(chains)
+                            }
+                        case let .failure(error):
+                            reporter.report(error: error)
+                        }
+                        self.updateFiats()
+                    }
                 case let .failure(error):
                     reporter.report(error: error)
                     self.finishJob()
@@ -81,7 +94,20 @@ public class RefreshAssetsJob: AsynchronousJob {
                             AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
                         }
                         self.asset = asset
-                        self.updateFiats()
+                        AssetAPI.chain(chainId: asset.chainId) { result in
+                            switch result {
+                            case let .success(chain):
+                                DispatchQueue.global().async {
+                                    guard !MixinService.isStopProcessMessages else {
+                                        return
+                                    }
+                                    ChainDAO.shared.insertOrUpdateChains([chain])
+                                }
+                            case let .failure(error):
+                                reporter.report(error: error)
+                            }
+                            self.updateFiats()
+                        }
                     }
                 case let .failure(error):
                     reporter.report(error: error)

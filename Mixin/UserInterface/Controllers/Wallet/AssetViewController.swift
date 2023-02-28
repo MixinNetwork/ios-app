@@ -48,6 +48,7 @@ class AssetViewController: UIViewController {
         }
         snapshotDataSource.reloadFromLocal()
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
         let job = RefreshAssetsJob(request: .asset(id: asset.assetId, untilDepositEntriesNotEmpty: false))
         self.job = job
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -71,6 +72,16 @@ class AssetViewController: UIViewController {
             return
         }
         guard id == asset.assetId else {
+            return
+        }
+        reloadAsset()
+    }
+    
+    @objc private func chainsDidChange(_ notification: Notification) {
+        guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
+            return
+        }
+        guard id == asset.chainId else {
             return
         }
         reloadAsset()

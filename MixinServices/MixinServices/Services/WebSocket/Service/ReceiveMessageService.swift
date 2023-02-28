@@ -1197,23 +1197,26 @@ extension ReceiveMessageService {
         guard let base64Data = Data(base64Encoded: data.data), let snapshot = (try? JSONDecoder.default.decode(Snapshot.self, from: base64Data)) else {
             return
         }
-
         if let opponentId = snapshot.opponentId {
             checkUser(userId: opponentId, tryAgain: true)
         }
-
-        switch AssetAPI.asset(assetId: snapshot.assetId) {
-        case let .success(asset):
+        let chainId: String?
+        if let asset = AssetDAO.shared.getAsset(assetId: snapshot.assetId) {
+            chainId = asset.chainId
+        } else if case let .success(asset) = AssetAPI.asset(assetId: snapshot.assetId) {
             AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
-        case .failure:
-            let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
-            ConcurrentJobQueue.shared.addJob(job: job)
+            chainId = asset.chainId
+        } else {
+            chainId = nil
         }
-
+        if let chainId, !ChainDAO.shared.isExist(chainId: chainId), case let .success(chain) = AssetAPI.chain(chainId: chainId) {
+            ChainDAO.shared.insertOrUpdateChains([chain])
+        }
+        let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
+        ConcurrentJobQueue.shared.addJob(job: job)
         if snapshot.type == SnapshotType.deposit.rawValue, let transactionHash = snapshot.transactionHash {
             SnapshotDAO.shared.removePendingDeposits(assetId: snapshot.assetId, transactionHash: transactionHash)
         }
-
         SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
         let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)

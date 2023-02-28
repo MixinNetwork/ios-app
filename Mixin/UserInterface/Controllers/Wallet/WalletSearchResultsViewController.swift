@@ -103,13 +103,18 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 guard !localIds.contains(asset.assetId) else {
                     return nil
                 }
-                guard let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+                let assetChain: Chain
+                if let chain = ChainDAO.shared.chain(chainId: asset.chainId) {
+                    assetChain = chain
+                } else if case let .success(chain) = AssetAPI.chain(chainId: asset.chainId) {
+                    DispatchQueue.global().async {
+                        ChainDAO.shared.insertOrUpdateChains([chain])
+                    }
+                    assetChain = chain
+                } else {
                     return nil
                 }
-                let chainInfo = AssetItem.ChainInfo(iconUrl: chainAsset.iconUrl,
-                                                    name: chainAsset.name,
-                                                    symbol: chainAsset.symbol)
-                let item = AssetItem(asset: asset, chain: chainInfo)
+                let item = AssetItem(asset: asset, chain: assetChain)
                 return item
             })
             

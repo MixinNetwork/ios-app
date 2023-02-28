@@ -28,15 +28,16 @@ class DepositViewController: UIViewController {
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
         
-        if let entry = asset.preferredDepositEntry {
+        if let entry = asset.preferredDepositEntry, let chain = asset.chain {
             stopLoading()
             show(entry: entry)
-            showDepositChooseNetworkWindowIfNeeded()
+            showDepositChooseNetworkWindowIfNeeded(chain: chain)
         } else {
             startLoading()
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
         let job = RefreshAssetsJob(request: .asset(id: asset.assetId, untilDepositEntriesNotEmpty: true))
         self.job = job
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -89,9 +90,23 @@ extension DepositViewController {
         guard id == asset.assetId else {
             return
         }
+        reloadAsset()
+    }
+    
+    @objc private func chainsDidChange(_ notification: Notification) {
+        guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
+            return
+        }
+        guard id == asset.chainId else {
+            return
+        }
+        reloadAsset()
+    }
+    
+    private func reloadAsset() {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+            guard let asset = AssetDAO.shared.getAsset(assetId: assetId), let chain = asset.chain else {
                 return
             }
             DispatchQueue.main.sync {
@@ -104,7 +119,7 @@ extension DepositViewController {
                     UIView.performWithoutAnimation {
                         self.show(entry: entry)
                     }
-                    self.showDepositChooseNetworkWindowIfNeeded()
+                    self.showDepositChooseNetworkWindowIfNeeded(chain: chain)
                 }
             }
         }
@@ -142,8 +157,8 @@ extension DepositViewController {
         hintLabel.text = asset.depositTips
     }
     
-    private func showDepositChooseNetworkWindowIfNeeded() {
-        guard !hasDepositChooseNetworkWindowPresented, let chain = asset.chain else {
+    private func showDepositChooseNetworkWindowIfNeeded(chain: Chain) {
+        guard !hasDepositChooseNetworkWindowPresented else {
             return
         }
         hasDepositChooseNetworkWindowPresented = true

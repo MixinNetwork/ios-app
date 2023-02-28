@@ -1108,80 +1108,68 @@ extension ConversationDataSource {
             stackedPhotoMessages.append(item)
             return item
         }
+        func canStack(_ message: MessageItem) -> Bool {
+            message.category.hasSuffix("_IMAGE") && message.quoteMessageId.isNilOrEmpty && message.mediaStatus == MediaStatus.DONE.rawValue
+        }
         var result = [MessageItem]()
         var messagesToStack = [MessageItem]()
-        var left = 0
-        var right = 1
-        var unableToStack: Bool {
-            messagesToStack.count < numberOfConsecutiveImagesToStack ||
-            messagesToStack.contains(where: { $0.mediaStatus != MediaStatus.DONE.rawValue })
-        }
-        while right < messages.count {
-            if !messages[left].category.hasSuffix("_IMAGE") {
-                result.append(messages[left])
-                left += 1
-                right += 1
-            } else if !messages[left].quoteMessageId.isNilOrEmpty {
-                result.append(messages[left])
-                left += 1
-                right += 1
-            } else if !messages[right].category.hasSuffix("_IMAGE") {
-                if messagesToStack.isEmpty {
-                    result.append(contentsOf: messages[left...right])
-                } else if unableToStack {
-                    result.append(contentsOf: messagesToStack)
-                    result.append(messages[right])
-                    messagesToStack.removeAll()
-                } else {
-                    result.append(createStackedPhotoMessage(messagesToStack))
-                    result.append(messages[right])
-                    messagesToStack.removeAll()
+        var startIndex = 0
+        var endIndex = 1
+        while endIndex < messages.count {
+            let startMessage = messages[startIndex]
+            let endMessage = messages[endIndex]
+            if canStack(startMessage), canStack(endMessage), startMessage.userId == endMessage.userId {
+                if startIndex == 0, messagesToStack.isEmpty {
+                    messagesToStack.append(startMessage)
                 }
-                left = right + 1
-                right = left + 1
-            } else if messages[left].userId != messages[right].userId {
-                if messagesToStack.isEmpty {
-                    result.append(messages[left])
-                } else if unableToStack {
-                    result.append(contentsOf: messagesToStack)
-                    messagesToStack.removeAll()
-                } else {
-                    result.append(createStackedPhotoMessage(messagesToStack))
-                    messagesToStack.removeAll()
+                messagesToStack.append(endMessage)
+                endIndex += 1
+                if endIndex >= messages.count {
+                    if messagesToStack.count < numberOfConsecutiveImagesToStack {
+                        result.append(contentsOf: messagesToStack)
+                    } else {
+                        result.append(createStackedPhotoMessage(messagesToStack))
+                    }
                 }
-                left = right
-                right += 1
-            } else if !messages[right].quoteMessageId.isNilOrEmpty {
-                if messagesToStack.isEmpty {
-                    result.append(messages[left])
-                } else if unableToStack {
-                    result.append(contentsOf: messagesToStack)
-                    messagesToStack.removeAll()
-                } else {
-                    result.append(createStackedPhotoMessage(messagesToStack))
-                    messagesToStack.removeAll()
-                }
-                result.append(messages[right])
-                left = right + 1
-                right += 1
             } else {
-                messagesToStack = Array(messages[left...right])
-                right += 1
+                if messagesToStack.isEmpty {
+                    result.append(contentsOf: messages[startIndex..<endIndex])
+                } else if messagesToStack.count < numberOfConsecutiveImagesToStack {
+                    result.append(contentsOf: messagesToStack)
+                    messagesToStack.removeAll()
+                } else {
+                    result.append(createStackedPhotoMessage(messagesToStack))
+                    messagesToStack.removeAll()
+                }
+                if canStack(endMessage) {
+                    messagesToStack.append(endMessage)
+                    startIndex = endIndex
+                    endIndex += 1
+                    if endIndex >= messages.count {
+                        if messagesToStack.count < numberOfConsecutiveImagesToStack {
+                            result.append(contentsOf: messagesToStack)
+                        } else {
+                            result.append(createStackedPhotoMessage(messagesToStack))
+                        }
+                    }
+                } else {
+                    result.append(endMessage)
+                    startIndex = endIndex + 1
+                    endIndex = startIndex + 1
+                    if startIndex < messages.count {
+                        let message = messages[startIndex]
+                        if startIndex == messages.count - 1 {
+                            result.append(message)
+                        } else if canStack(message) {
+                            messagesToStack.append(message)
+                        }
+                    }
+                }
             }
-        }
-        if left == messages.count - 1 {
-            result.append(messages[left])
-        }
-        if !messagesToStack.isEmpty {
-            if unableToStack {
-                result.append(contentsOf: messagesToStack)
-            } else {
-                result.append(createStackedPhotoMessage(messagesToStack))
-            }
-            messagesToStack.removeAll()
         }
         return result
     }
+    
 }
 
 // MARK: - Embedded class

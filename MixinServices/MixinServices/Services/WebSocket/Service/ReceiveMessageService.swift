@@ -1200,30 +1200,20 @@ extension ReceiveMessageService {
         if let opponentId = snapshot.opponentId {
             checkUser(userId: opponentId, tryAgain: true)
         }
-        let needsRefreshAsset: Bool
-        let needsRefreshChain: Bool
         let chainId: String?
         if let asset = AssetDAO.shared.getAsset(assetId: snapshot.assetId) {
             chainId = asset.chainId
-            needsRefreshAsset = true
         } else if case let .success(asset) = AssetAPI.asset(assetId: snapshot.assetId) {
             AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
-            needsRefreshAsset = false
             chainId = asset.chainId
         } else {
-            needsRefreshAsset = true
             chainId = nil
         }
         if let chainId, !ChainDAO.shared.isExist(chainId: chainId), case let .success(chain) = AssetAPI.chain(chainId: chainId) {
             ChainDAO.shared.insertOrUpdateChains([chain])
-            needsRefreshChain = false
-        } else {
-            needsRefreshChain = true
         }
-        if needsRefreshChain || needsRefreshAsset {
-            let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
-            ConcurrentJobQueue.shared.addJob(job: job)
-        }
+        let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
+        ConcurrentJobQueue.shared.addJob(job: job)
         if snapshot.type == SnapshotType.deposit.rawValue, let transactionHash = snapshot.transactionHash {
             SnapshotDAO.shared.removePendingDeposits(assetId: snapshot.assetId, transactionHash: transactionHash)
         }

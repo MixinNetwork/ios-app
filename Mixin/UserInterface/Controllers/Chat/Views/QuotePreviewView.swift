@@ -33,7 +33,9 @@ class QuotePreviewView: UIView, XibDesignable {
         indicatorView.backgroundColor = tintColor
         titleLabel.text = message.userFullName
         titleLabel.textColor = tintColor
+        titleLabel.font = MessageFontSet.quoteTitle.scaled
         subtitleLabel.text = message.quoteSubtitle
+        subtitleLabel.font = MessageFontSet.normalQuoteSubtitle.scaled
         
         if message.category.hasSuffix("_CONTACT") {
             contentImageWrapperView.isHidden = false

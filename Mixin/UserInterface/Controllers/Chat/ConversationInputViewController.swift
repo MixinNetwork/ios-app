@@ -1014,7 +1014,7 @@ extension ConversationInputViewController {
         let newHeight = min(contentHeight, maxHeight)
         let diff = newHeight - textViewHeightConstraint.constant
         if abs(diff) > 0.1 {
-            textViewHeightConstraint.constant = newHeight
+            textViewHeightConstraint.constant = max(newHeight, 36)
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
         }

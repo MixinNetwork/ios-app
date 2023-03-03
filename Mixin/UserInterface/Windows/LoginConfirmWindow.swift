@@ -19,7 +19,7 @@ class LoginConfirmWindow: BottomSheetView {
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
             return false
         }
-        guard biometryType != .none else {
+        guard BiometryType.payment != .none else {
             return false
         }
         return true
@@ -95,7 +95,7 @@ class LoginConfirmWindow: BottomSheetView {
     }
     
     @IBAction func biometricAction(_ sender: Any) {
-        let prompt = R.string.localizable.authorize_desktop_login(biometryType.localizedName)
+        let prompt = R.string.localizable.authorize_desktop_login(BiometryType.payment.localizedName)
         biometricAuthQueue.async { [weak self] in
             DispatchQueue.main.sync {
                 ScreenLockManager.shared.hasOtherBiometricAuthInProgress = true
@@ -131,9 +131,9 @@ class LoginConfirmWindow: BottomSheetView {
             showBiometricButtonConstraint.constant = 20
         }
         if canAuthorizeWithBiometric {
-            let image = biometryType == .faceID ? R.image.ic_pay_face() : R.image.ic_pay_touch()
+            let image = BiometryType.payment == .faceID ? R.image.ic_pay_face() : R.image.ic_pay_touch()
             biometricButton.setImage(image, for: .normal)
-            biometricButton.setTitle(R.string.localizable.use_biometry(biometryType.localizedName), for: .normal)
+            biometricButton.setTitle(R.string.localizable.use_biometry(BiometryType.payment.localizedName), for: .normal)
             hideBiometricButtonConstraint.priority = .defaultLow
             showBiometricButtonConstraint.priority = .defaultHigh
             biometricButton.isHidden = false

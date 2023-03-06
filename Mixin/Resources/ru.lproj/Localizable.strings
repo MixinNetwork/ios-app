@@ -195,6 +195,7 @@
 "cleared" = "Очищено";
 "clock_skew_hint" = "Пожалуйста, продолжайте использовать снова после исправления. «Настройки» > «Основные» > «Дата и время» > «Включить автоматическую установку»";
 "close" = "Закрыть";
+"closing_balance" = "Closing Balance";
 "collectible_token_id" = "#%@";
 "combine_and_forward" = "Объединить и вперед";
 "compress_database" = "Сжать базу данных";
@@ -578,6 +579,7 @@
 "open_in_maps" = "Открыть в Картах";
 "open_link" = "Открыть ссылку: %@";
 "open_url" = "Открыть URL";
+"opening_balance" = "Opening Balance";
 "operation_failed" = "Операция не удалась, повторите попытку позже";
 "optimize_database" = "Оптимизировать базу данных";
 "optimized" = "Оптимизировано";
@@ -799,6 +801,7 @@
 "sign_with_phone_number" = "Войти через номер телефона";
 "skip" = "Пропустить";
 "slide_to_cancel" = "Сдвиньте, чтобы отменить";
+"snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Снимок не найден.";
 "social" = "Социальное";
 "sort_by" = "Сортировать по";

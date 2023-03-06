@@ -195,6 +195,7 @@
 "cleared" = "クリアずみ";
 "clock_skew_hint" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
 "close" = "閉じる";
+"closing_balance" = "Closing Balance";
 "collectible_token_id" = "#%@";
 "combine_and_forward" = "まとめて転送";
 "compress_database" = "データの圧縮";
@@ -578,6 +579,7 @@
 "open_in_maps" = "マップで開く";
 "open_link" = "リンクを開く: %@";
 "open_url" = "URLを開く";
+"opening_balance" = "Opening Balance";
 "operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
 "optimize_database" = "データベースの最適化";
 "optimized" = "最適化済みです";
@@ -799,6 +801,7 @@
 "sign_with_phone_number" = "電話番号でログイン";
 "skip" = "スキップ";
 "slide_to_cancel" = "スライドしてキャンセル";
+"snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "スナップショットは見つかりません";
 "social" = "ソーシャル";
 "sort_by" = "並びかえ項目";

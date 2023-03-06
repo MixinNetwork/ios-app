@@ -321,7 +321,26 @@ extension TransactionViewController {
         default:
             break
         }
+        if !snapshot.openingBalance.isEmpty {
+            contents.append((title: R.string.localizable.opening_balance(), subtitle: "\(formatedBalance(snapshot.openingBalance)) \(asset.symbol)"))
+        }
+        if !snapshot.closingBalance.isEmpty {
+            contents.append((title: R.string.localizable.closing_balance(), subtitle: "\(formatedBalance(snapshot.closingBalance)) \(asset.symbol)"))
+        }
+        if let snapshotHash = snapshot.snapshotHash, !snapshotHash.isEmpty {
+            contents.append((title: R.string.localizable.snapshot_hash(), subtitle: snapshotHash))
+        }
         contents.append((title: R.string.localizable.date(), subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
+    }
+    
+    private func formatedBalance(_ balance: String) -> String {
+        let amount: String
+        if balance == "0" {
+            amount = "0\(currentDecimalSeparator)00"
+        } else {
+            amount = CurrencyFormatter.localizedString(from: balance, format: .precision, sign: .never) ?? ""
+        }
+        return amount
     }
     
     private func canCopyAction(indexPath: IndexPath) -> (Bool, String) {

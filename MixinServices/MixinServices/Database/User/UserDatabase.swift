@@ -209,6 +209,9 @@ public final class UserDatabase: Database {
             .init(key: .confirmations, constraints: "INTEGER"),
             .init(key: .traceId, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
+            .init(key: .snapshotHash, constraints: "TEXT"),
+            .init(key: .openingBalance, constraints: "TEXT NOT NULL"),
+            .init(key: .closingBalance, constraints: "TEXT NOT NULL"),
         ]),
         ColumnMigratableTableDefinition<StickerRelationship>(constraints: "PRIMARY KEY(album_id, sticker_id)", columns: [
             .init(key: .albumId, constraints: "TEXT NOT NULL"),
@@ -529,6 +532,19 @@ public final class UserDatabase: Database {
                 )
             """
             try db.execute(sql: sql)
+        }
+        
+        migrator.registerMigration("snapshot") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(snapshots)").map(\.name)
+            if !columns.contains("snapshot_hash") {
+                try db.execute(sql: "ALTER TABLE snapshots ADD COLUMN snapshot_hash TEXT")
+            }
+            if !columns.contains("opening_balance") {
+                try db.execute(sql: "ALTER TABLE snapshots ADD COLUMN opening_balance TEXT NOT NULL DEFAULT ''")
+            }
+            if !columns.contains("closing_balance") {
+                try db.execute(sql: "ALTER TABLE snapshots ADD COLUMN closing_balance TEXT NOT NULL DEFAULT ''")
+            }
         }
         
         return migrator

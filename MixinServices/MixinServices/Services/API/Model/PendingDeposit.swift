@@ -32,7 +32,10 @@ public struct PendingDeposit: Codable {
                         receiver: nil,
                         confirmations: confirmations,
                         traceId: "",
-                        createdAt: createdAt)
+                        createdAt: createdAt,
+                        snapshotHash: nil,
+                        openingBalance: "",
+                        closingBalance: "")
     }
     
 }

@@ -84,8 +84,8 @@ extension Snapshot: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         traceId = try container.decodeIfPresent(String.self, forKey: .traceId)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
         snapshotHash = try container.decodeIfPresent(String.self, forKey: .snapshotHash)
-        openingBalance = try container.decodeIfPresent(String.self, forKey: .openingBalance) ?? ""
-        closingBalance = try container.decodeIfPresent(String.self, forKey: .closingBalance) ?? ""
+        openingBalance = try container.decode(String.self, forKey: .openingBalance)
+        closingBalance = try container.decode(String.self, forKey: .closingBalance)
     }
     
 }

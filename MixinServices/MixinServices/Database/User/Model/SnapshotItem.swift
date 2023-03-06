@@ -105,8 +105,8 @@ extension SnapshotItem: Decodable, MixinFetchableRecord {
         opponentUserIdentityNumber = try container.decodeIfPresent(String.self, forKey: .opponentUserIdentityNumber)
         
         snapshotHash = try container.decodeIfPresent(String.self, forKey: .snapshotHash)
-        openingBalance = try container.decodeIfPresent(String.self, forKey: .openingBalance) ?? ""
-        closingBalance = try container.decodeIfPresent(String.self, forKey: .closingBalance) ?? ""
+        openingBalance = try container.decode(String.self, forKey: .openingBalance)
+        closingBalance = try container.decode(String.self, forKey: .closingBalance)
     }
     
 }

@@ -209,25 +209,9 @@ extension TransactionViewController {
     }
     
     private func fetchTransaction() {
+        var shouldRefreshSnapshot = snapshot.snapshotHash.isNilOrEmpty
         if snapshot.type == SnapshotType.withdrawal.rawValue && snapshot.transactionHash.isNilOrEmpty {
-            SnapshotAPI.snapshot(snapshotId: snapshot.snapshotId) { [weak self](result) in
-                switch result {
-                case let .success(snapshot):
-                    DispatchQueue.global().async {
-                        guard let snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot) else {
-                            return
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self?.snapshot = snapshotItem
-                            self?.makeContents()
-                            self?.tableView.reloadData()
-                        }
-                    }
-                case .failure:
-                    break
-                }
-            }
+            shouldRefreshSnapshot = true
         } else if snapshot.type == SnapshotType.pendingDeposit.rawValue {
             let assetId = asset.assetId
             let snapshotId = snapshot.snapshotId
@@ -248,6 +232,25 @@ extension TransactionViewController {
                     case .failure:
                         break
                     }
+                }
+            }
+        }
+        if shouldRefreshSnapshot {
+            SnapshotAPI.snapshot(snapshotId: snapshot.snapshotId) { [weak self](result) in
+                switch result {
+                case let .success(snapshot):
+                    DispatchQueue.global().async {
+                        guard let snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot) else {
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            self?.snapshot = snapshotItem
+                            self?.makeContents()
+                            self?.tableView.reloadData()
+                        }
+                    }
+                case .failure:
+                    break
                 }
             }
         }

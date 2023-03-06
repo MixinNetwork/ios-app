@@ -22,6 +22,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
                 snapshotItem = try? SnapshotItem.fetchOne(db,
                                                           sql: SnapshotDAO.sqlQueryById,
                                                           arguments: [snapshot.snapshotId])
+                NotificationCenter.default.post(onMainThread: Self.snapshotDidChangeNotification, object: self)
             }
         }
         return snapshotItem

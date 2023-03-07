@@ -35,6 +35,7 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>snssdk1128</string>
 		<string>snapchat</string>
 		<string>twitter</string>
 		<string>twitterauth</string>

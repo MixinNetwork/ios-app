@@ -680,6 +680,11 @@
 "remove_emergency_contact_for_sure" = "Remove emergency contact for sure?";
 "remove_from_group" = "Remove from Group";
 "remove_stickers" = "Remove Stickers";
+"repair" = "Repair";
+"repair_chat_history" = "Repair Chat History";
+"repair_chat_history_hint" = "The database file is found to be damaged, some messages may be lost, please try to repair it.";
+"repair_chat_history_success" = "The chat history has been repaired successfully! Chat records before %@ have been restored.";
+"repairing" = "Repairing";
 "reply" = "Reply";
 "report" = "Report";
 "report_and_block" = "Report and block?";

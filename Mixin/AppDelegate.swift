@@ -33,12 +33,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 15.0, *), !ProcessInfo.processInfo.isiOSAppOnMac {
             UITableView.appearance().sectionHeaderTopPadding = 0
         }
+        addObservers()
         checkLogin()
         ScreenLockManager.shared.lockScreenIfNeeded()
         checkJailbreak()
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
-        addObservers()
         Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString), device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
@@ -197,6 +197,7 @@ extension AppDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(handleClockSkew), name: MixinService.clockSkewDetectedNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(JobService.shared, selector: #selector(JobService.restoreJobs), name: WebSocketService.didSendListPendingMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(databaseCorrupted), name: AppGroupUserDefaults.User.databaseCorruptedNotification, object: nil)
     }
 
     @objc func webSocketDidConnect() {
@@ -257,6 +258,9 @@ extension AppDelegate {
         }
     }
     
+    @objc func databaseCorrupted() {
+        mainWindow.rootViewController = makeInitialViewController()
+    }
 }
 
 extension AppDelegate {

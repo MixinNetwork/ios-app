@@ -597,7 +597,12 @@ extension UserDatabase {
     }
     
     private func migrate() {
-        try! migrator.migrate(pool)
+        do {
+            try migrator.migrate(pool)
+        } catch {
+            AppGroupUserDefaults.User.isDatabaseCorrupted = true
+            Logger.database.error(category: "UserDatabase", message: "Failed to migrate: \(error)")
+        }
     }
     
 }

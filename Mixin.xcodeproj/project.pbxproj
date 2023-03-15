@@ -595,6 +595,7 @@
 		7C5DFE34284F3EA3008733FC /* UserCenterTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */; };
 		7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */; };
 		7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */; };
+		7C62922229B9699000B3596C /* DatabaseBackupJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C62922129B9699000B3596C /* DatabaseBackupJob.swift */; };
 		7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */; };
 		7C66F0272689D1FE006D8462 /* HomeAppsDragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */; };
 		7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* AppPageCell.swift */; };
@@ -636,6 +637,9 @@
 		7CCC801C292DC68E000B4200 /* ImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCC801A292DC68E000B4200 /* ImageCropViewController.swift */; };
 		7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCE65A628D69D1D00FE944A /* TransferActionView.swift */; };
 		7CCE65A928D69D1D00FE944A /* TransferActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CCE65A728D69D1D00FE944A /* TransferActionView.xib */; };
+		7CD9C17229B9BE94008F8D85 /* DatabaseBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD9C17129B9BE94008F8D85 /* DatabaseBackupManager.swift */; };
+		7CD9C17429B9DDE0008F8D85 /* DatabaseRepairViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD9C17329B9DDE0008F8D85 /* DatabaseRepairViewController.swift */; };
+		7CD9C17829BB306F008F8D85 /* DatabaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD9C17729BB306F008F8D85 /* DatabaseFile.swift */; };
 		7CDBA58A28F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */; };
 		7CDBA58E28F7B6CB00AC3777 /* TransferSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */; };
 		7CDF316C29890FB200421808 /* ConversationFontSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDF316B29890FB200421808 /* ConversationFontSet.swift */; };
@@ -1622,6 +1626,7 @@
 		7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCenterTableHeaderView.swift; sourceTree = "<group>"; };
 		7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountAbortWindow.swift; sourceTree = "<group>"; };
 		7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountAbortWindow.xib; sourceTree = "<group>"; };
+		7C62922129B9699000B3596C /* DatabaseBackupJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseBackupJob.swift; sourceTree = "<group>"; };
 		7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
 		7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsDragInteraction.swift; sourceTree = "<group>"; };
 		7C66F028268A0384006D8462 /* AppPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPageCell.swift; sourceTree = "<group>"; };
@@ -1663,6 +1668,9 @@
 		7CCC801A292DC68E000B4200 /* ImageCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropViewController.swift; sourceTree = "<group>"; };
 		7CCE65A628D69D1D00FE944A /* TransferActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferActionView.swift; sourceTree = "<group>"; };
 		7CCE65A728D69D1D00FE944A /* TransferActionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransferActionView.xib; sourceTree = "<group>"; };
+		7CD9C17129B9BE94008F8D85 /* DatabaseBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseBackupManager.swift; sourceTree = "<group>"; };
+		7CD9C17329B9DDE0008F8D85 /* DatabaseRepairViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseRepairViewController.swift; sourceTree = "<group>"; };
+		7CD9C17729BB306F008F8D85 /* DatabaseFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseFile.swift; sourceTree = "<group>"; };
 		7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferSearchResultsViewController.swift; sourceTree = "<group>"; };
 		7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSearchViewController.swift; sourceTree = "<group>"; };
 		7CDF316B29890FB200421808 /* ConversationFontSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationFontSet.swift; sourceTree = "<group>"; };
@@ -2368,6 +2376,8 @@
 				7BA24D7225342575004906AD /* HomeOverlaysCoordinator.swift */,
 				7BA24D76253438B9004906AD /* ViewPanningController.swift */,
 				94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */,
+				7CD9C17729BB306F008F8D85 /* DatabaseFile.swift */,
+				7CD9C17129B9BE94008F8D85 /* DatabaseBackupManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3288,6 +3298,7 @@
 				DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
 				DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */,
+				7CD9C17329B9DDE0008F8D85 /* DatabaseRepairViewController.swift */,
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
 				7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */,
@@ -3723,6 +3734,7 @@
 				947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */,
 				842347ED2695BA6400009A39 /* InitializeBotJob.swift */,
 				94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */,
+				7C62922129B9699000B3596C /* DatabaseBackupJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -4442,6 +4454,7 @@
 			files = (
 				7BF49DD320C3DBAC00A8510E /* CaptchaManager.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
+				7CD9C17829BB306F008F8D85 /* DatabaseFile.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
@@ -4674,6 +4687,7 @@
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
+				7CD9C17429B9DDE0008F8D85 /* DatabaseRepairViewController.swift in Sources */,
 				5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */,
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
 				7B4FCCE02440A66600360F65 /* SolidBackgroundColorImageView.swift in Sources */,
@@ -4792,6 +4806,7 @@
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
+				7C62922229B9699000B3596C /* DatabaseBackupJob.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */,
 				7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */,
@@ -4991,6 +5006,7 @@
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
 				7CC730502745F95D002780F5 /* StickerStore.swift in Sources */,
+				7CD9C17229B9BE94008F8D85 /* DatabaseBackupManager.swift in Sources */,
 				7B2E56B0244EA6BB0073102C /* SettingsFooterView.swift in Sources */,
 				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,
 				7B369206233A3314007321A7 /* SharedMediaViewController.swift in Sources */,

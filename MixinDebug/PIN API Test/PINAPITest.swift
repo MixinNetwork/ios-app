@@ -123,7 +123,11 @@ class PINAPITest: ObservableObject {
                                                 amount: "0",
                                                 traceId: uuid,
                                                 pin: self.pin,
-                                                memo: "")
+                                                memo: "",
+                                                fee: nil,
+                                                assetId: nil,
+                                                destination: nil,
+                                                tag: nil)
                 WithdrawalAPI.withdrawal(withdrawal: request) { result in
                     self.validate(result: result, onFinished: onFinished)
                 }
@@ -146,11 +150,7 @@ class PINAPITest: ObservableObject {
                 }
             }),
             Case(name: "Change Phone Number", work: { (onFinished) in
-                let request = AccountRequest(code: "0000",
-                                             registrationId: nil,
-                                             pin: self.pin,
-                                             sessionSecret: nil)
-                AccountAPI.changePhoneNumber(verificationId: "0000", accountRequest: request) { result in
+                AccountAPI.changePhoneNumber(verificationID: "0000", code: "0000", pin: self.pin) { result in
                     self.validate(result: result, onFinished: onFinished)
                 }
             }),

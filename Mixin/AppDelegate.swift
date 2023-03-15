@@ -261,6 +261,7 @@ extension AppDelegate {
     @objc func databaseCorrupted() {
         mainWindow.rootViewController = makeInitialViewController()
     }
+    
 }
 
 extension AppDelegate {

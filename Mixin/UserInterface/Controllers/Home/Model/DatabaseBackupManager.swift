@@ -14,8 +14,13 @@ class DatabaseBackupManager: NSObject {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
-        let lastDatabaseBackupDate = AppGroupUserDefaults.User.lastDatabaseBackupDate
-        if lastDatabaseBackupDate == nil || -lastDatabaseBackupDate!.timeIntervalSinceNow > TimeInterval.hour * 2 {
+        let needsBackup: Bool
+        if let date = AppGroupUserDefaults.User.lastDatabaseBackupDate {
+            needsBackup = -date.timeIntervalSinceNow > TimeInterval.hour * 2
+        } else {
+            needsBackup = true
+        }
+        if needsBackup {
             ConcurrentJobQueue.shared.addJob(job: DatabaseBackupJob())
         }
     }

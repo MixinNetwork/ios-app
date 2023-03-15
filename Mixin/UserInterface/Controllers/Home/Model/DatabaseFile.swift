@@ -42,11 +42,10 @@ enum DatabaseFile {
         }
     }
     
-    static func copy(at srcFile: DatabaseFile, to dstFIle: DatabaseFile) throws {
-        try removeIfExists(dstFIle)
-        try FileManager.default.copyItem(at: srcFile.db, to: dstFIle.db)
-        try FileManager.default.copyItem(at: srcFile.wal, to: dstFIle.wal)
-        try FileManager.default.copyItem(at: srcFile.shm, to: dstFIle.shm)
+    static func copy(at srcFile: DatabaseFile, to dstFile: DatabaseFile) throws {
+        try FileManager.default.copyItem(at: srcFile.db, to: dstFile.db)
+        try FileManager.default.copyItem(at: srcFile.wal, to: dstFile.wal)
+        try FileManager.default.copyItem(at: srcFile.shm, to: dstFile.shm)
     }
     
     static func exists(_ file: DatabaseFile) -> Bool {

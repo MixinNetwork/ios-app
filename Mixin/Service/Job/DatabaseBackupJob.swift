@@ -11,12 +11,14 @@ class DatabaseBackupJob: AsynchronousJob {
     override func execute() -> Bool {
         do {
             try UserDatabase.current.writeWithoutTransaction { _ in
+                try DatabaseFile.removeIfExists(.temp)
                 try DatabaseFile.copy(at: .original, to: .temp)
             }
             let dbQueue = try DatabaseQueue(path: DatabaseFile.temp.db.path)
             try dbQueue.write { db in
                 try db.execute(sql: "PRAGMA integrity_check")
             }
+            try DatabaseFile.removeIfExists(.backup)
             try DatabaseFile.copy(at: .temp, to: .backup)
             try DatabaseFile.removeIfExists(.temp)
             AppGroupUserDefaults.User.lastDatabaseBackupDate = Date()

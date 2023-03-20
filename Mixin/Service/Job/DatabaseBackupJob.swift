@@ -1,6 +1,5 @@
 import Foundation
 import MixinServices
-import GRDB
 
 class DatabaseBackupJob: AsynchronousJob {
     
@@ -14,13 +13,13 @@ class DatabaseBackupJob: AsynchronousJob {
                 try DatabaseFile.removeIfExists(.temp)
                 try DatabaseFile.copy(at: .original, to: .temp)
             }
-            let dbQueue = try DatabaseQueue(path: DatabaseFile.temp.db.path)
-            try dbQueue.write { db in
-                try db.execute(sql: "PRAGMA integrity_check")
-            }
+            
+            try DatabaseFile.checkIntegrity(.temp)
+            
             try DatabaseFile.removeIfExists(.backup)
             try DatabaseFile.copy(at: .temp, to: .backup)
             try DatabaseFile.removeIfExists(.temp)
+            
             AppGroupUserDefaults.User.lastDatabaseBackupDate = Date()
             finishJob()
         } catch {

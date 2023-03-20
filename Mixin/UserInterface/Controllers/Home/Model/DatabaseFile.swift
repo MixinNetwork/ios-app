@@ -1,5 +1,6 @@
 import Foundation
 import MixinServices
+import GRDB
 
 enum DatabaseFile {
     
@@ -18,15 +19,15 @@ enum DatabaseFile {
         }
     }
     
-    var db: URL {
+    private var db: URL {
         AppGroupContainer.accountUrl.appendingPathComponent("\(name)", isDirectory: false)
     }
     
-    var shm: URL {
+    private var shm: URL {
         AppGroupContainer.accountUrl.appendingPathComponent("\(name)-shm", isDirectory: false)
     }
     
-    var wal: URL {
+    private var wal: URL {
         AppGroupContainer.accountUrl.appendingPathComponent("\(name)-wal", isDirectory: false)
     }
     
@@ -44,14 +45,17 @@ enum DatabaseFile {
     
     static func copy(at srcFile: DatabaseFile, to dstFile: DatabaseFile) throws {
         try FileManager.default.copyItem(at: srcFile.db, to: dstFile.db)
-        try FileManager.default.copyItem(at: srcFile.wal, to: dstFile.wal)
-        try FileManager.default.copyItem(at: srcFile.shm, to: dstFile.shm)
     }
     
     static func exists(_ file: DatabaseFile) -> Bool {
-        FileManager.default.fileExists(atPath: file.db.path) &&
-        FileManager.default.fileExists(atPath: file.wal.path) &&
-        FileManager.default.fileExists(atPath: file.shm.path)
+        FileManager.default.fileExists(atPath: file.db.path)
+    }
+    
+    static func checkIntegrity(_ file: DatabaseFile) throws {
+        let dbQueue = try DatabaseQueue(path: file.db.path)
+        try dbQueue.write { db in
+            try db.execute(sql: "PRAGMA integrity_check")
+        }
     }
     
 }

@@ -1422,26 +1422,26 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="56"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="fWG-zc-jBB">
-                                                                <rect key="frame" x="16" y="12" width="350" height="32"/>
+                                                                <rect key="frame" x="16" y="9" width="350" height="38"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tdq-94-cad" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                                                        <rect key="frame" x="0.0" y="3" width="32" height="32"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="tdq-94-cad" secondAttribute="height" multiplier="1:1" id="RC1-e1-abA"/>
                                                                             <constraint firstAttribute="width" constant="32" id="mkq-86-QLI"/>
                                                                         </constraints>
                                                                     </view>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="uZy-dO-hDL">
-                                                                        <rect key="frame" x="42" y="0.0" width="308" height="32"/>
+                                                                        <rect key="frame" x="42" y="1.6666666666666714" width="308" height="34.666666666666664"/>
                                                                         <subviews>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Ether" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWj-mt-cR6">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="308" height="16.666666666666668"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="308" height="19.333333333333332"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                                                 <color key="textColor" name="text"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="0.0123456 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c71-Um-b7b">
-                                                                                <rect key="frame" x="0.0" y="17.666666666666671" width="308" height="14.333333333333336"/>
+                                                                                <rect key="frame" x="0.0" y="20.333333333333329" width="308" height="14.333333333333336"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                 <color key="textColor" name="text_accessory"/>
                                                                                 <nil key="highlightedColor"/>
@@ -1449,16 +1449,13 @@
                                                                         </subviews>
                                                                     </stackView>
                                                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_input_menu" translatesAutoresizingMaskIntoConstraints="NO" id="VeC-oB-tXb">
-                                                                        <rect key="frame" x="350" y="0.0" width="32" height="32"/>
+                                                                        <rect key="frame" x="350" y="3" width="32" height="32"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" constant="32" id="fkm-oY-mtb"/>
                                                                             <constraint firstAttribute="width" secondItem="VeC-oB-tXb" secondAttribute="height" id="veh-is-AYh"/>
                                                                         </constraints>
                                                                     </imageView>
                                                                 </subviews>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="32" id="HIx-fh-Q65"/>
-                                                                </constraints>
                                                             </stackView>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qRn-bb-fSw">
                                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="56"/>
@@ -1476,6 +1473,8 @@
                                                             <constraint firstItem="qRn-bb-fSw" firstAttribute="leading" secondItem="mW0-rn-zIu" secondAttribute="leading" id="RBQ-tp-Llt"/>
                                                             <constraint firstItem="fWG-zc-jBB" firstAttribute="leading" secondItem="mW0-rn-zIu" secondAttribute="leading" constant="16" id="RoZ-BQ-3v6"/>
                                                             <constraint firstItem="fWG-zc-jBB" firstAttribute="centerY" secondItem="mW0-rn-zIu" secondAttribute="centerY" id="XRi-YT-TSt"/>
+                                                            <constraint firstItem="fWG-zc-jBB" firstAttribute="top" secondItem="mW0-rn-zIu" secondAttribute="top" constant="9" id="frl-gb-3mG"/>
+                                                            <constraint firstAttribute="bottom" secondItem="fWG-zc-jBB" secondAttribute="bottom" constant="9" id="kva-yh-4zQ"/>
                                                             <constraint firstItem="qRn-bb-fSw" firstAttribute="top" secondItem="mW0-rn-zIu" secondAttribute="top" id="vxr-Dr-1zx"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
@@ -2110,7 +2109,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2125,7 +2124,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

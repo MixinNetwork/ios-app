@@ -49,8 +49,9 @@ enum PINEncryptor {
                     guard let pinData = pin.data(using: .utf8) else {
                         throw Error.invalidPIN
                     }
+                    let priv = try await TIP.getOrRecoverTIPPriv(pin: pin, pinToken: pinToken)
                     let body = try tipBody()
-                    let encrypted = try await TIP.encryptTIPPIN(pin: pin, pinToken: pinToken, target: body)
+                    let encrypted = try await TIP.encryptTIPPIN(tipPriv: priv, target: body)
                     await MainActor.run {
                         onSuccess(encrypted)
                     }

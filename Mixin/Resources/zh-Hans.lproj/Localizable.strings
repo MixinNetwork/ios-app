@@ -71,6 +71,8 @@
 "allow_bot_manage_bots" = "允许机器人添加或修改你的机器人列表。";
 "allow_bot_manage_circles" = "允许机器人添加、修改和删除你所有的圈子。";
 "allow_bot_send_messages" = "允许机器人代表你发消息。";
+"allow_dapp_access_public_address" = "允许 Dapp 访问你的钱包余额及活动。";
+"allow_dapp_request_permission" = "允许 Dapp 向你发送请求，如转账请求等";
 "allow_manual_report_message" = "允许手动上报消息";
 "amount" = "金额";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
@@ -117,6 +119,7 @@
 "bots" = "机器人";
 "bots_title" = "机器人";
 "business" = "商业";
+"calculating" = "正在计算...";
 "call" = "语音";
 "call_declined" = "对方已拒绝";
 "call_encryption_description" = "除了参与通话的人，其他人包含 Mixin 在内都无法听取或查看。";
@@ -139,6 +142,7 @@
 "card" = "卡片";
 "category_chats" = "最近聊天";
 "chain" = "所属公链";
+"chain_not_supported" = "不支持此网络";
 "change" = "更改";
 "change_amount" = "修改金额";
 "change_emergency_contact" = "修改紧急联系人";
@@ -203,8 +207,11 @@
 "compressed" = "已压缩";
 "confirm" = "确认";
 "connect_to_tip_network_failed" = "连接 TIP 网络失败，请尝试切换网络后重试";
+"connect_wallet" = "连接钱包";
 "connected" = "已连接";
+"connected_dapps" = "已连接的 Dapp";
 "connecting" = "正在连接";
+"connection_failed" = "连接失败";
 "connection_unstable" = "当前通话网络不佳";
 "connection_establishment_failed" = "连接建立失败";
 "contact" = "联系人";
@@ -261,6 +268,7 @@
 "current_selected" = "当前选择";
 "custom_time" = "自定义时间";
 "daily" = "每天";
+"dapp_description" = "此 Dapp 已经与你的钱包连接，并被授权查看你的钱包余额及活动，也可向你发出转账请求。";
 "dark" = "深色";
 "data_and_storage_usage" = "数据与存储空间";
 "data_parsing_error" = "数据解析错误";
@@ -316,6 +324,8 @@
 "disappearing_option_3" = "2 小时";
 "disappearing_option_4" = "1 天";
 "disappearing_option_5" = "1 周";
+"discard" = "废弃";
+"disconnected" = "已断开";
 "disconnecting" = "正在断开";
 "dismiss_as_admin" = "撤销管理员身份";
 "done" = "完成";
@@ -389,6 +399,7 @@
 "failed_to_send_location" = "发送位置失败，请稍后重试";
 "failed_to_send_photo" = "发送图片失败，请稍后重试";
 "failed_to_send_video" = "发送视频失败，请稍后重试";
+"failed_to_switch_network" = "切换网络失败: %@";
 "fee" = "手续费";
 "feedback" = "反馈";
 "file" = "文件";
@@ -456,6 +467,7 @@
 "invites_you_to_a_voice_call" = "发起了语音通话";
 "join_group" = "加入群组";
 "joined_in" = "%@ 加入";
+"keep_network" = "留在 %@";
 "keep_running_foreground" = "不要关闭屏幕并保持 Mixin 在前台运行";
 "label" = "标题";
 "landing_delete_content" = "您的账户将于 %@ 被删除，如果您继续登录，删除您账户的请求将被取消。";
@@ -504,6 +516,7 @@
 "message_preview" = "显示消息内容";
 "message_sent" = "消息已发送";
 "messages" = "消息";
+"method_not_supported" = "不支持此方法: %@";
 "minute" = "%d 分钟";
 "minute_count" = "%d 分钟";
 "mixin" = "Mixin";
@@ -532,8 +545,10 @@
 "name" = "名称";
 "name_or_phone_number" = "姓名或手机号";
 "need_help" = "需要帮助？";
+"network" = "网络";
 "network_connection_lost" = "网络连接超时，请检查网络稍后重试";
-"network_fee" = "网络手续费：%@";
+"network_fee" = "网络费用";
+"network_switched" = "已切换网络";
 "never_auto_download" = "关闭";
 "new_chat" = "新聊天";
 "new_group" = "新建群组";
@@ -547,6 +562,7 @@
 "no_blocked_users" = "没有屏蔽任何人";
 "no_bots" = "没有机器人";
 "no_contacts" = "没有联系人";
+"no_dapp" = "没有 Dapp";
 "no_files" = "没有文件";
 "no_hidden_assets" = "没有隐藏的资产";
 "no_items_selected" = "未选定项目";
@@ -668,6 +684,7 @@
 "read_your_contacts" = "读取你的联系人列表";
 "read_your_nfts" = "读取你的 NFT 列表";
 "read_your_phone_number" = "读取你的手机号";
+"read_your_public_address" = "读取你的地址";
 "read_your_public_profile" = "读取你的个人资料";
 "read_your_snapshots" = "读取你的转账记录";
 "rebate" = "退款";
@@ -696,6 +713,10 @@
 "report_title" = "给开发人员发送聊天日志？";
 "represent_send_messages" = "代表你发消息";
 "request_authorization" = "请求授权";
+"request_permission" = "允许请求";
+"request_rejected" = "请求已拒绝";
+"request_rejected_reason_another_request_in_process" = "正在处理另一请求，请完成当前请求后重试";
+"requests_switching_to_network" = "%1$@ 请求切换到 %2$@";
 "resend_code" = "重发验证码";
 "resend_code_pending" = "%@ 后重新发送验证码";
 "reset_link" = "重置邀请链接";
@@ -741,6 +762,7 @@
 "search_open_link" = "打开链接：";
 "search_placeholder_asset" = "名称, 符号";
 "search_placeholder_contact" = "Mixin ID, 名称, 手机号码";
+"search_placeholder_dapp" = "名称, URL";
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_related_message" = "%d 条相关的消息";
 "search_related_message_count" = "%d 条相关的消息";
@@ -766,6 +788,7 @@
 "send_message" = "发消息";
 "send_photo" = "发送 1 张图片";
 "send_photo_count" = "发送 %d 张图片";
+"send_signed_message_confirmation" = "此消息已被签名，点击下方按钮以发送或丢弃";
 "send_this_location" = "发送这个位置";
 "send_to" = "发送给 %@";
 "send_to_developer" = "把日志发给开发者";
@@ -777,6 +800,7 @@
 "send_your_current_location" = "发送您当前的位置";
 "send_count" = "发送（%d）";
 "senders" = "交易发起人";
+"session_not_found" = "没有对应的连接";
 "set" = "设置";
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
 "set_emergency_create_successfully" = "设置紧急联系人成功";
@@ -823,9 +847,12 @@
 "show" = "显示";
 "show_asset" = "显示资产";
 "show_in_chat" = "在聊天中展示";
+"sign_by_pin" = "使用 PIN 签名";
 "sign_in" = "登录";
 "sign_with_emergency_contact" = "通过紧急联系人登录";
 "sign_with_phone_number" = "通过手机号登录";
+"signature_request" = "请求签名";
+"signature_request_warning" = "我们无法验证此请求。签名前请确认你信任此 App。";
 "skip" = "跳过";
 "slide_to_cancel" = "滑动取消";
 "snapshot_hash" = "快照哈希";
@@ -849,6 +876,8 @@
 "stranger_hint" = "对方不是你的联系人";
 "successful" = "成功";
 "suspicious_link" = "可疑链接";
+"switch_network" = "切换网络";
+"switch_to_network" = "切换到 %@";
 "symbol" = "符号";
 "symbol_withdrawal" = "%@ 提现";
 "syncing_and_verifying_tip" = "正在验证并同步密钥分片到 TIP 网络，请保持应用在前台，设置过程中不要强制关闭应用";
@@ -879,7 +908,9 @@
 "trading" = "交易";
 "transaction" = "交易详情";
 "transaction_hash" = "上链哈希";
+"transaction_failed" = "转账失败";
 "transaction_id" = "交易编号";
+"transaction_request" = "请求转账";
 "transaction_type" = "交易类型";
 "transactions" = "转账记录";
 "transfer_protocol_version_not_matched" = "版本不匹配，无法同步数据，请先升级应用。";
@@ -910,6 +941,7 @@
 "trying_connect_tip_node" = "正在连接节点...";
 "turn_on_notifications" = "打开通知";
 "unable_synced_between_different_account" = "不同账户之间无法同步聊天记录";
+"unable_to_decode_the_request" = "无法解析请求: %@";
 "unable_to_save_photo" = "保存图片失败";
 "unable_to_save_video" = "保存视频失败";
 "unable_to_share_content" = "无法分享此内容";

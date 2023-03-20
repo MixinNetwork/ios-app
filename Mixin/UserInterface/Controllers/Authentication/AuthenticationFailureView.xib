@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="ZnY-Dz-YPS" customClass="AuthenticationFailureView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="155"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="This multisig link has already been signed by yourself, you can not make a duplicate operation." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="408-fH-Oqa">
+                    <rect key="frame" x="30" y="30" width="333" height="39"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="red"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FTF-Af-J8b" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="134.66666666666666" y="113" width="123.99999999999997" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="42" id="lTX-IT-HdO"/>
+                    </constraints>
+                    <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
+                    <state key="normal" title="Try Again">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="try_again"/>
+                    </userDefinedRuntimeAttributes>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="FTF-Af-J8b" firstAttribute="top" secondItem="408-fH-Oqa" secondAttribute="bottom" constant="44" id="JqA-e0-g9y"/>
+                <constraint firstAttribute="bottom" secondItem="FTF-Af-J8b" secondAttribute="bottom" id="Ngu-pJ-VXd"/>
+                <constraint firstItem="408-fH-Oqa" firstAttribute="leading" secondItem="ZnY-Dz-YPS" secondAttribute="leading" constant="30" id="P73-LE-PiB"/>
+                <constraint firstAttribute="trailing" secondItem="408-fH-Oqa" secondAttribute="trailing" constant="30" id="i5f-oX-GNZ"/>
+                <constraint firstItem="408-fH-Oqa" firstAttribute="top" secondItem="ZnY-Dz-YPS" secondAttribute="top" constant="30" id="l1w-JD-9pl"/>
+                <constraint firstItem="FTF-Af-J8b" firstAttribute="centerX" secondItem="ZnY-Dz-YPS" secondAttribute="centerX" id="tyw-qU-A9G"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="label" destination="408-fH-Oqa" id="Bwd-4G-3p7"/>
+                <outlet property="tryAgainButton" destination="FTF-Af-J8b" id="g7b-uh-b14"/>
+            </connections>
+            <point key="canvasLocation" x="133.58778625954199" y="173.59154929577466"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="red">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

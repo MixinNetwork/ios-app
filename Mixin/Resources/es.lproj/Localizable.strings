@@ -71,6 +71,8 @@
 "allow_bot_manage_bots" = "Permite que el bot añada o modifique tus bots.";
 "allow_bot_manage_circles" = "Permite que el bot añada, modifique y elimine tus círculos.";
 "allow_bot_send_messages" = "Permita que el bot envíe mensajes que lo representen.";
+"allow_dapp_access_public_address" = "Allow dapp to access your wallet balance and activity.";
+"allow_dapp_request_permission" = "Allow dapp to ask for your permission to make a transaction.";
 "allow_manual_report_message" = "Permitir mensaje de informe manual";
 "amount" = "Cantidad";
 "app_card_shareable_false" = "La tarjeta se ha configurado para no permitir compartir";
@@ -117,6 +119,7 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "business" = "Negocio";
+"calculating" = "Calculating...";
 "call" = "Llamar";
 "call_declined" = "Llamada rechazada";
 "call_encryption_description" = "Nadie fuera de esta llamada puede verla o escucharla. Ni siquiera Mixin.";
@@ -139,6 +142,7 @@
 "card" = "tarjeta";
 "category_chats" = "Chats";
 "chain" = "Cadena";
+"chain_not_supported" = "Chain not supported";
 "change" = "Cambiar";
 "change_amount" = "Cambiar cantidad";
 "change_emergency_contact" = "Cambiar contacto de emergencia";
@@ -203,8 +207,11 @@
 "compressed" = "Comprimido";
 "confirm" = "Confirmar";
 "connect_to_tip_network_failed" = "No se puede conectar a la red TIP. Comprueba tu conexión e inténtalo de nuevo.";
+"connect_wallet" = "Connect Wallet";
 "connected" = "Conectado";
+"connected_dapps" = "Connected Dapps";
 "connecting" = "Conectando";
+"connection_failed" = "Connection Failed";
 "connection_unstable" = "Conexión inestable";
 "connection_establishment_failed" = "Connection establishment failed";
 "contact" = "Contacto";
@@ -261,6 +268,7 @@
 "current_selected" = "Seleccionado actual";
 "custom_time" = "Hora personalizada";
 "daily" = "Diario";
+"dapp_description" = "This dapp has connected to your wallet, it can view your wallet balance, activity and request approval for transactions.";
 "dark" = "Oscuro";
 "data_and_storage_usage" = "Uso de datos y almacenamiento";
 "data_parsing_error" = "Error de análisis de datos";
@@ -316,6 +324,8 @@
 "disappearing_option_3" = "2 horas";
 "disappearing_option_4" = "1 día";
 "disappearing_option_5" = "1 semana";
+"discard" = "Desechar";
+"disconnected" = "Disconnected";
 "disconnecting" = "Desconectando";
 "dismiss_as_admin" = "Descartar como administrador";
 "done" = "Hecho";
@@ -389,6 +399,7 @@
 "failed_to_send_location" = "No se ha podido enviar la ubicación";
 "failed_to_send_photo" = "No se ha podido enviar la foto";
 "failed_to_send_video" = "No se ha podido enviar el video";
+"failed_to_switch_network" = "Failed to switch network: %@";
 "fee" = "Tarifa";
 "feedback" = "Comentario";
 "file" = "Archivo";
@@ -456,6 +467,7 @@
 "invites_you_to_a_voice_call" = "te invita a una llamada de voz";
 "join_group" = "Únete al grupo";
 "joined_in" = "Se ha unido en %@";
+"keep_network" = "Keep %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "Etiqueta";
 "landing_delete_content" = "Tu cuenta se eliminará el %@; si continúas iniciando sesión, se cancelará la solicitud para eliminar tu cuenta.";
@@ -504,6 +516,7 @@
 "message_preview" = "Vista previa del mensaje";
 "message_sent" = "Mensaje enviado";
 "messages" = "Mensajes";
+"method_not_supported" = "Method %@ is not supported";
 "minute" = "%d Minuto";
 "minute_count" = "%d Minutos";
 "mixin" = "Mixin";
@@ -532,8 +545,10 @@
 "name" = "Nombre";
 "name_or_phone_number" = "Nombre o número de teléfono";
 "need_help" = "¿Necesitas ayuda?";
+"network" = "Network";
 "network_connection_lost" = "Se ha perdido la conexión de red, verifica tu red e intenta nuevamente más tarde";
-"network_fee" = "Tarifa de red: %@";
+"network_fee" = "Tarifa de red: %\@";
+"network_switched" = "Network Switched";
 "never_auto_download" = "Nunca";
 "new_chat" = "Nueva chat";
 "new_group" = "Nuevo grupo";
@@ -547,6 +562,7 @@
 "no_blocked_users" = "Sin usuarios bloqueados";
 "no_bots" = "SIN BOTS";
 "no_contacts" = "SIN CONTACTOS";
+"no_dapp" = "NO DAPP";
 "no_files" = "SIN ARCHIVOS";
 "no_hidden_assets" = "Sin activos ocultos";
 "no_items_selected" = "No hay elementos seleccionados";
@@ -668,6 +684,7 @@
 "read_your_contacts" = "Lee tus contactos";
 "read_your_nfts" = "Lee tus NFT";
 "read_your_phone_number" = "Lee tu número de teléfono";
+"read_your_public_address" = "Read your public address";
 "read_your_public_profile" = "Lee tu perfil público";
 "read_your_snapshots" = "Lee tus instantáneas";
 "rebate" = "Reembolso";
@@ -696,6 +713,10 @@
 "report_title" = "¿Enviar el registro de conversación a los desarrolladores?";
 "represent_send_messages" = "Representar enviar mensajes";
 "request_authorization" = "Solicitar Autorización";
+"request_permission" = "Request permission";
+"request_rejected" = "Request Rejected";
+"request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
+"requests_switching_to_network" = "%1$@ requests switching to %2$@";
 "resend_code" = "Reenviar codigo";
 "resend_code_pending" = "Reenviar código en %@";
 "reset_link" = "Restablecer enlace";
@@ -741,6 +762,7 @@
 "search_open_link" = "Abrir enlace: ";
 "search_placeholder_asset" = "Nombre, Símbolo";
 "search_placeholder_contact" = "Mixin ID, nombre, número de teléfono";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Buscar Mixin ID o número de teléfono: ";
 "search_related_message" = "%d mensaje relacionado";
 "search_related_message_count" = "%d mensajes relacionados";
@@ -766,6 +788,7 @@
 "send_message" = "Enviar mensaje";
 "send_photo" = "Enviar 1 foto";
 "send_photo_count" = "Enviar %d fotos";
+"send_signed_message_confirmation" = "The message has been signed successfully, click the button below to send or discard the signed message";
 "send_this_location" = "Enviar esta ubicación";
 "send_to" = "Enviar a %@";
 "send_to_developer" = "Enviar al Desarrollador";
@@ -777,6 +800,7 @@
 "send_your_current_location" = "Envía tu ubicación actual";
 "send_count" = "Enviar(%d)";
 "senders" = "Remitentes";
+"session_not_found" = "Session not found";
 "set" = "Establecer";
 "set_disappearing_message_time_to" = "%1$@ ha establecido el tiempo de desaparición del mensaje a %2$@";
 "set_emergency_create_successfully" = "Se ha establecido el contacto de emergencia con éxito";
@@ -823,9 +847,12 @@
 "show" = "Espectáculo";
 "show_asset" = "Mostrar activo";
 "show_in_chat" = "Mostrar en el chat";
+"sign_by_pin" = "Sign by PIN";
 "sign_in" = "Iniciar sesión";
 "sign_with_emergency_contact" = "Iniciar sesión con contacto de emergencia";
 "sign_with_phone_number" = "Iniciar sesión con número de teléfono";
+"signature_request" = "Signature Request";
+"signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "Saltar";
 "slide_to_cancel" = "Deslizar para cancelar";
 "snapshot_hash" = "Hash de Instantánea";
@@ -849,6 +876,8 @@
 "stranger_hint" = "Este remitente no está en tus contactos";
 "successful" = "Exitoso";
 "suspicious_link" = "Enlace sospechoso";
+"switch_network" = "Switch Network";
+"switch_to_network" = "Switch to %@";
 "symbol" = "Símbolo";
 "symbol_withdrawal" = "Retiro de %@";
 "syncing_and_verifying_tip" = "Mantén la aplicación en primer plano mientras verificas y sincronizas las claves fragmentadas con la red TIP; no fuerces el cierre de la aplicación durante el proceso de configuración.";
@@ -878,8 +907,10 @@
 "track_not_found" = "Pista no encontrada";
 "trading" = "Comercio";
 "transaction" = "Transacción";
+"transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Hash de transacción";
 "transaction_id" = "ID de transacción";
+"transaction_request" = "Transaction Request";
 "transaction_type" = "Tipo de transacción";
 "transactions" = "Transacciones";
 "transfer_protocol_version_not_matched" = "Protocol version does not match, transfer failed. Please upgrade the application first.";
@@ -910,6 +941,7 @@
 "trying_connect_tip_node" = "Intentando conectar el nodo TIP";
 "turn_on_notifications" = "Activar las notificaciones";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
+"unable_to_decode_the_request" = "Unable to decode the request: %@";
 "unable_to_save_photo" = "No se puede guardar la foto.";
 "unable_to_save_video" = "No se puede guardar el video.";
 "unable_to_share_content" = "No se puede compartir este contenido";

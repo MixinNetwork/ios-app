@@ -1,4 +1,5 @@
 import UIKit
+import web3 // Remove this after TIP Wallet transfer is removed
 import MixinServices
 
 class AssetViewController: UIViewController {
@@ -257,8 +258,33 @@ extension AssetViewController {
             let vc = AddressViewController.instance(asset: asset)
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
+        
+        let withdrawToTIPAllowedChainIds = [
+            "43d61dcd-e413-450d-80b8-101d5e903357", // Ethereum
+            "b7938396-3f94-4e0a-9179-d3440718156f", // Polygon
+            "1949e683-6a08-49e2-b087-d6b72398588f", // Binance Smart Chain
+        ]
+        if withdrawToTIPAllowedChainIds.contains(asset.chainId) {
+            alert.addAction(UIAlertAction(title: "TIP Wallet", style: .default, handler: { _ in
+                self.sendToMyTIPWallet()
+            }))
+        }
+        
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
+    }
+    
+    private func sendToMyTIPWallet() {
+        let reveal = RevealTIPWalletAddressViewController()
+        reveal.onApprove = { [asset] priv in
+            let storage = InPlaceKeyStorage(raw: priv)
+            let account = try! EthereumAccount(keyStorage: storage)
+            let address = account.address.toChecksumAddress()
+            let transfer = TransferOutViewController.instance(asset: asset, type: .tipWallet(address))
+            self.navigationController?.pushViewController(transfer, animated: true)
+        }
+        let authentication = AuthenticationViewController(intentViewController: reveal)
+        present(authentication, animated: true)
     }
     
     private func updateTableViewContentInset() {

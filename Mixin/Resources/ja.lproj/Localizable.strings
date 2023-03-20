@@ -71,6 +71,8 @@
 "allow_bot_manage_bots" = "Allow bot to add or modify your bots.";
 "allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
 "allow_bot_send_messages" = "Allow bot to send messages represent of you.";
+"allow_dapp_access_public_address" = "Allow dapp to access your wallet balance and activity.";
+"allow_dapp_request_permission" = "Allow dapp to ask for your permission to make a transaction.";
 "allow_manual_report_message" = "メッセージ単位の報告を許可";
 "amount" = "数量";
 "app_card_shareable_false" = "このカードを共有することはできません";
@@ -117,6 +119,7 @@
 "bots" = "ミニアプリ";
 "bots_title" = "Myミニアプリ一覧";
 "business" = "ビジネス";
+"calculating" = "Calculating...";
 "call" = "電話";
 "call_declined" = "応答拒否";
 "call_encryption_description" = "この電話はMixinを含む外部から盗聴不可能です";
@@ -139,6 +142,7 @@
 "card" = "ロボ";
 "category_chats" = "チャット";
 "chain" = "チェーン";
+"chain_not_supported" = "Chain not supported";
 "change" = "変更";
 "change_amount" = "数量を変更";
 "change_emergency_contact" = "緊急連絡先を変更";
@@ -203,8 +207,11 @@
 "compressed" = "圧縮しました";
 "confirm" = "確認する";
 "connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
+"connect_wallet" = "Connect Wallet";
 "connected" = "接続済";
+"connected_dapps" = "Connected Dapps";
 "connecting" = "接続中";
+"connection_failed" = "Connection Failed";
 "connection_unstable" = "接続が不安定です";
 "connection_establishment_failed" = "Connection establishment failed";
 "contact" = "連絡先";
@@ -261,6 +268,7 @@
 "current_selected" = "選択";
 "custom_time" = "日時";
 "daily" = "日";
+"dapp_description" = "This dapp has connected to your wallet, it can view your wallet balance, activity and request approval for transactions.";
 "dark" = "ライト";
 "data_and_storage_usage" = "ストレージ使用率";
 "data_parsing_error" = "データ解析エラー";
@@ -316,6 +324,8 @@
 "disappearing_option_3" = "2時間";
 "disappearing_option_4" = "1日";
 "disappearing_option_5" = "1週間";
+"discard" = "Discard";
+"disconnected" = "Disconnected";
 "disconnecting" = "切断";
 "dismiss_as_admin" = "管理者権限を解除";
 "done" = "完了";
@@ -389,6 +399,7 @@
 "failed_to_send_location" = "位置情報を送信できませんでした";
 "failed_to_send_photo" = "画像を送信できませんでした";
 "failed_to_send_video" = "動画を送信できませんでした";
+"failed_to_switch_network" = "Failed to switch network: %@";
 "fee" = "手数料";
 "feedback" = "フィードバック";
 "file" = "ファイル";
@@ -456,6 +467,7 @@
 "invites_you_to_a_voice_call" = "グループ通話に招待されました";
 "join_group" = "グループに参加";
 "joined_in" = "%@からMixinを利用しています";
+"keep_network" = "Keep %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "ラベル";
 "landing_delete_content" = "あなたのアカウントは(%@) 後に消去されます。ログインを継続する場合、あなたのアカウント消去はキャンセルされます。";
@@ -504,6 +516,7 @@
 "message_preview" = "メッセージのプレビュー";
 "message_sent" = "送信完了";
 "messages" = "メッセージ";
+"method_not_supported" = "Method %@ is not supported";
 "minute" = "%d 分";
 "minute_count" = "%d分間";
 "mixin" = "Mixin";
@@ -532,8 +545,10 @@
 "name" = "名前";
 "name_or_phone_number" = "名前か電話番号";
 "need_help" = "ヘルプが必要ですか？";
+"network" = "Network";
 "network_connection_lost" = "ネットワークが切断されました。確認してから再度接続してください";
-"network_fee" = "ネットワーク手数料：%@";
+"network_fee" = "Network Fee";
+"network_switched" = "Network Switched";
 "never_auto_download" = "しない";
 "new_chat" = "チャットを作成";
 "new_group" = "グループを作成";
@@ -547,6 +562,7 @@
 "no_blocked_users" = "ブロック済みのユーザーはいません";
 "no_bots" = "ミニアプリがありません";
 "no_contacts" = "友達未追加";
+"no_dapp" = "NO DAPP";
 "no_files" = "ファイルがありません";
 "no_hidden_assets" = "非表示資産はありません";
 "no_items_selected" = "選択してください";
@@ -668,6 +684,7 @@
 "read_your_contacts" = "Read your contacts";
 "read_your_nfts" = "Read your NFTs";
 "read_your_phone_number" = "Read your phone number";
+"read_your_public_address" = "Read your public address";
 "read_your_public_profile" = "Read your public profile";
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "払い戻し";
@@ -696,6 +713,10 @@
 "report_title" = "Mixinの開発者へ会話記録を送信しますか?";
 "represent_send_messages" = "Represent send messages";
 "request_authorization" = "Request Authorization";
+"request_permission" = "Request permission";
+"request_rejected" = "Request Rejected";
+"request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
+"requests_switching_to_network" = "%1$@ requests switching to %2$@";
 "resend_code" = "コードを再送する";
 "resend_code_pending" = "%@ 後にコードを再送";
 "reset_link" = "リンクを取り消す";
@@ -741,6 +762,7 @@
 "search_open_link" = "リンクを開く:";
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_contact" = "Mixin ID, 名前, 電話番号";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Mixin ID または電話番号を検索";
 "search_related_message" = "%d個の関連するメッセージ";
 "search_related_message_count" = "%d個の関連するメッセージ";
@@ -766,6 +788,7 @@
 "send_message" = "メッセージを送信";
 "send_photo" = "写真を送信";
 "send_photo_count" = "%d枚の写真を送信";
+"send_signed_message_confirmation" = "The message has been signed successfully, click the button below to send or discard the signed message";
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
 "send_to_developer" = "開発者へ送信";
@@ -777,6 +800,7 @@
 "send_your_current_location" = "現在地を送信";
 "send_count" = "送信(%d)";
 "senders" = "送信者";
+"session_not_found" = "Session not found";
 "set" = "設定";
 "set_disappearing_message_time_to" = "1$sは、消えるメッセージの有効時間を%@に設定しました。";
 "set_emergency_create_successfully" = "Set emergency contact successfully";
@@ -823,9 +847,12 @@
 "show" = "表示";
 "show_asset" = "資産を表示する";
 "show_in_chat" = "チャット内で表示";
+"sign_by_pin" = "Sign by PIN";
 "sign_in" = "ログイン";
 "sign_with_emergency_contact" = "緊急連絡先でログイン";
 "sign_with_phone_number" = "電話番号でログイン";
+"signature_request" = "Signature Request";
+"signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "スキップ";
 "slide_to_cancel" = "スライドしてキャンセル";
 "snapshot_hash" = "Snapshot Hash";
@@ -849,6 +876,8 @@
 "stranger_hint" = "連絡先にない相手からのメッセージです";
 "successful" = "Successful";
 "suspicious_link" = "不審なリンクです";
+"switch_network" = "Switch Network";
+"switch_to_network" = "Switch to %@";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
@@ -878,8 +907,10 @@
 "track_not_found" = "トラックが見つかりません";
 "trading" = "トレード";
 "transaction" = "トランザクション";
+"transaction_failed" = "Transaction Failed";
 "transaction_hash" = "トランザクションハッシュ";
 "transaction_id" = "トランザクションID";
+"transaction_request" = "Transaction Request";
 "transaction_type" = "トランザクションタイプ";
 "transactions" = "もらった・あげたコイン💰";
 "transactions_cannot_be_deleted" = "トランザクション履歴を削除することはできません";
@@ -910,6 +941,7 @@
 "trying_connect_tip_node" = "Trying connect TIP node";
 "turn_on_notifications" = "通知をオンにする";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
+"unable_to_decode_the_request" = "Unable to decode the request: %@";
 "unable_to_save_photo" = "画像が保存できませんでした";
 "unable_to_save_video" = "動画が保存できませんでした";
 "unable_to_share_content" = "この内容は共有できません";

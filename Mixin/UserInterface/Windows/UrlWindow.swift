@@ -1,6 +1,8 @@
 import Foundation
 import UIKit
 import Alamofire
+import WalletConnectSwift
+import Web3Wallet
 import MixinServices
 
 class UrlWindow {
@@ -485,6 +487,10 @@ class UrlWindow {
             return
         }
         if let url = URL(string: string), checkUrl(url: url, clearNavigationStack: clearNavigationStack) {
+            return
+        }
+        if let url = WCURL(string) {
+            WalletConnectService.shared.connect(to: url)
             return
         }
         RecognizeWindow.instance().presentWindow(text: string)

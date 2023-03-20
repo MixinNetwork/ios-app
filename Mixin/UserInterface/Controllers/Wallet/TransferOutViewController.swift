@@ -6,6 +6,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     enum Opponent {
         case contact(UserItem)
         case address(Address)
+        case tipWallet(String)
     }
     
     @IBOutlet weak var scrollView: UIScrollView!
@@ -41,6 +42,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
     
+    // Remove after TIP Wallet transfer is removed
+    private var fee: String?
+    
     private weak var payWindowIfLoaded: PayWindow?
     
     private lazy var traceId = UUID().uuidString.lowercased()
@@ -69,6 +73,35 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                    selector: #selector(reloadAddress),
                                                    name: AddressDAO.addressDidChangeNotification,
                                                    object: nil)
+        case let .tipWallet(address):
+            opponentImageView.image = R.image.wallet.ic_transaction_external_large()
+            container?.titleLabel.text = "Send to TIP Wallet"
+            container?.setSubtitle(subtitle: address.toSimpleKey())
+            memoView.isHidden = true
+            if let asset = asset {
+                DispatchQueue.global().async { [weak self] in
+                    let response = ExternalSchemeAPI.checkAddress(assetId: asset.assetId,
+                                                                  destination: address,
+                                                                  tag: nil)
+                    guard case let .success(response) = response else {
+                        return
+                    }
+                    guard let feeAsset = AssetDAO.shared.getAsset(assetId: response.feeAssetId) else {
+                        return
+                    }
+                    let feeRepresentation = response.fee + " " + feeAsset.symbol
+                    let feeHint = R.string.localizable.withdrawal_network_fee() + feeRepresentation
+                    DispatchQueue.main.async {
+                        guard let self else {
+                            return
+                        }
+                        self.feeAsset = feeAsset
+                        self.fee = response.fee
+                        self.transactionFeeHintLabel.text = feeHint
+                        self.continueButton.isBusy = false
+                    }
+                }
+            }
         }
         
         if self.asset != nil {
@@ -247,6 +280,14 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                     }
                 }
             }
+        case let .tipWallet(address):
+            continueButton.isBusy = false
+            guard let fee, let feeAsset else {
+                return
+            }
+            let addressId = (myUserId + asset.assetId + address).uuidDigest()
+            let action: PayWindow.PinAction = .externalTransfer(destination: address, fee: fee, feeAsset: feeAsset, addressId: addressId, traceId: UUID().uuidString.lowercased())
+            payWindow.render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
         }
     }
     
@@ -393,7 +434,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             var highlightRanges = [NSRange]()
 
             let feeRepresentation = address.fee + " " + feeAsset.symbol
-            let feeHint = R.string.localizable.network_fee(feeRepresentation)
+            let feeHint = R.string.localizable.withdrawal_network_fee() + feeRepresentation
             hint = feeHint
             let range = (hint as NSString).range(of: feeRepresentation)
             highlightRanges.append(range)
@@ -477,6 +518,8 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
         case let .address(address):
             let vc = AddressTransactionsViewController.instance(asset: address.assetId, destination: address.destination, tag: address.tag)
             navigationController?.pushViewController(vc, animated: true)
+        case let .tipWallet(address):
+            break
         }
     }
 

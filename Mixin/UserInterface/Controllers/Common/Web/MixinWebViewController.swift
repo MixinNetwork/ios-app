@@ -1,6 +1,7 @@
 import UIKit
 import WebKit
 import Alamofire
+import WalletConnectSwift
 import MixinServices
 
 class MixinWebViewController: WebViewController {
@@ -13,6 +14,7 @@ class MixinWebViewController: WebViewController {
         static let reloadTheme = "reloadTheme"
         static let playlist = "playlist"
         static let close = "close"
+        static let log = "log"
     }
     
     weak var associatedClip: Clip?
@@ -27,10 +29,12 @@ class MixinWebViewController: WebViewController {
         config.mediaTypesRequiringUserActionForPlayback = .video
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
+        config.userContentController.addUserScript(Script.forwardLog)
         config.userContentController.add(scriptMessageProxy, name: HandlerName.mixinContext)
         config.userContentController.add(scriptMessageProxy, name: HandlerName.reloadTheme)
         config.userContentController.add(scriptMessageProxy, name: HandlerName.playlist)
         config.userContentController.add(scriptMessageProxy, name: HandlerName.close)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.log)
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
@@ -91,6 +95,7 @@ class MixinWebViewController: WebViewController {
             controller.add(scriptMessageProxy, name: HandlerName.reloadTheme)
             controller.add(scriptMessageProxy, name: HandlerName.playlist)
             controller.add(scriptMessageProxy, name: HandlerName.close)
+            controller.add(scriptMessageProxy, name: HandlerName.log)
             isMessageHandlerAdded = true
         }
     }
@@ -186,6 +191,7 @@ class MixinWebViewController: WebViewController {
         controller.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
         controller.removeScriptMessageHandler(forName: HandlerName.playlist)
         controller.removeScriptMessageHandler(forName: HandlerName.close)
+        controller.removeScriptMessageHandler(forName: HandlerName.log)
         isMessageHandlerAdded = false
     }
     
@@ -340,6 +346,10 @@ extension MixinWebViewController: WKScriptMessageHandler {
             }
         case HandlerName.close:
             dismissAsChild(animated: true, completion: nil)
+        case HandlerName.log:
+            if let log = message.body as? String, let url = WCURL(log) {
+                WalletConnectService.shared.connect(to: url)
+            }
         default:
             break
         }
@@ -590,6 +600,7 @@ extension MixinWebViewController {
 extension MixinWebViewController {
     
     enum Script {
+        
         static let getThemeColor = """
             function getColor() {
                 const metas = document.getElementsByTagName('meta');
@@ -602,6 +613,7 @@ extension MixinWebViewController {
             }
             getColor();
         """
+        
         static let disableImageSelection: WKUserScript = {
             let string = """
                 var style = document.createElement('style');
@@ -612,6 +624,22 @@ extension MixinWebViewController {
                                 injectionTime: .atDocumentEnd,
                                 forMainFrameOnly: true)
         }()
+        
+        static let forwardLog: WKUserScript = {
+            let string = """
+                let consoleLog = window.console.log;
+                window.console.log = function(message) {
+                    consoleLog.call(window.console, message);
+                    if ((typeof message === 'string' || message instanceof String) && message.startsWith('wc:')) {
+                        window.webkit.messageHandlers.log.postMessage(message);
+                    }
+                }
+            """
+            return WKUserScript(source: string,
+                                injectionTime: .atDocumentEnd,
+                                forMainFrameOnly: false)
+        }()
+        
     }
     
     struct Context {

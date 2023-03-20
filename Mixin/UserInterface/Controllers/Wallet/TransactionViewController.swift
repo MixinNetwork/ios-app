@@ -324,14 +324,14 @@ extension TransactionViewController {
         default:
             break
         }
+        if let snapshotHash = snapshot.snapshotHash, !snapshotHash.isEmpty {
+            contents.append((title: R.string.localizable.snapshot_hash(), subtitle: snapshotHash))
+        }
         if !snapshot.openingBalance.isEmpty {
             contents.append((title: R.string.localizable.opening_balance(), subtitle: "\(formatedBalance(snapshot.openingBalance)) \(asset.symbol)"))
         }
         if !snapshot.closingBalance.isEmpty {
             contents.append((title: R.string.localizable.closing_balance(), subtitle: "\(formatedBalance(snapshot.closingBalance)) \(asset.symbol)"))
-        }
-        if let snapshotHash = snapshot.snapshotHash, !snapshotHash.isEmpty {
-            contents.append((title: R.string.localizable.snapshot_hash(), subtitle: snapshotHash))
         }
         contents.append((title: R.string.localizable.date(), subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
     }
@@ -356,7 +356,8 @@ extension TransactionViewController {
              asset.memoLabel,
              R.string.localizable.address(),
              R.string.localizable.from(),
-             R.string.localizable.to():
+             R.string.localizable.to(),
+             R.string.localizable.snapshot_hash():
             return (true, subtitle ?? "")
         default:
             return (false, "")

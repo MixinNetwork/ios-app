@@ -37,7 +37,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var opponent: Opponent!
     private var asset: AssetItem?
     private var targetUser: UserItem?
-    private var targetAddress: Address?
     private var feeAsset: AssetItem?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
@@ -61,12 +60,15 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             container?.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
             container?.titleLabel.text = R.string.localizable.send_to_title() + " " + user.fullName
         case .address(let address):
-            targetAddress = address
             opponentImageView.image = R.image.wallet.ic_transaction_external_large()
             container?.titleLabel.text = R.string.localizable.send_to_title() + " " + address.label
             container?.setSubtitle(subtitle: address.fullAddress.toSimpleKey())
             memoView.isHidden = true
             reloadTransactionFeeHint(addressId: address.addressId)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(reloadAddress),
+                                                   name: AddressDAO.addressDidChangeNotification,
+                                                   object: nil)
         }
         
         if self.asset != nil {
@@ -303,6 +305,23 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 if assets.count > 1 {
                     weakSelf.assetSwitchImageView.isHidden = false
                     weakSelf.switchAssetButton.isUserInteractionEnabled = true
+                }
+            }
+        }
+    }
+    
+    @objc private func reloadAddress() {
+        if case let .address(address) = opponent {
+            DispatchQueue.global().async { [weak self] in
+                guard let address = AddressDAO.shared.getAddress(addressId: address.addressId) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.opponent = .address(address)
+                    self.fillFeeHint(address: address, onFinished: nil)
                 }
             }
         }

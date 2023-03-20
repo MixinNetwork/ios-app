@@ -195,6 +195,7 @@
 "cleared" = "Borrado";
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
+"closing_balance" = "Saldo de cierre";
 "collectible_token_id" = "#%@";
 "combine_and_forward" = "Combinar y avanzar";
 "compress_database" = "Comprimir base de datos";
@@ -578,6 +579,7 @@
 "open_in_maps" = "Abrir en Mapas";
 "open_link" = "Abrir enlace: %@";
 "open_url" = "Abrir URL";
+"opening_balance" = "Saldo inicial";
 "operation_failed" = "La operación ha fallado, intenta nuevamente más tarde";
 "optimize_database" = "Optimizar base de datos";
 "optimized" = "Optimizado";
@@ -799,6 +801,7 @@
 "sign_with_phone_number" = "Iniciar sesión con número de teléfono";
 "skip" = "Saltar";
 "slide_to_cancel" = "Deslizar para cancelar";
+"snapshot_hash" = "Hash de Instantánea";
 "snapshot_not_found" = "Instantánea no encontrada.";
 "social" = "Social";
 "sort_by" = "Ordenar por";

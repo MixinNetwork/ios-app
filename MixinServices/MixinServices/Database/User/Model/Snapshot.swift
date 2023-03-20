@@ -25,8 +25,11 @@ public struct Snapshot {
     public let confirmations: Int?
     public let traceId: String?
     public var createdAt: String
+    public let snapshotHash: String?
+    public let openingBalance: String
+    public let closingBalance: String
     
-    public init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, traceId: String?, createdAt: String) {
+    public init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, traceId: String?, createdAt: String, snapshotHash: String?, openingBalance: String, closingBalance: String) {
         self.snapshotId = snapshotId
         self.type = type
         self.assetId = assetId
@@ -39,6 +42,9 @@ public struct Snapshot {
         self.confirmations = confirmations
         self.traceId = traceId
         self.createdAt = createdAt
+        self.snapshotHash = snapshotHash
+        self.openingBalance = openingBalance
+        self.closingBalance = closingBalance
     }
     
 }
@@ -58,6 +64,9 @@ extension Snapshot: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case confirmations
         case traceId = "trace_id"
         case createdAt = "created_at"
+        case snapshotHash = "snapshot_hash"
+        case openingBalance = "opening_balance"
+        case closingBalance = "closing_balance"
     }
     
     public init(from decoder: Decoder) throws {
@@ -74,6 +83,9 @@ extension Snapshot: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations)
         traceId = try container.decodeIfPresent(String.self, forKey: .traceId)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        snapshotHash = try container.decodeIfPresent(String.self, forKey: .snapshotHash)
+        openingBalance = try container.decode(String.self, forKey: .openingBalance)
+        closingBalance = try container.decode(String.self, forKey: .closingBalance)
     }
     
 }

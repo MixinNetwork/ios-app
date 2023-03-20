@@ -6,7 +6,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
     public static let snapshotDidChangeNotification = NSNotification.Name("one.mixin.services.SnapshotDAO.snapshotDidChange")
     
     private static let sqlQueryTable = """
-    SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
+    SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number, s.snapshot_hash, s.opening_balance, s.closing_balance
     FROM snapshots s
     LEFT JOIN users u ON u.user_id = s.opponent_id
     LEFT JOIN assets a ON a.asset_id = s.asset_id
@@ -22,6 +22,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
                 snapshotItem = try? SnapshotItem.fetchOne(db,
                                                           sql: SnapshotDAO.sqlQueryById,
                                                           arguments: [snapshot.snapshotId])
+                NotificationCenter.default.post(onMainThread: Self.snapshotDidChangeNotification, object: self)
             }
         }
         return snapshotItem
@@ -131,7 +132,8 @@ extension SnapshotDAO {
         SELECT s.snapshot_id, s.type, s.asset_id, s.amount,
                 s.opponent_id, s.transaction_hash, s.sender, s.receiver,
                 s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol,
-                u.user_id, u.full_name, u.avatar_url, u.identity_number
+                u.user_id, u.full_name, u.avatar_url, u.identity_number,
+                s.snapshot_hash, s.opening_balance, s.closing_balance
         FROM snapshots s
         LEFT JOIN assets a ON s.asset_id = a.asset_id
         LEFT JOIN users u ON s.opponent_id = u.user_id

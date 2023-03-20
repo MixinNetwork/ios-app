@@ -23,6 +23,10 @@ public struct SnapshotItem {
     public let opponentUserAvatarUrl: String?
     public let opponentUserIdentityNumber: String?
     
+    public let snapshotHash: String?
+    public let openingBalance: String
+    public let closingBalance: String
+    
     public init(snapshot: Snapshot) {
         self.snapshotId = snapshot.snapshotId
         self.type = snapshot.type
@@ -42,6 +46,10 @@ public struct SnapshotItem {
         self.opponentUserFullName = nil
         self.opponentUserAvatarUrl = nil
         self.opponentUserIdentityNumber = nil
+        
+        self.snapshotHash = snapshot.snapshotHash
+        self.openingBalance = snapshot.openingBalance
+        self.closingBalance = snapshot.closingBalance
     }
     
 }
@@ -68,6 +76,10 @@ extension SnapshotItem: Decodable, MixinFetchableRecord {
         case opponentUserFullName = "full_name"
         case opponentUserAvatarUrl = "avatar_url"
         case opponentUserIdentityNumber = "identity_number"
+        
+        case snapshotHash = "snapshot_hash"
+        case openingBalance = "opening_balance"
+        case closingBalance = "closing_balance"
     }
     
     public init(from decoder: Decoder) throws {
@@ -91,6 +103,10 @@ extension SnapshotItem: Decodable, MixinFetchableRecord {
         opponentUserFullName = try container.decodeIfPresent(String.self, forKey: .opponentUserFullName)
         opponentUserAvatarUrl = try container.decodeIfPresent(String.self, forKey: .opponentUserAvatarUrl)
         opponentUserIdentityNumber = try container.decodeIfPresent(String.self, forKey: .opponentUserIdentityNumber)
+        
+        snapshotHash = try container.decodeIfPresent(String.self, forKey: .snapshotHash)
+        openingBalance = try container.decode(String.self, forKey: .openingBalance)
+        closingBalance = try container.decode(String.self, forKey: .closingBalance)
     }
     
 }

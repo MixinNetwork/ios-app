@@ -209,25 +209,9 @@ extension TransactionViewController {
     }
     
     private func fetchTransaction() {
+        var shouldRefreshSnapshot = snapshot.snapshotHash.isNilOrEmpty
         if snapshot.type == SnapshotType.withdrawal.rawValue && snapshot.transactionHash.isNilOrEmpty {
-            SnapshotAPI.snapshot(snapshotId: snapshot.snapshotId) { [weak self](result) in
-                switch result {
-                case let .success(snapshot):
-                    DispatchQueue.global().async {
-                        guard let snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot) else {
-                            return
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self?.snapshot = snapshotItem
-                            self?.makeContents()
-                            self?.tableView.reloadData()
-                        }
-                    }
-                case .failure:
-                    break
-                }
-            }
+            shouldRefreshSnapshot = true
         } else if snapshot.type == SnapshotType.pendingDeposit.rawValue {
             let assetId = asset.assetId
             let snapshotId = snapshot.snapshotId
@@ -251,6 +235,25 @@ extension TransactionViewController {
                 }
             }
         }
+        if shouldRefreshSnapshot {
+            SnapshotAPI.snapshot(snapshotId: snapshot.snapshotId) { [weak self](result) in
+                switch result {
+                case let .success(snapshot):
+                    DispatchQueue.global().async {
+                        guard let snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot) else {
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            self?.snapshot = snapshotItem
+                            self?.makeContents()
+                            self?.tableView.reloadData()
+                        }
+                    }
+                case .failure:
+                    break
+                }
+            }
+        }
     }
     
     private func getFormatValue(priceUsd: String) -> String {
@@ -261,6 +264,9 @@ extension TransactionViewController {
     private func makeContents() {
         contents = []
         contents.append((title: R.string.localizable.transaction_id(), subtitle: snapshot.snapshotId))
+        if let snapshotHash = snapshot.snapshotHash, !snapshotHash.isEmpty {
+            contents.append((title: R.string.localizable.snapshot_hash(), subtitle: snapshotHash))
+        }
         contents.append((title: R.string.localizable.asset_type(), subtitle: asset.name))
         switch snapshot.type {
         case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
@@ -321,7 +327,23 @@ extension TransactionViewController {
         default:
             break
         }
+        if !snapshot.openingBalance.isEmpty {
+            contents.append((title: R.string.localizable.opening_balance(), subtitle: "\(formatedBalance(snapshot.openingBalance)) \(asset.symbol)"))
+        }
+        if !snapshot.closingBalance.isEmpty {
+            contents.append((title: R.string.localizable.closing_balance(), subtitle: "\(formatedBalance(snapshot.closingBalance)) \(asset.symbol)"))
+        }
         contents.append((title: R.string.localizable.date(), subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
+    }
+    
+    private func formatedBalance(_ balance: String) -> String {
+        let amount: String
+        if balance == "0" {
+            amount = "0\(currentDecimalSeparator)00"
+        } else {
+            amount = CurrencyFormatter.localizedString(from: balance, format: .precision, sign: .never) ?? ""
+        }
+        return amount
     }
     
     private func canCopyAction(indexPath: IndexPath) -> (Bool, String) {
@@ -334,7 +356,8 @@ extension TransactionViewController {
              asset.memoLabel,
              R.string.localizable.address(),
              R.string.localizable.from(),
-             R.string.localizable.to():
+             R.string.localizable.to(),
+             R.string.localizable.snapshot_hash():
             return (true, subtitle ?? "")
         default:
             return (false, "")

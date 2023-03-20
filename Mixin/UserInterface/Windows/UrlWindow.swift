@@ -1098,10 +1098,22 @@ extension UrlWindow {
 
             let receiverUsers = users.filter { payment.receivers.contains($0.userId) }
             let error = payment.status == PaymentStatus.paid.rawValue ? R.string.localizable.pay_paid() : ""
-
+            
+            let action: PayWindow.PinAction
+            if receiverUsers.isEmpty {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            } else if receiverUsers.count == 1 && payment.threshold == 1 {
+                action = .transfer(trackId: payment.traceId, user: receiverUsers[0], fromWeb: true, returnTo: nil)
+            } else {
+                action = .payment(payment: payment, receivers: receiverUsers)
+            }
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .payment(payment: payment, receivers: receiverUsers), amount: payment.amount, memo: "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: action, amount: payment.amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }

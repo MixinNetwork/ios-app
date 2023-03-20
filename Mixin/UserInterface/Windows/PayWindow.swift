@@ -91,7 +91,7 @@ class PayWindow: BottomSheetView {
         guard let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate, -date.timeIntervalSinceNow < AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval else {
             return false
         }
-        guard biometryType != .none else {
+        guard BiometryType.payment != .none else {
             return false
         }
         return true
@@ -235,7 +235,7 @@ class PayWindow: BottomSheetView {
         } else {
             resetPinInput()
             if isAllowBiometricPay {
-                biometricButton.setTitle(R.string.localizable.use_biometry(biometryType.localizedName), for: .normal)
+                biometricButton.setTitle(R.string.localizable.use_biometry(BiometryType.payment.localizedName), for: .normal)
                 pinViewHeightConstraint.constant = 56
             } else {
                 pinViewHeightConstraint.constant = 60
@@ -305,7 +305,7 @@ class PayWindow: BottomSheetView {
         pinField.clear()
         let needsInitializeTIP = TIP.status == .needsInitialize
         if isAllowBiometricPay {
-            if biometryType == .faceID {
+            if BiometryType.payment == .faceID {
                 biometricButton.setImage(R.image.ic_pay_face(), for: .normal)
             } else {
                 biometricButton.setImage(R.image.ic_pay_touch(), for: .normal)
@@ -416,7 +416,7 @@ class PayWindow: BottomSheetView {
             return
         }
 
-        let prompt = R.string.localizable.authorize_payment_via(biometryType.localizedName)
+        let prompt = R.string.localizable.authorize_payment_via(BiometryType.payment.localizedName)
         biometricAuthQueue.async { [weak self] in
             DispatchQueue.main.sync {
                 ScreenLockManager.shared.hasOtherBiometricAuthInProgress = true
@@ -637,10 +637,10 @@ extension PayWindow: PinFieldDelegate {
             enableBiometricAuthButton.isHidden = true
             successViewHeight = successViewHeight + successButtonBottomConstraint.constant + stayInMixinButton.frame.height
         } else {
-            if isAllowBiometricPay || biometryType == .none {
+            if isAllowBiometricPay || BiometryType.payment == .none {
                 enableBiometricAuthButton.isHidden = true
             } else {
-                switch biometryType {
+                switch BiometryType.payment {
                 case .touchID:
                     let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_id())
                     UIView.performWithoutAnimation {

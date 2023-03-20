@@ -75,7 +75,7 @@ extension ScreenLockManager {
             self.state = .authenticationFailed
             return
         }
-        let reason = R.string.localizable.screen_lock_unlock(biometryType.localizedName)
+        let reason = R.string.localizable.screen_lock_unlock(BiometryType.lockScreen.localizedName)
         context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, error in
             DispatchQueue.main.async {
                 self.state = success ? .authenticationSucceed : .authenticationFailed
@@ -85,7 +85,7 @@ extension ScreenLockManager {
     }
     
     private var isBiometricAuthenticationEnabled: Bool {
-        biometryType != .none && AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication
+        BiometryType.lockScreen != .none && AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication
     }
     
     private func showScreenLockView() {

@@ -29,7 +29,7 @@ final class PrivacySettingViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if biometryType != .none {
+        if BiometryType.lockScreen != .none {
             dataSource.insertSection(screenLockSection, at: 2, animation: .none)
         }
         dataSource.tableViewDelegate = self
@@ -105,16 +105,7 @@ extension PrivacySettingViewController: UITableViewDelegate {
                 vc = PhoneContactsSettingViewController.instance()
             }
         default:
-            switch TIP.status {
-            case .ready, .needsMigrate:
-                vc = ScreenLockSettingViewController.instance()
-            case .needsInitialize:
-                let tip = TIPNavigationViewController(intent: .create, destination: nil)
-                present(tip, animated: true)
-                return
-            case .unknown:
-                return
-            }
+            vc = ScreenLockSettingViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

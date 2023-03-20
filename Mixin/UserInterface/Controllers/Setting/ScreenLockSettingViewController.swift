@@ -9,7 +9,7 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [])
     
-    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.lock_with_biometric(biometryType.localizedName),
+    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.lock_with_biometric(BiometryType.lockScreen.localizedName),
                                                       accessory: .switch(isOn: AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication))
     
     private lazy var timeoutIntervalRow = SettingsRow(title: R.string.localizable.auto_lock(),
@@ -27,7 +27,7 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
         if AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication {
             rows.append(timeoutIntervalRow)
         }
-        let biometricFooter =  R.string.localizable.screen_lock_enable_biometric_hint(biometryType.localizedName)
+        let biometricFooter =  R.string.localizable.screen_lock_enable_biometric_hint(BiometryType.lockScreen.localizedName)
         let section = SettingsSection(footer: biometricFooter, rows: rows)
         dataSource.insertSection(section, at: 0, animation: .none)
         NotificationCenter.default.addObserver(self,

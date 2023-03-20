@@ -11,7 +11,7 @@ final class PinSettingsViewController: SettingsTableViewController {
         ]),
     ])
     
-    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.pay_with(biometryType.localizedName),
+    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.pay_with(BiometryType.payment.localizedName),
                                                       accessory: .switch(isOn: AppGroupUserDefaults.Wallet.payWithBiometricAuthentication))
     private lazy var pinIntervalRow = SettingsRow(title: R.string.localizable.pay_with_pin_interval(),
                                                   accessory: .disclosure)
@@ -25,8 +25,8 @@ final class PinSettingsViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if biometryType != .none {
-            let biometricFooter = R.string.localizable.wallet_enable_biometric_pay(biometryType.localizedName)
+        if BiometryType.payment != .none {
+            let biometricFooter = R.string.localizable.wallet_enable_biometric_pay(BiometryType.payment.localizedName)
             var rows = [biometricSwitchRow]
             if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                 rows.append(pinIntervalRow)
@@ -80,7 +80,7 @@ final class PinSettingsViewController: SettingsTableViewController {
             return
         }
         if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
-            let type = biometryType == .touchID ? R.string.localizable.touch_id() : R.string.localizable.face_id()
+            let type = BiometryType.payment == .touchID ? R.string.localizable.touch_id() : R.string.localizable.face_id()
             let title = R.string.localizable.disable_biometric_pay_confirmation(type)
             let alc = UIAlertController(title: title, message: nil, preferredStyle: .alert)
             alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: { (_) in
@@ -96,7 +96,7 @@ final class PinSettingsViewController: SettingsTableViewController {
             present(alc, animated: true, completion: nil)
         } else {
             let tips: String, prompt: String
-            if biometryType == .touchID {
+            if BiometryType.payment == .touchID {
                 tips = R.string.localizable.enable_touch_pay_hint()
                 prompt = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_id())
             } else {
@@ -126,7 +126,7 @@ extension PinSettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && indexPath.row == 1 && biometryType != .none {
+        if indexPath.section == 0 && indexPath.row == 1 && BiometryType.payment != .none {
             let alert = UIAlertController(title: nil, message: R.string.localizable.wallet_pin_pay_interval_tips(), preferredStyle: .actionSheet)
             for interval in pinIntervals {
                 alert.addAction(UIAlertAction(title: title(for: interval), style: .default, handler: { (_) in
@@ -135,7 +135,7 @@ extension PinSettingsViewController: UITableViewDelegate {
             }
             alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
-        } else if (indexPath.section == 1 && biometryType != .none) || (indexPath.section == 0 && biometryType == .none) {
+        } else if (indexPath.section == 1 && BiometryType.payment != .none) || (indexPath.section == 0 && BiometryType.payment == .none) {
             let change = TIPNavigationViewController(intent: .change, destination: nil)
             present(change, animated: true)
         }
@@ -161,7 +161,7 @@ extension PinSettingsViewController {
     }
     
     private func updatePinIntervalRow() {
-        guard biometryType != .none else {
+        guard BiometryType.payment != .none else {
             return
         }
         let expirationInterval = AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval

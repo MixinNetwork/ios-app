@@ -264,6 +264,9 @@ extension TransactionViewController {
     private func makeContents() {
         contents = []
         contents.append((title: R.string.localizable.transaction_id(), subtitle: snapshot.snapshotId))
+        if let snapshotHash = snapshot.snapshotHash, !snapshotHash.isEmpty {
+            contents.append((title: R.string.localizable.snapshot_hash(), subtitle: snapshotHash))
+        }
         contents.append((title: R.string.localizable.asset_type(), subtitle: asset.name))
         switch snapshot.type {
         case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
@@ -323,9 +326,6 @@ extension TransactionViewController {
             }
         default:
             break
-        }
-        if let snapshotHash = snapshot.snapshotHash, !snapshotHash.isEmpty {
-            contents.append((title: R.string.localizable.snapshot_hash(), subtitle: snapshotHash))
         }
         if !snapshot.openingBalance.isEmpty {
             contents.append((title: R.string.localizable.opening_balance(), subtitle: "\(formatedBalance(snapshot.openingBalance)) \(asset.symbol)"))

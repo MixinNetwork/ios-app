@@ -325,6 +325,7 @@
 "disappearing_option_4" = "1日";
 "disappearing_option_5" = "1週間";
 "discard" = "Discard";
+"disconnect" = "Disconnect";
 "disconnected" = "Disconnected";
 "disconnecting" = "切断";
 "dismiss_as_admin" = "管理者権限を解除";

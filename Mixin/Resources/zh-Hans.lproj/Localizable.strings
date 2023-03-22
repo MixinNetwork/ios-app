@@ -325,6 +325,7 @@
 "disappearing_option_4" = "1 天";
 "disappearing_option_5" = "1 周";
 "discard" = "废弃";
+"disconnect" = "断开连接";
 "disconnected" = "已断开";
 "disconnecting" = "正在断开";
 "dismiss_as_admin" = "撤销管理员身份";

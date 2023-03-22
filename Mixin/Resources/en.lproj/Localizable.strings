@@ -325,6 +325,7 @@
 "disappearing_option_4" = "1 day";
 "disappearing_option_5" = "1 week";
 "discard" = "Discard";
+"disconnect" = "Disconnect";
 "disconnected" = "Disconnected";
 "disconnecting" = "Disconnecting";
 "dismiss_as_admin" = "Dismiss as Admin";

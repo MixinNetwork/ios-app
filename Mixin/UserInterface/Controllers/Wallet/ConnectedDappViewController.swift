@@ -6,7 +6,7 @@ final class ConnectedDappViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: "Disconnect")
+            SettingsRow(title: R.string.localizable.disconnect())
         ])
     ])
     

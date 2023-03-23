@@ -108,7 +108,6 @@ class BackupJob: BaseJob {
             return
         }
 
-        var uploadPaths: [String] = []
         var backupPaths: [String] = []
         monitors = SafeDictionary<String, Int64>()
         totalFileSize = 0
@@ -125,24 +124,21 @@ class BackupJob: BaseJob {
             let localFileSize = FileManager.default.fileSize(localURL.path)
             let cloudExists = FileManager.default.fileExists(atPath: cloudURL.path)
 
-            if !cloudExists || FileManager.default.fileSize(cloudURL.path) != localFileSize {
+            if !cloudExists || FileManager.default.fileSize(cloudURL.path) != localFileSize || (!cloudURL.isUploaded && !cloudURL.isUploading) {
                 backupPaths.append(filename)
                 backupTotalSize += localFileSize
-
-                uploadPaths.append(filename)
-            } else if cloudExists {
-                if cloudURL.isUploaded {
-                    withoutUploadSize += localFileSize
-                } else {
-                    uploadPaths.append(filename)
-                }
+            }
+            if cloudURL.isUploaded {
+                withoutUploadSize += localFileSize
             }
             totalFileSize += localFileSize
         }
 
         let databaseFileSize = getDatabaseFileSize()
         let databaseCloudURL = backupUrl.appendingPathComponent(backupDatabaseName)
-        let isBackupDatabase = !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize
+        let isBackupDatabase = !FileManager.default.fileExists(atPath: databaseCloudURL.path)
+            || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize
+            || (!databaseCloudURL.isUploaded && !databaseCloudURL.isUploading)
 
         if !isBackupDatabase {
             withoutUploadSize += databaseFileSize

@@ -642,7 +642,7 @@
 "post" = "文章";
 "post_sharing" = "文章";
 "preparing" = "準備...";
-"preparing_progress" = "備份中...（%@）";
+"preparing_progress" = "準備中...（%@）";
 "privacy" = "隱私";
 "privacy_policy" = "隱私政策";
 "process_can_not_be_stop" = "流程一旦開始無法取消，請牢記 6 位數字 PIN，意外中止流程需要再次輸入";

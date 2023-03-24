@@ -14,10 +14,10 @@ class RestoreJob: CloudJob {
         guard FileManager.default.ubiquityIdentityToken != nil else {
             return false
         }
-        guard let backupUrl = backupUrl else {
+        guard let backupURL = backupUrl else {
             return false
         }
-        guard prepare(backupUrl: backupUrl) else {
+        guard prepare(backupURL: backupURL) else {
             return false
         }
         guard pendingFiles.count > 0 else {
@@ -27,14 +27,14 @@ class RestoreJob: CloudJob {
         guard isContinueProcessing else {
             return false
         }
-        setupQuery(backupUrl: backupUrl)
+        setupQuery(backupURL: backupURL)
         startQuery()
         queue.async(execute: downloadFiles)
         return true
     }
     
-    override func setupQuery(backupUrl: URL) {
-        super.setupQuery(backupUrl: backupUrl)
+    override func setupQuery(backupURL: URL) {
+        super.setupQuery(backupURL: backupURL)
         query.valueListAttributes = [NSMetadataUbiquitousItemPercentDownloadedKey,
                                      NSMetadataUbiquitousItemDownloadingErrorKey,
                                      NSMetadataUbiquitousItemDownloadingStatusKey]
@@ -76,7 +76,7 @@ class RestoreJob: CloudJob {
 
 extension RestoreJob {
     
-    private func prepare(backupUrl: URL) -> Bool {
+    private func prepare(backupURL: URL) -> Bool {
         do {
             func process(cloudURL: URL, localURL: URL, category: AttachmentContainer.Category, isZipFile: Bool) {
                 let fileSize = cloudURL.fileSize
@@ -91,14 +91,14 @@ extension RestoreJob {
                 
                 if category == .photos || category == .audios {
                     let name = category == .photos ? "mixin.photos.zip" : "mixin.audios.zip"
-                    if backupUrl.appendingPathComponent(name).isStoredCloud {
-                        let cloudURL = backupUrl.appendingPathComponent(name)
+                    if backupURL.appendingPathComponent(name).isStoredCloud {
+                        let cloudURL = backupURL.appendingPathComponent(name)
                         let localURL = AttachmentContainer.url.appendingPathComponent(name)
                         process(cloudURL: cloudURL, localURL: localURL, category: category, isZipFile: true)
                     }
                 }
                 
-                let cloudDir = backupUrl.appendingPathComponent(category.pathComponent)
+                let cloudDir = backupURL.appendingPathComponent(category.pathComponent)
                 guard FileManager.default.directoryExists(atPath: cloudDir.path) else {
                     Logger.general.info(category: "RestoreJob", message: "Directory not exists at: \(cloudDir.path)")
                     continue

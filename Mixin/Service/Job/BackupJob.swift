@@ -28,16 +28,17 @@ class BackupJob: CloudJob {
     
     override func execute() -> Bool {
         guard FileManager.default.ubiquityIdentityToken != nil else {
+            Logger.general.info(category: "BackupJob", message: "icloud is not available")
             return false
         }
-        guard let backupUrl = backupUrl else {
+        guard let backupURL = backupUrl else {
             return false
         }
         guard isBackupNow() else {
             return false
         }
         AppGroupUserDefaults.Account.hasUnfinishedBackup = true
-        guard prepare(backupUrl: backupUrl) else {
+        guard prepare(backupURL: backupURL) else {
             return false
         }
         guard pendingFiles.count > 0 else {
@@ -47,14 +48,14 @@ class BackupJob: CloudJob {
         guard isContinueProcessing else {
             return false
         }
-        setupQuery(backupUrl: backupUrl)
+        setupQuery(backupURL: backupURL)
         startQuery()
         queue.async(execute: backupNextFile)
         return true
     }
     
-    override func setupQuery(backupUrl: URL) {
-        super.setupQuery(backupUrl: backupUrl)
+    override func setupQuery(backupURL: URL) {
+        super.setupQuery(backupURL: backupURL)
         query.valueListAttributes = [NSMetadataUbiquitousItemPercentUploadedKey,
                                      NSMetadataUbiquitousItemIsUploadedKey,
                                      NSMetadataUbiquitousItemUploadingErrorKey]
@@ -88,6 +89,9 @@ class BackupJob: CloudJob {
                 }
                 if let error = item.value(forAttribute: NSMetadataUbiquitousItemUploadingErrorKey) as? NSError {
                     Logger.general.error(category: "Backup", message: "Upload item at \(file.srcURL) failed, error: \(error)")
+                    if error.code == NSUbiquitousFileNotUploadedDueToQuotaError {
+                        self.backupFinished()
+                    }
                 }
             }
             if self.totalProcessedSize >= self.totalFileSize {
@@ -122,25 +126,25 @@ extension BackupJob {
         return true
     }
     
-    private func prepare(backupUrl: URL) -> Bool {
+    private func prepare(backupURL: URL) -> Bool {
         isPreparing = true
         defer {
             isPreparing = false
         }
         do {
-            try FileManager.default.createDirectory(at: backupUrl, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(at: backupURL, withIntermediateDirectories: true, attributes: nil)
             
             var categories: [AttachmentContainer.Category] = [.photos, .audios]
             if AppGroupUserDefaults.User.backupFiles {
                 categories.append(.files)
             } else {
-                let url = backupUrl.appendingPathComponent(AttachmentContainer.Category.files.pathComponent, isDirectory: true)
+                let url = backupURL.appendingPathComponent(AttachmentContainer.Category.files.pathComponent, isDirectory: true)
                 try? FileManager.default.removeItem(at: url)
             }
             if AppGroupUserDefaults.User.backupVideos {
                 categories.append(.videos)
             } else {
-                let url = backupUrl.appendingPathComponent(AttachmentContainer.Category.videos.pathComponent, isDirectory: true)
+                let url = backupURL.appendingPathComponent(AttachmentContainer.Category.videos.pathComponent, isDirectory: true)
                 try? FileManager.default.removeItem(at: url)
             }
             
@@ -151,7 +155,7 @@ extension BackupJob {
                 if localURL.fileExists {
                     localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localURL.path).map { "\(category.pathComponent)/\($0)" })
                 }
-                let cloudURL = backupUrl.appendingPathComponent(category.pathComponent)
+                let cloudURL = backupURL.appendingPathComponent(category.pathComponent)
                 if cloudURL.fileExists {
                     cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudURL.path).map { "\(category.pathComponent)/\($0)" })
                 } else {
@@ -159,31 +163,18 @@ extension BackupJob {
                 }
             }
             for path in cloudPaths where !localPaths.contains(path) {
-                try? FileManager.default.removeItem(at: backupUrl.appendingPathComponent(path))
+                try? FileManager.default.removeItem(at: backupURL.appendingPathComponent(path))
             }
-            
             totalFileCount = localPaths.count + 1
-            
-            func process(localURL: URL, cloudURL: URL, fileSize: Int64) {
-                let isUploaded = FileManager.default.fileExists(atPath: cloudURL.path) && FileManager.default.fileSize(cloudURL.path) == fileSize
-                if isUploaded {
-                    processedFileSize += fileSize
-                } else {
-                    let file = File(srcURL: localURL, dstURL: cloudURL, size: fileSize)
-                    pendingFiles[file.name] = file
-                }
-                totalFileSize += fileSize
-                preparedFileCount += 1
-            }
             
             let fileSize = databaseSizeAfterCompression()
             let localURL = AppGroupContainer.userDatabaseUrl
-            let cloudURL = backupUrl.appendingPathComponent(backupDatabaseName)
+            let cloudURL = backupURL.appendingPathComponent(backupDatabaseName)
             process(localURL: localURL, cloudURL: cloudURL, fileSize: fileSize)
             
             for path in localPaths {
                 let localURL = AttachmentContainer.url.appendingPathComponent(path)
-                let cloudURL = backupUrl.appendingPathComponent(path)
+                let cloudURL = backupURL.appendingPathComponent(path)
                 let fileSize = FileManager.default.fileSize(localURL.path)
                 process(localURL: localURL, cloudURL: cloudURL, fileSize: fileSize)
             }
@@ -192,6 +183,20 @@ extension BackupJob {
             Logger.general.error(category: "BackupJob", message: "Prepare failed: \(error)")
             return false
         }
+    }
+    
+    private func process(localURL: URL, cloudURL: URL, fileSize: Int64) {
+        let isUploaded = FileManager.default.fileExists(atPath: cloudURL.path)
+            && FileManager.default.fileSize(cloudURL.path) == fileSize
+            && cloudURL.isUploaded
+        if isUploaded {
+            processedFileSize += fileSize
+        } else {
+            let file = File(srcURL: localURL, dstURL: cloudURL, size: fileSize)
+            pendingFiles[file.name] = file
+        }
+        totalFileSize += fileSize
+        preparedFileCount += 1
     }
     
     private func databaseSizeAfterCompression() -> Int64 {
@@ -243,7 +248,7 @@ extension BackupJob {
         stopQuery()
         deleteLegacyBackup()
         AppGroupUserDefaults.User.lastBackupDate = Date()
-        AppGroupUserDefaults.User.lastBackupSize = totalFileSize
+        AppGroupUserDefaults.User.lastBackupSize = totalProcessedSize
         AppGroupUserDefaults.Account.hasUnfinishedBackup = false
         NotificationCenter.default.post(onMainThread: BackupJob.backupDidChangeNotification, object: self)
         finishJob()

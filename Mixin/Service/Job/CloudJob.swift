@@ -49,9 +49,9 @@ class CloudJob: AsynchronousJob {
         NotificationCenter.default.addObserver(self, selector: #selector(queryDidUpdate(notification:)), name: .NSMetadataQueryDidUpdate, object: nil)
     }
     
-    func setupQuery(backupUrl: URL) {
+    func setupQuery(backupURL: URL) {
         query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
-        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupUrl.path)
+        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupURL.path)
     }
     
     func startQuery() {

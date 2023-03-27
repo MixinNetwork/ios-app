@@ -34,10 +34,9 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let transactionView = R.nib.ethereumTransactionView(owner: nil)!
-        transactionView.valueLabel.text = transaction.decimalValue.description
-        messageWrapperView.addSubview(transactionView)
-        transactionView.snp.makeConstraints { make in
+        let previewView = R.nib.transactionPreviewUnavailableView(owner: nil)!
+        messageWrapperView.addSubview(previewView)
+        previewView.snp.makeConstraints { make in
             let insets = UIEdgeInsets(top: 16, left: 16, bottom: 10, right: 16)
             make.edges.equalToSuperview().inset(insets)
         }

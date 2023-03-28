@@ -98,7 +98,11 @@ extension ConnectWalletViewController: AuthenticationIntentViewController {
         true
     }
     
-    func authenticationViewController(_ controller: AuthenticationViewController, didInput pin: String, completion: @escaping @MainActor (Swift.Error?) -> Void) {
+    func authenticationViewController(
+        _ controller: AuthenticationViewController,
+        didInput pin: String,
+        completion: @escaping @MainActor (Swift.Error?) -> Void
+    ) {
         Task {
             do {
                 let priv = try await TIP.ethereumPrivateKey(pin: pin)

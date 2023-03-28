@@ -42,7 +42,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
         }
         chainNameLabel.text = chain.name
         if let gasPrice {
-            updateFeeLabel(gasPrice: gasPrice)
+            showFee(gasPrice: gasPrice)
         } else {
             feeLabel.text = R.string.localizable.calculating()
         }
@@ -52,10 +52,15 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
         onReject?()
     }
     
+    override func changeFee(_ sender: Any) {
+        let selector = NetworkFeeSelectorViewController()
+        present(selector, animated: true)
+    }
+    
     func updateFee(with gasPrice: BigUInt) {
         self.gasPrice = gasPrice
         if isViewLoaded {
-            updateFeeLabel(gasPrice: gasPrice)
+            showFee(gasPrice: gasPrice)
         }
     }
     
@@ -81,7 +86,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
         authenticationViewController?.presentingViewController?.dismiss(animated: true)
     }
     
-    private func updateFeeLabel(gasPrice: BigUInt) {
+    private func showFee(gasPrice: BigUInt) {
         let fee = transaction.gas * gasPrice
         if var decimalFee = Decimal(string: fee.description, locale: .enUSPOSIX) {
             // FIXME: Wei to decimal
@@ -91,6 +96,8 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
                                                               sign: .never,
                                                               symbol: .custom(chain.gasSymbol))
         }
+        feeButton.isEnabled = true
+        feeSelectorImageView.isHidden = false
     }
     
 }

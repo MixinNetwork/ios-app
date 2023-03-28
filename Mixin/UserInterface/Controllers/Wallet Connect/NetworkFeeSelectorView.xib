@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NetworkFeeSelectorViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="tableView" destination="ofa-86-16z" id="F0U-Bp-SpE"/>
+                <outlet property="tableViewBottomConstraint" destination="q7m-ns-Q58" id="M49-Xq-ooR"/>
+                <outlet property="tableViewTopConstraint" destination="kQb-VY-qrC" id="GXV-A3-cvI"/>
+                <outlet property="titleHeightConstraint" destination="STJ-Pw-pzz" id="6Nk-ll-dl6"/>
+                <outlet property="titleView" destination="dar-fD-aNg" id="Hxo-8e-XlR"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="294"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dar-fD-aNg" customClass="PopupTitleView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="70"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="STJ-Pw-pzz"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="none" rowHeight="74" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="ofa-86-16z">
+                    <rect key="frame" x="0.0" y="81" width="393" height="178"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ofa-86-16z" secondAttribute="trailing" id="BEo-Oo-4gY"/>
+                <constraint firstItem="dar-fD-aNg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Kuk-xV-7lF"/>
+                <constraint firstItem="ofa-86-16z" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Tjj-Jc-Xji"/>
+                <constraint firstItem="dar-fD-aNg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ZRy-6h-zU4"/>
+                <constraint firstAttribute="trailing" secondItem="dar-fD-aNg" secondAttribute="trailing" id="ffU-hX-G7O"/>
+                <constraint firstItem="ofa-86-16z" firstAttribute="top" secondItem="dar-fD-aNg" secondAttribute="bottom" constant="11" id="kQb-VY-qrC"/>
+                <constraint firstAttribute="bottom" secondItem="ofa-86-16z" secondAttribute="bottom" constant="35" id="q7m-ns-Q58"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="136.64122137404578" y="238.02816901408451"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -400,7 +400,6 @@
 		7BBC913424333DCA00FC3F3A /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC913324333DCA00FC3F3A /* CircleCell.swift */; };
 		7BBCABAE2524644C00601762 /* HomeOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCABAD2524644C00601762 /* HomeOverlayViewController.swift */; };
 		7BBCEC1825232A9800F270DF /* WebMoreMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */; };
-		7BBCEC2025232FC700F270DF /* PopupTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BBCEC1F25232FC700F270DF /* PopupTitleView.xib */; };
 		7BBCEC242523332200F270DF /* PopupTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCEC232523332200F270DF /* PopupTitleView.swift */; };
 		7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BBCEC332523A1FF00F270DF /* MinimizedClipSwitcherView.xib */; };
 		7BBCEC382523A2B400F270DF /* MinimizedClipSwitcherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCEC372523A2B400F270DF /* MinimizedClipSwitcherViewController.swift */; };
@@ -775,6 +774,10 @@
 		94656C212795395E006C3F1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94656C202795395E006C3F1D /* Preview Assets.xcassets */; };
 		94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94659DA925C13793003403E5 /* DevicePerformance.swift */; };
 		946983AD29D18E1F00E73428 /* TransactionPreviewUnavailableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946983AC29D18E1F00E73428 /* TransactionPreviewUnavailableView.xib */; };
+		946983B029D1A36400E73428 /* NetworkFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */; };
+		946983B129D1A36400E73428 /* NetworkFeeSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946983AF29D1A36400E73428 /* NetworkFeeSelectorView.xib */; };
+		946983B429D2A0DE00E73428 /* NetworkFeeOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */; };
+		946983B529D2A0DE00E73428 /* NetworkFeeOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */; };
 		946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B6F2325E974B500A95C40 /* CacheableAsset.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
 		94720ED129C1A9850070C7C1 /* TIP+BIP44.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94720ED029C1A9850070C7C1 /* TIP+BIP44.swift */; };
@@ -801,6 +804,7 @@
 		94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94812DD926E082C400213F79 /* mixin_condensed.otf */; };
 		94822BC929B7071600DC21B2 /* WalletConnectRejectionReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94822BC829B7071600DC21B2 /* WalletConnectRejectionReason.swift */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */; };
+		948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */; };
 		948E6CB528AF95CC00DFF5DF /* TIPIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */; };
 		948E6CB628AF95CC00DFF5DF /* TIPIntroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */; };
 		9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */; };
@@ -1515,7 +1519,6 @@
 		7BBC913324333DCA00FC3F3A /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
 		7BBCABAD2524644C00601762 /* HomeOverlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeOverlayViewController.swift; sourceTree = "<group>"; };
 		7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebMoreMenuViewController.swift; sourceTree = "<group>"; };
-		7BBCEC1F25232FC700F270DF /* PopupTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupTitleView.xib; sourceTree = "<group>"; };
 		7BBCEC232523332200F270DF /* PopupTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTitleView.swift; sourceTree = "<group>"; };
 		7BBCEC332523A1FF00F270DF /* MinimizedClipSwitcherView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedClipSwitcherView.xib; sourceTree = "<group>"; };
 		7BBCEC372523A2B400F270DF /* MinimizedClipSwitcherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedClipSwitcherViewController.swift; sourceTree = "<group>"; };
@@ -1898,6 +1901,10 @@
 		94656C202795395E006C3F1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		94659DA925C13793003403E5 /* DevicePerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePerformance.swift; sourceTree = "<group>"; };
 		946983AC29D18E1F00E73428 /* TransactionPreviewUnavailableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionPreviewUnavailableView.xib; sourceTree = "<group>"; };
+		946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeSelectorViewController.swift; sourceTree = "<group>"; };
+		946983AF29D1A36400E73428 /* NetworkFeeSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkFeeSelectorView.xib; sourceTree = "<group>"; };
+		946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOptionCell.swift; sourceTree = "<group>"; };
+		946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkFeeOptionCell.xib; sourceTree = "<group>"; };
 		946B6F2325E974B500A95C40 /* CacheableAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAsset.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
 		94720ED029C1A9850070C7C1 /* TIP+BIP44.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIP+BIP44.swift"; sourceTree = "<group>"; };
@@ -1925,6 +1932,7 @@
 		94822BC829B7071600DC21B2 /* WalletConnectRejectionReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectRejectionReason.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
+		948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOption.swift; sourceTree = "<group>"; };
 		948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPIntroViewController.swift; sourceTree = "<group>"; };
 		948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPIntroView.xib; sourceTree = "<group>"; };
 		9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistViewController.swift; sourceTree = "<group>"; };
@@ -3103,6 +3111,14 @@
 			path = "AppGroup Server";
 			sourceTree = "<group>";
 		};
+		948E276929D2A518002BFCE1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		94B7642D25EA673300EDF9C6 /* Cacheable Asset */ = {
 			isa = PBXGroup;
 			children = (
@@ -3164,6 +3180,7 @@
 		94ED3EF32990DB8D003BC236 /* Wallet Connect */ = {
 			isa = PBXGroup;
 			children = (
+				948E276929D2A518002BFCE1 /* Model */,
 				94E35BEF298B7A0B00ADB40D /* ConnectWalletView.xib */,
 				94E35BEE298B7A0B00ADB40D /* ConnectWalletViewController.swift */,
 				945E85A229BF9BBF000FDA54 /* RevealTIPWalletAddressViewController.swift */,
@@ -3178,6 +3195,10 @@
 				9406279329AC646B00457BBD /* EthereumTransactionView.xib */,
 				9406279529AC723400457BBD /* EthereumTransactionView.swift */,
 				946983AC29D18E1F00E73428 /* TransactionPreviewUnavailableView.xib */,
+				946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */,
+				946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */,
+				946983AF29D1A36400E73428 /* NetworkFeeSelectorView.xib */,
+				946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */,
 			);
 			path = "Wallet Connect";
 			sourceTree = "<group>";
@@ -3583,7 +3604,6 @@
 				94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */,
 				7B311BA922B9EAFE00C16652 /* IntroTextView.swift */,
 				7BC14670230D235C0060FE19 /* SelectedCellBackgroundView.swift */,
-				7BBCEC1F25232FC700F270DF /* PopupTitleView.xib */,
 				7BBCEC232523332200F270DF /* PopupTitleView.swift */,
 			);
 			path = Views;
@@ -4337,6 +4357,7 @@
 				7CCE65A928D69D1D00FE944A /* TransferActionView.xib in Resources */,
 				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
+				946983B529D2A0DE00E73428 /* NetworkFeeOptionCell.xib in Resources */,
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */,
 				7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */,
@@ -4352,13 +4373,13 @@
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
 				7C0FAAC927E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib in Resources */,
 				7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */,
+				946983B129D1A36400E73428 /* NetworkFeeSelectorView.xib in Resources */,
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
 				94C359F728B506D40010F53C /* TIPFullscreenInputView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
 				7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
-				7BBCEC2025232FC700F270DF /* PopupTitleView.xib in Resources */,
 				DFC2647624E933B700BF954D /* BigAmountConfirmationWindow.xib in Resources */,
 				94E35BF1298B7A0B00ADB40D /* ConnectWalletView.xib in Resources */,
 				7BA9F32124A22EC200D7C091 /* CallMemberCell.xib in Resources */,
@@ -5224,6 +5245,7 @@
 				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
+				948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				947C5E5B29B0FE9B00838458 /* WalletConnectV2Session.swift in Sources */,
@@ -5301,6 +5323,7 @@
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,
 				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
+				946983B029D1A36400E73428 /* NetworkFeeSelectorViewController.swift in Sources */,
 				DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */,
 				7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */,
 				947744E126A9F2D300B6BBDD /* HomeAppItem.swift in Sources */,
@@ -5319,6 +5342,7 @@
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
 				5E3725BA268D4E0400269FE7 /* HomeAppsSnapshotView.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
+				946983B429D2A0DE00E73428 /* NetworkFeeOptionCell.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */,
 				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,

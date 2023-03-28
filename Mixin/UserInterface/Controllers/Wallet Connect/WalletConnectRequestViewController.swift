@@ -8,6 +8,8 @@ class WalletConnectRequestViewController: UIViewController {
     @IBOutlet weak var networkStackView: UIStackView!
     @IBOutlet weak var chainNameLabel: UILabel!
     @IBOutlet weak var feeLabel: UILabel!
+    @IBOutlet weak var feeSelectorImageView: UIImageView!
+    @IBOutlet weak var feeButton: UIButton!
     @IBOutlet weak var warningWrapperView: UIView!
     @IBOutlet weak var warningIconView: UIImageView!
     @IBOutlet weak var warningLabel: UILabel!
@@ -45,6 +47,10 @@ class WalletConnectRequestViewController: UIViewController {
         } else {
             signButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 28, bottom: 12, right: 28)
         }
+    }
+    
+    @IBAction func changeFee(_ sender: Any) {
+        
     }
     
     @IBAction func signByPIN(_ sender: Any) {

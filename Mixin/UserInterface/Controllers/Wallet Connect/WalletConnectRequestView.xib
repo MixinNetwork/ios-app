@@ -12,7 +12,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WalletConnectRequestViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="chainNameLabel" destination="VhH-Vl-tYP" id="xRf-Ny-3AK"/>
+                <outlet property="feeButton" destination="0bT-vA-KNa" id="wN8-Lk-usA"/>
                 <outlet property="feeLabel" destination="cvt-69-wPa" id="QWZ-z2-cKb"/>
+                <outlet property="feeSelectorImageView" destination="AhN-xg-q9T" id="HFt-om-Jvb"/>
                 <outlet property="messageWrapperView" destination="LIM-Os-jYC" id="Z6q-ga-M0t"/>
                 <outlet property="networkStackView" destination="UF0-DO-fFr" id="QFL-Sw-Yu7"/>
                 <outlet property="networkStackViewBottomConstraint" destination="lHD-Ps-Ri6" id="OGE-WF-XuF"/>
@@ -67,7 +69,7 @@
                                 </label>
                             </subviews>
                         </stackView>
-                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gBF-HC-iHF">
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gBF-HC-iHF">
                             <rect key="frame" x="0.0" y="33" width="321" height="17"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" text="Network fee" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="By6-gF-Gdn">
@@ -81,7 +83,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cvt-69-wPa">
-                                    <rect key="frame" x="82.333333333333329" y="0.0" width="238.66666666666669" height="17"/>
+                                    <rect key="frame" x="86.333333333333329" y="0.0" width="234.66666666666669" height="17"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" name="text_desc"/>
                                     <nil key="highlightedColor"/>
@@ -89,10 +91,21 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
+                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_selector_down" translatesAutoresizingMaskIntoConstraints="NO" id="AhN-xg-q9T">
+                                    <rect key="frame" x="115" y="0.0" width="0.0" height="17"/>
+                                </imageView>
                             </subviews>
                         </stackView>
                     </subviews>
                 </stackView>
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0bT-vA-KNa" userLabel="Fee Button">
+                    <rect key="frame" x="122.33333333333333" y="223.66666666666666" width="28.666666666666671" height="17"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title=" "/>
+                    <connections>
+                        <action selector="changeFee:" destination="-1" eventType="touchUpInside" id="qi6-oQ-eys"/>
+                    </connections>
+                </button>
                 <view clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="BcS-yh-7Ne" userLabel="Warning Wrapper View">
                     <rect key="frame" x="16" y="256.66666666666669" width="361" height="74.333333333333314"/>
                     <subviews>
@@ -174,23 +187,28 @@
             <constraints>
                 <constraint firstItem="UF0-DO-fFr" firstAttribute="top" secondItem="LIM-Os-jYC" secondAttribute="bottom" constant="16" id="16l-HY-bol"/>
                 <constraint firstAttribute="trailing" secondItem="UF0-DO-fFr" secondAttribute="trailing" constant="36" id="1q1-r4-gcH"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="top" secondItem="cvt-69-wPa" secondAttribute="top" id="5sM-5F-XB8"/>
                 <constraint firstAttribute="trailing" secondItem="nqf-ki-SK0" secondAttribute="trailing" constant="16" id="73X-SP-Apb"/>
                 <constraint firstAttribute="trailing" secondItem="BcS-yh-7Ne" secondAttribute="trailing" constant="16" id="Gi5-MY-P35"/>
                 <constraint firstItem="BcS-yh-7Ne" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="Hpu-gP-HDt"/>
                 <constraint firstItem="nqf-ki-SK0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="X50-nq-0Wt"/>
                 <constraint firstAttribute="trailing" secondItem="LIM-Os-jYC" secondAttribute="trailing" constant="20" id="Xwh-c4-NuT"/>
                 <constraint firstItem="LIM-Os-jYC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="25" id="e0N-jY-MYb"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="leading" secondItem="cvt-69-wPa" secondAttribute="leading" id="fxP-UG-5qk"/>
                 <constraint firstItem="UF0-DO-fFr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="36" id="gFV-0M-5QH"/>
                 <constraint firstItem="nqf-ki-SK0" firstAttribute="top" secondItem="BcS-yh-7Ne" secondAttribute="bottom" constant="40" id="hLC-wq-pC0"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="bottom" secondItem="By6-gF-Gdn" secondAttribute="bottom" id="jQv-al-Z5r"/>
                 <constraint firstItem="0H3-LD-9bd" firstAttribute="bottom" secondItem="UF0-DO-fFr" secondAttribute="bottom" constant="252.33333333333334" id="lHD-Ps-Ri6"/>
                 <constraint firstItem="BcS-yh-7Ne" firstAttribute="top" secondItem="UF0-DO-fFr" secondAttribute="bottom" constant="16" id="qei-Uk-yzf"/>
                 <constraint firstItem="LIM-Os-jYC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="uo4-mz-hnY"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="trailing" secondItem="AhN-xg-q9T" secondAttribute="trailing" id="zLS-gu-0kC"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="136.64122137404578" y="738.38028169014092"/>
         </view>
     </objects>
     <resources>
+        <image name="ic_selector_down" width="16" height="16"/>
         <image name="ic_warning" width="22" height="23"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

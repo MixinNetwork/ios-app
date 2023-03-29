@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 enum MixinURL {
     
@@ -20,6 +21,7 @@ enum MixinURL {
         static let apps = "apps"
         static let snapshots = "snapshots"
         static let conversations = "conversations"
+        static let deviceTransfer = "device-transfer"
     }
     
     case codes(String)
@@ -35,6 +37,7 @@ enum MixinURL {
     case withdrawal
     case address
     case upgradeDesktop
+    case deviceTransfer(DeviceTransferCommand)
     
     init?(url: URL) {
         if url.scheme == MixinURL.scheme {
@@ -69,6 +72,17 @@ enum MixinURL {
                 self = .withdrawal
             } else if url.host == Host.address {
                 self = .address
+            } else if url.host == Host.deviceTransfer {
+                if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                   let queryItems = components.queryItems,
+                   let dataItem = queryItems.first(where: { $0.name == "data" }),
+                   let dataString = dataItem.value,
+                   let data = Data(base64URLEncoded: dataString),
+                   let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data) {
+                    self = .deviceTransfer(command)
+                } else {
+                    self = .unknown(url)
+                }
             } else {
                 self = .unknown(url)
             }

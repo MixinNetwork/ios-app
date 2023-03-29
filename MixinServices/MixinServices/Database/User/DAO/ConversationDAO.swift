@@ -631,6 +631,20 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
     }
     
+    public func conversations(limit: Int, offset: Int) -> [Conversation] {
+        let sql = "SELECT * FROM conversations ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+
+    public func conversationsCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM conversations")
+        return count ?? 0
+    }
+    
+    public func insert(conversation: Conversation) {
+        db.save(conversation)
+    }
+    
 }
 
 extension ConversationDAO {

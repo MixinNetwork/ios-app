@@ -1050,4 +1050,28 @@ extension MessageDAO {
         try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: messageId)])
     }
     
+    public func messages(limit: Int, offset: Int) -> [Message] {
+        let sql = "SELECT * FROM messages ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func messagesCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM messages")
+        return count ?? 0
+    }
+    
+    public func insert(message: Message) {
+        db.save(message)
+    }
+    
+    public func mediasCount() -> Int {
+        let sql = """
+        SELECT COUNT(*)
+        FROM messages
+        WHERE media_status = 'DONE' AND (category LIKE '%VIDEO' OR category LIKE '%IMAGE' OR category LIKE '%DATA' OR category LIKE '%AUDIO')
+        """
+        let count: Int? = db.select(with: sql)
+        return count ?? 0
+    }
+    
 }

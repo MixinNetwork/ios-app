@@ -74,17 +74,33 @@ public final class MessageItem {
     public var expireIn: Int64?
     
     public lazy var appButtons: [AppButtonData]? = {
-        guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let content = content, let data = Data(base64Encoded: content) else {
+        guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let content = content else {
             return nil
         }
-        return try? JSONDecoder.default.decode([AppButtonData].self, from: data)
+        let appButtonData: Data
+        if let data = Data(base64Encoded: content) {
+            appButtonData = data
+        } else if let data = content.data(using: .utf8) {
+            appButtonData = data
+        } else {
+            return nil
+        }
+        return try? JSONDecoder.default.decode([AppButtonData].self, from: appButtonData)
     }()
     
     public lazy var appCard: AppCardData? = {
-        guard category == MessageCategory.APP_CARD.rawValue, let content = content, let data = Data(base64Encoded: content) else {
+        guard category == MessageCategory.APP_CARD.rawValue, let content = content else {
             return nil
         }
-        return try? JSONDecoder.default.decode(AppCardData.self, from: data)
+        let cardData: Data
+        if let data = Data(base64Encoded: content) {
+            cardData = data
+        } else if let data = content.data(using: .utf8) {
+            cardData = data
+        } else {
+            return nil
+        }
+        return try? JSONDecoder.default.decode(AppCardData.self, from: cardData)
     }()
     
     public lazy var mentions: MessageMention.Mentions? = {

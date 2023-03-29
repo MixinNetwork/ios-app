@@ -110,6 +110,36 @@ public final class TranscriptMessage {
         self.createdAt = item.createdAt
     }
     
+    public init(transcriptId: String, messageId: String, userId: String?, userFullName: String?, category: String, createdAt: String, content: String?, mediaUrl: String?, mediaName: String?, mediaSize: Int64?, mediaWidth: Int?, mediaHeight: Int?, mediaMimeType: String?, mediaDuration: Int64?, mediaStatus: String?, mediaWaveform: Data?, thumbImage: String?, thumbUrl: String?, mediaKey: Data?, mediaDigest: Data?, mediaCreatedAt: String?, stickerId: String?, sharedUserId: String?, mentions: String?, quoteMessageId: String?, quoteContent: String?, caption: String?) {
+        self.transcriptId = transcriptId
+        self.messageId = messageId
+        self.userId = userId
+        self.userFullName = userFullName
+        self.category = category
+        self.createdAt = createdAt
+        self.content = content
+        self.mediaUrl = mediaUrl
+        self.mediaName = mediaName
+        self.mediaSize = mediaSize
+        self.mediaWidth = mediaWidth
+        self.mediaHeight = mediaHeight
+        self.mediaMimeType = mediaMimeType
+        self.mediaDuration = mediaDuration
+        self.mediaStatus = mediaStatus
+        self.mediaWaveform = mediaWaveform
+        self.thumbImage = thumbImage
+        self.thumbUrl = thumbUrl
+        self.mediaKey = mediaKey
+        self.mediaDigest = mediaDigest
+        self.mediaCreatedAt = mediaCreatedAt
+        self.stickerId = stickerId
+        self.sharedUserId = sharedUserId
+        self.mentions = mentions
+        self.quoteMessageId = quoteMessageId
+        self.quoteContent = quoteContent
+        self.caption = caption
+    }
+    
 }
 
 extension TranscriptMessage {

@@ -8,6 +8,7 @@ public class MixinService {
         public static let userId = "uid"
         public static let sessionId = "sid"
         public static let progress = "prog"
+        public static let command = "cmd"
     }
     
     public static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.recall.msg")
@@ -185,7 +186,7 @@ public class MixinService {
     }
 
     func sendNoKeyMessage(conversationId: String, recipientId: String) {
-        let plainData = PlainJsonMessagePayload(action: PlainDataAction.NO_KEY.rawValue, messages: nil, ackMessages: nil)
+        let plainData = PlainJsonMessagePayload(action: PlainDataAction.NO_KEY.rawValue, messages: nil, ackMessages: nil, content: nil)
         let encoded = (try? JSONEncoder.default.encode(plainData))?.base64EncodedString() ?? ""
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased())
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)

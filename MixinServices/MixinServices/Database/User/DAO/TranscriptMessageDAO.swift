@@ -41,6 +41,10 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                     && TranscriptMessage.column(of: .messageId) == messageId)
     }
     
+    public func transcriptMessage(messageId: String) -> TranscriptMessage? {
+        db.select(with: "SELECT * FROM transcript_messages WHERE message_id = ? LIMIT 1", arguments: [messageId])
+    }
+
     public func transcriptMessages(transcriptId: String) -> [TranscriptMessage] {
         db.select(where: TranscriptMessage.column(of: .transcriptId) == transcriptId,
                   order: [TranscriptMessage.column(of: .createdAt)])
@@ -84,6 +88,20 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
     
     public func childMessages(with transcriptId: String) -> [TranscriptMessage] {
         db.select(where: TranscriptMessage.column(of: .transcriptId) == transcriptId)
+    }
+    
+    public func transcriptMessages(limit: Int, offset: Int) -> [TranscriptMessage] {
+        let sql = "SELECT * FROM transcript_messages ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func transcriptMessagesCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM transcript_messages")
+        return count ?? 0
+    }
+    
+    public func insert(transcriptMessage: TranscriptMessage) {
+        db.save(transcriptMessage)
     }
     
     public func update(

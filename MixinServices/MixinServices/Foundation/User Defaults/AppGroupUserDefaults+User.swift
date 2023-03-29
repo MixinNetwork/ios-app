@@ -72,6 +72,7 @@ extension AppGroupUserDefaults {
         
         public static let version = 31
         public static let uninitializedVersion = -1
+        public static let deviceTransferVersion = 1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
         public static let didChangeUserInterfaceStyleNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeUserInterfaceStyle")

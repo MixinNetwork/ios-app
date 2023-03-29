@@ -1,10 +1,10 @@
 import Foundation
 
-enum QuoteContentConverter {
+public enum QuoteContentConverter {
     
     // Due to historical reasons, we are using different serialization between database and transcript
     
-    static func transcriptQuoteContent(from localQuoteContent: Data?) -> String? {
+    public static func transcriptQuoteContent(from localQuoteContent: Data?) -> String? {
         guard let localQuoteContent = localQuoteContent else {
             return nil
         }
@@ -18,7 +18,7 @@ enum QuoteContentConverter {
         return String(data: json, encoding: .utf8)
     }
     
-    static func localQuoteContent(from transcriptQuoteContent: String?) -> Data? {
+    public static func localQuoteContent(from transcriptQuoteContent: String?) -> Data? {
         guard let contentJson = transcriptQuoteContent?.data(using: .utf8)  else {
             return nil
         }

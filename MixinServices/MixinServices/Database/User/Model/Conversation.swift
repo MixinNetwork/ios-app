@@ -31,6 +31,25 @@ public struct Conversation {
     public var pinTime: String?
     public var expireIn: Int64?
     
+    public init(conversationId: String, ownerId: String? = nil, category: String? = nil, name: String? = nil, iconUrl: String? = nil, announcement: String? = nil, lastMessageId: String? = nil, lastMessageCreatedAt: String? = nil, lastReadMessageId: String? = nil, unseenMessageCount: Int? = nil, status: Int, draft: String? = nil, muteUntil: String? = nil, codeUrl: String? = nil, pinTime: String? = nil, expireIn: Int64? = nil) {
+        self.conversationId = conversationId
+        self.ownerId = ownerId
+        self.category = category
+        self.name = name
+        self.iconUrl = iconUrl
+        self.announcement = announcement
+        self.lastMessageId = lastMessageId
+        self.lastMessageCreatedAt = lastMessageCreatedAt
+        self.lastReadMessageId = lastReadMessageId
+        self.unseenMessageCount = unseenMessageCount
+        self.status = status
+        self.draft = draft
+        self.muteUntil = muteUntil
+        self.codeUrl = codeUrl
+        self.pinTime = pinTime
+        self.expireIn = expireIn
+    }
+    
     public static func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
         return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil, expireIn: 0)
     }

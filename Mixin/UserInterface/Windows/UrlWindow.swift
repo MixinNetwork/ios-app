@@ -49,6 +49,8 @@ class UrlWindow {
             case .upgradeDesktop:
                 UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
                 result = true
+            case let .deviceTransfer(command):
+                result = checkDeviceTransfer(command: command)
             case .unknown:
                 if presentHintOnUnsupportedMixinSchema && url.scheme == MixinURL.scheme {
                     UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
@@ -868,6 +870,31 @@ class UrlWindow {
         } else {
             return checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
         }
+    }
+    
+    class func checkDeviceTransfer(command: DeviceTransferCommand) -> Bool {
+        guard AppGroupUserDefaults.Account.canRestoreChat else {
+            return true
+        }
+        guard command.version == AppGroupUserDefaults.User.deviceTransferVersion else {
+            UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
+            return true
+        }
+        guard
+            command.ip != nil,
+            command.port != nil,
+            command.action == .push
+        else {
+            return true
+        }
+        let controller = DeviceTransferProgressViewController()
+        controller.invoker = .restoreFromPhone(command, nil)
+        if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {
+            navigationController.pushViewController(controller, animated: true)
+        } else {
+            AppDelegate.current.mainWindow.rootViewController?.present(controller, animated: true)
+        }
+        return true
     }
     
 }

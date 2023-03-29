@@ -163,6 +163,20 @@ public final class StickerDAO: UserDatabaseDAO {
                   where: Sticker.column(of: .stickerId) == stickerId)
     }
     
+    public func stickers(limit: Int, offset: Int) -> [Sticker] {
+        let sql = "SELECT * FROM stickers ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func stickersCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM stickers")
+        return count ?? 0
+    }
+    
+    public func inser(sticker: Sticker) {
+        db.save(sticker)
+    }
+    
     private func insertOrUpdateSticker(into db: GRDB.Database, with response: StickerResponse) throws {
         let sticker = Sticker(response: response)
         if try sticker.exists(db) {

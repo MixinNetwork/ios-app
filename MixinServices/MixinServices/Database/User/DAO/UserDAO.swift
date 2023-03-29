@@ -215,6 +215,20 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql)
     }
     
+    public func users(limit: Int, offset: Int) -> [User] {
+        let sql = "SELECT * FROM users ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func usersCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM users")
+        return count ?? 0
+    }
+    
+    public func insert(user: User) {
+        db.save(user)
+    }
+    
     public func mentionRepresentation(identityNumbers: [String]) -> [String: String] {
         db.select(keyColumn: User.column(of: .identityNumber),
                   valueColumn: User.column(of: .fullName),

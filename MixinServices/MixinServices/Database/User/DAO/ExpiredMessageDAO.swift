@@ -143,4 +143,18 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         }
     }
     
+    public func expiredMessages(limit: Int, offset: Int) -> [ExpiredMessage] {
+        let sql = "SELECT * FROM expired_messages ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func expiredMessagesCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM expired_messages")
+        return count ?? 0
+    }
+    
+    public func insert(expiredMessage: ExpiredMessage) {
+        db.save(expiredMessage)
+    }
+    
 }

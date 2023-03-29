@@ -37,6 +37,40 @@ public struct Message {
     public var createdAt: String
     
     public var albumId: String?
+    
+    public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, action: String? = nil, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, sharedUserId: String? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, createdAt: String, albumId: String? = nil) {
+        self.messageId = messageId
+        self.conversationId = conversationId
+        self.userId = userId
+        self.category = category
+        self.content = content
+        self.mediaUrl = mediaUrl
+        self.mediaMimeType = mediaMimeType
+        self.mediaSize = mediaSize
+        self.mediaDuration = mediaDuration
+        self.mediaWidth = mediaWidth
+        self.mediaHeight = mediaHeight
+        self.mediaHash = mediaHash
+        self.mediaKey = mediaKey
+        self.mediaDigest = mediaDigest
+        self.mediaStatus = mediaStatus
+        self.mediaWaveform = mediaWaveform
+        self.mediaLocalIdentifier = mediaLocalIdentifier
+        self.thumbImage = thumbImage
+        self.thumbUrl = thumbUrl
+        self.status = status
+        self.action = action
+        self.participantId = participantId
+        self.snapshotId = snapshotId
+        self.name = name
+        self.stickerId = stickerId
+        self.sharedUserId = sharedUserId
+        self.quoteMessageId = quoteMessageId
+        self.quoteContent = quoteContent
+        self.createdAt = createdAt
+        self.albumId = albumId
+    }
+    
 }
 
 extension Message: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

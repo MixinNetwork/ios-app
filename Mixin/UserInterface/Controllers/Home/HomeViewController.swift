@@ -136,6 +136,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDesktopButtonHidden), name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateBulletinView), name: TIP.didUpdateNotification, object: nil)
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
             CallService.shared.registerForPushKitNotificationsIfAvailable()

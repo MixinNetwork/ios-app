@@ -48,6 +48,8 @@ class NotificationController: NSObject {
                 present(text: string, localObject: string)
             case .upgradeDesktop:
                 present(text: R.string.localizable.desktop_upgrade(), localObject: string)
+            case .deviceTransfer:
+                present(text: R.string.localizable.restore_from_another_phone(), localObject: string)
             }
         } else {
             present(text: string, localObject: string)

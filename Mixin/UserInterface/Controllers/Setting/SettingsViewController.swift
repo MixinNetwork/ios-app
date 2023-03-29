@@ -9,7 +9,7 @@ class SettingsViewController: SettingsTableViewController {
                         title: R.string.localizable.account(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_backup(),
-                        title: R.string.localizable.chat_backup(),
+                        title: R.string.localizable.setting_chats(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_notification(),
                         title: R.string.localizable.notification_and_confirmation(),
@@ -67,12 +67,7 @@ extension SettingsViewController: UITableViewDelegate {
             case 0:
                 vc = AccountSettingViewController.instance()
             case 1:
-                if FileManager.default.ubiquityIdentityToken == nil {
-                    alert(R.string.localizable.backup_disable_hint())
-                    return
-                } else {
-                    vc = BackupViewController.instance()
-                }
+                vc = ChatsViewController.instance()
             case 2:
                 vc = NotificationAndConfirmationSettingsViewController.instance()
             default:

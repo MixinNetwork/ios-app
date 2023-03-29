@@ -19,6 +19,9 @@ public final class LoginManager {
     public static let accountDidChangeNotification = Notification.Name("one.mixin.services.account.did.change")
     public static let didLogoutNotification = Notification.Name("one.mixin.services.did.logout")
 
+    public var inDeviceTrasnfer = false
+    public var loggedOutInDeviceTrasnfer = false
+    
     fileprivate var _account: Account?
     fileprivate var _isLoggedIn = false
     fileprivate var lock = pthread_rwlock_t()
@@ -96,6 +99,11 @@ public final class LoginManager {
     }
     
     public func logout(reason: String) {
+        guard !inDeviceTrasnfer else {
+            loggedOutInDeviceTrasnfer = true
+            WebSocketService.shared.disconnect()
+            return
+        }
         guard account != nil else {
             return
         }

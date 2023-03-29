@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="restore_chat" rowHeight="118" id="KGk-i7-Jjw" customClass="RestoreChatTableViewCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="368" height="118"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="368" height="118"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_transfer_device" translatesAutoresizingMaskIntoConstraints="NO" id="vRG-uj-lYB">
+                        <rect key="frame" x="16" y="38" width="42" height="42"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="42" id="F1R-hl-ilp"/>
+                            <constraint firstAttribute="width" constant="42" id="dYX-Zk-rZC"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esU-14-F9u">
+                        <rect key="frame" x="68" y="35" width="248" height="19.333333333333329"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                        <color key="textColor" name="title"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="medium16"/>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="Uih-We-IzC">
+                        <rect key="frame" x="334" y="47" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="hxH-Hw-m9c"/>
+                            <constraint firstAttribute="width" constant="24" id="p7b-aa-fIw"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eSd-mR-5Ek">
+                        <rect key="frame" x="68" y="62.333333333333343" width="248" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" name="text_desc"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="esU-14-F9u" firstAttribute="leading" secondItem="vRG-uj-lYB" secondAttribute="trailing" constant="10" id="0Zz-Yy-6f5"/>
+                    <constraint firstItem="eSd-mR-5Ek" firstAttribute="top" secondItem="esU-14-F9u" secondAttribute="bottom" constant="8" id="1bH-M6-Qoq"/>
+                    <constraint firstAttribute="trailing" secondItem="esU-14-F9u" secondAttribute="trailing" constant="52" id="J8P-4v-2Yo"/>
+                    <constraint firstItem="eSd-mR-5Ek" firstAttribute="leading" secondItem="esU-14-F9u" secondAttribute="leading" id="N89-DD-jwq"/>
+                    <constraint firstItem="vRG-uj-lYB" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Ov4-YI-8Ti"/>
+                    <constraint firstItem="eSd-mR-5Ek" firstAttribute="trailing" secondItem="esU-14-F9u" secondAttribute="trailing" id="Qcw-Ps-hJN"/>
+                    <constraint firstItem="Uih-We-IzC" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Usy-6u-dll"/>
+                    <constraint firstItem="vRG-uj-lYB" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="fnw-Hc-O6C"/>
+                    <constraint firstAttribute="trailing" secondItem="Uih-We-IzC" secondAttribute="trailing" constant="10" id="hza-zj-Ycs"/>
+                    <constraint firstItem="esU-14-F9u" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="35" id="m0W-sk-t9v"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" name="background_secondary"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="13"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="detailLabel" destination="eSd-mR-5Ek" id="OzD-Ot-dH8"/>
+                <outlet property="iconView" destination="vRG-uj-lYB" id="sKh-Zs-K8V"/>
+                <outlet property="titleLabel" destination="esU-14-F9u" id="3ZU-Ev-fVA"/>
+            </connections>
+            <point key="canvasLocation" x="18.320610687022899" y="45.070422535211272"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Setting/ic_transfer_device" width="42" height="42.333332061767578"/>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

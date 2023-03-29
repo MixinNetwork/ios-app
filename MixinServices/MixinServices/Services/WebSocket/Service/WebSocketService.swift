@@ -151,7 +151,7 @@ public class WebSocketService {
                 }
                 semaphore.signal()
             }
-
+            
             let (success, isBadData) = send(message: message)
             if isBadData {
                 messageHandlers.removeValue(forKey: message.id)
@@ -308,7 +308,7 @@ extension WebSocketService {
     }
     
     @discardableResult
-    private func send(message: BlazeMessage) -> (success: Bool, isBadData: Bool) {
+    func send(message: BlazeMessage) -> (success: Bool, isBadData: Bool) {
         guard let socket = socket, socket.isConnected else {
             return (false, false)
         }

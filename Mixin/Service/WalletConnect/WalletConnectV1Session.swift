@@ -209,7 +209,9 @@ extension WalletConnectV1Session {
     private func requestSendTransaction(with request: WalletConnectSwift.Request) {
         do {
             let transactionPreview = try request.parameter(of: WalletConnectTransactionPreview.self, at: 0)
-            let transactionRequest = TransactionRequestViewController(session: self, chain: chain, transaction: transactionPreview)
+            let transactionRequest = TransactionRequestViewController(requester: .walletConnect(self),
+                                                                      chain: chain,
+                                                                      transaction: transactionPreview)
             Task { [weak transactionRequest] in
                 let gasPrice = try await self.ethereumClient.eth_gasPrice()
                 await MainActor.run {

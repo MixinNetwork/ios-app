@@ -4,6 +4,12 @@ import MixinServices
 
 class WalletConnectRequestViewController: UIViewController {
     
+    enum Requester {
+        case walletConnect(WalletConnectSession)
+        case app(App)
+        case page(String)
+    }
+    
     @IBOutlet weak var messageWrapperView: UIView!
     @IBOutlet weak var networkStackView: UIStackView!
     @IBOutlet weak var chainNameLabel: UILabel!
@@ -23,7 +29,7 @@ class WalletConnectRequestViewController: UIViewController {
     @MainActor var onReject: (() -> Void)?
     @MainActor var onApprove: ((Data) async throws -> Void)?
     
-    private let session: WalletConnectSession
+    private let requester: Requester
     
     private(set) var isApproved = false
     
@@ -31,8 +37,8 @@ class WalletConnectRequestViewController: UIViewController {
         UIView()
     }
     
-    init(session: WalletConnectSession) {
-        self.session = session
+    init(requester: Requester) {
+        self.requester = requester
         super.init(nibName: R.nib.walletConnectRequestView.name, bundle: nil)
     }
     
@@ -75,12 +81,30 @@ extension WalletConnectRequestViewController: AuthenticationIntentViewController
         "WalletConnect Request"
     }
     
-    var intentSubtitleIconURL: URL? {
-        session.iconURL
+    var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
+        switch requester {
+        case let .walletConnect(session):
+            if let url = session.iconURL {
+                return .url(url)
+            } else {
+                return nil
+            }
+        case let .app(app):
+            return .app(app)
+        case .page:
+            return nil
+        }
     }
     
     var intentSubtitle: String {
-        session.name
+        switch requester {
+        case let .walletConnect(session):
+            return session.name
+        case let .app(app):
+            return "\(app.name) (\(app.appNumber))"
+        case let .page(host):
+            return host
+        }
     }
     
     var isBiometryAuthAllowed: Bool {

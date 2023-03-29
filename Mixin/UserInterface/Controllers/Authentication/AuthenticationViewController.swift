@@ -88,8 +88,8 @@ final class AuthenticationViewController: UIViewController {
         intentViewController.didMove(toParent: self)
         titleLabel.text = intentViewController.intentTitle
         subtitleLabel.text = intentViewController.intentSubtitle
-        if let url = intentViewController.intentSubtitleIconURL {
-            let imageView = UIImageView()
+        if let icon = intentViewController.intentSubtitleIconURL {
+            let imageView = AvatarImageView()
             imageView.layer.cornerRadius = 8
             imageView.clipsToBounds = true
             imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -98,7 +98,12 @@ final class AuthenticationViewController: UIViewController {
                 make.height.equalTo(imageView.snp.width)
                 make.width.equalTo(16)
             }
-            imageView.sd_setImage(with: url)
+            switch icon {
+            case let .app(app):
+                imageView.setImage(app: app)
+            case let .url(url):
+                imageView.imageView.sd_setImage(with: url)
+            }
         }
         
         let biometryType = BiometryType.payment

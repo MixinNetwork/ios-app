@@ -17,9 +17,9 @@ final class SignRequestViewController: WalletConnectRequestViewController {
         successView
     }
     
-    init(session: WalletConnectSession, message: String) {
+    init(requester: WalletConnectRequestViewController.Requester, message: String) {
         self.message = message
-        super.init(session: session)
+        super.init(requester: requester)
     }
     
     required init?(coder: NSCoder) {

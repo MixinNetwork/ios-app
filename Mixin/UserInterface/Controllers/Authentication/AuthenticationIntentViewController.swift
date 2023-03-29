@@ -1,9 +1,15 @@
 import UIKit
+import MixinServices
+
+enum AuthenticationIntentSubtitleIcon {
+    case app(App)
+    case url(URL)
+}
 
 protocol AuthenticationIntentViewController: UIViewController {
     
     var intentTitle: String { get }
-    var intentSubtitleIconURL: URL? { get }
+    var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? { get }
     var intentSubtitle: String { get }
     var isBiometryAuthAllowed: Bool { get }
     var inputPINOnAppear: Bool { get }

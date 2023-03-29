@@ -22,10 +22,14 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
         sendTransactionView
     }
     
-    init(session: WalletConnectSession, chain: WalletConnectService.Chain, transaction: WalletConnectTransactionPreview) {
+    init(
+        requester: WalletConnectRequestViewController.Requester,
+        chain: WalletConnectService.Chain,
+        transaction: WalletConnectTransactionPreview
+    ) {
         self.chain = chain
         self.transaction = transaction
-        super.init(session: session)
+        super.init(requester: requester)
     }
     
     required init?(coder: NSCoder) {

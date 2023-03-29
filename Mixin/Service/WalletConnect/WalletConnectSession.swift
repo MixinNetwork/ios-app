@@ -25,7 +25,7 @@ extension WalletConnectSession {
     ) {
         do {
             let (message, address) = try decodeContent(request)
-            let signRequest = SignRequestViewController(session: self, message: message.humanReadable)
+            let signRequest = SignRequestViewController(requester: .walletConnect(self), message: message.humanReadable)
             signRequest.onReject = {
                 reject(.userRejected)
             }

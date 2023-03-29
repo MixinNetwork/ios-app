@@ -2,6 +2,7 @@ import UIKit
 import WebKit
 import Alamofire
 import WalletConnectSwift
+import web3
 import MixinServices
 
 class MixinWebViewController: WebViewController {
@@ -9,12 +10,14 @@ class MixinWebViewController: WebViewController {
     @IBOutlet weak var loadFailLabel: UILabel!
     @IBOutlet weak var contactDeveloperButton: UIButton!
     
-    private enum HandlerName {
-        static let mixinContext = "MixinContext"
-        static let reloadTheme = "reloadTheme"
-        static let playlist = "playlist"
-        static let close = "close"
-        static let log = "log"
+    private enum HandlerName: String, CaseIterable {
+        case mixinContext = "MixinContext"
+        case reloadTheme = "reloadTheme"
+        case playlist = "playlist"
+        case close = "close"
+        case log = "log"
+        case getTIPAddress = "getTipAddress"
+        case tipSign = "tipSign"
     }
     
     weak var associatedClip: Clip?
@@ -30,11 +33,9 @@ class MixinWebViewController: WebViewController {
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
         config.userContentController.addUserScript(Script.forwardLog)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.mixinContext)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.reloadTheme)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.playlist)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.close)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.log)
+        for name in HandlerName.allCases.map(\.rawValue) {
+            config.userContentController.add(scriptMessageProxy, name: name)
+        }
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
@@ -90,12 +91,9 @@ class MixinWebViewController: WebViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !isMessageHandlerAdded {
-            let controller = webView.configuration.userContentController
-            controller.add(scriptMessageProxy, name: HandlerName.mixinContext)
-            controller.add(scriptMessageProxy, name: HandlerName.reloadTheme)
-            controller.add(scriptMessageProxy, name: HandlerName.playlist)
-            controller.add(scriptMessageProxy, name: HandlerName.close)
-            controller.add(scriptMessageProxy, name: HandlerName.log)
+            for name in HandlerName.allCases.map(\.rawValue) {
+                webView.configuration.userContentController.add(scriptMessageProxy, name: name)
+            }
             isMessageHandlerAdded = true
         }
     }
@@ -187,11 +185,8 @@ class MixinWebViewController: WebViewController {
             return
         }
         let controller = webView.configuration.userContentController
-        controller.removeScriptMessageHandler(forName: HandlerName.mixinContext)
-        controller.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
-        controller.removeScriptMessageHandler(forName: HandlerName.playlist)
-        controller.removeScriptMessageHandler(forName: HandlerName.close)
-        controller.removeScriptMessageHandler(forName: HandlerName.log)
+        HandlerName.allCases.map(\.rawValue)
+            .forEach(controller.removeScriptMessageHandler(forName:))
         isMessageHandlerAdded = false
     }
     
@@ -315,7 +310,7 @@ extension MixinWebViewController: WKNavigationDelegate {
 extension MixinWebViewController: WKUIDelegate {
     
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
-        if prompt == HandlerName.mixinContext + ".getContext()" {
+        if prompt == HandlerName.mixinContext.rawValue + ".getContext()" {
             completionHandler(context.appContextString)
         } else {
             completionHandler("")
@@ -334,24 +329,88 @@ extension MixinWebViewController: WKUIDelegate {
 extension MixinWebViewController: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        switch message.name {
-        case HandlerName.reloadTheme:
+        guard let handlerName = HandlerName(rawValue: message.name) else {
+            return
+        }
+        switch handlerName {
+        case .mixinContext:
+            break
+        case .reloadTheme:
             reloadTheme(webView: webView)
-        case HandlerName.playlist:
+        case .playlist:
             if let body = message.body as? [String] {
                 let playlist = body.compactMap(PlaylistItem.init)
                 if !playlist.isEmpty {
                     PlaylistManager.shared.play(index: 0, in: playlist, source: .remote)
                 }
             }
-        case HandlerName.close:
+        case .close:
             dismissAsChild(animated: true, completion: nil)
-        case HandlerName.log:
+        case .log:
             if let log = message.body as? String, let url = WCURL(log) {
                 WalletConnectService.shared.connect(to: url)
             }
-        default:
-            break
+        case .getTIPAddress:
+            if let body = message.body as? [String], body.count == 2 {
+                let chainId = body[0]
+                let callback = body[1]
+                let info: ConnectWalletViewController.Info
+                switch context.style {
+                case let .app(app, _):
+                    info = .bot(app)
+                case .webPage:
+                    info = .page(webView.url?.host ?? "")
+                }
+                let connectWallet = ConnectWalletViewController(info: info)
+                connectWallet.onApprove = { priv in
+                    let address: String
+                    do {
+                        let storage = InPlaceKeyStorage(raw: priv)
+                        let account = try EthereumAccount(keyStorage: storage)
+                        address = account.address.toChecksumAddress()
+                    } catch {
+                        address = ""
+                        Logger.tip.error(category: "WalletConnectService", message: "Failed to obtain address: \(error)")
+                    }
+                    let script = "\(callback)('\(address)');"
+                    self.webView.evaluateJavaScript(script)
+                }
+                connectWallet.onReject = {
+                    self.webView.evaluateJavaScript(callback + "('');")
+                }
+                let authentication = AuthenticationViewController(intentViewController: connectWallet)
+                WalletConnectService.shared.presentRequest(viewController: authentication)
+            }
+        case .tipSign:
+            if let body = message.body as? [String], body.count == 3 {
+                let chainId = body[0]
+                let message = body[1]
+                let callback = body[2]
+                let requester: SignRequestViewController.Requester
+                switch context.style {
+                case let .app(app, _):
+                    requester = .app(app)
+                case .webPage:
+                    requester = .page(webView.url?.host ?? "")
+                }
+                let signRequest = SignRequestViewController(requester: requester, message: message)
+                signRequest.onReject = {
+                    self.webView.evaluateJavaScript("\(callback)('');")
+                }
+                signRequest.onApprove = { priv in
+                    let signature: String
+                    do {
+                        let storage = InPlaceKeyStorage(raw: priv)
+                        let account = try EthereumAccount(keyStorage: storage)
+                        signature = try account.sign(message: message).hexEncodedString()
+                    } catch {
+                        signature = ""
+                    }
+                    self.webView.evaluateJavaScript("\(callback)('\(signature)');")
+                }
+                let authentication = AuthenticationViewController(intentViewController: signRequest)
+                WalletConnectService.shared.presentRequest(viewController: authentication)
+            }
         }
     }
     

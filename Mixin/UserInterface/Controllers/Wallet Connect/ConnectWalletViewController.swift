@@ -8,6 +8,8 @@ final class ConnectWalletViewController: UIViewController {
     enum Info {
         case v1(WalletConnectSwift.Session.ClientMeta, WalletConnectService.Chain)
         case v2(WalletConnectSign.Session.Proposal)
+        case bot(App)
+        case page(String)
     }
     
     enum Error: Swift.Error {
@@ -43,14 +45,9 @@ final class ConnectWalletViewController: UIViewController {
         tableView.reloadData()
         switch info {
         case let .v1(_, chain):
-            chainStackView.isHidden = false
-            showChainConstraint.priority = .almostRequired
-            hideChainConstraint.priority = .almostInexist
-            chainNameLabel.text = chain.name
-        case .v2:
-            chainStackView.isHidden = true
-            showChainConstraint.priority = .almostInexist
-            hideChainConstraint.priority = .almostRequired
+            setChainName(chain.name)
+        case .v2, .bot, .page:
+            setChainName(nil)
         }
     }
     
@@ -64,6 +61,19 @@ final class ConnectWalletViewController: UIViewController {
         tableView.isScrollEnabled = tableView.frame.height < tableView.contentSize.height
     }
     
+    private func setChainName(_ name: String?) {
+        if let name {
+            chainStackView.isHidden = false
+            showChainConstraint.priority = .almostRequired
+            hideChainConstraint.priority = .almostInexist
+            chainNameLabel.text = name
+        } else {
+            chainStackView.isHidden = true
+            showChainConstraint.priority = .almostInexist
+            hideChainConstraint.priority = .almostRequired
+        }
+    }
+    
 }
 
 extension ConnectWalletViewController: AuthenticationIntentViewController {
@@ -72,12 +82,24 @@ extension ConnectWalletViewController: AuthenticationIntentViewController {
         R.string.localizable.connect_wallet()
     }
     
-    var intentSubtitleIconURL: URL? {
+    var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         switch info {
         case let .v1(meta, _):
-            return meta.icons.first
+            if let url = meta.icons.first {
+                return .url(url)
+            } else {
+                return nil
+            }
         case let .v2(proposal):
-            return proposal.proposer.icons.lazy.compactMap(URL.init(string:)).first
+            if let url = proposal.proposer.icons.lazy.compactMap(URL.init(string:)).first {
+                return .url(url)
+            } else {
+                return nil
+            }
+        case let .bot(app):
+            return .app(app)
+        case .page:
+            return nil
         }
     }
     
@@ -87,6 +109,10 @@ extension ConnectWalletViewController: AuthenticationIntentViewController {
             return meta.name
         case let .v2(proposal):
             return proposal.proposer.name
+        case let .bot(app):
+            return app.name + " (" + app.appNumber + ")"
+        case let .page(host):
+            return host
         }
     }
     

@@ -163,8 +163,8 @@ extension ConnectWalletViewController: UITableViewDataSource {
             cell.titleLabel.text = R.string.localizable.read_your_public_address()
             cell.descriptionLabel.text = R.string.localizable.allow_dapp_access_public_address()
         } else {
-            cell.titleLabel.text = R.string.localizable.request_permission()
-            cell.descriptionLabel.text = R.string.localizable.allow_dapp_request_permission()
+            cell.titleLabel.text = R.string.localizable.request_approval()
+            cell.descriptionLabel.text = R.string.localizable.allow_dapp_request_approval()
         }
         cell.checkmarkView.status = .nonSelectable
         return cell

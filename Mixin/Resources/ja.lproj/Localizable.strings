@@ -72,7 +72,7 @@
 "allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
 "allow_bot_send_messages" = "Allow bot to send messages represent of you.";
 "allow_dapp_access_public_address" = "Allow dapp to access your wallet balance and activity.";
-"allow_dapp_request_permission" = "Allow dapp to ask for your permission to make a transaction.";
+"allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "メッセージ単位の報告を許可";
 "amount" = "数量";
 "app_card_shareable_false" = "このカードを共有することはできません";
@@ -670,6 +670,8 @@
 "post_sharing" = "投稿";
 "preparing" = "準備中...";
 "preparing_progress" = "準備中...(%@)";
+"preview_unavailable" = "Preview unavailable";
+"preview_unavailable_description" = "Unable to estimate asset changes. Please make sure you trust this dapp.";
 "privacy" = "プライバシー";
 "privacy_policy" = "プライバシーポリシー";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -713,8 +715,8 @@
 "report_and_block" = "報告してブロックしますか?";
 "report_title" = "Mixinの開発者へ会話記録を送信しますか?";
 "represent_send_messages" = "Represent send messages";
+"request_approval" = "Request approval";
 "request_authorization" = "Request Authorization";
-"request_permission" = "Request permission";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "requests_switching_to_network" = "%1$@ requests switching to %2$@";

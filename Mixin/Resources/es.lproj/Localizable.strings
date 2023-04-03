@@ -72,7 +72,7 @@
 "allow_bot_manage_circles" = "Permite que el bot añada, modifique y elimine tus círculos.";
 "allow_bot_send_messages" = "Permita que el bot envíe mensajes que lo representen.";
 "allow_dapp_access_public_address" = "Allow dapp to access your wallet balance and activity.";
-"allow_dapp_request_permission" = "Allow dapp to ask for your permission to make a transaction.";
+"allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "Permitir mensaje de informe manual";
 "amount" = "Cantidad";
 "app_card_shareable_false" = "La tarjeta se ha configurado para no permitir compartir";
@@ -670,6 +670,8 @@
 "post_sharing" = "publicar";
 "preparing" = "Preparando...";
 "preparing_progress" = "Preparando...(%@)";
+"preview_unavailable" = "Preview unavailable";
+"preview_unavailable_description" = "Unable to estimate asset changes. Please make sure you trust this dapp.";
 "privacy" = "Privacidad";
 "privacy_policy" = "Política de privacidad";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
@@ -713,8 +715,8 @@
 "report_and_block" = "¿Denunciar y bloquear?";
 "report_title" = "¿Enviar el registro de conversación a los desarrolladores?";
 "represent_send_messages" = "Representar enviar mensajes";
+"request_approval" = "Request approval";
 "request_authorization" = "Solicitar Autorización";
-"request_permission" = "Request permission";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "requests_switching_to_network" = "%1$@ requests switching to %2$@";

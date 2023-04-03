@@ -72,7 +72,7 @@
 "allow_bot_manage_circles" = "允许机器人添加、修改和删除你所有的圈子。";
 "allow_bot_send_messages" = "允许机器人代表你发消息。";
 "allow_dapp_access_public_address" = "允许 Dapp 访问你的钱包余额及活动。";
-"allow_dapp_request_permission" = "允许 Dapp 向你发送请求，如转账请求等";
+"allow_dapp_request_approval" = "允许 Dapp 向你发送请求，如转账请求等";
 "allow_manual_report_message" = "允许手动上报消息";
 "amount" = "金额";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
@@ -670,6 +670,8 @@
 "post_sharing" = "文章";
 "preparing" = "准备...";
 "preparing_progress" = "准备中...（%@）";
+"preview_unavailable" = "预览不可用";
+"preview_unavailable_description" = "无法预览资产变化。请确保你信任此 dapp。";
 "privacy" = "隐私";
 "privacy_policy" = "隐私政策";
 "process_can_not_be_stop" = "流程一旦开始无法取消，请牢记 6 位数字 PIN，意外中止流程需要再次输入";
@@ -713,8 +715,8 @@
 "report_and_block" = "举报并屏蔽？";
 "report_title" = "给开发人员发送聊天日志？";
 "represent_send_messages" = "代表你发消息";
+"request_approval" = "允许请求";
 "request_authorization" = "请求授权";
-"request_permission" = "允许请求";
 "request_rejected" = "请求已拒绝";
 "request_rejected_reason_another_request_in_process" = "正在处理另一请求，请完成当前请求后重试";
 "requests_switching_to_network" = "%1$@ 请求切换到 %2$@";

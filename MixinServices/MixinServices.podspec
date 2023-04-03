@@ -29,12 +29,10 @@ Mixin Core Services.
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
-  s.dependency 'GzipSwift'
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
   s.dependency 'SocketRocket'
-  s.dependency 'GRDB.swift/SQLCipher'
-  s.dependency 'SQLCipher', '~> 4.0'
+  s.dependency 'GRDB.swift'
   s.dependency 'Sodium'
 
   s.test_spec 'Tests' do |tests|

@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import Gzip
 
 public class WebSocketService {
     

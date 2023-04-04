@@ -37,9 +37,11 @@ struct WalletConnectTransactionPreview: Decodable {
             throw Error.invalidData
         }
         
-        let hexValue = try container.decode(String.self, forKey: .value)
-        guard let value = BigUInt(hex: hexValue) else {
-            throw Error.invalidValue
+        let value: BigUInt
+        if let hexValue = try? container.decode(String.self, forKey: .value), let v = BigUInt(hex: hexValue) {
+            value = v
+        } else {
+            value = 0
         }
         let decimalValueString = value.description
         guard

@@ -1011,10 +1011,13 @@ extension ConversationInputViewController {
                                height: UIView.layoutFittingExpandedSize.height)
         let contentHeight = ceil(textView.sizeThatFits(sizeToFit).height)
         textView.isScrollEnabled = contentHeight > maxHeight
-        let newHeight = min(contentHeight, maxHeight)
+        
+        // 36 to keep layout consistent when text size is set to smaller than default in Dynamic Type settings
+        let newHeight = max(36, min(contentHeight, maxHeight))
+        
         let diff = newHeight - textViewHeightConstraint.constant
         if abs(diff) > 0.1 {
-            textViewHeightConstraint.constant = max(newHeight, 36)
+            textViewHeightConstraint.constant = newHeight
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
         }

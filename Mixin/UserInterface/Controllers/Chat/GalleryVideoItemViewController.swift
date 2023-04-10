@@ -588,6 +588,7 @@ extension GalleryVideoItemViewController {
         guard duration.isFinite else {
             return
         }
+        playerDidReachEnd = false
         let minValue = controlView.slider.minimumValue
         let maxValue = controlView.slider.maximumValue
         let value = controlView.slider.value

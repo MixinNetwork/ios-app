@@ -595,7 +595,11 @@ extension GalleryVideoItemViewController {
         let cmTime = CMTime(seconds: time, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         player.seek(to: cmTime) { [weak self] (_) in
             DispatchQueue.main.async {
-                self?.isSeeking = false
+                guard let self else {
+                    return
+                }
+                self.isSeeking = false
+                self.playerDidReachEnd = abs(duration - time) < 0.01
             }
         }
     }

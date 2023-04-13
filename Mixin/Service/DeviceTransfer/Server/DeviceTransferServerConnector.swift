@@ -55,7 +55,7 @@ extension DeviceTransferServerConnector {
     private func listenerStateDidChange(to state: NWListener.State) {
         switch state {
         case .ready:
-            Logger.general.debug(category: "DeviceTransferServerConnector", message:("Listener Ready"))
+            Logger.general.debug(category: "DeviceTransferServerConnector", message:("Listener Ready on \(NetworkInterface.firstEthernetHostname() ?? "(null)"), port: \(listener.port?.rawValue ?? 0)"))
             delegate?.deviceTransferServerConnectorDidReady(self)
         case .failed(let error):
             Logger.general.debug(category: "DeviceTransferServerConnector", message:("Listener failed: \(error)"))

@@ -540,7 +540,7 @@
 		7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */; };
 		7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E42284530200FC4379 /* PeerHeaderView.swift */; };
 		7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E622845DE100FC4379 /* MessageReceiver.swift */; };
-		7C07A17D29D8FDBC00D4835C /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C07A17C29D8FDBC00D4835C /* IPAddress.swift */; };
+		7C07A17D29D8FDBC00D4835C /* NetworkInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C07A17C29D8FDBC00D4835C /* NetworkInterface.swift */; };
 		7C0A4B9629D6B917009BF209 /* DeviceTransferDataComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0A4B9529D6B917009BF209 /* DeviceTransferDataComposer.swift */; };
 		7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */; };
 		7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */; };
@@ -1603,7 +1603,7 @@
 		7BFE47E42284530200FC4379 /* PeerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerHeaderView.swift; sourceTree = "<group>"; };
 		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
 		7C02C1EF282D059A00FFED80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		7C07A17C29D8FDBC00D4835C /* IPAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddress.swift; sourceTree = "<group>"; };
+		7C07A17C29D8FDBC00D4835C /* NetworkInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInterface.swift; sourceTree = "<group>"; };
 		7C07ED372880F31E00685322 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7C07ED382880F31E00685322 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C07ED392880F31E00685322 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2684,7 +2684,7 @@
 			isa = PBXGroup;
 			children = (
 				7CFABCDF29D4B705005F04AD /* CRC32.swift */,
-				7C07A17C29D8FDBC00D4835C /* IPAddress.swift */,
+				7C07A17C29D8FDBC00D4835C /* NetworkInterface.swift */,
 				7C719E7729D4AB0C00C42E08 /* DeviceTransferData.swift */,
 				7C719E8B29D4ABF000C42E08 /* DeviceTransferDataType.swift */,
 				7CC2226B29D917D00027FAAB /* DeviceTransferMessageType.swift */,
@@ -4660,7 +4660,7 @@
 				7B4BE561243E105000198EE9 /* EmbeddedApp.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */,
-				7C07A17D29D8FDBC00D4835C /* IPAddress.swift in Sources */,
+				7C07A17D29D8FDBC00D4835C /* NetworkInterface.swift in Sources */,
 				9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */,
 				7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,

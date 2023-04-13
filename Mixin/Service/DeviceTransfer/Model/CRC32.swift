@@ -7,7 +7,7 @@ struct CRC32 {
     
     mutating func update(data: Data) {
         crc = data.withUnsafeBytes { buffer in
-            crc32(crc, buffer.baseAddress, uInt(buffer.count))
+            crc32_z(crc, buffer.baseAddress, buffer.count)
         }
     }
     

@@ -38,7 +38,8 @@ public struct DeviceTransferCommand: Codable {
         case progress
     }
     
-    public init(deviceId: String = Device.current.id,
+    public init(
+        deviceId: String = Device.current.id,
         platform: String = "iOS",
         action: Action,
         version: Int = AppGroupUserDefaults.User.deviceTransferVersion,
@@ -48,7 +49,8 @@ public struct DeviceTransferCommand: Codable {
         code: Int? = nil,
         total: Int? = nil,
         userId: String? = nil,
-        progress: Double? = 0) {
+        progress: Double? = 0
+    ) {
         self.deviceId = deviceId
         self.platform = platform
         self.action = action

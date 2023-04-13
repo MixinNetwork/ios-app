@@ -16,7 +16,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         LoginManager.shared.inDeviceTrasnfer = true
-        if let server = try? DeviceTransferServer(), let ip = IPAddress.currentWiFiIPAddress() {
+        if let server = try? DeviceTransferServer(), let ip = NetworkInterface.firstEthernetHostname() {
             self.server = server
             stateObserver = server.$displayState
                 .receive(on: DispatchQueue.main)

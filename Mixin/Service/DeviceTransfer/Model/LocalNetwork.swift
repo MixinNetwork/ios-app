@@ -6,7 +6,7 @@ enum LocalNetwork {
     
     static func requestAuthorization(completion: @escaping (Bool) -> Void) {
         if #available(iOS 14.0, *) {
-            guard let ip = IPAddress.currentWiFiIPAddress() else {
+            guard let ip = NetworkInterface.firstEthernetHostname() else {
                 completion(false)
                 return
             }

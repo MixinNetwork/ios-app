@@ -81,7 +81,22 @@ public struct ExternalTransfer {
                 arbitraryAmount = nil
             }
             
-            if let range = Range(match.range(at: 3), in: path) {
+            if let reqAsset = queries["req-asset"] {
+                guard let assetID = assetIDFinder(reqAsset) else {
+                    throw TransferLinkError.assetNotFound
+                }
+                if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                    self.amount = decimalAmount
+                    self.resolvedAmount = nil
+                } else if let arbitraryAmount {
+                    self.amount = arbitraryAmount
+                    self.resolvedAmount = arbitraryAmount.description
+                } else {
+                    throw TransferLinkError.invalidFormat
+                }
+                self.assetID = assetID
+                self.destination = targetAddress
+            } else if let range = Range(match.range(at: 3), in: path) {
                 // ERC-20 Tokens
                 let functionName = String(path[range])
                 guard functionName == "transfer", let address = parameters["address"] else {

@@ -66,7 +66,7 @@ extension DeviceTransferClientConnector {
     }
     
     private func receive() {
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 65535) { (data, _, isComplete, error) in
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 1024) { (data, _, isComplete, error) in
             if let data, !data.isEmpty {
                 self.delegate?.deviceTransferClientConnector(self, didReceive: data)
             }

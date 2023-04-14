@@ -70,6 +70,7 @@ class DeviceTransferProgressViewController: UIViewController {
         displayAwakeningToken = DisplayAwakener.shared.retain()
         imageView.image = invoker.image
         tipLabel.text = invoker.tip
+        progressLabel.font = UIFont.monospacedSystemFont(ofSize: 18, weight: .medium)
         progressLabel.text = invoker.title
         switch invoker {
         case let .transferToDesktop(server):

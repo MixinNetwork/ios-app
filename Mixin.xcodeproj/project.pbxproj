@@ -642,6 +642,8 @@
 		7C952CFE27E035080083F92B /* ExpiredMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */; };
 		7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
+		7C9AABC429E924B400EBAAF3 /* LocalNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */; };
+		7C9AABC629E9387B00EBAAF3 /* NetworkPort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
 		7CA5EE58280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */; };
 		7CAE6B4E29D72CE50082E5DB /* DeviceTransferDisplayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */; };
@@ -1712,6 +1714,8 @@
 		7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageViewController.swift; sourceTree = "<group>"; };
 		7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpiredMessageTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
+		7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetwork.swift; sourceTree = "<group>"; };
+		7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPort.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockTimeFormatter.swift; sourceTree = "<group>"; };
 		7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferDisplayState.swift; sourceTree = "<group>"; };
@@ -2688,6 +2692,8 @@
 				7C0F774D29D7938800A6D0FE /* DeviceTransferServiceProvidable.swift */,
 				7C719E7C29D4AB0C00C42E08 /* DeviceTransferConnectionClosedReason.swift */,
 				7C1411D929E242CE00F05506 /* DeviceTransferSpeedTester.swift */,
+				7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */,
+				7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5216,6 +5222,7 @@
 				E061E52B23B208E600598FC3 /* NSAttributedString+CoreText.swift in Sources */,
 				7BF196B52411650900CC8325 /* LocationMessageCell.swift in Sources */,
 				7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */,
+				7C9AABC629E9387B00EBAAF3 /* NetworkPort.swift in Sources */,
 				7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DFC2647424E9339C00BF954D /* BigAmountConfirmationWindow.swift in Sources */,
@@ -5307,6 +5314,7 @@
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
+				7C9AABC429E924B400EBAAF3 /* LocalNetwork.swift in Sources */,
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,
 				94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */,
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,

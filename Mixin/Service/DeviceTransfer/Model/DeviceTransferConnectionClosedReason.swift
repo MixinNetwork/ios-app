@@ -6,6 +6,5 @@ enum DeviceTransferConnectionClosedReason {
     case mismatchedCode
     case exception(Error)
     case completed
-    case permissionDenied
     
 }

@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class RestoreFromPhoneViewController: DeviceTransferSettingViewController {
     
@@ -27,9 +28,19 @@ extension RestoreFromPhoneViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let controller = CameraViewController.instance()
-        controller.asQrCodeScanner = true
-        navigationController?.pushViewController(controller, animated: true)
+        guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+            alert(R.string.localizable.devices_on_same_network())
+            return
+        }
+        LocalNetwork.requestAuthorization { isAuthorized in
+            if isAuthorized {
+                let controller = CameraViewController.instance()
+                controller.asQrCodeScanner = true
+                self.navigationController?.pushViewController(controller, animated: true)
+            } else {
+                self.alertSettings(R.string.localizable.local_network_unable_accessed())
+            }
+        }
     }
     
 }

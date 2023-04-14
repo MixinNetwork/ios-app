@@ -75,7 +75,7 @@ extension TransferToPhoneQRCodeViewController {
                 alert(R.string.localizable.unable_synced_between_different_account(), message: nil)
             case .mismatchedCode:
                 alert(R.string.localizable.connection_establishment_failed(), message: nil)
-            case .exception, .completed, .permissionDenied:
+            case .exception, .completed:
                 break
             }
         case .preparing, .transporting, .ready, .finished, .closed:

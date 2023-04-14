@@ -5,6 +5,7 @@ import MixinServices
 class DeviceTransferProgressViewController: UIViewController {
     
     enum Invoker {
+        
         case transferToDesktop(DeviceTransferServer)
         case transferToPhone(DeviceTransferServer)
         case restoreFromPhone(DeviceTransferCommand, DeviceTransferClient?)
@@ -139,12 +140,6 @@ extension DeviceTransferProgressViewController {
                 title = R.string.localizable.connection_establishment_failed()
             case .exception, .completed:
                 title = R.string.localizable.transfer_failed()
-            case .permissionDenied:
-                navigationController?.popViewController(animated: true)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.alertSettings(R.string.localizable.local_network_unable_accessed())
-                }
-                return
             }
             progressLabel.text = title
             backtoHome(title: title)
@@ -282,6 +277,5 @@ extension DeviceTransferProgressViewController {
         semaphore.wait()
         NotificationCenter.default.removeObserver(observer)
     }
-    
     
 }

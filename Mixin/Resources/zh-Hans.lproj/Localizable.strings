@@ -303,6 +303,7 @@
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
 "detect_qr_tip" = "检测到一个 Mixin 二维码，点击识别";
 "developer" = "开发者";
+"devices_on_same_network" = "请确保两台设备接入同一个 Wi-Fi 或热点";
 "diagnose" = "诊断";
 "diagnose_warning_hint" = "⚠️请在 Mixin 团队指导下使用";
 "disable" = "禁用";

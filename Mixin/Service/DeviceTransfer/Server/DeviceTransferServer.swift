@@ -28,7 +28,7 @@ class DeviceTransferServer: DeviceTransferServiceProvidable {
     
     init() throws {
         code = Int(arc4random_uniform(1000))
-        port = DeviceTransferServer.randomPort()
+        port = NetworkPort.randomAvailablePort()
         composer = DeviceTransferDataComposer()
         parser = DeviceTransferDataParser()
         connector = try DeviceTransferServerConnector(port: port)
@@ -108,27 +108,6 @@ extension DeviceTransferServer: DeviceTransferServerConnectorDelegate {
     
     func deviceTransferServerConnector(_ connector: DeviceTransferServerConnector, didCloseWith reason: DeviceTransferConnectionClosedReason) {
         displayState = .failed(reason)
-    }
-    
-}
-
-extension DeviceTransferServer {
-    
-    private class func randomPort() -> UInt16 {
-        var port: UInt16 = 0
-        while true {
-            port = UInt16(arc4random_uniform(64512) + 1024)
-            let port = NWEndpoint.Port(integerLiteral: port)
-            let parameters = NWParameters.tcp
-            parameters.allowLocalEndpointReuse = true
-            if let listener = try? NWListener(using: parameters, on: port) {
-                listener.cancel()
-                break
-            } else {
-                continue
-            }
-        }
-        return port
     }
     
 }

@@ -303,6 +303,7 @@
 "desktop_upgrade" = "Actualiza Mixin Messenger Desktop a la última versión.";
 "detect_qr_tip" = "Se ha detectado un código QR de Mixin, toca para reconocer";
 "developer" = "Desarrollador";
+"devices_on_same_network" = "Please make sure both devices are connected to the same Wi-Fi or hotspot";
 "diagnose" = "Diagnosticar";
 "diagnose_warning_hint" = "⚠️Usa estas funciones solo bajo las instrucciones del equipo de Mixin";
 "disable" = "Desactivar";

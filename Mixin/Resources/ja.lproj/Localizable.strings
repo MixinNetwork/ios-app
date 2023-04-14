@@ -303,6 +303,7 @@
 "desktop_upgrade" = "デスクトップ版Mixinを最新バージョンにアップデートしてください";
 "detect_qr_tip" = "Mixin QRコードを検出しました、タップしてアクセスします";
 "developer" = "開発者向け情報";
+"devices_on_same_network" = "Please make sure both devices are connected to the same Wi-Fi or hotspot";
 "diagnose" = "診断";
 "diagnose_warning_hint" = "⚠️Mixinチームの指示がない場合、この機能を使用しないでください";
 "disable" = "無効にする";

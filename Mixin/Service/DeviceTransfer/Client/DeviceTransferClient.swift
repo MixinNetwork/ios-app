@@ -110,8 +110,6 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
             displayState = .failed(.exception(error))
         case .completed:
             displayState = .closed
-        case .permissionDenied:
-            displayState = .failed(.permissionDenied)
         case .mismatchedCode, .mismatchedUserId:
             break
         }

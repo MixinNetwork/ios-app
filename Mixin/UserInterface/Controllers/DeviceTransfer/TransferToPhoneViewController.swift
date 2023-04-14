@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class TransferToPhoneViewController: DeviceTransferSettingViewController {
     
@@ -25,6 +26,10 @@ extension TransferToPhoneViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+            alert(R.string.localizable.devices_on_same_network())
+            return
+        }
         let controller = TransferToPhoneQRCodeViewController.instance()
         navigationController?.pushViewController(controller, animated: true)
     }

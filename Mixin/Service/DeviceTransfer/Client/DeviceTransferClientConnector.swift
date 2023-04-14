@@ -58,8 +58,6 @@ extension DeviceTransferClientConnector {
         case .failed(let error):
             Logger.general.debug(category: "DeviceTransferClientConnector", message: "Connection error: \(error.localizedDescription)")
             delegate?.deviceTransferClientConnector(self, didCloseWith: .exception(error))
-        case .waiting:
-            delegate?.deviceTransferClientConnector(self, didCloseWith: .permissionDenied)
         default:
             break
         }

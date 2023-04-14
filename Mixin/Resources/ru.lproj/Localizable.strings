@@ -303,6 +303,7 @@
 "desktop_upgrade" = "Пожалуйста, обновите Mixin Messenger Desktop до последней версии.";
 "detect_qr_tip" = "Обнаружен QR-код Mixin, нажмите, чтобы распознать";
 "developer" = "Разработчик";
+"devices_on_same_network" = "Please make sure both devices are connected to the same Wi-Fi or hotspot";
 "diagnose" = "Диагностировать";
 "diagnose_warning_hint" = "⚠️Используйте эти функции только по инструкции от команды Mixin.";
 "disable" = "Запретить";

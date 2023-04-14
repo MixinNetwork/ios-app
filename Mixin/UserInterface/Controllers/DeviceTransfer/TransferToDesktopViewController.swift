@@ -30,6 +30,10 @@ extension TransferToDesktopViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+            alert(R.string.localizable.devices_on_same_network())
+            return
+        }
         if AppGroupUserDefaults.Account.isDesktopLoggedIn {
             tableView.isUserInteractionEnabled = false
             let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
@@ -88,7 +92,7 @@ extension TransferToDesktopViewController {
                 alert(R.string.localizable.unable_synced_between_different_account(), message: nil)
             case .mismatchedCode:
                 alert(R.string.localizable.connection_establishment_failed(), message: nil)
-            case .exception, .completed, .permissionDenied:
+            case .exception, .completed:
                 break
             }
         case .preparing, .ready, .transporting, .finished, .closed:

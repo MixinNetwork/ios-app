@@ -31,12 +31,22 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if AppGroupUserDefaults.Account.isDesktopLoggedIn {
-            tableView.isUserInteractionEnabled = false
-            let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
-                                               rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
-            section.setAccessory(.busy, forRowAt: indexPath.row)
-            dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
-            sendPullCommand()
+            guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+                alert(R.string.localizable.devices_on_same_network())
+                return
+            }
+            LocalNetwork.requestAuthorization { isAuthorized in
+                if isAuthorized {
+                    tableView.isUserInteractionEnabled = false
+                    let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
+                                                       rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
+                    section.setAccessory(.busy, forRowAt: indexPath.row)
+                    self.dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
+                    self.sendPullCommand()
+                } else {
+                    self.alertSettings(R.string.localizable.local_network_unable_accessed())
+                }
+            }
         } else {
             alert(R.string.localizable.login_desktop_first())
         }
@@ -91,14 +101,10 @@ extension RestoreFromDesktopViewController {
             let controller = DeviceTransferProgressViewController()
             controller.invoker = .restoreFromDesktop(client)
             navigationController?.pushViewController(withBackChat: controller)
-        case .failed(let reson):
+        case .failed:
             tableView.isUserInteractionEnabled = true
             stateObserver?.cancel()
             client.stop()
-            if case .permissionDenied = reson {
-                dataSource.replaceSection(at: 0, with: section, animation: .automatic)
-                alertSettings(R.string.localizable.local_network_unable_accessed())
-            }
         case .preparing, .ready, .transporting, .finished, .closed:
             break
         }

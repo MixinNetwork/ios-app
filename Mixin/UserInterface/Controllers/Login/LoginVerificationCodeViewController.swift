@@ -119,12 +119,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             
             logBackup()
             
-            var backupExist = false
-            if let backupDir = backupUrl {
-                backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
-            }
-
-            if AppGroupUserDefaults.User.isLogoutByServer || !backupExist {
+            if AppGroupUserDefaults.User.isLogoutByServer {
                 AppGroupUserDefaults.User.isLogoutByServer = false
                 UserDAO.shared.updateAccount(account: account)
                 DispatchQueue.main.sync {

@@ -7,6 +7,15 @@ class RestoreChatViewController: UIViewController {
     
     private var isUsernameJustInitialized = false
     
+    private var icloudBackupExists: Bool {
+        guard let backupURL = backupUrl else {
+            return false
+        }
+        let exists = backupURL.appendingPathComponent(backupDatabaseName).isStoredCloud
+            || backupURL.appendingPathComponent("mixin.backup.db").isStoredCloud
+        return exists
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -34,7 +43,7 @@ class RestoreChatViewController: UIViewController {
 extension RestoreChatViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        icloudBackupExists ? 2 : 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

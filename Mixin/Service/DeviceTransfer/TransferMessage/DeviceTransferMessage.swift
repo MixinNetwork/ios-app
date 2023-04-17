@@ -97,7 +97,7 @@ struct DeviceTransferMessage {
                 mediaLocalIdentifier: mediaLocalIdentifier,
                 thumbImage: thumbImage,
                 thumbUrl: thumbUrl,
-                status: status,
+                status: MessageStatus.READ.rawValue,
                 action: action,
                 participantId: participantId,
                 snapshotId: snapshotId,

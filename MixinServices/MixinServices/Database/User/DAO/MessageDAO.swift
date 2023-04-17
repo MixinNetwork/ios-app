@@ -499,35 +499,21 @@ public final class MessageDAO: UserDatabaseDAO {
     public func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.created_at <= ? AND m.ROWID < ?
-        ORDER BY m.created_at DESC
+        WHERE m.conversation_id = ? AND m.created_at <= ?
+        ORDER BY m.created_at DESC, m.ROWID DESC
         LIMIT ?
         """
-        let locationRowID: Int? = db.select(column: .rowID,
-                                            from: Message.self,
-                                            where: Message.column(of: .messageId) == location.messageId)
-        if let rowID = locationRowID {
-            return db.select(with: sql, arguments: [conversationId, location.createdAt, rowID, count]).reversed()
-        } else {
-            return []
-        }
+        return db.select(with: sql, arguments: [conversationId, location.createdAt, count]).reversed()
     }
     
     public func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.created_at >= ? AND m.ROWID > ?
-        ORDER BY m.created_at ASC
+        WHERE m.conversation_id = ? AND m.created_at >= ?
+        ORDER BY m.created_at ASC, m.ROWID ASC
         LIMIT ?
         """
-        let locationRowID: Int? = db.select(column: .rowID,
-                                            from: Message.self,
-                                            where: Message.column(of: .messageId) == location.messageId)
-        if let rowID = locationRowID {
-            return db.select(with: sql, arguments: [conversationId, location.createdAt, rowID, count])
-        } else {
-            return []
-        }
+        return db.select(with: sql, arguments: [conversationId, location.createdAt, count])
     }
     
     public func getMessages(conversationId: String, categoryIn categories: [MessageCategory], earlierThan location: MessageItem?, count: Int) -> [MessageItem] {

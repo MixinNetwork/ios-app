@@ -522,15 +522,10 @@ public final class MessageDAO: UserDatabaseDAO {
         \(Self.sqlQueryFullMessage)
         WHERE m.conversation_id = ? AND m.category in ('\(categories)')
         """
-        if let location = location {
-            let rowId: Int? = db.select(column: .rowID,
-                                        from: Message.self,
-                                        where: Message.column(of: .messageId) == location.messageId)
-            if let id = rowId {
-                sql += " AND m.ROWID < \(id)"
-            }
+        if let createdAt = location?.createdAt {
+            sql += " AND m.created_at <= \(createdAt)"
         }
-        sql += " ORDER BY m.created_at DESC LIMIT ?"
+        sql += " ORDER BY m.created_at DESC, m.ROWID DESC LIMIT ?"
         return db.select(with: sql, arguments: [conversationId, count])
     }
     

@@ -15,7 +15,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        LoginManager.shared.inDeviceTrasnfer = true
+        LoginManager.shared.inDeviceTransfer = true
         if let server = try? DeviceTransferServer(), let ip = NetworkInterface.firstEthernetHostname() {
             self.server = server
             stateObserver = server.$displayState
@@ -123,9 +123,9 @@ extension TransferToPhoneQRCodeViewController {
     }
     
     private func checkLogout(isBackAction: Bool) {
-        LoginManager.shared.inDeviceTrasnfer = false
-        if LoginManager.shared.loggedOutInDeviceTrasnfer {
-            LoginManager.shared.loggedOutInDeviceTrasnfer = false
+        LoginManager.shared.inDeviceTransfer = false
+        if LoginManager.shared.loggedOutInDeviceTransfer {
+            LoginManager.shared.loggedOutInDeviceTransfer = false
             LoginManager.shared.logout(reason: "Device Transfer")
         } else if isBackAction {
             navigationController?.popViewController(animated: true)

@@ -118,7 +118,6 @@ extension DeviceTransferProgressViewController {
     private func stateDidChange(_ state: DeviceTransferDisplayState) {
         switch state {
         case let .transporting(processedCount, totalCount):
-            AppGroupUserDefaults.Account.canRestoreChat = false
             let progressValue = Double(processedCount) / Double(totalCount) * 100
             let progress = String(format: "%.1f", progressValue)
             switch invoker {
@@ -132,54 +131,91 @@ extension DeviceTransferProgressViewController {
         case .failed(let error):
             stateObserver?.cancel()
             endPoint?.stop()
-            let title: String
+            let hint: String
             switch error {
             case .mismatchedUserId:
-                title = R.string.localizable.unable_synced_between_different_account()
+                hint = R.string.localizable.unable_synced_between_different_account()
             case .mismatchedCode:
-                title = R.string.localizable.connection_establishment_failed()
+                hint = R.string.localizable.connection_establishment_failed()
             case .exception, .completed:
-                title = R.string.localizable.transfer_failed()
+                hint = R.string.localizable.transfer_failed()
             }
-            progressLabel.text = title
-            backtoHome(title: title)
+            progressLabel.text = hint
+            transferFailed(hint: hint)
         case .closed:
             stateObserver?.cancel()
             endPoint?.stop()
-            let title: String
+            let hint: String
             switch invoker {
             case .transferToDesktop, .transferToPhone:
-                title = R.string.localizable.transfer_completed()
+                hint = R.string.localizable.transfer_completed()
             case .restoreFromDesktop, .restoreFromPhone:
-                title = R.string.localizable.restore_completed()
+                hint = R.string.localizable.restore_completed()
             case .restoreFromCloud, .none:
                 return
             }
-            progressLabel.text = title
-            backtoHome(title: title)
+            progressLabel.text = hint
+            transferSucceeded(hint: hint)
         case .preparing, .ready, .connected, .finished:
             break
         }
     }
     
-    private func backtoHome(title: String) {
+    private func transferFailed(hint: String) {
         switch invoker {
         case .transferToPhone:
-            LoginManager.shared.inDeviceTrasnfer = false
-            LoginManager.shared.loggedOutInDeviceTrasnfer = false
+            LoginManager.shared.inDeviceTransfer = false
+            LoginManager.shared.loggedOutInDeviceTransfer = false
             LoginManager.shared.logout(reason: "Device Transfer")
-        case .restoreFromPhone:
-            UserDatabase.reloadCurrent()
-            AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
-        case .transferToDesktop, .restoreFromDesktop:
+        case .transferToDesktop:
+            navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            alert(hint) { _ in
+                self.navigationController?.backToHome()
+            }
+        case .restoreFromPhone, .restoreFromCloud:
+            alert(hint) { _ in
+                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+            }
+        case .restoreFromDesktop:
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
-            alert(title, message: nil) { _ in
+            alert(hint) { _ in
                 self.navigationController?.backToHome()
+            }
+        case .none:
+            break
+        }
+    }
+    
+    private func transferSucceeded(hint: String) {
+        switch invoker {
+        case .transferToPhone:
+            LoginManager.shared.inDeviceTransfer = false
+            LoginManager.shared.loggedOutInDeviceTransfer = false
+            LoginManager.shared.logout(reason: "Device Transfer")
+        case .transferToDesktop:
+            navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            alert(hint) { _ in
+                self.navigationController?.backToHome()
+            }
+        case .restoreFromPhone, .restoreFromDesktop:
+            alert(hint) { _ in
+                self.restoreFinished()
             }
         case .restoreFromCloud, .none:
             break
         }
+    }
+    
+    private func restoreFinished() {
+        AppGroupUserDefaults.Account.canRestoreChat = false
+        AppGroupUserDefaults.Account.canRestoreMedia = true
+        AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
+        AppGroupUserDefaults.Database.isFTSInitialized = false
+        AppGroupUserDefaults.User.needsRebuildDatabase = true
+        AppGroupUserDefaults.User.isCircleSynchronized = false
+        UserDatabase.reloadCurrent()
+        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: self.isUsernameJustInitialized ?? false)
     }
     
 }
@@ -217,28 +253,17 @@ extension DeviceTransferProgressViewController {
                     try FileManager.default.removeItem(at: localURL)
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
-                
-                AppGroupUserDefaults.Account.canRestoreChat = false
-                AppGroupUserDefaults.Account.canRestoreMedia = true
-                AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
-                AppGroupUserDefaults.Database.isFTSInitialized = false
-                AppGroupUserDefaults.User.needsRebuildDatabase = true
-                AppGroupUserDefaults.User.isCircleSynchronized = false
-                
-                UserDatabase.reloadCurrent()
                 DispatchQueue.main.async {
-                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: self.isUsernameJustInitialized ?? false)
+                    self.restoreFinished()
                 }
             } catch {
                 Logger.general.error(category: "DeviceTransferProgressViewController", message: "Restore from icloud, restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
-                self.restoreFailed(error: error)
+                DispatchQueue.main.async {
+                    self.transferFailed(hint: R.string.localizable.restore_chat_history_failed())
+                }
+                reporter.report(error: error)
             }
         }
-    }
-    
-    private func restoreFailed(error: Swift.Error) {
-        reporter.report(error: error)
-        backtoHome(title: R.string.localizable.restore_chat_history_failed())
     }
     
     private func downloadFromCloud(cloudURL: URL, progress: @escaping (Float) -> Void) throws {

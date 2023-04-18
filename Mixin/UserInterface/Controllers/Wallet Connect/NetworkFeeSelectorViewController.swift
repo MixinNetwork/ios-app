@@ -1,5 +1,9 @@
 import UIKit
 
+protocol NetworkFeeSelectorViewControllerDelegate: AnyObject {
+    func networkFeeSelectorViewController(_ controller: NetworkFeeSelectorViewController, didSelectOption option: NetworkFeeOption)
+}
+
 class NetworkFeeSelectorViewController: UIViewController {
     
     @IBOutlet weak var titleView: PopupTitleView!
@@ -9,16 +13,20 @@ class NetworkFeeSelectorViewController: UIViewController {
     @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
     
-    private let options = [
-        NetworkFeeOption(speed: "Fast", cost: "$7.57 - $7.68", duration: "~15 sec", value: "0.0047 - 0.0048 ETH"),
-        NetworkFeeOption(speed: "Normal", cost: "$5.74 - $6.95", duration: "~30 sec", value: "0.0036 - 0.0043 ETH"),
-        NetworkFeeOption(speed: "Slow", cost: "$5.74 - $6.21", duration: "45 sec+", value: "0.0036 - 0.0039 ETH"),
-    ]
+    weak var delegate: NetworkFeeSelectorViewControllerDelegate?
     
-    convenience init() {
-        self.init(nib: R.nib.networkFeeSelectorView)
+    private let options: [NetworkFeeOption]
+    
+    init(options: [NetworkFeeOption]) {
+        self.options = options
+        let nib = R.nib.networkFeeSelectorView
+        super.init(nibName: nib.name, bundle: nib.bundle)
         transitioningDelegate = PopupPresentationManager.shared
         modalPresentationStyle = .custom
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
@@ -59,7 +67,7 @@ extension NetworkFeeSelectorViewController: UITableViewDataSource {
         cell.speedLabel.text = option.speed
         cell.costLabel.text = option.cost
         cell.durationLabel.text = option.duration
-        cell.valueLabel.text = option.value
+        cell.valueLabel.text = option.gasValue
         return cell
     }
     
@@ -69,6 +77,7 @@ extension NetworkFeeSelectorViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        delegate?.networkFeeSelectorViewController(self, didSelectOption: options[indexPath.row])
         close(tableView)
     }
     

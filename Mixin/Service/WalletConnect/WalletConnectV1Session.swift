@@ -212,32 +212,27 @@ extension WalletConnectV1Session {
             let transactionRequest = TransactionRequestViewController(requester: .walletConnect(self),
                                                                       chain: chain,
                                                                       transaction: transactionPreview)
-            Task { [weak transactionRequest] in
-                let gasPrice = try await self.ethereumClient.eth_gasPrice()
-                await MainActor.run {
-                    transactionRequest?.updateFee(with: gasPrice)
-                }
-            }
-            
             var account: EthereumAccount?
             var transaction: EthereumTransaction?
             transactionRequest.onReject = {
                 self.server.send(.reject(request))
             }
-            transactionRequest.onApprove = { priv in
+            transactionRequest.onApprove = { [unowned transactionRequest] priv in
                 let storage = InPlaceKeyStorage(raw: priv)
                 account = try EthereumAccount(keyStorage: storage)
-                guard transactionPreview.from == account?.address else {
+                guard
+                    transactionPreview.from == account?.address,
+                    let fee = transactionRequest.selectedFeeOption
+                else {
                     self.server.send(.reject(request))
                     return
                 }
-                let gasPrice = try await self.ethereumClient.eth_gasPrice()
                 transaction = EthereumTransaction(from: nil,
                                                   to: transactionPreview.to,
                                                   value: transactionPreview.value,
                                                   data: transactionPreview.data,
                                                   nonce: nil,
-                                                  gasPrice: gasPrice,
+                                                  gasPrice: fee.gasPrice,
                                                   gasLimit: transactionPreview.gas,
                                                   chainId: self.chain.id)
             }

@@ -401,6 +401,7 @@
 "failed_to_send_photo" = "傳送圖片失敗，請稍後重試";
 "failed_to_send_video" = "傳送影片失敗，請稍後重試";
 "failed_to_switch_network" = "切換網路失敗: %@";
+"fast" = "快速";
 "fee" = "手續費";
 "feedback" = "反饋";
 "file" = "檔案";
@@ -578,6 +579,7 @@
 "no_transactions" = "暫無轉賬記錄";
 "nobody" = "沒有人";
 "none" = "無";
+"normal" = "普通";
 "not_all_signer_success" = "有些節點失敗了";
 "not_enough_partials" = "沒有足夠的節點返回金鑰分片";
 "not_found" = "沒有找到相應的訊息";
@@ -858,6 +860,7 @@
 "signature_request_warning" = "我們無法驗證此請求。簽名前請確認你信任此 App。";
 "skip" = "跳過";
 "slide_to_cancel" = "滑動取消";
+"slow" = "緩慢";
 "snapshot_hash" = "快照雜湊";
 "snapshot_not_found" = "找不到該轉賬記錄。";
 "social" = "社交";

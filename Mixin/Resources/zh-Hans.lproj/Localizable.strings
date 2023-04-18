@@ -401,6 +401,7 @@
 "failed_to_send_photo" = "发送图片失败，请稍后重试";
 "failed_to_send_video" = "发送视频失败，请稍后重试";
 "failed_to_switch_network" = "切换网络失败: %@";
+"fast" = "快速";
 "fee" = "手续费";
 "feedback" = "反馈";
 "file" = "文件";
@@ -578,6 +579,7 @@
 "no_transactions" = "暂无转账记录";
 "nobody" = "没有人";
 "none" = "无";
+"normal" = "普通";
 "not_all_signer_success" = "有些节点失败了";
 "not_enough_partials" = "没有足够的节点返回密钥分片";
 "not_found" = "没有找到相应的消息";
@@ -858,6 +860,7 @@
 "signature_request_warning" = "我们无法验证此请求。签名前请确认你信任此 App。";
 "skip" = "跳过";
 "slide_to_cancel" = "滑动取消";
+"slow" = "缓慢";
 "snapshot_hash" = "快照哈希";
 "snapshot_not_found" = "找不到该转账记录。";
 "social" = "社交";

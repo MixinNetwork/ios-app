@@ -156,30 +156,35 @@ extension WalletConnectService {
         
         static let ethereum = Chain(
             id: 1,
+            internalID: "43d61dcd-e413-450d-80b8-101d5e903357",
             name: "Ethereum",
             rpcServerURL: URL(string: "https://rpc.ankr.com/eth")!,
             gasSymbol: "ETH"
         )
         static let goerli = Chain(
             id: 5,
+            internalID: "43d61dcd-e413-450d-80b8-101d5e903357",
             name: "Goerli",
             rpcServerURL: URL(string: "https://rpc.ankr.com/eth_goerli")!,
             gasSymbol: "ETH"
         )
         static let binanceSmartChain = Chain(
             id: 56,
+            internalID: "1949e683-6a08-49e2-b087-d6b72398588f",
             name: "Binance Smart Chain",
             rpcServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
             gasSymbol: "BSC"
         )
         static let polygon = Chain(
             id: 137,
+            internalID: "b7938396-3f94-4e0a-9179-d3440718156f",
             name: "Polygon",
             rpcServerURL: URL(string: "https://polygon.blockpi.network/v1/rpc/public")!,
             gasSymbol: "MATIC"
         )
         
         let id: Int
+        let internalID: String
         let name: String
         let rpcServerURL: URL
         let gasSymbol: String

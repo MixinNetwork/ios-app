@@ -401,6 +401,7 @@
 "failed_to_send_photo" = "Failed to send photo";
 "failed_to_send_video" = "Failed to send video";
 "failed_to_switch_network" = "Failed to switch network: %@";
+"fast" = "Fast";
 "fee" = "Fee";
 "feedback" = "Feedback";
 "file" = "File";
@@ -578,6 +579,7 @@
 "no_transactions" = "No transactions";
 "nobody" = "Nobody";
 "none" = "None";
+"normal" = "Normal";
 "not_all_signer_success" = "Not all node success";
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Not found";
@@ -858,6 +860,7 @@
 "signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "Skip";
 "slide_to_cancel" = "Slide to Cancel";
+"slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
 "social" = "Social";

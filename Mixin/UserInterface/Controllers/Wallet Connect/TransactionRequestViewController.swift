@@ -7,10 +7,12 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
     
     @MainActor var onSend: (() async throws -> Void)?
     
+    private(set) var selectedFeeOption: NetworkFeeOption?
+    
     private let transaction: WalletConnectTransactionPreview
     private let chain: WalletConnectService.Chain
     
-    private var gasPrice: BigUInt?
+    private var feeOptions: [NetworkFeeOption] = []
     
     private lazy var sendTransactionView = R.nib.sendTransactionView(owner: self)!
     
@@ -45,11 +47,8 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
             make.edges.equalToSuperview().inset(insets)
         }
         chainNameLabel.text = chain.name
-        if let gasPrice {
-            showFee(gasPrice: gasPrice)
-        } else {
-            feeLabel.text = R.string.localizable.calculating()
-        }
+        feeLabel.text = R.string.localizable.calculating()
+        loadGas()
     }
     
     override func authenticationViewControllerWillDismiss(_ controller: AuthenticationViewController) {
@@ -57,15 +56,9 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
     }
     
     override func changeFee(_ sender: Any) {
-        let selector = NetworkFeeSelectorViewController()
+        let selector = NetworkFeeSelectorViewController(options: feeOptions)
+        selector.delegate = self
         present(selector, animated: true)
-    }
-    
-    func updateFee(with gasPrice: BigUInt) {
-        self.gasPrice = gasPrice
-        if isViewLoaded {
-            showFee(gasPrice: gasPrice)
-        }
     }
     
     @IBAction func sendTransaction(_ sender: Any) {
@@ -90,18 +83,54 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
         authenticationViewController?.presentingViewController?.dismiss(animated: true)
     }
     
-    private func showFee(gasPrice: BigUInt) {
-        let fee = transaction.gas * gasPrice
-        if var decimalFee = Decimal(string: fee.description, locale: .enUSPOSIX) {
-            // FIXME: Wei to decimal
-            decimalFee /= 1_000_000_000_000_000_000
-            feeLabel.text = CurrencyFormatter.localizedString(from: decimalFee,
-                                                              format: .precision,
-                                                              sign: .never,
-                                                              symbol: .custom(chain.gasSymbol))
+    private func loadGas() {
+        signButton.isBusy = true
+        TIPAPI.tipGas(id: chain.internalID) { [gas=transaction.gas, weak self] result in
+            switch result {
+            case .success(let prices):
+                let options = [
+                    NetworkFeeOption(speed: R.string.localizable.fast(),
+                                     cost: "",
+                                     duration: "",
+                                     gas: gas,
+                                     gasPrice: prices.fastGasPrice),
+                    NetworkFeeOption(speed: R.string.localizable.normal(),
+                                     cost: "",
+                                     duration: "",
+                                     gas: gas,
+                                     gasPrice: prices.proposeGasPrice),
+                    NetworkFeeOption(speed: R.string.localizable.slow(),
+                                     cost: "",
+                                     duration: "",
+                                     gas: gas,
+                                     gasPrice: prices.safeGasPrice),
+                ].compactMap({ $0 })
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    if options.count == 3 {
+                        self.feeOptions = options
+                        self.selectedFeeOption = options[1]
+                        self.feeButton.isEnabled = true
+                        self.feeLabel.text = "\(options[1].gasValue) \(self.chain.gasSymbol)"
+                        self.feeSelectorImageView.isHidden = false
+                        self.signButton.isBusy = false
+                    }
+                }
+            case .failure(let error):
+                Logger.tip.error(category: "WalletConnectV1Session", message: "Failed to get gas: \(error)")
+            }
         }
-        feeButton.isEnabled = true
-        feeSelectorImageView.isHidden = false
+    }
+    
+}
+
+extension TransactionRequestViewController: NetworkFeeSelectorViewControllerDelegate {
+    
+    func networkFeeSelectorViewController(_ controller: NetworkFeeSelectorViewController, didSelectOption option: NetworkFeeOption) {
+        selectedFeeOption = option
+        feeLabel.text = "\(option.gasValue) \(chain.gasSymbol)"
     }
     
 }

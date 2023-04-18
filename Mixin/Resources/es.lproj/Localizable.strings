@@ -401,6 +401,7 @@
 "failed_to_send_photo" = "No se ha podido enviar la foto";
 "failed_to_send_video" = "No se ha podido enviar el video";
 "failed_to_switch_network" = "Failed to switch network: %@";
+"fast" = "Fast";
 "fee" = "Tarifa";
 "feedback" = "Comentario";
 "file" = "Archivo";
@@ -578,6 +579,7 @@
 "no_transactions" = "Sin transacciones";
 "nobody" = "Nadie";
 "none" = "Ninguno";
+"normal" = "Normal";
 "not_all_signer_success" = "No todos los nodos tienen éxito";
 "not_enough_partials" = "No hay suficientes nodos que devuelvan fragmento de clave";
 "not_found" = "Extraviado";
@@ -859,6 +861,7 @@
 "skip" = "Saltar";
 "slide_to_cancel" = "Deslizar para cancelar";
 "snapshot_hash" = "Hash de Instantánea";
+"slow" = "Slow";
 "snapshot_not_found" = "Instantánea no encontrada.";
 "social" = "Social";
 "sort_by" = "Ordenar por";

@@ -401,6 +401,7 @@
 "failed_to_send_photo" = "画像を送信できませんでした";
 "failed_to_send_video" = "動画を送信できませんでした";
 "failed_to_switch_network" = "Failed to switch network: %@";
+"fast" = "高速";
 "fee" = "手数料";
 "feedback" = "フィードバック";
 "file" = "ファイル";
@@ -578,6 +579,7 @@
 "no_transactions" = "トランザクションはありません";
 "nobody" = "ユーザーなし";
 "none" = "なし";
+"normal" = "通常";
 "not_all_signer_success" = "Not all node success";
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "見つかりません";
@@ -858,6 +860,7 @@
 "signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "スキップ";
 "slide_to_cancel" = "スライドしてキャンセル";
+"slow" = "低速";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "スナップショットは見つかりません";
 "social" = "ソーシャル";

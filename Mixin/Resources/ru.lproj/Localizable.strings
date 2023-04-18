@@ -401,6 +401,7 @@
 "failed_to_send_photo" = "Не удалось отправить фото";
 "failed_to_send_video" = "Не удалось отправить видео";
 "failed_to_switch_network" = "Failed to switch network: %@";
+"fast" = "Fast";
 "fee" = "Комиссия";
 "feedback" = "Обратная связь";
 "file" = "Файл";
@@ -578,6 +579,7 @@
 "no_transactions" = "Нет транзакций";
 "nobody" = "Никто";
 "none" = "Никто";
+"normal" = "Normal";
 "not_all_signer_success" = "Not all node success";
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Не найден";
@@ -858,6 +860,7 @@
 "signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "Пропустить";
 "slide_to_cancel" = "Сдвиньте, чтобы отменить";
+"slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Снимок не найден.";
 "social" = "Социальное";

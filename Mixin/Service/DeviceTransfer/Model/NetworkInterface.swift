@@ -35,7 +35,7 @@ enum NetworkInterface {
             }
             
             let interfaceName = String(cString: interface.pointee.ifa_name)
-            guard interfaceName.hasPrefix("en") else {
+            guard interfaceName == "en0" else {
                 continue
             }
             

@@ -489,7 +489,7 @@ class UrlWindow {
         if let url = URL(string: string), checkUrl(url: url, clearNavigationStack: clearNavigationStack) {
             return
         }
-        if let url = WCURL(string) {
+        if WalletConnectService.isAvailable, let url = WCURL(string) {
             WalletConnectService.shared.connect(to: url)
             return
         }

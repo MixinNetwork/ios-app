@@ -347,11 +347,11 @@ extension MixinWebViewController: WKScriptMessageHandler {
         case .close:
             dismissAsChild(animated: true, completion: nil)
         case .log:
-            if let log = message.body as? String, let url = WCURL(log) {
+            if WalletConnectService.isAvailable, let log = message.body as? String, let url = WCURL(log) {
                 WalletConnectService.shared.connect(to: url)
             }
         case .getTIPAddress:
-            if let body = message.body as? [String], body.count == 2 {
+            if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 2 {
                 let chainId = body[0]
                 let callback = body[1]
                 let info: ConnectWalletViewController.Info
@@ -382,7 +382,7 @@ extension MixinWebViewController: WKScriptMessageHandler {
                 WalletConnectService.shared.presentRequest(viewController: authentication)
             }
         case .tipSign:
-            if let body = message.body as? [String], body.count == 3 {
+            if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 3 {
                 let chainId = body[0]
                 let message = body[1]
                 let callback = body[2]

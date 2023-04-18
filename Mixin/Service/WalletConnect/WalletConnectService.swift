@@ -16,6 +16,10 @@ final class WalletConnectService {
     
     static let shared = WalletConnectService()
     
+    static var isAvailable: Bool {
+        LoginManager.shared.account?.debug.contains("tip") ?? false
+    }
+    
     @Published
     private(set) var v1Sessions: [WalletConnectV1Session] = []
     

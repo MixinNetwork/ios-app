@@ -154,7 +154,9 @@ class HomeViewController: UIViewController {
             }
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
-        WalletConnectService.shared.reloadSessions()
+        if WalletConnectService.isAvailable {
+            WalletConnectService.shared.reloadSessions()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -13,7 +13,6 @@ class DeviceTransferClient: DeviceTransferServiceProvidable {
     private weak var syncProgressTimer: Timer?
     
     private lazy var writer = DeviceTransferClientMessageWriter(client: self)
-    private lazy var speedTester = DeviceTransferSpeedTester()
     
     private let connector: DeviceTransferClientConnector
     private let code: Int
@@ -48,7 +47,6 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
         case .start:
             if let total = command.total {
                 startTimer()
-                startSpeedTester()
                 displayState = .transporting(processedCount: 0, totalCount: total)
             } else {
                 displayState = .transporting(processedCount: 0, totalCount: 0)
@@ -56,7 +54,6 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
         case .finish:
             displayState = .finished
             invalidateTimer()
-            stopSpeedTester()
             let command = DeviceTransferCommand(action: .finish)
             if let data = composer.commandData(command: command) {
                 send(data: data)
@@ -81,7 +78,6 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
         displayState = .failed(.exception(error))
         connector.stop()
         invalidateTimer()
-        stopSpeedTester()
     }
     
 }
@@ -99,12 +95,10 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
     
     func deviceTransferClientConnector(_ connector: DeviceTransferClientConnector, didReceive data: Data) {
         parser.parse(data)
-        speedTester.send(data: data)
     }
     
     func deviceTransferClientConnector(_ connector: DeviceTransferClientConnector, didCloseWith reason: DeviceTransferConnectionClosedReason) {
         invalidateTimer()
-        stopSpeedTester()
         switch reason {
         case .exception(let error):
             displayState = .failed(.exception(error))
@@ -127,7 +121,6 @@ extension DeviceTransferClient {
         if currentProcessedCount == totalCount {
             displayState = .finished
             invalidateTimer()
-            stopSpeedTester()
         } else {
             displayState = .transporting(processedCount: currentProcessedCount, totalCount: totalCount)
         }
@@ -149,18 +142,6 @@ extension DeviceTransferClient {
                                              repeats: true)
             self.syncProgressTimer = timer
             RunLoop.current.add(timer, forMode: .common)
-        }
-    }
-    
-    private func startSpeedTester() {
-        DispatchQueue.main.async {
-            self.speedTester.startTimer()
-        }
-    }
-    
-    private func stopSpeedTester() {
-        DispatchQueue.main.async {
-            self.speedTester.stop()
         }
     }
     

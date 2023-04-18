@@ -554,7 +554,6 @@
 		7C11E349281BF4BC00D3362B /* ic_time_animation@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C11E347281BF4BC00D3362B /* ic_time_animation@2x.gif */; };
 		7C11E34A281BF4BC00D3362B /* ic_time_animation_dark@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C11E348281BF4BC00D3362B /* ic_time_animation_dark@2x.gif */; };
 		7C140E9429E15B8200F05506 /* DeviceTransferSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C140E9329E15B8200F05506 /* DeviceTransferSettingViewController.swift */; };
-		7C1411DA29E242CE00F05506 /* DeviceTransferSpeedTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1411D929E242CE00F05506 /* DeviceTransferSpeedTester.swift */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
 		7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */; };
@@ -1626,7 +1625,6 @@
 		7C11E347281BF4BC00D3362B /* ic_time_animation@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation@2x.gif"; sourceTree = "<group>"; };
 		7C11E348281BF4BC00D3362B /* ic_time_animation_dark@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation_dark@2x.gif"; sourceTree = "<group>"; };
 		7C140E9329E15B8200F05506 /* DeviceTransferSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferSettingViewController.swift; sourceTree = "<group>"; };
-		7C1411D929E242CE00F05506 /* DeviceTransferSpeedTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferSpeedTester.swift; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
 		7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewItemCell.swift; sourceTree = "<group>"; };
@@ -2691,7 +2689,6 @@
 				7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */,
 				7C0F774D29D7938800A6D0FE /* DeviceTransferServiceProvidable.swift */,
 				7C719E7C29D4AB0C00C42E08 /* DeviceTransferConnectionClosedReason.swift */,
-				7C1411D929E242CE00F05506 /* DeviceTransferSpeedTester.swift */,
 				7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */,
 				7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */,
 			);
@@ -5266,7 +5263,6 @@
 				7B9A18182428939A00187693 /* PageControlView.swift in Sources */,
 				E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */,
 				7B333A8823406AF900FDA848 /* GalleryTransitionFromSharedMediaView.swift in Sources */,
-				7C1411DA29E242CE00F05506 /* DeviceTransferSpeedTester.swift in Sources */,
 				7B9C102A245588DA00B2718F /* PhoneNumberSettingViewController.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,

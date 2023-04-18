@@ -74,7 +74,7 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
     }
     
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFailed error: DeviceTransferDataParserError) {
-        Logger.general.debug(category: "DeviceTransferClient", message: "Parse failed: \(error)")
+        Logger.general.info(category: "DeviceTransferClient", message: "Parse failed: \(error)")
         displayState = .failed(.exception(error))
         connector.stop()
         invalidateTimer()
@@ -89,7 +89,7 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
         let connectCommand = DeviceTransferCommand(action: .connect, code: code, userId: myUserId)
         if let commandData = DeviceTransferDataComposer().commandData(command: connectCommand) {
             send(data: commandData)
-            Logger.general.debug(category: "DeviceTransferClient", message: "Send connect command: \(connectCommand)")
+            Logger.general.info(category: "DeviceTransferClient", message: "Send connect command: \(connectCommand)")
         }
     }
     

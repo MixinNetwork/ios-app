@@ -87,7 +87,7 @@ extension DeviceTransferServer: DeviceTransferDataParserDelegate {
     }
     
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFailed error: DeviceTransferDataParserError) {
-        Logger.general.debug(category: "DeviceTransferServer", message: "Parse failed: \(error)")
+        Logger.general.info(category: "DeviceTransferServer", message: "Parse failed: \(error)")
     }
     
 }

@@ -54,7 +54,7 @@ class DeviceTransferClientMessageWriter {
             }
         } catch {
             if let content = String(data: messageData, encoding: .utf8) {
-                Logger.general.debug(category: "DeviceTransferClientMessageWriter", message: "\(error) \(content)")
+                Logger.general.info(category: "DeviceTransferClientMessageWriter", message: "\(error) \(content)")
             }
         }
     }

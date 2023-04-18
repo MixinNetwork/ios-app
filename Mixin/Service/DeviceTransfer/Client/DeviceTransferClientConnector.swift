@@ -50,13 +50,13 @@ class DeviceTransferClientConnector {
 extension DeviceTransferClientConnector {
     
     private func connectionStateDidChange(to state: NWConnection.State) {
-        Logger.general.debug(category: "DeviceTransferClientConnector", message: "Connection State: \(state)")
         switch state {
         case .ready:
             receive()
             delegate?.deviceTransferClientConnectorDidReady(self)
+            Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection State: ready")
         case .failed(let error):
-            Logger.general.debug(category: "DeviceTransferClientConnector", message: "Connection error: \(error.localizedDescription)")
+            Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection error: \(error.localizedDescription)")
             delegate?.deviceTransferClientConnector(self, didCloseWith: .exception(error))
         default:
             break
@@ -69,10 +69,10 @@ extension DeviceTransferClientConnector {
                 self.delegate?.deviceTransferClientConnector(self, didReceive: data)
             }
             if isComplete {
-                Logger.general.debug(category: "DeviceTransferClientConnector", message: "Receive isComplete")
+                Logger.general.info(category: "DeviceTransferClientConnector", message: "Receive isComplete")
                 self.delegate?.deviceTransferClientConnector(self, didCloseWith: .completed)
             } else if let error {
-                Logger.general.debug(category: "DeviceTransferClientConnector", message: "Receive error \(error.localizedDescription)")
+                Logger.general.info(category: "DeviceTransferClientConnector", message: "Receive error \(error.localizedDescription)")
                 self.delegate?.deviceTransferClientConnector(self, didCloseWith: .exception(error))
             } else {
                 self.receive()

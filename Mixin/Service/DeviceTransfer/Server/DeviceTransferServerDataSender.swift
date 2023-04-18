@@ -141,7 +141,7 @@ extension DeviceTransferServerDataSender {
                 continue
             }
             guard let stream = InputStream(url: path) else {
-                Logger.general.debug(category: "DeviceTransferServerDataSender", message: "Open stream failed")
+                Logger.general.info(category: "DeviceTransferServerDataSender", message: "Open stream failed")
                 continue
             }
             // send typeData + lengthData + idData
@@ -158,7 +158,7 @@ extension DeviceTransferServerDataSender {
                 let bytesRead = stream.read(buffer, maxLength: fileBufferSize)
                 if bytesRead < 0 {
                     if let error = stream.streamError {
-                        Logger.general.debug(category: "DeviceTransferServerDataSender", message: "Read stream failed:\(error)")
+                        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Read stream failed:\(error)")
                     }
                     break
                 }

@@ -129,7 +129,7 @@ extension DeviceTransferDataParser {
         let localChecksum = CRC32.checksum(data: messageData)
         guard localChecksum == remoteChecksum else {
             bufferState = .failed
-            Logger.general.debug(category: "DeviceTransferDataParser", message: "❌Checksum incorrect: remote:\(remoteChecksum) local:\(localChecksum) buffer: \(buffer.debugDescription)")
+            Logger.general.info(category: "DeviceTransferDataParser", message: "Message checksum incorrect, remote: \(remoteChecksum) local: \(localChecksum) message: \(String(describing: String(data: messageData, encoding: .utf8)))")
             delegate?.deviceTransferDataParser(self, didParseFailed: .mismatchedChecksum)
             return
         }
@@ -206,12 +206,12 @@ extension DeviceTransferDataParser {
                     fileManager.createFile(atPath: fileURL.path, contents: nil, attributes: nil)
                     fileHandle = try FileHandle(forWritingTo: fileURL)
                 } catch {
-                    Logger.general.debug(category: "DeviceTransferDataParser", message: "Init FileHandle failed: \(error)")
+                    Logger.general.info(category: "DeviceTransferDataParser", message: "Init FileHandle failed: \(error)")
                     fileHandle = nil
                 }
             } else {
                 fileHandle = nil
-                Logger.general.debug(category: "DeviceTransferDataParser", message: "Message not exists: \(fileMessageId)")
+                Logger.general.info(category: "DeviceTransferDataParser", message: "File message not exists: \(fileMessageId)")
             }
             var checksum = CRC32()
             checksum.update(data: idData)

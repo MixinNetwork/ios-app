@@ -55,13 +55,13 @@ extension DeviceTransferServerConnector {
     private func listenerStateDidChange(to state: NWListener.State) {
         switch state {
         case .ready:
-            Logger.general.debug(category: "DeviceTransferServerConnector", message:("Listener Ready on \(NetworkInterface.firstEthernetHostname() ?? "(null)"), port: \(listener.port?.rawValue ?? 0)"))
+            Logger.general.info(category: "DeviceTransferServerConnector", message:("Listener Ready on \(NetworkInterface.firstEthernetHostname() ?? "(null)"), port: \(listener.port?.rawValue ?? 0)"))
             delegate?.deviceTransferServerConnectorDidReady(self)
         case .failed(let error):
-            Logger.general.debug(category: "DeviceTransferServerConnector", message:("Listener failed: \(error)"))
+            Logger.general.info(category: "DeviceTransferServerConnector", message:("Listener failed: \(error)"))
             delegate?.deviceTransferServerConnector(self, didCloseWith: .exception(error))
         default:
-            Logger.general.debug(category: "DeviceTransferServerConnector", message:("Listener State: \(state)"))
+            Logger.general.info(category: "DeviceTransferServerConnector", message:("Listener State: \(state)"))
             break
         }
     }
@@ -72,13 +72,13 @@ extension DeviceTransferServerConnector {
         connection.stateUpdateHandler = { newState in
             switch newState {
             case .ready:
-                Logger.general.debug(category: "DeviceTransferServerConnector", message: "Connection Ready")
+                Logger.general.info(category: "DeviceTransferServerConnector", message: "Connection Ready")
                 self.delegate?.deviceTransferServerConnectorDidConnect(self)
             case .failed(let error):
-                Logger.general.debug(category: "DeviceTransferServerConnector", message:"Connection failed: \(error)")
+                Logger.general.info(category: "DeviceTransferServerConnector", message:"Connection failed: \(error)")
                 self.delegate?.deviceTransferServerConnector(self, didCloseWith: .exception(error))
             default:
-                Logger.general.debug(category: "DeviceTransferServerConnector", message:("Connection State: \(newState)"))
+                Logger.general.info(category: "DeviceTransferServerConnector", message:("Connection State: \(newState)"))
                 break
             }
         }
@@ -91,10 +91,10 @@ extension DeviceTransferServerConnector {
                 self.delegate?.deviceTransferServerConnector(self, didReceive: data)
             }
             if isComplete {
-                Logger.general.debug(category: "DeviceTransferServerConnector", message: "Receive isComplete")
+                Logger.general.info(category: "DeviceTransferServerConnector", message: "Receive isComplete")
                 self.delegate?.deviceTransferServerConnector(self, didCloseWith: .completed)
             } else if let error = error {
-                Logger.general.debug(category: "DeviceTransferServerConnector", message: "Receive error: \(error)")
+                Logger.general.info(category: "DeviceTransferServerConnector", message: "Receive error: \(error)")
                 self.delegate?.deviceTransferServerConnector(self, didCloseWith: .exception(error))
             } else {
                 self.receive(on: connection)

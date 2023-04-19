@@ -28,16 +28,14 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aML-Th-l5w" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="136.33333333333334" y="151" width="61.333333333333343" height="44"/>
+                    <rect key="frame" x="122" y="151" width="90" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="OAg-jp-HKO"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="yFw-QT-RNF"/>
                     </constraints>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                     <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
-                    <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" title="Send">
-                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCallout"/>
-                    </buttonConfiguration>
+                    <state key="normal" title="Send"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="send"/>
                     </userDefinedRuntimeAttributes>

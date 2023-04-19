@@ -85,6 +85,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
     
     private func loadGas() {
         signButton.isBusy = true
+        signButton.isEnabled = false
         TIPAPI.tipGas(id: chain.internalID) { [gas=transaction.gas, weak self] result in
             switch result {
             case .success(let prices):
@@ -116,6 +117,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
                         self.feeLabel.text = "\(options[1].gasValue) \(self.chain.gasSymbol)"
                         self.feeSelectorImageView.isHidden = false
                         self.signButton.isBusy = false
+                        self.signButton.isEnabled = true
                     }
                 }
             case .failure(let error):

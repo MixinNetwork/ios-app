@@ -146,15 +146,13 @@
                     <rect key="frame" x="16" y="371" width="361" height="104"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rlh-mu-ZJ9" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="127" y="0.0" width="107.33333333333331" height="44"/>
+                            <rect key="frame" x="138.66666666666666" y="0.0" width="84" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="3lY-lG-Wwq"/>
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="SkD-CI-nEV"/>
                             </constraints>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="Sign by PIN">
-                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleCallout"/>
-                            </buttonConfiguration>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                            <state key="normal" title="Sign by PIN"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sign_by_pin"/>
                             </userDefinedRuntimeAttributes>

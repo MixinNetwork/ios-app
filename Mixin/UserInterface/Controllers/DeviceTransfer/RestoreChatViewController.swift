@@ -71,7 +71,7 @@ extension RestoreChatViewController: UITableViewDelegate, UITableViewDataSource 
         if indexPath.section == 0 {
             vc = RestoreFromPhoneViewController.instance()
         } else {
-            vc = RestoreFromCloudViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
+            vc = RestoreFromCloudViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

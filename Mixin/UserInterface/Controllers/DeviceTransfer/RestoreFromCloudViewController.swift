@@ -2,8 +2,6 @@ import UIKit
 
 class RestoreFromCloudViewController: DeviceTransferSettingViewController {
     
-    private var isUsernameJustInitialized = false
-    
     private let restoreActionRow = SettingsRow(title: R.string.localizable.restore_chat_history(), titleStyle: .highlighted)
     
     private lazy var dataSource = SettingsDataSource(sections: [
@@ -18,9 +16,8 @@ class RestoreFromCloudViewController: DeviceTransferSettingViewController {
         dataSource.tableView = tableView
     }
     
-    class func instance(isUsernameJustInitialized: Bool) -> UIViewController {
+    class func instance() -> UIViewController {
         let controller = RestoreFromCloudViewController()
-        controller.isUsernameJustInitialized = isUsernameJustInitialized
         return ContainerViewController.instance(viewController: controller, title: R.string.localizable.restore_from_icloud())
     }
     
@@ -31,7 +28,7 @@ extension RestoreFromCloudViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let controller = DeviceTransferProgressViewController()
-        controller.invoker = .restoreFromCloud(isUsernameJustInitialized)
+        controller.invoker = .restoreFromCloud
         navigationController?.pushViewController(controller, animated: true)
     }
     

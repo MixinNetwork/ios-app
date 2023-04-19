@@ -10,7 +10,7 @@ class DeviceTransferProgressViewController: UIViewController {
         case transferToPhone(DeviceTransferServer)
         case restoreFromPhone(DeviceTransferCommand, DeviceTransferClient?)
         case restoreFromDesktop(DeviceTransferClient)
-        case restoreFromCloud(Bool)
+        case restoreFromCloud
         
         var image: UIImage? {
             switch self {
@@ -56,7 +56,6 @@ class DeviceTransferProgressViewController: UIViewController {
     private var stateObserver: AnyCancellable?
     private var endPoint: DeviceTransferServiceProvidable?
     private var displayAwakeningToken: DisplayAwakener.Token?
-    private var isUsernameJustInitialized: Bool?
     
     deinit {
         if let token = displayAwakeningToken {
@@ -103,8 +102,7 @@ class DeviceTransferProgressViewController: UIViewController {
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
             }
-        case .restoreFromCloud(let isUsernameJustInitialized):
-            self.isUsernameJustInitialized = isUsernameJustInitialized
+        case .restoreFromCloud:
             restoreFromCloud()
         case .none:
             break
@@ -187,7 +185,7 @@ extension DeviceTransferProgressViewController {
         }
     }
     
-    private func transferSucceeded(hint: String) {
+    private func transferSucceeded(hint: String = "") {
         switch invoker {
         case .transferToPhone:
             LoginManager.shared.inDeviceTransfer = false
@@ -198,24 +196,32 @@ extension DeviceTransferProgressViewController {
             alert(hint) { _ in
                 self.navigationController?.backToHome()
             }
-        case .restoreFromPhone, .restoreFromDesktop:
+        case .restoreFromDesktop:
+            navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
             alert(hint) { _ in
-                self.restoreFinished()
+                self.navigationController?.backToHome()
             }
-        case .restoreFromCloud, .none:
+        case .restoreFromPhone:
+            AppGroupUserDefaults.Account.canRestoreChat = false
+            AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
+            AppGroupUserDefaults.Database.isFTSInitialized = false
+            AppGroupUserDefaults.User.needsRebuildDatabase = true
+            AppGroupUserDefaults.User.isCircleSynchronized = false
+            UserDatabase.reloadCurrent()
+            AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+        case .restoreFromCloud:
+            AppGroupUserDefaults.Account.canRestoreChat = false
+            AppGroupUserDefaults.Account.canRestoreMedia = true
+            AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
+            AppGroupUserDefaults.Database.isFTSInitialized = false
+            AppGroupUserDefaults.User.needsRebuildDatabase = true
+            AppGroupUserDefaults.User.isCircleSynchronized = false
+            UserDatabase.reloadCurrent()
+            AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+        case .none:
             break
         }
-    }
-    
-    private func restoreFinished() {
-        AppGroupUserDefaults.Account.canRestoreChat = false
-        AppGroupUserDefaults.Account.canRestoreMedia = true
-        AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
-        AppGroupUserDefaults.Database.isFTSInitialized = false
-        AppGroupUserDefaults.User.needsRebuildDatabase = true
-        AppGroupUserDefaults.User.isCircleSynchronized = false
-        UserDatabase.reloadCurrent()
-        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: self.isUsernameJustInitialized ?? false)
     }
     
 }
@@ -254,7 +260,7 @@ extension DeviceTransferProgressViewController {
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
                 DispatchQueue.main.async {
-                    self.restoreFinished()
+                    self.transferSucceeded()
                 }
             } catch {
                 Logger.general.error(category: "DeviceTransferProgressViewController", message: "Restore from icloud, restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")

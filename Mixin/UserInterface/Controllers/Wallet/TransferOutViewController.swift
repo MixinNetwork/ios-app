@@ -518,13 +518,18 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
         case let .address(address):
             let vc = AddressTransactionsViewController.instance(asset: address.assetId, destination: address.destination, tag: address.tag)
             navigationController?.pushViewController(vc, animated: true)
-        case let .tipWallet(address):
+        case .tipWallet:
             break
         }
     }
 
     func imageBarRightButton() -> UIImage? {
-        R.image.ic_title_transaction()
+        switch opponent {
+        case .tipWallet:
+            return nil
+        default:
+            return R.image.ic_title_transaction()
+        }
     }
 
 }

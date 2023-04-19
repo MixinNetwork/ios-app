@@ -56,7 +56,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
     }
     
     override func changeFee(_ sender: Any) {
-        let selector = NetworkFeeSelectorViewController(options: feeOptions)
+        let selector = NetworkFeeSelectorViewController(options: feeOptions, gasSymbol: chain.gasSymbol)
         selector.delegate = self
         present(selector, animated: true)
     }

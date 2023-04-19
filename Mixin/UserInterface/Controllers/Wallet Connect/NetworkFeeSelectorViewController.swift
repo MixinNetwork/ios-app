@@ -15,10 +15,12 @@ class NetworkFeeSelectorViewController: UIViewController {
     
     weak var delegate: NetworkFeeSelectorViewControllerDelegate?
     
+    private let gasSymbol: String
     private let options: [NetworkFeeOption]
     
-    init(options: [NetworkFeeOption]) {
+    init(options: [NetworkFeeOption], gasSymbol: String) {
         self.options = options
+        self.gasSymbol = gasSymbol
         let nib = R.nib.networkFeeSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
         transitioningDelegate = PopupPresentationManager.shared
@@ -65,9 +67,9 @@ extension NetworkFeeSelectorViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.fee_option, for: indexPath)!
         let option = options[indexPath.row]
         cell.speedLabel.text = option.speed
-        cell.costLabel.text = option.cost
-        cell.durationLabel.text = option.duration
-        cell.valueLabel.text = option.gasValue
+        cell.costLabel.text = option.gasValue + " " + gasSymbol
+        cell.durationLabel.text = nil
+        cell.valueLabel.text = nil
         return cell
     }
     

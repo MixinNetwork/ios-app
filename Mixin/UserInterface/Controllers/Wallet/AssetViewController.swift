@@ -265,7 +265,7 @@ extension AssetViewController {
             "1949e683-6a08-49e2-b087-d6b72398588f", // Binance Smart Chain
         ]
         if WalletConnectService.isAvailable, withdrawToTIPAllowedChainIds.contains(asset.chainId) {
-            alert.addAction(UIAlertAction(title: "TIP Wallet", style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: "Bridge", style: .default, handler: { _ in
                 self.sendToMyTIPWallet()
             }))
         }

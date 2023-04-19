@@ -975,6 +975,41 @@ extension MessageDAO {
                                silentNotification: silentNotification)
     }
     
+    public func messages(limit: Int, offset: Int) -> [Message] {
+        let sql = "SELECT * FROM messages ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func messagesCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM messages")
+        return count ?? 0
+    }
+    
+    public func insert(message: Message) {
+        guard !isExist(messageId: message.messageId) else {
+            return
+        }
+        db.write { db in
+            try message.save(db)
+            let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
+                && message.status != MessageStatus.FAILED.rawValue
+                && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
+            if shouldInsertIntoFTSTable {
+                try insertFTSContent(db, message: message, children: nil)
+            }
+        }
+    }
+    
+    public func mediasCount() -> Int {
+        let sql = """
+        SELECT COUNT(*)
+        FROM messages
+        WHERE media_status = 'DONE' AND (category LIKE '%VIDEO' OR category LIKE '%IMAGE' OR category LIKE '%DATA' OR category LIKE '%AUDIO')
+        """
+        let count: Int? = db.select(with: sql)
+        return count ?? 0
+    }
+    
     private func clearPinMessageContent(quoteMessageIds: [String], conversationId: String, from database: GRDB.Database) throws {
         let ids: [String] = try quoteMessageIds.flatMap { (quoteMessageId) -> [String] in
             let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
@@ -1029,30 +1064,6 @@ extension MessageDAO {
     private func deleteFTSContent(_ db: GRDB.Database, messageId: String) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?"
         try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: messageId)])
-    }
-    
-    public func messages(limit: Int, offset: Int) -> [Message] {
-        let sql = "SELECT * FROM messages ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
-    }
-    
-    public func messagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM messages")
-        return count ?? 0
-    }
-    
-    public func insert(message: Message) {
-        db.save(message)
-    }
-    
-    public func mediasCount() -> Int {
-        let sql = """
-        SELECT COUNT(*)
-        FROM messages
-        WHERE media_status = 'DONE' AND (category LIKE '%VIDEO' OR category LIKE '%IMAGE' OR category LIKE '%DATA' OR category LIKE '%AUDIO')
-        """
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
 }

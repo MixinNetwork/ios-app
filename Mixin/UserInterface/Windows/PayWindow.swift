@@ -691,9 +691,6 @@ extension PayWindow: PinFieldDelegate {
 
             switch result {
             case let .success(snapshot):
-                if let trace = trace {
-                    TraceDAO.shared.updateSnapshot(traceId: trace.traceId, snapshotId: snapshot.snapshotId)
-                }
                 switch pinAction {
                 case .transfer, .payment:
                     AppGroupUserDefaults.User.hasPerformedTransfer = true
@@ -705,7 +702,18 @@ extension PayWindow: PinFieldDelegate {
                 default:
                     break
                 }
-                SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
+                DispatchQueue.global().async {
+                    // When a user-initiated transfer is successful, a Snapshot message is received over WebSocket, and
+                    // a Snapshot record is inserted into the database. After the insertion is complete, the main queue
+                    // is synchronously invoked from the database queue to send a NSNotification. If that process occurs
+                    // simultaneously with this callback function, which synchronously accesses the database queue from
+                    // the main queue, a deadlock may occur. Dispatch the database access to a background queue to
+                    // avoid this issue.
+                    if let trace = trace {
+                        TraceDAO.shared.updateSnapshot(traceId: trace.traceId, snapshotId: snapshot.snapshotId)
+                    }
+                    SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
+                }
                 weakSelf.successHandler()
             case let .failure(error):
                 switch error {

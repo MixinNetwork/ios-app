@@ -58,7 +58,7 @@ extension BlockedUsersViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! BlockUserCell
-        cell.render(user: users[indexPath.row])
+        cell.infoView.render(user: users[indexPath.row])
         return cell
     }
     

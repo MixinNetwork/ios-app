@@ -20,9 +20,13 @@ class CircleMemberSearchResult: SearchResult {
                                             textAttributes: SearchResult.titleAttributes,
                                             keyword: keyword,
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
-        description = SearchResult.description(identityNumber: member.identityNumber,
-                                               phoneNumber: member.phoneNumber,
-                                               keyword: keyword)
+        if let content = member.conversationContent {
+            description = SearchResult.description(conversationContent: content)
+        } else {
+            description = SearchResult.description(identityNumber: member.identityNumber,
+                                                   phoneNumber: member.phoneNumber,
+                                                   keyword: keyword)
+        }
     }
     
 }

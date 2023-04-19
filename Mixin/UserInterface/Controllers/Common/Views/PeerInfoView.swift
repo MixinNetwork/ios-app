@@ -106,7 +106,8 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
-        descriptionLabel.isHidden = true
+        descriptionLabel.isHidden = false
+        descriptionLabel.text = user.identityNumber
     }
     
     func render(user: User, userBiographyAsSubtitle: Bool) {
@@ -116,27 +117,25 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
-        if userBiographyAsSubtitle {
-            descriptionLabel.isHidden = false
-            descriptionLabel.text = user.biography
-        } else {
-            descriptionLabel.isHidden = true
-        }
+        descriptionLabel.isHidden = false
+        descriptionLabel.text = userBiographyAsSubtitle ? user.biography : user.identityNumber
     }
     
     func render(receiver: MessageReceiver) {
         switch receiver.item {
         case let .group(conversation):
             avatarImageView.setGroupImage(with: conversation.iconUrl)
+            descriptionLabel.text = receiver.conversationContent
         case let .user(user):
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
+            descriptionLabel.text = receiver.conversationContent ?? user.identityNumber
         }
         titleLabel.text = receiver.name
+        descriptionLabel.isHidden = descriptionLabel.text?.isEmpty ?? true
         badgeImageView.image = receiver.badgeImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
-        descriptionLabel.isHidden = true
     }
     
     func render(member: CircleMember) {
@@ -147,12 +146,20 @@ class PeerInfoView: UIView, XibDesignable {
                                      userId: member.userId ?? "",
                                      name: member.name)
         }
+        if let content = member.conversationContent {
+            descriptionLabel.text = content
+            descriptionLabel.isHidden = content.isEmpty
+        } else if let identityNumber = member.identityNumber {
+            descriptionLabel.text = identityNumber
+            descriptionLabel.isHidden = false
+        } else {
+            descriptionLabel.isHidden = true
+        }
         titleLabel.text = member.name
         badgeImageView.image = member.badgeImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
-        descriptionLabel.isHidden = true
     }
     
     func render(phoneContact: PhoneContact) {

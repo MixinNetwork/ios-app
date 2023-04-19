@@ -21,7 +21,8 @@ class DeviceTransferServer: DeviceTransferServiceProvidable {
     
     var composer: DeviceTransferDataComposer
     var parser: DeviceTransferDataParser
-    
+    var connectionCommand: DeviceTransferCommand?
+
     private lazy var sender = DeviceTransferServerDataSender(server: self)
     
     private let connector: DeviceTransferServerConnector
@@ -63,6 +64,7 @@ extension DeviceTransferServer: DeviceTransferDataParserDelegate {
                 displayState = .failed(.mismatchedCode)
                 return
             }
+            connectionCommand = command
             displayState = .connected
             sender.startTransfer()
         case .finish:

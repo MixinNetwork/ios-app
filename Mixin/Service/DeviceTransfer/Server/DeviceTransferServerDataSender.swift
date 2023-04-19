@@ -65,7 +65,9 @@ extension DeviceTransferServerDataSender {
             switch type {
             case .conversation:
                 transferItems = ConversationDAO.shared.conversations(limit: limit, offset: offset)
-                    .map { DeviceTransferConversation(conversation: $0) }
+                    .map { conversation in
+                        DeviceTransferConversation(conversation: conversation, to: server.connectionCommand?.platform)
+                    }
             case .participant:
                 transferItems = ParticipantDAO.shared.participants(limit: limit, offset: offset)
                     .map { DeviceTransferParticipant(participant: $0) }

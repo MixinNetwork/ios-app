@@ -9,7 +9,8 @@ class DeviceTransferClient: DeviceTransferServiceProvidable {
     
     var composer: DeviceTransferDataComposer
     var parser: DeviceTransferDataParser
-    
+    var connectionCommand: DeviceTransferCommand?
+
     private weak var syncProgressTimer: Timer?
     
     private lazy var writer = DeviceTransferClientMessageWriter(client: self)
@@ -45,12 +46,13 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseCommand command: DeviceTransferCommand) {
         switch command.action {
         case .start:
-            if let total = command.total {
-                startTimer()
-                displayState = .transporting(processedCount: 0, totalCount: total)
-            } else {
-                displayState = .transporting(processedCount: 0, totalCount: 0)
+            guard let total = command.total else {
+                displayState = .failed(.completed)
+                return
             }
+            connectionCommand = command
+            startTimer()
+            displayState = .transporting(processedCount: 0, totalCount: total)
         case .finish:
             displayState = .finished
             invalidateTimer()

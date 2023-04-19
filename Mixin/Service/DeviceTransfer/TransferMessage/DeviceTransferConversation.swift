@@ -21,7 +21,7 @@ struct DeviceTransferConversation {
     let expireIn: Int64?
     let createdAt: String
     
-    init(conversation: Conversation) {
+    init(conversation: Conversation, to platform: String?) {
         self.conversationId = conversation.conversationId
         self.ownerId = conversation.ownerId
         self.category = conversation.category
@@ -32,7 +32,11 @@ struct DeviceTransferConversation {
         self.lastMessageCreatedAt = conversation.lastMessageCreatedAt
         self.lastReadMessageId = conversation.lastReadMessageId
         self.unseenMessageCount = conversation.unseenMessageCount
-        self.status = conversation.status
+        if platform == "iOS" {
+            self.status = conversation.status
+        } else {
+            self.status = ConversationStatusConverter.toOtherPlatform(status: conversation.status).rawValue
+        }
         self.draft = conversation.draft
         self.muteUntil = conversation.muteUntil
         self.codeUrl = conversation.codeUrl
@@ -41,23 +45,70 @@ struct DeviceTransferConversation {
         self.createdAt = "2017-10-25T00:00:00.000Z"
     }
 
-    func toConversation() -> Conversation {
-        Conversation(conversationId: conversationId,
-                     ownerId: ownerId,
-                     category: category,
-                     name: name,
-                     iconUrl: iconUrl,
-                     announcement: announcement,
-                     lastMessageId: lastMessageId,
-                     lastMessageCreatedAt: lastMessageCreatedAt,
-                     lastReadMessageId: lastReadMessageId,
-                     unseenMessageCount: 0,
-                     status: status,
-                     draft: draft,
-                     muteUntil: muteUntil,
-                     codeUrl: codeUrl,
-                     pinTime: pinTime,
-                     expireIn: expireIn)
+    func toConversation(from platform: String?) -> Conversation {
+        let conversationStatus: Int
+        if platform == "iOS" {
+            conversationStatus = status
+        } else {
+            conversationStatus = ConversationStatusConverter.toiOSPlatform(status: status).rawValue
+        }
+        return Conversation(conversationId: conversationId,
+                            ownerId: ownerId,
+                            category: category,
+                            name: name,
+                            iconUrl: iconUrl,
+                            announcement: announcement,
+                            lastMessageId: lastMessageId,
+                            lastMessageCreatedAt: lastMessageCreatedAt,
+                            lastReadMessageId: lastReadMessageId,
+                            unseenMessageCount: 0,
+                            status: conversationStatus,
+                            draft: draft,
+                            muteUntil: muteUntil,
+                            codeUrl: codeUrl,
+                            pinTime: pinTime,
+                            expireIn: expireIn)
+    }
+    
+    fileprivate enum ConversationStatusConverter {
+        
+        enum OtherPlatformConversationStatus: Int {
+            case START = 0
+            case FAILURE = 1
+            case SUCCESS = 2
+            case QUIT = 3
+        }
+        
+        static func toiOSPlatform(status: Int) -> ConversationStatus {
+            if let status = OtherPlatformConversationStatus(rawValue: status) {
+                switch status {
+                case .START, .FAILURE:
+                    return ConversationStatus.START
+                case .SUCCESS:
+                    return ConversationStatus.SUCCESS
+                case .QUIT:
+                    return ConversationStatus.QUIT
+                }
+            } else {
+                return ConversationStatus.START
+            }
+        }
+        
+        static func toOtherPlatform(status: Int) -> OtherPlatformConversationStatus {
+            if let status = ConversationStatus(rawValue: status) {
+                switch status {
+                case .START:
+                    return OtherPlatformConversationStatus.START
+                case .SUCCESS:
+                    return OtherPlatformConversationStatus.SUCCESS
+                case .QUIT:
+                    return OtherPlatformConversationStatus.QUIT
+                }
+            } else {
+                return OtherPlatformConversationStatus.START
+            }
+        }
+        
     }
     
 }

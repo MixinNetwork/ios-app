@@ -21,7 +21,7 @@ class DeviceTransferClientMessageWriter {
             switch wrapper.type {
             case .conversation:
                 let conversation = try decoder.decode(DeviceTransferData<DeviceTransferConversation>.self, from: messageData).data
-                ConversationDAO.shared.insert(conversation: conversation.toConversation())
+                ConversationDAO.shared.insert(conversation: conversation.toConversation(from: client?.connectionCommand?.platform))
             case .message:
                 let message = try decoder.decode(DeviceTransferData<DeviceTransferMessage>.self, from: messageData).data
                 MessageDAO.shared.insert(message: message.toMessage())

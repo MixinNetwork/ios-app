@@ -18,11 +18,11 @@ extension MessageDAO {
         assert(count != 0)
         var items = [GalleryItem]()
         let sql: String
-        if let createdAt = location?.createdAt {
+        if location != nil {
             if count < 0 {
-                sql = String(format: Self.sqlQueryGalleryItem, "") + " AND created_at <= ? ORDER BY created_at DESC, ROWID DESC LIMIT \(-count)"
+                sql = String(format: Self.sqlQueryGalleryItem, "") + " AND created_at <= ? AND id != ? ORDER BY created_at DESC, ROWID DESC LIMIT \(-count)"
             } else {
-                sql = String(format: Self.sqlQueryGalleryItem, "") + " AND created_at >= ? ORDER BY created_at ASC, ROWID ASC LIMIT \(count)"
+                sql = String(format: Self.sqlQueryGalleryItem, "") + " AND created_at >= ? AND id != ? ORDER BY created_at ASC, ROWID ASC LIMIT \(count)"
             }
         } else {
             assert(count > 0)
@@ -31,8 +31,8 @@ extension MessageDAO {
         do {
             try db.read { (db) -> Void in
                 let rows: RowCursor
-                if let createdAt = location?.createdAt {
-                    rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId, createdAt], adapter: nil)
+                if let location {
+                    rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId, location.createdAt, location.messageId], adapter: nil)
                 } else {
                     rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId], adapter: nil)
                 }

@@ -499,21 +499,21 @@ public final class MessageDAO: UserDatabaseDAO {
     public func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.created_at <= ?
+        WHERE m.conversation_id = ? AND m.created_at <= ? AND m.id != ?
         ORDER BY m.created_at DESC, m.ROWID DESC
         LIMIT ?
         """
-        return db.select(with: sql, arguments: [conversationId, location.createdAt, count]).reversed()
+        return db.select(with: sql, arguments: [conversationId, location.createdAt, location.messageId, count]).reversed()
     }
     
     public func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.created_at >= ?
+        WHERE m.conversation_id = ? AND m.created_at >= ? AND m.id != ?
         ORDER BY m.created_at ASC, m.ROWID ASC
         LIMIT ?
         """
-        return db.select(with: sql, arguments: [conversationId, location.createdAt, count])
+        return db.select(with: sql, arguments: [conversationId, location.createdAt, location.messageId, count])
     }
     
     public func getMessages(conversationId: String, categoryIn categories: [MessageCategory], earlierThan location: MessageItem?, count: Int) -> [MessageItem] {

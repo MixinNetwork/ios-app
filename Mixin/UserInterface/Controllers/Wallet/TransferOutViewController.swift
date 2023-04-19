@@ -75,7 +75,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                    object: nil)
         case let .tipWallet(address):
             opponentImageView.image = R.image.wallet.ic_transaction_external_large()
-            container?.titleLabel.text = "Send to TIP Wallet"
+            container?.titleLabel.text = "Bridge"
             container?.setSubtitle(subtitle: address.toSimpleKey())
             memoView.isHidden = true
             if let asset = asset {

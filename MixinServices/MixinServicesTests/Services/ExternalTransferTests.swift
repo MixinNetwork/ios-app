@@ -99,6 +99,14 @@ final class ExternalTransferTests: XCTestCase {
                     resolvedAmount: nil,
                     memo: nil)
         XCTAssertEqual(ExternalTransfer.resolve(atomicAmount: c8.amount, with: 6), "3.27")
+        
+        let c9 = try! ExternalTransfer(string: "ethereum:0x752420f80e0A6158f06c00A864Ff220503EB502a?amount=68.255292&label=R2PY8P&uuid=UHTR42MTTBSORZEB&req-asset=0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                                       assetIDFinder: mockAssetIDFinder(_:))
+        assertEqual(transfer: c9,
+                    assetID: usdt,
+                    destination: "0x752420f80e0A6158f06c00A864Ff220503EB502a",
+                    resolvedAmount: "68.255292",
+                    memo: nil)
     }
     
     // MARK: - LTC

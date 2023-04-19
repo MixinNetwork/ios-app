@@ -106,7 +106,8 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
-        descriptionLabel.isHidden = true
+        descriptionLabel.isHidden = false
+        descriptionLabel.text = user.identityNumber
     }
     
     func render(user: User, userBiographyAsSubtitle: Bool) {
@@ -116,11 +117,11 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
+        descriptionLabel.isHidden = false
         if userBiographyAsSubtitle {
-            descriptionLabel.isHidden = false
             descriptionLabel.text = user.biography
         } else {
-            descriptionLabel.isHidden = true
+            descriptionLabel.text = user.identityNumber
         }
     }
     

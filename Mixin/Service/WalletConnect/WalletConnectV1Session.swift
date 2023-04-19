@@ -30,6 +30,7 @@ final class WalletConnectV1Session {
         case personalSign = "personal_sign"
         case ethSignTypedData = "eth_signTypedData"
         case sendTransaction = "eth_sendTransaction"
+        case ethSignTypedDataV4 = "eth_signTypedData_v4"
     }
     
     static let didUpdateNotification = Notification.Name("one.mixin.messenger.WalletConnectV1Session.DidUpdate")
@@ -119,7 +120,7 @@ extension WalletConnectV1Session: WalletConnectSession {
             requestWalletSwitchEthereumChain(with: request)
         case .personalSign:
             requestPersonalSign(with: request)
-        case .ethSignTypedData:
+        case .ethSignTypedData, .ethSignTypedDataV4:
             requestETHSignTypedData(with: request)
         case .sendTransaction:
             requestSendTransaction(with: request)

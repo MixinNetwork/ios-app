@@ -644,6 +644,7 @@
 		7C9AABC429E924B400EBAAF3 /* LocalNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */; };
 		7C9AABC629E9387B00EBAAF3 /* NetworkPort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
+		7C9DEA5729F15FA200959D77 /* DeviceTransferApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */; };
 		7CA5EE58280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */; };
 		7CAE6B4E29D72CE50082E5DB /* DeviceTransferDisplayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
@@ -1715,6 +1716,7 @@
 		7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetwork.swift; sourceTree = "<group>"; };
 		7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPort.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
+		7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferApp.swift; sourceTree = "<group>"; };
 		7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockTimeFormatter.swift; sourceTree = "<group>"; };
 		7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferDisplayState.swift; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
@@ -2837,6 +2839,7 @@
 				7CEB736729DBCE44006FB5B2 /* DeviceTransferPinMessage.swift */,
 				7CEB736929DBCF09006FB5B2 /* DeviceTransferTranscriptMessage.swift */,
 				7CEB736B29DBD1C0006FB5B2 /* DeviceTransferMessage.swift */,
+				7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */,
 				7CEB736D29DBD591006FB5B2 /* DeviceTransferExpiredMessage.swift */,
 			);
 			path = TransferMessage;
@@ -5013,6 +5016,7 @@
 				7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */,
 				94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
+				7C9DEA5729F15FA200959D77 /* DeviceTransferApp.swift in Sources */,
 				946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */,
 				7B369212233B5153007321A7 /* SharedMediaCell.swift in Sources */,
 				7B7A243B236A9B86003F1458 /* RoundedInsetLabel.swift in Sources */,

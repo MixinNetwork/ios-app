@@ -35,4 +35,18 @@ public final class AppDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [appId])
     }
     
+    public func apps(limit: Int, offset: Int) -> [App] {
+        let sql = "SELECT * FROM apps ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func appsCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM apps")
+        return count ?? 0
+    }
+    
+    public func inser(app: App) {
+        db.save(app)
+    }
+    
 }

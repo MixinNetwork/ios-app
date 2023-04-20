@@ -30,6 +30,7 @@ extension DeviceTransferServerDataSender {
         let total = ConversationDAO.shared.conversationsCount()
             + ParticipantDAO.shared.participantsCount()
             + UserDAO.shared.usersCount()
+            + AppDAO.shared.appsCount()
             + AssetDAO.shared.assetsCount()
             + SnapshotDAO.shared.snapshotsCount()
             + StickerDAO.shared.stickersCount()
@@ -74,6 +75,9 @@ extension DeviceTransferServerDataSender {
             case .user:
                 transferItems = UserDAO.shared.users(limit: limit, offset: offset)
                     .map { DeviceTransferUser(user: $0) }
+            case .app:
+                transferItems = AppDAO.shared.apps(limit: limit, offset: offset)
+                    .map { DeviceTransferApp(app: $0) }
             case .asset:
                 transferItems = AssetDAO.shared.assets(limit: limit, offset: offset)
                     .map { DeviceTransferAsset(asset: $0) }

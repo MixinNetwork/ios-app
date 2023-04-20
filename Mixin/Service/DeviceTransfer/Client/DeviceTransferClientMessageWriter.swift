@@ -22,33 +22,36 @@ class DeviceTransferClientMessageWriter {
             case .conversation:
                 let conversation = try decoder.decode(DeviceTransferData<DeviceTransferConversation>.self, from: messageData).data
                 ConversationDAO.shared.insert(conversation: conversation.toConversation(from: client?.connectionCommand?.platform))
-            case .message:
-                let message = try decoder.decode(DeviceTransferData<DeviceTransferMessage>.self, from: messageData).data
-                MessageDAO.shared.insert(message: message.toMessage())
-            case .sticker:
-                let sticker = try decoder.decode(DeviceTransferData<DeviceTransferSticker>.self, from: messageData).data
-                StickerDAO.shared.inser(sticker: sticker.toSticker())
+            case .participant:
+                let participant = try decoder.decode(DeviceTransferData<DeviceTransferParticipant>.self, from: messageData).data
+                ParticipantDAO.shared.insert(participant: participant.toParticipant())
+            case .user:
+                let user = try decoder.decode(DeviceTransferData<DeviceTransferUser>.self, from: messageData).data
+                UserDAO.shared.insert(user: user.toUser())
+            case .app:
+                let app = try decoder.decode(DeviceTransferData<DeviceTransferApp>.self, from: messageData).data
+                AppDAO.shared.inser(app: app.toApp())
             case .asset:
                 let asset = try decoder.decode(DeviceTransferData<DeviceTransferAsset>.self, from: messageData).data
                 AssetDAO.shared.insert(asset: asset.toAsset())
             case .snapshot:
                 let snapshot = try decoder.decode(DeviceTransferData<DeviceTransferSnapshot>.self, from: messageData).data
                 SnapshotDAO.shared.insert(snapshot: snapshot.toSnapshot())
-            case .user:
-                let user = try decoder.decode(DeviceTransferData<DeviceTransferUser>.self, from: messageData).data
-                UserDAO.shared.insert(user: user.toUser())
+            case .sticker:
+                let sticker = try decoder.decode(DeviceTransferData<DeviceTransferSticker>.self, from: messageData).data
+                StickerDAO.shared.inser(sticker: sticker.toSticker())
             case .pinMessage:
                 let pinMessage = try decoder.decode(DeviceTransferData<DeviceTransferPinMessage>.self, from: messageData).data
                 PinMessageDAO.shared.inser(pinMessage: pinMessage.toPinMessage())
-            case .expiredMessage:
-                let expiredMessage = try decoder.decode(DeviceTransferData<DeviceTransferExpiredMessage>.self, from: messageData).data
-                ExpiredMessageDAO.shared.insert(expiredMessage: expiredMessage.toExpiredMessage())
             case .transcriptMessage:
                 let transcriptMessage = try decoder.decode(DeviceTransferData<DeviceTransferTranscriptMessage>.self, from: messageData).data
                 TranscriptMessageDAO.shared.insert(transcriptMessage: transcriptMessage.toTranscriptMessage())
-            case .participant:
-                let participant = try decoder.decode(DeviceTransferData<DeviceTransferParticipant>.self, from: messageData).data
-                ParticipantDAO.shared.insert(participant: participant.toParticipant())
+            case .message:
+                let message = try decoder.decode(DeviceTransferData<DeviceTransferMessage>.self, from: messageData).data
+                MessageDAO.shared.insert(message: message.toMessage())
+            case .expiredMessage:
+                let expiredMessage = try decoder.decode(DeviceTransferData<DeviceTransferExpiredMessage>.self, from: messageData).data
+                ExpiredMessageDAO.shared.insert(expiredMessage: expiredMessage.toExpiredMessage())
             case .command, .unknown:
                 break
             }

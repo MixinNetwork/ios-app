@@ -42,7 +42,7 @@ public struct Account {
     public let transferConfirmationThreshold: Double
     public let tipKey: Data?
     public let tipCounter: UInt64
-    public let debug: [String]
+    public let features: [String]
     
 }
 
@@ -73,7 +73,7 @@ extension Account: Codable {
         case transferConfirmationThreshold = "transfer_confirmation_threshold"
         case tipKey = "tip_key_base64"
         case tipCounter = "tip_counter"
-        case debug
+        case features
     }
     
     public init(from decoder: Decoder) throws {
@@ -108,7 +108,7 @@ extension Account: Codable {
             tipKey = nil
         }
         tipCounter = try container.decodeIfPresent(UInt64.self, forKey: .tipCounter) ?? 0
-        debug = try container.decodeIfPresent([String].self, forKey: .debug) ?? []
+        features = try container.decodeIfPresent([String].self, forKey: .features) ?? []
     }
     
 }

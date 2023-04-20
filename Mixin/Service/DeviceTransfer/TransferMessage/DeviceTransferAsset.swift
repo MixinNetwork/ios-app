@@ -18,6 +18,7 @@ struct DeviceTransferAsset {
     let confirmations: Int
     let assetKey: String?
     let reserve: String?
+    let depositEntries: [Asset.DepositEntry]?
     
     init(asset: Asset) {
         assetId = asset.assetId
@@ -35,6 +36,7 @@ struct DeviceTransferAsset {
         confirmations = asset.confirmations
         assetKey = asset.assetKey
         reserve = asset.reserve
+        depositEntries = asset.depositEntries
     }
     
     func toAsset() -> Asset {
@@ -53,7 +55,7 @@ struct DeviceTransferAsset {
               confirmations: confirmations,
               assetKey: assetKey ?? "",
               reserve: reserve ?? "",
-              depositEntries: [])
+              depositEntries: depositEntries ?? [])
     }
     
 }
@@ -76,6 +78,7 @@ extension DeviceTransferAsset: Codable {
         case confirmations
         case assetKey = "asset_key"
         case reserve
+        case depositEntries = "deposit_entries"
     }
     
 }

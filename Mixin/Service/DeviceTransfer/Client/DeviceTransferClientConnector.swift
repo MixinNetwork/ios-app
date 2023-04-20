@@ -16,7 +16,8 @@ class DeviceTransferClientConnector {
     
     private let connection: NWConnection
     private let queue = DispatchQueue(label: "one.mixin.messenger.DeviceTransferClientConnector")
-    
+    private let maximumLengthOnReceive = 1024 * 20
+
     init(host: String, port: UInt16) {
         let host = NWEndpoint.Host(host)
         let port = NWEndpoint.Port(integerLiteral: port)
@@ -64,7 +65,7 @@ extension DeviceTransferClientConnector {
     }
     
     private func receive() {
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 1024) { (data, _, isComplete, error) in
+        connection.receive(minimumIncompleteLength: 1, maximumLength: maximumLengthOnReceive) { (data, _, isComplete, error) in
             if let data, !data.isEmpty {
                 self.delegate?.deviceTransferClientConnector(self, didReceive: data)
             }

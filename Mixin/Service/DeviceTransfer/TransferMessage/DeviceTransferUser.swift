@@ -37,7 +37,10 @@ struct DeviceTransferUser {
              biography: biography,
              identityNumber: identityNumber,
              avatarUrl: avatarUrl,
+             phone: phone,
              isVerified: isVerified,
+             muteUntil: muteUntil,
+             appId: appId,
              createdAt: createdAt,
              relationship: relationship,
              isScam: isScam ?? false)

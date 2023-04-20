@@ -61,7 +61,7 @@ struct DeviceTransferConversation {
                             lastMessageId: lastMessageId,
                             lastMessageCreatedAt: lastMessageCreatedAt,
                             lastReadMessageId: lastReadMessageId,
-                            unseenMessageCount: 0,
+                            unseenMessageCount: unseenMessageCount,
                             status: conversationStatus,
                             draft: draft,
                             muteUntil: muteUntil,

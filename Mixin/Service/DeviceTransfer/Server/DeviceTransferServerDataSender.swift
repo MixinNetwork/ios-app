@@ -37,6 +37,7 @@ extension DeviceTransferServerDataSender {
             + PinMessageDAO.shared.pinMessagesCount()
             + TranscriptMessageDAO.shared.transcriptMessagesCount()
             + MessageDAO.shared.messagesCount()
+            + MessageMentionDAO.shared.messageMentionsCount()
             + ExpiredMessageDAO.shared.expiredMessagesCount()
             + attachmentsCount()
         let command = DeviceTransferCommand(action: .start, total: total)
@@ -96,6 +97,9 @@ extension DeviceTransferServerDataSender {
             case .message:
                 transferItems = MessageDAO.shared.messages(limit: limit, offset: offset)
                     .map { DeviceTransferMessage(message: $0) }
+            case .messageMention:
+                transferItems = MessageMentionDAO.shared.messageMentions(limit: limit, offset: offset)
+                    .map { DeviceTransferMessageMention(messageMention: $0) }
             case .expiredMessage:
                 transferItems = ExpiredMessageDAO.shared.expiredMessages(limit: limit, offset: offset)
                     .map { DeviceTransferExpiredMessage(expiredMessage: $0) }

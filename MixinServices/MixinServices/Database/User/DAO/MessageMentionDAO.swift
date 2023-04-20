@@ -15,4 +15,18 @@ public final class MessageMentionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
+    public func messageMentions(limit: Int, offset: Int) -> [MessageMention] {
+        let sql = "SELECT * FROM message_mentions ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func messageMentionsCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM message_mentions")
+        return count ?? 0
+    }
+    
+    public func inser(messageMention: MessageMention) {
+        db.save(messageMention)
+    }
+    
 }

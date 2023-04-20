@@ -1000,6 +1000,12 @@ extension MessageDAO {
         }
     }
     
+    public func messageContent(conversationId: String, messageId: String) -> String? {
+        db.select(column: Message.column(of: .content),
+                  from: Message.self,
+                  where: Message.column(of: .conversationId) == conversationId && Message.column(of: .messageId) == messageId)
+    }
+    
     public func mediasCount() -> Int {
         let sql = """
         SELECT COUNT(*)

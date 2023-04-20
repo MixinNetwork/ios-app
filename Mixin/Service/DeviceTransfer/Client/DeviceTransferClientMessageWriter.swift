@@ -49,6 +49,10 @@ class DeviceTransferClientMessageWriter {
             case .message:
                 let message = try decoder.decode(DeviceTransferData<DeviceTransferMessage>.self, from: messageData).data
                 MessageDAO.shared.insert(message: message.toMessage())
+            case .messageMention:
+                if let messageMention = try decoder.decode(DeviceTransferData<DeviceTransferMessageMention>.self, from: messageData).data.toMessageMention() {
+                    MessageMentionDAO.shared.inser(messageMention: messageMention)
+                }
             case .expiredMessage:
                 let expiredMessage = try decoder.decode(DeviceTransferData<DeviceTransferExpiredMessage>.self, from: messageData).data
                 ExpiredMessageDAO.shared.insert(expiredMessage: expiredMessage.toExpiredMessage())

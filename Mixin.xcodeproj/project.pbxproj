@@ -645,6 +645,7 @@
 		7C9AABC629E9387B00EBAAF3 /* NetworkPort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
 		7C9DEA5729F15FA200959D77 /* DeviceTransferApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */; };
+		7C9DEA5B29F1770000959D77 /* DeviceTransferMessageMention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9DEA5A29F1770000959D77 /* DeviceTransferMessageMention.swift */; };
 		7CA5EE58280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */; };
 		7CAE6B4E29D72CE50082E5DB /* DeviceTransferDisplayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
@@ -1717,6 +1718,7 @@
 		7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPort.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferApp.swift; sourceTree = "<group>"; };
+		7C9DEA5A29F1770000959D77 /* DeviceTransferMessageMention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferMessageMention.swift; sourceTree = "<group>"; };
 		7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockTimeFormatter.swift; sourceTree = "<group>"; };
 		7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferDisplayState.swift; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
@@ -2840,6 +2842,7 @@
 				7CEB736929DBCF09006FB5B2 /* DeviceTransferTranscriptMessage.swift */,
 				7CEB736B29DBD1C0006FB5B2 /* DeviceTransferMessage.swift */,
 				7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */,
+				7C9DEA5A29F1770000959D77 /* DeviceTransferMessageMention.swift */,
 				7CEB736D29DBD591006FB5B2 /* DeviceTransferExpiredMessage.swift */,
 			);
 			path = TransferMessage;
@@ -4733,6 +4736,7 @@
 				E0B53A6B23B0C3FC008DA9F1 /* MessageCategory+Icon.swift in Sources */,
 				7BB78728245136850057B4ED /* SettingsRadioSection.swift in Sources */,
 				7C0F774E29D7938800A6D0FE /* DeviceTransferServiceProvidable.swift in Sources */,
+				7C9DEA5B29F1770000959D77 /* DeviceTransferMessageMention.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */,
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,

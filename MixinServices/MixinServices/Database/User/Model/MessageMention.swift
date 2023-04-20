@@ -72,7 +72,7 @@ public struct MessageMention {
                   hasRead: hasRead)
     }
     
-    private init(conversationId: String, messageId: String, mentionsJson: Data, hasRead: Bool) {
+    public init(conversationId: String, messageId: String, mentionsJson: Data, hasRead: Bool) {
         self.conversationId = conversationId
         self.messageId = messageId
         self.mentionsJson = mentionsJson

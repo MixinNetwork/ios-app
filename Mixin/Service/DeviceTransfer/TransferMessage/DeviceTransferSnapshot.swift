@@ -15,20 +15,20 @@ struct DeviceTransferSnapshot {
     let confirmations: Int?
     let traceId: String?
     let createdAt: String
-
+    
     init(snapshot: Snapshot) {
-        self.snapshotId = snapshot.snapshotId
-            self.type = snapshot.type
-            self.assetId = snapshot.assetId
-            self.amount = snapshot.amount
-            self.opponentId = snapshot.opponentId
-            self.transactionHash = snapshot.transactionHash
-            self.sender = snapshot.sender
-            self.receiver = snapshot.receiver
-            self.memo = snapshot.memo
-            self.confirmations = snapshot.confirmations
-            self.traceId = snapshot.traceId
-            self.createdAt = snapshot.createdAt
+        snapshotId = snapshot.snapshotId
+        type = snapshot.type
+        assetId = snapshot.assetId
+        amount = snapshot.amount
+        opponentId = snapshot.opponentId
+        transactionHash = snapshot.transactionHash
+        sender = snapshot.sender
+        receiver = snapshot.receiver
+        memo = snapshot.memo
+        confirmations = snapshot.confirmations
+        traceId = snapshot.traceId
+        createdAt = snapshot.createdAt
     }
     
     func toSnapshot() -> Snapshot {
@@ -67,5 +67,5 @@ extension DeviceTransferSnapshot: Codable {
         case traceId = "trace_id"
         case createdAt = "created_at"
     }
-
+    
 }

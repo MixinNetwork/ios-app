@@ -8,9 +8,9 @@ struct DeviceTransferExpiredMessage {
     var expireAt: Int64?
     
     init(expiredMessage: ExpiredMessage) {
-        self.messageId = expiredMessage.messageId
-        self.expireIn = expiredMessage.expireIn
-        self.expireAt = expiredMessage.expireAt
+        messageId = expiredMessage.messageId
+        expireIn = expiredMessage.expireIn
+        expireAt = expiredMessage.expireAt
     }
     
     func toExpiredMessage() -> ExpiredMessage {

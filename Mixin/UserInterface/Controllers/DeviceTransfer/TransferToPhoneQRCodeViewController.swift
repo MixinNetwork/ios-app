@@ -32,6 +32,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
             imageView.image = UIImage(qrcode: content, size: size, foregroundColor: .black)
             updateLabelText()
         } else {
+            alert(R.string.localizable.connection_establishment_failed())
             Logger.general.debug(category: "TransferToPhoneQRCodeViewController", message: "Failed to launch server")
         }
     }

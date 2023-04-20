@@ -8,9 +8,9 @@ protocol DeviceTransferServiceProvidable {
     var composer: DeviceTransferDataComposer { get }
     var parser: DeviceTransferDataParser { get }
     var connectionCommand: DeviceTransferCommand? { get }
-
+    
     func start()
     func stop()
     func send(data: Data, completion: (() -> Void)?)
-
+    
 }

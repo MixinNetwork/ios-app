@@ -7,9 +7,9 @@ class RestoreFromDesktopViewController: DeviceTransferSettingViewController {
     private var stateObserver: AnyCancellable?
     private var client: DeviceTransferClient!
     
-    private let section = SettingsRadioSection(rows: [SettingsRow(title: R.string.localizable.restore_now(), titleStyle: .highlighted)])
-    
-    private lazy var dataSource = SettingsDataSource(sections: [section])
+    private lazy var dataSource = SettingsDataSource(sections: [
+        SettingsRadioSection(rows: [SettingsRow(title: R.string.localizable.restore_now(), titleStyle: .highlighted)])
+    ])
     
     override func viewDidLoad() {
         super.viewDidLoad()

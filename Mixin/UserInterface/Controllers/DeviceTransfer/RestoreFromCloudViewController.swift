@@ -2,10 +2,8 @@ import UIKit
 
 class RestoreFromCloudViewController: DeviceTransferSettingViewController {
     
-    private let restoreActionRow = SettingsRow(title: R.string.localizable.restore_chat_history(), titleStyle: .highlighted)
-    
     private lazy var dataSource = SettingsDataSource(sections: [
-        SettingsSection(rows: [restoreActionRow])
+        SettingsSection(rows: [SettingsRow(title: R.string.localizable.restore_chat_history(), titleStyle: .highlighted)])
     ])
     
     override func viewDidLoad() {

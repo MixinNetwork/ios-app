@@ -885,6 +885,7 @@ class UrlWindow {
             command.port != nil,
             command.action == .push
         else {
+            UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
         let controller = DeviceTransferProgressViewController()

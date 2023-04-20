@@ -22,29 +22,29 @@ struct DeviceTransferConversation {
     let createdAt: String
     
     init(conversation: Conversation, to platform: String?) {
-        self.conversationId = conversation.conversationId
-        self.ownerId = conversation.ownerId
-        self.category = conversation.category
-        self.name = conversation.name
-        self.iconUrl = conversation.iconUrl
-        self.announcement = conversation.announcement
-        self.lastMessageId = conversation.lastMessageId
-        self.lastMessageCreatedAt = conversation.lastMessageCreatedAt
-        self.lastReadMessageId = conversation.lastReadMessageId
-        self.unseenMessageCount = conversation.unseenMessageCount
+        conversationId = conversation.conversationId
+        ownerId = conversation.ownerId
+        category = conversation.category
+        name = conversation.name
+        iconUrl = conversation.iconUrl
+        announcement = conversation.announcement
+        lastMessageId = conversation.lastMessageId
+        lastMessageCreatedAt = conversation.lastMessageCreatedAt
+        lastReadMessageId = conversation.lastReadMessageId
+        unseenMessageCount = conversation.unseenMessageCount
         if platform == "iOS" {
-            self.status = conversation.status
+            status = conversation.status
         } else {
-            self.status = ConversationStatusConverter.toOtherPlatform(status: conversation.status).rawValue
+            status = ConversationStatusConverter.toOtherPlatform(status: conversation.status).rawValue
         }
-        self.draft = conversation.draft
-        self.muteUntil = conversation.muteUntil
-        self.codeUrl = conversation.codeUrl
-        self.pinTime = conversation.pinTime
-        self.expireIn = conversation.expireIn
-        self.createdAt = "2017-10-25T00:00:00.000Z"
+        draft = conversation.draft
+        muteUntil = conversation.muteUntil
+        codeUrl = conversation.codeUrl
+        pinTime = conversation.pinTime
+        expireIn = conversation.expireIn
+        createdAt = "2017-10-25T00:00:00.000Z"
     }
-
+    
     func toConversation(from platform: String?) -> Conversation {
         let conversationStatus: Int
         if platform == "iOS" {

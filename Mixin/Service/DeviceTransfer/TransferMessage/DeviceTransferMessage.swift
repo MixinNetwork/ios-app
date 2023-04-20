@@ -35,10 +35,10 @@ struct DeviceTransferMessage {
     let albumId: String?
     
     init(message: Message) {
-        self.messageId = message.messageId
-        self.conversationId = message.conversationId
-        self.userId = message.userId
-        self.category = message.category
+        messageId = message.messageId
+        conversationId = message.conversationId
+        userId = message.userId
+        category = message.category
         let jsonContent: String?
         if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
             if let content = message.content, let data = Data(base64Encoded: content) {
@@ -49,36 +49,36 @@ struct DeviceTransferMessage {
         } else {
             jsonContent = message.content
         }
-        self.content = jsonContent
-        self.mediaUrl = message.mediaUrl
-        self.mediaMimeType = message.mediaMimeType
-        self.mediaSize = message.mediaSize
-        self.mediaDuration = "\(message.mediaDuration ?? 0)"
-        self.mediaWidth = message.mediaWidth
-        self.mediaHeight = message.mediaHeight
-        self.mediaHash = message.mediaHash
-        self.mediaKey = message.mediaKey
-        self.mediaDigest = message.mediaDigest
-        self.mediaStatus = message.mediaStatus
-        self.mediaWaveform = message.mediaWaveform
-        self.mediaLocalIdentifier = message.mediaLocalIdentifier
-        self.thumbImage = message.thumbImage
-        self.thumbUrl = message.thumbUrl
-        self.status = message.status
-        self.action = message.action
-        self.participantId = message.participantId
-        self.snapshotId = message.snapshotId
-        self.name = message.name
-        self.stickerId = message.stickerId
-        self.sharedUserId = message.sharedUserId
-        self.quoteMessageId = message.quoteMessageId
-        self.quoteContent = QuoteContentConverter.transcriptQuoteContent(from: message.quoteContent)
-        self.createdAt = message.createdAt
-        self.albumId = message.albumId
+        content = jsonContent
+        mediaUrl = message.mediaUrl
+        mediaMimeType = message.mediaMimeType
+        mediaSize = message.mediaSize
+        mediaDuration = "\(message.mediaDuration ?? 0)"
+        mediaWidth = message.mediaWidth
+        mediaHeight = message.mediaHeight
+        mediaHash = message.mediaHash
+        mediaKey = message.mediaKey
+        mediaDigest = message.mediaDigest
+        mediaStatus = message.mediaStatus
+        mediaWaveform = message.mediaWaveform
+        mediaLocalIdentifier = message.mediaLocalIdentifier
+        thumbImage = message.thumbImage
+        thumbUrl = message.thumbUrl
+        status = message.status
+        action = message.action
+        participantId = message.participantId
+        snapshotId = message.snapshotId
+        name = message.name
+        stickerId = message.stickerId
+        sharedUserId = message.sharedUserId
+        quoteMessageId = message.quoteMessageId
+        quoteContent = QuoteContentConverter.transcriptQuoteContent(from: message.quoteContent)
+        createdAt = message.createdAt
+        albumId = message.albumId
     }
     
     func toMessage() -> Message {
-        return Message(messageId: messageId,
+        Message(messageId: messageId,
                 conversationId: conversationId,
                 userId: userId,
                 category: category,

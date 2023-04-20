@@ -10,7 +10,7 @@ class DeviceTransferClient: DeviceTransferServiceProvidable {
     var composer: DeviceTransferDataComposer
     var parser: DeviceTransferDataParser
     var connectionCommand: DeviceTransferCommand?
-
+    
     private weak var syncProgressTimer: Timer?
     
     private lazy var writer = DeviceTransferClientMessageWriter(client: self)

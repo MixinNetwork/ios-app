@@ -20,21 +20,21 @@ struct DeviceTransferAsset {
     let reserve: String?
     
     init(asset: Asset) {
-        self.assetId = asset.assetId
-        self.symbol = asset.symbol
-        self.name = asset.name
-        self.iconUrl = asset.iconUrl
-        self.balance = asset.balance
-        self.destination = asset.destination
-        self.tag = asset.tag
-        self.priceBtc = asset.priceBtc
-        self.priceUsd = asset.priceUsd
-        self.changeUsd = asset.changeUsd
-        self.changeBtc = "0"
-        self.chainId = asset.chainId
-        self.confirmations = asset.confirmations
-        self.assetKey = asset.assetKey
-        self.reserve = asset.reserve
+        assetId = asset.assetId
+        symbol = asset.symbol
+        name = asset.name
+        iconUrl = asset.iconUrl
+        balance = asset.balance
+        destination = asset.destination
+        tag = asset.tag
+        priceBtc = asset.priceBtc
+        priceUsd = asset.priceUsd
+        changeUsd = asset.changeUsd
+        changeBtc = "0"
+        chainId = asset.chainId
+        confirmations = asset.confirmations
+        assetKey = asset.assetKey
+        reserve = asset.reserve
     }
     
     func toAsset() -> Asset {

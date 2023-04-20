@@ -14,15 +14,15 @@ struct DeviceTransferSticker {
     let createdAt: String
     
     init(sticker: Sticker) {
-        self.stickerId = sticker.stickerId
-        self.name = sticker.name
-        self.assetUrl = sticker.assetUrl
-        self.assetType = sticker.assetType
-        self.assetWidth = sticker.assetWidth
-        self.assetHeight = sticker.assetHeight
-        self.lastUseAt = sticker.lastUseAt
-        self.albumId = sticker.albumId
-        self.createdAt = "2017-10-25T00:00:00.000Z"
+        stickerId = sticker.stickerId
+        name = sticker.name
+        assetUrl = sticker.assetUrl
+        assetType = sticker.assetType
+        assetWidth = sticker.assetWidth
+        assetHeight = sticker.assetHeight
+        lastUseAt = sticker.lastUseAt
+        albumId = sticker.albumId
+        createdAt = "2017-10-25T00:00:00.000Z"
     }
     
     func toSticker() -> Sticker {
@@ -35,6 +35,7 @@ struct DeviceTransferSticker {
                 lastUseAt: lastUseAt,
                 albumId: albumId)
     }
+    
 }
 
 extension DeviceTransferSticker: Codable {

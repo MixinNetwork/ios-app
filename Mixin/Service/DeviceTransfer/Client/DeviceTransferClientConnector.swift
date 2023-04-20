@@ -17,7 +17,7 @@ class DeviceTransferClientConnector {
     private let connection: NWConnection
     private let queue = DispatchQueue(label: "one.mixin.messenger.DeviceTransferClientConnector")
     private let maximumLengthOnReceive = 1024 * 20
-
+    
     init(host: String, port: UInt16) {
         let host = NWEndpoint.Host(host)
         let port = NWEndpoint.Port(integerLiteral: port)

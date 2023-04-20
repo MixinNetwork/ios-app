@@ -20,7 +20,7 @@ class DeviceTransferDataComposer {
             return nil
         }
     }
-        
+    
     private func composeData(type: DeviceTransferDataType, data: Data) -> Data {
         let typeData = Data([type.rawValue])
         let lengthData = UInt32(data.count).data(endianness: .big)

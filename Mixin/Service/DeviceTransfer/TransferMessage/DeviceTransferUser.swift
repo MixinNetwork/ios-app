@@ -17,18 +17,18 @@ struct DeviceTransferUser {
     let isScam: Bool?
     
     init(user: User) {
-        self.userId = user.userId
-        self.fullName = user.fullName
-        self.biography = user.biography
-        self.identityNumber = user.identityNumber
-        self.avatarUrl = user.avatarUrl
-        self.phone = user.phone
-        self.isVerified = user.isVerified
-        self.muteUntil = user.muteUntil
-        self.appId = user.appId
-        self.createdAt = user.createdAt
-        self.relationship = user.relationship
-        self.isScam = user.isScam
+        userId = user.userId
+        fullName = user.fullName
+        biography = user.biography
+        identityNumber = user.identityNumber
+        avatarUrl = user.avatarUrl
+        phone = user.phone
+        isVerified = user.isVerified
+        muteUntil = user.muteUntil
+        appId = user.appId
+        createdAt = user.createdAt
+        relationship = user.relationship
+        isScam = user.isScam
     }
     
     func toUser() -> User {

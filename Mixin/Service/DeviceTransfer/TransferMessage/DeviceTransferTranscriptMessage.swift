@@ -124,5 +124,4 @@ extension DeviceTransferTranscriptMessage: Codable {
         case caption
     }
     
-    
 }

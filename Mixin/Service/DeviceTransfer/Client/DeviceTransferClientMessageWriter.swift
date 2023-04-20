@@ -6,7 +6,7 @@ class DeviceTransferClientMessageWriter {
     private struct TypeWrapper: Decodable {
         let type: DeviceTransferMessageType
     }
-
+    
     weak var client: DeviceTransferClient?
     
     private let decoder = JSONDecoder.default

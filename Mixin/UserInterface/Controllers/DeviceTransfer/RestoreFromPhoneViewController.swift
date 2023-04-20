@@ -3,10 +3,8 @@ import MixinServices
 
 class RestoreFromPhoneViewController: DeviceTransferSettingViewController {
     
-    private let restoreActionRow = SettingsRow(title: R.string.localizable.scan_to_restore(), titleStyle: .highlighted)
-    
     private lazy var dataSource = SettingsDataSource(sections: [
-        SettingsSection(rows: [restoreActionRow])
+        SettingsSection(rows: [SettingsRow(title: R.string.localizable.scan_to_restore(), titleStyle: .highlighted)])
     ])
     
     override func viewDidLoad() {

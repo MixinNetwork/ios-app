@@ -30,11 +30,11 @@ extension TransferToDesktopViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
-            alert(R.string.localizable.devices_on_same_network())
-            return
-        }
         if AppGroupUserDefaults.Account.isDesktopLoggedIn {
+            guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+                alert(R.string.localizable.devices_on_same_network())
+                return
+            }
             tableView.isUserInteractionEnabled = false
             let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
                                                rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])

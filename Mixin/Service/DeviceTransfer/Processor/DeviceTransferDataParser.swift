@@ -16,7 +16,7 @@ enum DeviceTransferDataParserError: Error {
 }
 
 class DeviceTransferDataParser {
-
+    
     weak var delegate: DeviceTransferDataParserDelegate?
     
     private enum ByteLength {

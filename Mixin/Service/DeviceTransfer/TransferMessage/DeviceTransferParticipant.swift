@@ -9,10 +9,10 @@ struct DeviceTransferParticipant {
     let createdAt: String
     
     init(participant: Participant) {
-        self.conversationId = participant.conversationId
-        self.userId = participant.userId
-        self.role = participant.role
-        self.createdAt = participant.createdAt
+        conversationId = participant.conversationId
+        userId = participant.userId
+        role = participant.role
+        createdAt = participant.createdAt
     }
     
     func toParticipant() -> Participant {

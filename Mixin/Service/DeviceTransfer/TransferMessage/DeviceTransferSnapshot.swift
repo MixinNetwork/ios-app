@@ -15,6 +15,9 @@ struct DeviceTransferSnapshot {
     let confirmations: Int?
     let traceId: String?
     let createdAt: String
+    let snapshotHash: String?
+    let openingBalance: String?
+    let closingBalance: String?
     
     init(snapshot: Snapshot) {
         snapshotId = snapshot.snapshotId
@@ -29,6 +32,9 @@ struct DeviceTransferSnapshot {
         confirmations = snapshot.confirmations
         traceId = snapshot.traceId
         createdAt = snapshot.createdAt
+        snapshotHash = snapshot.snapshotHash
+        openingBalance = snapshot.openingBalance
+        closingBalance = snapshot.closingBalance
     }
     
     func toSnapshot() -> Snapshot {
@@ -44,9 +50,9 @@ struct DeviceTransferSnapshot {
                  confirmations: confirmations,
                  traceId: traceId,
                  createdAt: createdAt,
-                 snapshotHash: nil,
-                 openingBalance: "",
-                 closingBalance: "")
+                 snapshotHash: snapshotHash,
+                 openingBalance: openingBalance ?? "",
+                 closingBalance: closingBalance ?? "")
     }
     
 }
@@ -66,6 +72,9 @@ extension DeviceTransferSnapshot: Codable {
         case confirmations
         case traceId = "trace_id"
         case createdAt = "created_at"
+        case snapshotHash = "snapshot_hash"
+        case openingBalance = "opening_balance"
+        case closingBalance = "closing_balance"
     }
     
 }

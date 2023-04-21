@@ -101,6 +101,7 @@ class DeviceTransferProgressViewController: UIViewController {
                 alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
+                Logger.general.info(category: "DeviceTranDeviceTransferProgressViewControllersferDataComposer", message: "Restore from phone failed, ip:\(command.ip ?? ""), port: \(command.port ?? -1), code: \(command.code ?? -1)")
             }
         case .restoreFromCloud:
             restoreFromCloud()

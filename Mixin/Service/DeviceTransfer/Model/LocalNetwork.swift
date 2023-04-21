@@ -7,6 +7,7 @@ enum LocalNetwork {
     static func requestAuthorization(completion: @escaping (Bool) -> Void) {
         if #available(iOS 14.0, *) {
             guard let ip = NetworkInterface.firstEthernetHostname() else {
+                Logger.general.info(category: "LocalNetwork", message: "No host")
                 completion(false)
                 return
             }
@@ -16,6 +17,7 @@ enum LocalNetwork {
             let connection = NWConnection(to: endPoint, using: .tcp)
             if AppGroupUserDefaults.isLocalNetworkTriggered {
                 connection.stateUpdateHandler = { newState in
+                    Logger.general.info(category: "LocalNetwork", message: "Connection new state: \(newState)")
                     switch newState {
                     case .waiting(let error):
                         if error == .posix(.ENETDOWN) {

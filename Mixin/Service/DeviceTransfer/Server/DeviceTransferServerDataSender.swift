@@ -196,7 +196,7 @@ extension DeviceTransferServerDataSender {
                     filePaths.append(fileURL)
                 }
             } catch {
-                Logger.general.error(category: "DeviceTransferServerDataSender", message: "Failed to get file path: \(error)")
+                Logger.general.info(category: "DeviceTransferServerDataSender", message: "Failed to get file path: \(error)")
             }
         }
         return filePaths

@@ -5,18 +5,22 @@ class DeviceTransferDataComposer {
     
     func commandData(command: DeviceTransferCommand) -> Data? {
         let transferData = DeviceTransferData(type: .command, data: command)
-        if let jsonData = try? JSONEncoder.default.encode(transferData) {
+        do {
+            let jsonData = try JSONEncoder.default.encode(transferData)
             return composeData(type: .command, data: jsonData)
-        } else {
+        } catch {
+            Logger.general.info(category: "DeviceTransferDataComposer", message: "Compose command failed: \(error)")
             return nil
         }
     }
     
     func messageData<TransferData>(type: DeviceTransferMessageType, data: TransferData) -> Data? where TransferData: Codable {
         let transferData = DeviceTransferData(type: type, data: data)
-        if let jsonData = try? JSONEncoder.default.encode(transferData) {
+        do {
+            let jsonData = try JSONEncoder.default.encode(transferData)
             return composeData(type: .message, data: jsonData)
-        } else {
+        } catch {
+            Logger.general.info(category: "DeviceTransferDataComposer", message: "Compose message failed: \(error)")
             return nil
         }
     }

@@ -67,8 +67,7 @@ extension TransferToPhoneQRCodeViewController {
         case .connected:
             startTransfering = true
             stateObserver?.cancel()
-            let viewController = DeviceTransferProgressViewController()
-            viewController.invoker = .transferToPhone(server)
+            let viewController = DeviceTransferProgressViewController(intent: .transferToPhone(server))
             navigationController?.pushViewController(viewController, animated: true)
         case let .failed(error):
             switch error {

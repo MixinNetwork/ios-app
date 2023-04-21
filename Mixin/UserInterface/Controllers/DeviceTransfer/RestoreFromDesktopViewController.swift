@@ -98,8 +98,7 @@ extension RestoreFromDesktopViewController {
         switch state {
         case .connected:
             stateObserver?.cancel()
-            let controller = DeviceTransferProgressViewController()
-            controller.invoker = .restoreFromDesktop(client)
+            let controller = DeviceTransferProgressViewController(intent: .restoreFromDesktop(client))
             navigationController?.pushViewController(withBackChat: controller)
         case .failed:
             tableView.isUserInteractionEnabled = true

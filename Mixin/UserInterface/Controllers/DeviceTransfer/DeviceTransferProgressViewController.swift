@@ -4,7 +4,7 @@ import MixinServices
 
 class DeviceTransferProgressViewController: UIViewController {
     
-    enum Invoker {
+    enum Intent {
         
         case transferToDesktop(DeviceTransferServer)
         case transferToPhone(DeviceTransferServer)
@@ -51,11 +51,20 @@ class DeviceTransferProgressViewController: UIViewController {
     @IBOutlet weak var progressLabel: UILabel!
     @IBOutlet weak var tipLabel: UILabel!
     
-    var invoker: Invoker!
-    
+    private var intent: Intent
     private var stateObserver: AnyCancellable?
     private var endPoint: DeviceTransferServiceProvidable?
     private var displayAwakeningToken: DisplayAwakener.Token?
+    
+    init(intent: Intent) {
+        self.intent = intent
+        let nib = R.nib.deviceTransferProgressView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     deinit {
         if let token = displayAwakeningToken {
@@ -68,11 +77,11 @@ class DeviceTransferProgressViewController: UIViewController {
         view.isUserInteractionEnabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         displayAwakeningToken = DisplayAwakener.shared.retain()
-        imageView.image = invoker.image
-        tipLabel.text = invoker.tip
+        imageView.image = intent.image
+        tipLabel.text = intent.tip
         progressLabel.font = UIFont.monospacedSystemFont(ofSize: 18, weight: .medium)
-        progressLabel.text = invoker.title
-        switch invoker {
+        progressLabel.text = intent.title
+        switch intent {
         case let .transferToDesktop(server):
             endPoint = server
             stateObserver = server.$displayState
@@ -95,7 +104,7 @@ class DeviceTransferProgressViewController: UIViewController {
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: stateDidChange(_:))
                 client.start()
-                invoker = .restoreFromPhone(command, client)
+                intent = .restoreFromPhone(command, client)
                 endPoint = client
             } else {
                 alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
@@ -105,8 +114,6 @@ class DeviceTransferProgressViewController: UIViewController {
             }
         case .restoreFromCloud:
             restoreFromCloud()
-        case .none:
-            break
         }
     }
     
@@ -119,12 +126,12 @@ extension DeviceTransferProgressViewController {
         case let .transporting(processedCount, totalCount):
             let progressValue = Double(processedCount) / Double(totalCount) * 100
             let progress = String(format: "%.1f", progressValue)
-            switch invoker {
+            switch intent {
             case .transferToDesktop, .transferToPhone:
                 progressLabel.text = R.string.localizable.transferring_chat_progress(progress)
             case .restoreFromDesktop, .restoreFromPhone:
                 progressLabel.text = R.string.localizable.restoring_chat_progress(progress)
-            case .restoreFromCloud, .none:
+            case .restoreFromCloud:
                 break
             }
         case .failed(let error):
@@ -145,12 +152,12 @@ extension DeviceTransferProgressViewController {
             stateObserver?.cancel()
             endPoint?.stop()
             let hint: String
-            switch invoker {
+            switch intent {
             case .transferToDesktop, .transferToPhone:
                 hint = R.string.localizable.transfer_completed()
             case .restoreFromDesktop, .restoreFromPhone:
                 hint = R.string.localizable.restore_completed()
-            case .restoreFromCloud, .none:
+            case .restoreFromCloud:
                 return
             }
             progressLabel.text = hint
@@ -161,7 +168,7 @@ extension DeviceTransferProgressViewController {
     }
     
     private func transferFailed(hint: String) {
-        switch invoker {
+        switch intent {
         case .transferToPhone:
             LoginManager.shared.inDeviceTransfer = false
             LoginManager.shared.loggedOutInDeviceTransfer = false
@@ -181,13 +188,11 @@ extension DeviceTransferProgressViewController {
             alert(hint) { _ in
                 self.navigationController?.backToHome()
             }
-        case .none:
-            break
         }
     }
     
     private func transferSucceeded(hint: String = "") {
-        switch invoker {
+        switch intent {
         case .transferToPhone:
             LoginManager.shared.inDeviceTransfer = false
             LoginManager.shared.loggedOutInDeviceTransfer = false
@@ -220,8 +225,6 @@ extension DeviceTransferProgressViewController {
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
             AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
-        case .none:
-            break
         }
     }
     

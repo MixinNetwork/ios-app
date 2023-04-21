@@ -888,8 +888,7 @@ class UrlWindow {
             UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
-        let controller = DeviceTransferProgressViewController()
-        controller.invoker = .restoreFromPhone(command, nil)
+        let controller = DeviceTransferProgressViewController(intent: .restoreFromPhone(command, nil))
         if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {
             navigationController.pushViewController(controller, animated: true)
         } else {

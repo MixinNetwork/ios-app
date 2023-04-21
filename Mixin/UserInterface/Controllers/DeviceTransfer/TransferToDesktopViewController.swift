@@ -82,8 +82,7 @@ extension TransferToDesktopViewController {
         switch state {
         case .connected :
             stateObserver?.cancel()
-            let controller = DeviceTransferProgressViewController()
-            controller.invoker = .transferToDesktop(server)
+            let controller = DeviceTransferProgressViewController(intent: .transferToDesktop(server))
             navigationController?.pushViewController(controller, animated: true)
         case let .failed(error):
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)

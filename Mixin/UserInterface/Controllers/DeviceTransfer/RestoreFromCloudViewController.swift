@@ -25,8 +25,7 @@ extension RestoreFromCloudViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let controller = DeviceTransferProgressViewController()
-        controller.invoker = .restoreFromCloud
+        let controller = DeviceTransferProgressViewController(intent: .restoreFromCloud)
         navigationController?.pushViewController(controller, animated: true)
     }
     

@@ -14,6 +14,8 @@ struct DeviceTransferApp {
     let creatorId: String
     let updatedAt: String?
     let category: String
+    let description: String
+    let appSecret: String
     
     init(app: App) {
         appId = app.appId
@@ -27,6 +29,8 @@ struct DeviceTransferApp {
         creatorId = app.creatorId
         updatedAt = app.updatedAt
         category = app.category
+        description = ""
+        appSecret = ""
     }
     
     func toApp() -> App {
@@ -59,6 +63,8 @@ extension DeviceTransferApp: Codable {
         case homeUri = "home_uri"
         case creatorId = "creator_id"
         case updatedAt = "updated_at"
+        case description
+        case appSecret = "app_secret"
     }
     
 }

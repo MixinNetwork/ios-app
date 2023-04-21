@@ -7,7 +7,6 @@ struct DeviceTransferConversation {
     let ownerId: String?
     let category: String?
     let name: String?
-    let iconUrl: String?
     let announcement: String?
     let lastMessageId: String?
     let lastMessageCreatedAt: String?
@@ -26,7 +25,6 @@ struct DeviceTransferConversation {
         ownerId = conversation.ownerId
         category = conversation.category
         name = conversation.name
-        iconUrl = conversation.iconUrl
         announcement = conversation.announcement
         lastMessageId = conversation.lastMessageId
         lastMessageCreatedAt = conversation.lastMessageCreatedAt
@@ -56,7 +54,7 @@ struct DeviceTransferConversation {
                             ownerId: ownerId,
                             category: category,
                             name: name,
-                            iconUrl: iconUrl,
+                            iconUrl: nil,
                             announcement: announcement,
                             lastMessageId: lastMessageId,
                             lastMessageCreatedAt: lastMessageCreatedAt,
@@ -121,7 +119,6 @@ extension DeviceTransferConversation: Codable {
         case ownerId = "owner_id"
         case category
         case name
-        case iconUrl = "icon_url"
         case announcement
         case lastMessageId = "last_message_id"
         case lastMessageCreatedAt = "last_message_created_at"

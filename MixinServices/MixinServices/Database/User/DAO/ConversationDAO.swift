@@ -386,7 +386,8 @@ public final class ConversationDAO: UserDatabaseDAO {
                                         muteUntil: nil,
                                         codeUrl: nil,
                                         pinTime: nil,
-                                        expireIn: 0)
+                                        expireIn: 0,
+                                        createdAt: createdAt)
         var participants = members.map {
             Participant(conversationId: conversationId,
                         userId: $0.userId,

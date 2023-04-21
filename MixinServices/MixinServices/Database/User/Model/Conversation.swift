@@ -30,8 +30,9 @@ public struct Conversation {
     public var codeUrl: String?
     public var pinTime: String?
     public var expireIn: Int64?
+    public let createdAt: String
     
-    public init(conversationId: String, ownerId: String? = nil, category: String? = nil, name: String? = nil, iconUrl: String? = nil, announcement: String? = nil, lastMessageId: String? = nil, lastMessageCreatedAt: String? = nil, lastReadMessageId: String? = nil, unseenMessageCount: Int? = nil, status: Int, draft: String? = nil, muteUntil: String? = nil, codeUrl: String? = nil, pinTime: String? = nil, expireIn: Int64? = nil) {
+    public init(conversationId: String, ownerId: String? = nil, category: String? = nil, name: String? = nil, iconUrl: String? = nil, announcement: String? = nil, lastMessageId: String? = nil, lastMessageCreatedAt: String? = nil, lastReadMessageId: String? = nil, unseenMessageCount: Int? = nil, status: Int, draft: String? = nil, muteUntil: String? = nil, codeUrl: String? = nil, pinTime: String? = nil, expireIn: Int64? = nil, createdAt: String) {
         self.conversationId = conversationId
         self.ownerId = ownerId
         self.category = category
@@ -48,14 +49,15 @@ public struct Conversation {
         self.codeUrl = codeUrl
         self.pinTime = pinTime
         self.expireIn = expireIn
+        self.createdAt = createdAt
     }
     
     public static func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
-        return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil, expireIn: 0)
+        return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil, expireIn: 0, createdAt: conversation.createdAt)
     }
 
     public static func createConversation(conversationId: String, category: String?, recipientId: String, status: Int) -> Conversation {
-        return Conversation(conversationId: conversationId, ownerId: recipientId, category: category, name: nil, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil, expireIn: 0)
+        return Conversation(conversationId: conversationId, ownerId: recipientId, category: category, name: nil, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil, expireIn: 0, createdAt: Date().toUTCString())
     }
     
     public func isGroup() -> Bool {
@@ -83,6 +85,7 @@ extension Conversation: Codable, DatabaseColumnConvertible, MixinFetchableRecord
         case codeUrl = "code_url"
         case pinTime = "pin_time"
         case expireIn = "expire_in"
+        case createdAt = "created_at"
     }
     
 }

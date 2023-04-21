@@ -42,7 +42,7 @@ struct DeviceTransferConversation {
         codeUrl = conversation.codeUrl
         pinTime = conversation.pinTime
         expireIn = conversation.expireIn
-        createdAt = "2017-10-25T00:00:00.000Z"
+        createdAt = conversation.createdAt.isEmpty ? "2017-10-25T00:00:00.000Z" : conversation.createdAt
     }
     
     func toConversation(from platform: String?) -> Conversation {
@@ -67,7 +67,8 @@ struct DeviceTransferConversation {
                             muteUntil: muteUntil,
                             codeUrl: codeUrl,
                             pinTime: pinTime,
-                            expireIn: expireIn)
+                            expireIn: expireIn,
+                            createdAt: createdAt)
     }
     
     fileprivate enum ConversationStatusConverter {

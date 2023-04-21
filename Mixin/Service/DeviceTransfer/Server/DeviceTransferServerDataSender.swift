@@ -7,7 +7,7 @@ class DeviceTransferServerDataSender {
     
     private let limit = 100
     private let fileBufferSize = 1024 * 1024 * 10
-    private let maxConcurrentSends = 2
+    private let maxConcurrentSends = 1000
     
     init(server: DeviceTransferServer) {
         self.server = server
@@ -42,7 +42,7 @@ extension DeviceTransferServerDataSender {
             + attachmentsCount()
         let command = DeviceTransferCommand(action: .start, total: total)
         if let server, let commandData = server.composer.commandData(command: command) {
-            Logger.general.debug(category: "DeviceTransferServer", message: "Send Start Command")
+            Logger.general.info(category: "DeviceTransferServer", message: "Send Start Command")
             server.send(data: commandData)
             server.displayState = .transporting(processedCount: 0, totalCount: total)
         }
@@ -51,7 +51,7 @@ extension DeviceTransferServerDataSender {
     private func sendFinishCommand() {
         let command = DeviceTransferCommand(action: .finish)
         if let server, let data = server.composer.commandData(command: command) {
-            Logger.general.debug(category: "DeviceTransferServer", message: "Send Finish Command")
+            Logger.general.info(category: "DeviceTransferServer", message: "Send Finish Command")
             server.send(data: data)
         }
     }
@@ -60,6 +60,7 @@ extension DeviceTransferServerDataSender {
         guard type != .unknown else {
             return
         }
+        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
         var offset = 0
         let semaphore = DispatchSemaphore(value: maxConcurrentSends)
         while let server, server.canSendData {
@@ -133,6 +134,7 @@ extension DeviceTransferServerDataSender {
 extension DeviceTransferServerDataSender {
     
     private func sendAttachment(type: String) {
+        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
         let fileDirectory = AttachmentContainer.url.appendingPathComponent(type)
         let allFilePaths = getAllFilePaths(inDirectory: fileDirectory)
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: fileBufferSize)
@@ -150,6 +152,7 @@ extension DeviceTransferServerDataSender {
             if type == "Videos", components[1] != "mp4" { // filter thumb
                 continue
             }
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
             guard let stream = InputStream(url: path) else {
                 Logger.general.info(category: "DeviceTransferServerDataSender", message: "Open stream failed")
                 continue
@@ -164,6 +167,7 @@ extension DeviceTransferServerDataSender {
             server.send(data: header)
             // send content data
             stream.open()
+            let semaphore = DispatchSemaphore(value: 1)
             while stream.hasBytesAvailable {
                 let bytesRead = stream.read(buffer, maxLength: fileBufferSize)
                 if bytesRead < 0 {
@@ -174,14 +178,16 @@ extension DeviceTransferServerDataSender {
                 }
                 let data = Data(bytesNoCopy: buffer, count: bytesRead, deallocator: .none)
                 checksum.update(data: data)
-                server.send(data: data)
+                semaphore.wait()
+                server.send(data: data) {
+                    semaphore.signal()
+                }
             }
             stream.close()
             // send checksum data
             let checksumData = checksum.finalize().data(endianness: .big)
             server.send(data: checksumData)
         }
-        Logger.general.debug(category: "DeviceTransferServerDataSender", message: "Send \(type)")
     }
     
     private func getAllFilePaths(inDirectory url: URL) -> [URL] {

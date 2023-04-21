@@ -4,9 +4,8 @@ import MixinServices
 class DeviceTransferDataComposer {
     
     func commandData(command: DeviceTransferCommand) -> Data? {
-        let transferData = DeviceTransferData(type: .command, data: command)
         do {
-            let jsonData = try JSONEncoder.default.encode(transferData)
+            let jsonData = try JSONEncoder.default.encode(command)
             return composeData(type: .command, data: jsonData)
         } catch {
             Logger.general.info(category: "DeviceTransferDataComposer", message: "Compose command failed: \(error)")

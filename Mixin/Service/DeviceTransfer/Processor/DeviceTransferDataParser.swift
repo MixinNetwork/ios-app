@@ -67,7 +67,7 @@ extension DeviceTransferDataParser {
         } else {
             Logger.general.debug(category: "DeviceTransferDataParse", message: "Receive: \(messageData) \n")
         }
-        if let command = try? JSONDecoder.default.decode(DeviceTransferData<DeviceTransferCommand>.self, from: messageData).data {
+        if let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: messageData) {
             delegate?.deviceTransferDataParser(self, didParseCommand: command)
         } else {
             delegate?.deviceTransferDataParser(self, didParseMessage: messageData)

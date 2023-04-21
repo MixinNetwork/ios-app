@@ -56,8 +56,8 @@ class DeviceTransferClientMessageWriter {
             case .expiredMessage:
                 let expiredMessage = try decoder.decode(DeviceTransferData<DeviceTransferExpiredMessage>.self, from: messageData).data
                 ExpiredMessageDAO.shared.insert(expiredMessage: expiredMessage.toExpiredMessage())
-            case .command, .unknown:
-                break
+            case .unknown:
+                Logger.general.info(category: "DeviceTransferClientMessageWriter", message: "unknown message: \(String(data: messageData, encoding: .utf8) ?? "")")
             }
         } catch {
             if let content = String(data: messageData, encoding: .utf8) {

@@ -57,7 +57,7 @@ extension DeviceTransferServerDataSender {
     }
     
     private func sendTransferItems(type: DeviceTransferMessageType) {
-        guard type != .command, type != .unknown else {
+        guard type != .unknown else {
             return
         }
         var offset = 0
@@ -103,7 +103,7 @@ extension DeviceTransferServerDataSender {
             case .expiredMessage:
                 transferItems = ExpiredMessageDAO.shared.expiredMessages(limit: limit, offset: offset)
                     .map { DeviceTransferExpiredMessage(expiredMessage: $0) }
-            case .command, .unknown:
+            case .unknown:
                 return
             }
             if transferItems.isEmpty {

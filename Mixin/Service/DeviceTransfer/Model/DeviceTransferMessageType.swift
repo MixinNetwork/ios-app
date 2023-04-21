@@ -14,7 +14,6 @@ enum DeviceTransferMessageType: String, Codable, CaseIterable {
     case message
     case messageMention = "message_mention"
     case expiredMessage = "expired_message"
-    case command
     case unknown
     
 }

@@ -170,23 +170,24 @@ extension DeviceTransferProgressViewController {
     private func transferFailed(hint: String) {
         switch intent {
         case .transferToPhone:
-            LoginManager.shared.inDeviceTransfer = false
-            LoginManager.shared.loggedOutInDeviceTransfer = false
-            LoginManager.shared.logout(reason: "Device Transfer")
+            navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            alert(hint) { _ in
+                self.navigationController?.popViewController(animated: true)
+            }
         case .transferToDesktop:
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in
-                self.navigationController?.backToHome()
+                self.navigationController?.popViewController(animated: true)
             }
         case .restoreFromPhone, .restoreFromCloud:
             alert(hint) { _ in
-                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+                self.navigationController?.popToRootViewController(animated: true)
             }
         case .restoreFromDesktop:
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
             alert(hint) { _ in
-                self.navigationController?.backToHome()
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }
@@ -268,6 +269,11 @@ extension DeviceTransferProgressViewController {
                 }
             } catch {
                 Logger.general.error(category: "DeviceTransferProgressViewController", message: "Restore from icloud, restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
+                if FileManager.default.fileExists(atPath: localURL.path) {
+                    UserDatabase.closeCurrent()
+                    try? FileManager.default.removeItem(at: localURL)
+                }
+                UserDatabase.reloadCurrent()
                 DispatchQueue.main.async {
                     self.transferFailed(hint: R.string.localizable.restore_chat_history_failed())
                 }

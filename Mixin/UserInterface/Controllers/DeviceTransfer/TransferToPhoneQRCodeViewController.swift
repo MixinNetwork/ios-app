@@ -10,7 +10,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
     
     private var stateObserver: AnyCancellable?
-    private var server: DeviceTransferServer!
+    private var server: DeviceTransferServer?
     private var startTransfering = false
     
     override func viewDidLoad() {
@@ -18,9 +18,6 @@ class TransferToPhoneQRCodeViewController: UIViewController {
         LoginManager.shared.inDeviceTransfer = true
         if let server = try? DeviceTransferServer(), let ip = NetworkInterface.firstEthernetHostname() {
             self.server = server
-            stateObserver = server.$displayState
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: stateDidChange(_:))
             server.start()
             let pushCommand = DeviceTransferCommand(action: .push, ip: ip, port: Int(server.port), code: server.code)
             guard let jsonData = try? JSONEncoder.default.encode(pushCommand) else {
@@ -35,6 +32,17 @@ class TransferToPhoneQRCodeViewController: UIViewController {
             alert(R.string.localizable.connection_establishment_failed())
             Logger.general.debug(category: "TransferToPhoneQRCodeViewController", message: "Failed to launch server")
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        startTransfering = false
+        guard let server else {
+            return
+        }
+        stateObserver = server.$displayState
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: stateDidChange(_:))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -67,8 +75,10 @@ extension TransferToPhoneQRCodeViewController {
         case .connected:
             startTransfering = true
             stateObserver?.cancel()
-            let viewController = DeviceTransferProgressViewController(intent: .transferToPhone(server))
-            navigationController?.pushViewController(viewController, animated: true)
+            if let server {
+                let viewController = DeviceTransferProgressViewController(intent: .transferToPhone(server))
+                navigationController?.pushViewController(viewController, animated: true)
+            }
         case let .failed(error):
             switch error {
             case .mismatchedUserId:

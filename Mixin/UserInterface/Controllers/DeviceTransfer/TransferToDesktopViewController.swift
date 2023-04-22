@@ -82,9 +82,12 @@ extension TransferToDesktopViewController {
         switch state {
         case .connected :
             stateObserver?.cancel()
+            tableView.isUserInteractionEnabled = true
+            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             let controller = DeviceTransferProgressViewController(intent: .transferToDesktop(server))
             navigationController?.pushViewController(controller, animated: true)
         case let .failed(error):
+            tableView.isUserInteractionEnabled = true
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             switch error {
             case .mismatchedUserId:

@@ -7,9 +7,9 @@ class RestoreFromDesktopViewController: DeviceTransferSettingViewController {
     private var stateObserver: AnyCancellable?
     private var client: DeviceTransferClient!
     
-    private lazy var dataSource = SettingsDataSource(sections: [
-        SettingsRadioSection(rows: [SettingsRow(title: R.string.localizable.restore_now(), titleStyle: .highlighted)])
-    ])
+    private let section = SettingsRadioSection(rows: [SettingsRow(title: R.string.localizable.restore_now(), titleStyle: .highlighted)])
+    
+    private lazy var dataSource = SettingsDataSource(sections: [section])
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,9 +98,12 @@ extension RestoreFromDesktopViewController {
         switch state {
         case .connected:
             stateObserver?.cancel()
+            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+            tableView.isUserInteractionEnabled = true
             let controller = DeviceTransferProgressViewController(intent: .restoreFromDesktop(client))
-            navigationController?.pushViewController(withBackChat: controller)
+            navigationController?.pushViewController(controller, animated: true)
         case .failed:
+            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = true
             stateObserver?.cancel()
             client.stop()

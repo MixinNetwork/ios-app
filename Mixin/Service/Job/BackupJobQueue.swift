@@ -14,11 +14,11 @@ class BackupJobQueue: JobQueue {
     }
     
     var backupJob: BackupJob? {
-        return findJobById(jodId: BackupJob.sharedId) as? BackupJob
+        return findJobById(jodId: BackupJob.jobId) as? BackupJob
     }
 
     var restoreJob: RestoreJob? {
-        return findJobById(jodId: RestoreJob.sharedId) as? RestoreJob
+        return findJobById(jodId: RestoreJob.jobId) as? RestoreJob
     }
     
     init() {

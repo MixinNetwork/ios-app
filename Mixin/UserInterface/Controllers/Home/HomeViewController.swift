@@ -151,6 +151,7 @@ class HomeViewController: UIViewController {
             if SpotlightManager.isAvailable {
                 SpotlightManager.shared.indexIfNeeded()
             }
+            DatabaseBackupManager.shared.backupIfNeeded()
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }

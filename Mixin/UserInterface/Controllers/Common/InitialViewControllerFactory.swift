@@ -2,7 +2,9 @@ import UIKit
 import MixinServices
 
 func makeInitialViewController(isUsernameJustInitialized: Bool = false) -> UIViewController {
-    if AppGroupUserDefaults.Account.isClockSkewed {
+    if AppGroupUserDefaults.User.isDatabaseCorrupted {
+        return DatabaseRepairViewController.instance()
+    } else if AppGroupUserDefaults.Account.isClockSkewed {
         if let viewController = AppDelegate.current.mainWindow.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
             return viewController

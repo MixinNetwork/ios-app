@@ -680,6 +680,11 @@
 "remove_emergency_contact_for_sure" = "本当に緊急連絡先を削除しますか?";
 "remove_from_group" = "グループから退会させる";
 "remove_stickers" = "スタンプの削除";
+"repair" = "Repair";
+"repair_chat_history" = "Repair Chat History";
+"repair_chat_history_hint" = "The database file is found to be damaged, some messages may be lost, please try to repair it.";
+"repair_chat_history_success" = "The chat history has been repaired successfully! Chat records before %@ have been restored.";
+"repairing" = "Repairing";
 "reply" = "返信";
 "report" = "報告";
 "report_and_block" = "報告してブロックしますか?";

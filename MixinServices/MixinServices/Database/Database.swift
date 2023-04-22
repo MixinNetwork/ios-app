@@ -93,6 +93,15 @@ open class Database {
         }
     }
     
+    public func writeWithoutTransaction(_ updates: (GRDB.Database) throws -> Void) throws {
+        do {
+            try pool.writeWithoutTransaction(updates)
+        } catch {
+            handleDatabaseError(error)
+            throw error
+        }
+    }
+    
     public func vacuum() throws {
         try pool.vacuum()
     }

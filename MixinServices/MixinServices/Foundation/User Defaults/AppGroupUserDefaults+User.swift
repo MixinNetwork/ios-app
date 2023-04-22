@@ -68,6 +68,9 @@ extension AppGroupUserDefaults {
             case wallpapers = "wallpapers"
             case chatFontSize = "chat_font_size"
             case useSystemFont = "use_system_font"
+            
+            case isDatabaseCorrupted = "database_corrupted"
+            case lastDatabaseBackupDate = "last_database_backup_date"
         }
         
         public static let version = 31
@@ -79,6 +82,7 @@ extension AppGroupUserDefaults {
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
+        public static let databaseCorruptedNotification = Notification.Name(rawValue: "one.mixin.services.databaseCorrupted")
 
         private static let maxNumberOfAssetSearchHistory = 2
         
@@ -261,6 +265,16 @@ extension AppGroupUserDefaults {
         public static var useSystemFont: Bool {
             didSet {
                 NotificationCenter.default.post(name: UIContentSizeCategory.didChangeNotification, object: nil)
+            }
+        }
+        
+        @Default(namespace: .user, key: "last_database_backup_date", defaultValue: nil)
+        public static var lastDatabaseBackupDate: Date?
+        
+        @Default(namespace: .user, key: "database_corrupted", defaultValue: false)
+        public static var isDatabaseCorrupted: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: databaseCorruptedNotification, object: nil)
             }
         }
         

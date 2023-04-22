@@ -680,6 +680,11 @@
 "remove_emergency_contact_for_sure" = "確定刪除緊急聯絡人？";
 "remove_from_group" = "從群組中移除";
 "remove_stickers" = "移除所有表情";
+"repair" = "修復";
+"repair_chat_history" = "修復聊天記錄";
+"repair_chat_history_hint" = "資料庫檔案被發現損壞，可能會丟失一些資訊，請嘗試修復它。";
+"repair_chat_history_success" = "聊天記錄修復成功！%@ 之前的聊天記錄已經恢復。";
+"repairing" = "修复中";
 "reply" = "回覆";
 "report" = "舉報";
 "report_and_block" = "舉報並封鎖？";

@@ -45,7 +45,7 @@ public final class AppDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func inser(app: App) {
+    public func insert(app: App) {
         db.save(app)
     }
     

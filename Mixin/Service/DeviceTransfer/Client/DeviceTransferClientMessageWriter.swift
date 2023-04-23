@@ -30,7 +30,7 @@ class DeviceTransferClientMessageWriter {
                 UserDAO.shared.insert(user: user.toUser())
             case .app:
                 let app = try decoder.decode(DeviceTransferData<DeviceTransferApp>.self, from: messageData).data
-                AppDAO.shared.inser(app: app.toApp())
+                AppDAO.shared.insert(app: app.toApp())
             case .asset:
                 let asset = try decoder.decode(DeviceTransferData<DeviceTransferAsset>.self, from: messageData).data
                 AssetDAO.shared.insert(asset: asset.toAsset())
@@ -39,10 +39,10 @@ class DeviceTransferClientMessageWriter {
                 SnapshotDAO.shared.insert(snapshot: snapshot.toSnapshot())
             case .sticker:
                 let sticker = try decoder.decode(DeviceTransferData<DeviceTransferSticker>.self, from: messageData).data
-                StickerDAO.shared.inser(sticker: sticker.toSticker())
+                StickerDAO.shared.insert(sticker: sticker.toSticker())
             case .pinMessage:
                 let pinMessage = try decoder.decode(DeviceTransferData<DeviceTransferPinMessage>.self, from: messageData).data
-                PinMessageDAO.shared.inser(pinMessage: pinMessage.toPinMessage())
+                PinMessageDAO.shared.insert(pinMessage: pinMessage.toPinMessage())
             case .transcriptMessage:
                 let transcriptMessage = try decoder.decode(DeviceTransferData<DeviceTransferTranscriptMessage>.self, from: messageData).data
                 TranscriptMessageDAO.shared.insert(transcriptMessage: transcriptMessage.toTranscriptMessage())
@@ -51,7 +51,7 @@ class DeviceTransferClientMessageWriter {
                 MessageDAO.shared.insert(message: message.toMessage())
             case .messageMention:
                 if let messageMention = try decoder.decode(DeviceTransferData<DeviceTransferMessageMention>.self, from: messageData).data.toMessageMention() {
-                    MessageMentionDAO.shared.inser(messageMention: messageMention)
+                    MessageMentionDAO.shared.insert(messageMention: messageMention)
                 }
             case .expiredMessage:
                 let expiredMessage = try decoder.decode(DeviceTransferData<DeviceTransferExpiredMessage>.self, from: messageData).data

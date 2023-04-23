@@ -986,10 +986,11 @@ extension MessageDAO {
     }
     
     public func insert(message: Message) {
-        guard !isExist(messageId: message.messageId) else {
-            return
-        }
         db.write { db in
+            let exists = try message.exists(db)
+            guard !exists else {
+                return
+            }
             try message.save(db)
             let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
                 && message.status != MessageStatus.FAILED.rawValue
@@ -1004,16 +1005,6 @@ extension MessageDAO {
         db.select(column: Message.column(of: .content),
                   from: Message.self,
                   where: Message.column(of: .conversationId) == conversationId && Message.column(of: .messageId) == messageId)
-    }
-    
-    public func mediasCount() -> Int {
-        let sql = """
-        SELECT COUNT(*)
-        FROM messages
-        WHERE media_status = 'DONE' AND (category LIKE '%VIDEO' OR category LIKE '%IMAGE' OR category LIKE '%DATA' OR category LIKE '%AUDIO')
-        """
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
     private func clearPinMessageContent(quoteMessageIds: [String], conversationId: String, from database: GRDB.Database) throws {

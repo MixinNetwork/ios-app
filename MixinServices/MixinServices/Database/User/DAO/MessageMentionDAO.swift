@@ -25,7 +25,7 @@ public final class MessageMentionDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func inser(messageMention: MessageMention) {
+    public func insert(messageMention: MessageMention) {
         db.save(messageMention)
     }
     

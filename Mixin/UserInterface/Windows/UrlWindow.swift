@@ -880,6 +880,10 @@ class UrlWindow {
             UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
+        guard command.userId == myUserId else {
+            UIApplication.currentActivity()?.alert(R.string.localizable.unable_synced_between_different_account())
+            return true
+        }
         guard
             command.ip != nil,
             command.port != nil,

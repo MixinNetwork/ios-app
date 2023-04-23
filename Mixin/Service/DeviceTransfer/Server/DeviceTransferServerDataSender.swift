@@ -149,9 +149,6 @@ extension DeviceTransferServerDataSender {
             guard components.count == 2, let idData = UUID(uuidString: components[0])?.data else {
                 continue
             }
-            if type == "Videos", components[1] != "mp4" { // filter thumb
-                continue
-            }
             Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
             guard let stream = InputStream(url: path) else {
                 Logger.general.info(category: "DeviceTransferServerDataSender", message: "Open stream failed")
@@ -196,6 +193,10 @@ extension DeviceTransferServerDataSender {
             return filePaths
         }
         for case let fileURL as URL in fileEnumerator {
+            // filter thumb
+            if url.lastPathComponent == AttachmentContainer.Category.videos.pathComponent, fileURL.lastPathComponent.contains(ExtensionName.jpeg.withDot)  {
+                continue
+            }
             do {
                 let resourceValues = try fileURL.resourceValues(forKeys: [.isRegularFileKey])
                 if let isRegularFile = resourceValues.isRegularFile, isRegularFile {

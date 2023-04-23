@@ -996,7 +996,15 @@ extension MessageDAO {
                 && message.status != MessageStatus.FAILED.rawValue
                 && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
             if shouldInsertIntoFTSTable {
-                try insertFTSContent(db, message: message, children: nil)
+                let children: [TranscriptMessage]?
+                if message.category.hasSuffix("_TRANSCRIPT") {
+                    children = try TranscriptMessage
+                        .filter(TranscriptMessage.column(of: .transcriptId) == message.messageId)
+                        .fetchAll(db)
+                } else {
+                    children = nil
+                }
+                try insertFTSContent(db, message: message, children: children)
             }
         }
     }

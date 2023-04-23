@@ -173,7 +173,7 @@ public final class StickerDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(sticker: Sticker) {
+    public func save(sticker: Sticker) {
         db.save(sticker)
     }
     

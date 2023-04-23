@@ -225,7 +225,7 @@ public final class UserDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(user: User) {
+    public func save(user: User) {
         db.save(user)
     }
     

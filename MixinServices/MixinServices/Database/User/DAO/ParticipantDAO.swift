@@ -185,11 +185,11 @@ public final class ParticipantDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(participant: Participant) {
+    public func save(participant: Participant) {
         db.save(participant)
     }
     
-    public func joinedConversationId() -> String? {
+    public func randomSuccessConversationID() -> String? {
         let sql = """
         SELECT p.conversation_id
         FROM participants p, conversations c

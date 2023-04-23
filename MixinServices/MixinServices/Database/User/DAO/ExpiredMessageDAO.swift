@@ -153,7 +153,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(expiredMessage: ExpiredMessage) {
+    public func save(expiredMessage: ExpiredMessage) {
         db.save(expiredMessage)
     }
     

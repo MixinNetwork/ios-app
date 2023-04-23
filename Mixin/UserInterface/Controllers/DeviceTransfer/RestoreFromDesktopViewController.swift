@@ -63,7 +63,7 @@ extension RestoreFromDesktopViewController {
             let jsonData = try? JSONEncoder.default.encode(pullCommand),
             let content = String(data: jsonData, encoding: .utf8),
             let sessionId = AppGroupUserDefaults.Account.extensionSession,
-            let conversationId = ParticipantDAO.shared.joinedConversationId()
+            let conversationId = ParticipantDAO.shared.randomSuccessConversationID()
         else {
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                 self.navigationController?.popViewController(animated: true)

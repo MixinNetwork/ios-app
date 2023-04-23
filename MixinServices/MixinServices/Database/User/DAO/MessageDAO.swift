@@ -985,7 +985,7 @@ extension MessageDAO {
         return count ?? 0
     }
     
-    public func insert(message: Message) {
+    public func save(message: Message) {
         db.write { db in
             let exists = try message.exists(db)
             guard !exists else {

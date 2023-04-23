@@ -114,7 +114,7 @@ public final class AssetDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(asset: Asset) {
+    public func save(asset: Asset) {
         db.save(asset)
     }
     

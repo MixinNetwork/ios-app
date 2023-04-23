@@ -100,7 +100,7 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(transcriptMessage: TranscriptMessage) {
+    public func save(transcriptMessage: TranscriptMessage) {
         db.save(transcriptMessage)
     }
     

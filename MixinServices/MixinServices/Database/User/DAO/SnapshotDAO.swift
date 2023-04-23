@@ -126,7 +126,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(snapshot: Snapshot) {
+    public func save(snapshot: Snapshot) {
         db.save(snapshot)
     }
     

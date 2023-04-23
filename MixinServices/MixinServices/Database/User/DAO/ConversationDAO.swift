@@ -642,7 +642,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(conversation: Conversation) {
+    public func save(conversation: Conversation) {
         let unseenMessageCount: Int? = db.select(column: Conversation.column(of: .unseenMessageCount),
                                                  from: Conversation.self,
                                                  where: Conversation.column(of: .conversationId) == conversation.conversationId)

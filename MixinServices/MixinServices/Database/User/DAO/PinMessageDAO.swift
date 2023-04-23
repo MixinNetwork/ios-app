@@ -123,7 +123,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func insert(pinMessage: PinMessage) {
+    public func save(pinMessage: PinMessage) {
         db.save(pinMessage)
     }
     

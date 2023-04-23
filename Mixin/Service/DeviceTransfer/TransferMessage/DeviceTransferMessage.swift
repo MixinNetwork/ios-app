@@ -78,36 +78,46 @@ struct DeviceTransferMessage {
     }
     
     func toMessage() -> Message {
-        Message(messageId: messageId,
-                conversationId: conversationId,
-                userId: userId,
-                category: category,
-                content: content,
-                mediaUrl: mediaUrl,
-                mediaMimeType: mediaMimeType,
-                mediaSize: mediaSize,
-                mediaDuration: Int64(mediaDuration ?? ""),
-                mediaWidth: mediaWidth,
-                mediaHeight: mediaHeight,
-                mediaHash: mediaHash,
-                mediaKey: mediaKey,
-                mediaDigest: mediaDigest,
-                mediaStatus: mediaStatus,
-                mediaWaveform: mediaWaveform,
-                mediaLocalIdentifier: mediaLocalIdentifier,
-                thumbImage: thumbImage,
-                thumbUrl: thumbUrl,
-                status: MessageStatus.READ.rawValue,
-                action: action,
-                participantId: participantId,
-                snapshotId: snapshotId,
-                name: name,
-                stickerId: stickerId,
-                sharedUserId: sharedUserId,
-                quoteMessageId: quoteMessageId,
-                quoteContent: QuoteContentConverter.localQuoteContent(from: quoteContent),
-                createdAt: createdAt,
-                albumId: albumId)
+        let messageContent: String?
+        if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
+            if let content, let data = content.data(using: .utf8) {
+                messageContent = data.base64EncodedString()
+            } else {
+                messageContent = content
+            }
+        } else {
+            messageContent = content
+        }
+        return Message(messageId: messageId,
+                       conversationId: conversationId,
+                       userId: userId,
+                       category: category,
+                       content: messageContent,
+                       mediaUrl: mediaUrl,
+                       mediaMimeType: mediaMimeType,
+                       mediaSize: mediaSize,
+                       mediaDuration: Int64(mediaDuration ?? ""),
+                       mediaWidth: mediaWidth,
+                       mediaHeight: mediaHeight,
+                       mediaHash: mediaHash,
+                       mediaKey: mediaKey,
+                       mediaDigest: mediaDigest,
+                       mediaStatus: mediaStatus,
+                       mediaWaveform: mediaWaveform,
+                       mediaLocalIdentifier: mediaLocalIdentifier,
+                       thumbImage: thumbImage,
+                       thumbUrl: thumbUrl,
+                       status: MessageStatus.READ.rawValue,
+                       action: action,
+                       participantId: participantId,
+                       snapshotId: snapshotId,
+                       name: name,
+                       stickerId: stickerId,
+                       sharedUserId: sharedUserId,
+                       quoteMessageId: quoteMessageId,
+                       quoteContent: QuoteContentConverter.localQuoteContent(from: quoteContent),
+                       createdAt: createdAt,
+                       albumId: albumId)
     }
     
 }

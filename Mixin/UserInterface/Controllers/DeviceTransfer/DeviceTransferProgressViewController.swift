@@ -195,9 +195,11 @@ extension DeviceTransferProgressViewController {
     private func transferSucceeded(hint: String = "") {
         switch intent {
         case .transferToPhone:
-            LoginManager.shared.inDeviceTransfer = false
-            LoginManager.shared.loggedOutInDeviceTransfer = false
-            LoginManager.shared.logout(reason: "Device Transfer")
+            alert(hint) { _ in
+                LoginManager.shared.inDeviceTransfer = false
+                LoginManager.shared.loggedOutInDeviceTransfer = false
+                LoginManager.shared.logout(reason: "Device Transfer")
+            }
         case .transferToDesktop:
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in

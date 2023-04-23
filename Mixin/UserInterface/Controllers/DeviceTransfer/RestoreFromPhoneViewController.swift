@@ -9,7 +9,7 @@ class RestoreFromPhoneViewController: DeviceTransferSettingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableHeaderView.imageView.image = R.image.setting.ic_restore_phone()
+        tableHeaderView.imageView.image = R.image.setting.ic_transfer_phone()
         tableHeaderView.label.attributedText = updateLabelText()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView

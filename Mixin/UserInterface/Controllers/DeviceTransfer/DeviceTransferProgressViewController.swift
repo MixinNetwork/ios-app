@@ -21,7 +21,7 @@ class DeviceTransferProgressViewController: UIViewController {
             case .restoreFromDesktop:
                 return R.image.setting.ic_restore_desktop()
             case .restoreFromPhone:
-                return R.image.setting.ic_restore_phone()
+                return R.image.setting.ic_transfer_phone()
             case .restoreFromCloud:
                 return R.image.setting.ic_restore_cloud()
             }

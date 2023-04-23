@@ -19,7 +19,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
         if let server = try? DeviceTransferServer(), let ip = NetworkInterface.firstEthernetHostname() {
             self.server = server
             server.start()
-            let pushCommand = DeviceTransferCommand(action: .push, ip: ip, port: Int(server.port), code: server.code)
+            let pushCommand = DeviceTransferCommand(action: .push, ip: ip, port: Int(server.port), code: server.code, userId: myUserId)
             guard let jsonData = try? JSONEncoder.default.encode(pushCommand) else {
                 return
             }

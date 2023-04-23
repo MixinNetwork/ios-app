@@ -57,7 +57,7 @@ extension TransferToDesktopViewController {
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: stateDidChange(_:))
             server.start()
-            let pushCommand = DeviceTransferCommand(action: .push, ip: ip, port: Int(server.port), code: server.code)
+            let pushCommand = DeviceTransferCommand(action: .push, ip: ip, port: Int(server.port), code: server.code, userId: myUserId)
             guard
                 let jsonData = try? JSONEncoder.default.encode(pushCommand),
                 let content = String(data: jsonData, encoding: .utf8),

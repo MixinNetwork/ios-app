@@ -204,21 +204,6 @@ extension Job {
         self.category = JobCategory.WebSocket.rawValue
     }
     
-    init(deviceTransfer conversationId: String, messageId: String?, blazeMessage: BlazeMessage) {
-        self.jobId = UUID().uuidString.lowercased()
-        self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
-        self.action = JobAction.SEND_SESSION_MESSAGE.rawValue
-        self.userId = nil
-        self.conversationId = conversationId
-        self.resendMessageId = nil
-        self.blazeMessage = try! JSONEncoder.default.encode(blazeMessage)
-        self.blazeMessageData = nil
-        self.messageId = messageId
-        self.status = MessageStatus.SENDING.rawValue
-        self.sessionId = nil
-        self.category = JobCategory.WebSocket.rawValue
-    }
-    
     init(attachmentMessage messageId: String, action: JobAction) {
         self.jobId = UUID().uuidString.lowercased()
         self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue

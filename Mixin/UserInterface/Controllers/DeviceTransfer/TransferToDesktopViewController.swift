@@ -68,7 +68,7 @@ extension TransferToDesktopViewController {
                 }
                 return
             }
-            let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.userId)
+            let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
             SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
         } else {
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in

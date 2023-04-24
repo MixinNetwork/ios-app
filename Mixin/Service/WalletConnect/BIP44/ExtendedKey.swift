@@ -6,6 +6,9 @@ import MixinServices
 
 // https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 
+fileprivate let bitcoinKey = Data(hexEncodedString: "426974636f696e2073656564")!
+fileprivate let n = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
+
 struct ExtendedKey {
     
     enum Error: Swift.Error {
@@ -38,7 +41,6 @@ struct ExtendedKey {
     let chainCode: Data
     
     init(seed: Data) {
-        let bitcoinKey = Data(hexEncodedString: "426974636f696e2073656564")!
         let (key, chainCode) = Self.hmacSHA512(seed, key: bitcoinKey)
         self.init(key: key, chainCode: chainCode)
     }
@@ -59,7 +61,6 @@ struct ExtendedKey {
             let data = Data([0x00] + key + index.value.data(endianness: .big))
             (il, ir) = Self.hmacSHA512(data, key: chainCode)
         }
-        let n = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
         let parse256IL = BigUInt(il)
         guard parse256IL < n else {
             throw Error.invalidIndex

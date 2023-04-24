@@ -8,7 +8,7 @@ class SettingsViewController: SettingsTableViewController {
             SettingsRow(icon: R.image.setting.ic_category_account(),
                         title: R.string.localizable.account(),
                         accessory: .disclosure),
-            SettingsRow(icon: R.image.setting.ic_category_backup(),
+            SettingsRow(icon: R.image.setting.ic_category_chats(),
                         title: R.string.localizable.setting_chats(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_notification(),

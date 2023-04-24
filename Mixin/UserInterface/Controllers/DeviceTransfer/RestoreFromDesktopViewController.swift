@@ -62,14 +62,14 @@ extension RestoreFromDesktopViewController {
         guard
             let jsonData = try? JSONEncoder.default.encode(pullCommand),
             let content = String(data: jsonData, encoding: .utf8),
-            let sessionId = AppGroupUserDefaults.Account.extensionSession,
-            let conversationId = ParticipantDAO.shared.randomSuccessConversationID()
+            let sessionId = AppGroupUserDefaults.Account.extensionSession
         else {
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                 self.navigationController?.popViewController(animated: true)
             }
             return
         }
+        let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: "773e5e77-4107-45c2-b648-8fc722ed77f5")
         SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
     }
     

@@ -593,6 +593,7 @@
 "optimize_database" = "最佳化查詢索引";
 "optimized" = "已最佳化";
 "other" = "其他";
+"overwrite" = "覆蓋";
 "owner" = "群主";
 "participants" = "成員";
 "participants_count" = "%@ 位群組成員";
@@ -715,6 +716,7 @@
 "restore_completed" = "恢復已完成";
 "restoring_chat_progress" = "恢復聊天記錄（%@%%）";
 "restoring_progress" = "正在恢復 %@";
+"restore_from_icloud_confirmation" = "已經有 %d 條本地聊天記錄，最後一條訊息的時間是 %@，確定用 iCloud 上的聊天資料覆蓋本地資料嗎？";
 "retry" = "重試";
 "revoke_access" = "取消授權";
 "revoke_multisig_transaction" = "撤銷多重簽名交易";

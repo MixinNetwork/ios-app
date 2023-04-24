@@ -14,13 +14,13 @@ class SignalLoadingViewController: UIViewController {
             return []
         }
         return [
-            InitializeBotJob.Bot(userId: "68ef7899-3e81-4b3d-8124-83ae652def89", fullname: "Mixin Bots"),
-            InitializeBotJob.Bot(userId: "96c1460b-c7c4-480a-a342-acaa73995a37", fullname: "Mixin Data"),
+            InitializeBotJob.Bot(userId: MixinBot.mixinBots.userId, fullname: MixinBot.mixinBots.name),
+            InitializeBotJob.Bot(userId: MixinBot.mixinData.userId, fullname: MixinBot.mixinData.name),
         ]
     }
     
     private var allUsersInitialBots: [InitializeBotJob.Bot] {
-        [InitializeBotJob.Bot(userId: "773e5e77-4107-45c2-b648-8fc722ed77f5", fullname: "Team Mixin")]
+        [InitializeBotJob.Bot(userId: MixinBot.teamMixin.userId, fullname: MixinBot.teamMixin.name)]
     }
     
     class func instance(isUsernameJustInitialized: Bool) -> SignalLoadingViewController {

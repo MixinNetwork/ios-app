@@ -602,6 +602,7 @@
 		7C5DFE34284F3EA3008733FC /* UserCenterTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */; };
 		7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */; };
 		7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */; };
+		7C651D8F29F68277003331A4 /* MixinBot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C651D8E29F68277003331A4 /* MixinBot.swift */; };
 		7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */; };
 		7C66F0272689D1FE006D8462 /* HomeAppsDragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */; };
 		7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* AppPageCell.swift */; };
@@ -1675,6 +1676,7 @@
 		7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCenterTableHeaderView.swift; sourceTree = "<group>"; };
 		7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountAbortWindow.swift; sourceTree = "<group>"; };
 		7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountAbortWindow.xib; sourceTree = "<group>"; };
+		7C651D8E29F68277003331A4 /* MixinBot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinBot.swift; sourceTree = "<group>"; };
 		7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
 		7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsDragInteraction.swift; sourceTree = "<group>"; };
 		7C66F028268A0384006D8462 /* AppPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPageCell.swift; sourceTree = "<group>"; };
@@ -3305,6 +3307,7 @@
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
 				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,
+				7C651D8E29F68277003331A4 /* MixinBot.swift */,
 				DFF1AD7B22254C6E0087173D /* R.generated.swift */,
 			);
 			path = Constants;
@@ -4873,6 +4876,7 @@
 				DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
+				7C651D8F29F68277003331A4 /* MixinBot.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
 				5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */,
 				DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */,

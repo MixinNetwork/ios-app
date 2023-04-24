@@ -69,7 +69,7 @@ extension RestoreFromDesktopViewController {
             }
             return
         }
-        let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: "773e5e77-4107-45c2-b648-8fc722ed77f5")
+        let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.userId)
         SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
     }
     

@@ -215,12 +215,16 @@ extension Database {
     public func select<Record: TableRecord, Value: DatabaseValueConvertible>(
         column: Column,
         from table: Record.Type,
-        where condition: SQLSpecificExpressible? = nil
+        where condition: SQLSpecificExpressible? = nil,
+        order orderings: [SQLOrderingTerm]? = nil
     ) -> Value? {
         try! read { (db) -> Value? in
             var request = Record.select([column]).limit(1)
             if let condition = condition {
                 request = request.filter(condition)
+            }
+            if let orderings = orderings {
+                request = request.order(orderings)
             }
             return try Value.fetchOne(db, request)
         }

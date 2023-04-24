@@ -988,8 +988,7 @@ extension MessageDAO {
     public func lastMessageCreatedAt() -> String? {
         db.select(column: Message.column(of: .createdAt),
                   from: Message.self,
-                  order: [Message.column(of: .createdAt).desc],
-                  limit: 1).first
+                  order: [Message.column(of: .createdAt).desc])
     }
     
     public func save(message: Message) {

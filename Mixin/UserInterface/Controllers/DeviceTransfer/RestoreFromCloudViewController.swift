@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class RestoreFromCloudViewController: DeviceTransferSettingViewController {
     
@@ -25,6 +26,23 @@ extension RestoreFromCloudViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let databasePath = AppGroupContainer.userDatabaseUrl.path
+        let databaseExists = FileManager.default.fileExists(atPath: databasePath)
+        if databaseExists, let lastMessageCreatedAt = MessageDAO.shared.lastMessageCreatedAt() {
+            let messageCount = MessageDAO.shared.messagesCount()
+            let createdAt = DateFormatter.dateFull.string(from: lastMessageCreatedAt.toUTCDate())
+            alert(R.string.localizable.restore_from_icloud_confirmation(messageCount, createdAt), actionTitle: R.string.localizable.overwrite()) { _ in
+                self.restoreFromCloud()
+            }
+        } else {
+            restoreFromCloud()
+        }
+    }
+}
+
+extension RestoreFromCloudViewController {
+    
+    private func restoreFromCloud() {
         let controller = DeviceTransferProgressViewController(intent: .restoreFromCloud)
         navigationController?.pushViewController(controller, animated: true)
     }

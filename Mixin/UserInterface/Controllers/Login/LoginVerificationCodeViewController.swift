@@ -116,26 +116,10 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             } else {
                 reporter.report(event: .login, userInfo: ["source": "normal"])
             }
-            
             logBackup()
-            
-            if AppGroupUserDefaults.User.isLogoutByServer {
-                AppGroupUserDefaults.User.isLogoutByServer = false
-                UserDAO.shared.updateAccount(account: account)
-                DispatchQueue.main.sync {
-                    if account.fullName.isEmpty {
-                        let vc = UsernameViewController()
-                        self.navigationController?.pushViewController(vc, animated: true)
-                    } else {
-                        ContactAPI.syncContacts()
-                        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
-                    }
-                }
-            } else {
-                DispatchQueue.main.sync {
-                    AppGroupUserDefaults.Account.canRestoreChat = true
-                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
-                }
+            DispatchQueue.main.sync {
+                AppGroupUserDefaults.Account.canRestoreChat = true
+                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
             }
             UIApplication.shared.setShortcutItemsEnabled(true)
         case let .failure(error):

@@ -985,6 +985,13 @@ extension MessageDAO {
         return count ?? 0
     }
     
+    public func lastMessageCreatedAt() -> String? {
+        db.select(column: Message.column(of: .createdAt),
+                  from: Message.self,
+                  order: [Message.column(of: .createdAt).desc],
+                  limit: 1).first
+    }
+    
     public func save(message: Message) {
         db.write { db in
             let exists = try message.exists(db)

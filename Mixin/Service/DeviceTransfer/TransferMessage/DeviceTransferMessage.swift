@@ -49,11 +49,17 @@ struct DeviceTransferMessage {
         } else {
             jsonContent = message.content
         }
+        let duration: String?
+        if let mediaDuration = message.mediaDuration {
+            duration = "\(mediaDuration)"
+        } else {
+            duration = nil
+        }
         content = jsonContent
         mediaUrl = message.mediaUrl
         mediaMimeType = message.mediaMimeType
         mediaSize = message.mediaSize
-        mediaDuration = "\(message.mediaDuration ?? 0)"
+        mediaDuration = duration
         mediaWidth = message.mediaWidth
         mediaHeight = message.mediaHeight
         mediaHash = message.mediaHash
@@ -88,6 +94,12 @@ struct DeviceTransferMessage {
         } else {
             messageContent = content
         }
+        let duration: Int64?
+        if let mediaDuration {
+            duration = Int64(mediaDuration)
+        } else {
+            duration = nil
+        }
         return Message(messageId: messageId,
                        conversationId: conversationId,
                        userId: userId,
@@ -96,7 +108,7 @@ struct DeviceTransferMessage {
                        mediaUrl: mediaUrl,
                        mediaMimeType: mediaMimeType,
                        mediaSize: mediaSize,
-                       mediaDuration: Int64(mediaDuration ?? ""),
+                       mediaDuration: duration,
                        mediaWidth: mediaWidth,
                        mediaHeight: mediaHeight,
                        mediaHash: mediaHash,

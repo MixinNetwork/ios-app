@@ -19,7 +19,7 @@ struct DeviceTransferUser {
     init(user: User) {
         userId = user.userId
         fullName = user.fullName
-        biography = user.biography
+        biography = user.biography ?? ""
         identityNumber = user.identityNumber
         avatarUrl = user.avatarUrl
         phone = user.phone

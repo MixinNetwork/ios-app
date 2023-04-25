@@ -5,8 +5,6 @@ class RestoreChatViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    private var isUsernameJustInitialized = false
-    
     private var icloudBackupExists: Bool {
         guard let backupURL = backupUrl else {
             return false
@@ -27,17 +25,16 @@ class RestoreChatViewController: UIViewController {
     
     @IBAction func skipButton(_ sender: Any) {
         Logger.general.info(category: "RestoreChatViewController", message: "Restoration skipped")
-        AppGroupUserDefaults.Account.canRestoreChat = false
+        AppGroupUserDefaults.Account.canRestoreFromPhone = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
-        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
+        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
     }
     
-    class func instance(isUsernameJustInitialized: Bool) -> UIViewController {
+    class func instance() -> UIViewController {
         let vc = RestoreChatViewController()
-        vc.isUsernameJustInitialized = isUsernameJustInitialized
-        let navigationController = LoneBackButtonNavigationController(rootViewController: vc)
-        return navigationController
+        return LoneBackButtonNavigationController(rootViewController: vc)
     }
+    
 }
 
 extension RestoreChatViewController: UITableViewDelegate, UITableViewDataSource {

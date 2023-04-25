@@ -873,7 +873,7 @@ class UrlWindow {
     }
     
     class func checkDeviceTransfer(command: DeviceTransferCommand) -> Bool {
-        guard AppGroupUserDefaults.Account.canRestoreChat else {
+        guard AppGroupUserDefaults.Account.canRestoreFromPhone else {
             return true
         }
         guard command.version == AppGroupUserDefaults.User.deviceTransferVersion else {

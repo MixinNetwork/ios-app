@@ -220,14 +220,13 @@ extension DeviceTransferProgressViewController {
                 self.navigationController?.backToHome()
             }
         case .restoreFromPhone:
-            AppGroupUserDefaults.Account.canRestoreChat = false
+            AppGroupUserDefaults.Account.canRestoreFromPhone = false
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.needsRebuildDatabase = true
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
             AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
         case .restoreFromCloud:
-            AppGroupUserDefaults.Account.canRestoreChat = false
             AppGroupUserDefaults.Account.canRestoreMedia = true
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.needsRebuildDatabase = true

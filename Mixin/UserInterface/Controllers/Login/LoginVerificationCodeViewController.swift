@@ -113,9 +113,15 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 reporter.report(event: .login, userInfo: ["source": "normal"])
             }
             logBackup()
+            UserDAO.shared.updateAccount(account: account)
             DispatchQueue.main.sync {
-                AppGroupUserDefaults.Account.canRestoreChat = true
-                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+                if account.fullName.isEmpty {
+                    let vc = UsernameViewController()
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    AppGroupUserDefaults.Account.canRestoreFromPhone = true
+                    AppDelegate.current.mainWindow.rootViewController = RestoreChatViewController.instance()
+                }
             }
             UIApplication.shared.setShortcutItemsEnabled(true)
         case let .failure(error):

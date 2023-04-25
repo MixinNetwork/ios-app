@@ -43,7 +43,8 @@ class SignalLoadingViewController: UIViewController {
             self.syncSignalKeys()
             self.syncSession()
             self.syncCircles()
-
+            ContactAPI.syncContacts()
+            
             DispatchQueue.main.async {
                 let time = Date().timeIntervalSince(startTime)
                 if time < 2 {

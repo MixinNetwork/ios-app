@@ -30,7 +30,7 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="restore_your_chat_history"/>
                     </userDefinedRuntimeAttributes>
                 </label>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" style="insetGrouped" separatorStyle="none" rowHeight="130" estimatedRowHeight="-1" sectionHeaderHeight="1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="10" estimatedSectionFooterHeight="-1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYC-ei-7zB">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" style="insetGrouped" separatorStyle="none" rowHeight="130" estimatedRowHeight="-1" sectionHeaderHeight="1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="10" estimatedSectionFooterHeight="-1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYC-ei-7zB">
                     <rect key="frame" x="0.0" y="204.00000000000003" width="393" height="438.66666666666674"/>
                     <color key="backgroundColor" name="background"/>
                 </tableView>
@@ -57,10 +57,40 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="gaB-Hf-tyj" secondAttribute="bottom" constant="42" id="KaL-pF-aor"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="6D3-zX-mKs" secondAttribute="trailing" constant="20" id="g28-z2-6Yo"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="GYC-ei-7zB" secondAttribute="trailing" id="hrQ-wh-vAO"/>
-                <constraint firstItem="gaB-Hf-tyj" firstAttribute="top" secondItem="GYC-ei-7zB" secondAttribute="bottom" constant="100" id="iZI-bk-I5T"/>
+                <constraint firstItem="gaB-Hf-tyj" firstAttribute="top" secondItem="GYC-ei-7zB" secondAttribute="bottom" constant="100" id="iZI-bk-I5T" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="100"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
+                            <real key="value" value="100"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                            <real key="value" value="100"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="6D3-zX-mKs" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="74" id="n9k-Cn-Ohl"/>
                 <constraint firstItem="gaB-Hf-tyj" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="uhq-Ps-xY7"/>
-                <constraint firstItem="GYC-ei-7zB" firstAttribute="top" secondItem="6D3-zX-mKs" secondAttribute="bottom" constant="50" id="zJs-46-CZN"/>
+                <constraint firstItem="GYC-ei-7zB" firstAttribute="top" secondItem="6D3-zX-mKs" secondAttribute="bottom" constant="50" id="zJs-46-CZN" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
             </constraints>
             <point key="canvasLocation" x="113" y="21"/>
         </view>

@@ -109,9 +109,6 @@ public final class LoginManager {
         }
 
         Logger.general.error(category: "LoginManager", message: "Logout because: \(reason), isAppExtension: \(isAppExtension)")
-        if !isAppExtension {
-            AppGroupUserDefaults.User.isLogoutByServer = true
-        }
 
         pthread_rwlock_wrlock(&lock)
         _account = nil
@@ -122,6 +119,7 @@ public final class LoginManager {
             AppGroupUserDefaults.Account.serializedAccount = nil
             Queue.main.autoSync {
                 INInteraction.deleteAll(completion: nil)
+                UserDatabase.current.clearSentSenderKey()
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
                 AppGroupUserDefaults.Account.clearAll()

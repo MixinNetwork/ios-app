@@ -100,10 +100,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             
             TaskDatabase.reloadCurrent()
             UserDatabase.reloadCurrent()
-            if AppGroupUserDefaults.User.isLogoutByServer {
-                UserDatabase.current.clearSentSenderKey()
-                AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
-            }
             
             if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
                 AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
@@ -135,7 +131,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         }
         
         var logs = [String]()
-        logs.append("[iCloud]...isLogoutByServer:\(AppGroupUserDefaults.User.isLogoutByServer)")
         if let backupDir = backupUrl {
             let backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud
             let fileSize = backupDir.appendingPathComponent(backupDatabaseName).fileSize

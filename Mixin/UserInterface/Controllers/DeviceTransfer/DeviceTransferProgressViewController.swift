@@ -221,7 +221,6 @@ extension DeviceTransferProgressViewController {
             }
         case .restoreFromPhone:
             AppGroupUserDefaults.Account.canRestoreChat = false
-            AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.needsRebuildDatabase = true
             AppGroupUserDefaults.User.isCircleSynchronized = false
@@ -230,7 +229,6 @@ extension DeviceTransferProgressViewController {
         case .restoreFromCloud:
             AppGroupUserDefaults.Account.canRestoreChat = false
             AppGroupUserDefaults.Account.canRestoreMedia = true
-            AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.needsRebuildDatabase = true
             AppGroupUserDefaults.User.isCircleSynchronized = false

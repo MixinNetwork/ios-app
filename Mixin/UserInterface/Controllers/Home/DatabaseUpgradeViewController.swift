@@ -45,11 +45,6 @@ class DatabaseUpgradeViewController: UIViewController {
             TaskDatabase.reloadCurrent()
             UserDatabase.reloadCurrent()
             
-            if !AppGroupUserDefaults.Database.isSentSenderKeyCleared {
-                UserDatabase.current.clearSentSenderKey()
-                AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
-            }
-            
             if localVersion < 4 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
             }

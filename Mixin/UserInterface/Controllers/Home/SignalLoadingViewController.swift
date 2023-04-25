@@ -43,7 +43,10 @@ class SignalLoadingViewController: UIViewController {
             self.syncSignalKeys()
             self.syncSession()
             self.syncCircles()
-            ContactAPI.syncContacts()
+            
+            if !self.isUsernameJustInitialized {
+                ContactAPI.syncContacts()
+            }
             
             DispatchQueue.main.async {
                 let time = Date().timeIntervalSince(startTime)

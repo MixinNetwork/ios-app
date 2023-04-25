@@ -79,7 +79,6 @@ class DeviceTransferProgressViewController: UIViewController {
         displayAwakeningToken = DisplayAwakener.shared.retain()
         imageView.image = intent.image
         tipLabel.text = intent.tip
-        progressLabel.font = UIFont.monospacedSystemFont(ofSize: 18, weight: .medium)
         progressLabel.text = intent.title
         switch intent {
         case let .transferToDesktop(server):
@@ -126,13 +125,22 @@ extension DeviceTransferProgressViewController {
         case let .transporting(processedCount, totalCount):
             let progressValue = Double(processedCount) / Double(totalCount) * 100
             let progress = String(format: "%.1f", progressValue)
+            let progressText: String
             switch intent {
             case .transferToDesktop, .transferToPhone:
-                progressLabel.text = R.string.localizable.transferring_chat_progress(progress)
+                progressText = R.string.localizable.transferring_chat_progress(progress)
             case .restoreFromDesktop, .restoreFromPhone:
-                progressLabel.text = R.string.localizable.restoring_chat_progress(progress)
+                progressText = R.string.localizable.restoring_chat_progress(progress)
             case .restoreFromCloud:
-                break
+                return
+            }
+            if let range = progressText.range(of: progress) {
+                let attributedString = NSMutableAttributedString(string: progressText)
+                let font = UIFont.monospacedDigitSystemFont(ofSize: 18, weight: .medium)
+                attributedString.setAttributes([.font: font, .foregroundColor: UIColor.title], range: NSRange(range, in: progressText))
+                progressLabel.attributedText = attributedString
+            } else {
+                progressLabel.text = progressText
             }
         case .failed(let error):
             stateObserver?.cancel()

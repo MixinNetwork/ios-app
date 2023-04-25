@@ -76,22 +76,31 @@ extension RestoreFromDesktopViewController {
     @objc private func deviceTransfer(_ notification: Notification) {
         guard
             let data = notification.userInfo?[ReceiveMessageService.UserInfoKey.command] as? Data,
-            let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data),
-            command.action == .push,
-            let ip = command.ip,
-            let port = command.port,
-            let code = command.code
+            let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data)
         else {
-            alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
-                self.navigationController?.popViewController(animated: true)
-            }
             return
         }
-        client = DeviceTransferClient(host: ip, port: UInt16(port), code: code)
-        stateObserver = client.$displayState
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: stateDidChange(_:))
-        client.start()
+        if command.action == .cancel {
+            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+            tableView.isUserInteractionEnabled = true
+        } else {
+            guard
+                command.action == .push,
+                let ip = command.ip,
+                let port = command.port,
+                let code = command.code
+            else {
+                alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }
+                return
+            }
+            client = DeviceTransferClient(host: ip, port: UInt16(port), code: code)
+            stateObserver = client.$displayState
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: stateDidChange(_:))
+            client.start()
+        }
     }
     
     private func stateDidChange(_ state: DeviceTransferDisplayState) {

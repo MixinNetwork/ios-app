@@ -17,6 +17,7 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
         tableHeaderView.label.text = R.string.localizable.transfer_to_pc_hint()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+        NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
     }
     
     class func instance() -> UIViewController {
@@ -100,6 +101,18 @@ extension TransferToDesktopViewController {
         case .preparing, .ready, .transporting, .finished, .closed:
             break
         }
+    }
+    
+    @objc private func deviceTransfer(_ notification: Notification) {
+        guard
+            let data = notification.userInfo?[ReceiveMessageService.UserInfoKey.command] as? Data,
+            let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data),
+            command.action == .cancel
+        else {
+            return
+        }
+        tableView.isUserInteractionEnabled = true
+        dataSource.replaceSection(at: 0, with: section, animation: .automatic)
     }
     
 }

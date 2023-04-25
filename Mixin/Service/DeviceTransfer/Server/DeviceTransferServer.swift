@@ -75,7 +75,7 @@ extension DeviceTransferServer: DeviceTransferDataParserDelegate {
                 let currentProcessedCount = Int(Double(totalCount) * progress / 100.0)
                 displayState = .transporting(processedCount: currentProcessedCount, totalCount: totalCount)
             }
-        case .pull, .push, .start:
+        case .pull, .push, .start, .cancel:
             break
         }
     }

@@ -22,6 +22,7 @@ public struct DeviceTransferCommand: Codable {
         case connect
         case finish
         case progress
+        case cancel
     }
     
     enum CodingKeys: String, CodingKey {

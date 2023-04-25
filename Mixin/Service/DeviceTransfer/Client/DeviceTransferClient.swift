@@ -60,7 +60,7 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
             if let data = composer.commandData(command: command) {
                 send(data: data)
             }
-        case .pull, .push, .progress, .connect:
+        case .pull, .push, .progress, .connect, .cancel:
             break
         }
     }

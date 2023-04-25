@@ -92,7 +92,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             }
             AppGroupKeychain.sessionSecret = key.rawRepresentation
             AppGroupKeychain.pinToken = pinToken
-            LoginManager.shared.setAccount(account, updateUserTable: true)
+            LoginManager.shared.setAccount(account, updateUserTable: false)
             if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
                 AppGroupUserDefaults.migrateUserSpecificDefaults()
             }
@@ -113,6 +113,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 reporter.report(event: .login, userInfo: ["source": "normal"])
             }
             logBackup()
+            UserDAO.shared.updateAccount(account: account)
             DispatchQueue.main.sync {
                 if account.fullName.isEmpty {
                     let vc = UsernameViewController()

@@ -716,7 +716,7 @@
 "restore_completed" = "Restore completed";
 "restoring_chat_progress" = "Restoring Chat (%@%%)";
 "restoring_progress" = "Restaurando %@";
-"restore_from_icloud_confirmation" = "There are already %d local chat records, and the last message was created at %@. Are you sure you want to overwrite the local data with the chat data on iCloud?";
+"restore_from_icloud_confirmation" = "There are already %@ local chat records, and the last message was created at %@. Are you sure you want to overwrite the local data with the chat data on iCloud?";
 "retry" = "Reintentar";
 "revoke_access" = "Revocar el acceso";
 "revoke_multisig_transaction" = "Revocar transacción multigrado";

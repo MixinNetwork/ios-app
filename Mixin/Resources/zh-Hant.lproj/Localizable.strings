@@ -716,7 +716,7 @@
 "restore_completed" = "恢復已完成";
 "restoring_chat_progress" = "恢復聊天記錄（%@%%）";
 "restoring_progress" = "正在恢復 %@";
-"restore_from_icloud_confirmation" = "已經有 %d 條本地聊天記錄，最後一條訊息的時間是 %@，確定用 iCloud 上的聊天資料覆蓋本地資料嗎？";
+"restore_from_icloud_confirmation" = "已經有 %@ 條本地聊天記錄，最後一條訊息的時間是 %@，確定用 iCloud 上的聊天資料覆蓋本地資料嗎？";
 "retry" = "重試";
 "revoke_access" = "取消授權";
 "revoke_multisig_transaction" = "撤銷多重簽名交易";

@@ -3,7 +3,7 @@ import Foundation
 public class AttachmentExtra: Codable {
     
     public let attachmentId: String
-    public let createdAt: String
+    public let createdAt: String?
     public let isShareable: Bool?
     
     enum CodingKeys: String, CodingKey {

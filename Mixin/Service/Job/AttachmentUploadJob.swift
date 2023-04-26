@@ -45,11 +45,12 @@ class AttachmentUploadJob: AttachmentLoadingJob {
            isAttachmentMetadataReady,
            let attachmentExtra = AttachmentExtra.decode(from: content),
            UUID(uuidString: attachmentExtra.attachmentId) != nil,
-           !attachmentExtra.createdAt.isEmpty,
-           abs(attachmentExtra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
+           let createdAt = attachmentExtra.createdAt,
+           !createdAt.isEmpty,
+           abs(createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
         {
             Logger.general.debug(category: "AttachmentUploadJob", message: "Using existed attachment ID: \(attachmentExtra.attachmentId)")
-            uploadFinished(attachmentId: attachmentExtra.attachmentId, key: message.mediaKey, digest: message.mediaDigest, createdAt: attachmentExtra.createdAt)
+            uploadFinished(attachmentId: attachmentExtra.attachmentId, key: message.mediaKey, digest: message.mediaDigest, createdAt: createdAt)
             finishJob()
             return true
         }

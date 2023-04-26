@@ -58,7 +58,8 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
                 continue
             } else if let content = child.content,
                       let extra = AttachmentExtra.decode(from: content),
-                      abs(extra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
+                      let createdAt = extra.createdAt?.toUTCDate().timeIntervalSinceNow,
+                      abs(createdAt) < secondsPerDay
             {
                 Logger.general.debug(category: "AttachmentUploadJob", message: "Using existed attachment ID: \(extra.attachmentId)")
                 child.content = extra.attachmentId

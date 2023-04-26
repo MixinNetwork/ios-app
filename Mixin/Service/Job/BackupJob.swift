@@ -132,6 +132,9 @@ class BackupJob: BaseJob {
                 backupPaths.append(filename)
                 backupTotalSize += localFileSize
             }
+            if cloudURL.isUploading {
+                monitors[cloudURL.lastPathComponent] = 0
+            }
             if cloudURL.isUploaded {
                 withoutUploadSize += localFileSize
             }
@@ -148,6 +151,9 @@ class BackupJob: BaseJob {
         if !isBackupDatabase {
             withoutUploadSize += localDatabaseSize
             totalFileSize += localDatabaseSize
+        }
+        if databaseCloudURL.isUploading {
+            monitors[databaseCloudURL.lastPathComponent] = 0
         }
 
         guard isContinueBackup else {

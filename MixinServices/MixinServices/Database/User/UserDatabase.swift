@@ -113,7 +113,6 @@ public final class UserDatabase: Database {
             .init(key: .codeUrl, constraints: "TEXT"),
             .init(key: .pinTime, constraints: "TEXT"),
             .init(key: .expireIn, constraints: "INTEGER"),
-            .init(key: .createdAt, constraints: "TEXT NOT NULL")
         ]),
         ColumnMigratableTableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
             .init(key: .userId, constraints: "TEXT NOT NULL"),

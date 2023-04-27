@@ -48,7 +48,9 @@ class DeviceTransferClientMessageWriter {
                 TranscriptMessageDAO.shared.save(transcriptMessage: transcriptMessage.toTranscriptMessage())
             case .message:
                 let message = try decoder.decode(DeviceTransferData<DeviceTransferMessage>.self, from: messageData).data
-                MessageDAO.shared.save(message: message.toMessage())
+                if let category = MessageCategory(rawValue: message.category), category != .UNKNOWN {
+                    MessageDAO.shared.save(message: message.toMessage())
+                }
             case .messageMention:
                 if let messageMention = try decoder.decode(DeviceTransferData<DeviceTransferMessageMention>.self, from: messageData).data.toMessageMention() {
                     MessageMentionDAO.shared.save(messageMention: messageMention)

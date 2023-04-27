@@ -62,6 +62,7 @@ extension DeviceTransferServerDataSender {
         }
         Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
         var offset = 0
+        var lastMessageId: String?
         let semaphore = DispatchSemaphore(value: maxConcurrentSends)
         while let server, server.canSendData {
             let transferItems: [Codable]
@@ -96,8 +97,9 @@ extension DeviceTransferServerDataSender {
                 transferItems = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, offset: offset)
                     .map { DeviceTransferTranscriptMessage(transcriptMessage: $0) }
             case .message:
-                transferItems = MessageDAO.shared.messages(limit: limit, offset: offset)
-                    .map { DeviceTransferMessage(message: $0) }
+                let messages = MessageDAO.shared.messages(limit: limit, after: lastMessageId)
+                lastMessageId = messages.last?.messageId
+                transferItems = messages.map { DeviceTransferMessage(message: $0) }
             case .messageMention:
                 transferItems = MessageMentionDAO.shared.messageMentions(limit: limit, offset: offset)
                     .map { DeviceTransferMessageMention(messageMention: $0) }

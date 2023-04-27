@@ -975,9 +975,17 @@ extension MessageDAO {
                                silentNotification: silentNotification)
     }
     
-    public func messages(limit: Int, offset: Int) -> [Message] {
-        let sql = "SELECT * FROM messages ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func messages(limit: Int, after messageId: String?) -> [Message] {
+        var sql = """
+        SELECT *
+        FROM messages
+        WHERE status != 'FAILED' AND status != 'UNKNOWN'
+        """
+        if let messageId {
+            sql += " AND ROWID < IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
+        }
+        sql += " ORDER BY ROWID DESC LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
     
     public func messagesCount() -> Int {

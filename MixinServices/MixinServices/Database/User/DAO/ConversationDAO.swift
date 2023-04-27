@@ -615,6 +615,27 @@ public final class ConversationDAO: UserDatabaseDAO {
         try database.execute(sql: sql, arguments: [messageId, createdAt, conversationId, createdAt])
     }
     
+    public func updateLastMessageIdAndCreatedAt() {
+        let sql = """
+        UPDATE conversations
+        SET
+            last_message_id = lastMessage.id,
+            last_message_created_at = lastMessage.createdAt
+        FROM (
+            SELECT
+                m.conversation_id,
+                MAX(m.created_at) AS createdAt,
+                FIRST_VALUE(m.id) OVER (
+                    PARTITION BY m.conversation_id ORDER BY m.created_at DESC
+                ) AS id
+            FROM messages AS m
+            GROUP BY m.conversation_id
+        ) AS lastMessage
+        WHERE conversations.conversation_id = lastMessage.conversation_id
+        """
+        db.execute(sql: sql)
+    }
+    
     public func updateLastMessageIdOnDeleteMessage(conversationId: String, messageId: String? = nil, database: GRDB.Database) throws {
         var sql = "UPDATE conversations SET last_message_id = (SELECT id FROM messages WHERE conversation_id = ? ORDER BY created_at DESC LIMIT 1)"
         let arguments: StatementArguments

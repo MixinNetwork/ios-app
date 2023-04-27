@@ -54,6 +54,7 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
             startTimer()
             displayState = .transporting(processedCount: 0, totalCount: total)
         case .finish:
+            ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
             displayState = .finished
             invalidateTimer()
             let command = DeviceTransferCommand(action: .finish)

@@ -976,15 +976,11 @@ extension MessageDAO {
     }
     
     public func messages(limit: Int, after messageId: String?) -> [Message] {
-        var sql = """
-        SELECT *
-        FROM messages
-        WHERE status != 'FAILED' AND status != 'UNKNOWN'
-        """
+        var sql = "SELECT * FROM messages WHERE"
         if let messageId {
-            sql += " AND ROWID < IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
+            sql += " ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0) AND"
         }
-        sql += " ORDER BY ROWID DESC LIMIT ?"
+        sql += " status != 'FAILED' AND status != 'UNKNOWN' ORDER BY ROWID LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

@@ -620,16 +620,12 @@ public final class ConversationDAO: UserDatabaseDAO {
         UPDATE conversations
         SET
             last_message_id = lastMessage.id,
-            last_message_created_at = lastMessage.createdAt
+            last_message_created_at = lastMessage.created_at
         FROM (
-            SELECT
-                m.conversation_id,
-                MAX(m.created_at) AS createdAt,
-                FIRST_VALUE(m.id) OVER (
-                    PARTITION BY m.conversation_id ORDER BY m.created_at DESC
-                ) AS id
-            FROM messages AS m
-            GROUP BY m.conversation_id
+            SELECT id, conversation_id, created_at
+            FROM messages
+            GROUP BY conversation_id
+            HAVING MAX(created_at)
         ) AS lastMessage
         WHERE conversations.conversation_id = lastMessage.conversation_id
         """

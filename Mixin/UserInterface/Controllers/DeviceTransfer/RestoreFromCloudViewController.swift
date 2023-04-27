@@ -39,7 +39,7 @@ extension RestoreFromCloudViewController: UITableViewDelegate {
             DispatchQueue.global().async {
                 if let lastMessageCreatedAt = MessageDAO.shared.lastMessageCreatedAt() {
                     let messageCount = MessageDAO.shared.messagesCount()
-                    let formattedCount = NumberFormatter.decimal.stringFormat(value: Float64(messageCount))
+                    let formattedCount = NumberFormatter.decimal.string(from: NSNumber(value: messageCount)) ?? "\(messageCount)"
                     let createdAt = DateFormatter.dateFull.string(from: lastMessageCreatedAt.toUTCDate())
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else {

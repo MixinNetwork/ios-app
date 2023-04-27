@@ -47,9 +47,11 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
         switch command.action {
         case .start:
             guard let total = command.total else {
+                Logger.general.info(category: "DeviceTransferClient", message: "No total count")
                 displayState = .failed(.completed)
                 return
             }
+            Logger.general.info(category: "DeviceTransferClient", message: "Total messages \(total)")
             connectionCommand = command
             startTimer()
             displayState = .transporting(processedCount: 0, totalCount: total)
@@ -73,7 +75,7 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
     
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFile fileURL: URL) {
         updateProgressIfNeeded()
-        Logger.general.debug(category: "DeviceTransferDataParser", message: "Receive file: \(fileURL)")
+        Logger.general.debug(category: "DeviceTransferClient", message: "Receive file: \(fileURL)")
     }
     
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFailed error: DeviceTransferDataParserError) {

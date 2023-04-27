@@ -27,6 +27,8 @@ class DeviceTransferServerDataSender {
 extension DeviceTransferServerDataSender {
     
     private func sendStartCommand() {
+        let messagesCount = MessageDAO.shared.messagesCount()
+        let attachmentsCount = attachmentsCount()
         let total = ConversationDAO.shared.conversationsCount()
             + ParticipantDAO.shared.participantsCount()
             + UserDAO.shared.usersCount()
@@ -36,13 +38,14 @@ extension DeviceTransferServerDataSender {
             + StickerDAO.shared.stickersCount()
             + PinMessageDAO.shared.pinMessagesCount()
             + TranscriptMessageDAO.shared.transcriptMessagesCount()
-            + MessageDAO.shared.messagesCount()
+            + messagesCount
             + MessageMentionDAO.shared.messageMentionsCount()
             + ExpiredMessageDAO.shared.expiredMessagesCount()
-            + attachmentsCount()
+            + attachmentsCount
+        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Total: \(total), Messages: \(messagesCount), attachments: \(attachmentsCount)")
         let command = DeviceTransferCommand(action: .start, total: total)
         if let server, let commandData = server.composer.commandData(command: command) {
-            Logger.general.info(category: "DeviceTransferServer", message: "Send Start Command")
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send Start Command")
             server.send(data: commandData)
             server.displayState = .transporting(processedCount: 0, totalCount: total)
         }
@@ -51,7 +54,7 @@ extension DeviceTransferServerDataSender {
     private func sendFinishCommand() {
         let command = DeviceTransferCommand(action: .finish)
         if let server, let data = server.composer.commandData(command: command) {
-            Logger.general.info(category: "DeviceTransferServer", message: "Send Finish Command")
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send Finish Command")
             server.send(data: data)
         }
     }

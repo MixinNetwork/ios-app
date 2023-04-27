@@ -136,13 +136,13 @@ extension DeviceTransferServerDataSender {
 extension DeviceTransferServerDataSender {
     
     private func sendAttachment(type: String) {
-        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
         let fileDirectory = AttachmentContainer.url.appendingPathComponent(type)
         let allFilePaths = getAllFilePaths(inDirectory: fileDirectory)
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: fileBufferSize)
         defer {
             buffer.deallocate()
         }
+        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type) \(allFilePaths.count)")
         for path in allFilePaths {
             guard let server, server.canSendData else {
                 break
@@ -151,11 +151,11 @@ extension DeviceTransferServerDataSender {
             guard components.count == 2, let idData = UUID(uuidString: components[0])?.data else {
                 continue
             }
-            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
             guard let stream = InputStream(url: path) else {
                 Logger.general.info(category: "DeviceTransferServerDataSender", message: "Open stream failed")
                 continue
             }
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
             // send typeData + lengthData + idData
             var checksum = CRC32()
             let fileSize = Int(FileManager.default.fileSize(path.path))

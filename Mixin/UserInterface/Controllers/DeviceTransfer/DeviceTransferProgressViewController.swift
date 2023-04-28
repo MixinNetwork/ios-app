@@ -214,7 +214,6 @@ extension DeviceTransferProgressViewController {
         case .restoreFromPhone:
             AppGroupUserDefaults.Account.canRestoreFromPhone = false
             AppGroupUserDefaults.Database.isFTSInitialized = false
-            AppGroupUserDefaults.User.needsRebuildDatabase = true
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
             AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()

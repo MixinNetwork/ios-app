@@ -100,10 +100,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             
             TaskDatabase.reloadCurrent()
             UserDatabase.reloadCurrent()
-            if AppGroupUserDefaults.User.isLogoutByServer {
-                UserDatabase.current.clearSentSenderKey()
-                AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
-            }
             
             if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
                 AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
@@ -116,30 +112,15 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             } else {
                 reporter.report(event: .login, userInfo: ["source": "normal"])
             }
-            
             logBackup()
-            
-            var backupExist = false
-            if let backupDir = backupUrl {
-                backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
-            }
-
-            if AppGroupUserDefaults.User.isLogoutByServer || !backupExist {
-                AppGroupUserDefaults.User.isLogoutByServer = false
-                UserDAO.shared.updateAccount(account: account)
-                DispatchQueue.main.sync {
-                    if account.fullName.isEmpty {
-                        let vc = UsernameViewController()
-                        self.navigationController?.pushViewController(vc, animated: true)
-                    } else {
-                        ContactAPI.syncContacts()
-                        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
-                    }
-                }
-            } else {
-                DispatchQueue.main.sync {
-                    AppGroupUserDefaults.Account.canRestoreChat = true
-                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+            UserDAO.shared.updateAccount(account: account)
+            DispatchQueue.main.sync {
+                if account.fullName.isEmpty {
+                    let vc = UsernameViewController()
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    AppGroupUserDefaults.Account.canRestoreFromPhone = true
+                    AppDelegate.current.mainWindow.rootViewController = RestoreChatViewController.instance()
                 }
             }
             UIApplication.shared.setShortcutItemsEnabled(true)
@@ -156,7 +137,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         }
         
         var logs = [String]()
-        logs.append("[iCloud]...isLogoutByServer:\(AppGroupUserDefaults.User.isLogoutByServer)")
         if let backupDir = backupUrl {
             let backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud
             let fileSize = backupDir.appendingPathComponent(backupDatabaseName).fileSize

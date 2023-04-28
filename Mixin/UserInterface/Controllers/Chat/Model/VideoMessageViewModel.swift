@@ -158,6 +158,13 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
             thumbnail = betterThumbnail
             isBetterThumbnailLoaded = true
+        } else {
+            let videoURL = AttachmentContainer.url(for: .videos, filename: videoFilename)
+            if let thumbnailImage = UIImage(withFirstFrameOfVideoAtURL: videoURL) {
+                thumbnailImage.saveToFile(path: betterThumbnailURL)
+                thumbnail = thumbnailImage
+                isBetterThumbnailLoaded = true
+            }
         }
     }
     

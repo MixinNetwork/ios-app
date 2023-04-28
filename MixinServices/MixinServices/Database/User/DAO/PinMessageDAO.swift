@@ -113,4 +113,18 @@ public final class PinMessageDAO: UserDatabaseDAO {
                         where: PinMessage.column(of: .conversationId) == conversationId)
     }
     
+    public func pinMessages(limit: Int, offset: Int) -> [PinMessage] {
+        let sql = "SELECT * FROM pin_messages ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func pinMessagesCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM pin_messages")
+        return count ?? 0
+    }
+    
+    public func save(pinMessage: PinMessage) {
+        db.save(pinMessage)
+    }
+    
 }

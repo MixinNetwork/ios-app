@@ -15,7 +15,8 @@ public class ReceiveMessageService: MixinService {
     public static let senderKeyDidChangeNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.SenderKeyDidChange")
     public static let progressNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.progressNotification")
     public static let userSessionDidChangeNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.userSessionDidChange")
-    
+    public static let deviceTransferNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.deviceTransfer")
+
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
     
@@ -191,7 +192,7 @@ public class ReceiveMessageService: MixinService {
     }
     
     public func requestResendKey(conversationId: String, recipientId: String, sessionId: String?) {
-        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_KEY.rawValue, messages: nil, ackMessages: nil)
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_KEY.rawValue, messages: nil, ackMessages: nil, content: nil)
         let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
@@ -1089,6 +1090,13 @@ public class ReceiveMessageService: MixinService {
                 
                 ExpiredMessageDAO.shared.updateExpireAt(for: expireMessages)
                 MessageDAO.shared.batchUpdateMessageStatus(readMessageIds: readMessageIds, mentionMessageIds: mentionMessageIds)
+            case PlainDataAction.DEVICE_TRANSFER.rawValue:
+                guard let content = plainData.content, let data = content.data(using: .utf8) else {
+                    return
+                }
+                NotificationCenter.default.post(onMainThread: Self.deviceTransferNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.command: data])
             default:
                 break
             }
@@ -1112,7 +1120,7 @@ public class ReceiveMessageService: MixinService {
         }
 
         Logger.conversation(id: conversationId).info(category: "ReceiveMessageService", message: "Request resend messages: [\(messages.joined(separator: ","))]")
-        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_MESSAGES.rawValue, messages: messages, ackMessages: nil)
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_MESSAGES.rawValue, messages: messages, ackMessages: nil, content: nil)
         let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)

@@ -36,6 +36,20 @@ public struct App {
     public let updatedAt: String?
     public let category: String
     
+    public init(appId: String, appNumber: String, redirectUri: String, name: String, iconUrl: String, capabilities: [String]?, resourcePatterns: [String]?, homeUri: String, creatorId: String, updatedAt: String?, category: String) {
+        self.appId = appId
+        self.appNumber = appNumber
+        self.redirectUri = redirectUri
+        self.name = name
+        self.iconUrl = iconUrl
+        self.capabilities = capabilities
+        self.resourcePatterns = resourcePatterns
+        self.homeUri = homeUri
+        self.creatorId = creatorId
+        self.updatedAt = updatedAt
+        self.category = category
+    }
+    
 }
 
 extension App: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

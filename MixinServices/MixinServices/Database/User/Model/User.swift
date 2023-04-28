@@ -20,7 +20,7 @@ public struct User {
     
     public var app: App?
     
-    internal init(userId: String, fullName: String?, biography: String?, identityNumber: String, avatarUrl: String?, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, relationship: String, isScam: Bool, app: App? = nil) {
+    public init(userId: String, fullName: String?, biography: String?, identityNumber: String, avatarUrl: String?, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, relationship: String, isScam: Bool, app: App? = nil) {
         self.userId = userId
         self.fullName = fullName
         self.biography = biography

@@ -42,17 +42,33 @@ public final class ConversationItem {
     public var mentionsJson: Data?
     
     public lazy var appButtons: [AppButtonData]? = {
-        guard let content = content, let data = Data(base64Encoded: content) else {
+        guard let content = content else {
             return nil
         }
-        return try? JSONDecoder().decode([AppButtonData].self, from: data)
+        let appButtonData: Data
+        if let data = Data(base64Encoded: content) {
+            appButtonData = data
+        } else if let data = content.data(using: .utf8) {
+            appButtonData = data
+        } else {
+            return nil
+        }
+        return try? JSONDecoder().decode([AppButtonData].self, from: appButtonData)
     }()
     
     public lazy var appCard: AppCardData? = {
-        guard let content = content, let data = Data(base64Encoded: content) else {
+        guard let content = content else {
             return nil
         }
-        return try? JSONDecoder().decode(AppCardData.self, from: data)
+        let cardData: Data
+        if let data = Data(base64Encoded: content) {
+            cardData = data
+        } else if let data = content.data(using: .utf8) {
+            cardData = data
+        } else {
+            return nil
+        }
+        return try? JSONDecoder().decode(AppCardData.self, from: cardData)
     }()
     
     public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()

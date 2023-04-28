@@ -31,4 +31,8 @@ public struct Device {
         return result
     }()
     
+    private init() {
+        
+    }
+    
 }

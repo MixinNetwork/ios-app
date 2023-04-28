@@ -19,6 +19,9 @@ public final class LoginManager {
     public static let accountDidChangeNotification = Notification.Name("one.mixin.services.account.did.change")
     public static let didLogoutNotification = Notification.Name("one.mixin.services.did.logout")
 
+    public var inDeviceTransfer = false
+    public var loggedOutInDeviceTransfer = false
+    
     fileprivate var _account: Account?
     fileprivate var _isLoggedIn = false
     fileprivate var lock = pthread_rwlock_t()
@@ -96,14 +99,16 @@ public final class LoginManager {
     }
     
     public func logout(reason: String) {
+        guard !inDeviceTransfer else {
+            loggedOutInDeviceTransfer = true
+            WebSocketService.shared.disconnect()
+            return
+        }
         guard account != nil else {
             return
         }
 
         Logger.general.error(category: "LoginManager", message: "Logout because: \(reason), isAppExtension: \(isAppExtension)")
-        if !isAppExtension {
-            AppGroupUserDefaults.User.isLogoutByServer = true
-        }
 
         pthread_rwlock_wrlock(&lock)
         _account = nil
@@ -114,6 +119,7 @@ public final class LoginManager {
             AppGroupUserDefaults.Account.serializedAccount = nil
             Queue.main.autoSync {
                 INInteraction.deleteAll(completion: nil)
+                UserDatabase.current.clearSentSenderKey()
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
                 AppGroupUserDefaults.Account.clearAll()

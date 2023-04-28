@@ -9,7 +9,6 @@ extension AppGroupUserDefaults {
             case needsRebuildDatabase = "needs_rebuild_database"
             case lastUpdateOrInstallDate = "last_update_or_install_date"
             case lastUpdateOrInstallVersion = "last_update_or_install_version"
-            case isLogoutByServer = "logged_out_by_server"
             
             case hasShownRecallTips = "session_secret"
             case hasPerformedTransfer = "has_performed_transfer"
@@ -72,6 +71,7 @@ extension AppGroupUserDefaults {
         
         public static let version = 31
         public static let uninitializedVersion = -1
+        public static let deviceTransferVersion = 1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
         public static let didChangeUserInterfaceStyleNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeUserInterfaceStyle")
@@ -101,9 +101,6 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.lastUpdateOrInstallVersion, defaultValue: "")
         private static var lastUpdateOrInstallVersion: String
-        
-        @Default(namespace: .user, key: Key.isLogoutByServer, defaultValue: false)
-        public static var isLogoutByServer: Bool
         
         @Default(namespace: .user, key: Key.hasShownRecallTips, defaultValue: false)
         public static var hasShownRecallTips: Bool
@@ -297,7 +294,6 @@ extension AppGroupUserDefaults {
             localVersion = DatabaseUserDefault.shared.databaseVersion ?? uninitializedVersion
             needsRebuildDatabase = DatabaseUserDefault.shared.forceUpgradeDatabase
             lastUpdateOrInstallDate = CommonUserDefault.shared.lastUpdateOrInstallTime.toUTCDate()
-            isLogoutByServer = CommonUserDefault.shared.hasForceLogout
             
             hasShownRecallTips = CommonUserDefault.shared.isRecallTips
             hasPerformedTransfer = CommonUserDefault.shared.hasPerformedTransfer

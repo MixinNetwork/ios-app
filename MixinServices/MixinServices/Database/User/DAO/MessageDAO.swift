@@ -499,35 +499,21 @@ public final class MessageDAO: UserDatabaseDAO {
     public func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.created_at <= ? AND m.ROWID < ?
-        ORDER BY m.created_at DESC
+        WHERE m.conversation_id = ? AND m.created_at <= ? AND m.id != ?
+        ORDER BY m.created_at DESC, m.ROWID DESC
         LIMIT ?
         """
-        let locationRowID: Int? = db.select(column: .rowID,
-                                            from: Message.self,
-                                            where: Message.column(of: .messageId) == location.messageId)
-        if let rowID = locationRowID {
-            return db.select(with: sql, arguments: [conversationId, location.createdAt, rowID, count]).reversed()
-        } else {
-            return []
-        }
+        return db.select(with: sql, arguments: [conversationId, location.createdAt, location.messageId, count]).reversed()
     }
     
     public func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.created_at >= ? AND m.ROWID > ?
-        ORDER BY m.created_at ASC
+        WHERE m.conversation_id = ? AND m.created_at >= ? AND m.id != ?
+        ORDER BY m.created_at ASC, m.ROWID ASC
         LIMIT ?
         """
-        let locationRowID: Int? = db.select(column: .rowID,
-                                            from: Message.self,
-                                            where: Message.column(of: .messageId) == location.messageId)
-        if let rowID = locationRowID {
-            return db.select(with: sql, arguments: [conversationId, location.createdAt, rowID, count])
-        } else {
-            return []
-        }
+        return db.select(with: sql, arguments: [conversationId, location.createdAt, location.messageId, count])
     }
     
     public func getMessages(conversationId: String, categoryIn categories: [MessageCategory], earlierThan location: MessageItem?, count: Int) -> [MessageItem] {
@@ -536,15 +522,10 @@ public final class MessageDAO: UserDatabaseDAO {
         \(Self.sqlQueryFullMessage)
         WHERE m.conversation_id = ? AND m.category in ('\(categories)')
         """
-        if let location = location {
-            let rowId: Int? = db.select(column: .rowID,
-                                        from: Message.self,
-                                        where: Message.column(of: .messageId) == location.messageId)
-            if let id = rowId {
-                sql += " AND m.ROWID < \(id)"
-            }
+        if let location {
+            sql += " AND m.created_at <= '\(location.createdAt)' AND m.id != '\(location.messageId)'"
         }
-        sql += " ORDER BY m.created_at DESC LIMIT ?"
+        sql += " ORDER BY m.created_at DESC, m.ROWID DESC LIMIT ?"
         return db.select(with: sql, arguments: [conversationId, count])
     }
     
@@ -992,6 +973,56 @@ extension MessageDAO {
                                messageSource: messageSource,
                                children: children,
                                silentNotification: silentNotification)
+    }
+    
+    public func messages(limit: Int, after messageId: String?) -> [Message] {
+        var sql = "SELECT * FROM messages WHERE"
+        if let messageId {
+            sql += " ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0) AND"
+        }
+        sql += " status != 'FAILED' AND status != 'UNKNOWN' ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
+    }
+    
+    public func messagesCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM messages")
+        return count ?? 0
+    }
+    
+    public func lastMessageCreatedAt() -> String? {
+        db.select(column: Message.column(of: .createdAt),
+                  from: Message.self,
+                  order: [Message.column(of: .createdAt).desc])
+    }
+    
+    public func save(message: Message) {
+        db.write { db in
+            let exists = try message.exists(db)
+            guard !exists else {
+                return
+            }
+            try message.save(db)
+            let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
+                && message.status != MessageStatus.FAILED.rawValue
+                && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
+            if shouldInsertIntoFTSTable {
+                let children: [TranscriptMessage]?
+                if message.category.hasSuffix("_TRANSCRIPT") {
+                    children = try TranscriptMessage
+                        .filter(TranscriptMessage.column(of: .transcriptId) == message.messageId)
+                        .fetchAll(db)
+                } else {
+                    children = nil
+                }
+                try insertFTSContent(db, message: message, children: children)
+            }
+        }
+    }
+    
+    public func messageContent(conversationId: String, messageId: String) -> String? {
+        db.select(column: Message.column(of: .content),
+                  from: Message.self,
+                  where: Message.column(of: .conversationId) == conversationId && Message.column(of: .messageId) == messageId)
     }
     
     private func clearPinMessageContent(quoteMessageIds: [String], conversationId: String, from database: GRDB.Database) throws {

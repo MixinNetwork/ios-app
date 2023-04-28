@@ -386,7 +386,8 @@ public final class ConversationDAO: UserDatabaseDAO {
                                         muteUntil: nil,
                                         codeUrl: nil,
                                         pinTime: nil,
-                                        expireIn: 0)
+                                        expireIn: 0,
+                                        createdAt: createdAt)
         var participants = members.map {
             Participant(conversationId: conversationId,
                         userId: $0.userId,
@@ -614,6 +615,33 @@ public final class ConversationDAO: UserDatabaseDAO {
         try database.execute(sql: sql, arguments: [messageId, createdAt, conversationId, createdAt])
     }
     
+    public func updateLastMessageIdAndCreatedAt() {
+        db.write { db in
+            let updateLastMessageIdSQL = """
+            UPDATE conversations
+            SET last_message_id = (
+                SELECT id
+                FROM messages
+                WHERE conversation_id = conversations.conversation_id
+                ORDER BY created_at DESC
+                LIMIT 1
+            )
+            """
+            try db.execute(sql: updateLastMessageIdSQL)
+            
+            let updateLastMessageCreatedAtSQL = """
+            UPDATE conversations
+            SET last_message_created_at = (
+                SELECT created_at
+                FROM messages
+                WHERE id = conversations.last_message_id
+                LIMIT 1
+            )
+            """
+            try db.execute(sql: updateLastMessageCreatedAtSQL)
+        }
+    }
+    
     public func updateLastMessageIdOnDeleteMessage(conversationId: String, messageId: String? = nil, database: GRDB.Database) throws {
         var sql = "UPDATE conversations SET last_message_id = (SELECT id FROM messages WHERE conversation_id = ? ORDER BY created_at DESC LIMIT 1)"
         let arguments: StatementArguments
@@ -629,6 +657,25 @@ public final class ConversationDAO: UserDatabaseDAO {
         database.afterNextTransaction { db in
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
         }
+    }
+    
+    public func conversations(limit: Int, offset: Int) -> [Conversation] {
+        let sql = "SELECT * FROM conversations ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+
+    public func conversationsCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM conversations")
+        return count ?? 0
+    }
+    
+    public func save(conversation: Conversation) {
+        let unseenMessageCount: Int? = db.select(column: Conversation.column(of: .unseenMessageCount),
+                                                 from: Conversation.self,
+                                                 where: Conversation.column(of: .conversationId) == conversation.conversationId)
+        var conversation = conversation
+        conversation.unseenMessageCount = unseenMessageCount ?? 0
+        db.save(conversation)
     }
     
 }

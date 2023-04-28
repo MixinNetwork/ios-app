@@ -6,7 +6,6 @@ internal class AccountUserDefault {
     private let keySessionSecret = "session_secret"
     private let keyPinToken = "pin_token"
     private var keyHasClockSkew = "has_clock_skew"
-    private var keyHasRestoreChat = "has_restore_chat"
     private var keyHasRestoreFilesAndVideos = "has_restore_files_videos"
     private var keyRebackup = "has_rebackup"
     private var keyExtensionSession = "extension_session"
@@ -76,15 +75,6 @@ internal class AccountUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHasClockSkew)
-        }
-    }
-
-    var hasRestoreChat: Bool {
-        get {
-            return session.bool(forKey: keyHasRestoreChat)
-        }
-        set {
-            session.set(newValue, forKey: keyHasRestoreChat)
         }
     }
 

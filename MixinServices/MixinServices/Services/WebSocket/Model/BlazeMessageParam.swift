@@ -101,7 +101,18 @@ extension BlazeMessageParam {
     }
 
     init(sessionId: String, conversationId: String, ackMessages: [TransferMessage]) {
-        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: nil, ackMessages: ackMessages)
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: nil, ackMessages: ackMessages, content: nil)
+        self.messageId = UUID().uuidString.lowercased()
+        self.conversationId = conversationId
+        self.recipientId = myUserId
+        self.category = MessageCategory.PLAIN_JSON.rawValue
+        self.data = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
+        self.status = MessageStatus.SENDING.rawValue
+        self.sessionId = sessionId
+    }
+
+    init(sessionId: String, conversationId: String, content: String) {
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.DEVICE_TRANSFER.rawValue, messages: nil, content: content)
         self.messageId = UUID().uuidString.lowercased()
         self.conversationId = conversationId
         self.recipientId = myUserId

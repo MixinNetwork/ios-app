@@ -27,6 +27,7 @@ public var canProcessMessages: Bool {
         && !AppGroupUserDefaults.Account.isClockSkewed
         && AppGroupUserDefaults.Crypto.isPrekeyLoaded
         && AppGroupUserDefaults.Crypto.isSessionSynchronized
+        && !LoginManager.shared.loggedOutInDeviceTransfer
 }
 
 public let checkStatusInAppExtensionDarwinNotificationName = CFNotificationName(rawValue: "one.mixin.messenger.darwin.status.check.extension" as CFString)

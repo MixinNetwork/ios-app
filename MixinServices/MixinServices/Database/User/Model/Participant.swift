@@ -28,6 +28,14 @@ public struct Participant {
     public let status: Int
     public let createdAt: String
     
+    public init(conversationId: String, userId: String, role: String, status: Int, createdAt: String) {
+        self.conversationId = conversationId
+        self.userId = userId
+        self.role = role
+        self.status = status
+        self.createdAt = createdAt
+    }
+    
 }
 
 extension Participant: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

@@ -90,6 +90,8 @@
 	<string>Mixin uses your microphone to record voice messages to share with your contacts.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Mixin uses the photo library to set profile photo, and send photo to your contact in chat.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Mixin uses the local network to transfer or restore your chat history.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>INSendMessageIntent</string>

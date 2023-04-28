@@ -175,4 +175,28 @@ public final class ParticipantDAO: UserDatabaseDAO {
             .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })
     }
     
+    public func participants(limit: Int, offset: Int) -> [Participant] {
+        let sql = "SELECT * FROM participants ORDER BY rowid LIMIT ? OFFSET ?"
+        return db.select(with: sql, arguments: [limit, offset])
+    }
+    
+    public func participantsCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM participants")
+        return count ?? 0
+    }
+    
+    public func save(participant: Participant) {
+        db.save(participant)
+    }
+    
+    public func randomSuccessConversationID() -> String? {
+        let sql = """
+        SELECT p.conversation_id
+        FROM participants p, conversations c
+        WHERE p.user_id = ? AND p.conversation_id = c.conversation_id AND c.status = 1
+        LIMIT 1
+        """
+        return db.select(with: sql, arguments: [myUserId])
+    }
+    
 }

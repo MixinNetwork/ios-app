@@ -18,20 +18,24 @@ extension MessageDAO {
         assert(count != 0)
         var items = [GalleryItem]()
         let sql: String
-        if let location = location, let rowId: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == location.messageId) {
-            if count > 0 {
-                sql = String(format: Self.sqlQueryGalleryItem, "ROWID > \(rowId) AND ") + " ORDER BY created_at ASC LIMIT \(count)"
+        if location != nil {
+            if count < 0 {
+                sql = String(format: Self.sqlQueryGalleryItem, "") + " AND created_at <= ? AND id != ? ORDER BY created_at DESC, ROWID DESC LIMIT \(-count)"
             } else {
-                sql = String(format: Self.sqlQueryGalleryItem, "ROWID < \(rowId) AND ") + " ORDER BY created_at DESC LIMIT \(-count)"
+                sql = String(format: Self.sqlQueryGalleryItem, "") + " AND created_at >= ? AND id != ? ORDER BY created_at ASC, ROWID ASC LIMIT \(count)"
             }
         } else {
             assert(count > 0)
             sql = String(format: Self.sqlQueryGalleryItem, "") + " ORDER BY created_at DESC LIMIT \(count)"
         }
-        
         do {
             try db.read { (db) -> Void in
-                let rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId], adapter: nil)
+                let rows: RowCursor
+                if let location {
+                    rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId, location.createdAt, location.messageId], adapter: nil)
+                } else {
+                    rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId], adapter: nil)
+                }
                 while let row = try rows.next() {
                     let counter = Counter(value: -1)
                     let item = GalleryItem(transcriptId: nil,

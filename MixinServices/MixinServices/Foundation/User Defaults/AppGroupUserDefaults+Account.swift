@@ -9,7 +9,7 @@ extension AppGroupUserDefaults {
             case sessionSecret = "session_secret"
             case pinToken = "pin_token"
             case isClockSkewed = "clock_skew"
-            case canRestoreChat = "can_restore_chat"
+            case canRestoreFromPhone = "can_restore_from_phone"
             case canRestoreMedia = "can_restore_media"
             case hasUnfinishedBackup = "has_unfinished_backup"
             case extensionSession = "extension_session"
@@ -32,8 +32,8 @@ extension AppGroupUserDefaults {
         @Default(namespace: .account, key: Key.isClockSkewed, defaultValue: false)
         public static var isClockSkewed: Bool
         
-        @Default(namespace: .account, key: Key.canRestoreChat, defaultValue: false)
-        public static var canRestoreChat: Bool
+        @Default(namespace: .account, key: Key.canRestoreFromPhone, defaultValue: false)
+        public static var canRestoreFromPhone: Bool
         
         @Default(namespace: .account, key: Key.canRestoreMedia, defaultValue: false)
         public static var canRestoreMedia: Bool
@@ -70,7 +70,6 @@ extension AppGroupUserDefaults {
             sessionSecret = AccountUserDefault.shared.getToken()
             pinToken = AccountUserDefault.shared.getPinToken()
             isClockSkewed = AccountUserDefault.shared.hasClockSkew
-            canRestoreChat = AccountUserDefault.shared.hasRestoreChat
             canRestoreMedia = AccountUserDefault.shared.hasRestoreMedia
             hasUnfinishedBackup = AccountUserDefault.shared.hasRebackup
             extensionSession = AccountUserDefault.shared.extensionSession

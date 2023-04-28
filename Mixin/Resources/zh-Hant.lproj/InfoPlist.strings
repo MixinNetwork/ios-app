@@ -5,3 +5,4 @@
 "NSMicrophoneUsageDescription" = "Mixin 使用你的麥克風錄製語音訊息發給你的聯絡人";
 "NSFaceIDUsageDescription" = "Mixin 使用面容識別來驗證支付";
 "NSLocationWhenInUseUsageDescription" = "允許獲取位置讓您可以在對話中傳送當前的位置或附近的地點";
+"NSLocalNetworkUsageDescription" = "Mixin 使用本地網路同步或恢復您的聊天記錄";

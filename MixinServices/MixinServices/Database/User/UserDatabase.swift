@@ -112,7 +112,7 @@ public final class UserDatabase: Database {
             .init(key: .muteUntil, constraints: "TEXT"),
             .init(key: .codeUrl, constraints: "TEXT"),
             .init(key: .pinTime, constraints: "TEXT"),
-            .init(key: .expireIn, constraints: "INTEGER")
+            .init(key: .expireIn, constraints: "INTEGER"),
         ]),
         ColumnMigratableTableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
             .init(key: .userId, constraints: "TEXT NOT NULL"),
@@ -544,6 +544,13 @@ public final class UserDatabase: Database {
             }
             if !columns.contains("closing_balance") {
                 try db.execute(sql: "ALTER TABLE snapshots ADD COLUMN closing_balance TEXT NOT NULL DEFAULT ''")
+            }
+        }
+        
+        migrator.registerMigration("conversation_created_at") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(conversations)").map(\.name)
+            if !columns.contains("created_at") {
+                try db.execute(sql: "ALTER TABLE conversations ADD COLUMN created_at TEXT NOT NULL DEFAULT ''")
             }
         }
         

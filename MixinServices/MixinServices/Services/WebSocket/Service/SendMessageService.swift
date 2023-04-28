@@ -128,6 +128,32 @@ public class SendMessageService: MixinService {
         UserDatabase.current.save(jobs)
     }
     
+    // `conversation_id` is nessecary due to regulations of backend, but not in use, just put a valid conversation_id
+    // `session_id` is the recipient's session id, generally desktop's session id here
+    public func sendDeviceTransferCommand(_ content: String, conversationId: String, sessionId: String) {
+        dispatchQueue.async {
+            var params = BlazeMessageParam()
+            params.conversationId = conversationId
+            params.recipientId = myUserId
+            params.messageId = UUID().uuidString.lowercased()
+            params.category = MessageCategory.PLAIN_JSON.rawValue
+            params.data = {
+                let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.DEVICE_TRANSFER.rawValue, messages: nil, ackMessages: nil, content: content)
+                let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64RawURLEncodedString()) ?? ""
+                return encoded
+            }()
+            params.status = MessageStatus.SENDING.rawValue
+            params.sessionId = sessionId
+            let blazeMessage = BlazeMessage(id: UUID().uuidString.lowercased(),
+                                            action: BlazeMessageAction.createMessage.rawValue,
+                                            params: params,
+                                            data: nil,
+                                            error: nil,
+                                            fromPush: nil)
+            WebSocketService.shared.send(message: blazeMessage)
+        }
+    }
+    
     public func sendWebRTCMessage(message: Message, recipientId: String) {
         let job = Job(webRTCMessage: message, recipientId: recipientId)
         UserDatabase.current.save(job)

@@ -42,9 +42,6 @@ internal class CommonUserDefault {
     private var keyLastBackupSize: String {
         return "last_backup_size_\(myIdentityNumber)"
     }
-    private var keyHasForceLogout: String {
-        return "has_force_logout_\(myIdentityNumber)"
-    }
     private var keyRecentlyUsedAppIds: String {
         return "recently_used_app_ids_\(myIdentityNumber)"
     }
@@ -121,15 +118,6 @@ internal class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyBackupVideos)
-        }
-    }
-
-    var hasForceLogout: Bool {
-        get {
-            return session.bool(forKey: keyHasForceLogout)
-        }
-        set {
-            session.set(newValue, forKey: keyHasForceLogout)
         }
     }
 

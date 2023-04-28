@@ -5,3 +5,4 @@
 "NSMicrophoneUsageDescription" = "Mixin usa tu micrófono para grabar mensajes de voz para compartir con tus contactos";
 "NSFaceIDUsageDescription" = "Mixin usa Face ID para autorizar el pago";
 "NSLocationWhenInUseUsageDescription" = "Activa los servicios de ubicación para enviar tu ubicación actual o lugares cercanos en una conversación";
+"NSLocalNetworkUsageDescription" = "Mixin uses the local network to transfer or restore your chat history.";

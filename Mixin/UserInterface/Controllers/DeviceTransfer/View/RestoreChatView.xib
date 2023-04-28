@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RestoreChatViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="tableView" destination="GYC-ei-7zB" id="0ZJ-f1-Kzb"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restore Your Chat History" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6D3-zX-mKs">
+                    <rect key="frame" x="20" y="133" width="353" height="21"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="title"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="restore_your_chat_history"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" style="insetGrouped" separatorStyle="none" rowHeight="130" estimatedRowHeight="-1" sectionHeaderHeight="1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="10" estimatedSectionFooterHeight="-1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYC-ei-7zB">
+                    <rect key="frame" x="0.0" y="204.00000000000003" width="393" height="438.66666666666674"/>
+                    <color key="backgroundColor" name="background"/>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gaB-Hf-tyj">
+                    <rect key="frame" x="168.66666666666666" y="742.66666666666663" width="55.666666666666657" height="33.333333333333371"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title="Skip">
+                        <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
+                    </buttonConfiguration>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="skip"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="skipButton:" destination="-1" eventType="touchUpInside" id="QUz-fL-p7y"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="GYC-ei-7zB" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="1Ai-j2-bAQ"/>
+                <constraint firstItem="6D3-zX-mKs" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="Iye-oR-Tsr"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="gaB-Hf-tyj" secondAttribute="bottom" constant="42" id="KaL-pF-aor"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="6D3-zX-mKs" secondAttribute="trailing" constant="20" id="g28-z2-6Yo"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="GYC-ei-7zB" secondAttribute="trailing" id="hrQ-wh-vAO"/>
+                <constraint firstItem="gaB-Hf-tyj" firstAttribute="top" secondItem="GYC-ei-7zB" secondAttribute="bottom" constant="100" id="iZI-bk-I5T" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="100"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
+                            <real key="value" value="100"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                            <real key="value" value="100"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="6D3-zX-mKs" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="74" id="n9k-Cn-Ohl"/>
+                <constraint firstItem="gaB-Hf-tyj" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="uhq-Ps-xY7"/>
+                <constraint firstItem="GYC-ei-7zB" firstAttribute="top" secondItem="6D3-zX-mKs" secondAttribute="bottom" constant="50" id="zJs-46-CZN" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+            </constraints>
+            <point key="canvasLocation" x="113" y="21"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

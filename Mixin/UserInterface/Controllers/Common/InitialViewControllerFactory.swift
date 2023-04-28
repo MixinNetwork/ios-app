@@ -14,8 +14,6 @@ func makeInitialViewController(isUsernameJustInitialized: Bool = false) -> UIVie
         }
     } else if LoginManager.shared.account?.fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
         return UsernameViewController()
-    } else if AppGroupUserDefaults.Account.canRestoreChat {
-        return RestoreViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
     } else if DatabaseUpgradeViewController.needsUpgrade {
         return DatabaseUpgradeViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
     } else if !AppGroupUserDefaults.Crypto.isPrekeyLoaded || !AppGroupUserDefaults.Crypto.isSessionSynchronized || !AppGroupUserDefaults.User.isCircleSynchronized {

@@ -616,20 +616,30 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func updateLastMessageIdAndCreatedAt() {
-        let sql = """
-        UPDATE conversations
-        SET
-            last_message_id = lastMessage.id,
-            last_message_created_at = lastMessage.created_at
-        FROM (
-            SELECT id, conversation_id, created_at
-            FROM messages
-            GROUP BY conversation_id
-            HAVING MAX(created_at)
-        ) AS lastMessage
-        WHERE conversations.conversation_id = lastMessage.conversation_id
-        """
-        db.execute(sql: sql)
+        db.write { db in
+            let updateLastMessageIdSQL = """
+            UPDATE conversations
+            SET last_message_id = (
+                SELECT id
+                FROM messages
+                WHERE conversation_id = conversations.conversation_id
+                ORDER BY created_at DESC
+                LIMIT 1
+            )
+            """
+            try db.execute(sql: updateLastMessageIdSQL)
+            
+            let updateLastMessageCreatedAtSQL = """
+            UPDATE conversations
+            SET last_message_created_at = (
+                SELECT created_at
+                FROM messages
+                WHERE id = conversations.last_message_id
+                LIMIT 1
+            )
+            """
+            try db.execute(sql: updateLastMessageCreatedAtSQL)
+        }
     }
     
     public func updateLastMessageIdOnDeleteMessage(conversationId: String, messageId: String? = nil, database: GRDB.Database) throws {

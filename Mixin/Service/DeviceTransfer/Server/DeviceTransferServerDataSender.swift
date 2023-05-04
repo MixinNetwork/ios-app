@@ -127,6 +127,7 @@ extension DeviceTransferServerDataSender {
                 return
             }
             if transferItems.isEmpty {
+                Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(type) is empty")
                 return
             }
             let itemData = transferItems.compactMap { server.composer.messageData(type: type, data: $0) }
@@ -136,6 +137,7 @@ extension DeviceTransferServerDataSender {
                     semaphore.signal()
                 }
             }
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type) \(transferItems.count)")
             if transferItems.count < limit {
                 return
             }
@@ -177,7 +179,7 @@ extension DeviceTransferServerDataSender {
                 Logger.general.info(category: "DeviceTransferServerDataSender", message: "Open stream failed")
                 continue
             }
-            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
+            Logger.general.debug(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
             // send typeData + lengthData + idData
             var checksum = CRC32()
             let fileSize = Int(FileManager.default.fileSize(path.path))

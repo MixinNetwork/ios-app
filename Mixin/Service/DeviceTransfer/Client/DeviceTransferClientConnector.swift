@@ -40,7 +40,7 @@ class DeviceTransferClientConnector {
     func send(data: Data, completion: (() -> Void)? = nil) {
         connection.send(content: data, completion: .contentProcessed({ (error) in
             if let error = error {
-                Logger.general.debug(category: "DeviceTransferClientConnector", message: "Failed to send: \(error.localizedDescription)")
+                Logger.general.info(category: "DeviceTransferClientConnector", message: "Failed to send: \(error.localizedDescription)")
             }
             completion?()
         }))
@@ -60,6 +60,7 @@ extension DeviceTransferClientConnector {
             Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection error: \(error.localizedDescription)")
             delegate?.deviceTransferClientConnector(self, didCloseWith: .exception(error))
         default:
+            Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection State: \(state)")
             break
         }
     }

@@ -75,7 +75,7 @@ extension TransferToDesktopViewController {
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                 self.navigationController?.popViewController(animated: true)
             }
-            Logger.general.debug(category: "TransferToDesktopViewController", message: "Failed to launch server")
+            Logger.general.info(category: "TransferToDesktopViewController", message: "Failed to launch server")
         }
     }
     

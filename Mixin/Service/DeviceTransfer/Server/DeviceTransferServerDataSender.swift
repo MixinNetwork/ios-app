@@ -42,14 +42,9 @@ extension DeviceTransferServerDataSender {
             + MessageMentionDAO.shared.messageMentionsCount()
             + ExpiredMessageDAO.shared.expiredMessagesCount()
             + attachmentsCount
-        guard let server, server.canSendData else {
-            let message = server == nil ? "Server is nil" : "Server can't send data"
-            Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(message) when sending start command")
-            return
-        }
         Logger.general.info(category: "DeviceTransferServerDataSender", message: "Total: \(total), Messages: \(messagesCount), attachments: \(attachmentsCount)")
         let command = DeviceTransferCommand(action: .start, total: total)
-        if let commandData = server.composer.commandData(command: command) {
+        if let server, let commandData = server.composer.commandData(command: command) {
             Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send Start Command")
             server.send(data: commandData)
             server.displayState = .transporting(processedCount: 0, totalCount: total)

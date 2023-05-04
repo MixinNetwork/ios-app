@@ -81,6 +81,7 @@ class DeviceTransferProgressViewController: UIViewController {
         tipLabel.text = intent.tip
         progressLabel.font = .monospacedDigitSystemFont(ofSize: 18, weight: .medium)
         progressLabel.text = intent.title
+        Logger.general.info(category: "DeviceTransferProgressViewController", message: "Start transfer: \(intent)")
         switch intent {
         case let .transferToDesktop(server):
             endPoint = server
@@ -110,7 +111,7 @@ class DeviceTransferProgressViewController: UIViewController {
                 alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
-                Logger.general.info(category: "DeviceTranDeviceTransferProgressViewControllersferDataComposer", message: "Restore from phone failed, ip:\(command.ip ?? ""), port: \(command.port ?? -1), code: \(command.code ?? -1)")
+                Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from phone failed, ip:\(command.ip ?? ""), port: \(command.port ?? -1), code: \(command.code ?? -1)")
             }
         case .restoreFromCloud:
             restoreFromCloud()
@@ -148,6 +149,7 @@ extension DeviceTransferProgressViewController {
             }
             progressLabel.text = hint
             transferFailed(hint: hint)
+            Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer failed: \(error)")
         case .closed:
             stateObserver?.cancel()
             endPoint?.stop()
@@ -162,6 +164,7 @@ extension DeviceTransferProgressViewController {
             }
             progressLabel.text = hint
             transferSucceeded(hint: hint)
+            Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer succeeded")
         case .preparing, .ready, .connected, .finished:
             break
         }

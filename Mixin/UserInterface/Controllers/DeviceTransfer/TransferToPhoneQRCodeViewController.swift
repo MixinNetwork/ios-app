@@ -30,7 +30,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
             updateLabelText()
         } else {
             alert(R.string.localizable.connection_establishment_failed())
-            Logger.general.debug(category: "TransferToPhoneQRCodeViewController", message: "Failed to launch server")
+            Logger.general.info(category: "TransferToPhoneQRCodeViewController", message: "Failed to launch server")
         }
     }
     

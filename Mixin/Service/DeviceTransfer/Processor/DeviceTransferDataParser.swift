@@ -301,6 +301,7 @@ extension DeviceTransferDataParser {
                         delegate?.deviceTransferDataParser(self, didParseFile: fileURL)
                     }
                 } else {
+                    Logger.general.info(category: "DeviceTransferDataParser", message: "File checksum failed, fileURL: \(fileURL) localChecksum: \(localChecksum) remoteChecksum: \(remoteChecksum)")
                     if let fileURL {
                         try? FileManager.default.removeItem(at: fileURL)
                     }

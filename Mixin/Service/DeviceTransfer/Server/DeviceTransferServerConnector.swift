@@ -40,9 +40,13 @@ final class DeviceTransferServerConnector {
     }
     
     func send(data: Data, completion: (() -> Void)? = nil) {
-        connection?.send(content: data, completion: .contentProcessed({ error in
+        guard let connection else {
+            Logger.general.info(category: "DeviceTransferServerConnector", message: "No connection")
+            return
+        }
+        connection.send(content: data, completion: .contentProcessed({ error in
             if let error {
-                Logger.general.debug(category: "DeviceTransferServerConnector", message: "Failed to send: \(error.localizedDescription)")
+                Logger.general.info(category: "DeviceTransferServerConnector", message: "Failed to send: \(error.localizedDescription)")
             }
             completion?()
         }))

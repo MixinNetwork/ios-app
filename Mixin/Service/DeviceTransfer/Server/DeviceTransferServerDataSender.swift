@@ -42,20 +42,34 @@ extension DeviceTransferServerDataSender {
             + MessageMentionDAO.shared.messageMentionsCount()
             + ExpiredMessageDAO.shared.expiredMessagesCount()
             + attachmentsCount
+        guard let server, server.canSendData else {
+            let message = server == nil ? "Server is nil" : "Server can't send data"
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(message) when sending start command")
+            return
+        }
         Logger.general.info(category: "DeviceTransferServerDataSender", message: "Total: \(total), Messages: \(messagesCount), attachments: \(attachmentsCount)")
         let command = DeviceTransferCommand(action: .start, total: total)
-        if let server, let commandData = server.composer.commandData(command: command) {
+        if let commandData = server.composer.commandData(command: command) {
             Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send Start Command")
             server.send(data: commandData)
             server.displayState = .transporting(processedCount: 0, totalCount: total)
+        } else {
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Compose start command data failed")
         }
     }
     
     private func sendFinishCommand() {
+        guard let server, server.canSendData else {
+            let message = server == nil ? "Server is nil" : "Server can't send data"
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(message) when sending finish command")
+            return
+        }
         let command = DeviceTransferCommand(action: .finish)
-        if let server, let data = server.composer.commandData(command: command) {
+        if let data = server.composer.commandData(command: command) {
             Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send Finish Command")
             server.send(data: data)
+        } else {
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Compose finish command data failed")
         }
     }
     
@@ -63,11 +77,16 @@ extension DeviceTransferServerDataSender {
         guard type != .unknown else {
             return
         }
+        guard let server, server.canSendData else {
+            let message = server == nil ? "Server is nil" : "Server can't send data"
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(message) when sending \(type)")
+            return
+        }
         Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
         var offset = 0
         var lastMessageId: String?
         let semaphore = DispatchSemaphore(value: maxConcurrentSends)
-        while let server, server.canSendData {
+        while server.canSendData {
             let transferItems: [Codable]
             switch type {
             case .conversation:
@@ -130,6 +149,11 @@ extension DeviceTransferServerDataSender {
     }
     
     private func sendAttachments() {
+        guard let server, server.canSendData else {
+            let message = server == nil ? "Server is nil" : "Server can't send data"
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(message) when sending attachments")
+            return
+        }
         let types = AttachmentContainer.Category.allCases.map(\.pathComponent) + ["Transcript"]
         types.forEach(sendAttachment(type:))
     }

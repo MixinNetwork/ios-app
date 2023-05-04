@@ -126,7 +126,7 @@ extension DeviceTransferProgressViewController {
         switch state {
         case let .transporting(processedCount, totalCount):
             let progressValue = Double(processedCount) / Double(totalCount) * 100
-            let progress = String(format: "%.1f", progressValue)
+            let progress = String(format: "%.2f", progressValue)
             switch intent {
             case .transferToDesktop, .transferToPhone:
                 progressLabel.text = R.string.localizable.transferring_chat_progress(progress)

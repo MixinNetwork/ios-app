@@ -7,7 +7,6 @@ class DeviceTransferServerDataSender {
     
     private let limit = 100
     private let fileBufferSize = 1024 * 1024 * 10
-    private let maxConcurrentSends = 1000
     
     init(server: DeviceTransferServer) {
         self.server = server
@@ -80,7 +79,7 @@ extension DeviceTransferServerDataSender {
         Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
         var offset = 0
         var lastMessageId: String?
-        let semaphore = DispatchSemaphore(value: maxConcurrentSends)
+        let semaphore = DispatchSemaphore(value: 1)
         let maxWaitingTime: TimeInterval = 60.0
         while server.canSendData {
             let transferItems: [Codable]

@@ -98,7 +98,9 @@ extension RestoreFromDesktopViewController {
             client = DeviceTransferClient(host: ip, port: UInt16(port), code: code)
             stateObserver = client.$displayState
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: stateDidChange(_:))
+                .sink(receiveValue: { [weak self] state in
+                    self?.stateDidChange(state)
+                })
             client.start()
         }
     }

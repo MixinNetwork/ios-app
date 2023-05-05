@@ -81,28 +81,37 @@ class DeviceTransferProgressViewController: UIViewController {
         tipLabel.text = intent.tip
         progressLabel.font = .monospacedDigitSystemFont(ofSize: 18, weight: .medium)
         progressLabel.text = intent.title
+        Logger.general.info(category: "DeviceTransferProgressViewController", message: "Start transfer: \(intent)")
         switch intent {
         case let .transferToDesktop(server):
             endPoint = server
             stateObserver = server.$displayState
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: stateDidChange(_:))
+                .sink(receiveValue: { [weak self] state in
+                    self?.stateDidChange(state)
+                })
         case let .transferToPhone(server):
             endPoint = server
             stateObserver = server.$displayState
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: stateDidChange(_:))
+                .sink(receiveValue: { [weak self] state in
+                    self?.stateDidChange(state)
+                })
         case let .restoreFromDesktop(client):
             endPoint = client
             stateObserver = client.$displayState
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: stateDidChange(_:))
+                .sink(receiveValue: { [weak self] state in
+                    self?.stateDidChange(state)
+                })
         case let .restoreFromPhone(command, _):
             if let ip = command.ip, let port = command.port, let code = command.code {
                 let client = DeviceTransferClient(host: ip, port: UInt16(port), code: code)
                 stateObserver = client.$displayState
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: stateDidChange(_:))
+                    .sink(receiveValue: { [weak self] state in
+                        self?.stateDidChange(state)
+                    })
                 client.start()
                 intent = .restoreFromPhone(command, client)
                 endPoint = client
@@ -110,7 +119,7 @@ class DeviceTransferProgressViewController: UIViewController {
                 alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
-                Logger.general.info(category: "DeviceTranDeviceTransferProgressViewControllersferDataComposer", message: "Restore from phone failed, ip:\(command.ip ?? ""), port: \(command.port ?? -1), code: \(command.code ?? -1)")
+                Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from phone failed, ip:\(command.ip ?? ""), port: \(command.port ?? -1), code: \(command.code ?? -1)")
             }
         case .restoreFromCloud:
             restoreFromCloud()
@@ -125,7 +134,7 @@ extension DeviceTransferProgressViewController {
         switch state {
         case let .transporting(processedCount, totalCount):
             let progressValue = Double(processedCount) / Double(totalCount) * 100
-            let progress = String(format: "%.1f", progressValue)
+            let progress = String(format: "%.2f", progressValue)
             switch intent {
             case .transferToDesktop, .transferToPhone:
                 progressLabel.text = R.string.localizable.transferring_chat_progress(progress)
@@ -148,6 +157,7 @@ extension DeviceTransferProgressViewController {
             }
             progressLabel.text = hint
             transferFailed(hint: hint)
+            Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer failed: \(error)")
         case .closed:
             stateObserver?.cancel()
             endPoint?.stop()
@@ -162,6 +172,7 @@ extension DeviceTransferProgressViewController {
             }
             progressLabel.text = hint
             transferSucceeded(hint: hint)
+            Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer succeeded")
         case .preparing, .ready, .connected, .finished:
             break
         }

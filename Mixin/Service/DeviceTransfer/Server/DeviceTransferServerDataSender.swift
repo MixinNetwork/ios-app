@@ -7,7 +7,6 @@ class DeviceTransferServerDataSender {
     
     private let limit = 100
     private let fileBufferSize = 1024 * 1024 * 10
-    private let maxConcurrentSends = 1000
     
     init(server: DeviceTransferServer) {
         self.server = server
@@ -80,7 +79,8 @@ extension DeviceTransferServerDataSender {
         Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
         var offset = 0
         var lastMessageId: String?
-        let semaphore = DispatchSemaphore(value: maxConcurrentSends)
+        let semaphore = DispatchSemaphore(value: 1)
+        let maxWaitingTime: TimeInterval = 60.0
         while server.canSendData {
             let transferItems: [Codable]
             switch type {
@@ -127,15 +127,22 @@ extension DeviceTransferServerDataSender {
                 return
             }
             if transferItems.isEmpty {
+                Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(type) is empty")
                 return
             }
             let itemData = transferItems.compactMap { server.composer.messageData(type: type, data: $0) }
             for data in itemData {
-                semaphore.wait()
+                let result = semaphore.wait(timeout: .now() + maxWaitingTime)
+                if result == .timedOut {
+                    Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(type) data sending timed out")
+                    server.displayState = .failed(.completed)
+                    break
+                }
                 server.send(data: data) {
                     semaphore.signal()
                 }
             }
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type) \(transferItems.count)")
             if transferItems.count < limit {
                 return
             }
@@ -177,7 +184,7 @@ extension DeviceTransferServerDataSender {
                 Logger.general.info(category: "DeviceTransferServerDataSender", message: "Open stream failed")
                 continue
             }
-            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
+            Logger.general.debug(category: "DeviceTransferServerDataSender", message: "Send File: \(path.absoluteString)")
             // send typeData + lengthData + idData
             var checksum = CRC32()
             let fileSize = Int(FileManager.default.fileSize(path.path))

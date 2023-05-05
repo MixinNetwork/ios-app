@@ -1,5 +1,7 @@
 import Foundation
 
+let maxMessageDeviceTransferDataSize = 512000 // 500K
+
 class DeviceTransferData<TransferData>: Codable where TransferData: Codable {
     
     let type: DeviceTransferMessageType

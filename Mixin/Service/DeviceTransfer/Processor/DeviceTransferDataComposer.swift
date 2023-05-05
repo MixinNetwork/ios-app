@@ -17,7 +17,12 @@ class DeviceTransferDataComposer {
         let transferData = DeviceTransferData(type: type, data: data)
         do {
             let jsonData = try JSONEncoder.default.encode(transferData)
-            return composeData(type: .message, data: jsonData)
+            if jsonData.count >= maxMessageDeviceTransferDataSize {
+                Logger.general.info(category: "DeviceTransferDataComposer", message: "Data size is too large: \(data)")
+                return nil
+            } else {
+                return composeData(type: .message, data: jsonData)
+            }
         } catch {
             Logger.general.info(category: "DeviceTransferDataComposer", message: "Compose message failed: \(error)")
             return nil

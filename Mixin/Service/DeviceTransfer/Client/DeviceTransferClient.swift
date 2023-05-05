@@ -73,9 +73,9 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
         writer.take(message)
     }
     
-    func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFile fileURL: URL) {
+    func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFile fileURL: URL?) {
         updateProgressIfNeeded()
-        Logger.general.debug(category: "DeviceTransferClient", message: "Receive file: \(fileURL)")
+        Logger.general.debug(category: "DeviceTransferClient", message: "Receive file: \(String(describing: fileURL))")
     }
     
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFailed error: DeviceTransferDataParserError) {

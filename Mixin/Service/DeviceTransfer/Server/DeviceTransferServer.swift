@@ -84,7 +84,7 @@ extension DeviceTransferServer: DeviceTransferDataParserDelegate {
         
     }
     
-    func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFile fileURL: URL) {
+    func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFile fileURL: URL?) {
         
     }
     

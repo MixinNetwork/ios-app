@@ -1,6 +1,7 @@
 import Foundation
+import MixinServices
 
-let maxMessageDeviceTransferDataSize = 512000 // 500K
+let maxMessageDeviceTransferDataSize = 500 * bytesPerKiloByte
 
 class DeviceTransferData<TransferData>: Codable where TransferData: Codable {
     

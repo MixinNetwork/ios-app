@@ -62,12 +62,7 @@ class DeviceTransferDataParser {
 extension DeviceTransferDataParser {
     
     private func decodeMessageData(_ messageData: Data) {
-        let content: String
-        if let message = String(data: messageData, encoding: .utf8) {
-            content = message
-        } else {
-            content = ""
-        }
+        let content = String(data: messageData, encoding: .utf8) ?? "Data(\(messageData.count))"
         Logger.general.debug(category: "DeviceTransferDataParse", message: "Receive: \(content) \n")
         if messageData.count >= maxMessageDeviceTransferDataSize {
             Logger.general.info(category: "DeviceTransferDataParser", message: "Data size is too large: \(content)")

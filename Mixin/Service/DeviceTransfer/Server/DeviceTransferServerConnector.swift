@@ -42,6 +42,7 @@ final class DeviceTransferServerConnector {
     func send(data: Data, completion: (() -> Void)? = nil) {
         guard let connection else {
             Logger.general.info(category: "DeviceTransferServerConnector", message: "No connection")
+            delegate?.deviceTransferServerConnector(self, didCloseWith: .completed)
             return
         }
         connection.send(content: data, completion: .contentProcessed({ error in

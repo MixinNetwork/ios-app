@@ -81,6 +81,7 @@ extension DeviceTransferServerDataSender {
         var offset = 0
         var lastMessageId: String?
         let semaphore = DispatchSemaphore(value: maxConcurrentSends)
+        let maxWaitingTime: TimeInterval = 60.0
         while server.canSendData {
             let transferItems: [Codable]
             switch type {
@@ -132,7 +133,12 @@ extension DeviceTransferServerDataSender {
             }
             let itemData = transferItems.compactMap { server.composer.messageData(type: type, data: $0) }
             for data in itemData {
-                semaphore.wait()
+                let result = semaphore.wait(timeout: .now() + maxWaitingTime)
+                if result == .timedOut {
+                    Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(type) data sending timed out")
+                    server.displayState = .failed(.completed)
+                    break
+                }
                 server.send(data: data) {
                     semaphore.signal()
                 }

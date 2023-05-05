@@ -78,7 +78,7 @@ struct DeviceTransferMessage {
         stickerId = message.stickerId
         sharedUserId = message.sharedUserId
         quoteMessageId = message.quoteMessageId
-        quoteContent = QuoteContentConverter.transcriptQuoteContent(from: message.quoteContent, encodeWithSnakeCase: false)
+        quoteContent = QuoteContentConverter.transcriptQuoteContent(from: message.quoteContent)
         createdAt = message.createdAt
         albumId = message.albumId
     }
@@ -127,7 +127,7 @@ struct DeviceTransferMessage {
                        stickerId: stickerId,
                        sharedUserId: sharedUserId,
                        quoteMessageId: quoteMessageId,
-                       quoteContent: QuoteContentConverter.localQuoteContent(from: quoteContent, decodeWithSnakeCase: false),
+                       quoteContent: QuoteContentConverter.localQuoteContent(from: quoteContent),
                        createdAt: createdAt,
                        albumId: albumId)
     }

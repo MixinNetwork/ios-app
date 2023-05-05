@@ -4,7 +4,7 @@ public enum QuoteContentConverter {
     
     // Due to historical reasons, we are using different serialization between database and transcript
     
-    public static func transcriptQuoteContent(from localQuoteContent: Data?, encodeWithSnakeCase: Bool = true) -> String? {
+    public static func transcriptQuoteContent(from localQuoteContent: Data?) -> String? {
         guard let localQuoteContent = localQuoteContent else {
             return nil
         }
@@ -12,29 +12,17 @@ public enum QuoteContentConverter {
             return nil
         }
         let content = QuoteContent(item: item)
-        let json: Data?
-        if encodeWithSnakeCase {
-            json = try? JSONEncoder.snakeCase.encode(content)
-        } else {
-            json = try? JSONEncoder.default.encode(content)
-        }
-        guard let json else {
+        guard let json = try? JSONEncoder.snakeCase.encode(content) else {
             return nil
         }
         return String(data: json, encoding: .utf8)
     }
     
-    public static func localQuoteContent(from transcriptQuoteContent: String?, decodeWithSnakeCase: Bool = true) -> Data? {
+    public static func localQuoteContent(from transcriptQuoteContent: String?) -> Data? {
         guard let contentJson = transcriptQuoteContent?.data(using: .utf8)  else {
             return nil
         }
-        let content: QuoteContent?
-        if decodeWithSnakeCase {
-            content = try? JSONDecoder.snakeCase.decode(QuoteContent.self, from: contentJson)
-        } else {
-            content = try? JSONDecoder.default.decode(QuoteContent.self, from: contentJson)
-        }
-        guard let content else {
+        guard let content = try? JSONDecoder.snakeCase.decode(QuoteContent.self, from: contentJson) else {
             return nil
         }
         let item = content.messageItem

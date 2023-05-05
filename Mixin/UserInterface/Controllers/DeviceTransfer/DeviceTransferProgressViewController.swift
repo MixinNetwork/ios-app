@@ -88,30 +88,21 @@ class DeviceTransferProgressViewController: UIViewController {
             stateObserver = server.$displayState
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] state in
-                    guard let self = self else {
-                        return
-                    }
-                    self.stateDidChange(state)
+                    self?.stateDidChange(state)
                 })
         case let .transferToPhone(server):
             endPoint = server
             stateObserver = server.$displayState
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] state in
-                    guard let self = self else {
-                        return
-                    }
-                    self.stateDidChange(state)
+                    self?.stateDidChange(state)
                 })
         case let .restoreFromDesktop(client):
             endPoint = client
             stateObserver = client.$displayState
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] state in
-                    guard let self = self else {
-                        return
-                    }
-                    self.stateDidChange(state)
+                    self?.stateDidChange(state)
                 })
         case let .restoreFromPhone(command, _):
             if let ip = command.ip, let port = command.port, let code = command.code {
@@ -119,10 +110,7 @@ class DeviceTransferProgressViewController: UIViewController {
                 stateObserver = client.$displayState
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] state in
-                        guard let self = self else {
-                            return
-                        }
-                        self.stateDidChange(state)
+                        self?.stateDidChange(state)
                     })
                 client.start()
                 intent = .restoreFromPhone(command, client)

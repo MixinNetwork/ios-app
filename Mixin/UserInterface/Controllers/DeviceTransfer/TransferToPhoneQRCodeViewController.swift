@@ -43,10 +43,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
         stateObserver = server.$displayState
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] state in
-                guard let self = self else {
-                    return
-                }
-                self.stateDidChange(state)
+                self?.stateDidChange(state)
             })
     }
     

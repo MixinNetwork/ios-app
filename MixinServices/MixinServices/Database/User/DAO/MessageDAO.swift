@@ -579,6 +579,11 @@ public final class MessageDAO: UserDatabaseDAO {
         
         let quotedMessage: MessageItem?
         if let id = message.quoteMessageId, let quoted = getNonFailedMessage(messageId: id) {
+            
+            // Prevent recursion of quoting
+            quoted.quoteContent = nil
+            quoted.quoteMessageId = nil
+            
             message.quoteContent = try? JSONEncoder.default.encode(quoted)
             quotedMessage = quoted
         } else {

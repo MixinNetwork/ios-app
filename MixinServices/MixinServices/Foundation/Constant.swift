@@ -8,6 +8,10 @@ public let secondsPerDay: TimeInterval = 24 * secondsPerHour
 public let bytesPerKiloByte: UInt = 1024
 public let bytesPerMegaByte: UInt = bytesPerKiloByte * 1024
 
+public let maxQuoteContentLength = 10 * bytesPerKiloByte
+public let maxThumbImageLength = 5 * bytesPerKiloByte
+public let defaultThumbImage = "K0OWvn_3fQ~qj[fQfQfQfQ"
+
 public enum JPEGCompressionQuality {
     public static let max: CGFloat = 1
     public static let high: CGFloat = 0.85

@@ -152,6 +152,12 @@ class HomeViewController: UIViewController {
             if SpotlightManager.isAvailable {
                 SpotlightManager.shared.indexIfNeeded()
             }
+            if !AppGroupUserDefaults.User.hasCleanedUpLargeThumbImage {
+                ConcurrentJobQueue.shared.addJob(job: CleanUpLargeThumbImageJob())
+            }
+            if !AppGroupUserDefaults.User.hasCleanedUpLargeQuoteContent {
+                ConcurrentJobQueue.shared.addJob(job: CleanUpLargeQuoteContentJob())
+            }
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }

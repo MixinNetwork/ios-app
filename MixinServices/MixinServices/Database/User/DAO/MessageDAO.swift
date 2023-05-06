@@ -562,6 +562,25 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: MessageDAO.sqlQueryQuoteMessageById, arguments: [messageId])
     }
     
+    public func largeQuoteContentMessages(limit: Int, after rowId: Int?) -> [LargeQuoteMessage] {
+        var sql = "SELECT rowid, conversation_id, quote_message_id FROM messages WHERE"
+        if let rowId {
+            sql += " ROWID > \(rowId) AND"
+        }
+        sql += " quote_message_id IS NOT NULL AND quote_message_id != '' AND LENGTH(quote_content) > ? GROUP BY quote_message_id LIMIT ?"
+        return db.select(with: sql, arguments: [maxQuoteContentLength, limit])
+    }
+    
+    public func updateQuoteContent(content: Data?, conversationId: String, messageId: String) {
+        let sql = "UPDATE messages SET quote_content = ? WHERE conversation_id = ? AND id = ?"
+        db.execute(sql: sql, arguments: [content, conversationId, messageId])
+    }
+    
+    public func cleanUpLargeThumbImage() {
+        let sql = "UPDATE messages SET thumb_image = ? WHERE LENGTH(thumb_image) > ?"
+        db.execute(sql: sql, arguments: [defaultThumbImage, maxThumbImageLength])
+    }
+    
     public func insertMessage(
         message: Message,
         children: [TranscriptMessage]? = nil,

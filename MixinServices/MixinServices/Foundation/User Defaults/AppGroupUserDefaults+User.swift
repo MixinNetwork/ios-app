@@ -67,6 +67,9 @@ extension AppGroupUserDefaults {
             case wallpapers = "wallpapers"
             case chatFontSize = "chat_font_size"
             case useSystemFont = "use_system_font"
+            
+            case hasCleanedUpLargeThumbImage = "has_cleaned_up_large_thumb_image"
+            case hasCleanedUpLargeQuoteContent = "has_cleaned_up_large_quote_content"
         }
         
         public static let version = 31
@@ -260,6 +263,12 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(name: UIContentSizeCategory.didChangeNotification, object: nil)
             }
         }
+        
+        @Default(namespace: .user, key: Key.hasCleanedUpLargeThumbImage, defaultValue: false)
+        public static var hasCleanedUpLargeThumbImage: Bool
+        
+        @Default(namespace: .user, key: Key.hasCleanedUpLargeQuoteContent, defaultValue: false)
+        public static var hasCleanedUpLargeQuoteContent: Bool
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

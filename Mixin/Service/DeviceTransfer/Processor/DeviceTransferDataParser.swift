@@ -5,7 +5,7 @@ protocol DeviceTransferDataParserDelegate: AnyObject {
     
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseCommand command: DeviceTransferCommand)
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseMessage message: Data)
-    func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFile fileURL: URL)
+    func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFile fileURL: URL?)
     func deviceTransferDataParser(_ parser: DeviceTransferDataParser, didParseFailed error: DeviceTransferDataParserError)
     
 }
@@ -294,14 +294,12 @@ extension DeviceTransferDataParser {
                     if let dataAfterChecksum {
                         appendTypeUndeterminedDataAndContinue(dataAfterChecksum)
                     }
-                    if let fileURL {
-                        if let copyToURL {
-                            try? FileManager.default.copyItem(at: fileURL, to: copyToURL)
-                        }
-                        delegate?.deviceTransferDataParser(self, didParseFile: fileURL)
+                    if let fileURL, let copyToURL {
+                        try? FileManager.default.copyItem(at: fileURL, to: copyToURL)
                     }
+                    delegate?.deviceTransferDataParser(self, didParseFile: fileURL)
                 } else {
-                    Logger.general.info(category: "DeviceTransferDataParser", message: "File checksum failed, fileURL: \(fileURL) localChecksum: \(localChecksum) remoteChecksum: \(remoteChecksum)")
+                    Logger.general.info(category: "DeviceTransferDataParser", message: "File checksum failed, fileURL: \(String(describing: fileURL)) localChecksum: \(localChecksum) remoteChecksum: \(remoteChecksum)")
                     if let fileURL {
                         try? FileManager.default.removeItem(at: fileURL)
                     }

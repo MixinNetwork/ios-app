@@ -177,7 +177,12 @@ extension DeviceTransferServerDataSender {
                 break
             }
             let components = path.lastPathComponent.components(separatedBy: ".")
-            guard components.count == 2, let idData = UUID(uuidString: components[0])?.data else {
+            guard components.count == 2, let fileMessageId = components.first, let idData = UUID(uuidString: fileMessageId)?.data else {
+                continue
+            }
+            guard MessageDAO.shared.hasMessage(id: fileMessageId) || TranscriptMessageDAO.shared.hasTranscriptMessage(withMessageId: fileMessageId) else {
+                Logger.general.info(category: "DeviceTransferServerDataSender", message: "Message not exists for attachment: \(path)")
+                try? FileManager.default.removeItem(at: path)
                 continue
             }
             guard let stream = InputStream(url: path) else {

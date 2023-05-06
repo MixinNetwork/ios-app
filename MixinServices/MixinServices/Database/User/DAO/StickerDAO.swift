@@ -163,9 +163,13 @@ public final class StickerDAO: UserDatabaseDAO {
                   where: Sticker.column(of: .stickerId) == stickerId)
     }
     
-    public func stickers(limit: Int, offset: Int) -> [Sticker] {
-        let sql = "SELECT * FROM stickers ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func stickers(limit: Int, after stickerId: String?) -> [Sticker] {
+        var sql = "SELECT * FROM stickers"
+        if let stickerId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM stickers WHERE sticker_id = '\(stickerId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
     
     public func stickersCount() -> Int {

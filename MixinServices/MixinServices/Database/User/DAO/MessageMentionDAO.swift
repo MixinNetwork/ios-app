@@ -15,9 +15,13 @@ public final class MessageMentionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    public func messageMentions(limit: Int, offset: Int) -> [MessageMention] {
-        let sql = "SELECT * FROM message_mentions ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func messageMentions(limit: Int, after messageId: String?) -> [MessageMention] {
+        var sql = "SELECT * FROM message_mentions"
+        if let messageId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM message_mentions WHERE message_id = '\(messageId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
     
     public func messageMentionsCount() -> Int {

@@ -659,9 +659,13 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
     }
     
-    public func conversations(limit: Int, offset: Int) -> [Conversation] {
-        let sql = "SELECT * FROM conversations ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func conversations(limit: Int, after conversationId: String?) -> [Conversation] {
+        var sql = "SELECT * FROM conversations"
+        if let conversationId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
 
     public func conversationsCount() -> Int {

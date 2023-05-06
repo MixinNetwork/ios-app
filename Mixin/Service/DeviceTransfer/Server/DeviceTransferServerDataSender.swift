@@ -77,52 +77,65 @@ extension DeviceTransferServerDataSender {
             return
         }
         Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type)")
-        var offset = 0
-        var lastMessageId: String?
+        var lastItemId: String?
+        var lastItemAssistanceId: String?
         let semaphore = DispatchSemaphore(value: 1)
         let maxWaitingTime: TimeInterval = 60.0
         while server.canSendData {
             let transferItems: [Codable]
             switch type {
             case .conversation:
-                transferItems = ConversationDAO.shared.conversations(limit: limit, offset: offset)
-                    .map { conversation in
-                        DeviceTransferConversation(conversation: conversation, to: server.connectionCommand?.platform)
-                    }
+                let conversations = ConversationDAO.shared.conversations(limit: limit, after: lastItemId)
+                lastItemId = conversations.last?.conversationId
+                transferItems = conversations.map { conversation in
+                    DeviceTransferConversation(conversation: conversation, to: server.connectionCommand?.platform)
+                }
             case .participant:
-                transferItems = ParticipantDAO.shared.participants(limit: limit, offset: offset)
-                    .map { DeviceTransferParticipant(participant: $0) }
+                let participants = ParticipantDAO.shared.participants(limit: limit, after: lastItemId, with: lastItemAssistanceId)
+                lastItemId = participants.last?.conversationId
+                lastItemAssistanceId = participants.last?.userId
+                transferItems = participants.map { DeviceTransferParticipant(participant: $0) }
             case .user:
-                transferItems = UserDAO.shared.users(limit: limit, offset: offset)
-                    .map { DeviceTransferUser(user: $0) }
+                let users = UserDAO.shared.users(limit: limit, after: lastItemId)
+                lastItemId = users.last?.userId
+                transferItems = users.map { DeviceTransferUser(user: $0) }
             case .app:
-                transferItems = AppDAO.shared.apps(limit: limit, offset: offset)
-                    .map { DeviceTransferApp(app: $0) }
+                let apps = AppDAO.shared.apps(limit: limit, after: lastItemId)
+                lastItemId = apps.last?.appId
+                transferItems = apps.map { DeviceTransferApp(app: $0) }
             case .asset:
-                transferItems = AssetDAO.shared.assets(limit: limit, offset: offset)
-                    .map { DeviceTransferAsset(asset: $0) }
+                let assets = AssetDAO.shared.assets(limit: limit, after: lastItemId)
+                lastItemId = assets.last?.assetId
+                transferItems = assets.map { DeviceTransferAsset(asset: $0) }
             case .snapshot:
-                transferItems = SnapshotDAO.shared.snapshots(limit: limit, offset: offset)
-                    .map { DeviceTransferSnapshot(snapshot: $0) }
+                let snapshots = SnapshotDAO.shared.snapshots(limit: limit, after: lastItemId)
+                lastItemId = snapshots.last?.snapshotId
+                transferItems = snapshots.map { DeviceTransferSnapshot(snapshot: $0) }
             case .sticker:
-                transferItems = StickerDAO.shared.stickers(limit: limit, offset: offset)
-                    .map { DeviceTransferSticker(sticker: $0) }
+                let stickers = StickerDAO.shared.stickers(limit: limit, after: lastItemId)
+                lastItemId = stickers.last?.stickerId
+                transferItems = stickers.map { DeviceTransferSticker(sticker: $0) }
             case .pinMessage:
-                transferItems = PinMessageDAO.shared.pinMessages(limit: limit, offset: offset)
-                    .map { DeviceTransferPinMessage(pinMessage: $0) }
+                let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit, after: lastItemId)
+                lastItemId = pinMessages.last?.messageId
+                transferItems = pinMessages.map { DeviceTransferPinMessage(pinMessage: $0) }
             case .transcriptMessage:
-                transferItems = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, offset: offset)
-                    .map { DeviceTransferTranscriptMessage(transcriptMessage: $0) }
+                let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: lastItemId, with: lastItemAssistanceId)
+                lastItemId = transcriptMessages.last?.transcriptId
+                lastItemAssistanceId = transcriptMessages.last?.messageId
+                transferItems = transcriptMessages.map { DeviceTransferTranscriptMessage(transcriptMessage: $0) }
             case .message:
-                let messages = MessageDAO.shared.messages(limit: limit, after: lastMessageId)
-                lastMessageId = messages.last?.messageId
+                let messages = MessageDAO.shared.messages(limit: limit, after: lastItemId)
+                lastItemId = messages.last?.messageId
                 transferItems = messages.map { DeviceTransferMessage(message: $0) }
             case .messageMention:
-                transferItems = MessageMentionDAO.shared.messageMentions(limit: limit, offset: offset)
-                    .map { DeviceTransferMessageMention(messageMention: $0) }
+                let messageMentions = MessageMentionDAO.shared.messageMentions(limit: limit, after: lastItemId)
+                lastItemId = messageMentions.last?.messageId
+                transferItems = messageMentions.map { DeviceTransferMessageMention(messageMention: $0) }
             case .expiredMessage:
-                transferItems = ExpiredMessageDAO.shared.expiredMessages(limit: limit, offset: offset)
-                    .map { DeviceTransferExpiredMessage(expiredMessage: $0) }
+                let expiredMessages = ExpiredMessageDAO.shared.expiredMessages(limit: limit, after: lastItemId)
+                lastItemId = expiredMessages.last?.messageId
+                transferItems = expiredMessages.map { DeviceTransferExpiredMessage(expiredMessage: $0) }
             case .unknown:
                 return
             }
@@ -146,7 +159,6 @@ extension DeviceTransferServerDataSender {
             if transferItems.count < limit {
                 return
             }
-            offset += limit
         }
     }
     

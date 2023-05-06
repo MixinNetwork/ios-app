@@ -35,9 +35,13 @@ public final class AppDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [appId])
     }
     
-    public func apps(limit: Int, offset: Int) -> [App] {
-        let sql = "SELECT * FROM apps ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func apps(limit: Int, after appId: String?) -> [App] {
+        var sql = "SELECT * FROM apps"
+        if let appId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM apps WHERE app_id = '\(appId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
     
     public func appsCount() -> Int {

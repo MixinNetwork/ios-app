@@ -215,9 +215,13 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql)
     }
     
-    public func users(limit: Int, offset: Int) -> [User] {
-        let sql = "SELECT * FROM users ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func users(limit: Int, after userId: String?) -> [User] {
+        var sql = "SELECT * FROM users"
+        if let userId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM users WHERE user_id = '\(userId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
     
     public func usersCount() -> Int {

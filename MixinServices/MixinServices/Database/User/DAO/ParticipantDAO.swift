@@ -175,9 +175,13 @@ public final class ParticipantDAO: UserDatabaseDAO {
             .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })
     }
     
-    public func participants(limit: Int, offset: Int) -> [Participant] {
-        let sql = "SELECT * FROM participants ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func participants(limit: Int, after conversationId: String?, with userId: String?) -> [Participant] {
+        var sql = "SELECT * FROM participants"
+        if let conversationId, let userId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
     
     public func participantsCount() -> Int {

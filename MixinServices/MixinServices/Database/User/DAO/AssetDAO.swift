@@ -104,9 +104,13 @@ public final class AssetDAO: UserDatabaseDAO {
         db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
     }
     
-    public func assets(limit: Int, offset: Int) -> [Asset] {
-        let sql = "SELECT * FROM assets ORDER BY rowid LIMIT ? OFFSET ?"
-        return db.select(with: sql, arguments: [limit, offset])
+    public func assets(limit: Int, after assetId: String?) -> [Asset] {
+        var sql = "SELECT * FROM assets"
+        if let assetId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM assets WHERE asset_id = '\(assetId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
     
     public func assetsCount() -> Int {

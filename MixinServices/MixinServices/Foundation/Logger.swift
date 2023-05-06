@@ -67,7 +67,9 @@ public enum Logger {
     }
     
     public func debug(category: StaticString, message: String, userInfo: UserInfo? = nil) {
+        #if DEBUG
         write(level: .debug, category: category, message: message, userInfo: userInfo)
+        #endif
     }
     
     public func info(category: StaticString, message: String, userInfo: UserInfo? = nil) {
@@ -83,7 +85,9 @@ public enum Logger {
     }
     
     public func debug(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
+        #if DEBUG
         write(level: .debug, category: category, message: message, userInfo: UserInfo(userInfo))
+        #endif
     }
     
     public func info(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {

@@ -62,15 +62,20 @@ class DeviceTransferDataParser {
 extension DeviceTransferDataParser {
     
     private func decodeMessageData(_ messageData: Data) {
-        if let message = String(data: messageData, encoding: .utf8) {
-            Logger.general.debug(category: "DeviceTransferDataParse", message: "Receive: \(message) \n")
-        } else {
-            Logger.general.debug(category: "DeviceTransferDataParse", message: "Receive: \(messageData) \n")
+        let content = {
+            String(data: messageData, encoding: .utf8) ?? "Data(\(messageData.count))"
         }
-        if let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: messageData) {
-            delegate?.deviceTransferDataParser(self, didParseCommand: command)
+        #if DEBUG
+        Logger.general.debug(category: "DeviceTransferDataParse", message: "Receive: \(content()) \n")
+        #endif
+        if messageData.count >= maxMessageDeviceTransferDataSize {
+            Logger.general.info(category: "DeviceTransferDataParser", message: "Data size is too large: \(content())")
         } else {
-            delegate?.deviceTransferDataParser(self, didParseMessage: messageData)
+            if let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: messageData) {
+                delegate?.deviceTransferDataParser(self, didParseCommand: command)
+            } else {
+                delegate?.deviceTransferDataParser(self, didParseMessage: messageData)
+            }
         }
     }
     

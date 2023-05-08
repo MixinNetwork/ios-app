@@ -62,9 +62,8 @@ class DeviceTransferClientMessageWriter {
                 Logger.general.info(category: "DeviceTransferClientMessageWriter", message: "unknown message: \(String(data: messageData, encoding: .utf8) ?? "")")
             }
         } catch {
-            if let content = String(data: messageData, encoding: .utf8) {
-                Logger.general.info(category: "DeviceTransferClientMessageWriter", message: "\(error) \(content)")
-            }
+            let content = String(data: messageData, encoding: .utf8) ?? "Data(\(messageData.count))"
+            Logger.general.info(category: "DeviceTransferClientMessageWriter", message: "Error: \(error) Content: \(content)")
         }
     }
     

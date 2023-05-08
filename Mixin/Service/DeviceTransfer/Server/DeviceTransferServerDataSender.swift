@@ -80,7 +80,7 @@ extension DeviceTransferServerDataSender {
         var lastItemId: String?
         var lastItemAssistanceId: String?
         let semaphore = DispatchSemaphore(value: 1)
-        let maxWaitingTime: TimeInterval = 60.0
+        let maxWaitingTime: TimeInterval = 15.0
         while server.canSendData {
             let transferItems: [Codable]
             switch type {
@@ -144,18 +144,18 @@ extension DeviceTransferServerDataSender {
                 return
             }
             let itemData = transferItems.compactMap { server.composer.messageData(type: type, data: $0) }
-            for data in itemData {
+            for (index, data) in itemData.enumerated() {
                 let result = semaphore.wait(timeout: .now() + maxWaitingTime)
                 if result == .timedOut {
-                    Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(type) data sending timed out")
+                    Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(type) data sending timed out. Quantities equal:\(transferItems.count == itemData.count). DataCount: \(data.count). Item: \(String(describing: transferItems[index])) CanSendData: \(server.canSendData)")
                     server.displayState = .failed(.completed)
-                    break
+                    return
                 }
                 server.send(data: data) {
                     semaphore.signal()
                 }
             }
-            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type) \(transferItems.count)")
+            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type) \(transferItems.count). CanSendData: \(server.canSendData)")
             if transferItems.count < limit {
                 return
             }

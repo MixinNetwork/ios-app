@@ -563,7 +563,7 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func largeQuoteContentMessages(limit: Int, after rowId: Int?) -> [LargeQuoteMessage] {
-        var sql = "SELECT rowid, conversation_id, quote_message_id FROM messages WHERE"
+        var sql = "SELECT rowid, id, quote_message_id, quote_content FROM messages WHERE"
         if let rowId {
             sql += " ROWID > \(rowId) AND"
         }
@@ -571,9 +571,9 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [maxQuoteContentLength, limit])
     }
     
-    public func updateQuoteContent(content: Data?, conversationId: String, messageId: String) {
-        let sql = "UPDATE messages SET quote_content = ? WHERE conversation_id = ? AND id = ?"
-        db.execute(sql: sql, arguments: [content, conversationId, messageId])
+    public func updateQuoteContent(content: Data?, messageId: String) {
+        let sql = "UPDATE messages SET quote_content = ? WHERE id = ?"
+        db.execute(sql: sql, arguments: [content, messageId])
     }
     
     public func cleanUpLargeThumbImage() {

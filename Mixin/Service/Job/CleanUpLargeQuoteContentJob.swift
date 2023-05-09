@@ -18,21 +18,24 @@ class CleanUpLargeQuoteContentJob: AsynchronousJob {
                 return true
             }
             for message in messages {
-                let content: Data?
-                if let quoteMessage = MessageDAO.shared.getNonFailedMessage(messageId: message.quoteMessageId) {
-                    if let thumbImage = quoteMessage.thumbImage, thumbImage.utf8.count > maxThumbImageLength {
-                        quoteMessage.thumbImage = defaultThumbImage
-                    }
-                    quoteMessage.quoteContent = nil
-                    quoteMessage.quoteMessageId = nil
-                    content = try? JSONEncoder.default.encode(quoteMessage)
+                let quotedMessage: MessageItem
+                if let m = MessageDAO.shared.getNonFailedMessage(messageId: message.quoteMessageId) {
+                    quotedMessage = m
+                } else if let m = try? JSONDecoder.default.decode(MessageItem.self, from: message.quoteContent) {
+                    quotedMessage = m
                 } else {
-                    content = nil
+                    continue
                 }
-                MessageDAO.shared.updateQuoteContent(content: content,
-                                                     conversationId: message.conversationId,
-                                                     messageId: message.quoteMessageId)
+                if let thumbImage = quotedMessage.thumbImage, thumbImage.utf8.count > maxThumbImageLength {
+                    quotedMessage.thumbImage = defaultThumbImage
+                }
+                quotedMessage.quoteContent = nil
+                quotedMessage.quoteMessageId = nil
+                if let content = try? JSONEncoder.default.encode(quotedMessage) {
+                    MessageDAO.shared.updateQuoteContent(content: content, messageId: message.messageId)
+                }
             }
+            Logger.general.info(category: "CleanUpLargeQuoteContentJob", message: "Cleaned up \(messages.count)")
             if messages.count < limit {
                 AppGroupUserDefaults.User.hasCleanedUpLargeQuoteContent = true
                 return true

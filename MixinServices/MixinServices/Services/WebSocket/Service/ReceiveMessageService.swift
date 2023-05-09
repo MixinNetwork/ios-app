@@ -728,6 +728,8 @@ public class ReceiveMessageService: MixinService {
                 if let thumbImage = quoteMessage.thumbImage, thumbImage.utf8.count > maxThumbImageLength {
                     quoteMessage.thumbImage = defaultThumbImage
                 }
+                quoteMessage.quoteContent = nil
+                quoteMessage.quoteMessageId = nil
                 if let quoteContent = try? JSONEncoder.default.encode(quoteMessage) {
                     MessageDAO.shared.update(quoteContent: quoteContent, for: messageId)
                 }

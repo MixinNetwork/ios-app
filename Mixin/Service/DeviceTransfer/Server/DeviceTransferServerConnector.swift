@@ -53,6 +53,16 @@ final class DeviceTransferServerConnector {
         }))
     }
     
+    func collectReport(reason: String) {
+        guard let connection else {
+            return
+        }
+        let report = connection.startDataTransferReport()
+        report.collect(queue: .global()) { report in
+            Logger.general.info(category: "DeviceTransferServerConnector", message:"\(reason): \(report.debugDescription)")
+        }
+    }
+    
 }
 
 extension DeviceTransferServerConnector {

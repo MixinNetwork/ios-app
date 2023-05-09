@@ -49,6 +49,10 @@ class DeviceTransferServer: DeviceTransferServiceProvidable {
         connector.send(data: data, completion: completion)
     }
     
+    func collectReport(reason: String) {
+        connector.collectReport(reason: reason)
+    }
+    
 }
 
 extension DeviceTransferServer: DeviceTransferDataParserDelegate {

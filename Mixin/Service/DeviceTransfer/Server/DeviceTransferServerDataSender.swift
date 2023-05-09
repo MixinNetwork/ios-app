@@ -7,7 +7,8 @@ class DeviceTransferServerDataSender {
     
     private let limit = 100
     private let fileBufferSize = 1024 * 1024 * 10
-    
+    private let maxWaitingTime: TimeInterval = 10.0
+
     init(server: DeviceTransferServer) {
         self.server = server
     }
@@ -80,7 +81,6 @@ extension DeviceTransferServerDataSender {
         var lastItemId: String?
         var lastItemAssistanceId: String?
         let semaphore = DispatchSemaphore(value: 1)
-        let maxWaitingTime: TimeInterval = 15.0
         while server.canSendData {
             let transferItems: [Codable]
             switch type {
@@ -148,8 +148,7 @@ extension DeviceTransferServerDataSender {
                 let result = semaphore.wait(timeout: .now() + maxWaitingTime)
                 if result == .timedOut {
                     Logger.general.info(category: "DeviceTransferServerDataSender", message: "\(type) data sending timed out. Quantities equal:\(transferItems.count == itemData.count). DataCount: \(data.count). Item: \(String(describing: transferItems[index])) CanSendData: \(server.canSendData)")
-                    server.displayState = .failed(.completed)
-                    return
+                    server.collectReport(reason: "\(type) data sending timed out: \(String(describing: transferItems[index]))")
                 }
                 server.send(data: data) {
                     semaphore.signal()
@@ -223,7 +222,11 @@ extension DeviceTransferServerDataSender {
                 }
                 let data = Data(bytesNoCopy: buffer, count: bytesRead, deallocator: .none)
                 checksum.update(data: data)
-                semaphore.wait()
+                let result = semaphore.wait(timeout: .now() + maxWaitingTime)
+                if result == .timedOut {
+                    Logger.general.info(category: "DeviceTransferServerDataSender", message: "File sending timed out \(path). DataCount: \(data.count). CanSendData: \(server.canSendData)")
+                    server.collectReport(reason: "File sending timed out \(path)")
+                }
                 server.send(data: data) {
                     semaphore.signal()
                 }

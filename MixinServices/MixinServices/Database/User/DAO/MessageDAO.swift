@@ -571,11 +571,6 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [maxQuoteContentLength, limit])
     }
     
-    public func updateQuoteContent(content: Data?, messageId: String) {
-        let sql = "UPDATE messages SET quote_content = ? WHERE id = ?"
-        db.execute(sql: sql, arguments: [content, messageId])
-    }
-    
     public func cleanUpLargeThumbImage() {
         let sql = "UPDATE messages SET thumb_image = ? WHERE LENGTH(thumb_image) > ?"
         db.execute(sql: sql, arguments: [defaultThumbImage, maxThumbImageLength])

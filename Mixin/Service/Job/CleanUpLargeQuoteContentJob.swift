@@ -32,7 +32,7 @@ class CleanUpLargeQuoteContentJob: AsynchronousJob {
                 quotedMessage.quoteContent = nil
                 quotedMessage.quoteMessageId = nil
                 if let content = try? JSONEncoder.default.encode(quotedMessage) {
-                    MessageDAO.shared.updateQuoteContent(content: content, messageId: message.messageId)
+                    MessageDAO.shared.update(quoteContent: content, for: message.messageId)
                 }
             }
             Logger.general.info(category: "CleanUpLargeQuoteContentJob", message: "Cleaned up \(messages.count)")

@@ -15,6 +15,7 @@ class CleanUpLargeQuoteContentJob: AsynchronousJob {
             let messages = MessageDAO.shared.largeQuoteContentMessages(limit: limit, after: rowId)
             if messages.isEmpty {
                 AppGroupUserDefaults.User.hasCleanedUpLargeQuoteContent = true
+                Logger.general.info(category: "CleanUpLargeQuoteContentJob", message: "Cleaned up done")
                 return true
             }
             for message in messages {
@@ -38,6 +39,7 @@ class CleanUpLargeQuoteContentJob: AsynchronousJob {
             Logger.general.info(category: "CleanUpLargeQuoteContentJob", message: "Cleaned up \(messages.count)")
             if messages.count < limit {
                 AppGroupUserDefaults.User.hasCleanedUpLargeQuoteContent = true
+                Logger.general.info(category: "CleanUpLargeQuoteContentJob", message: "Cleaned up done")
                 return true
             }
             rowId = messages.last?.rowId

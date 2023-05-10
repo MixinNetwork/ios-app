@@ -214,13 +214,13 @@ extension DeviceTransferServerDataSender {
             let semaphore = DispatchSemaphore(value: 1)
             while stream.hasBytesAvailable {
                 let bytesRead = stream.read(buffer, maxLength: fileBufferSize)
-                if bytesRead < 0 {
+                guard bytesRead > 0 else {
                     if let error = stream.streamError {
-                        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Read stream failed:\(error)")
+                        Logger.general.info(category: "DeviceTransferServerDataSender", message: "Read stream failed: \(error)")
                     }
                     break
                 }
-                let data = Data(bytesNoCopy: buffer, count: bytesRead, deallocator: .none)
+                let data = Data(bytes: buffer, count: bytesRead)
                 checksum.update(data: data)
                 let result = semaphore.wait(timeout: .now() + maxWaitingTime)
                 if result == .timedOut {

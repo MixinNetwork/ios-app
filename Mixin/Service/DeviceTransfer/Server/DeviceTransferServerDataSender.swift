@@ -186,7 +186,7 @@ extension DeviceTransferServerDataSender {
                 transferItems = transcriptMessages.compactMap { transcriptMessage in
                     let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage)
                     if let data = server.composer.messageData(type: type, data: deviceTransferTranscriptMessage) {
-                        if let mediaURL = transcriptMessage.mediaUrl {
+                        if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty {
                             let path = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
                             return TransferItem(rawItem: transcriptMessage, messageData: data, messageId: transcriptMessage.messageId, attachmentPath: path)
                         } else {
@@ -202,7 +202,7 @@ extension DeviceTransferServerDataSender {
                 transferItems = messages.compactMap { message in
                     let deviceTransferMessage = DeviceTransferMessage(message: message)
                     if let data = server.composer.messageData(type: type, data: deviceTransferMessage) {
-                        if let mediaURL = message.mediaUrl, let category = AttachmentContainer.Category(messageCategory: message.category) {
+                        if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, let category = AttachmentContainer.Category(messageCategory: message.category) {
                             let path = AttachmentContainer.url(for: category, filename: mediaURL)
                             return TransferItem(rawItem: message, messageData: data, messageId: message.messageId, attachmentPath: path)
                         } else {

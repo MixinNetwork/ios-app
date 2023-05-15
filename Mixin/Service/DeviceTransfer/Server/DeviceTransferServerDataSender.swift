@@ -8,6 +8,16 @@ class DeviceTransferServerDataSender {
         let messageData: Data
         let messageId: String?
         let attachmentPath: URL?
+        
+        init?(rawItem: Codable, messageData: Data?, messageId: String?, attachmentPath: URL?) {
+            guard let messageData else {
+                return nil
+            }
+            self.rawItem = rawItem
+            self.messageData = messageData
+            self.messageId = messageId
+            self.attachmentPath = attachmentPath
+        }
     }
     
     weak var server: DeviceTransferServer?
@@ -95,11 +105,8 @@ extension DeviceTransferServerDataSender {
                 lastItemId = conversations.last?.conversationId
                 transferItems = conversations.compactMap { conversation in
                     let deviceTransferConversation = DeviceTransferConversation(conversation: conversation, to: server.connectionCommand?.platform)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferConversation) {
-                        return TransferItem(rawItem: conversation, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferConversation)
+                    return TransferItem(rawItem: conversation, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .participant:
                 let participants = ParticipantDAO.shared.participants(limit: limit, after: lastItemId, with: lastItemAssistanceId)
@@ -107,77 +114,56 @@ extension DeviceTransferServerDataSender {
                 lastItemAssistanceId = participants.last?.userId
                 transferItems = participants.compactMap { participant in
                     let deviceTransferParticipant = DeviceTransferParticipant(participant: participant)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferParticipant) {
-                        return TransferItem(rawItem: participant, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferParticipant)
+                    return TransferItem(rawItem: participant, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .user:
                 let users = UserDAO.shared.users(limit: limit, after: lastItemId)
                 lastItemId = users.last?.userId
                 transferItems = users.compactMap { user in
                     let deviceTransferUser = DeviceTransferUser(user: user)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferUser) {
-                        return TransferItem(rawItem: user, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferUser)
+                    return TransferItem(rawItem: user, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .app:
                 let apps = AppDAO.shared.apps(limit: limit, after: lastItemId)
                 lastItemId = apps.last?.appId
                 transferItems = apps.compactMap { app in
                     let deviceTransferApp = DeviceTransferApp(app: app)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferApp) {
-                        return TransferItem(rawItem: app, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferApp)
+                    return TransferItem(rawItem: app, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .asset:
                 let assets = AssetDAO.shared.assets(limit: limit, after: lastItemId)
                 lastItemId = assets.last?.assetId
                 transferItems = assets.compactMap { asset in
                     let deviceTransferAsset = DeviceTransferAsset(asset: asset)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferAsset) {
-                        return TransferItem(rawItem: asset, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferAsset)
+                    return TransferItem(rawItem: asset, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .snapshot:
                 let snapshots = SnapshotDAO.shared.snapshots(limit: limit, after: lastItemId)
                 lastItemId = snapshots.last?.snapshotId
                 transferItems = snapshots.compactMap { snapshot in
                     let deviceTransferSnapshot = DeviceTransferSnapshot(snapshot: snapshot)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferSnapshot) {
-                        return TransferItem(rawItem: snapshot, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferSnapshot)
+                    return TransferItem(rawItem: snapshot, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .sticker:
                 let stickers = StickerDAO.shared.stickers(limit: limit, after: lastItemId)
                 lastItemId = stickers.last?.stickerId
                 transferItems = stickers.compactMap { sticker in
                     let deviceTransferSticker = DeviceTransferSticker(sticker: sticker)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferSticker) {
-                        return TransferItem(rawItem: sticker, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferSticker)
+                    return TransferItem(rawItem: sticker, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .pinMessage:
                 let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit, after: lastItemId)
                 lastItemId = pinMessages.last?.messageId
                 transferItems = pinMessages.compactMap { pinMessage in
                     let deviceTransferPinMessage = DeviceTransferPinMessage(pinMessage: pinMessage)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferPinMessage) {
-                        return TransferItem(rawItem: pinMessage, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferPinMessage)
+                    return TransferItem(rawItem: pinMessage, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .transcriptMessage:
                 let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: lastItemId, with: lastItemAssistanceId)
@@ -185,15 +171,12 @@ extension DeviceTransferServerDataSender {
                 lastItemAssistanceId = transcriptMessages.last?.messageId
                 transferItems = transcriptMessages.compactMap { transcriptMessage in
                     let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferTranscriptMessage) {
-                        if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty {
-                            let path = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
-                            return TransferItem(rawItem: transcriptMessage, messageData: data, messageId: transcriptMessage.messageId, attachmentPath: path)
-                        } else {
-                            return TransferItem(rawItem: transcriptMessage, messageData: data, messageId: nil, attachmentPath: nil)
-                        }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferTranscriptMessage)
+                    if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty {
+                        let path = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
+                        return TransferItem(rawItem: transcriptMessage, messageData: messageData, messageId: transcriptMessage.messageId, attachmentPath: path)
                     } else {
-                        return nil
+                        return TransferItem(rawItem: transcriptMessage, messageData: messageData, messageId: nil, attachmentPath: nil)
                     }
                 }
             case .message:
@@ -201,15 +184,12 @@ extension DeviceTransferServerDataSender {
                 lastItemId = messages.last?.messageId
                 transferItems = messages.compactMap { message in
                     let deviceTransferMessage = DeviceTransferMessage(message: message)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferMessage) {
-                        if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, let category = AttachmentContainer.Category(messageCategory: message.category) {
-                            let path = AttachmentContainer.url(for: category, filename: mediaURL)
-                            return TransferItem(rawItem: message, messageData: data, messageId: message.messageId, attachmentPath: path)
-                        } else {
-                            return TransferItem(rawItem: message, messageData: data, messageId: nil, attachmentPath: nil)
-                        }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferMessage)
+                    if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, let category = AttachmentContainer.Category(messageCategory: message.category) {
+                        let path = AttachmentContainer.url(for: category, filename: mediaURL)
+                        return TransferItem(rawItem: message, messageData: messageData, messageId: message.messageId, attachmentPath: path)
                     } else {
-                        return nil
+                        return TransferItem(rawItem: message, messageData: messageData, messageId: nil, attachmentPath: nil)
                     }
                 }
             case .messageMention:
@@ -217,22 +197,16 @@ extension DeviceTransferServerDataSender {
                 lastItemId = messageMentions.last?.messageId
                 transferItems = messageMentions.compactMap { messageMention in
                     let deviceTransferMessageMention = DeviceTransferMessageMention(messageMention: messageMention)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferMessageMention) {
-                        return TransferItem(rawItem: messageMention, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferMessageMention)
+                    return TransferItem(rawItem: messageMention, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .expiredMessage:
                 let expiredMessages = ExpiredMessageDAO.shared.expiredMessages(limit: limit, after: lastItemId)
                 lastItemId = expiredMessages.last?.messageId
                 transferItems = expiredMessages.compactMap { expiredMessage in
                     let deviceTransferExpiredMessage = DeviceTransferExpiredMessage(expiredMessage: expiredMessage)
-                    if let data = server.composer.messageData(type: type, data: deviceTransferExpiredMessage) {
-                        return TransferItem(rawItem: expiredMessage, messageData: data, messageId: nil, attachmentPath: nil)
-                    } else {
-                        return nil
-                    }
+                    let messageData = server.composer.messageData(type: type, data: deviceTransferExpiredMessage)
+                    return TransferItem(rawItem: expiredMessage, messageData: messageData, messageId: nil, attachmentPath: nil)
                 }
             case .unknown:
                 return

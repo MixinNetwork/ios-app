@@ -17,6 +17,7 @@ class RestoreFromDesktopViewController: DeviceTransferSettingViewController {
         tableHeaderView.label.text = R.string.localizable.restore_from_pc_tip()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+        NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
     }
     
     class func instance() -> UIViewController {
@@ -57,7 +58,6 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
 extension RestoreFromDesktopViewController {
     
     private func sendPullCommand() {
-        NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
         let pullCommand = DeviceTransferCommand(action: .pull)
         guard
             let jsonData = try? JSONEncoder.default.encode(pullCommand),

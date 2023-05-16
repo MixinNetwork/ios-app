@@ -8,6 +8,7 @@ protocol DeviceTransferServiceProvidable {
     var composer: DeviceTransferDataComposer { get }
     var parser: DeviceTransferDataParser { get }
     var connectionCommand: DeviceTransferCommand? { get }
+    var speedTester: DeviceTransferSpeedTester { get }
     
     func start()
     func stop()

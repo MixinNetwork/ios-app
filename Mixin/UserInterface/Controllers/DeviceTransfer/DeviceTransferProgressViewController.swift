@@ -30,9 +30,9 @@ class DeviceTransferProgressViewController: UIViewController {
         var title: String? {
             switch self {
             case .transferToDesktop, .transferToPhone:
-                return R.string.localizable.transferring_chat_progress("0")
+                return R.string.localizable.transferring_chat()
             case .restoreFromDesktop, .restoreFromPhone, .restoreFromCloud:
-                return R.string.localizable.restoring_chat_progress("0")
+                return R.string.localizable.restoring_chat()
             }
         }
         
@@ -48,8 +48,10 @@ class DeviceTransferProgressViewController: UIViewController {
     }
     
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var progressLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tipLabel: UILabel!
+    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var speedLabel: UILabel!
     
     private var intent: Intent
     private var stateObserver: AnyCancellable?
@@ -78,9 +80,8 @@ class DeviceTransferProgressViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         displayAwakeningToken = DisplayAwakener.shared.retain()
         imageView.image = intent.image
+        titleLabel.text = intent.title
         tipLabel.text = intent.tip
-        progressLabel.font = .monospacedDigitSystemFont(ofSize: 18, weight: .medium)
-        progressLabel.text = intent.title
         Logger.general.info(category: "DeviceTransferProgressViewController", message: "Start transfer: \(intent)")
         switch intent {
         case let .transferToDesktop(server):
@@ -122,9 +123,21 @@ class DeviceTransferProgressViewController: UIViewController {
                 Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from phone failed, ip:\(command.ip ?? ""), port: \(command.port ?? -1), code: \(command.code ?? -1)")
             }
         case .restoreFromCloud:
+            speedLabel.isHidden = true
             restoreFromCloud()
         }
+        if let endPoint {
+            endPoint.speedTester.delegate = self
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+}
+
+extension DeviceTransferProgressViewController: DeviceTransferSpeedTesterDelegate {
+    
+    func deviceTransferSpeedTester(_ tester: DeviceTransferSpeedTester, didUpdate speed: String) {
+        speedLabel.text = speed
     }
     
 }
@@ -134,17 +147,9 @@ extension DeviceTransferProgressViewController {
     private func stateDidChange(_ state: DeviceTransferDisplayState) {
         switch state {
         case let .transporting(processedCount, totalCount):
-            let progressValue = Double(processedCount) / Double(totalCount) * 100
-            let progress = String(format: "%.2f", progressValue)
-            switch intent {
-            case .transferToDesktop, .transferToPhone:
-                progressLabel.text = R.string.localizable.transferring_chat_progress(progress)
-            case .restoreFromDesktop, .restoreFromPhone:
-                progressLabel.text = R.string.localizable.restoring_chat_progress(progress)
-            case .restoreFromCloud:
-                break
-            }
+            progressView.progress = Float(processedCount) / Float(totalCount)
         case .failed(let error):
+            speedLabel.isHidden = true
             stateObserver?.cancel()
             endPoint?.stop()
             let hint: String
@@ -156,10 +161,11 @@ extension DeviceTransferProgressViewController {
             case .exception, .completed:
                 hint = R.string.localizable.transfer_failed()
             }
-            progressLabel.text = hint
+            titleLabel.text = hint
             transferFailed(hint: hint)
             Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer failed: \(error)")
         case .closed:
+            speedLabel.isHidden = true
             stateObserver?.cancel()
             endPoint?.stop()
             let hint: String
@@ -171,7 +177,7 @@ extension DeviceTransferProgressViewController {
             case .restoreFromCloud:
                 return
             }
-            progressLabel.text = hint
+            titleLabel.text = hint
             transferSucceeded(hint: hint)
             Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer succeeded")
         case .preparing, .ready, .connected, .finished:
@@ -268,7 +274,7 @@ extension DeviceTransferProgressViewController {
             do {
                 if !cloudURL.isDownloaded {
                     try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in
-                        self.progressLabel.text = R.string.localizable.restoring_chat_progress(String(format: "%.1f", progress))
+                        self.progressView.progress = progress
                     })
                 } else {
                     Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from icloud, file not downloaded: \(cloudURL.suffix(base: backupDir))")

@@ -10,6 +10,7 @@ class DeviceTransferClient: DeviceTransferServiceProvidable {
     var composer: DeviceTransferDataComposer
     var parser: DeviceTransferDataParser
     var connectionCommand: DeviceTransferCommand?
+    var speedTester: DeviceTransferSpeedTester
     
     private weak var syncProgressTimer: Timer?
     
@@ -22,6 +23,7 @@ class DeviceTransferClient: DeviceTransferServiceProvidable {
         self.code = code
         composer = DeviceTransferDataComposer()
         parser = DeviceTransferDataParser()
+        speedTester = DeviceTransferSpeedTester()
         connector = DeviceTransferClientConnector(host: host, port: port)
         connector.delegate = self
         parser.delegate = self
@@ -53,11 +55,13 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
             }
             Logger.general.info(category: "DeviceTransferClient", message: "Total messages \(total)")
             connectionCommand = command
+            startSpeedTester()
             startTimer()
             displayState = .transporting(processedCount: 0, totalCount: total)
         case .finish:
             ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
             displayState = .finished
+            stopSpeedTester()
             invalidateTimer()
             let command = DeviceTransferCommand(action: .finish)
             if let data = composer.commandData(command: command) {
@@ -82,6 +86,7 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
         Logger.general.info(category: "DeviceTransferClient", message: "Parse failed: \(error)")
         displayState = .failed(.exception(error))
         connector.stop()
+        stopSpeedTester()
         invalidateTimer()
     }
     
@@ -100,9 +105,11 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
     
     func deviceTransferClientConnector(_ connector: DeviceTransferClientConnector, didReceive data: Data) {
         parser.parse(data)
+        speedTester.take(data)
     }
     
     func deviceTransferClientConnector(_ connector: DeviceTransferClientConnector, didCloseWith reason: DeviceTransferConnectionClosedReason) {
+        stopSpeedTester()
         invalidateTimer()
         switch reason {
         case .exception(let error):
@@ -117,6 +124,14 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
 }
 
 extension DeviceTransferClient {
+    
+    private func startSpeedTester() {
+        DispatchQueue.main.async(execute: speedTester.start)
+    }
+
+    private func stopSpeedTester() {
+        DispatchQueue.main.async(execute: speedTester.stop)
+    }
     
     private func updateProgressIfNeeded() {
         guard case let .transporting(processedCount, totalCount) = displayState else {
@@ -157,7 +172,7 @@ extension DeviceTransferClient {
             progress = 100
         case let .transporting(processedCount, totalCount):
             progress = Double(processedCount) / Double(totalCount) * 100
-            Logger.general.info(category: "DeviceTransferClient", message: "Processed: \(processedCount) Total: \(totalCount)")
+            Logger.general.info(category: "DeviceTransferClient", message: "Processed: \(processedCount) Total: \(totalCount) Progress: \(progress)")
         case .connected, .failed, .preparing, .ready:
             progress = 0
         }

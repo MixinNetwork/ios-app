@@ -130,7 +130,7 @@ extension RestoreFromDesktopViewController {
             tableView.isUserInteractionEnabled = true
             stateObserver?.cancel()
             client.stop()
-        case .preparing, .ready, .transporting, .finished, .closed:
+        case .preparing, .ready, .transporting, .finished, .closed, .importing:
             break
         }
     }

@@ -35,8 +35,8 @@ class DeviceTransferDataParser {
     
     private enum ReceiveFileState {
         case header
-        case content(handle: FileHandle?, fileURL: URL?, copyToURL: URL?, remainingLength: Int, checksum: CRC32)
-        case checksum(fileURL: URL?, copyToURL: URL?, localChecksum: UInt64, remoteChecksumDataSlice: Data)
+        case content(handle: FileHandle?, fileURL: URL, remainingLength: Int, checksum: CRC32)
+        case checksum(fileURL: URL, localChecksum: UInt64, remoteChecksumDataSlice: Data)
     }
     
     private var buffer = Data(capacity: 16)
@@ -65,13 +65,13 @@ extension DeviceTransferDataParser {
         let content = {
             String(data: messageData, encoding: .utf8) ?? "Data(\(messageData.count))"
         }
-        #if DEBUG
-        Logger.general.debug(category: "DeviceTransferDataParse", message: "Receive: \(content()) \n")
-        #endif
         if messageData.count >= maxMessageDeviceTransferDataSize {
             Logger.general.info(category: "DeviceTransferDataParser", message: "Data size is too large: \(content())")
         } else {
             if let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: messageData) {
+                #if DEBUG
+                Logger.general.debug(category: "DeviceTransferDataParse", message: "Receive: \(content()) \n")
+                #endif
                 delegate?.deviceTransferDataParser(self, didParseCommand: command)
             } else {
                 delegate?.deviceTransferDataParser(self, didParseMessage: messageData)
@@ -183,46 +183,24 @@ extension DeviceTransferDataParser {
             let headerEndIndex = buffer.startIndex.advanced(by: ByteLength.type + ByteLength.payloadLength + ByteLength.fileMessageID)
             buffer.removeSubrange(headerStartIndex..<headerEndIndex)
             
+            let fileURL = AttachmentContainer.deviceTransferDataURL(isFile: true, fileName: fileMessageId)
             let fileHandle: FileHandle?
-            let fileURL: URL?
-            let copyToURL: URL?
-            if let message = MessageDAO.shared.getMessage(messageId: fileMessageId), let mediaURL = message.mediaUrl {
-                let category = AttachmentContainer.Category(messageCategory: message.category) ?? .files
-                fileURL = AttachmentContainer.url(for: category, filename: mediaURL)
-                if let transcriptMessage = TranscriptMessageDAO.shared.transcriptMessage(messageId: fileMessageId), let mediaURL = transcriptMessage.mediaUrl {
-                    copyToURL = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
-                } else {
-                    copyToURL = nil
+            do {
+                let fileManager = FileManager.default
+                if fileManager.fileExists(atPath: fileURL.path) {
+                    try? fileManager.removeItem(at: fileURL)
                 }
-            } else if let transcriptMessage = TranscriptMessageDAO.shared.transcriptMessage(messageId: fileMessageId), let mediaURL = transcriptMessage.mediaUrl {
-                fileURL = AttachmentContainer.url(transcriptId: fileMessageId, filename: mediaURL)
-                copyToURL = nil
-            } else {
-                fileURL = nil
-                copyToURL = nil
-            }
-            if let fileURL {
-                do {
-                    Logger.general.debug(category: "DeviceTransferDataParser", message: "File opened: \(fileURL)")
-                    let fileManager = FileManager.default
-                    if fileManager.fileExists(atPath: fileURL.path) {
-                        try? fileManager.removeItem(at: fileURL)
-                    }
-                    fileManager.createFile(atPath: fileURL.path, contents: nil, attributes: nil)
-                    fileHandle = try FileHandle(forWritingTo: fileURL)
-                } catch {
-                    Logger.general.info(category: "DeviceTransferDataParser", message: "Init FileHandle failed: \(error)")
-                    fileHandle = nil
-                }
-            } else {
+                fileManager.createFile(atPath: fileURL.path, contents: nil, attributes: nil)
+                fileHandle = try FileHandle(forWritingTo: fileURL)
+                Logger.general.debug(category: "DeviceTransferDataParser", message: "File opened: \(fileURL)")
+            } catch {
                 fileHandle = nil
-                Logger.general.info(category: "DeviceTransferDataParser", message: "File message not exists: \(fileMessageId)")
+                Logger.general.info(category: "DeviceTransferDataParser", message: "Init FileHandle failed: \(error)")
             }
             var checksum = CRC32()
             checksum.update(data: idData)
             let state: ReceiveFileState = .content(handle: fileHandle,
                                                    fileURL: fileURL,
-                                                   copyToURL: copyToURL,
                                                    remainingLength: contentLength,
                                                    checksum: checksum)
             // No one reads it. calling to `continueWithFile(state:)` blocks current
@@ -231,7 +209,7 @@ extension DeviceTransferDataParser {
             // that would keeps `buffer` and `bufferState` always in sync
             bufferState = .receivingFile(state)
             continueWithFile(state: state)
-        case let .content(handle, fileURL, copyToURL, remainingLength, checksum):
+        case let .content(handle, fileURL, remainingLength, checksum):
             var newChecksum = checksum
             if buffer.count <= remainingLength {
                 handle?.write(buffer)
@@ -240,13 +218,11 @@ extension DeviceTransferDataParser {
                 if buffer.count == remainingLength {
                     let localChecksum = newChecksum.finalize()
                     state = .checksum(fileURL: fileURL,
-                                      copyToURL: copyToURL,
                                       localChecksum: localChecksum,
                                       remoteChecksumDataSlice: Data())
                 } else {
                     state = .content(handle: handle,
                                      fileURL: fileURL,
-                                     copyToURL: copyToURL,
                                      remainingLength: remainingLength - buffer.count,
                                      checksum: newChecksum)
                 }
@@ -266,7 +242,6 @@ extension DeviceTransferDataParser {
                 
                 let remoteChecksumSlice = buffer.prefix(ByteLength.checksum)
                 let state: ReceiveFileState = .checksum(fileURL: fileURL,
-                                                        copyToURL: copyToURL,
                                                         localChecksum: localChecksum,
                                                         remoteChecksumDataSlice: remoteChecksumSlice)
                 buffer.removeSubrange(..<buffer.startIndex.advanced(by: remoteChecksumSlice.count))
@@ -274,11 +249,10 @@ extension DeviceTransferDataParser {
                 bufferState = .receivingFile(state)
                 continueWithFile(state: state)
             }
-        case let .checksum(fileURL, copyToURL, localChecksum, remoteChecksumDataSlice):
+        case let .checksum(fileURL, localChecksum, remoteChecksumDataSlice):
             let remainingChecksumCount = ByteLength.checksum - remoteChecksumDataSlice.count
             if buffer.count < remainingChecksumCount {
                 let state: ReceiveFileState = .checksum(fileURL: fileURL,
-                                                        copyToURL: copyToURL,
                                                         localChecksum: localChecksum,
                                                         remoteChecksumDataSlice: remoteChecksumDataSlice + buffer)
                 self.bufferState = .receivingFile(state)
@@ -299,15 +273,10 @@ extension DeviceTransferDataParser {
                     if let dataAfterChecksum {
                         appendTypeUndeterminedDataAndContinue(dataAfterChecksum)
                     }
-                    if let fileURL, let copyToURL {
-                        try? FileManager.default.copyItem(at: fileURL, to: copyToURL)
-                    }
                     delegate?.deviceTransferDataParser(self, didParseFile: fileURL)
                 } else {
                     Logger.general.info(category: "DeviceTransferDataParser", message: "File checksum failed, fileURL: \(String(describing: fileURL)) localChecksum: \(localChecksum) remoteChecksum: \(remoteChecksum)")
-                    if let fileURL {
-                        try? FileManager.default.removeItem(at: fileURL)
-                    }
+                    try? FileManager.default.removeItem(at: fileURL)
                     bufferState = .failed
                     delegate?.deviceTransferDataParser(self, didParseFailed: .mismatchedChecksum)
                 }

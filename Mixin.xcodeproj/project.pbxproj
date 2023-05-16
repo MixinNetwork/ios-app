@@ -621,7 +621,7 @@
 		7C719E8629D4AB0C00C42E08 /* DeviceTransferConnectionClosedReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C719E7C29D4AB0C00C42E08 /* DeviceTransferConnectionClosedReason.swift */; };
 		7C719E8829D4AB0C00C42E08 /* DeviceTransferClientConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C719E7F29D4AB0C00C42E08 /* DeviceTransferClientConnector.swift */; };
 		7C719E8929D4AB0C00C42E08 /* DeviceTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C719E8029D4AB0C00C42E08 /* DeviceTransferClient.swift */; };
-		7C719E8A29D4AB0C00C42E08 /* DeviceTransferClientMessageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C719E8129D4AB0C00C42E08 /* DeviceTransferClientMessageWriter.swift */; };
+		7C719E8A29D4AB0C00C42E08 /* DeviceTransferClientDataWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C719E8129D4AB0C00C42E08 /* DeviceTransferClientDataWriter.swift */; };
 		7C719E8C29D4ABF000C42E08 /* DeviceTransferDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C719E8B29D4ABF000C42E08 /* DeviceTransferDataType.swift */; };
 		7C7579D029DC3E660002DA0B /* DeviceTransferActionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7579CF29DC3E660002DA0B /* DeviceTransferActionTableHeaderView.swift */; };
 		7C7579D229DC54120002DA0B /* RestoreFromDesktopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7579D129DC54120002DA0B /* RestoreFromDesktopViewController.swift */; };
@@ -1696,7 +1696,7 @@
 		7C719E7C29D4AB0C00C42E08 /* DeviceTransferConnectionClosedReason.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferConnectionClosedReason.swift; sourceTree = "<group>"; };
 		7C719E7F29D4AB0C00C42E08 /* DeviceTransferClientConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferClientConnector.swift; sourceTree = "<group>"; };
 		7C719E8029D4AB0C00C42E08 /* DeviceTransferClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferClient.swift; sourceTree = "<group>"; };
-		7C719E8129D4AB0C00C42E08 /* DeviceTransferClientMessageWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferClientMessageWriter.swift; sourceTree = "<group>"; };
+		7C719E8129D4AB0C00C42E08 /* DeviceTransferClientDataWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferClientDataWriter.swift; sourceTree = "<group>"; };
 		7C719E8B29D4ABF000C42E08 /* DeviceTransferDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferDataType.swift; sourceTree = "<group>"; };
 		7C7579CF29DC3E660002DA0B /* DeviceTransferActionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferActionTableHeaderView.swift; sourceTree = "<group>"; };
 		7C7579D129DC54120002DA0B /* RestoreFromDesktopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreFromDesktopViewController.swift; sourceTree = "<group>"; };
@@ -2803,7 +2803,7 @@
 			children = (
 				7C719E8029D4AB0C00C42E08 /* DeviceTransferClient.swift */,
 				7C719E7F29D4AB0C00C42E08 /* DeviceTransferClientConnector.swift */,
-				7C719E8129D4AB0C00C42E08 /* DeviceTransferClientMessageWriter.swift */,
+				7C719E8129D4AB0C00C42E08 /* DeviceTransferClientDataWriter.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -4725,7 +4725,7 @@
 				7C427BC428373F8000FFDE12 /* Wallpaper.swift in Sources */,
 				E090B90F23B0B27F0012C7E9 /* ConversationDAO+Search.swift in Sources */,
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
-				7C719E8A29D4AB0C00C42E08 /* DeviceTransferClientMessageWriter.swift in Sources */,
+				7C719E8A29D4AB0C00C42E08 /* DeviceTransferClientDataWriter.swift in Sources */,
 				7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */,
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
 				7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */,

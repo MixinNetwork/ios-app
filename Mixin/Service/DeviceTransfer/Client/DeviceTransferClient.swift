@@ -12,12 +12,22 @@ class DeviceTransferClient: DeviceTransferServiceProvidable {
     var connectionCommand: DeviceTransferCommand?
     var speedTester: DeviceTransferSpeedTester
     
+    var isTransferFinished = false
+    
     private weak var syncProgressTimer: Timer?
     
-    private lazy var writer = DeviceTransferClientMessageWriter(client: self)
-    
+    private lazy var writer: DeviceTransferClientDataWriter = {
+        let writer = DeviceTransferClientDataWriter(client: self)
+        writer.delegate = self
+        return writer
+    }()
+        
     private let connector: DeviceTransferClientConnector
     private let code: Int
+    
+    deinit {
+        writer.cleanFiles()
+    }
     
     init(host: String, port: UInt16, code: Int) {
         self.code = code
@@ -57,9 +67,11 @@ extension DeviceTransferClient: DeviceTransferDataParserDelegate {
             connectionCommand = command
             startSpeedTester()
             startTimer()
+            writer.canWriteData = true
             displayState = .transporting(processedCount: 0, totalCount: total)
         case .finish:
-            ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
+            isTransferFinished = true
+            writer.parseDataIfNeeded()
             displayState = .finished
             stopSpeedTester()
             invalidateTimer()
@@ -111,13 +123,33 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
     func deviceTransferClientConnector(_ connector: DeviceTransferClientConnector, didCloseWith reason: DeviceTransferConnectionClosedReason) {
         stopSpeedTester()
         invalidateTimer()
+        guard !isTransferFinished else {
+            return
+        }
+        writer.canWriteData = false
         switch reason {
         case .exception(let error):
             displayState = .failed(.exception(error))
         case .completed:
-            displayState = .closed
+            displayState = .failed(.completed)
         case .mismatchedCode, .mismatchedUserId:
             break
+        }
+    }
+    
+}
+
+extension DeviceTransferClient: DeviceTransferClientDataWriterDelegate {
+    
+    func deviceTransferClientDataWriter(_ writer: DeviceTransferClientDataWriter, update progress: Double) {
+        guard isTransferFinished else {
+            return
+        }
+        if progress < 1 {
+            displayState = .importing(progress)
+        } else {
+            ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
+            displayState = .closed
         }
     }
     
@@ -163,7 +195,7 @@ extension DeviceTransferClient {
         case let .transporting(processedCount, totalCount):
             progress = Double(processedCount) / Double(totalCount) * 100
             Logger.general.info(category: "DeviceTransferClient", message: "Processed: \(processedCount) Total: \(totalCount) Progress: \(progress)")
-        case .connected, .failed, .preparing, .ready:
+        case .connected, .failed, .preparing, .ready, .importing:
             progress = 0
         }
         let command = DeviceTransferCommand(action: .progress, progress: progress)

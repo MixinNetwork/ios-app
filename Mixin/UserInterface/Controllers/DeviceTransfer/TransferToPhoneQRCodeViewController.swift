@@ -91,7 +91,7 @@ extension TransferToPhoneQRCodeViewController {
             case .exception, .completed:
                 break
             }
-        case .preparing, .transporting, .ready, .finished, .closed:
+        case .preparing, .transporting, .ready, .finished, .closed, .importing:
             break
         }
     }

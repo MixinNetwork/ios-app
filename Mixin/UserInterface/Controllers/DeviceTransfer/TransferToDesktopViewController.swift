@@ -107,7 +107,7 @@ extension TransferToDesktopViewController {
             case .exception, .completed:
                 break
             }
-        case .preparing, .ready, .transporting, .finished, .closed:
+        case .preparing, .ready, .transporting, .finished, .closed, .importing:
             break
         }
     }

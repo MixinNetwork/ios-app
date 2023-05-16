@@ -56,6 +56,24 @@ public enum AttachmentContainer {
         try? FileManager.default.createDirectoryIfNotExists(at: url)
         return url.appendingPathComponent(key)
     }
+
+    public static func deviceTransferURL() -> URL {
+        let url = AppGroupContainer.accountUrl.appendingPathComponent("DeviceTransfer", isDirectory: true)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
+        return url
+    }
+    
+    public static func deviceTransferDataURL(isFile: Bool, fileName: String?) -> URL {
+        let type = isFile ? "File" : "Message"
+        let url = Self.deviceTransferURL().appendingPathComponent(type, isDirectory: true)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
+        if let fileName {
+            assert(!fileName.isEmpty)
+            return url.appendingPathComponent("\(fileName).bin")
+        } else {
+            return url
+        }
+    }
     
     public static func removeMediaFiles(mediaUrl: String, category: String) {
         guard let category = AttachmentContainer.Category(messageCategory: category) else {

@@ -160,6 +160,10 @@ extension DeviceTransferProgressViewController {
                 break
             }
             progressView.progress = progressValue
+        case let .importing(progress):
+            tipLabel.text = R.string.localizable.keep_running_foreground()
+            titleLabel.text = R.string.localizable.importing_chat_progress(String(format: "%.2f", progress * 100))
+            progressView.progress = progress
         case .failed(let error):
             speedLabel.isHidden = true
             stateObserver?.cancel()

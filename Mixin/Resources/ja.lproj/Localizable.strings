@@ -429,6 +429,7 @@
 "i_am_good" = "いい気分";
 "image" = "画像";
 "immediately" = "すぐに";
+"importing_chat_progress" = "Importing chat (%@%%)";
 "in_connecting" = "接続中...";
 "include_files" = "ファイルが含まれています";
 "include_videos" = "動画が含まれています";

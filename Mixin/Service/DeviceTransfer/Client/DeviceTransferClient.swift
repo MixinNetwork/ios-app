@@ -157,6 +157,7 @@ extension DeviceTransferClient {
             progress = 100
         case let .transporting(processedCount, totalCount):
             progress = Double(processedCount) / Double(totalCount) * 100
+            Logger.general.info(category: "DeviceTransferClient", message: "Processed: \(processedCount) Total: \(totalCount)")
         case .connected, .failed, .preparing, .ready:
             progress = 0
         }

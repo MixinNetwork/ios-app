@@ -124,6 +124,7 @@ class DeviceTransferProgressViewController: UIViewController {
         case .restoreFromCloud:
             restoreFromCloud()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
 }
@@ -184,21 +185,25 @@ extension DeviceTransferProgressViewController {
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in
                 self.navigationController?.popViewController(animated: true)
+                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
             }
         case .transferToDesktop:
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in
                 self.navigationController?.popViewController(animated: true)
+                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
             }
         case .restoreFromPhone, .restoreFromCloud:
             alert(hint) { _ in
                 self.navigationController?.popToRootViewController(animated: true)
+                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
             }
         case .restoreFromDesktop:
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
             alert(hint) { _ in
                 self.navigationController?.popViewController(animated: true)
+                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
             }
         }
     }
@@ -326,6 +331,14 @@ extension DeviceTransferProgressViewController {
         }
         semaphore.wait()
         NotificationCenter.default.removeObserver(observer)
+    }
+    
+}
+
+extension DeviceTransferProgressViewController {
+    
+    @objc private func applicationDidEnterBackground() {
+        Logger.general.info(category: "DeviceTransferProgressViewController", message: "Did enter background")
     }
     
 }

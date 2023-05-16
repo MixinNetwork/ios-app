@@ -47,7 +47,7 @@ final class DeviceTransferServerConnector {
         }
         connection.send(content: data, completion: .contentProcessed({ error in
             if let error {
-                Logger.general.info(category: "DeviceTransferServerConnector", message: "Failed to send: \(error.localizedDescription)")
+                Logger.general.info(category: "DeviceTransferServerConnector", message: "Failed to send: \(error.debugDescription)")
             }
             completion?()
         }))

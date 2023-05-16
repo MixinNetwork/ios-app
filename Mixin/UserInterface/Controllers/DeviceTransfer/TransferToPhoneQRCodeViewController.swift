@@ -135,6 +135,7 @@ extension TransferToPhoneQRCodeViewController {
     }
     
     private func checkLogout(isBackAction: Bool) {
+        Logger.general.info(category: "TransferToPhoneQRCodeViewController", message: "Check logout: \(isBackAction)")
         LoginManager.shared.inDeviceTransfer = false
         if LoginManager.shared.loggedOutInDeviceTransfer {
             LoginManager.shared.loggedOutInDeviceTransfer = false

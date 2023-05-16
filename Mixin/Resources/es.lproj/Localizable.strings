@@ -714,7 +714,7 @@
 "restore_now" = "Restore Now";
 "restoring" = "Restaurando...";
 "restore_completed" = "Restore completed";
-"restoring_chat_progress" = "Restoring Chat (%@%%)";
+"restoring_chat" = "Restoring Chat";
 "restoring_progress" = "Restaurando %@";
 "restore_from_icloud_confirmation" = "There are already %@ local chat records, and the last message was created at %@. Are you sure you want to overwrite the local data with the chat data on iCloud?";
 "retry" = "Reintentar";
@@ -903,7 +903,7 @@
 "transfer_to_pc_hint" = "Synchronize your chat history to the Mixin Messenger desktop version. Please make sure both devices are connected to the same Wi-Fi or hotspot.";
 "transfer_to_user_or_bot" = "Transferir a usuario o bot";
 "transfer_completed" = "Transfer completed";
-"transferring_chat_progress" = "Transferring Chat (%@%%)";
+"transferring_chat" = "Transferring Chat";
 "trending" = "Tendencias";
 "try_again" = "Intentar otra vez";
 "trying_connect_tip_network" = "Conexión de la red TIP";

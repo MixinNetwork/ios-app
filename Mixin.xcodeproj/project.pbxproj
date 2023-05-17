@@ -2697,9 +2697,9 @@
 				7CAE6B4D29D72CE50082E5DB /* DeviceTransferDisplayState.swift */,
 				7C0F774D29D7938800A6D0FE /* DeviceTransferServiceProvidable.swift */,
 				7C719E7C29D4AB0C00C42E08 /* DeviceTransferConnectionClosedReason.swift */,
+				7CF96CC62A135EF000955C89 /* DeviceTransferSpeedTester.swift */,
 				7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */,
 				7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */,
-				7CF96CC62A135EF000955C89 /* DeviceTransferSpeedTester.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

@@ -3,7 +3,7 @@ import MixinServices
 
 protocol DeviceTransferClientDataWriterDelegate: AnyObject {
     
-    func deviceTransferClientDataWriter(_ writer: DeviceTransferClientDataWriter, update progress: Double)
+    func deviceTransferClientDataWriter(_ writer: DeviceTransferClientDataWriter, update progress: Float)
     
 }
 
@@ -125,12 +125,12 @@ extension DeviceTransferClientDataWriter {
                         index += UInt64(length)
                         self.parseMessage(data)
                         self.parsedCount += 1
-                        let progress: Double
+                        let progress: Float
                         if self.parsedCount >= self.totalCount {
                             self.processFiles()
                             progress = 1
                         } else {
-                            progress = Double(self.parsedCount) / (self.totalCount + 1)
+                            progress = Float(self.parsedCount) / Float(self.totalCount + 1)
                         }
                         self.delegate?.deviceTransferClientDataWriter(self, update: progress)
                     }

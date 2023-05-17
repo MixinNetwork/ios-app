@@ -141,7 +141,7 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
 
 extension DeviceTransferClient: DeviceTransferClientDataWriterDelegate {
     
-    func deviceTransferClientDataWriter(_ writer: DeviceTransferClientDataWriter, update progress: Double) {
+    func deviceTransferClientDataWriter(_ writer: DeviceTransferClientDataWriter, update progress: Float) {
         guard isTransferFinished else {
             return
         }

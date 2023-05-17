@@ -9,7 +9,7 @@ struct DeviceTransferUser {
     let identityNumber: String
     let avatarUrl: String?
     let phone: String?
-    let isVerified: Bool
+    let isVerified: Bool?
     let muteUntil: String?
     let appId: String?
     let createdAt: String?
@@ -38,7 +38,7 @@ struct DeviceTransferUser {
              identityNumber: identityNumber,
              avatarUrl: avatarUrl,
              phone: phone,
-             isVerified: isVerified,
+             isVerified: isVerified ?? false,
              muteUntil: muteUntil,
              appId: appId,
              createdAt: createdAt,

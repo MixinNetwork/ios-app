@@ -909,6 +909,7 @@
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
+"unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "turn_on_notifications" = "Включить уведомления";
 "unable_to_save_photo" = "Не удалось сохранить фото.";
 "unable_to_save_video" = "Не удалось сохранить видео.";

@@ -909,6 +909,7 @@
 "trying_connect_tip_network" = "正在连接 TIP 网络";
 "trying_connect_tip_node" = "正在连接节点...";
 "turn_on_notifications" = "打开通知";
+"unable_connect_to_desktop" = "无法连接到桌面，请稍后重试";
 "unable_synced_between_different_account" = "不同账户之间无法同步聊天记录";
 "unable_to_save_photo" = "保存图片失败";
 "unable_to_save_video" = "保存视频失败";

@@ -37,6 +37,11 @@ extension TransferToDesktopViewController: UITableViewDelegate {
                 alert(R.string.localizable.devices_on_same_network())
                 return
             }
+            guard WebSocketService.shared.isRealConnected else {
+                Logger.general.info(category: "TransferToDesktopViewController", message: "WebSocket is not connected")
+                alert(R.string.localizable.unable_connect_to_desktop())
+                return
+            }
             tableView.isUserInteractionEnabled = false
             let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
                                                rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])

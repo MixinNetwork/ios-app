@@ -909,6 +909,7 @@
 "trying_connect_tip_network" = "Conexión de la red TIP";
 "trying_connect_tip_node" = "Intentando conectar el nodo TIP";
 "turn_on_notifications" = "Activar las notificaciones";
+"unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_save_photo" = "No se puede guardar la foto.";
 "unable_to_save_video" = "No se puede guardar el video.";

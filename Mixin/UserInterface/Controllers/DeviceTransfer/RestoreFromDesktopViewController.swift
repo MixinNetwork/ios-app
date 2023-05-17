@@ -37,6 +37,11 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
                 alert(R.string.localizable.devices_on_same_network())
                 return
             }
+            guard WebSocketService.shared.isRealConnected else {
+                Logger.general.info(category: "RestoreFromDesktopViewController", message: "WebSocket is not connected")
+                alert(R.string.localizable.unable_connect_to_desktop())
+                return
+            }
             LocalNetwork.requestAuthorization { isAuthorized in
                 if isAuthorized {
                     tableView.isUserInteractionEnabled = false

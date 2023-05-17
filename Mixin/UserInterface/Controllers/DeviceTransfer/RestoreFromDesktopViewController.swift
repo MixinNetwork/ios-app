@@ -33,6 +33,7 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if AppGroupUserDefaults.Account.isDesktopLoggedIn {
             guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+                Logger.general.info(category: "RestoreFromDesktopViewController", message: "Network is not reachable")
                 alert(R.string.localizable.devices_on_same_network())
                 return
             }
@@ -45,6 +46,7 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
                     self.dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
                     self.sendPullCommand()
                 } else {
+                    Logger.general.info(category: "RestoreFromDesktopViewController", message: "LocalNetwork is not authorized")
                     self.alertSettings(R.string.localizable.local_network_unable_accessed())
                 }
             }
@@ -64,11 +66,13 @@ extension RestoreFromDesktopViewController {
             let content = String(data: jsonData, encoding: .utf8),
             let sessionId = AppGroupUserDefaults.Account.extensionSession
         else {
+            Logger.general.info(category: "RestoreFromDesktopViewController", message: "Send pull command failed, sessionId:\(String(describing: AppGroupUserDefaults.Account.extensionSession)) command: \(pullCommand)")
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                 self.navigationController?.popViewController(animated: true)
             }
             return
         }
+        Logger.general.info(category: "RestoreFromDesktopViewController", message: "Start send pull command")
         let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
         SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
     }
@@ -78,8 +82,10 @@ extension RestoreFromDesktopViewController {
             let data = notification.userInfo?[ReceiveMessageService.UserInfoKey.command] as? Data,
             let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data)
         else {
+            Logger.general.info(category: "RestoreFromDesktopViewController", message: "Not valid command: \(String(describing: notification.userInfo))")
             return
         }
+        Logger.general.info(category: "RestoreFromDesktopViewController", message: "Notification command: \(command)")
         if command.action == .cancel {
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = true
@@ -90,6 +96,7 @@ extension RestoreFromDesktopViewController {
                 let port = command.port,
                 let code = command.code
             else {
+                Logger.general.info(category: "RestoreFromDesktopViewController", message: "Not valid command")
                 alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                     self.navigationController?.popViewController(animated: true)
                 }

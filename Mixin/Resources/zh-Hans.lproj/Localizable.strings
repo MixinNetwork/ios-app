@@ -714,7 +714,7 @@
 "restore_now" = "开始恢复";
 "restoring" = "正在恢复...";
 "restore_completed" = "恢复已完成";
-"restoring_chat" = "恢复聊天记录";
+"restoring_chat_progress" = "恢复聊天记录（%@%%）";
 "restoring_progress" = "正在恢复 %@";
 "restore_from_icloud_confirmation" = "已经有 %@ 条本地聊天记录，最后一条消息的时间是 %@，确定用 iCloud 上的聊天数据覆盖本地数据吗？";
 "retry" = "重试";
@@ -903,7 +903,7 @@
 "transfer_to_pc_hint" = "同步你的聊天记录到 Mixin Messenger 桌面端，请确保两台设备接入同一个 Wi-Fi 或热点。";
 "transfer_to_user_or_bot" = "给用户或机器人转账";
 "transfer_completed" = "传输已完成";
-"transferring_chat" = "传输聊天记录";
+"transferring_chat_progress" = "传输聊天记录（%@%%）";
 "trending" = "热门资产";
 "try_again" = "请重试";
 "trying_connect_tip_network" = "正在连接 TIP 网络";

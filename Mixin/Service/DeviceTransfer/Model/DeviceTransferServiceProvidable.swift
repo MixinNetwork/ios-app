@@ -15,3 +15,15 @@ protocol DeviceTransferServiceProvidable {
     func send(data: Data, completion: (() -> Void)?)
     
 }
+
+extension DeviceTransferServiceProvidable {
+    
+    func startSpeedTester() {
+        DispatchQueue.main.async(execute: speedTester.start)
+    }
+
+    func stopSpeedTester() {
+        DispatchQueue.main.async(execute: speedTester.stop)
+    }
+    
+}

@@ -123,15 +123,3 @@ extension DeviceTransferServer: DeviceTransferServerConnectorDelegate {
     }
     
 }
-
-extension DeviceTransferServer {
-    
-    private func startSpeedTester() {
-        DispatchQueue.main.async(execute: speedTester.start)
-    }
-
-    private func stopSpeedTester() {
-        DispatchQueue.main.async(execute: speedTester.stop)
-    }
-    
-}

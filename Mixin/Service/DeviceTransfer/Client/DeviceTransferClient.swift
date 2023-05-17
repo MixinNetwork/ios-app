@@ -125,14 +125,6 @@ extension DeviceTransferClient: DeviceTransferClientConnectorDelegate {
 
 extension DeviceTransferClient {
     
-    private func startSpeedTester() {
-        DispatchQueue.main.async(execute: speedTester.start)
-    }
-
-    private func stopSpeedTester() {
-        DispatchQueue.main.async(execute: speedTester.stop)
-    }
-    
     private func updateProgressIfNeeded() {
         guard case let .transporting(processedCount, totalCount) = displayState else {
             return

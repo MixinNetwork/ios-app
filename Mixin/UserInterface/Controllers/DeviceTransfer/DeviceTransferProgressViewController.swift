@@ -30,9 +30,9 @@ class DeviceTransferProgressViewController: UIViewController {
         var title: String? {
             switch self {
             case .transferToDesktop, .transferToPhone:
-                return R.string.localizable.transferring_chat()
+                return R.string.localizable.transferring_chat_progress("0")
             case .restoreFromDesktop, .restoreFromPhone, .restoreFromCloud:
-                return R.string.localizable.restoring_chat()
+                return R.string.localizable.restoring_chat_progress("0")
             }
         }
         
@@ -80,8 +80,9 @@ class DeviceTransferProgressViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         displayAwakeningToken = DisplayAwakener.shared.retain()
         imageView.image = intent.image
-        titleLabel.text = intent.title
         tipLabel.text = intent.tip
+        titleLabel.font = .monospacedDigitSystemFont(ofSize: 18, weight: .medium)
+        titleLabel.text = intent.title
         Logger.general.info(category: "DeviceTransferProgressViewController", message: "Start transfer: \(intent)")
         switch intent {
         case let .transferToDesktop(server):
@@ -147,7 +148,17 @@ extension DeviceTransferProgressViewController {
     private func stateDidChange(_ state: DeviceTransferDisplayState) {
         switch state {
         case let .transporting(processedCount, totalCount):
-            progressView.progress = Float(processedCount) / Float(totalCount)
+            let progressValue = Float(processedCount) / Float(totalCount)
+            let progress = String(format: "%.2f", progressValue * 100)
+            switch intent {
+            case .transferToDesktop, .transferToPhone:
+                titleLabel.text = R.string.localizable.transferring_chat_progress(progress)
+            case .restoreFromDesktop, .restoreFromPhone:
+                titleLabel.text = R.string.localizable.restoring_chat_progress(progress)
+            case .restoreFromCloud:
+                break
+            }
+            progressView.progress = progressValue
         case .failed(let error):
             speedLabel.isHidden = true
             stateObserver?.cancel()
@@ -275,6 +286,7 @@ extension DeviceTransferProgressViewController {
                 if !cloudURL.isDownloaded {
                     try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in
                         self.progressView.progress = progress
+                        self.titleLabel.text = R.string.localizable.restoring_chat_progress(String(format: "%.1f", progress))
                     })
                 } else {
                     Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from icloud, file not downloaded: \(cloudURL.suffix(base: backupDir))")

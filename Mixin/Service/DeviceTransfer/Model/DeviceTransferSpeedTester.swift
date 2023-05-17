@@ -29,7 +29,7 @@ class DeviceTransferSpeedTester {
         guard timer == nil else {
             return
         }
-        let scheduledTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (_) in
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] (_) in
             guard let self = self else {
                 return
             }
@@ -39,8 +39,6 @@ class DeviceTransferSpeedTester {
             self.delegate?.deviceTransferSpeedTester(self, didUpdate: "\(formattedSize)/s")
             Logger.general.info(category: "DeviceTransferSpeedTester", message: "TotalBytesTaken: \(formattedSize)")
         })
-        timer = scheduledTimer
-        RunLoop.current.add(scheduledTimer, forMode: .common)
     }
     
     func stop() {

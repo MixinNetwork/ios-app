@@ -155,13 +155,11 @@ extension DeviceTransferClient {
     
     private func startTimer() {
         DispatchQueue.main.async {
-            let timer = Timer.scheduledTimer(timeInterval: 1,
-                                             target: self,
-                                             selector: #selector(self.syncProgress),
-                                             userInfo: nil,
-                                             repeats: true)
-            self.syncProgressTimer = timer
-            RunLoop.current.add(timer, forMode: .common)
+            self.syncProgressTimer = Timer.scheduledTimer(timeInterval: 1,
+                                                          target: self,
+                                                          selector: #selector(self.syncProgress),
+                                                          userInfo: nil,
+                                                          repeats: true)
         }
     }
     

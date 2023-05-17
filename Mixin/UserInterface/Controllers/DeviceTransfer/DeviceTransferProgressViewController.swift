@@ -83,6 +83,7 @@ class DeviceTransferProgressViewController: UIViewController {
         tipLabel.text = intent.tip
         titleLabel.font = .monospacedDigitSystemFont(ofSize: 18, weight: .medium)
         titleLabel.text = intent.title
+        speedLabel.font = .monospacedDigitSystemFont(ofSize: 14, weight: .regular)
         Logger.general.info(category: "DeviceTransferProgressViewController", message: "Start transfer: \(intent)")
         switch intent {
         case let .transferToDesktop(server):

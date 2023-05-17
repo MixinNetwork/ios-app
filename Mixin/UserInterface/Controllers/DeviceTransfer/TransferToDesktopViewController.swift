@@ -33,7 +33,13 @@ extension TransferToDesktopViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if AppGroupUserDefaults.Account.isDesktopLoggedIn {
             guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+                Logger.general.info(category: "TransferToDesktopViewController", message: "Network is not reachable")
                 alert(R.string.localizable.devices_on_same_network())
+                return
+            }
+            guard WebSocketService.shared.isRealConnected else {
+                Logger.general.info(category: "TransferToDesktopViewController", message: "WebSocket is not connected")
+                alert(R.string.localizable.unable_connect_to_desktop())
                 return
             }
             tableView.isUserInteractionEnabled = false
@@ -66,6 +72,7 @@ extension TransferToDesktopViewController {
                 let content = String(data: jsonData, encoding: .utf8),
                 let sessionId = AppGroupUserDefaults.Account.extensionSession
             else {
+                Logger.general.info(category: "TransferToDesktopViewController", message: "Send push command failed, sessionId:\(String(describing: AppGroupUserDefaults.Account.extensionSession)), PushCommand: \(pushCommand)")
                 alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                     self.navigationController?.popViewController(animated: true)
                 }
@@ -111,8 +118,10 @@ extension TransferToDesktopViewController {
             let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data),
             command.action == .cancel
         else {
+            Logger.general.info(category: "TransferToDesktopViewController", message: "Not valid command: \(String(describing: notification.userInfo))")
             return
         }
+        Logger.general.info(category: "TransferToDesktopViewController", message: "Command: \(command))")
         tableView.isUserInteractionEnabled = true
         dataSource.replaceSection(at: 0, with: section, animation: .automatic)
     }

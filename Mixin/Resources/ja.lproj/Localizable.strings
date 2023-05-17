@@ -909,6 +909,7 @@
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
 "turn_on_notifications" = "通知をオンにする";
+"unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_save_photo" = "画像が保存できませんでした";
 "unable_to_save_video" = "動画が保存できませんでした";

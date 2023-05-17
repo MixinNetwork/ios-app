@@ -40,7 +40,7 @@ class DeviceTransferClientConnector {
     func send(data: Data, completion: (() -> Void)? = nil) {
         connection.send(content: data, completion: .contentProcessed({ (error) in
             if let error = error {
-                Logger.general.info(category: "DeviceTransferClientConnector", message: "Failed to send: \(error.localizedDescription)")
+                Logger.general.info(category: "DeviceTransferClientConnector", message: "Failed to send: \(error.debugDescription)")
             }
             completion?()
         }))
@@ -57,7 +57,7 @@ extension DeviceTransferClientConnector {
             delegate?.deviceTransferClientConnectorDidReady(self)
             Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection State: ready")
         case .failed(let error):
-            Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection error: \(error.localizedDescription)")
+            Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection error: \(error.debugDescription)")
             delegate?.deviceTransferClientConnector(self, didCloseWith: .exception(error))
         default:
             Logger.general.info(category: "DeviceTransferClientConnector", message: "Connection State: \(state)")
@@ -74,7 +74,7 @@ extension DeviceTransferClientConnector {
                 Logger.general.info(category: "DeviceTransferClientConnector", message: "Receive isComplete")
                 self.delegate?.deviceTransferClientConnector(self, didCloseWith: .completed)
             } else if let error {
-                Logger.general.info(category: "DeviceTransferClientConnector", message: "Receive error \(error.localizedDescription)")
+                Logger.general.info(category: "DeviceTransferClientConnector", message: "Receive error \(error.debugDescription)")
                 self.delegate?.deviceTransferClientConnector(self, didCloseWith: .exception(error))
             } else {
                 self.receive()

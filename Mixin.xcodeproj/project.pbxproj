@@ -695,6 +695,7 @@
 		7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */; };
 		7CF7416E27DAD93000DA0004 /* SnapCenterFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */; };
 		7CF836F127E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */; };
+		7CF96CC72A135EF000955C89 /* DeviceTransferSpeedTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF96CC62A135EF000955C89 /* DeviceTransferSpeedTester.swift */; };
 		7CFABCDE29D4B6CF005F04AD /* DeviceTransferServerDataSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFABCDD29D4B6CF005F04AD /* DeviceTransferServerDataSender.swift */; };
 		7CFABCE029D4B705005F04AD /* CRC32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFABCDF29D4B705005F04AD /* CRC32.swift */; };
 		7CFC1C8A29E78DBE00A290D5 /* RestoreFromCloudViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFC1C8929E78DBE00A290D5 /* RestoreFromCloudViewController.swift */; };
@@ -1768,6 +1769,7 @@
 		7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountVerifyPinWindow.xib; sourceTree = "<group>"; };
 		7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCenterFlowLayout.swift; sourceTree = "<group>"; };
 		7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageDurationFormatter.swift; sourceTree = "<group>"; };
+		7CF96CC62A135EF000955C89 /* DeviceTransferSpeedTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferSpeedTester.swift; sourceTree = "<group>"; };
 		7CFABCDD29D4B6CF005F04AD /* DeviceTransferServerDataSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServerDataSender.swift; sourceTree = "<group>"; };
 		7CFABCDF29D4B705005F04AD /* CRC32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRC32.swift; sourceTree = "<group>"; };
 		7CFC1C8929E78DBE00A290D5 /* RestoreFromCloudViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreFromCloudViewController.swift; sourceTree = "<group>"; };
@@ -2697,6 +2699,7 @@
 				7C719E7C29D4AB0C00C42E08 /* DeviceTransferConnectionClosedReason.swift */,
 				7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */,
 				7C9AABC529E9387B00EBAAF3 /* NetworkPort.swift */,
+				7CF96CC62A135EF000955C89 /* DeviceTransferSpeedTester.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4769,6 +4772,7 @@
 				94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */,
 				7B91AB6A251A2BAC00879812 /* Message+ExternalSharing.swift in Sources */,
 				7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */,
+				7CF96CC72A135EF000955C89 /* DeviceTransferSpeedTester.swift in Sources */,
 				E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */,
 				7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,

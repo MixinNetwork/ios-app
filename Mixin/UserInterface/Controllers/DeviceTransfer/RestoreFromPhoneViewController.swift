@@ -27,6 +27,7 @@ extension RestoreFromPhoneViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+            Logger.general.info(category: "RestoreFromPhoneViewController", message: "Network is not reachable")
             alert(R.string.localizable.devices_on_same_network())
             return
         }
@@ -36,6 +37,7 @@ extension RestoreFromPhoneViewController: UITableViewDelegate {
                 controller.asQrCodeScanner = true
                 self.navigationController?.pushViewController(controller, animated: true)
             } else {
+                Logger.general.info(category: "RestoreFromPhoneViewController", message: "LocalNetwork is not authorized")
                 self.alertSettings(R.string.localizable.local_network_unable_accessed())
             }
         }

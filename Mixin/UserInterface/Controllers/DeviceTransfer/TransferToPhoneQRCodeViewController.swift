@@ -28,6 +28,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
             let size = CGSize(width: imageViewWidthConstraint.constant, height: imageViewHeightConstraint.constant)
             imageView.image = UIImage(qrcode: content, size: size, foregroundColor: .black)
             updateLabelText()
+            Logger.general.info(category: "TransferToPhoneQRCodeViewController", message: "Push command: \(pushCommand)")
         } else {
             alert(R.string.localizable.connection_establishment_failed())
             Logger.general.info(category: "TransferToPhoneQRCodeViewController", message: "Failed to launch server")
@@ -135,6 +136,7 @@ extension TransferToPhoneQRCodeViewController {
     }
     
     private func checkLogout(isBackAction: Bool) {
+        Logger.general.info(category: "TransferToPhoneQRCodeViewController", message: "Check logout: \(isBackAction)")
         LoginManager.shared.inDeviceTransfer = false
         if LoginManager.shared.loggedOutInDeviceTransfer {
             LoginManager.shared.loggedOutInDeviceTransfer = false

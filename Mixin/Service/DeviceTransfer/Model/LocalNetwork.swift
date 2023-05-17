@@ -5,6 +5,7 @@ import MixinServices
 enum LocalNetwork {
     
     static func requestAuthorization(completion: @escaping (Bool) -> Void) {
+        Logger.general.info(category: "LocalNetwork", message: "RequestAuthorization")
         if #available(iOS 14.0, *) {
             guard let ip = NetworkInterface.firstEthernetHostname() else {
                 Logger.general.info(category: "LocalNetwork", message: "No host")

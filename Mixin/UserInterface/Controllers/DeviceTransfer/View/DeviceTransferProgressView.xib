@@ -12,8 +12,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DeviceTransferProgressViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="imageView" destination="aem-2l-U9o" id="ADv-0Q-NqC"/>
-                <outlet property="progressLabel" destination="WlK-bR-dDE" id="CJx-5d-Z7e"/>
+                <outlet property="progressView" destination="rn1-lv-t9a" id="37x-Pn-ibI"/>
+                <outlet property="speedLabel" destination="yQU-8n-BSh" id="eAA-QQ-ma9"/>
                 <outlet property="tipLabel" destination="78r-aB-mCg" id="AGv-1b-N15"/>
+                <outlet property="titleLabel" destination="WlK-bR-dDE" id="CJx-5d-Z7e"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -29,7 +31,7 @@
                         <constraint firstAttribute="height" constant="72" id="XQr-mJ-B2E"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restoring Chat (0%)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WlK-bR-dDE">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restoring Chat" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WlK-bR-dDE">
                     <rect key="frame" x="20" y="291" width="353" height="21"/>
                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                     <color key="textColor" name="title"/>
@@ -48,10 +50,26 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="not_turn_off_screen_hint"/>
                     </userDefinedRuntimeAttributes>
                 </label>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rn1-lv-t9a">
+                    <rect key="frame" x="70" y="377" width="253" height="4"/>
+                    <color key="progressTintColor" name="theme"/>
+                </progressView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00 MB/s" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yQU-8n-BSh">
+                    <rect key="frame" x="164" y="405" width="65.333333333333314" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="text_desc"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="rn1-lv-t9a" secondAttribute="trailing" constant="70" id="3xO-Nt-Fls"/>
+                <constraint firstItem="yQU-8n-BSh" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="5vU-XI-l97"/>
+                <constraint firstItem="yQU-8n-BSh" firstAttribute="top" secondItem="rn1-lv-t9a" secondAttribute="bottom" constant="24" id="6h4-3K-SEA"/>
                 <constraint firstItem="aem-2l-U9o" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="122" id="BE0-fQ-zfC"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="WlK-bR-dDE" secondAttribute="trailing" constant="20" id="Bmm-u6-JD7"/>
                 <constraint firstItem="78r-aB-mCg" firstAttribute="top" secondItem="WlK-bR-dDE" secondAttribute="bottom" constant="24" id="IpT-CA-hUD"/>
@@ -60,8 +78,10 @@
                 <constraint firstItem="78r-aB-mCg" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="38" id="oSa-p7-ypi"/>
                 <constraint firstItem="WlK-bR-dDE" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="rDF-mM-YR2"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="78r-aB-mCg" secondAttribute="trailing" constant="38" id="s8h-Iz-jvU"/>
+                <constraint firstItem="rn1-lv-t9a" firstAttribute="top" secondItem="78r-aB-mCg" secondAttribute="bottom" constant="24" id="sxZ-PT-0NF"/>
+                <constraint firstItem="rn1-lv-t9a" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="70" id="vM8-AL-DVI"/>
             </constraints>
-            <point key="canvasLocation" x="112" y="21"/>
+            <point key="canvasLocation" x="110.68702290076335" y="20.422535211267608"/>
         </view>
     </objects>
     <resources>
@@ -71,6 +91,9 @@
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -227,7 +227,6 @@ extension DeviceTransferServerDataSender {
                 }
                 sendAttachmentIfNeeded(transferItem: item)
             }
-            Logger.general.info(category: "DeviceTransferServerDataSender", message: "Send \(type) \(transferItems.count). CanSendData: \(server.canSendData)")
             if transferItems.count < limit {
                 return
             }

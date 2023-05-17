@@ -22,6 +22,7 @@ class DeviceTransferServer: DeviceTransferServiceProvidable {
     var composer: DeviceTransferDataComposer
     var parser: DeviceTransferDataParser
     var connectionCommand: DeviceTransferCommand?
+    var speedTester: DeviceTransferSpeedTester
     
     private lazy var sender = DeviceTransferServerDataSender(server: self)
     
@@ -32,6 +33,7 @@ class DeviceTransferServer: DeviceTransferServiceProvidable {
         port = NetworkPort.randomAvailablePort()
         composer = DeviceTransferDataComposer()
         parser = DeviceTransferDataParser()
+        speedTester = DeviceTransferSpeedTester()
         connector = try DeviceTransferServerConnector(port: port)
         connector.delegate = self
         parser.delegate = self
@@ -47,6 +49,7 @@ class DeviceTransferServer: DeviceTransferServiceProvidable {
     
     func send(data: Data, completion: (() -> Void)? = nil) {
         connector.send(data: data, completion: completion)
+        speedTester.take(data)
     }
     
     func collectReport(reason: String) {
@@ -70,8 +73,10 @@ extension DeviceTransferServer: DeviceTransferDataParserDelegate {
             }
             connectionCommand = command
             displayState = .connected
+            startSpeedTester()
             sender.startTransfer()
         case .finish:
+            stopSpeedTester()
             displayState = .closed
             connector.stopConnection()
         case .progress:
@@ -114,6 +119,7 @@ extension DeviceTransferServer: DeviceTransferServerConnectorDelegate {
     
     func deviceTransferServerConnector(_ connector: DeviceTransferServerConnector, didCloseWith reason: DeviceTransferConnectionClosedReason) {
         displayState = .failed(reason)
+        stopSpeedTester()
     }
     
 }

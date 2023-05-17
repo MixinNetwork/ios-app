@@ -151,6 +151,7 @@ public class SendMessageService: MixinService {
                                             error: nil,
                                             fromPush: nil)
             WebSocketService.shared.send(message: blazeMessage)
+            Logger.general.info(category: "SendMessageService", message: "Send Command, content:\(content) conversationId:\(conversationId) sessionId:\(sessionId)")
         }
     }
     

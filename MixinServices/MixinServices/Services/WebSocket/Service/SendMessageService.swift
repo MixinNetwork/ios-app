@@ -128,9 +128,10 @@ public class SendMessageService: MixinService {
         UserDatabase.current.save(jobs)
     }
     
-    // `conversation_id` is nessecary due to regulations of backend, but not in use, just put a valid conversation_id
-    // `session_id` is the recipient's session id, generally desktop's session id here
-    public func sendDeviceTransferCommand(_ content: String, conversationId: String, sessionId: String) {
+    // A `conversation_id` is required here to compose a BlazeMessage.
+    // Since it doesn't have any practical significance, you can pass in any valid conversation ID.
+    // The `session_id` is the recipient's session ID, typically is the one of desktop client.
+    public func sendDeviceTransferCommand(_ content: String, conversationId: String, sessionId: String, completion: @escaping (Bool) -> Void) {
         dispatchQueue.async {
             var params = BlazeMessageParam()
             params.conversationId = conversationId
@@ -150,8 +151,12 @@ public class SendMessageService: MixinService {
                                             data: nil,
                                             error: nil,
                                             fromPush: nil)
-            WebSocketService.shared.send(message: blazeMessage)
-            Logger.general.info(category: "SendMessageService", message: "Send Command, content:\(content) conversationId:\(conversationId) sessionId:\(sessionId)")
+            WebSocketService.shared.send(message: blazeMessage) { success in
+                DispatchQueue.main.async {
+                    completion(success)
+                }
+            }
+            Logger.general.info(category: "SendMessageService", message: "Send Command, content:\(content) conversationId:\(conversationId) sessionId:\(sessionId). BlazeMessage: \(blazeMessage)")
         }
     }
     

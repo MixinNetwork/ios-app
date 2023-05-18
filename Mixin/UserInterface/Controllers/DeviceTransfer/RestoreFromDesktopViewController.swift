@@ -46,19 +46,25 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
             }
             tableView.isUserInteractionEnabled = false
             authorization.requestAuthorization { [weak self] isAuthorized in
-                guard let self else {
+                guard let strongSelf = self else {
                     return
                 }
                 if isAuthorized {
                     let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
                                                        rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
                     section.setAccessory(.busy, forRowAt: indexPath.row)
-                    self.dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
-                    self.sendPullCommand()
+                    strongSelf.dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
+                    strongSelf.sendPullCommand() { success in
+                        if !success, let self {
+                            self.alert(R.string.localizable.unable_connect_to_desktop())
+                            self.dataSource.replaceSection(at: 0, with: self.section, animation: .automatic)
+                            self.tableView.isUserInteractionEnabled = true
+                        }
+                    }
                 } else {
                     tableView.isUserInteractionEnabled = true
                     Logger.general.info(category: "RestoreFromDesktop", message: "LocalNetwork is not authorized")
-                    self.alertSettings(R.string.localizable.local_network_unable_accessed())
+                    strongSelf.alertSettings(R.string.localizable.local_network_unable_accessed())
                 }
             }
         } else {
@@ -70,7 +76,7 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
 
 extension RestoreFromDesktopViewController {
     
-    private func sendPullCommand() {
+    private func sendPullCommand(completion: @escaping (Bool) -> Void) {
         let pull = DeviceTransferCommand(action: .pull)
         guard
             let jsonData = try? JSONEncoder.default.encode(pull),
@@ -86,7 +92,10 @@ extension RestoreFromDesktopViewController {
         Logger.general.info(category: "RestoreFromDesktop", message: "Start send pull command")
         let conversationId = ParticipantDAO.shared.randomSuccessConversationID()
             ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
-        SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
+        SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId) { success in
+            Logger.general.info(category: "RestoreFromDesktopViewController", message: "Send Pull command: \(success)")
+            completion(success)
+        }
     }
     
     @objc private func deviceTransfer(_ notification: Notification) {

@@ -308,7 +308,7 @@ extension WebSocketService {
     }
     
     @discardableResult
-    func send(message: BlazeMessage) -> (success: Bool, isBadData: Bool) {
+    private func send(message: BlazeMessage) -> (success: Bool, isBadData: Bool) {
         guard let socket = socket, socket.isConnected else {
             return (false, false)
         }
@@ -325,6 +325,18 @@ extension WebSocketService {
         
         socket.send(data: gzipped)
         return (true, false)
+    }
+    
+    func send(message: BlazeMessage, completion: @escaping (Bool) -> Void) {
+        messageHandlers[message.id] = { (result) in
+            switch result {
+            case .success:
+                completion(true)
+            case .failure:
+                completion(false)
+            }
+        }
+        send(message: message)
     }
     
     private func requestListPendingMessages() {

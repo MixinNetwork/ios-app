@@ -130,7 +130,7 @@ public class SendMessageService: MixinService {
     
     // `conversation_id` is nessecary due to regulations of backend, but not in use, just put a valid conversation_id
     // `session_id` is the recipient's session id, generally desktop's session id here
-    public func sendDeviceTransferCommand(_ content: String, conversationId: String, sessionId: String) {
+    public func sendDeviceTransferCommand(_ content: String, conversationId: String, sessionId: String, completion: @escaping (Bool) -> Void) {
         dispatchQueue.async {
             var params = BlazeMessageParam()
             params.conversationId = conversationId
@@ -150,8 +150,8 @@ public class SendMessageService: MixinService {
                                             data: nil,
                                             error: nil,
                                             fromPush: nil)
-            WebSocketService.shared.send(message: blazeMessage)
-            Logger.general.info(category: "SendMessageService", message: "Send Command, content:\(content) conversationId:\(conversationId) sessionId:\(sessionId)")
+            WebSocketService.shared.send(message: blazeMessage, completion: completion)
+            Logger.general.info(category: "SendMessageService", message: "Send Command, content:\(content) conversationId:\(conversationId) sessionId:\(sessionId). BlazeMessage: \(blazeMessage)")
         }
     }
     

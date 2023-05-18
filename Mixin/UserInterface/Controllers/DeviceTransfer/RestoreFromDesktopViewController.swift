@@ -77,9 +77,17 @@ extension RestoreFromDesktopViewController {
             }
             return
         }
-        Logger.general.info(category: "RestoreFromDesktopViewController", message: "Start send pull command")
         let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
-        SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
+        SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId) { success in
+            Logger.general.info(category: "RestoreFromDesktopViewController", message: "Send Pull command: \(success)")
+            if !success {
+                DispatchQueue.main.async {
+                    self.alert(R.string.localizable.unable_connect_to_desktop())
+                    self.dataSource.replaceSection(at: 0, with: self.section, animation: .automatic)
+                    self.tableView.isUserInteractionEnabled = true
+                }
+            }
+        }
     }
     
     @objc private func deviceTransfer(_ notification: Notification) {

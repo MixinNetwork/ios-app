@@ -327,6 +327,21 @@ extension WebSocketService {
         return (true, false)
     }
     
+    func send(message: BlazeMessage, completion: @escaping (Bool) -> Void) {
+        messageHandlers[message.id] = { (result) in
+            switch result {
+            case .success:
+                completion(true)
+            case .failure:
+                completion(false)
+            }
+        }
+        if !send(message: message).success {
+            messageHandlers.removeValue(forKey: message.id)
+            completion(false)
+        }
+    }
+    
     private func requestListPendingMessages() {
         let message: BlazeMessage
         if let offset = BlazeMessageDAO.shared.getLastBlazeMessageCreatedAt() {

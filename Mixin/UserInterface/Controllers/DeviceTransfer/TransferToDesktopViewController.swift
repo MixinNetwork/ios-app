@@ -79,7 +79,16 @@ extension TransferToDesktopViewController {
                 return
             }
             let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
-            SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
+            SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId) { success in
+                Logger.general.info(category: "TransferToDesktopViewController", message: "Send Pull command: \(success)")
+                if !success {
+                    DispatchQueue.main.async {
+                        self.alert(R.string.localizable.unable_connect_to_desktop())
+                        self.dataSource.replaceSection(at: 0, with: self.section, animation: .automatic)
+                        self.tableView.isUserInteractionEnabled = true
+                    }
+                }
+            }
         } else {
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                 self.navigationController?.popViewController(animated: true)

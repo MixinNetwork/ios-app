@@ -19,7 +19,6 @@ struct DeviceTransferMessage {
     let mediaDigest: Data?
     let mediaStatus: String?
     let mediaWaveform: Data?
-    let mediaLocalIdentifier: String?
     let thumbImage: String?
     let thumbUrl: String?
     let status: String
@@ -67,7 +66,6 @@ struct DeviceTransferMessage {
         mediaDigest = message.mediaDigest
         mediaStatus = message.mediaStatus
         mediaWaveform = message.mediaWaveform
-        mediaLocalIdentifier = message.mediaLocalIdentifier
         thumbImage = message.thumbImage
         thumbUrl = message.thumbUrl
         status = message.status
@@ -116,7 +114,7 @@ struct DeviceTransferMessage {
                        mediaDigest: mediaDigest,
                        mediaStatus: mediaStatus,
                        mediaWaveform: mediaWaveform,
-                       mediaLocalIdentifier: mediaLocalIdentifier,
+                       mediaLocalIdentifier: nil,
                        thumbImage: thumbImage,
                        thumbUrl: thumbUrl,
                        status: MessageStatus.READ.rawValue,
@@ -153,7 +151,6 @@ extension DeviceTransferMessage: Codable {
         case mediaDigest = "media_digest"
         case mediaStatus = "media_status"
         case mediaWaveform = "media_waveform"
-        case mediaLocalIdentifier = "media_local_id"
         case thumbImage = "thumb_image"
         case thumbUrl = "thumb_url"
         case status

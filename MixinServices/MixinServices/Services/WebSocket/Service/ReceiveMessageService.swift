@@ -724,8 +724,15 @@ public class ReceiveMessageService: MixinService {
         let quoteMessage = MessageDAO.shared.getNonFailedMessage(messageId: data.quoteMessageId)
 
         defer {
-            if let quoteMessage = quoteMessage, let quoteContent = try? JSONEncoder.default.encode(quoteMessage) {
-                MessageDAO.shared.update(quoteContent: quoteContent, for: messageId)
+            if let quoteMessage {
+                if let thumbImage = quoteMessage.thumbImage, thumbImage.utf8.count > maxThumbImageLength {
+                    quoteMessage.thumbImage = defaultThumbImage
+                }
+                quoteMessage.quoteContent = nil
+                quoteMessage.quoteMessageId = nil
+                if let quoteContent = try? JSONEncoder.default.encode(quoteMessage) {
+                    MessageDAO.shared.update(quoteContent: quoteContent, for: messageId)
+                }
             }
         }
         

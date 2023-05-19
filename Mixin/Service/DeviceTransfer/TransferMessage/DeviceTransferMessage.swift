@@ -100,6 +100,12 @@ struct DeviceTransferMessage {
         } else {
             duration = nil
         }
+        let messageThumbImage: String?
+        if let thumbImage, thumbImage.utf8.count > maxThumbImageLength {
+            messageThumbImage = defaultThumbImage
+        } else {
+            messageThumbImage = thumbImage
+        }
         return Message(messageId: messageId,
                        conversationId: conversationId,
                        userId: userId,
@@ -117,7 +123,7 @@ struct DeviceTransferMessage {
                        mediaStatus: mediaStatus,
                        mediaWaveform: mediaWaveform,
                        mediaLocalIdentifier: mediaLocalIdentifier,
-                       thumbImage: thumbImage,
+                       thumbImage: messageThumbImage,
                        thumbUrl: thumbUrl,
                        status: MessageStatus.READ.rawValue,
                        action: action,

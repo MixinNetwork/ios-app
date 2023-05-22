@@ -2,10 +2,18 @@ import Foundation
 
 enum NetworkInterface {
     
-    static func firstEthernetHostname() -> String? {
+    enum Error: Swift.Error {
+        case getInterfaceAddress(Int32)
+        case noInterface
+    }
+    
+    static func firstEthernetHostname() throws -> String {
         var interface: UnsafeMutablePointer<ifaddrs>! = nil
-        guard getifaddrs(&interface) == 0, let firstInterface = interface else {
-            return nil
+        guard getifaddrs(&interface) == 0 else {
+            throw Error.getInterfaceAddress(errno)
+        }
+        guard let firstInterface = interface else {
+            throw Error.noInterface
         }
         defer {
             freeifaddrs(firstInterface)
@@ -57,7 +65,8 @@ enum NetworkInterface {
                 continue
             }
         }
-        return nil
+        
+        throw Error.noInterface
     }
     
 }

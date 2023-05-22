@@ -49,7 +49,7 @@ struct DeviceTransferApp {
     
 }
 
-extension DeviceTransferApp: Codable {
+extension DeviceTransferApp: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case appId = "app_id"

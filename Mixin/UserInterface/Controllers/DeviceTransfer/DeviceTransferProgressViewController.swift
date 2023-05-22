@@ -4,47 +4,15 @@ import MixinServices
 
 class DeviceTransferProgressViewController: UIViewController {
     
-    enum Intent {
-        
-        case transferToDesktop(DeviceTransferServer)
-        case transferToPhone(DeviceTransferServer)
-        case restoreFromPhone(DeviceTransferCommand, DeviceTransferClient?)
-        case restoreFromDesktop(DeviceTransferClient)
-        case restoreFromCloud
-        
-        var image: UIImage? {
-            switch self {
-            case .transferToDesktop:
-                return R.image.setting.ic_transfer_desktop()
-            case .transferToPhone:
-                return R.image.setting.ic_transfer_phone()
-            case .restoreFromDesktop:
-                return R.image.setting.ic_restore_desktop()
-            case .restoreFromPhone:
-                return R.image.setting.ic_transfer_phone()
-            case .restoreFromCloud:
-                return R.image.setting.ic_restore_cloud()
-            }
-        }
-        
-        var title: String? {
-            switch self {
-            case .transferToDesktop, .transferToPhone:
-                return R.string.localizable.transferring_chat_progress("0")
-            case .restoreFromDesktop, .restoreFromPhone, .restoreFromCloud:
-                return R.string.localizable.restoring_chat_progress("0")
-            }
-        }
-        
-        var tip: String? {
-            switch self {
-            case .transferToDesktop, .transferToPhone, .restoreFromDesktop, .restoreFromPhone:
-                return R.string.localizable.not_turn_off_screen_hint()
-            case .restoreFromCloud:
-                return R.string.localizable.restore_chat_history_hint()
-            }
-        }
-        
+    enum Remote {
+        case phone
+        case desktop
+    }
+    
+    enum Connection {
+        case cloud
+        case server(DeviceTransferServer, Remote)
+        case client(DeviceTransferClient, Remote)
     }
     
     @IBOutlet weak var imageView: UIImageView!
@@ -53,13 +21,13 @@ class DeviceTransferProgressViewController: UIViewController {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var speedLabel: UILabel!
     
-    private var intent: Intent
-    private var stateObserver: AnyCancellable?
-    private var endPoint: DeviceTransferServiceProvidable?
-    private var displayAwakeningToken: DisplayAwakener.Token?
+    private let connection: Connection
     
-    init(intent: Intent) {
-        self.intent = intent
+    private var displayAwakeningToken: DisplayAwakener.Token?
+    private var stateObserver: AnyCancellable?
+    
+    init(connection: Connection) {
+        self.connection = connection
         let nib = R.nib.deviceTransferProgressView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -76,182 +44,105 @@ class DeviceTransferProgressViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        Logger.general.info(category: "DeviceTransferProgress", message: "Start transfer: \(connection)")
         view.isUserInteractionEnabled = false
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         displayAwakeningToken = DisplayAwakener.shared.retain()
-        imageView.image = intent.image
-        tipLabel.text = intent.tip
         titleLabel.font = .monospacedDigitSystemFont(ofSize: 18, weight: .medium)
-        titleLabel.text = intent.title
         speedLabel.font = .monospacedDigitSystemFont(ofSize: 14, weight: .regular)
-        Logger.general.info(category: "DeviceTransferProgressViewController", message: "Start transfer: \(intent)")
-        switch intent {
-        case let .transferToDesktop(server):
-            endPoint = server
-            stateObserver = server.$displayState
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] state in
-                    self?.stateDidChange(state)
-                })
-        case let .transferToPhone(server):
-            endPoint = server
-            stateObserver = server.$displayState
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] state in
-                    self?.stateDidChange(state)
-                })
-        case let .restoreFromDesktop(client):
-            endPoint = client
-            stateObserver = client.$displayState
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] state in
-                    self?.stateDidChange(state)
-                })
-        case let .restoreFromPhone(command, _):
-            if let ip = command.ip, let port = command.port, let code = command.code {
-                let client = DeviceTransferClient(host: ip, port: UInt16(port), code: code)
-                stateObserver = client.$displayState
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] state in
-                        self?.stateDidChange(state)
-                    })
-                client.start()
-                intent = .restoreFromPhone(command, client)
-                endPoint = client
-            } else {
-                alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
-                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
-                }
-                Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from phone failed, ip:\(command.ip ?? ""), port: \(command.port ?? -1), code: \(command.code ?? -1)")
-            }
-        case .restoreFromCloud:
-            speedLabel.isHidden = true
+        switch connection {
+        case .cloud:
+            imageView.image = R.image.setting.ic_restore_cloud()
+            titleLabel.text = R.string.localizable.restoring_chat_progress("0")
+            tipLabel.text = R.string.localizable.restore_chat_history_hint()
             restoreFromCloud()
-        }
-        if let endPoint {
-            endPoint.speedTester.delegate = self
+        case let .server(server, remote):
+            switch remote {
+            case .phone:
+                imageView.image = R.image.setting.ic_transfer_phone()
+            case .desktop:
+                imageView.image = R.image.setting.ic_transfer_phone()
+            }
+            titleLabel.text = R.string.localizable.transferring_chat_progress("0")
+            tipLabel.text = R.string.localizable.not_turn_off_screen_hint()
+            stateObserver = server.$state
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] state in
+                    self?.serverStateDidChange(state)
+                }
+        case let .client(client, remote):
+            switch remote {
+            case .phone:
+                imageView.image = R.image.setting.ic_transfer_phone()
+            case .desktop:
+                imageView.image = R.image.setting.ic_restore_desktop()
+            }
+            titleLabel.text = R.string.localizable.restoring_chat_progress("0")
+            tipLabel.text = R.string.localizable.not_turn_off_screen_hint()
+            stateObserver = client.$state
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] state in
+                    self?.clientStateDidChange(state)
+                }
         }
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
-}
-
-extension DeviceTransferProgressViewController: DeviceTransferSpeedTesterDelegate {
-    
-    func deviceTransferSpeedTester(_ tester: DeviceTransferSpeedTester, didUpdate speed: String) {
-        speedLabel.text = speed
-    }
-    
-}
-
-extension DeviceTransferProgressViewController {
-    
-    private func stateDidChange(_ state: DeviceTransferDisplayState) {
-        switch state {
-        case let .transporting(processedCount, totalCount):
-            let progressValue = Float(processedCount) / Float(totalCount)
-            let progress = String(format: "%.2f", progressValue * 100)
-            switch intent {
-            case .transferToDesktop, .transferToPhone:
-                titleLabel.text = R.string.localizable.transferring_chat_progress(progress)
-            case .restoreFromDesktop, .restoreFromPhone:
-                titleLabel.text = R.string.localizable.restoring_chat_progress(progress)
-            case .restoreFromCloud:
-                break
-            }
-            progressView.progress = progressValue
-        case .failed(let error):
-            speedLabel.isHidden = true
-            stateObserver?.cancel()
-            endPoint?.stop()
-            let hint: String
-            switch error {
-            case .mismatchedUserId:
-                hint = R.string.localizable.unable_synced_between_different_account()
-            case .mismatchedCode:
-                hint = R.string.localizable.connection_establishment_failed()
-            case .exception, .completed:
-                hint = R.string.localizable.transfer_failed()
-            }
-            titleLabel.text = hint
-            transferFailed(hint: hint)
-            Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer failed: \(error)")
-        case .closed:
-            speedLabel.isHidden = true
-            stateObserver?.cancel()
-            endPoint?.stop()
-            let hint: String
-            switch intent {
-            case .transferToDesktop, .transferToPhone:
-                hint = R.string.localizable.transfer_completed()
-            case .restoreFromDesktop, .restoreFromPhone:
-                hint = R.string.localizable.restore_completed()
-            case .restoreFromCloud:
-                return
-            }
-            titleLabel.text = hint
-            transferSucceeded(hint: hint)
-            Logger.general.info(category: "DeviceTransferProgressViewController", message: "Transfer succeeded")
-        case .preparing, .ready, .connected, .finished:
-            break
-        }
-    }
-    
     private func transferFailed(hint: String) {
-        switch intent {
-        case .transferToPhone:
+        switch connection {
+        case .server(_, .phone):
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in
                 self.navigationController?.popViewController(animated: true)
-                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
+                Logger.general.info(category: "DeviceTransferProgress", message: "\(self.connection) failed and popped")
             }
-        case .transferToDesktop:
+        case .server(_, .desktop):
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in
                 self.navigationController?.popViewController(animated: true)
-                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
+                Logger.general.info(category: "DeviceTransferProgress", message: "\(self.connection) failed and popped")
             }
-        case .restoreFromPhone, .restoreFromCloud:
+        case .client(_, .phone), .cloud:
             alert(hint) { _ in
                 self.navigationController?.popToRootViewController(animated: true)
-                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
+                Logger.general.info(category: "DeviceTransferProgress", message: "\(self.connection) failed and popped")
             }
-        case .restoreFromDesktop:
+        case .client(_, .desktop):
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
             alert(hint) { _ in
                 self.navigationController?.popViewController(animated: true)
-                Logger.general.info(category: "DeviceTransferProgressViewController", message: "\(self.intent) failed and popped")
+                Logger.general.info(category: "DeviceTransferProgress", message: "\(self.connection) failed and popped")
             }
         }
     }
     
     private func transferSucceeded(hint: String = "") {
-        switch intent {
-        case .transferToPhone:
+        switch connection {
+        case .server(_, .phone):
             alert(hint) { _ in
                 LoginManager.shared.inDeviceTransfer = false
                 LoginManager.shared.loggedOutInDeviceTransfer = false
                 LoginManager.shared.logout(reason: "Device Transfer")
             }
-        case .transferToDesktop:
+        case .server(_, .desktop):
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in
                 self.navigationController?.backToHome()
             }
-        case .restoreFromDesktop:
+        case .client(_, .desktop):
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
             alert(hint) { _ in
                 self.navigationController?.backToHome()
             }
-        case .restoreFromPhone:
+        case .client(_, .phone):
             AppGroupUserDefaults.Account.canRestoreFromPhone = false
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
             AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
-        case .restoreFromCloud:
+        case .cloud:
             AppGroupUserDefaults.Account.canRestoreMedia = true
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.needsRebuildDatabase = true
@@ -263,6 +154,76 @@ extension DeviceTransferProgressViewController {
     
 }
 
+// MARK: - State Handling
+extension DeviceTransferProgressViewController {
+    
+    private func serverStateDidChange(_ state: DeviceTransferServer.State) {
+        switch state {
+        case .idle, .listening:
+            Logger.general.error(category: "DeviceTransferProgress", message: "Invalid state: \(state)")
+        case let .transfer(progress, speed):
+            updateTitleLabel(with: progress, speed: speed)
+        case let .closed(reason):
+            handleConnectionClosing(reason: reason)
+        }
+    }
+    
+    private func clientStateDidChange(_ state: DeviceTransferClient.State) {
+        switch state {
+        case .idle, .connecting:
+            Logger.general.warn(category: "DeviceTransferProgress", message: "Invalid state: \(state)")
+        case let .transfer(progress, speed):
+            updateTitleLabel(with: progress, speed: speed)
+        case let .closed(reason):
+            handleConnectionClosing(reason: reason)
+        }
+    }
+    
+    private func updateTitleLabel(with transferProgress: Double, speed: String) {
+        let progress = String(format: "%.2f", transferProgress)
+        switch connection {
+        case .server:
+            titleLabel.text = R.string.localizable.transferring_chat_progress(progress)
+        case .client:
+            titleLabel.text = R.string.localizable.restoring_chat_progress(progress)
+        case .cloud:
+            break
+        }
+        progressView.progress = Float(transferProgress / 100)
+        speedLabel.text = speed
+    }
+    
+    private func handleConnectionClosing(reason: DeviceTransferClosedReason) {
+        switch reason {
+        case .finished:
+            let hint: String
+            switch connection {
+            case .server:
+                hint = R.string.localizable.transfer_completed()
+            case .client:
+                hint = R.string.localizable.restore_completed()
+            case .cloud:
+                return
+            }
+            titleLabel.text = hint
+            progressView.progress = 1
+            transferSucceeded(hint: hint)
+            speedLabel.isHidden = true
+            stateObserver?.cancel()
+            Logger.general.info(category: "DeviceTransferProgress", message: "Transfer succeeded")
+        case .exception(let error):
+            let hint = R.string.localizable.transfer_failed()
+            titleLabel.text = hint
+            transferFailed(hint: hint)
+            speedLabel.isHidden = true
+            stateObserver?.cancel()
+            Logger.general.info(category: "DeviceTransferProgress", message: "Transfer failed: \(error)")
+        }
+    }
+    
+}
+
+// MARK: - Cloud Worker
 extension DeviceTransferProgressViewController {
     
     private func restoreFromCloud() {
@@ -278,7 +239,7 @@ extension DeviceTransferProgressViewController {
                 cloudURL = backupDir.appendingPathComponent("mixin.backup.db")
             }
             guard cloudURL.isStoredCloud else {
-                Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from icloud, Missing file: \(cloudURL.suffix(base: backupDir))")
+                Logger.general.info(category: "DeviceTransferProgress", message: "Restore from icloud, Missing file: \(cloudURL.suffix(base: backupDir))")
                 reporter.report(error: MixinError.missingBackup)
                 return
             }
@@ -290,7 +251,7 @@ extension DeviceTransferProgressViewController {
                         self.titleLabel.text = R.string.localizable.restoring_chat_progress(String(format: "%.1f", progress))
                     })
                 } else {
-                    Logger.general.info(category: "DeviceTransferProgressViewController", message: "Restore from icloud, file not downloaded: \(cloudURL.suffix(base: backupDir))")
+                    Logger.general.info(category: "DeviceTransferProgress", message: "Restore from icloud, file not downloaded: \(cloudURL.suffix(base: backupDir))")
                 }
                 if FileManager.default.fileExists(atPath: localURL.path) {
                     UserDatabase.closeCurrent()
@@ -301,7 +262,7 @@ extension DeviceTransferProgressViewController {
                     self.transferSucceeded()
                 }
             } catch {
-                Logger.general.error(category: "DeviceTransferProgressViewController", message: "Restore from icloud, restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
+                Logger.general.error(category: "DeviceTransferProgress", message: "Restore from icloud, restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
                 if FileManager.default.fileExists(atPath: localURL.path) {
                     UserDatabase.closeCurrent()
                     try? FileManager.default.removeItem(at: localURL)
@@ -354,10 +315,11 @@ extension DeviceTransferProgressViewController {
     
 }
 
+// MARK: - Log
 extension DeviceTransferProgressViewController {
     
     @objc private func applicationDidEnterBackground() {
-        Logger.general.info(category: "DeviceTransferProgressViewController", message: "Did enter background")
+        Logger.general.info(category: "DeviceTransferProgress", message: "Did enter background")
     }
     
 }

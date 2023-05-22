@@ -92,7 +92,7 @@ struct DeviceTransferTranscriptMessage {
     }
 }
 
-extension DeviceTransferTranscriptMessage: Codable {
+extension DeviceTransferTranscriptMessage: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case transcriptId = "transcript_id"

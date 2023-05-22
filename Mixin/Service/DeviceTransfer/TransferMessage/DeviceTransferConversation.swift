@@ -20,7 +20,7 @@ struct DeviceTransferConversation {
     let expireIn: Int64?
     let createdAt: String
     
-    init(conversation: Conversation, to platform: String?) {
+    init(conversation: Conversation, to platform: DeviceTransferPlatform) {
         conversationId = conversation.conversationId
         ownerId = conversation.ownerId
         category = conversation.category
@@ -30,7 +30,7 @@ struct DeviceTransferConversation {
         lastMessageCreatedAt = conversation.lastMessageCreatedAt
         lastReadMessageId = conversation.lastReadMessageId
         unseenMessageCount = conversation.unseenMessageCount
-        if platform == "iOS" {
+        if platform == .iOS {
             status = conversation.status
         } else {
             status = ConversationStatusConverter.toOtherPlatform(status: conversation.status).rawValue
@@ -43,11 +43,12 @@ struct DeviceTransferConversation {
         createdAt = conversation.createdAt.isEmpty ? "2017-10-25T00:00:00.000Z" : conversation.createdAt
     }
     
-    func toConversation(from platform: String?) -> Conversation {
+    func toConversation(from platform: DeviceTransferPlatform) -> Conversation {
         let conversationStatus: Int
-        if platform == "iOS" {
+        switch platform {
+        case .iOS:
             conversationStatus = status
-        } else {
+        case .other:
             conversationStatus = ConversationStatusConverter.toiOSPlatform(status: status).rawValue
         }
         return Conversation(conversationId: conversationId,
@@ -69,7 +70,7 @@ struct DeviceTransferConversation {
                             createdAt: createdAt)
     }
     
-    fileprivate enum ConversationStatusConverter {
+    private enum ConversationStatusConverter {
         
         enum OtherPlatformConversationStatus: Int {
             case START = 0
@@ -112,7 +113,7 @@ struct DeviceTransferConversation {
     
 }
 
-extension DeviceTransferConversation: Codable {
+extension DeviceTransferConversation: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"

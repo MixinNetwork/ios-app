@@ -3,6 +3,8 @@ import MixinServices
 
 class RestoreFromPhoneViewController: DeviceTransferSettingViewController {
     
+    private let authorization = LocalNetworkAuthorization()
+    
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [SettingsRow(title: R.string.localizable.scan_to_restore(), titleStyle: .highlighted)])
     ])
@@ -10,7 +12,7 @@ class RestoreFromPhoneViewController: DeviceTransferSettingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableHeaderView.imageView.image = R.image.setting.ic_transfer_phone()
-        tableHeaderView.label.attributedText = updateLabelText()
+        tableHeaderView.label.attributedText = makeDescription()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -27,17 +29,22 @@ extension RestoreFromPhoneViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
-            Logger.general.info(category: "RestoreFromPhoneViewController", message: "Network is not reachable")
+            Logger.general.info(category: "RestoreFromPhone", message: "Network is not reachable")
             alert(R.string.localizable.devices_on_same_network())
             return
         }
-        LocalNetwork.requestAuthorization { isAuthorized in
+        tableView.isUserInteractionEnabled = false
+        authorization.requestAuthorization { [weak self] isAuthorized in
+            guard let self else {
+                return
+            }
+            self.tableView.isUserInteractionEnabled = true
             if isAuthorized {
                 let controller = CameraViewController.instance()
                 controller.asQrCodeScanner = true
                 self.navigationController?.pushViewController(controller, animated: true)
             } else {
-                Logger.general.info(category: "RestoreFromPhoneViewController", message: "LocalNetwork is not authorized")
+                Logger.general.info(category: "RestoreFromPhone", message: "LocalNetwork is not authorized")
                 self.alertSettings(R.string.localizable.local_network_unable_accessed())
             }
         }
@@ -47,7 +54,7 @@ extension RestoreFromPhoneViewController: UITableViewDelegate {
 
 extension RestoreFromPhoneViewController {
     
-    private func updateLabelText() -> NSAttributedString {
+    private func makeDescription() -> NSAttributedString {
         let indentation: CGFloat = 10
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: indentation)]

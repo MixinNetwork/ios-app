@@ -4,12 +4,14 @@ import MixinServices
 
 class TransferToDesktopViewController: DeviceTransferSettingViewController {
     
-    private var stateObserver: AnyCancellable?
-    private var server: DeviceTransferServer!
+    private let section = SettingsRadioSection(rows: [
+        SettingsRow(title: R.string.localizable.transfer_now(), titleStyle: .highlighted)
+    ])
     
     private lazy var dataSource = SettingsDataSource(sections: [section])
     
-    private let section = SettingsRadioSection(rows: [SettingsRow(title: R.string.localizable.transfer_now(), titleStyle: .highlighted)])
+    private var observers: Set<AnyCancellable> = []
+    private var server: DeviceTransferServer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +19,30 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
         tableHeaderView.label.text = R.string.localizable.transfer_to_pc_hint()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
+        do {
+            let server = try DeviceTransferServer()
+            NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
+            server.$state
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] state in
+                    self.server(server, didChangeToState: state)
+                }
+                .store(in: &observers)
+            server.$lastConnectionBlockedReason
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] reason in
+                    if let reason {
+                        self.serverDidBlockConnection(reason)
+                    }
+                }
+                .store(in: &observers)
+            self.server = server
+        } catch {
+            alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
+                self.navigationController?.popViewController(animated: true)
+            }
+            Logger.general.info(category: "TransferToDesktop", message: "Failed to launch server: \(error)")
+        }
     }
     
     class func instance() -> UIViewController {
@@ -33,12 +58,12 @@ extension TransferToDesktopViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if AppGroupUserDefaults.Account.isDesktopLoggedIn {
             guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
-                Logger.general.info(category: "TransferToDesktopViewController", message: "Network is not reachable")
+                Logger.general.info(category: "TransferToDesktop", message: "Network is not reachable")
                 alert(R.string.localizable.devices_on_same_network())
                 return
             }
             guard WebSocketService.shared.isRealConnected else {
-                Logger.general.info(category: "TransferToDesktopViewController", message: "WebSocket is not connected")
+                Logger.general.info(category: "TransferToDesktop", message: "WebSocket is not connected")
                 alert(R.string.localizable.unable_connect_to_desktop())
                 return
             }
@@ -47,7 +72,7 @@ extension TransferToDesktopViewController: UITableViewDelegate {
                                                rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
             section.setAccessory(.busy, forRowAt: indexPath.row)
             dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
-            sendPushCommand()
+            server?.start()
         } else {
             alert(R.string.localizable.login_desktop_first())
         }
@@ -57,71 +82,70 @@ extension TransferToDesktopViewController: UITableViewDelegate {
 
 extension TransferToDesktopViewController {
     
-    private func sendPushCommand() {
-        if let server = try? DeviceTransferServer(), let ip = NetworkInterface.firstEthernetHostname() {
-            self.server = server
-            stateObserver = server.$displayState
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] state in
-                    self?.stateDidChange(state)
-                })
-            server.start()
-            let pushCommand = DeviceTransferCommand(action: .push, ip: ip, port: Int(server.port), code: server.code, userId: myUserId)
+    private func server(_ server: DeviceTransferServer, didChangeToState state: DeviceTransferServer.State) {
+        switch state {
+        case .idle:
+            break
+        case let .listening(hostname, port, code):
+            let push = DeviceTransferCommand(action: .push(hostname: hostname, port: port, code: code, userID: myUserId))
             guard
-                let jsonData = try? JSONEncoder.default.encode(pushCommand),
+                let jsonData = try? JSONEncoder.default.encode(push),
                 let content = String(data: jsonData, encoding: .utf8),
                 let sessionId = AppGroupUserDefaults.Account.extensionSession
             else {
-                Logger.general.info(category: "TransferToDesktopViewController", message: "Send push command failed, sessionId:\(String(describing: AppGroupUserDefaults.Account.extensionSession)), PushCommand: \(pushCommand)")
+                Logger.general.info(category: "TransferToDesktop", message: "Send push command failed, sessionId:\(String(describing: AppGroupUserDefaults.Account.extensionSession)), PushCommand: \(push)")
                 alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
                     self.navigationController?.popViewController(animated: true)
                 }
+                Logger.general.error(category: "TransferToDesktop", message: "Unable to make push command")
                 return
             }
-            let conversationId = ParticipantDAO.shared.randomSuccessConversationID() ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
+            let conversationId = ParticipantDAO.shared.randomSuccessConversationID()
+                ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
             SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId)
-        } else {
-            alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
-                self.navigationController?.popViewController(animated: true)
+        case .transfer:
+            observers.forEach({ $0.cancel() })
+            let progress = DeviceTransferProgressViewController(connection: .server(server, .desktop))
+            navigationController?.pushViewController(progress, animated: true)
+        case let .closed(reason):
+            switch reason {
+            case .finished:
+                break
+            case .exception(let error):
+                alert(R.string.localizable.connection_establishment_failed(), message: error.localizedDescription) { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
-            Logger.general.info(category: "TransferToDesktopViewController", message: "Failed to launch server")
         }
     }
     
-    private func stateDidChange(_ state: DeviceTransferDisplayState) {
-        switch state {
-        case .connected :
-            stateObserver?.cancel()
-            tableView.isUserInteractionEnabled = true
-            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
-            let controller = DeviceTransferProgressViewController(intent: .transferToDesktop(server))
-            navigationController?.pushViewController(controller, animated: true)
-        case let .failed(error):
-            tableView.isUserInteractionEnabled = true
-            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
-            switch error {
-            case .mismatchedUserId:
-                alert(R.string.localizable.unable_synced_between_different_account(), message: nil)
-            case .mismatchedCode:
-                alert(R.string.localizable.connection_establishment_failed(), message: nil)
-            case .exception, .completed:
-                break
-            }
-        case .preparing, .ready, .transporting, .finished, .closed:
-            break
+    private func serverDidBlockConnection(_ reason: DeviceTransferServer.ConnectionBlockedReason) {
+        tableView.isUserInteractionEnabled = true
+        dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+        let title: String
+        switch reason {
+        case .mismatchedUser:
+            title = R.string.localizable.unable_synced_between_different_account()
+        case .mismatchedCode:
+            title = R.string.localizable.connection_establishment_failed()
         }
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel) { [server] _ in
+            server?.consumeLastConnectionBlockedReason()
+        })
+        present(alert, animated: true, completion: nil)
     }
     
     @objc private func deviceTransfer(_ notification: Notification) {
         guard
             let data = notification.userInfo?[ReceiveMessageService.UserInfoKey.command] as? Data,
             let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data),
-            command.action == .cancel
+            case .cancel = command.action
         else {
-            Logger.general.info(category: "TransferToDesktopViewController", message: "Not valid command: \(String(describing: notification.userInfo))")
+            Logger.general.info(category: "TransferToDesktop", message: "Not valid command: \(String(describing: notification.userInfo))")
             return
         }
-        Logger.general.info(category: "TransferToDesktopViewController", message: "Command: \(command))")
+        Logger.general.info(category: "TransferToDesktop", message: "Command: \(command))")
         tableView.isUserInteractionEnabled = true
         dataSource.replaceSection(at: 0, with: section, animation: .automatic)
     }

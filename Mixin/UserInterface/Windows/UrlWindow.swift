@@ -876,27 +876,24 @@ class UrlWindow {
         guard AppGroupUserDefaults.Account.canRestoreFromPhone else {
             return true
         }
-        guard command.version == AppGroupUserDefaults.User.deviceTransferVersion else {
+        guard command.version == DeviceTransferCommand.localVersion else {
             UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
-        guard command.userId == myUserId else {
+        guard case let .push(hostname, port, code, userID) = command.action else {
+            UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
+            return true
+        }
+        guard userID == myUserId else {
             UIApplication.currentActivity()?.alert(R.string.localizable.unable_synced_between_different_account())
             return true
         }
-        guard
-            command.ip != nil,
-            command.port != nil,
-            command.action == .push
-        else {
-            UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
-            return true
-        }
-        let controller = DeviceTransferProgressViewController(intent: .restoreFromPhone(command, nil))
+        let client = DeviceTransferClient(hostname: hostname, port: port, code: code, remotePlatform: command.platform)
+        let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))
         if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {
-            navigationController.pushViewController(controller, animated: true)
+            navigationController.pushViewController(progress, animated: true)
         } else {
-            AppDelegate.current.mainWindow.rootViewController?.present(controller, animated: true)
+            AppDelegate.current.mainWindow.rootViewController?.present(progress, animated: true)
         }
         return true
     }

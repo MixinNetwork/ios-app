@@ -31,7 +31,7 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
     
     static let label = "DeviceTransfer"
     static let definition = NWProtocolFramer.Definition(implementation: DeviceTransferProtocol.self)
-    static let maxMessageDataSize = 500 * bytesPerKiloByte
+    static let maxRecordDataSize = 500 * bytesPerKiloByte
     static let checksumLength = 8
     
     private var receivingState: ReceivingState?
@@ -139,7 +139,7 @@ extension DeviceTransferProtocol {
         do {
             let typedRecord = DeviceTransferTypedRecord(type: type, data: data)
             let jsonData = try JSONEncoder.default.encode(typedRecord)
-            if jsonData.count >= maxMessageDataSize {
+            if jsonData.count >= maxRecordDataSize {
                 Logger.general.warn(category: "DeviceTransferProtocol", message: "Data size is too large: \(data)")
                 return nil
             } else {

@@ -19,30 +19,22 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
         tableHeaderView.label.text = R.string.localizable.transfer_to_pc_hint()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        do {
-            let server = try DeviceTransferServer()
-            NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
-            server.$state
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] state in
-                    self.server(server, didChangeToState: state)
-                }
-                .store(in: &observers)
-            server.$lastConnectionBlockedReason
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] reason in
-                    if let reason {
-                        self.serverDidBlockConnection(reason)
-                    }
-                }
-                .store(in: &observers)
-            self.server = server
-        } catch {
-            alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
-                self.navigationController?.popViewController(animated: true)
+        let server = DeviceTransferServer()
+        NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
+        server.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                self.server(server, didChangeToState: state)
             }
-            Logger.general.info(category: "TransferToDesktop", message: "Failed to launch server: \(error)")
-        }
+            .store(in: &observers)
+        server.$lastConnectionBlockedReason
+            .sink { [unowned self] reason in
+                if let reason {
+                    self.serverDidBlockConnection(reason)
+                }
+            }
+            .store(in: &observers)
+        self.server = server
     }
     
     class func instance() -> UIViewController {
@@ -72,7 +64,15 @@ extension TransferToDesktopViewController: UITableViewDelegate {
                                                rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
             section.setAccessory(.busy, forRowAt: indexPath.row)
             dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
-            server?.start()
+            server?.startListening() { [weak self] error in
+                guard let self else {
+                    return
+                }
+                Logger.general.info(category: "TransferToDesktop", message: "Failed to start listening: \(error)")
+                self.alert(R.string.localizable.connection_establishment_failed()) { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
         } else {
             alert(R.string.localizable.login_desktop_first())
         }
@@ -80,7 +80,23 @@ extension TransferToDesktopViewController: UITableViewDelegate {
     
 }
 
+// MARK: - State Handler
 extension TransferToDesktopViewController {
+    
+    @objc private func deviceTransfer(_ notification: Notification) {
+        guard
+            let data = notification.userInfo?[ReceiveMessageService.UserInfoKey.command] as? Data,
+            let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data),
+            case .cancel = command.action
+        else {
+            Logger.general.info(category: "TransferToDesktop", message: "Invalid command: \(String(describing: notification.userInfo))")
+            return
+        }
+        Logger.general.info(category: "TransferToDesktop", message: "Command: \(command))")
+        tableView.isUserInteractionEnabled = true
+        dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+        server?.stopListening()
+    }
     
     private func server(_ server: DeviceTransferServer, didChangeToState state: DeviceTransferServer.State) {
         switch state {
@@ -141,20 +157,6 @@ extension TransferToDesktopViewController {
             server?.consumeLastConnectionBlockedReason()
         })
         present(alert, animated: true, completion: nil)
-    }
-    
-    @objc private func deviceTransfer(_ notification: Notification) {
-        guard
-            let data = notification.userInfo?[ReceiveMessageService.UserInfoKey.command] as? Data,
-            let command = try? JSONDecoder.default.decode(DeviceTransferCommand.self, from: data),
-            case .cancel = command.action
-        else {
-            Logger.general.info(category: "TransferToDesktop", message: "Not valid command: \(String(describing: notification.userInfo))")
-            return
-        }
-        Logger.general.info(category: "TransferToDesktop", message: "Command: \(command))")
-        tableView.isUserInteractionEnabled = true
-        dataSource.replaceSection(at: 0, with: section, animation: .automatic)
     }
     
 }

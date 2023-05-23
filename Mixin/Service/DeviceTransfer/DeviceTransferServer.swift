@@ -25,16 +25,16 @@ final class DeviceTransferServer {
     // Access on main queue
     @Published private(set) var lastConnectionBlockedReason: ConnectionBlockedReason?
     
-    private let listener: NWListener
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferServer")
     private let dataLoaderQueue = Queue(label: "one.mixin.messenger.DeviceTransferServer.Loader")
     private let maxMemoryConsumption = 100 * Int(bytesPerMegaByte)
     private let maxWaitingTimeIntervalUntilContentProcessed: TimeInterval = 10
     
+    // Access on the private `queue`
+    private var listener: NWListener?
     private var connection: NWConnection?
     
-    init() throws {
-        self.listener = try NWListener(using: .deviceTransfer)
+    init() {
         Logger.general.info(category: "DeviceTransferServer", message: "\(Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()) init")
     }
     
@@ -42,36 +42,67 @@ final class DeviceTransferServer {
         Logger.general.info(category: "DeviceTransferServer", message: "\(Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()) deinit")
     }
     
-    func start() {
-        listener.stateUpdateHandler = { [weak self, unowned listener, code] state in
-            switch state {
-            case .ready:
-                do {
-                    let hostname = try NetworkInterface.firstEthernetHostname()
-                    switch (self, listener.port) {
-                    case (nil, _):
-                        Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready after server deinited")
-                    case (_, nil):
-                        Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a port")
-                    case let (.some(self), .some(port)):
-                        Logger.general.info(category: "DeviceTransferServer", message: "Listening on [\(hostname)]:\(port.rawValue)")
-                        self.state = .listening(hostname: hostname, port: port.rawValue, code: code)
+    func startListening(onFailure: @escaping (Error) -> Void) {
+        queue.async { [weak self, code] in
+            guard self?.listener == nil else {
+                return
+            }
+            
+            let listener: NWListener
+            do {
+                listener = try NWListener(using: .deviceTransfer)
+            } catch {
+                onFailure(error)
+                return
+            }
+            
+            listener.stateUpdateHandler = { [unowned listener] state in
+                switch state {
+                case .ready:
+                    do {
+                        let hostname = try NetworkInterface.firstEthernetHostname()
+                        switch (self, listener.port) {
+                        case (nil, _):
+                            Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready after server deinited")
+                        case (_, nil):
+                            Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a port")
+                        case let (.some(self), .some(port)):
+                            Logger.general.info(category: "DeviceTransferServer", message: "Listening on [\(hostname)]:\(port.rawValue)")
+                            self.state = .listening(hostname: hostname, port: port.rawValue, code: code)
+                        }
+                    } catch {
+                        Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a hostname")
                     }
-                } catch {
-                    Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a hostname")
+                case let .failed(error), let .waiting(error):
+                    Logger.general.warn(category: "DeviceTransferServer", message: "Not listening: \(error)")
+                case .setup, .cancelled:
+                    break
+                @unknown default:
+                    break
                 }
-            case let .failed(error), let .waiting(error):
-                Logger.general.warn(category: "DeviceTransferServer", message: "Not listening: \(error)")
-            case .setup, .cancelled:
-                break
-            @unknown default:
-                break
+            }
+            listener.newConnectionHandler = { [unowned listener] connection in
+                listener.cancel()
+                if let self {
+                    if listener === self.listener {
+                        self.listener = nil
+                    }
+                    self.startNewConnection(connection)
+                }
+            }
+            
+            if let self {
+                self.listener = listener
+                listener.start(queue: self.queue.dispatchQueue)
             }
         }
-        listener.newConnectionHandler = { [weak self] connection in
-            self?.startNewConnection(connection)
+    }
+    
+    func stopListening() {
+        queue.async {
+            self.listener?.cancel()
+            self.listener = nil
         }
-        listener.start(queue: queue.dispatchQueue)
     }
     
     func consumeLastConnectionBlockedReason() {
@@ -81,7 +112,7 @@ final class DeviceTransferServer {
     
     private func stop(reason: DeviceTransferClosedReason) {
         assert(queue.isCurrent)
-        listener.cancel()
+        listener?.cancel()
         connection?.cancel()
         DispatchQueue.main.sync(execute: stopSpeedInspecting)
         switch reason {
@@ -123,7 +154,6 @@ extension DeviceTransferServer {
             connection.cancel()
             return
         }
-        listener.cancel()
         self.connection = connection
         connection.stateUpdateHandler = { [weak self] state in
             switch state {
@@ -249,7 +279,10 @@ extension DeviceTransferServer {
             connection.cancel()
             self.connection = nil
         }
-        start()
+        startListening { error in
+            Logger.general.error(category: "DeviceTransferServer", message: "Failed to start listening after connection rejected")
+            self.state = .closed(.exception(.failed(error)))
+        }
     }
     
 }

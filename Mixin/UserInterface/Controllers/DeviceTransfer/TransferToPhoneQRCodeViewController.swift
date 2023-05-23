@@ -15,27 +15,29 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateTipLabel()
         LoginManager.shared.inDeviceTransfer = true
-        do {
-            let server = try DeviceTransferServer()
-            server.$state
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] state in
-                    self.server(server, didChangeToState: state)
+        let server = DeviceTransferServer()
+        server.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                self.server(server, didChangeToState: state)
+            }
+            .store(in: &observers)
+        server.$lastConnectionBlockedReason
+            .sink { [unowned self] reason in
+                if let reason {
+                    self.server(server, didBlockConnection: reason)
                 }
-                .store(in: &observers)
-            server.$lastConnectionBlockedReason
-                .sink { [unowned self] reason in
-                    if let reason {
-                        self.server(server, didBlockConnection: reason)
-                    }
-                }
-                .store(in: &observers)
-            self.server = server
-            server.start()
-        } catch {
-            Logger.general.info(category: "TransferToPhoneQRCode", message: "Failed to start server: \(error)")
-            alert(R.string.localizable.connection_establishment_failed()) { _ in
+            }
+            .store(in: &observers)
+        self.server = server
+        server.startListening() { [weak self] error in
+            guard let self else {
+                return
+            }
+            Logger.general.info(category: "TransferToPhoneQRCode", message: "Failed to start listening: \(error)")
+            self.alert(R.string.localizable.connection_establishment_failed()) { _ in
                 self.navigationController?.popViewController(animated: true)
             }
         }
@@ -49,6 +51,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         guard !startTransfering else {
+            server?.stopListening()
             return
         }
         checkLogout(isBackAction: false)
@@ -84,7 +87,6 @@ extension TransferToPhoneQRCodeViewController {
                 let size = CGSize(width: imageViewWidthConstraint.constant,
                                   height: imageViewHeightConstraint.constant)
                 imageView.image = UIImage(qrcode: content, size: size, foregroundColor: .black)
-                updateTipLabel()
                 Logger.general.info(category: "TransferToPhoneQRCode", message: "Push command: \(push)")
             } catch {
                 Logger.general.error(category: "TransferToPhoneQRCode", message: "Unable to encode: \(error)")

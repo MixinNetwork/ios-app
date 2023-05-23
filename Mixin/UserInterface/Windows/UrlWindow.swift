@@ -889,6 +889,7 @@ class UrlWindow {
             return true
         }
         let client = DeviceTransferClient(hostname: hostname, port: port, code: code, remotePlatform: command.platform)
+        client.start()
         let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))
         if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {
             navigationController.pushViewController(progress, animated: true)

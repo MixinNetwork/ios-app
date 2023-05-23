@@ -129,7 +129,8 @@ extension DeviceTransferClient {
                 let message = contentContext?.protocolMetadata(definition: DeviceTransferProtocol.definition) as? NWProtocolFramer.Message
             else {
                 if isComplete {
-                    Logger.general.warn(category: "DeviceTransferClient", message: "Protocol failed on completion")
+                    self.state = .closed(.exception(.remoteComplete))
+                    Logger.general.warn(category: "DeviceTransferClient", message: "Remote closed")
                 }
                 return
             }

@@ -9,11 +9,11 @@ class DeviceTransferFileStream: InstanceInitializable {
         self.id = id
     }
     
-    convenience init(context: DeviceTransferProtocol.FileContext) {
-        if let impl = DeviceTransferFileStreamImpl(context) {
+    convenience init(context: DeviceTransferProtocol.FileContext, key: DeviceTransferProtocol.Key) {
+        if let impl = DeviceTransferFileStreamImpl(context, key: key) {
             self.init(instance: impl as! Self)
         } else {
-            self.init(id: context.id)
+            self.init(id: context.fileHeader.id)
         }
     }
     
@@ -34,14 +34,24 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
     private let destinationURLs: [URL]
     private let fileSize: Int
     private let fileManager: FileManager = .default
+    private let key: Data
     
+    private var localHMAC: HMACSHA256
+    private var cryptor: AESCryptor
+    private var remoteHMAC = Data(capacity: DeviceTransferProtocol.hmacDataCount)
     private var wroteCount = 0
-    private var localChecksum = CRC32()
-    private var remoteChecksumSlice = Data()
     
-    init?(_ context: DeviceTransferProtocol.FileContext) {
-        let id = context.id.uuidString.lowercased()
-        let idData = context.id.data
+    init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferProtocol.Key) {
+        let cryptor: AESCryptor
+        do {
+            cryptor = try AESCryptor(operation: .decrypt, iv: context.fileHeader.iv, key: key.aes)
+        } catch {
+            Logger.general.error(category: "DeviceTransferFileStream", message: "Failed to init cryptor: \(error)")
+            return nil
+        }
+        
+        let id = context.fileHeader.id.uuidString.lowercased()
+        let idData = context.fileHeader.id.data
         
         var destinationURLs: [URL]
         if let message = MessageDAO.shared.getMessage(messageId: id), let mediaURL = message.mediaUrl {
@@ -69,9 +79,13 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             self.tempURL = url
             self.handle = try FileHandle(forWritingTo: url)
             self.destinationURLs = destinationURLs
-            self.fileSize = Int(context.header.length) - idData.count
-            super.init(id: context.id)
-            localChecksum.update(data: idData)
+            self.fileSize = Int(context.header.length) - DeviceTransferProtocol.ivDataCount - idData.count
+            self.key = key.aes
+            self.localHMAC = HMACSHA256(key: key.hmac)
+            self.cryptor = cryptor
+            super.init(id: context.fileHeader.id)
+            localHMAC.update(data: idData)
+            localHMAC.update(data: context.fileHeader.iv)
         } catch {
             Logger.general.debug(category: "DeviceTransferFileStream", message: error.localizedDescription)
             assertionFailure()
@@ -82,54 +96,63 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
     override func write(data: Data) {
         let remainingFileDataCount = fileSize - wroteCount
         if remainingFileDataCount == 0 {
-            remoteChecksumSlice.append(data)
+            remoteHMAC.append(data)
         } else if data.count >= remainingFileDataCount {
             let fileData = data.prefix(remainingFileDataCount)
             handle.write(fileData)
-            localChecksum.update(data: fileData)
-            
-            let checksumSliceCount = data.count - remainingFileDataCount
-            if checksumSliceCount > 0 {
-                let checksumSliceData = data.suffix(checksumSliceCount)
-                remoteChecksumSlice.append(checksumSliceData)
-            }
-            
+            localHMAC.update(data: fileData)
             wroteCount = fileSize
+            
+            let hmacSliceCount = data.count - remainingFileDataCount
+            if hmacSliceCount > 0 {
+                let hmacSliceData = data.suffix(hmacSliceCount)
+                remoteHMAC.append(hmacSliceData)
+            }
         } else {
             handle.write(data)
-            localChecksum.update(data: data)
+            localHMAC.update(data: data)
             wroteCount += data.count
         }
     }
     
     override func close() {
-        if remoteChecksumSlice.count != DeviceTransferProtocol.checksumLength {
-            Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Invalid checksum count: \(remoteChecksumSlice.count)")
+        defer {
+            try? fileManager.removeItem(at: tempURL)
+        }
+        
+        guard remoteHMAC.count == DeviceTransferProtocol.hmacDataCount else {
+            Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Invalid HMAC: \(remoteHMAC.count)")
+            return
+        }
+        
+        do {
+            try handle.close()
+        } catch {
+            Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Close: \(error)")
+        }
+        
+        let localHMAC = localHMAC.finalize()
+        if localHMAC != remoteHMAC {
+            let local = localHMAC.base64EncodedString()
+            let remote = remoteHMAC.base64EncodedString()
+            Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Local HMAC: \(local), Remote HMAC: \(remote)")
         } else {
-            let remoteChecksum = UInt64(data: remoteChecksumSlice, endianess: .big)
-            if localChecksum.finalize() != remoteChecksum {
-                Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Local checksum: \(localChecksum), Remote checksum: \(remoteChecksum)")
-            } else {
-                do {
-                    try handle.close()
-                    Logger.general.debug(category: "DeviceTransferFileStream", message: "\(id) Closed")
-                    for destinationURL in destinationURLs {
-                        let path = destinationURL.path
-                        if fileManager.fileExists(atPath: path) {
-                            if fileManager.fileSize(path) == 0 {
-                                try? fileManager.removeItem(atPath: path)
-                            } else {
-                                continue
-                            }
-                        }
-                        try fileManager.copyItem(at: tempURL, to: destinationURL)
+            for destinationURL in destinationURLs {
+                let path = destinationURL.path
+                if fileManager.fileExists(atPath: path) {
+                    if fileManager.fileSize(path) == 0 {
+                        try? fileManager.removeItem(atPath: path)
+                    } else {
+                        continue
                     }
+                }
+                do {
+                    try fileManager.copyItem(at: tempURL, to: destinationURL)
                 } catch {
-                    Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) error: \(error)")
+                    Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Not copied: \(error)")
                 }
             }
         }
-        try? fileManager.removeItem(at: tempURL)
     }
     
 }

@@ -1,14 +1,17 @@
 import Foundation
+import CommonCrypto
 import MixinServices
 
 final class DeviceTransferServerDataSource {
     
     private let limit = 100
-    private let fileChunkSize = 10 * Int(bytesPerMegaByte)
+    private let fileChunkSize = 600000 * kCCBlockSizeAES128 // About 9.1 MiB
+    private let key: DeviceTransferProtocol.Key
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
     
-    init(remotePlatform: DeviceTransferPlatform) {
+    init(key: DeviceTransferProtocol.Key, remotePlatform: DeviceTransferPlatform) {
+        self.key = key
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
     }
@@ -108,7 +111,8 @@ extension DeviceTransferServerDataSource {
         
     }
     
-    func enumerateItems(using block: (_ data: Data, _ stop: inout Bool) -> Void) {
+    // Only throw fatal errors, like encryption failure for now
+    func enumerateItems(using block: (_ data: Data, _ stop: inout Bool) -> Void) throws {
         var nextLocation: Location? = Location(type: .allCases[0], primaryID: nil, secondaryID: nil)
         while let location = nextLocation {
             let (transferItems, nextPrimaryID, nextSecondaryID) = items(on: location)
@@ -122,7 +126,7 @@ extension DeviceTransferServerDataSource {
                     return
                 }
                 if let attachment = item.attachment {
-                    readAttachment(attachment, using: block)
+                    try readAttachment(attachment, using: block)
                 }
             }
             if transferItems.count < limit {
@@ -149,8 +153,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = conversations.compactMap { conversation in
                 let deviceTransferConversation = DeviceTransferConversation(conversation: conversation, to: remotePlatform)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferConversation)
-                return TransferItem(rawItem: conversation, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferConversation, key: key)
+                    return TransferItem(rawItem: conversation, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .participant:
             let participants = ParticipantDAO.shared.participants(limit: limit, after: location.primaryID, with: location.secondaryID)
@@ -158,8 +167,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = participants.last?.userId
             transferItems = participants.compactMap { participant in
                 let deviceTransferParticipant = DeviceTransferParticipant(participant: participant)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferParticipant)
-                return TransferItem(rawItem: participant, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferParticipant, key: key)
+                    return TransferItem(rawItem: participant, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .user:
             let users = UserDAO.shared.users(limit: limit, after: location.primaryID)
@@ -167,8 +181,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = users.compactMap { user in
                 let deviceTransferUser = DeviceTransferUser(user: user)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferUser)
-                return TransferItem(rawItem: user, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferUser, key: key)
+                    return TransferItem(rawItem: user, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .app:
             let apps = AppDAO.shared.apps(limit: limit, after: location.primaryID)
@@ -176,8 +195,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = apps.compactMap { app in
                 let deviceTransferApp = DeviceTransferApp(app: app)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferApp)
-                return TransferItem(rawItem: app, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferApp, key: key)
+                    return TransferItem(rawItem: app, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .asset:
             let assets = AssetDAO.shared.assets(limit: limit, after: location.primaryID)
@@ -185,8 +209,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = assets.compactMap { asset in
                 let deviceTransferAsset = DeviceTransferAsset(asset: asset)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferAsset)
-                return TransferItem(rawItem: asset, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferAsset, key: key)
+                    return TransferItem(rawItem: asset, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .snapshot:
             let snapshots = SnapshotDAO.shared.snapshots(limit: limit, after: location.primaryID)
@@ -194,8 +223,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = snapshots.compactMap { snapshot in
                 let deviceTransferSnapshot = DeviceTransferSnapshot(snapshot: snapshot)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferSnapshot)
-                return TransferItem(rawItem: snapshot, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSnapshot, key: key)
+                    return TransferItem(rawItem: snapshot, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .sticker:
             let stickers = StickerDAO.shared.stickers(limit: limit, after: location.primaryID)
@@ -203,8 +237,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = stickers.compactMap { sticker in
                 let deviceTransferSticker = DeviceTransferSticker(sticker: sticker)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferSticker)
-                return TransferItem(rawItem: sticker, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSticker, key: key)
+                    return TransferItem(rawItem: sticker, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .pinMessage:
             let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit, after: location.primaryID)
@@ -212,8 +251,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = pinMessages.compactMap { pinMessage in
                 let deviceTransferPinMessage = DeviceTransferPinMessage(pinMessage: pinMessage)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferPinMessage)
-                return TransferItem(rawItem: pinMessage, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferPinMessage, key: key)
+                    return TransferItem(rawItem: pinMessage, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .transcriptMessage:
             let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: location.primaryID, with: location.secondaryID)
@@ -221,13 +265,18 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = transcriptMessages.last?.messageId
             transferItems = transcriptMessages.compactMap { transcriptMessage in
                 let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferTranscriptMessage)
-                if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty {
-                    let url = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
-                    let attachment = TransferItem.Attachment(messageID: transcriptMessage.messageId, url: url)
-                    return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: attachment)
-                } else {
-                    return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferTranscriptMessage, key: key)
+                    if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty {
+                        let url = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
+                        let attachment = TransferItem.Attachment(messageID: transcriptMessage.messageId, url: url)
+                        return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: attachment)
+                    } else {
+                        return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: nil)
+                    }
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
                 }
             }
         case .message:
@@ -236,13 +285,18 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = messages.compactMap { message in
                 let deviceTransferMessage = DeviceTransferMessage(message: message)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessage)
-                if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, let category = AttachmentContainer.Category(messageCategory: message.category) {
-                    let url = AttachmentContainer.url(for: category, filename: mediaURL)
-                    let attachment = TransferItem.Attachment(messageID: message.messageId, url: url)
-                    return TransferItem(rawItem: message, outputData: outputData, attachment: attachment)
-                } else {
-                    return TransferItem(rawItem: message, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessage, key: key)
+                    if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, let category = AttachmentContainer.Category(messageCategory: message.category) {
+                        let url = AttachmentContainer.url(for: category, filename: mediaURL)
+                        let attachment = TransferItem.Attachment(messageID: message.messageId, url: url)
+                        return TransferItem(rawItem: message, outputData: outputData, attachment: attachment)
+                    } else {
+                        return TransferItem(rawItem: message, outputData: outputData, attachment: nil)
+                    }
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
                 }
             }
         case .messageMention:
@@ -251,8 +305,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = messageMentions.compactMap { messageMention in
                 let deviceTransferMessageMention = DeviceTransferMessageMention(messageMention: messageMention)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessageMention)
-                return TransferItem(rawItem: messageMention, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessageMention, key: key)
+                    return TransferItem(rawItem: messageMention, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         case .expiredMessage:
             let expiredMessages = ExpiredMessageDAO.shared.expiredMessages(limit: limit, after: location.primaryID)
@@ -260,8 +319,13 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             transferItems = expiredMessages.compactMap { expiredMessage in
                 let deviceTransferExpiredMessage = DeviceTransferExpiredMessage(expiredMessage: expiredMessage)
-                let outputData = DeviceTransferProtocol.output(type: location.type, data: deviceTransferExpiredMessage)
-                return TransferItem(rawItem: expiredMessage, outputData: outputData, attachment: nil)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferExpiredMessage, key: key)
+                    return TransferItem(rawItem: expiredMessage, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
             }
         }
         
@@ -269,7 +333,8 @@ extension DeviceTransferServerDataSource {
         return (transferItems, nextPrimaryID, nextSecondaryID)
     }
     
-    private func readAttachment(_ attachment: TransferItem.Attachment, using block: (Data, inout Bool) -> Void) {
+    // Only throw fatal errors, like encryption failure for now
+    private func readAttachment(_ attachment: TransferItem.Attachment, using block: (Data, inout Bool) -> Void) throws {
         guard let idData = UUID(uuidString: attachment.messageID)?.data else {
             Logger.general.error(category: "DeviceTransferServerDataSource", message: "Invalid mid: \(attachment.messageID)")
             return
@@ -280,13 +345,23 @@ extension DeviceTransferServerDataSource {
             Logger.general.info(category: "DeviceTransferServerDataSource", message: "Open stream failed: \(url)")
             return
         }
-        
+        guard let iv = Data(withNumberOfSecuredRandomBytes: DeviceTransferProtocol.ivDataCount) else {
+            Logger.general.error(category: "DeviceTransferServerDataSource", message: "Unable to generate iv for attachment")
+            return
+        }
         Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
         
-        var stop = false
+        let encryptor = try AESCryptor(operation: .encrypt, iv: iv, key: key.aes)
         
-        let length = Int32(idData.count) + Int32(FileManager.default.fileSize(url.path))
-        let header = DeviceTransferHeader(type: .file, length: length)
+        let fileSize = Int(FileManager.default.fileSize(url.path))
+        let encryptedFileSize = encryptor.outputDataCount(inputDataCount: fileSize, isFinal: true)
+        encryptor.reserveOutputBufferCapacity(min(encryptedFileSize, fileChunkSize))
+        
+        var stop = false
+        var hmac = HMACSHA256(key: key.hmac)
+        
+        let length = idData.count + iv.count + encryptedFileSize
+        let header = DeviceTransferHeader(type: .file, length: Int32(length))
         let headerData = header.encoded()
         block(headerData, &stop)
         if stop {
@@ -297,9 +372,13 @@ extension DeviceTransferServerDataSource {
         if stop {
             return
         }
+        hmac.update(data: idData)
         
-        var checksum = CRC32()
-        checksum.update(data: idData)
+        block(iv, &stop)
+        if stop {
+            return
+        }
+        hmac.update(data: iv)
         
         stream.open()
         while stream.hasBytesAvailable {
@@ -310,17 +389,22 @@ extension DeviceTransferServerDataSource {
                 }
                 break
             }
-            let data = Data(bytes: fileContentBuffer, count: bytesRead)
-            checksum.update(data: data)
-            block(data, &stop)
+            let chunk = Data(bytesNoCopy: fileContentBuffer, count: bytesRead, deallocator: .none)
+            let encryptedChunk = try encryptor.update(chunk)
+            hmac.update(data: encryptedChunk)
+            block(encryptedChunk, &stop)
             if stop {
                 break
             }
         }
         stream.close()
         
-        let checksumData = checksum.finalize().data(endianness: .big)
-        block(checksumData, &stop)
+        let finalChunk = try encryptor.final()
+        hmac.update(data: finalChunk)
+        block(finalChunk, &stop)
+        
+        let hmacData = hmac.finalize()
+        block(hmacData, &stop)
     }
     
 }

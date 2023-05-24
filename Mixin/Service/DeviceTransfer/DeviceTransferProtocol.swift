@@ -1,5 +1,6 @@
 import Foundation
 import Network
+import libsignal_protocol_c
 import MixinServices
 
 final class DeviceTransferProtocol: NWProtocolFramerImplementation {
@@ -9,30 +10,58 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
         static let fileContext = "f"
     }
     
+    struct FileHeader: RawBufferInitializable {
+        
+        static let bufferCount = 32
+        
+        let id: UUID
+        let iv: Data
+        
+        init?(_ buffer: UnsafeMutableRawBufferPointer) {
+            assert(buffer.count == Self.bufferCount)
+            guard let ivAddress = buffer.baseAddress?.advanced(by: 16) else {
+                return nil
+            }
+            
+            // https://forums.swift.org/t/guarantee-in-memory-tuple-layout-or-dont/40122
+            // Tuples have always had their own guarantee: if all the elements are the same type,
+            // they will be laid out in order by stride (size rounded up to alignment), just like
+            // a fixed-sized array in C.
+            let uuid = buffer.load(as: uuid_t.self)
+            
+            self.id = UUID(uuid: uuid)
+            self.iv = Data(bytes: ivAddress, count: 16)
+        }
+        
+    }
+    
     struct FileContext {
         
         static let mtu = 0xffff
         
         let header: DeviceTransferHeader
-        let id: UUID
+        let fileHeader: FileHeader
         let remainingLength: Int
         
         func replacingRemainingLength(with length: Int) -> FileContext {
-            FileContext(header: header, id: id, remainingLength: length)
+            FileContext(header: header,
+                        fileHeader: fileHeader,
+                        remainingLength: length)
         }
         
     }
     
     private enum ReceivingState {
         case pendingCommandOrMessageContent(DeviceTransferHeader)
-        case pendingFileID(DeviceTransferHeader)
+        case pendingFileHeader(DeviceTransferHeader)
         case pendingFileContent(FileContext)
     }
     
     static let label = "DeviceTransfer"
     static let definition = NWProtocolFramer.Definition(implementation: DeviceTransferProtocol.self)
     static let maxRecordDataSize = 500 * bytesPerKiloByte
-    static let checksumLength = 8
+    static let ivDataCount = 16
+    static let hmacDataCount = HMACSHA256.digestDataCount
     
     private var receivingState: ReceivingState?
     
@@ -49,8 +78,8 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
             let message = NWProtocolFramer.Message(definition: DeviceTransferProtocol.definition)
             switch receivingState {
             case .none:
-                let header: ParseResult<DeviceTransferHeader> = parseContent(framer: framer)
-                switch header {
+                let result: ParseResult<DeviceTransferHeader> = parseContent(framer: framer)
+                switch result {
                 case .notEnough(let size):
                     return size
                 case .enough(let header):
@@ -58,24 +87,24 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
                     case .command, .message:
                         receivingState = .pendingCommandOrMessageContent(header)
                     case .file:
-                        receivingState = .pendingFileID(header)
+                        receivingState = .pendingFileHeader(header)
                     }
                 }
             case let .pendingCommandOrMessageContent(header):
                 message[MessageKey.header] = header
-                let length = Int(header.length) + Self.checksumLength
+                let length = Int(header.length) + Self.hmacDataCount
                 receivingState = nil
                 if !framer.deliverInputNoCopy(length: length, message: message, isComplete: true) {
                     return 0
                 }
-            case let .pendingFileID(header):
-                let id: ParseResult<UUID> = parseContent(framer: framer)
-                switch id {
+            case let .pendingFileHeader(header):
+                let result: ParseResult<FileHeader> = parseContent(framer: framer)
+                switch result {
                 case .notEnough(let size):
                     return size
-                case .enough(let id):
-                    let contentLength = Int(header.length) - UUID.bufferCount + Self.checksumLength
-                    let context = FileContext(header: header, id: id, remainingLength: contentLength)
+                case .enough(let fileHeader):
+                    let contentLength = Int(header.length) - FileHeader.bufferCount + Self.hmacDataCount
+                    let context = FileContext(header: header, fileHeader: fileHeader, remainingLength: contentLength)
                     receivingState = .pendingFileContent(context)
                 }
             case let .pendingFileContent(context):
@@ -125,37 +154,90 @@ extension DeviceTransferProtocol {
     // custom functions to combine the header and checksum, and directly send the
     // message in binary, aiming to achieve optimal performance.
     
-    static func output(command: DeviceTransferCommand) -> Data? {
-        do {
-            let jsonData = try JSONEncoder.default.encode(command)
-            return package(type: .command, data: jsonData)
-        } catch {
-            Logger.general.error(category: "DeviceTransferProtocol", message: "Failed to encode command: \(error)")
-            return nil
+    enum OutputError: Error {
+        case maxSizeExceeded
+    }
+    
+    static func output(command: DeviceTransferCommand, key: Key) throws -> Data {
+        let jsonData = try JSONEncoder.default.encode(command)
+        return try package(type: .command, data: jsonData, key: key)
+    }
+    
+    static func output<Record: DeviceTransferRecord>(type: DeviceTransferRecordType, data: Record, key: Key) throws -> Data {
+        let typedRecord = DeviceTransferTypedRecord(type: type, data: data)
+        let jsonData = try JSONEncoder.default.encode(typedRecord)
+        if jsonData.count >= maxRecordDataSize {
+            throw OutputError.maxSizeExceeded
+        } else {
+            return try package(type: .message, data: jsonData, key: key)
         }
     }
     
-    static func output<Record: DeviceTransferRecord>(type: DeviceTransferRecordType, data: Record) -> Data? {
-        do {
-            let typedRecord = DeviceTransferTypedRecord(type: type, data: data)
-            let jsonData = try JSONEncoder.default.encode(typedRecord)
-            if jsonData.count >= maxRecordDataSize {
-                Logger.general.warn(category: "DeviceTransferProtocol", message: "Data size is too large: \(data)")
-                return nil
-            } else {
-                return package(type: .message, data: jsonData)
+    private static func package(type: DeviceTransferHeader.ContentType, data: Data, key: Key) throws -> Data {
+        let encrypted = try AESCryptor.encrypt(data, with: key.aes)
+        let hmac = HMACSHA256.calculate(for: encrypted, using: key.hmac)
+        let header = DeviceTransferHeader(type: type, length: Int32(encrypted.count))
+        return header.encoded() + encrypted + hmac
+    }
+    
+}
+
+extension DeviceTransferProtocol {
+    
+    struct Key {
+        
+        let raw: Data
+        
+        var aes: Data {
+            raw[..<firstHMACIndex]
+        }
+        
+        var hmac: Data {
+            raw[firstHMACIndex...]
+        }
+        
+        private let firstHMACIndex: Data.Index
+        
+        init() {
+            let seed = Data(withNumberOfSecuredRandomBytes: 32)!
+            self.init(seed: seed)
+        }
+        
+        init(raw: Data) {
+            self.raw = raw
+            self.firstHMACIndex = raw.startIndex.advanced(by: 32)
+        }
+        
+        private init(seed: Data) {
+            assert(seed.count == 32)
+            var derived: UnsafeMutablePointer<UInt8>!
+            var hkdf: OpaquePointer!
+            
+            let status = hkdf_create(&hkdf, 3, globalSignalContext)
+            assert(status == 0)
+            let salt = Data(repeating: 0, count: 32)
+            let info = "Mixin Device Transfer".data(using: .utf8)!
+            let derivedCount = salt.withUnsafeBytes { salt in
+                info.withUnsafeBytes { info in
+                    seed.withUnsafeBytes { seed in
+                        hkdf_derive_secrets(hkdf,
+                                            &derived,
+                                            seed.baseAddress,
+                                            seed.count,
+                                            salt.baseAddress,
+                                            salt.count,
+                                            info.baseAddress,
+                                            info.count,
+                                            64)
+                    }
+                }
             }
-        } catch {
-            Logger.general.error(category: "DeviceTransferProtocol", message: "Failed to encode record: \(error)")
-            return nil
+            assert(derivedCount == 64)
+            
+            let raw = Data(bytesNoCopy: derived, count: 64, deallocator: .free)
+            self.init(raw: raw)
         }
-    }
-    
-    private static func package(type: DeviceTransferHeader.ContentType, data: Data) -> Data {
-        let header = DeviceTransferHeader(type: type, length: Int32(data.count))
-        let checksum = CRC32.checksum(data: data)
-        let checksumData = checksum.data(endianness: .big)
-        return header.encoded() + data + checksumData
+        
     }
     
 }

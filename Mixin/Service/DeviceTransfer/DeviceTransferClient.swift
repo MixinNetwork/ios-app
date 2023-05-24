@@ -16,6 +16,7 @@ final class DeviceTransferClient {
     private let hostname: String
     private let port: UInt16
     private let code: UInt16
+    private let key: DeviceTransferProtocol.Key
     private let remotePlatform: DeviceTransferPlatform
     private let connection: NWConnection
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferClient")
@@ -29,10 +30,11 @@ final class DeviceTransferClient {
     private var processedCount = 0
     private var totalCount: Int?
     
-    init(hostname: String, port: UInt16, code: UInt16, remotePlatform: DeviceTransferPlatform) {
+    init(hostname: String, port: UInt16, code: UInt16, secretKey: Data, remotePlatform: DeviceTransferPlatform) {
         self.hostname = hostname
         self.port = port
         self.code = code
+        self.key = DeviceTransferProtocol.Key(raw: secretKey)
         self.remotePlatform = remotePlatform
         self.connection = {
             let host = NWEndpoint.Host(hostname)
@@ -49,7 +51,7 @@ final class DeviceTransferClient {
     
     func start() {
         Logger.general.info(category: "DeviceTransferClient", message: "Will start connecting to [\(hostname)]:\(port)")
-        connection.stateUpdateHandler = { [weak self, unowned connection, code] state in
+        connection.stateUpdateHandler = { [weak self, unowned connection] state in
             switch state {
             case .setup:
                 Logger.general.info(category: "DeviceTransferClient", message: "Setting up new connection")
@@ -60,11 +62,15 @@ final class DeviceTransferClient {
             case .ready:
                 Logger.general.info(category: "DeviceTransferClient", message: "Connection ready")
                 if let self {
-                    self.continueReceiving(connection: connection)
-                    let connect = DeviceTransferCommand(action: .connect(code: code, userID: myUserId))
-                    if let content = DeviceTransferProtocol.output(command: connect) {
-                        Logger.general.info(category: "DeviceTransferClient", message: "Send connect command: \(connect)")
+                    do {
+                        let connect = DeviceTransferCommand(action: .connect(code: self.code, userID: myUserId))
+                        let content = try DeviceTransferProtocol.output(command: connect, key: self.key)
+                        self.continueReceiving(connection: connection)
                         connection.send(content: content, completion: .idempotent)
+                        Logger.general.info(category: "DeviceTransferClient", message: "Sent connect command: \(connect)")
+                    } catch {
+                        connection.cancel()
+                        Logger.general.error(category: "DeviceTransferClient", message: "Unable to output connect command: \(error)")
                     }
                 } else {
                     Logger.general.error(category: "DeviceTransferClient", message: "Connection ready after self deinited")
@@ -110,9 +116,12 @@ final class DeviceTransferClient {
                 }
                 self.state = .transfer(progress: progress, speed: speed)
                 let command = DeviceTransferCommand(action: .progress(progress))
-                if let content = DeviceTransferProtocol.output(command: command){
+                do {
+                    let content = try DeviceTransferProtocol.output(command: command, key: self.key)
                     self.connection.send(content: content, completion: .idempotent)
                     Logger.general.info(category: "DeviceTransferClient", message: "Report progress: \(progress), speed: \(speed)")
+                } catch {
+                    Logger.general.error(category: "DeviceTransferClient", message: "Failed to report progress: \(error)")
                 }
             }
         }
@@ -159,20 +168,24 @@ extension DeviceTransferClient {
     
     private func handleCommand(content: Data) {
         assert(queue.isCurrent)
-        let jsonData = content[..<content.endIndex.advanced(by: -8)]
-        let localChecksum = CRC32.checksum(data: jsonData)
-        let remoteChecksum = UInt64(data: content[content.endIndex.advanced(by: -8)...], endianess: .big)
-        guard localChecksum == remoteChecksum else {
-            stop(reason: .exception(.checksumError(local: localChecksum, remote: remoteChecksum)))
+        let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
+        let encryptedData = content[..<firstHMACIndex]
+        let localHMAC = HMACSHA256.calculate(for: encryptedData, using: key.hmac)
+        let remoteHMAC = content[firstHMACIndex...]
+        guard localHMAC == remoteHMAC else {
+            stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
             return
         }
+        
         let command: DeviceTransferCommand
         do {
-            command = try JSONDecoder.default.decode(DeviceTransferCommand.self, from: jsonData)
+            let decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
+            command = try JSONDecoder.default.decode(DeviceTransferCommand.self, from: decryptedData)
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Unable to decode message: \(error)")
             return
         }
+        
         switch command.action {
         case .start(let count):
             Logger.general.info(category: "DeviceTransferClient", message: "Total count: \(count)")
@@ -185,10 +198,13 @@ extension DeviceTransferClient {
             Logger.general.info(category: "DeviceTransferClient", message: "Received finish command")
             ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
             self.state = .closed(.finished)
-            let command = DeviceTransferCommand(action: .finish)
-            if let content = DeviceTransferProtocol.output(command: command){
-                Logger.general.info(category: "DeviceTransferClient", message: "Send finish command")
+            do {
+                let command = DeviceTransferCommand(action: .finish)
+                let content = try DeviceTransferProtocol.output(command: command, key: key)
                 self.connection.send(content: content, isComplete: true, completion: .idempotent)
+                Logger.general.info(category: "DeviceTransferClient", message: "Sent finish command")
+            } catch {
+                Logger.general.error(category: "DeviceTransferClient", message: "Failed to finish command: \(error)")
             }
         default:
             break
@@ -198,66 +214,77 @@ extension DeviceTransferClient {
     private func handleMessage(content: Data) {
         assert(queue.isCurrent)
         DispatchQueue.main.sync {
-            speedInspector.store(count: content.count)
+            speedInspector.store(byteCount: content.count)
             processedCount += 1
         }
-        let jsonData = content[..<content.endIndex.advanced(by: -8)]
-        let localChecksum = CRC32.checksum(data: jsonData)
-        let remoteChecksum = UInt64(data: content[content.endIndex.advanced(by: -8)...], endianess: .big)
-        guard localChecksum == remoteChecksum else {
-            stop(reason: .exception(.checksumError(local: localChecksum, remote: remoteChecksum)))
+        
+        let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
+        let encryptedData = content[..<firstHMACIndex]
+        let localHMAC = HMACSHA256.calculate(for: encryptedData, using: key.hmac)
+        let remoteHMAC = content[firstHMACIndex...]
+        guard localHMAC == remoteHMAC else {
+            stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
             return
         }
+        
+        let decryptedData: Data
+        do {
+            decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
+        } catch {
+            Logger.general.error(category: "DeviceTransferClient", message: "Unable to decrypt: \(error)")
+            return
+        }
+        
         do {
             struct TypeWrapper: Decodable {
                 let type: DeviceTransferRecordType
             }
             
             let decoder = JSONDecoder.default
-            let wrapper = try decoder.decode(TypeWrapper.self, from: jsonData)
+            let wrapper = try decoder.decode(TypeWrapper.self, from: decryptedData)
             switch wrapper.type {
             case .conversation:
-                let conversation = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferConversation>.self, from: jsonData).data
+                let conversation = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferConversation>.self, from: decryptedData).data
                 ConversationDAO.shared.save(conversation: conversation.toConversation(from: remotePlatform))
             case .participant:
-                let participant = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferParticipant>.self, from: jsonData).data
+                let participant = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferParticipant>.self, from: decryptedData).data
                 ParticipantDAO.shared.save(participant: participant.toParticipant())
             case .user:
-                let user = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferUser>.self, from: jsonData).data
+                let user = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferUser>.self, from: decryptedData).data
                 UserDAO.shared.save(user: user.toUser())
             case .app:
-                let app = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferApp>.self, from: jsonData).data
+                let app = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferApp>.self, from: decryptedData).data
                 AppDAO.shared.save(app: app.toApp())
             case .asset:
-                let asset = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferAsset>.self, from: jsonData).data
+                let asset = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferAsset>.self, from: decryptedData).data
                 AssetDAO.shared.save(asset: asset.toAsset())
             case .snapshot:
-                let snapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSnapshot>.self, from: jsonData).data
+                let snapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSnapshot>.self, from: decryptedData).data
                 SnapshotDAO.shared.save(snapshot: snapshot.toSnapshot())
             case .sticker:
-                let sticker = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSticker>.self, from: jsonData).data
+                let sticker = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSticker>.self, from: decryptedData).data
                 StickerDAO.shared.save(sticker: sticker.toSticker())
             case .pinMessage:
-                let pinMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferPinMessage>.self, from: jsonData).data
+                let pinMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferPinMessage>.self, from: decryptedData).data
                 PinMessageDAO.shared.save(pinMessage: pinMessage.toPinMessage())
             case .transcriptMessage:
-                let transcriptMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferTranscriptMessage>.self, from: jsonData).data
+                let transcriptMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferTranscriptMessage>.self, from: decryptedData).data
                 TranscriptMessageDAO.shared.save(transcriptMessage: transcriptMessage.toTranscriptMessage())
             case .message:
-                let message = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessage>.self, from: jsonData).data
+                let message = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessage>.self, from: decryptedData).data
                 if MessageCategory.isLegal(category: message.category) {
                     MessageDAO.shared.save(message: message.toMessage())
                 }
             case .messageMention:
-                if let messageMention = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessageMention>.self, from: jsonData).data.toMessageMention() {
+                if let messageMention = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessageMention>.self, from: decryptedData).data.toMessageMention() {
                     MessageMentionDAO.shared.save(messageMention: messageMention)
                 }
             case .expiredMessage:
-                let expiredMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferExpiredMessage>.self, from: jsonData).data
+                let expiredMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferExpiredMessage>.self, from: decryptedData).data
                 ExpiredMessageDAO.shared.save(expiredMessage: expiredMessage.toExpiredMessage())
             }
         } catch {
-            let content = String(data: jsonData, encoding: .utf8) ?? "Data(\(jsonData.count))"
+            let content = String(data: decryptedData, encoding: .utf8) ?? "Data(\(decryptedData.count))"
             Logger.general.error(category: "DeviceTransferClient", message: "Error: \(error) Content: \(content)")
         }
     }
@@ -269,16 +296,17 @@ extension DeviceTransferClient {
         let isReceivingNewFile: Bool
         let stream: DeviceTransferFileStream
         if let currentStream = self.fileStream {
-            if currentStream.id == context.id {
+            if currentStream.id == context.fileHeader.id {
                 stream = currentStream
                 isReceivingNewFile = false
             } else {
+                assertionFailure("Should be closed by the end of previous call")
                 currentStream.close()
-                stream = DeviceTransferFileStream(context: context)
+                stream = DeviceTransferFileStream(context: context, key: key)
                 isReceivingNewFile = true
             }
         } else {
-            stream = DeviceTransferFileStream(context: context)
+            stream = DeviceTransferFileStream(context: context, key: key)
             isReceivingNewFile = true
         }
         if isReceivingNewFile {
@@ -286,7 +314,7 @@ extension DeviceTransferClient {
         }
         
         DispatchQueue.main.sync {
-            speedInspector.store(count: content.count)
+            speedInspector.store(byteCount: content.count)
             if isReceivingNewFile {
                 processedCount += 1
             }

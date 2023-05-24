@@ -78,8 +78,13 @@ extension TransferToPhoneQRCodeViewController {
         switch state {
         case .idle:
             break
-        case let .listening(hostname, port, code):
-            let push = DeviceTransferCommand(action: .push(hostname: hostname, port: port, code: code, userID: myUserId))
+        case let .listening(hostname, port):
+            let context = DeviceTransferCommand.PushContext(hostname: hostname,
+                                                            port: port,
+                                                            code: server.code,
+                                                            secretKey: server.key.raw,
+                                                            userID: myUserId)
+            let push = DeviceTransferCommand(action: .push(context))
             do {
                 let jsonData = try JSONEncoder.default.encode(push)
                 let data = jsonData.base64RawURLEncodedString()

@@ -2,11 +2,29 @@ import Foundation
 
 public struct DeviceTransferCommand {
     
-    public static let localVersion = 1
+    public static let localVersion = 2
+    
+    public struct PushContext {
+        
+        public let hostname: String
+        public let port: UInt16
+        public let code: UInt16
+        public let secretKey: Data
+        public let userID: String?
+        
+        public init(hostname: String, port: UInt16, code: UInt16, secretKey: Data, userID: String?) {
+            self.hostname = hostname
+            self.port = port
+            self.code = code
+            self.secretKey = secretKey
+            self.userID = userID
+        }
+        
+    }
     
     public enum Action {
         case pull
-        case push(hostname: String, port: UInt16, code: UInt16, userID: String?)
+        case push(PushContext)
         case start(Int)
         case connect(code: UInt16, userID: String)
         case progress(Double)
@@ -32,6 +50,7 @@ extension DeviceTransferCommand: Codable {
     
     public enum DecodingError: Error {
         case unknownAction(String)
+        case invalidSecretKey
     }
     
     private enum ActionName {
@@ -69,11 +88,20 @@ extension DeviceTransferCommand: Codable {
             case ActionName.pull:
                 return .pull
             case ActionName.push:
+                let secretKeyString = try container.decode(String.self, forKey: .secretKey)
+                guard let secretKey = Data(base64Encoded: secretKeyString) else {
+                    throw DecodingError.invalidSecretKey
+                }
                 let hostname = try container.decode(String.self, forKey: .hostname)
                 let port = try container.decode(UInt16.self, forKey: .port)
                 let code = try container.decode(UInt16.self, forKey: .code)
                 let userID = try container.decodeIfPresent(String.self, forKey: .userID)
-                return .push(hostname: hostname, port: port, code: code, userID: userID)
+                let context = PushContext(hostname: hostname,
+                                          port: port,
+                                          code: code,
+                                          secretKey: secretKey,
+                                          userID: userID)
+                return .push(context)
             case ActionName.start:
                 let count = try container.decode(Int.self, forKey: .total)
                 return .start(count)
@@ -102,14 +130,15 @@ extension DeviceTransferCommand: Codable {
         switch action {
         case .pull:
             try container.encode(ActionName.pull, forKey: .action)
-        case let .push(hostname, port, code, userID):
+        case let .push(context):
             try container.encode(ActionName.push, forKey: .action)
-            try container.encode(hostname, forKey: .hostname)
-            try container.encode(port, forKey: .port)
-            try container.encode(code, forKey: .code)
-            if let userID {
+            try container.encode(context.hostname, forKey: .hostname)
+            try container.encode(context.port, forKey: .port)
+            try container.encode(context.code, forKey: .code)
+            if let userID = context.userID {
                 try container.encode(userID, forKey: .userID)
             }
+            try container.encode(context.secretKey.base64EncodedString(), forKey: .secretKey)
         case let .start(count):
             try container.encode(ActionName.start, forKey: .action)
             try container.encode(count, forKey: .total)

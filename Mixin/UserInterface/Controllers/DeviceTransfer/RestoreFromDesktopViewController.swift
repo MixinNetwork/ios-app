@@ -117,10 +117,11 @@ extension RestoreFromDesktopViewController {
         case .cancel:
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = true
-        case let .push(hostname, port, code, _):
-            let client = DeviceTransferClient(hostname: hostname,
-                                              port: port,
-                                              code: code,
+        case let .push(context):
+            let client = DeviceTransferClient(hostname: context.hostname,
+                                              port: context.port,
+                                              code: context.code,
+                                              secretKey: context.secretKey,
                                               remotePlatform: command.platform)
             stateObserver = client.$state
                 .receive(on: DispatchQueue.main)

@@ -880,15 +880,19 @@ class UrlWindow {
             UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
-        guard case let .push(hostname, port, code, userID) = command.action else {
+        guard case let .push(context) = command.action else {
             UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
-        guard userID == myUserId else {
+        guard context.userID == myUserId else {
             UIApplication.currentActivity()?.alert(R.string.localizable.unable_synced_between_different_account())
             return true
         }
-        let client = DeviceTransferClient(hostname: hostname, port: port, code: code, remotePlatform: command.platform)
+        let client = DeviceTransferClient(hostname: context.hostname,
+                                          port: context.port,
+                                          code: context.code,
+                                          secretKey: context.secretKey,
+                                          remotePlatform: command.platform)
         client.start()
         let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))
         if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {

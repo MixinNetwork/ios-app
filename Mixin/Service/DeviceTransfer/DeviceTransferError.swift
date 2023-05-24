@@ -3,6 +3,7 @@ import Foundation
 enum DeviceTransferError: Error {
     case remoteComplete
     case mismatchedConnection
-    case checksumError(local: UInt64, remote: UInt64)
+    case encrypt(Error)
+    case mismatchedHMAC(local: Data, remote: Data)
     case failed(Error)
 }

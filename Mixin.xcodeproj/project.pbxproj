@@ -682,7 +682,6 @@
 		7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */; };
 		7CF7416E27DAD93000DA0004 /* SnapCenterFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */; };
 		7CF836F127E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */; };
-		7CFABCE029D4B705005F04AD /* CRC32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFABCDF29D4B705005F04AD /* CRC32.swift */; };
 		7CFC1C8A29E78DBE00A290D5 /* RestoreFromCloudViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFC1C8929E78DBE00A290D5 /* RestoreFromCloudViewController.swift */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
@@ -706,6 +705,7 @@
 		9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */; };
 		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
 		941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */; };
+		942014D82A1E09DE0049CAB7 /* HMACSHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942014D72A1E09DE0049CAB7 /* HMACSHA256.swift */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9427D51425E0D31100B1EF0E /* MusicInfoView.xib */; };
 		9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */; };
@@ -761,7 +761,7 @@
 		948E6CB628AF95CC00DFF5DF /* TIPIntroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */; };
 		9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */; };
 		9492286425DFB7EF0000A19F /* MinimizedPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */; };
-		9493708C2A1B64CC00C0A21E /* LocalNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */; };
+		9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC329E924B400EBAAF3 /* LocalNetworkAuthorization.swift */; };
 		949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */; };
 		949569A8263B13BF00E043FE /* TranscriptMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
@@ -1705,7 +1705,7 @@
 		7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageViewController.swift; sourceTree = "<group>"; };
 		7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpiredMessageTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
-		7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNetwork.swift; sourceTree = "<group>"; };
+		7C9AABC329E924B400EBAAF3 /* LocalNetworkAuthorization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNetworkAuthorization.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferApp.swift; sourceTree = "<group>"; };
 		7C9DEA5A29F1770000959D77 /* DeviceTransferMessageMention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferMessageMention.swift; sourceTree = "<group>"; };
@@ -1755,7 +1755,6 @@
 		7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountVerifyPinWindow.xib; sourceTree = "<group>"; };
 		7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCenterFlowLayout.swift; sourceTree = "<group>"; };
 		7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageDurationFormatter.swift; sourceTree = "<group>"; };
-		7CFABCDF29D4B705005F04AD /* CRC32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRC32.swift; sourceTree = "<group>"; };
 		7CFC1C8929E78DBE00A290D5 /* RestoreFromCloudViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreFromCloudViewController.swift; sourceTree = "<group>"; };
 		7CFD7471288FC88900D7A0EE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		7CFD7472288FC88A00D7A0EE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1782,6 +1781,7 @@
 		9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconSaver.swift; sourceTree = "<group>"; };
 		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
 		941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertModifier.swift; sourceTree = "<group>"; };
+		942014D72A1E09DE0049CAB7 /* HMACSHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HMACSHA256.swift; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9427D51425E0D31100B1EF0E /* MusicInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicInfoView.xib; sourceTree = "<group>"; };
 		9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfoView.swift; sourceTree = "<group>"; };
@@ -2864,8 +2864,8 @@
 		94149B462A190751003E9E1A /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				7CFABCDF29D4B705005F04AD /* CRC32.swift */,
-				7C9AABC329E924B400EBAAF3 /* LocalNetwork.swift */,
+				942014D72A1E09DE0049CAB7 /* HMACSHA256.swift */,
+				7C9AABC329E924B400EBAAF3 /* LocalNetworkAuthorization.swift */,
 				7C07A17C29D8FDBC00D4835C /* NetworkInterface.swift */,
 				940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */,
 				94149B422A17B4D5003E9E1A /* NetworkSpeedConditioner.swift */,
@@ -4995,6 +4995,7 @@
 				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
+				942014D82A1E09DE0049CAB7 /* HMACSHA256.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */,
@@ -5053,7 +5054,6 @@
 				7CDBA58A28F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift in Sources */,
 				DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
-				7CFABCE029D4B705005F04AD /* CRC32.swift in Sources */,
 				7BD3860224DC55A000A3035C /* UNMutableNotificationContent+Convenience.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
@@ -5239,7 +5239,7 @@
 				7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */,
 				7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */,
 				942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */,
-				9493708C2A1B64CC00C0A21E /* LocalNetwork.swift in Sources */,
+				9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
 				7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */,

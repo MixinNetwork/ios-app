@@ -217,7 +217,7 @@ extension DeviceTransferProgressViewController {
             transferFailed(hint: hint)
             speedLabel.isHidden = true
             stateObserver?.cancel()
-            Logger.general.info(category: "DeviceTransferProgress", message: "Transfer failed: \(error)")
+            Logger.general.error(category: "DeviceTransferProgress", message: "Transfer failed: \(error)")
         }
     }
     

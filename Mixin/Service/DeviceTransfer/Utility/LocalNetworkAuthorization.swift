@@ -32,7 +32,7 @@ class LocalNetworkAuthorization: NSObject {
             case .waiting:
                 Logger.general.info(category: "LocalNetworkAuthorization", message: "Denied")
                 self.completion?(false)
-                self.reset()
+                self.tearDown()
             default:
                 break
             }
@@ -47,7 +47,7 @@ class LocalNetworkAuthorization: NSObject {
         netService.publish()
     }
     
-    private func reset() {
+    private func tearDown() {
         browser?.cancel()
         browser = nil
         netService?.stop()
@@ -62,7 +62,7 @@ extension LocalNetworkAuthorization : NetServiceDelegate {
     func netServiceDidPublish(_ sender: NetService) {
         Logger.general.info(category: "LocalNetworkAuthorization", message: "Granted")
         completion?(true)
-        reset()
+        tearDown()
     }
     
 }

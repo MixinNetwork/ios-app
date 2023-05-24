@@ -11,13 +11,13 @@ final class DeviceTransferServer {
     
     enum State {
         case idle
-        case listening(hostname: String, port: UInt16, code: UInt16)
+        case listening(hostname: String, port: UInt16)
         case transfer(progress: Double, speed: String)
         case closed(DeviceTransferClosedReason)
     }
     
     let code: UInt16 = .random(in: 0...999)
-    let speedInspector = NetworkSpeedInspector()
+    let key = DeviceTransferProtocol.Key()
     
     // Access on the private `queue`
     @Published private(set) var state: State = .idle
@@ -27,6 +27,7 @@ final class DeviceTransferServer {
     
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferServer")
     private let dataLoaderQueue = Queue(label: "one.mixin.messenger.DeviceTransferServer.Loader")
+    private let speedInspector = NetworkSpeedInspector()
     private let maxMemoryConsumption = 100 * Int(bytesPerMegaByte)
     private let maxWaitingTimeIntervalUntilContentProcessed: TimeInterval = 10
     
@@ -34,16 +35,20 @@ final class DeviceTransferServer {
     private var listener: NWListener?
     private var connection: NWConnection?
     
+    private var opaquePointer: UnsafeMutableRawPointer {
+        Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()
+    }
+    
     init() {
-        Logger.general.info(category: "DeviceTransferServer", message: "\(Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()) init")
+        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) init")
     }
     
     deinit {
-        Logger.general.info(category: "DeviceTransferServer", message: "\(Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()) deinit")
+        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) deinit")
     }
     
     func startListening(onFailure: @escaping (Error) -> Void) {
-        queue.async { [weak self, code] in
+        queue.async { [weak self] in
             guard self?.listener == nil else {
                 return
             }
@@ -68,7 +73,7 @@ final class DeviceTransferServer {
                             Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a port")
                         case let (.some(self), .some(port)):
                             Logger.general.info(category: "DeviceTransferServer", message: "Listening on [\(hostname)]:\(port.rawValue)")
-                            self.state = .listening(hostname: hostname, port: port.rawValue, code: code)
+                            self.state = .listening(hostname: hostname, port: port.rawValue)
                         }
                     } catch {
                         Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a hostname")
@@ -205,26 +210,23 @@ extension DeviceTransferServer {
                 return
             }
             
-            var remoteChecksum: UInt64 {
-                let data = content[content.endIndex.advanced(by: -8)...]
-                return UInt64(data: data, endianess: .big)
-            }
-            
             if let header = message[DeviceTransferProtocol.MessageKey.header] as? DeviceTransferHeader {
                 switch header.type {
                 case .command:
-                    let jsonData = content[..<content.endIndex.advanced(by: -8)]
-                    let localChecksum = CRC32.checksum(data: jsonData)
-                    guard localChecksum == remoteChecksum else {
-                        self.stop(reason: .exception(.checksumError(local: localChecksum, remote: remoteChecksum)))
+                    let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
+                    let encryptedData = content[..<firstHMACIndex]
+                    let remoteHMAC = content[firstHMACIndex...]
+                    let localHMAC = HMACSHA256.calculate(for: encryptedData, using: self.key.hmac)
+                    guard localHMAC == remoteHMAC else {
+                        self.stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
                         return
                     }
                     do {
-                        let command = try JSONDecoder.default.decode(DeviceTransferCommand.self, from: jsonData)
+                        let decryptedData = try AESCryptor.decrypt(encryptedData, with: self.key.aes)
+                        let command = try JSONDecoder.default.decode(DeviceTransferCommand.self, from: decryptedData)
                         self.handle(command: command, on: connection)
                     } catch {
-                        let raw = String(data: jsonData, encoding: .utf8) ?? "Data(\(jsonData.count))"
-                        Logger.general.error(category: "DeviceTransferServer", message: "Unable to decode the command: \(raw)")
+                        Logger.general.error(category: "DeviceTransferServer", message: "Unable to decode the command: \(error)")
                     }
                 case .message:
                     Logger.general.warn(category: "DeviceTransferServer", message: "Received a message from remote")
@@ -298,51 +300,64 @@ extension DeviceTransferServer {
             Logger.general.warn(category: "DeviceTransferServer", message: "Not transfering due to invalid state")
             return
         }
-        let dataSource = DeviceTransferServerDataSource(remotePlatform: remotePlatform)
+        let dataSource = DeviceTransferServerDataSource(key: key, remotePlatform: remotePlatform)
         let count = dataSource.totalCount()
         let start = DeviceTransferCommand(action: .start(count))
-        let data = DeviceTransferProtocol.output(command: start)
-        guard connection === self.connection else {
-            stop(reason: .exception(.mismatchedConnection))
-            return
-        }
-        connection.send(content: data, completion: .contentProcessed({ error in
-            if let error {
-                Logger.general.error(category: "DeviceTransferServer", message: "Error sending start command: \(error)")
-            } else {
-                self.transferData(dataSource: dataSource, connection: connection)
+        do {
+            let data = try DeviceTransferProtocol.output(command: start, key: key)
+            guard connection === self.connection else {
+                stop(reason: .exception(.mismatchedConnection))
+                return
             }
-        }))
+            connection.send(content: data, completion: .contentProcessed({ error in
+                if let error {
+                    Logger.general.error(category: "DeviceTransferServer", message: "Error sending start command: \(error)")
+                } else {
+                    self.transferData(dataSource: dataSource, connection: connection)
+                }
+            }))
+        } catch {
+            Logger.general.error(category: "DeviceTransferServer", message: "Failed to output start command: \(error)")
+            connection.cancel()
+            state = .closed(.exception(.encrypt(error)))
+        }
     }
     
     private func transferData(dataSource: DeviceTransferServerDataSource, connection: NWConnection) {
         assert(self.queue.isCurrent)
         let speedConditioner = NetworkSpeedConditioner(maxCount: maxMemoryConsumption,
                                                        timeoutInterval: maxWaitingTimeIntervalUntilContentProcessed)
-        dataLoaderQueue.async {
-            dataSource.enumerateItems { data, stop in
-                let count = data.count
-                if speedConditioner.wait(count) == .timedOut {
-                    Logger.general.warn(category: "DeviceTransferServer", message: "SpeedConditioner timeout")
-                }
-                if connection.state == .ready {
-                    connection.send(content: data, completion: .contentProcessed({ error in
-                        assert(self.queue.isCurrent)
-                        speedConditioner.signal(count)
-                        if let error {
-                            Logger.general.error(category: "DeviceTransferServer", message: "Failed to send: \(error)")
-                        }
-                    }))
-                    DispatchQueue.main.sync {
-                        self.speedInspector.store(count: count)
+        dataLoaderQueue.async { [key] in
+            do {
+                try dataSource.enumerateItems { data, stop in
+                    let count = data.count
+                    if speedConditioner.wait(count) == .timedOut {
+                        Logger.general.warn(category: "DeviceTransferServer", message: "SpeedConditioner timeout")
                     }
-                } else {
-                    stop = true
+                    if connection.state == .ready {
+                        connection.send(content: data, completion: .contentProcessed({ error in
+                            assert(self.queue.isCurrent)
+                            speedConditioner.signal(count)
+                            if let error {
+                                Logger.general.error(category: "DeviceTransferServer", message: "Failed to send: \(error)")
+                            }
+                        }))
+                        DispatchQueue.main.sync {
+                            self.speedInspector.store(byteCount: count)
+                        }
+                    } else {
+                        stop = true
+                    }
                 }
-            }
-            let finish = DeviceTransferCommand(action: .finish)
-            if let data = DeviceTransferProtocol.output(command: finish) {
+                let finish = DeviceTransferCommand(action: .finish)
+                let data = try DeviceTransferProtocol.output(command: finish, key: key)
                 connection.send(content: data, completion: .idempotent)
+            } catch {
+                Logger.general.error(category: "DeviceTransferServer", message: "Failed to transfer: \(error)")
+                connection.cancel()
+                self.queue.async {
+                    self.state = .closed(.exception(.failed(error)))
+                }
             }
         }
     }

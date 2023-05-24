@@ -18,10 +18,9 @@ final class NetworkSpeedInspector {
         count = 0
     }
     
-    // Count in number of bytes
-    func store(count: Int) {
+    func store(byteCount: Int) {
         assert(Queue.main.isCurrent)
-        self.count += Int64(count)
+        self.count += Int64(byteCount)
     }
     
 }

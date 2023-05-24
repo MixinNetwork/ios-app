@@ -47,6 +47,11 @@ final class DeviceTransferServer {
         Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) deinit")
     }
     
+}
+
+// MARK: - Listening Connection
+extension DeviceTransferServer {
+    
     func startListening(onFailure: @escaping (Error) -> Void) {
         queue.async { [weak self] in
             guard self?.listener == nil else {
@@ -111,6 +116,33 @@ final class DeviceTransferServer {
         }
     }
     
+}
+
+// MARK: - Speed Inspecting
+extension DeviceTransferServer {
+    
+    private func startSpeedInspecting() {
+        assert(Queue.main.isCurrent)
+        speedInspector.clear()
+        speedInspector.scheduleAutoReporting { speed in
+            self.queue.async {
+                if case let .transfer(progress, _) = self.state {
+                    self.state = .transfer(progress: progress, speed: speed)
+                }
+            }
+        }
+    }
+    
+    private func stopSpeedInspecting() {
+        assert(Queue.main.isCurrent)
+        speedInspector.invalidateAutoReporting()
+    }
+    
+}
+
+// MARK: - Signaling
+extension DeviceTransferServer {
+    
     func consumeLastConnectionBlockedReason() {
         assert(Queue.main.isCurrent)
         lastConnectionBlockedReason = nil
@@ -129,29 +161,20 @@ final class DeviceTransferServer {
         }
     }
     
-}
-
-extension DeviceTransferServer {
-    
-    private func startSpeedInspecting() {
-        assert(Queue.main.isCurrent)
-        speedInspector.scheduleAutoConsuming { speed in
-            self.queue.async {
-                if case let .transfer(progress, _) = self.state {
-                    self.state = .transfer(progress: progress, speed: speed)
-                }
-            }
+    private func rejectCurrentConnection(reason: ConnectionBlockedReason) {
+        assert(queue.isCurrent)
+        DispatchQueue.main.sync {
+            self.lastConnectionBlockedReason = reason
+        }
+        if let connection {
+            connection.cancel()
+            self.connection = nil
+        }
+        startListening { error in
+            Logger.general.error(category: "DeviceTransferServer", message: "Failed to start listening after connection rejected")
+            self.state = .closed(.exception(.failed(error)))
         }
     }
-    
-    private func stopSpeedInspecting() {
-        assert(Queue.main.isCurrent)
-        speedInspector.stopAutoConsuming()
-    }
-    
-}
-
-extension DeviceTransferServer {
     
     private func startNewConnection(_ connection: NWConnection) {
         assert(queue.isCurrent)
@@ -216,7 +239,7 @@ extension DeviceTransferServer {
                     let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
                     let encryptedData = content[..<firstHMACIndex]
                     let remoteHMAC = content[firstHMACIndex...]
-                    let localHMAC = HMACSHA256.calculate(for: encryptedData, using: self.key.hmac)
+                    let localHMAC = HMACSHA256.mac(for: encryptedData, using: self.key.hmac)
                     guard localHMAC == remoteHMAC else {
                         self.stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
                         return
@@ -275,23 +298,9 @@ extension DeviceTransferServer {
         }
     }
     
-    private func rejectCurrentConnection(reason: ConnectionBlockedReason) {
-        assert(queue.isCurrent)
-        DispatchQueue.main.sync {
-            self.lastConnectionBlockedReason = reason
-        }
-        if let connection {
-            connection.cancel()
-            self.connection = nil
-        }
-        startListening { error in
-            Logger.general.error(category: "DeviceTransferServer", message: "Failed to start listening after connection rejected")
-            self.state = .closed(.exception(.failed(error)))
-        }
-    }
-    
 }
 
+// MARK: - Data Transfer
 extension DeviceTransferServer {
     
     private func startTransfer(on connection: NWConnection, remotePlatform: DeviceTransferPlatform) {
@@ -343,7 +352,7 @@ extension DeviceTransferServer {
                             }
                         }))
                         DispatchQueue.main.sync {
-                            self.speedInspector.store(byteCount: count)
+                            self.speedInspector.add(byteCount: count)
                         }
                     } else {
                         stop = true

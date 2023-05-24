@@ -126,6 +126,7 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
     
     func handleOutput(framer: NWProtocolFramer.Instance, message: NWProtocolFramer.Message, messageLength: Int, isComplete: Bool) {
         do {
+            // No magic here. See code below for output framing
             try framer.writeOutputNoCopy(length: messageLength)
         } catch {
             Logger.general.error(category: "DeviceTransferProtocol", message: "Failed to output: \(error)")
@@ -159,23 +160,23 @@ extension DeviceTransferProtocol {
     }
     
     static func output(command: DeviceTransferCommand, key: Key) throws -> Data {
-        let jsonData = try JSONEncoder.default.encode(command)
-        return try package(type: .command, data: jsonData, key: key)
+        let data = try JSONEncoder.default.encode(command)
+        return try package(type: .command, data: data, key: key)
     }
     
     static func output<Record: DeviceTransferRecord>(type: DeviceTransferRecordType, data: Record, key: Key) throws -> Data {
         let typedRecord = DeviceTransferTypedRecord(type: type, data: data)
-        let jsonData = try JSONEncoder.default.encode(typedRecord)
-        if jsonData.count >= maxRecordDataSize {
+        let data = try JSONEncoder.default.encode(typedRecord)
+        if data.count >= maxRecordDataSize {
             throw OutputError.maxSizeExceeded
         } else {
-            return try package(type: .message, data: jsonData, key: key)
+            return try package(type: .message, data: data, key: key)
         }
     }
     
     private static func package(type: DeviceTransferHeader.ContentType, data: Data, key: Key) throws -> Data {
         let encrypted = try AESCryptor.encrypt(data, with: key.aes)
-        let hmac = HMACSHA256.calculate(for: encrypted, using: key.hmac)
+        let hmac = HMACSHA256.mac(for: encrypted, using: key.hmac)
         let header = DeviceTransferHeader(type: type, length: Int32(encrypted.count))
         return header.encoded() + encrypted + hmac
     }

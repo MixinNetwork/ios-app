@@ -30,7 +30,7 @@ struct HMACSHA256 {
 
 extension HMACSHA256 {
     
-    static func calculate(for input: Data, using key: Data) -> Data {
+    static func mac(for input: Data, using key: Data) -> Data {
         let mac = malloc(digestDataCount)!
         input.withUnsafeBytes { input in
             key.withUnsafeBytes { key in

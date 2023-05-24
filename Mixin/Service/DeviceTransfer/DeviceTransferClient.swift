@@ -30,6 +30,10 @@ final class DeviceTransferClient {
     private var processedCount = 0
     private var totalCount: Int?
     
+    private var opaquePointer: UnsafeMutableRawPointer {
+        Unmanaged<DeviceTransferClient>.passUnretained(self).toOpaque()
+    }
+    
     init(hostname: String, port: UInt16, code: UInt16, secretKey: Data, remotePlatform: DeviceTransferPlatform) {
         self.hostname = hostname
         self.port = port
@@ -42,11 +46,11 @@ final class DeviceTransferClient {
             let endpoint = NWEndpoint.hostPort(host: host, port: port)
             return NWConnection(to: endpoint, using: .deviceTransfer)
         }()
-        Logger.general.info(category: "DeviceTransferClient", message: "\(Unmanaged<DeviceTransferClient>.passUnretained(self).toOpaque()) init")
+        Logger.general.info(category: "DeviceTransferClient", message: "\(opaquePointer) init")
     }
     
     deinit {
-        Logger.general.info(category: "DeviceTransferClient", message: "\(Unmanaged<DeviceTransferClient>.passUnretained(self).toOpaque()) deinit")
+        Logger.general.info(category: "DeviceTransferClient", message: "\(opaquePointer) deinit")
     }
     
     func start() {
@@ -63,6 +67,7 @@ final class DeviceTransferClient {
                 Logger.general.info(category: "DeviceTransferClient", message: "Connection ready")
                 if let self {
                     do {
+                        DispatchQueue.main.sync(execute: self.speedInspector.clear)
                         let connect = DeviceTransferCommand(action: .connect(code: self.code, userID: myUserId))
                         let content = try DeviceTransferProtocol.output(command: connect, key: self.key)
                         self.continueReceiving(connection: connection)
@@ -101,7 +106,7 @@ final class DeviceTransferClient {
         assert(Queue.main.isCurrent)
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            let speed = self.speedInspector.consume()
+            let speed = self.speedInspector.drain()
             let progress: Double
             if let totalCount = self.totalCount {
                 progress = Double(self.processedCount) * 100 / Double(totalCount)
@@ -170,7 +175,7 @@ extension DeviceTransferClient {
         assert(queue.isCurrent)
         let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
         let encryptedData = content[..<firstHMACIndex]
-        let localHMAC = HMACSHA256.calculate(for: encryptedData, using: key.hmac)
+        let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
             stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
@@ -214,13 +219,13 @@ extension DeviceTransferClient {
     private func handleMessage(content: Data) {
         assert(queue.isCurrent)
         DispatchQueue.main.sync {
-            speedInspector.store(byteCount: content.count)
+            speedInspector.add(byteCount: content.count)
             processedCount += 1
         }
         
         let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
         let encryptedData = content[..<firstHMACIndex]
-        let localHMAC = HMACSHA256.calculate(for: encryptedData, using: key.hmac)
+        let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
             stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
@@ -314,7 +319,7 @@ extension DeviceTransferClient {
         }
         
         DispatchQueue.main.sync {
-            speedInspector.store(byteCount: content.count)
+            speedInspector.add(byteCount: content.count)
             if isReceivingNewFile {
                 processedCount += 1
             }

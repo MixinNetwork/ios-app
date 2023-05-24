@@ -19,22 +19,7 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
         tableHeaderView.label.text = R.string.localizable.transfer_to_pc_hint()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        let server = DeviceTransferServer()
         NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
-        server.$state
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
-                self.server(server, didChangeToState: state)
-            }
-            .store(in: &observers)
-        server.$lastConnectionBlockedReason
-            .sink { [unowned self] reason in
-                if let reason {
-                    self.serverDidBlockConnection(reason)
-                }
-            }
-            .store(in: &observers)
-        self.server = server
     }
     
     class func instance() -> UIViewController {
@@ -64,7 +49,22 @@ extension TransferToDesktopViewController: UITableViewDelegate {
                                                rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
             section.setAccessory(.busy, forRowAt: indexPath.row)
             dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
-            server?.startListening() { [weak self] error in
+            let server = DeviceTransferServer()
+            server.$state
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] state in
+                    self.server(server, didChangeToState: state)
+                }
+                .store(in: &observers)
+            server.$lastConnectionBlockedReason
+                .sink { [unowned self] reason in
+                    if let reason {
+                        self.serverDidBlockConnection(reason)
+                    }
+                }
+                .store(in: &observers)
+            self.server = server
+            server.startListening() { [weak self] error in
                 guard let self else {
                     return
                 }
@@ -128,6 +128,8 @@ extension TransferToDesktopViewController {
             }
         case .transfer:
             observers.forEach({ $0.cancel() })
+            tableView.isUserInteractionEnabled = true
+            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             let progress = DeviceTransferProgressViewController(connection: .server(server, .desktop))
             navigationController?.pushViewController(progress, animated: true)
         case let .closed(reason):

@@ -72,6 +72,7 @@ final class DeviceTransferServer {
                         }
                     } catch {
                         Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a hostname")
+                        self?.state = .closed(.exception(.failed(error)))
                     }
                 case let .failed(error), let .waiting(error):
                     Logger.general.warn(category: "DeviceTransferServer", message: "Not listening: \(error)")
@@ -186,7 +187,6 @@ extension DeviceTransferServer {
             }
         }
         connection.start(queue: queue.dispatchQueue)
-        continueReceiving(connection: connection)
     }
     
     private func continueReceiving(connection: NWConnection) {
@@ -234,7 +234,10 @@ extension DeviceTransferServer {
             } else {
                 Logger.general.warn(category: "DeviceTransferServer", message: "Received data without a header")
             }
-            if error == nil {
+            
+            if let error {
+                Logger.general.error(category: "DeviceTransferServer", message: "Error receiving message: \(error)")
+            } else {
                 self.continueReceiving(connection: connection)
             }
         }

@@ -17,6 +17,11 @@ class TransferToPhoneQRCodeViewController: UIViewController {
         super.viewDidLoad()
         updateTipLabel()
         LoginManager.shared.inDeviceTransfer = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        startTransfering = false
         let server = DeviceTransferServer()
         server.$state
             .receive(on: DispatchQueue.main)
@@ -41,11 +46,6 @@ class TransferToPhoneQRCodeViewController: UIViewController {
                 self.navigationController?.popViewController(animated: true)
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        startTransfering = false
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -92,6 +92,8 @@ extension TransferToPhoneQRCodeViewController {
                 Logger.general.error(category: "TransferToPhoneQRCode", message: "Unable to encode: \(error)")
             }
         case .transfer:
+            startTransfering = true
+            observers.forEach { $0.cancel() }
             let progress = DeviceTransferProgressViewController(connection: .server(server, .phone))
             navigationController?.pushViewController(progress, animated: true)
         case let .closed(reason):

@@ -170,7 +170,7 @@ extension DeviceTransferProgressViewController {
     
     private func clientStateDidChange(_ state: DeviceTransferClient.State) {
         switch state {
-        case .idle, .connecting:
+        case .idle:
             Logger.general.warn(category: "DeviceTransferProgress", message: "Invalid state: \(state)")
         case let .transfer(progress, speed):
             updateTitleLabel(with: progress, speed: speed)

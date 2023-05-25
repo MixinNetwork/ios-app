@@ -6,4 +6,5 @@ enum DeviceTransferError: Error {
     case encrypt(Error)
     case mismatchedHMAC(local: Data, remote: Data)
     case failed(Error)
+    case receiveFile(Error)
 }

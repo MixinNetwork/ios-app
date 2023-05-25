@@ -140,6 +140,8 @@ extension RestoreFromDesktopViewController {
     
     private func stateDidChange(client: DeviceTransferClient, state: DeviceTransferClient.State) {
         switch state {
+        case .idle:
+            break
         case .transfer:
             stateObserver?.cancel()
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
@@ -155,8 +157,6 @@ extension RestoreFromDesktopViewController {
                     self.navigationController?.popViewController(animated: true)
                 }
             }
-        case .idle, .connecting:
-            break
         }
     }
     

@@ -6,7 +6,6 @@ final class DeviceTransferClient {
     
     enum State {
         case idle
-        case connecting
         case transfer(progress: Double, speed: String)
         case closed(DeviceTransferClosedReason)
     }
@@ -93,8 +92,11 @@ final class DeviceTransferClient {
     
     private func stop(reason: DeviceTransferClosedReason) {
         assert(queue.isCurrent)
+        DispatchQueue.main.sync {
+            self.timer?.invalidate()
+        }
         connection.cancel()
-        Logger.general.warn(category: "DeviceTransferClient", message: "Stop with reason: \(reason)")
+        Logger.general.info(category: "DeviceTransferClient", message: "Stopped: \(reason)")
         switch reason {
         case .finished:
             state = .closed(.finished)
@@ -106,7 +108,12 @@ final class DeviceTransferClient {
     private func startUpdatingProgressAndSpeed() {
         assert(Queue.main.isCurrent)
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self else {
+                timer.invalidate()
+                Logger.general.warn(category: "DeviceTransferClient", message: "Progress timer fired after self deinited")
+                return
+            }
             let speed = self.speedInspector.drain()
             let progress: Double
             if let totalCount = self.totalCount {
@@ -117,7 +124,7 @@ final class DeviceTransferClient {
             self.queue.async {
                 guard case .transfer = self.state else {
                     DispatchQueue.main.sync(execute: timer.invalidate)
-                    Logger.general.warn(category: "DeviceTransferClient", message: "Progress timer invalidated on firing")
+                    Logger.general.warn(category: "DeviceTransferClient", message: "Progress timer fired on: \(self.state)")
                     return
                 }
                 self.state = .transfer(progress: progress, speed: speed)
@@ -144,7 +151,7 @@ extension DeviceTransferClient {
                 let message = contentContext?.protocolMetadata(definition: DeviceTransferProtocol.definition) as? NWProtocolFramer.Message
             else {
                 if isComplete {
-                    self.state = .closed(.exception(.remoteComplete))
+                    self.stop(reason: .exception(.remoteComplete))
                     Logger.general.warn(category: "DeviceTransferClient", message: "Remote closed")
                 }
                 return
@@ -205,7 +212,6 @@ extension DeviceTransferClient {
         case .finish:
             Logger.general.info(category: "DeviceTransferClient", message: "Received finish command")
             ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
-            self.state = .closed(.finished)
             do {
                 let command = DeviceTransferCommand(action: .finish)
                 let content = try DeviceTransferProtocol.output(command: command, key: key)
@@ -214,6 +220,7 @@ extension DeviceTransferClient {
             } catch {
                 Logger.general.error(category: "DeviceTransferClient", message: "Failed to finish command: \(error)")
             }
+            self.stop(reason: .finished)
         default:
             break
         }
@@ -337,8 +344,7 @@ extension DeviceTransferClient {
             try stream.write(data: content)
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Failed to write: \(error)")
-            connection.cancel()
-            state = .closed(.exception(.failed(error)))
+            stop(reason: .exception(.receiveFile(error)))
         }
         if context.remainingLength == 0 {
             stream.close()

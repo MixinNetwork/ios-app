@@ -44,16 +44,16 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
                 alert(R.string.localizable.unable_connect_to_desktop())
                 return
             }
+            let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
+                                               rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
+            section.setAccessory(.busy, forRowAt: indexPath.row)
+            dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = false
             authorization.requestAuthorization { [weak self] isAuthorized in
                 guard let strongSelf = self else {
                     return
                 }
                 if isAuthorized {
-                    let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
-                                                       rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
-                    section.setAccessory(.busy, forRowAt: indexPath.row)
-                    strongSelf.dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
                     strongSelf.sendPullCommand() { success in
                         if !success, let self {
                             self.alert(R.string.localizable.unable_connect_to_desktop())
@@ -63,6 +63,7 @@ extension RestoreFromDesktopViewController: UITableViewDelegate {
                     }
                 } else {
                     tableView.isUserInteractionEnabled = true
+                    strongSelf.dataSource.replaceSection(at: 0, with: strongSelf.section, animation: .automatic)
                     Logger.general.info(category: "RestoreFromDesktop", message: "LocalNetwork is not authorized")
                     strongSelf.alertSettings(R.string.localizable.local_network_unable_accessed())
                 }

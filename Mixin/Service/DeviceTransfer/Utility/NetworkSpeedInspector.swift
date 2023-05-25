@@ -41,12 +41,12 @@ extension NetworkSpeedInspector {
 // - MARK: Auto Reporting
 extension NetworkSpeedInspector {
     
-    func scheduleAutoReporting(_ block: @escaping (String) -> Void) {
+    func scheduleAutoReporting(_ report: @escaping (String) -> Void) {
         assert(Queue.main.isCurrent)
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [unowned self] _ in
-            let count = self.drain()
-            block(count)
+            let speed = self.drain()
+            report(speed)
         }
     }
     

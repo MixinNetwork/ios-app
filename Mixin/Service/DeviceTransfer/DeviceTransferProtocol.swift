@@ -3,6 +3,27 @@ import Network
 import libsignal_protocol_c
 import MixinServices
 
+/*
+ Command packet format:
+ ------------------------------------------------------------------------------------------
+ | type (1 byte 01) | body_length（4 bytes） | [iv (16 bytes) | body(AES)] | HMAC（32 bytes）|
+ ------------------------------------------------------------------------------------------
+ 
+ Message packet format:
+ ------------------------------------------------------------------------------------------
+ | type (1 byte 02) | body_length（4 bytes） | [iv (16 bytes) | body(AES)] | HMAC（32 bytes）|
+ ------------------------------------------------------------------------------------------
+ 
+ File packet format:
+ ----------------------------------------------------------------------------------------------------------
+ | type (1 byte 03) | body_length（4 bytes）| [uuid(16 bytes) | iv (16 bytes) | body(AES)] | HMAC（32 bytes）|
+ ----------------------------------------------------------------------------------------------------------
+ 
+ Note:
+ 1. Content within the "[]" represents the data that needs to be verified
+ 2. "body_length" equals to the content length within the "[]"
+ */
+
 final class DeviceTransferProtocol: NWProtocolFramerImplementation {
     
     enum MessageKey {
@@ -44,9 +65,7 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
         let remainingLength: Int
         
         func replacingRemainingLength(with length: Int) -> FileContext {
-            FileContext(header: header,
-                        fileHeader: fileHeader,
-                        remainingLength: length)
+            FileContext(header: header, fileHeader: fileHeader, remainingLength: length)
         }
         
     }

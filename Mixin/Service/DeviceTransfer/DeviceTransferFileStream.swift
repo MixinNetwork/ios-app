@@ -64,7 +64,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
                 destinationURLs.append(url)
             }
         } else if let transcriptMessage = TranscriptMessageDAO.shared.transcriptMessage(messageId: id), let mediaURL = transcriptMessage.mediaUrl {
-            let url = AttachmentContainer.url(transcriptId: id, filename: mediaURL)
+            let url = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
             destinationURLs = [url]
         } else {
             Logger.general.warn(category: "DeviceTransferFileStream", message: "No message found for: \(id)")

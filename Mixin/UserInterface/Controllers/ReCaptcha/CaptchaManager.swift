@@ -20,6 +20,7 @@ class CaptchaManager: NSObject {
     func validate(on viewController: UIViewController, completion: @escaping CompletionCallback) {
         let window = AppDelegate.current.mainWindow
         let config = WKWebViewConfiguration()
+        config.preferences.isFraudulentWebsiteWarningEnabled = false
         config.userContentController.add(self, name: messageHandlerName)
         let webView = WKWebView(frame: window.bounds, configuration: config)
         webView.frame.origin.y = window.bounds.height

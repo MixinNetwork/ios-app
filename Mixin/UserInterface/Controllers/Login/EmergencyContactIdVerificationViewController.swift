@@ -11,13 +11,12 @@ class EmergencyContactIdVerificationViewController: LoginInfoInputViewController
         textField.textAlignment = .center
         textField.keyboardType = .numberPad
         textField.delegate = self
+        AppDelegate.current.mainWindow.endEditing(true)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if !textField.isFirstResponder {
-            textField.becomeFirstResponder()
-        }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        textField.becomeFirstResponder()
     }
     
     override func continueAction(_ sender: Any) {

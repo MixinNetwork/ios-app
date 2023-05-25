@@ -28,7 +28,7 @@ final class DeviceTransferServer {
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferServer")
     private let dataLoaderQueue = Queue(label: "one.mixin.messenger.DeviceTransferServer.Loader")
     private let speedInspector = NetworkSpeedInspector()
-    private let maxMemoryConsumption = 100 * Int(bytesPerMegaByte)
+    private let maxMemoryConsumption = 10 * Int(bytesPerMegaByte)
     private let maxWaitingTimeIntervalUntilContentProcessed: TimeInterval = 10
     
     // Access on the private `queue`

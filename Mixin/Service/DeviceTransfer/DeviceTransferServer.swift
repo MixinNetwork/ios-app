@@ -336,9 +336,13 @@ extension DeviceTransferServer {
         assert(self.queue.isCurrent)
         let speedConditioner = NetworkSpeedConditioner(maxCount: maxMemoryConsumption,
                                                        timeoutInterval: maxWaitingTimeIntervalUntilContentProcessed)
-        dataLoaderQueue.async { [key] in
+        dataLoaderQueue.async { [weak self, key] in
             do {
                 try dataSource.enumerateItems { data, stop in
+                    guard let self else {
+                        stop = true
+                        return
+                    }
                     let count = data.count
                     if speedConditioner.wait(count) == .timedOut {
                         Logger.general.warn(category: "DeviceTransferServer", message: "SpeedConditioner timeout")
@@ -364,8 +368,8 @@ extension DeviceTransferServer {
             } catch {
                 Logger.general.error(category: "DeviceTransferServer", message: "Failed to transfer: \(error)")
                 connection.cancel()
-                self.queue.async {
-                    self.state = .closed(.exception(.failed(error)))
+                self?.queue.async {
+                    self?.state = .closed(.exception(.failed(error)))
                 }
             }
         }

@@ -335,12 +335,16 @@ extension DeviceTransferServerDataSource {
     
     // Only throw fatal errors, like encryption failure for now
     private func readAttachment(_ attachment: TransferItem.Attachment, using block: (Data, inout Bool) -> Void) throws {
+        let url = attachment.url
+        let fileSize = Int(FileManager.default.fileSize(url.path))
+        guard fileSize > 0 else {
+            return
+        }
+        
         guard let idData = UUID(uuidString: attachment.messageID)?.data else {
             Logger.general.error(category: "DeviceTransferServerDataSource", message: "Invalid mid: \(attachment.messageID)")
             return
         }
-        
-        let url = attachment.url
         guard let stream = InputStream(url: url) else {
             Logger.general.info(category: "DeviceTransferServerDataSource", message: "Open stream failed: \(url)")
             return
@@ -352,8 +356,6 @@ extension DeviceTransferServerDataSource {
         Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
         
         let encryptor = try AESCryptor(operation: .encrypt, iv: iv, key: key.aes)
-        
-        let fileSize = Int(FileManager.default.fileSize(url.path))
         let encryptedFileSize = encryptor.outputDataCount(inputDataCount: fileSize, isFinal: true)
         encryptor.reserveOutputBufferCapacity(min(encryptedFileSize, fileChunkSize))
         

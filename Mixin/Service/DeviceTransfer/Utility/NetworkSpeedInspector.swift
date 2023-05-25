@@ -44,9 +44,12 @@ extension NetworkSpeedInspector {
     func scheduleAutoReporting(_ report: @escaping (String) -> Void) {
         assert(Queue.main.isCurrent)
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [unowned self] _ in
-            let speed = self.drain()
-            report(speed)
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            if let speed = self?.drain() {
+                report(speed)
+            } else {
+                Logger.general.warn(category: "NetworkSpeedInspector", message: "Timer fired after deinited")
+            }
         }
     }
     

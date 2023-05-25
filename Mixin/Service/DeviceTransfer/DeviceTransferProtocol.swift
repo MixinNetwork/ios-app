@@ -217,6 +217,7 @@ extension DeviceTransferProtocol {
                 return 0
             }
             guard let currentContent = Content(buffer) else {
+                Logger.general.warn(category: "DeviceTransferProtocol", message: "Failed to parse: \(Content.self)")
                 framer.markFailed(error: .posix(.EBADMSG))
                 return 0
             }

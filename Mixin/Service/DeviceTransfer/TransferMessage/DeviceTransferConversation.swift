@@ -30,9 +30,10 @@ struct DeviceTransferConversation {
         lastMessageCreatedAt = conversation.lastMessageCreatedAt
         lastReadMessageId = conversation.lastReadMessageId
         unseenMessageCount = conversation.unseenMessageCount
-        if platform == .iOS {
+        switch platform {
+        case .iOS:
             status = conversation.status
-        } else {
+        case .other:
             status = ConversationStatusConverter.toOtherPlatform(status: conversation.status).rawValue
         }
         draft = conversation.draft

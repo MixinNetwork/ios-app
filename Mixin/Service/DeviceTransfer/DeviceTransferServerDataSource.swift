@@ -264,7 +264,7 @@ extension DeviceTransferServerDataSource {
             nextPrimaryID = transcriptMessages.last?.transcriptId
             nextSecondaryID = transcriptMessages.last?.messageId
             transferItems = transcriptMessages.compactMap { transcriptMessage in
-                let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage)
+                let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage, to: remotePlatform)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferTranscriptMessage, key: key)
                     if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty {
@@ -284,7 +284,7 @@ extension DeviceTransferServerDataSource {
             nextPrimaryID = messages.last?.messageId
             nextSecondaryID = nil
             transferItems = messages.compactMap { message in
-                let deviceTransferMessage = DeviceTransferMessage(message: message)
+                let deviceTransferMessage = DeviceTransferMessage(message: message, to: remotePlatform)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessage, key: key)
                     if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, let category = AttachmentContainer.Category(messageCategory: message.category) {

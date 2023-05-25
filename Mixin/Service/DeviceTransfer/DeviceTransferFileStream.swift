@@ -32,14 +32,12 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
     private let tempURL: URL
     private let handle: FileHandle
     private let destinationURLs: [URL]
-    private let fileSize: Int
     private let fileManager: FileManager = .default
-    private let key: Data
     
-    private var localHMAC: HMACSHA256
     private var decryptor: AESCryptor
+    private var remainingDataCount: Int
+    private var localHMAC: HMACSHA256
     private var remoteHMAC = Data(capacity: DeviceTransferProtocol.hmacDataCount)
-    private var consumedEncryptedDataCount = 0
     
     init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey) {
         let decryptor: AESCryptor
@@ -69,23 +67,23 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             let url = AttachmentContainer.url(transcriptId: id, filename: mediaURL)
             destinationURLs = [url]
         } else {
+            Logger.general.warn(category: "DeviceTransferFileStream", message: "No message found for: \(id)")
             return nil
         }
         
         do {
-            let url = fileManager.temporaryDirectory.appendingPathComponent("devicetransfer.temp")
-            if fileManager.fileExists(atPath: url.path) {
-                try fileManager.removeItem(at: url)
+            let tempURL = fileManager.temporaryDirectory.appendingPathComponent("devicetransfer.tmp")
+            if fileManager.fileExists(atPath: tempURL.path) {
+                try fileManager.removeItem(at: tempURL)
             }
-            fileManager.createFile(atPath: url.path, contents: nil)
+            fileManager.createFile(atPath: tempURL.path, contents: nil)
             
-            self.tempURL = url
-            self.handle = try FileHandle(forWritingTo: url)
+            self.tempURL = tempURL
+            self.handle = try FileHandle(forWritingTo: tempURL)
             self.destinationURLs = destinationURLs
-            self.fileSize = Int(context.header.length) - DeviceTransferProtocol.ivDataCount - idData.count
-            self.key = key.aes
-            self.localHMAC = HMACSHA256(key: key.hmac)
             self.decryptor = decryptor
+            self.remainingDataCount = Int(context.header.length) - idData.count - DeviceTransferProtocol.ivDataCount
+            self.localHMAC = HMACSHA256(key: key.hmac)
             super.init(id: context.fileHeader.id)
             
             localHMAC.update(data: idData)
@@ -98,30 +96,29 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
     }
     
     override func write(data: Data) throws {
-        let remainingCount = fileSize - consumedEncryptedDataCount
-        if remainingCount == 0 {
+        if remainingDataCount == 0 {
             remoteHMAC.append(data)
-        } else if data.count >= remainingCount {
-            let encryptedFileData = data.prefix(remainingCount)
+        } else if data.count >= remainingDataCount {
+            let encryptedFileData = data.prefix(remainingDataCount)
             localHMAC.update(data: encryptedFileData)
             
             let decryptedFileData = try decryptor.update(encryptedFileData)
             handle.write(decryptedFileData)
             
-            consumedEncryptedDataCount = fileSize
-            
-            let hmacSliceCount = data.count - remainingCount
+            let hmacSliceCount = data.count - remainingDataCount
             if hmacSliceCount > 0 {
                 let hmacSliceData = data.suffix(hmacSliceCount)
                 remoteHMAC.append(hmacSliceData)
             }
+            
+            remainingDataCount = 0
         } else {
             localHMAC.update(data: data)
             
             let decrypted = try decryptor.update(data)
             handle.write(decrypted)
             
-            consumedEncryptedDataCount += data.count
+            remainingDataCount -= data.count
         }
     }
     
@@ -143,25 +140,26 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             return
         }
         let localHMAC = localHMAC.finalize()
-        if localHMAC != remoteHMAC {
+        guard localHMAC == remoteHMAC else {
             let local = localHMAC.base64EncodedString()
             let remote = remoteHMAC.base64EncodedString()
             Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Local HMAC: \(local), Remote HMAC: \(remote)")
-        } else {
-            for destinationURL in destinationURLs {
-                let path = destinationURL.path
-                if fileManager.fileExists(atPath: path) {
-                    if fileManager.fileSize(path) == 0 {
-                        try? fileManager.removeItem(atPath: path)
-                    } else {
-                        continue
-                    }
+            return
+        }
+        
+        for destinationURL in destinationURLs {
+            let path = destinationURL.path
+            if fileManager.fileExists(atPath: path) {
+                if fileManager.fileSize(path) == 0 {
+                    try? fileManager.removeItem(atPath: path)
+                } else {
+                    continue
                 }
-                do {
-                    try fileManager.copyItem(at: tempURL, to: destinationURL)
-                } catch {
-                    Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Not copied: \(error)")
-                }
+            }
+            do {
+                try fileManager.copyItem(at: tempURL, to: destinationURL)
+            } catch {
+                Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Not copied: \(error)")
             }
         }
     }

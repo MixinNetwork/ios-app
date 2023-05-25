@@ -338,6 +338,7 @@ extension DeviceTransferServerDataSource {
         let url = attachment.url
         let fileSize = Int(FileManager.default.fileSize(url.path))
         guard fileSize > 0 else {
+            Logger.general.error(category: "DeviceTransferServerDataSource", message: "File is empty: \(url)")
             return
         }
         

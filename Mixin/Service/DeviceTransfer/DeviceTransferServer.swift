@@ -55,6 +55,7 @@ extension DeviceTransferServer {
     func startListening(onFailure: @escaping (Error) -> Void) {
         queue.async { [weak self] in
             guard self?.listener == nil else {
+                Logger.general.warn(category: "DeviceTransferServer", message: "Listener inited")
                 return
             }
             
@@ -153,6 +154,7 @@ extension DeviceTransferServer {
         listener?.cancel()
         connection?.cancel()
         DispatchQueue.main.sync(execute: stopSpeedInspecting)
+        Logger.general.warn(category: "DeviceTransferServer", message: "Stop with reason: \(reason)")
         switch reason {
         case .finished:
             state = .closed(.finished)
@@ -340,6 +342,7 @@ extension DeviceTransferServer {
             do {
                 try dataSource.enumerateItems { data, stop in
                     guard let self else {
+                        Logger.general.error(category: "DeviceTransferServer", message: "Stop transfering due to server deinited")
                         stop = true
                         return
                     }
@@ -359,6 +362,7 @@ extension DeviceTransferServer {
                             self.speedInspector.add(byteCount: count)
                         }
                     } else {
+                        Logger.general.error(category: "DeviceTransferServer", message: "Stop transfering due to connection is not ready: \(connection.state)")
                         stop = true
                     }
                 }

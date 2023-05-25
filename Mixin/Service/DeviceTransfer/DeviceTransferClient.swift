@@ -94,6 +94,7 @@ final class DeviceTransferClient {
     private func stop(reason: DeviceTransferClosedReason) {
         assert(queue.isCurrent)
         connection.cancel()
+        Logger.general.warn(category: "DeviceTransferClient", message: "Stop with reason: \(reason)")
         switch reason {
         case .finished:
             state = .closed(.finished)
@@ -165,7 +166,9 @@ extension DeviceTransferClient {
             } else {
                 Logger.general.warn(category: "DeviceTransferClient", message: "Protocol provides unknown context")
             }
-            if error == nil {
+            if let error {
+                Logger.general.error(category: "DeviceTransferClient", message: "Error receiving message: \(error)")
+            } else {
                 self.continueReceiving(connection: connection)
             }
         }
@@ -279,10 +282,15 @@ extension DeviceTransferClient {
                 let message = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessage>.self, from: decryptedData).data
                 if MessageCategory.isLegal(category: message.category) {
                     MessageDAO.shared.save(message: message.toMessage())
+                } else {
+                    Logger.general.warn(category: "DeviceTransferClient", message: "Message is illegal: \(message)")
                 }
             case .messageMention:
-                if let messageMention = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessageMention>.self, from: decryptedData).data.toMessageMention() {
-                    MessageMentionDAO.shared.save(messageMention: messageMention)
+                let messageMention = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessageMention>.self, from: decryptedData).data
+                if let mention = messageMention.toMessageMention() {
+                    MessageMentionDAO.shared.save(messageMention: mention)
+                } else {
+                    Logger.general.warn(category: "DeviceTransferClient", message: "Message Mention does not exist: \(messageMention)")
                 }
             case .expiredMessage:
                 let expiredMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferExpiredMessage>.self, from: decryptedData).data

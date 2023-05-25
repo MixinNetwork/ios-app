@@ -49,8 +49,6 @@ public final class AESCryptor {
         buffer.reserveCapacity(capacity)
     }
     
-    // The data argument to the output should not be stored or used
-    // outside of the lifetime of the call to the closure.
     public func update(_ input: Data) throws -> Data {
         let outputSize = CCCryptorGetOutputLength(cryptor, input.count, false)
         if outputSize > buffer.count {
@@ -64,7 +62,7 @@ public final class AESCryptor {
                                 input.baseAddress,
                                 input.count,
                                 buffer.baseAddress,
-                                outputSize,
+                                buffer.count,
                                 &dataOutMoved)
             }
         }
@@ -75,27 +73,24 @@ public final class AESCryptor {
         if dataOutMoved == 0 {
             return Data()
         } else {
-            return buffer.withUnsafeBytes { buffer in
-                Data(bytes: buffer.baseAddress!, count: dataOutMoved)
-            }
+            return buffer.prefix(dataOutMoved)
         }
     }
     
-    public func final() throws -> Data {
+    public func finalize() throws -> Data {
         let outputSize = CCCryptorGetOutputLength(cryptor, 0, true)
         buffer.count = outputSize
         var dataOutMoved: Int = 0
         let status = buffer.withUnsafeMutableBytes { buffer in
             CCCryptorFinal(cryptor,
                            buffer.baseAddress,
-                           outputSize,
+                           buffer.count,
                            &dataOutMoved)
         }
         guard status == kCCSuccess else {
             throw Error.finalize(status)
         }
-        buffer.count = dataOutMoved
-        return buffer
+        return buffer.prefix(dataOutMoved)
     }
     
 }

@@ -122,8 +122,8 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
                 case .notEnough(let size):
                     return size
                 case .enough(let fileHeader):
-                    let contentLength = Int(header.length) - FileHeader.bufferCount + Self.hmacDataCount
-                    let context = FileContext(header: header, fileHeader: fileHeader, remainingLength: contentLength)
+                    let remainingLength = Int(header.length) - FileHeader.bufferCount + Self.hmacDataCount
+                    let context = FileContext(header: header, fileHeader: fileHeader, remainingLength: remainingLength)
                     receivingState = .pendingFileContent(context)
                 }
             case let .pendingFileContent(context):
@@ -178,12 +178,12 @@ extension DeviceTransferProtocol {
         case maxSizeExceeded
     }
     
-    static func output(command: DeviceTransferCommand, key: Key) throws -> Data {
+    static func output(command: DeviceTransferCommand, key: DeviceTransferKey) throws -> Data {
         let data = try JSONEncoder.default.encode(command)
         return try package(type: .command, data: data, key: key)
     }
     
-    static func output<Record: DeviceTransferRecord>(type: DeviceTransferRecordType, data: Record, key: Key) throws -> Data {
+    static func output<Record: DeviceTransferRecord>(type: DeviceTransferRecordType, data: Record, key: DeviceTransferKey) throws -> Data {
         let typedRecord = DeviceTransferTypedRecord(type: type, data: data)
         let data = try JSONEncoder.default.encode(typedRecord)
         if data.count >= maxRecordDataSize {
@@ -193,71 +193,11 @@ extension DeviceTransferProtocol {
         }
     }
     
-    private static func package(type: DeviceTransferHeader.ContentType, data: Data, key: Key) throws -> Data {
+    private static func package(type: DeviceTransferHeader.ContentType, data: Data, key: DeviceTransferKey) throws -> Data {
         let encrypted = try AESCryptor.encrypt(data, with: key.aes)
         let hmac = HMACSHA256.mac(for: encrypted, using: key.hmac)
         let header = DeviceTransferHeader(type: type, length: Int32(encrypted.count))
         return header.encoded() + encrypted + hmac
-    }
-    
-}
-
-extension DeviceTransferProtocol {
-    
-    struct Key {
-        
-        let raw: Data
-        
-        var aes: Data {
-            raw[..<firstHMACIndex]
-        }
-        
-        var hmac: Data {
-            raw[firstHMACIndex...]
-        }
-        
-        private let firstHMACIndex: Data.Index
-        
-        init() {
-            let seed = Data(withNumberOfSecuredRandomBytes: 32)!
-            self.init(seed: seed)
-        }
-        
-        init(raw: Data) {
-            self.raw = raw
-            self.firstHMACIndex = raw.startIndex.advanced(by: 32)
-        }
-        
-        private init(seed: Data) {
-            assert(seed.count == 32)
-            var derived: UnsafeMutablePointer<UInt8>!
-            var hkdf: OpaquePointer!
-            
-            let status = hkdf_create(&hkdf, 3, globalSignalContext)
-            assert(status == 0)
-            let salt = Data(repeating: 0, count: 32)
-            let info = "Mixin Device Transfer".data(using: .utf8)!
-            let derivedCount = salt.withUnsafeBytes { salt in
-                info.withUnsafeBytes { info in
-                    seed.withUnsafeBytes { seed in
-                        hkdf_derive_secrets(hkdf,
-                                            &derived,
-                                            seed.baseAddress,
-                                            seed.count,
-                                            salt.baseAddress,
-                                            salt.count,
-                                            info.baseAddress,
-                                            info.count,
-                                            64)
-                    }
-                }
-            }
-            assert(derivedCount == 64)
-            
-            let raw = Data(bytesNoCopy: derived, count: 64, deallocator: .free)
-            self.init(raw: raw)
-        }
-        
     }
     
 }

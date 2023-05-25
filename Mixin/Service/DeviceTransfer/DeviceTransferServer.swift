@@ -17,7 +17,7 @@ final class DeviceTransferServer {
     }
     
     let code: UInt16 = .random(in: 0...999)
-    let key = DeviceTransferProtocol.Key()
+    let key = DeviceTransferKey()
     
     // Access on the private `queue`
     @Published private(set) var state: State = .idle

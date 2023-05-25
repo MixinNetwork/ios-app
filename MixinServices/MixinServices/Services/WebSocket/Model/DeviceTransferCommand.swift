@@ -9,14 +9,14 @@ public struct DeviceTransferCommand {
         public let hostname: String
         public let port: UInt16
         public let code: UInt16
-        public let secretKey: Data
+        public let key: DeviceTransferKey
         public let userID: String?
         
-        public init(hostname: String, port: UInt16, code: UInt16, secretKey: Data, userID: String?) {
+        public init(hostname: String, port: UInt16, code: UInt16, key: DeviceTransferKey, userID: String?) {
             self.hostname = hostname
             self.port = port
             self.code = code
-            self.secretKey = secretKey
+            self.key = key
             self.userID = userID
         }
         
@@ -89,7 +89,7 @@ extension DeviceTransferCommand: Codable {
                 return .pull
             case ActionName.push:
                 let secretKeyString = try container.decode(String.self, forKey: .secretKey)
-                guard let secretKey = Data(base64Encoded: secretKeyString) else {
+                guard let secretKey = Data(base64Encoded: secretKeyString), let key = DeviceTransferKey(raw: secretKey) else {
                     throw DecodingError.invalidSecretKey
                 }
                 let hostname = try container.decode(String.self, forKey: .hostname)
@@ -99,7 +99,7 @@ extension DeviceTransferCommand: Codable {
                 let context = PushContext(hostname: hostname,
                                           port: port,
                                           code: code,
-                                          secretKey: secretKey,
+                                          key: key,
                                           userID: userID)
                 return .push(context)
             case ActionName.start:
@@ -138,7 +138,7 @@ extension DeviceTransferCommand: Codable {
             if let userID = context.userID {
                 try container.encode(userID, forKey: .userID)
             }
-            try container.encode(context.secretKey.base64EncodedString(), forKey: .secretKey)
+            try container.encode(context.key.raw.base64EncodedString(), forKey: .secretKey)
         case let .start(count):
             try container.encode(ActionName.start, forKey: .action)
             try container.encode(count, forKey: .total)

@@ -16,7 +16,7 @@ final class DeviceTransferClient {
     private let hostname: String
     private let port: UInt16
     private let code: UInt16
-    private let key: DeviceTransferProtocol.Key
+    private let key: DeviceTransferKey
     private let remotePlatform: DeviceTransferPlatform
     private let connection: NWConnection
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferClient")
@@ -34,11 +34,11 @@ final class DeviceTransferClient {
         Unmanaged<DeviceTransferClient>.passUnretained(self).toOpaque()
     }
     
-    init(hostname: String, port: UInt16, code: UInt16, secretKey: Data, remotePlatform: DeviceTransferPlatform) {
+    init(hostname: String, port: UInt16, code: UInt16, key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform) {
         self.hostname = hostname
         self.port = port
         self.code = code
-        self.key = DeviceTransferProtocol.Key(raw: secretKey)
+        self.key = key
         self.remotePlatform = remotePlatform
         self.connection = {
             let host = NWEndpoint.Host(hostname)
@@ -325,7 +325,13 @@ extension DeviceTransferClient {
             }
         }
         
-        stream.write(data: content)
+        do {
+            try stream.write(data: content)
+        } catch {
+            Logger.general.error(category: "DeviceTransferClient", message: "Failed to write: \(error)")
+            connection.cancel()
+            state = .closed(.exception(.failed(error)))
+        }
         if context.remainingLength == 0 {
             stream.close()
             self.fileStream = nil

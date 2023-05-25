@@ -891,7 +891,7 @@ class UrlWindow {
         let client = DeviceTransferClient(hostname: context.hostname,
                                           port: context.port,
                                           code: context.code,
-                                          secretKey: context.secretKey,
+                                          key: context.key,
                                           remotePlatform: command.platform)
         client.start()
         let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))

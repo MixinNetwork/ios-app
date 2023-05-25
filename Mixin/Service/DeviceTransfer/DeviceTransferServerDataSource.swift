@@ -6,11 +6,11 @@ final class DeviceTransferServerDataSource {
     
     private let limit = 100
     private let fileChunkSize = 600000 * kCCBlockSizeAES128 // About 9.1 MiB
-    private let key: DeviceTransferProtocol.Key
+    private let key: DeviceTransferKey
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
     
-    init(key: DeviceTransferProtocol.Key, remotePlatform: DeviceTransferPlatform) {
+    init(key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform) {
         self.key = key
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
@@ -399,7 +399,7 @@ extension DeviceTransferServerDataSource {
         }
         stream.close()
         
-        let finalChunk = try encryptor.final()
+        let finalChunk = try encryptor.finalize()
         hmac.update(data: finalChunk)
         block(finalChunk, &stop)
         

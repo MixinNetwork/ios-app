@@ -121,7 +121,7 @@ extension RestoreFromDesktopViewController {
             let client = DeviceTransferClient(hostname: context.hostname,
                                               port: context.port,
                                               code: context.code,
-                                              secretKey: context.secretKey,
+                                              key: context.key,
                                               remotePlatform: command.platform)
             stateObserver = client.$state
                 .receive(on: DispatchQueue.main)

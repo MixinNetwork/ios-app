@@ -82,7 +82,7 @@ extension TransferToPhoneQRCodeViewController {
             let context = DeviceTransferCommand.PushContext(hostname: hostname,
                                                             port: port,
                                                             code: server.code,
-                                                            secretKey: server.key.raw,
+                                                            key: server.key,
                                                             userID: myUserId)
             let push = DeviceTransferCommand(action: .push(context))
             do {

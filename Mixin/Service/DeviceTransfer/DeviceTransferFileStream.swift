@@ -9,7 +9,7 @@ class DeviceTransferFileStream: InstanceInitializable {
         self.id = id
     }
     
-    convenience init(context: DeviceTransferProtocol.FileContext, key: DeviceTransferProtocol.Key) {
+    convenience init(context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey) {
         if let impl = DeviceTransferFileStreamImpl(context, key: key) {
             self.init(instance: impl as! Self)
         } else {
@@ -17,7 +17,7 @@ class DeviceTransferFileStream: InstanceInitializable {
         }
     }
     
-    func write(data: Data) {
+    func write(data: Data) throws {
         
     }
     
@@ -37,14 +37,14 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
     private let key: Data
     
     private var localHMAC: HMACSHA256
-    private var cryptor: AESCryptor
+    private var decryptor: AESCryptor
     private var remoteHMAC = Data(capacity: DeviceTransferProtocol.hmacDataCount)
-    private var wroteCount = 0
+    private var consumedEncryptedDataCount = 0
     
-    init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferProtocol.Key) {
-        let cryptor: AESCryptor
+    init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey) {
+        let decryptor: AESCryptor
         do {
-            cryptor = try AESCryptor(operation: .decrypt, iv: context.fileHeader.iv, key: key.aes)
+            decryptor = try AESCryptor(operation: .decrypt, iv: context.fileHeader.iv, key: key.aes)
         } catch {
             Logger.general.error(category: "DeviceTransferFileStream", message: "Failed to init cryptor: \(error)")
             return nil
@@ -55,7 +55,10 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
         
         var destinationURLs: [URL]
         if let message = MessageDAO.shared.getMessage(messageId: id), let mediaURL = message.mediaUrl {
-            let category = AttachmentContainer.Category(messageCategory: message.category) ?? .files
+            guard let category = AttachmentContainer.Category(messageCategory: message.category) else {
+                Logger.general.error(category: "DeviceTransferFileStream", message: "Invalid category: \(message.category)")
+                return nil
+            }
             let url = AttachmentContainer.url(for: category, filename: mediaURL)
             destinationURLs = [url]
             if let transcriptMessage = TranscriptMessageDAO.shared.transcriptMessage(messageId: id), let mediaURL = transcriptMessage.mediaUrl {
@@ -82,8 +85,9 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             self.fileSize = Int(context.header.length) - DeviceTransferProtocol.ivDataCount - idData.count
             self.key = key.aes
             self.localHMAC = HMACSHA256(key: key.hmac)
-            self.cryptor = cryptor
+            self.decryptor = decryptor
             super.init(id: context.fileHeader.id)
+            
             localHMAC.update(data: idData)
             localHMAC.update(data: context.fileHeader.iv)
         } catch {
@@ -93,25 +97,31 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
         }
     }
     
-    override func write(data: Data) {
-        let remainingFileDataCount = fileSize - wroteCount
-        if remainingFileDataCount == 0 {
+    override func write(data: Data) throws {
+        let remainingCount = fileSize - consumedEncryptedDataCount
+        if remainingCount == 0 {
             remoteHMAC.append(data)
-        } else if data.count >= remainingFileDataCount {
-            let fileData = data.prefix(remainingFileDataCount)
-            handle.write(fileData)
-            localHMAC.update(data: fileData)
-            wroteCount = fileSize
+        } else if data.count >= remainingCount {
+            let encryptedFileData = data.prefix(remainingCount)
+            localHMAC.update(data: encryptedFileData)
             
-            let hmacSliceCount = data.count - remainingFileDataCount
+            let decryptedFileData = try decryptor.update(encryptedFileData)
+            handle.write(decryptedFileData)
+            
+            consumedEncryptedDataCount = fileSize
+            
+            let hmacSliceCount = data.count - remainingCount
             if hmacSliceCount > 0 {
                 let hmacSliceData = data.suffix(hmacSliceCount)
                 remoteHMAC.append(hmacSliceData)
             }
         } else {
-            handle.write(data)
             localHMAC.update(data: data)
-            wroteCount += data.count
+            
+            let decrypted = try decryptor.update(data)
+            handle.write(decrypted)
+            
+            consumedEncryptedDataCount += data.count
         }
     }
     
@@ -120,17 +130,18 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             try? fileManager.removeItem(at: tempURL)
         }
         
-        guard remoteHMAC.count == DeviceTransferProtocol.hmacDataCount else {
-            Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Invalid HMAC: \(remoteHMAC.count)")
-            return
-        }
-        
         do {
+            let finalData = try decryptor.finalize()
+            handle.write(finalData)
             try handle.close()
         } catch {
             Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Close: \(error)")
         }
         
+        guard remoteHMAC.count == DeviceTransferProtocol.hmacDataCount else {
+            Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Invalid HMAC: \(remoteHMAC.count)")
+            return
+        }
         let localHMAC = localHMAC.finalize()
         if localHMAC != remoteHMAC {
             let local = localHMAC.base64EncodedString()

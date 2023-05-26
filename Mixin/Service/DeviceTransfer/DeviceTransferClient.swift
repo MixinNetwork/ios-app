@@ -21,7 +21,7 @@ final class DeviceTransferClient {
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferClient")
     private let speedInspector = NetworkSpeedInspector()
     
-    private weak var timer: Timer?
+    private weak var statisticsTimer: Timer?
     
     private var fileStream: DeviceTransferFileStream?
     
@@ -95,11 +95,11 @@ final class DeviceTransferClient {
     
     private func stop(reason: DeviceTransferClosedReason) {
         assert(queue.isCurrent)
+        Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(reason)")
         DispatchQueue.main.sync {
-            self.timer?.invalidate()
+            self.statisticsTimer?.invalidate()
         }
         connection.cancel()
-        Logger.general.info(category: "DeviceTransferClient", message: "Stopped: \(reason)")
         switch reason {
         case .finished:
             state = .closed(.finished)
@@ -110,11 +110,11 @@ final class DeviceTransferClient {
     
     private func startUpdatingProgressAndSpeed() {
         assert(Queue.main.isCurrent)
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+        statisticsTimer?.invalidate()
+        statisticsTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self else {
                 timer.invalidate()
-                Logger.general.warn(category: "DeviceTransferClient", message: "Progress timer fired after self deinited")
+                Logger.general.warn(category: "DeviceTransferClient", message: "Statistic timer fired after self deinited")
                 return
             }
             let speed = self.speedInspector.drain()
@@ -127,7 +127,7 @@ final class DeviceTransferClient {
             self.queue.async {
                 guard case .transfer = self.state else {
                     DispatchQueue.main.sync(execute: timer.invalidate)
-                    Logger.general.warn(category: "DeviceTransferClient", message: "Progress timer fired on: \(self.state)")
+                    Logger.general.warn(category: "DeviceTransferClient", message: "Statistic timer fired on: \(self.state)")
                     return
                 }
                 self.state = .transfer(progress: progress, speed: speed)
@@ -137,7 +137,7 @@ final class DeviceTransferClient {
                     self.connection.send(content: content, completion: .idempotent)
                     Logger.general.info(category: "DeviceTransferClient", message: "Report progress: \(progress), speed: \(speed)")
                 } catch {
-                    Logger.general.error(category: "DeviceTransferClient", message: "Failed to report progress: \(error)")
+                    Logger.general.error(category: "DeviceTransferClient", message: "Failed to report statistics: \(error)")
                 }
             }
         }

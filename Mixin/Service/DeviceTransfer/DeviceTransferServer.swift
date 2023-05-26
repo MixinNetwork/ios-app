@@ -4,7 +4,7 @@ import MixinServices
 
 final class DeviceTransferServer {
     
-    enum ConnectionBlockedReason {
+    enum ConnectionRejectedReason {
         case mismatchedUser
         case mismatchedCode
     }
@@ -23,7 +23,7 @@ final class DeviceTransferServer {
     @Published private(set) var state: State = .idle
     
     // Access on main queue
-    @Published private(set) var lastConnectionBlockedReason: ConnectionBlockedReason?
+    @Published private(set) var lastConnectionRejectedReason: ConnectionRejectedReason?
     
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferServer")
     private let dataLoaderQueue = Queue(label: "one.mixin.messenger.DeviceTransferServer.Loader")
@@ -34,6 +34,8 @@ final class DeviceTransferServer {
     // Access on the private `queue`
     private var listener: NWListener?
     private var connection: NWConnection?
+    
+    private weak var speedInspectingTimer: Timer?
     
     private var opaquePointer: UnsafeMutableRawPointer {
         Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()
@@ -124,8 +126,14 @@ extension DeviceTransferServer {
     
     private func startSpeedInspecting() {
         assert(Queue.main.isCurrent)
+        speedInspectingTimer?.invalidate()
         speedInspector.clear()
-        speedInspector.scheduleAutoReporting { speed in
+        speedInspectingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self else {
+                Logger.general.warn(category: "DeviceTransferServer", message: "Timer fired after deinited")
+                return
+            }
+            let speed = self.speedInspector.drain()
             self.queue.async {
                 if case let .transfer(progress, _) = self.state {
                     self.state = .transfer(progress: progress, speed: speed)
@@ -136,7 +144,7 @@ extension DeviceTransferServer {
     
     private func stopSpeedInspecting() {
         assert(Queue.main.isCurrent)
-        speedInspector.invalidateAutoReporting()
+        speedInspectingTimer?.invalidate()
     }
     
 }
@@ -146,15 +154,17 @@ extension DeviceTransferServer {
     
     func consumeLastConnectionBlockedReason() {
         assert(Queue.main.isCurrent)
-        lastConnectionBlockedReason = nil
+        lastConnectionRejectedReason = nil
     }
     
     private func stop(reason: DeviceTransferClosedReason) {
         assert(queue.isCurrent)
+        Logger.general.info(category: "DeviceTransferServer", message: "Stop with reason: \(reason)")
         listener?.cancel()
+        listener = nil
         connection?.cancel()
+        connection = nil
         DispatchQueue.main.sync(execute: stopSpeedInspecting)
-        Logger.general.warn(category: "DeviceTransferServer", message: "Stop with reason: \(reason)")
         switch reason {
         case .finished:
             state = .closed(.finished)
@@ -163,10 +173,10 @@ extension DeviceTransferServer {
         }
     }
     
-    private func rejectCurrentConnection(reason: ConnectionBlockedReason) {
+    private func rejectCurrentConnection(reason: ConnectionRejectedReason) {
         assert(queue.isCurrent)
         DispatchQueue.main.sync {
-            self.lastConnectionBlockedReason = reason
+            self.lastConnectionRejectedReason = reason
         }
         if let connection {
             connection.cancel()
@@ -202,16 +212,9 @@ extension DeviceTransferServer {
                 }
             case .failed(let error):
                 Logger.general.warn(category: "DeviceTransferServer", message: "Failed: \(error)")
-                if let self {
-                    DispatchQueue.main.async(execute: self.stopSpeedInspecting)
-                    self.state = .closed(.exception(.failed(error)))
-                }
+                self?.stop(reason: .exception(.failed(error)))
             case .cancelled:
                 Logger.general.info(category: "DeviceTransferServer", message: "Connection cancelled")
-                if let self {
-                    DispatchQueue.main.async(execute: self.stopSpeedInspecting)
-                }
-                // `state` is updated in `stop(reason:)`
             @unknown default:
                 break
             }
@@ -285,10 +288,7 @@ extension DeviceTransferServer {
                 }
             }
         case .finish:
-            connection.cancel()
-            if connection === self.connection {
-                self.state = .closed(.finished)
-            }
+            self.stop(reason: .finished)
         case let .progress(progress):
             if case let .transfer(_, speed) = state {
                 state = .transfer(progress: progress, speed: speed)
@@ -329,8 +329,7 @@ extension DeviceTransferServer {
             }))
         } catch {
             Logger.general.error(category: "DeviceTransferServer", message: "Failed to output start command: \(error)")
-            connection.cancel()
-            state = .closed(.exception(.encrypt(error)))
+            stop(reason: .exception(.encrypt(error)))
         }
     }
     
@@ -354,13 +353,13 @@ extension DeviceTransferServer {
                         connection.send(content: data, completion: .contentProcessed({ error in
                             assert(self.queue.isCurrent)
                             speedConditioner.signal(count)
+                            DispatchQueue.main.async {
+                                self.speedInspector.add(byteCount: count)
+                            }
                             if let error {
                                 Logger.general.error(category: "DeviceTransferServer", message: "Failed to send: \(error)")
                             }
                         }))
-                        DispatchQueue.main.sync {
-                            self.speedInspector.add(byteCount: count)
-                        }
                     } else {
                         Logger.general.error(category: "DeviceTransferServer", message: "Stop transfering due to connection is not ready: \(connection.state)")
                         stop = true
@@ -371,9 +370,8 @@ extension DeviceTransferServer {
                 connection.send(content: data, completion: .idempotent)
             } catch {
                 Logger.general.error(category: "DeviceTransferServer", message: "Failed to transfer: \(error)")
-                connection.cancel()
                 self?.queue.async {
-                    self?.state = .closed(.exception(.failed(error)))
+                    self?.stop(reason: .exception(.encrypt(error)))
                 }
             }
         }

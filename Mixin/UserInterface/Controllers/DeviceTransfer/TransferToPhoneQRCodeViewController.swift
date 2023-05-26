@@ -29,7 +29,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
                 self.server(server, didChangeToState: state)
             }
             .store(in: &observers)
-        server.$lastConnectionBlockedReason
+        server.$lastConnectionRejectedReason
             .sink { [unowned self] reason in
                 if let reason {
                     self.server(server, didBlockConnection: reason)
@@ -113,7 +113,7 @@ extension TransferToPhoneQRCodeViewController {
         }
     }
     
-    private func server(_ server: DeviceTransferServer, didBlockConnection reason: DeviceTransferServer.ConnectionBlockedReason) {
+    private func server(_ server: DeviceTransferServer, didBlockConnection reason: DeviceTransferServer.ConnectionRejectedReason) {
         switch reason {
         case .mismatchedUser:
             alert(R.string.localizable.unable_synced_between_different_account(), message: nil)

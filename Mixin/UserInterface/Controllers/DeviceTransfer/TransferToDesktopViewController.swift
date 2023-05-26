@@ -56,7 +56,7 @@ extension TransferToDesktopViewController: UITableViewDelegate {
                     self.server(server, didChangeToState: state)
                 }
                 .store(in: &observers)
-            server.$lastConnectionBlockedReason
+            server.$lastConnectionRejectedReason
                 .sink { [unowned self] reason in
                     if let reason {
                         self.serverDidBlockConnection(reason)
@@ -149,7 +149,7 @@ extension TransferToDesktopViewController {
         }
     }
     
-    private func serverDidBlockConnection(_ reason: DeviceTransferServer.ConnectionBlockedReason) {
+    private func serverDidBlockConnection(_ reason: DeviceTransferServer.ConnectionRejectedReason) {
         tableView.isUserInteractionEnabled = true
         dataSource.replaceSection(at: 0, with: section, animation: .automatic)
         let title: String

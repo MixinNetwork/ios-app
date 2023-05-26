@@ -3,7 +3,13 @@ import MixinServices
 
 final class NetworkSpeedInspector {
     
-    private let formatter = ByteCountFormatter()
+    private let formatter: ByteCountFormatter = {
+        let formatter = ByteCountFormatter()
+        formatter.allowedUnits = [.useKB, .useMB]
+        formatter.countStyle = .binary
+        formatter.allowsNonnumericFormatting = false
+        return formatter
+    }()
     
     private var byteCount: Int64 = 0
     

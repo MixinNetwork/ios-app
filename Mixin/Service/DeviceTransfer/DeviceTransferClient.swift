@@ -81,6 +81,9 @@ final class DeviceTransferClient {
                 }
             case .failed(let error):
                 Logger.general.warn(category: "DeviceTransferClient", message: "Failed: \(error)")
+                if let self {
+                    self.stop(reason: .exception(.failed(error)))
+                }
             case .cancelled:
                 Logger.general.info(category: "DeviceTransferClient", message: "Connection cancelled")
             @unknown default:

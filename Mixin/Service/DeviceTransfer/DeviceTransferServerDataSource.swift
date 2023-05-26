@@ -267,7 +267,7 @@ extension DeviceTransferServerDataSource {
                 let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage, to: remotePlatform)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferTranscriptMessage, key: key)
-                    if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty {
+                    if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty, transcriptMessage.mediaStatus == MediaStatus.DONE.rawValue {
                         let url = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
                         let attachment = TransferItem.Attachment(messageID: transcriptMessage.messageId, url: url)
                         return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: attachment)
@@ -287,7 +287,7 @@ extension DeviceTransferServerDataSource {
                 let deviceTransferMessage = DeviceTransferMessage(message: message, to: remotePlatform)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessage, key: key)
-                    if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, let category = AttachmentContainer.Category(messageCategory: message.category) {
+                    if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, message.mediaStatus == MediaStatus.DONE.rawValue, let category = AttachmentContainer.Category(messageCategory: message.category) {
                         let url = AttachmentContainer.url(for: category, filename: mediaURL)
                         let attachment = TransferItem.Attachment(messageID: message.messageId, url: url)
                         return TransferItem(rawItem: message, outputData: outputData, attachment: attachment)

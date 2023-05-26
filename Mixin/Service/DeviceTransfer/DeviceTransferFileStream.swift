@@ -89,7 +89,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             localHMAC.update(data: idData)
             localHMAC.update(data: context.fileHeader.iv)
         } catch {
-            Logger.general.debug(category: "DeviceTransferFileStream", message: error.localizedDescription)
+            Logger.general.error(category: "DeviceTransferFileStream", message: error.localizedDescription)
             assertionFailure()
             return nil
         }

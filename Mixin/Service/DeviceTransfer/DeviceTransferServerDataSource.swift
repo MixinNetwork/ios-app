@@ -354,7 +354,9 @@ extension DeviceTransferServerDataSource {
             Logger.general.error(category: "DeviceTransferServerDataSource", message: "Unable to generate iv for attachment")
             return
         }
+#if DEBUG
         Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
+#endif
         
         let encryptor = try AESCryptor(operation: .encrypt, iv: iv, key: key.aes)
         let encryptedFileSize = encryptor.outputDataCount(inputDataCount: fileSize, isFinal: true)

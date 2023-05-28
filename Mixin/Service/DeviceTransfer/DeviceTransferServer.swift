@@ -234,7 +234,14 @@ extension DeviceTransferServer {
                 let content = completeContent,
                 let message = contentContext?.protocolMetadata(definition: DeviceTransferProtocol.definition) as? NWProtocolFramer.Message
             else {
-                Logger.general.warn(category: "DeviceTransferServer", message: "Invalid message")
+                switch error {
+                case .posix(.ECANCELED):
+                    Logger.general.info(category: "DeviceTransferServer", message: "Stop receiving on cancellation")
+                case .some(let error):
+                    Logger.general.error(category: "DeviceTransferServer", message: "Stop receiving on: \(error)")
+                case .none:
+                    Logger.general.warn(category: "DeviceTransferServer", message: "Stop receiving with content: \(completeContent?.count ?? -1), context: \(String(describing: contentContext)), complete: \(isComplete)")
+                }
                 return
             }
             

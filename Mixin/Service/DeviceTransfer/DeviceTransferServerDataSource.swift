@@ -117,7 +117,7 @@ extension DeviceTransferServerDataSource {
         while let location = nextLocation {
             let (transferItems, nextPrimaryID, nextSecondaryID) = items(on: location)
             if transferItems.isEmpty {
-                Logger.general.warn(category: "DeviceTransferServerDataSource", message: "\(location.type) is empty")
+                Logger.general.info(category: "DeviceTransferServerDataSource", message: "\(location.type) is empty")
             }
             for item in transferItems {
                 var stop = false

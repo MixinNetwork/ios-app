@@ -1,6 +1,6 @@
 import Foundation
 
-enum DeviceTransferMessageType: String, Codable, CaseIterable {
+enum DeviceTransferRecordType: String, Codable, CaseIterable {
     
     case conversation
     case participant = "participant"
@@ -14,6 +14,5 @@ enum DeviceTransferMessageType: String, Codable, CaseIterable {
     case message
     case messageMention = "message_mention"
     case expiredMessage = "expired_message"
-    case unknown
     
 }

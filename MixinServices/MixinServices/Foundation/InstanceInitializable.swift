@@ -1,12 +1,12 @@
 import Foundation
 
-protocol InstanceInitializable {
+public protocol InstanceInitializable {
     
 }
 
 extension InstanceInitializable {
     
-    init(instance: Self) {
+    public init(instance: Self) {
         self = instance
     }
     

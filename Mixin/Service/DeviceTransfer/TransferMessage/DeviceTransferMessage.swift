@@ -33,7 +33,7 @@ struct DeviceTransferMessage {
     let createdAt: String
     let albumId: String?
     
-    init(message: Message) {
+    init(message: Message, to platform: DeviceTransferPlatform) {
         messageId = message.messageId
         conversationId = message.conversationId
         userId = message.userId
@@ -64,7 +64,12 @@ struct DeviceTransferMessage {
         mediaHash = message.mediaHash
         mediaKey = message.mediaKey
         mediaDigest = message.mediaDigest
-        mediaStatus = message.mediaStatus
+        switch platform {
+        case .iOS:
+            mediaStatus = message.mediaStatus
+        case .other:
+            mediaStatus = message.mediaStatus == MediaStatus.PENDING.rawValue ? MediaStatus.CANCELED.rawValue : message.mediaStatus
+        }
         mediaWaveform = message.mediaWaveform
         thumbImage = message.thumbImage
         thumbUrl = message.thumbUrl
@@ -132,7 +137,7 @@ struct DeviceTransferMessage {
     
 }
 
-extension DeviceTransferMessage: Codable {
+extension DeviceTransferMessage: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case messageId = "message_id"

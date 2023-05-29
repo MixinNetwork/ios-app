@@ -24,7 +24,7 @@ class RestoreChatViewController: UIViewController {
     }
     
     @IBAction func skipButton(_ sender: Any) {
-        Logger.general.info(category: "RestoreChatViewController", message: "Restoration skipped")
+        Logger.general.info(category: "RestoreChat", message: "Restoration skipped")
         AppGroupUserDefaults.Account.canRestoreFromPhone = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
         AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()

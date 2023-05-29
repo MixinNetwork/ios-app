@@ -52,9 +52,9 @@ extension CCCryptorRef {
     
 }
 
-extension CCOperation {
-    static let encrypt = CCOperation(kCCEncrypt)
-    static let decrypt = CCOperation(kCCDecrypt)
+public extension CCOperation {
+    public static let encrypt = CCOperation(kCCEncrypt)
+    public static let decrypt = CCOperation(kCCDecrypt)
 }
 
 extension CCAlgorithm {
@@ -65,8 +65,8 @@ extension CCOptions {
     static let pkcs7Padding = CCOptions(kCCOptionPKCS7Padding)
 }
 
-extension CCHmacAlgorithm {
-    static let sha256 = CCHmacAlgorithm(kCCHmacAlgSHA256)
+public extension CCHmacAlgorithm {
+    public static let sha256 = CCHmacAlgorithm(kCCHmacAlgSHA256)
 }
 
 extension CCStatus {

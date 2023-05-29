@@ -73,7 +73,7 @@ extension RestoreFromCloudViewController: UITableViewDelegate {
 extension RestoreFromCloudViewController {
     
     private func restoreFromCloud() {
-        let controller = DeviceTransferProgressViewController(intent: .restoreFromCloud)
+        let controller = DeviceTransferProgressViewController(connection: .cloud)
         navigationController?.pushViewController(controller, animated: true)
     }
     

@@ -57,7 +57,7 @@ struct DeviceTransferSnapshot {
     
 }
 
-extension DeviceTransferSnapshot: Codable {
+extension DeviceTransferSnapshot: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case snapshotId = "snapshot_id"

@@ -21,7 +21,7 @@ struct DeviceTransferExpiredMessage {
     
 }
 
-extension DeviceTransferExpiredMessage: Codable {
+extension DeviceTransferExpiredMessage: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case messageId = "message_id"

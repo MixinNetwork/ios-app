@@ -126,9 +126,6 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "notification_bulletin_dismissal_date", defaultValue: nil)
     public static var notificationBulletinDismissalDate: Date?
     
-    @Default(namespace: nil, key: "local_network_triggered", defaultValue: false)
-    public static var isLocalNetworkTriggered: Bool
-    
 }
 
 extension AppGroupUserDefaults {

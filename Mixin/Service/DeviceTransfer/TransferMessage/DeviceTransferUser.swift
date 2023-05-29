@@ -48,7 +48,7 @@ struct DeviceTransferUser {
     
 }
 
-extension DeviceTransferUser: Codable {
+extension DeviceTransferUser: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"

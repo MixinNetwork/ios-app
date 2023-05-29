@@ -27,7 +27,7 @@ extension TransferToPhoneViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
-            Logger.general.info(category: "TransferToPhoneViewController", message: "Network is not reachable")
+            Logger.general.info(category: "TransferToPhone", message: "Network is not reachable")
             alert(R.string.localizable.devices_on_same_network())
             return
         }

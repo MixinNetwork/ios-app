@@ -27,7 +27,7 @@ struct DeviceTransferMessageMention {
     
 }
 
-extension DeviceTransferMessageMention: Codable {
+extension DeviceTransferMessageMention: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case messageId = "message_id"

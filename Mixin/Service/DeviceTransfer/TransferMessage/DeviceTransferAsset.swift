@@ -60,7 +60,7 @@ struct DeviceTransferAsset {
     
 }
 
-extension DeviceTransferAsset: Codable {
+extension DeviceTransferAsset: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case assetId = "asset_id"

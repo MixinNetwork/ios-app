@@ -38,7 +38,7 @@ struct DeviceTransferSticker {
     
 }
 
-extension DeviceTransferSticker: Codable {
+extension DeviceTransferSticker: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case stickerId = "sticker_id"

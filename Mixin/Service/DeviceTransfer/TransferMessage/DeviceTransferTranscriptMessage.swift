@@ -31,7 +31,7 @@ struct DeviceTransferTranscriptMessage {
     let quoteContent: String?
     let caption: String?
     
-    init(transcriptMessage: TranscriptMessage) {
+    init(transcriptMessage: TranscriptMessage, to platform: DeviceTransferPlatform) {
         transcriptId = transcriptMessage.transcriptId
         messageId = transcriptMessage.messageId
         userId = transcriptMessage.userId
@@ -46,7 +46,12 @@ struct DeviceTransferTranscriptMessage {
         mediaHeight = transcriptMessage.mediaHeight
         mediaMimeType = transcriptMessage.mediaMimeType
         mediaDuration = transcriptMessage.mediaDuration
-        mediaStatus = transcriptMessage.mediaStatus
+        switch platform {
+        case .iOS:
+            mediaStatus = transcriptMessage.mediaStatus
+        case .other:
+            mediaStatus = transcriptMessage.mediaStatus == MediaStatus.PENDING.rawValue ? MediaStatus.CANCELED.rawValue : transcriptMessage.mediaStatus
+        }
         mediaWaveform = transcriptMessage.mediaWaveform
         thumbImage = transcriptMessage.thumbImage
         thumbUrl = transcriptMessage.thumbUrl
@@ -92,7 +97,7 @@ struct DeviceTransferTranscriptMessage {
     }
 }
 
-extension DeviceTransferTranscriptMessage: Codable {
+extension DeviceTransferTranscriptMessage: DeviceTransferRecord {
     
     enum CodingKeys: String, CodingKey {
         case transcriptId = "transcript_id"

@@ -1,7 +1,7 @@
 import Foundation
 import CommonCrypto
 
-public enum AESCryptor {
+public final class AESCryptor {
     
     enum Error: Swift.Error {
         case badInput
@@ -11,8 +11,92 @@ public enum AESCryptor {
         case finalize(CCStatus)
     }
     
-    static let blockSize = kCCBlockSizeAES128
     static let ivSize = 16
+    
+    private let cryptor: CCCryptorRef
+    
+    private var buffer: Data
+    
+    public init(operation: CCOperation, iv: Data, key: Data) throws {
+        var cryptor: CCCryptorRef! = nil
+        let status = key.withUnsafeBytes { key in
+            iv.withUnsafeBytes { iv in
+                return CCCryptorCreate(operation,
+                                       CCAlgorithm(kCCAlgorithmAES),
+                                       CCOptions(kCCOptionPKCS7Padding),
+                                       key.baseAddress,
+                                       key.count,
+                                       iv.baseAddress,
+                                       &cryptor)
+            }
+        }
+        guard status == kCCSuccess else {
+            throw Error.createCryptor(status)
+        }
+        self.cryptor = cryptor
+        self.buffer = Data()
+    }
+    
+    deinit {
+        CCCryptorRelease(cryptor)
+    }
+    
+    public func outputDataCount(inputDataCount: Int, isFinal: Bool) -> Int {
+        CCCryptorGetOutputLength(cryptor, inputDataCount, isFinal)
+    }
+    
+    public func reserveOutputBufferCapacity(_ capacity: Int) {
+        buffer.reserveCapacity(capacity)
+    }
+    
+    public func update(_ input: Data) throws -> Data {
+        let outputSize = CCCryptorGetOutputLength(cryptor, input.count, false)
+        if outputSize > buffer.count {
+            buffer.count = outputSize
+        }
+        
+        var dataOutMoved: Int = 0
+        let status = input.withUnsafeBytes { input in
+            buffer.withUnsafeMutableBytes { buffer in
+                CCCryptorUpdate(cryptor,
+                                input.baseAddress,
+                                input.count,
+                                buffer.baseAddress,
+                                buffer.count,
+                                &dataOutMoved)
+            }
+        }
+        guard status == kCCSuccess else {
+            throw Error.update(status)
+        }
+        
+        if dataOutMoved == 0 {
+            return Data()
+        } else {
+            return buffer.prefix(dataOutMoved)
+        }
+    }
+    
+    public func finalize() throws -> Data {
+        let outputSize = CCCryptorGetOutputLength(cryptor, 0, true)
+        buffer.count = outputSize
+        var dataOutMoved: Int = 0
+        let status = buffer.withUnsafeMutableBytes { buffer in
+            CCCryptorFinal(cryptor,
+                           buffer.baseAddress,
+                           buffer.count,
+                           &dataOutMoved)
+        }
+        guard status == kCCSuccess else {
+            throw Error.finalize(status)
+        }
+        return buffer.prefix(dataOutMoved)
+    }
+    
+}
+
+// MARK: - Stateless Operations
+extension AESCryptor {
     
     // Encrypts plainData with `key` and a 16 bytes auto-generated IV
     // The IV is prepended to encrypted data

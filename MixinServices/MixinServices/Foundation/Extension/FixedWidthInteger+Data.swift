@@ -7,7 +7,7 @@ public enum Endianness {
 
 extension FixedWidthInteger {
     
-    public init(data: Data, endianess: Endianness) {
+    public init<Data: DataProtocol & ContiguousBytes>(data: Data, endianess: Endianness) {
         var raw: Self = 0
         withUnsafeMutableBytes(of: &raw) { raw in
             data.withUnsafeBytes { data in

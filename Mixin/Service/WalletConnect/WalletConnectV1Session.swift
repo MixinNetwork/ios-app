@@ -29,7 +29,7 @@ final class WalletConnectV1Session {
         case walletSwitchEthereumChain = "wallet_switchEthereumChain"
         case personalSign = "personal_sign"
         case ethSignTypedData = "eth_signTypedData"
-        case sendTransaction = "eth_sendTransaction"
+        case ethSendTransaction = "eth_sendTransaction"
         case ethSignTypedDataV4 = "eth_signTypedData_v4"
     }
     
@@ -40,7 +40,7 @@ final class WalletConnectV1Session {
     private(set) var session: WalletConnectSwift.Session
     private(set) var chain: WalletConnectService.Chain
     
-    private lazy var ethereumClient = makeEthereumClient(with: chain)
+    private lazy var ethereumClient = Self.makeEthereumClient(with: chain)
     
     init(server: Server, chain: WalletConnectService.Chain, session: WalletConnectSwift.Session) {
         self.server = server
@@ -67,22 +67,8 @@ final class WalletConnectV1Session {
         try server.updateSession(session, with: info)
         self.session.walletInfo = info
         self.chain = chain
-        self.ethereumClient = makeEthereumClient(with: chain)
+        self.ethereumClient = Self.makeEthereumClient(with: chain)
         NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
-    }
-    
-    private func makeEthereumClient(with chain: WalletConnectService.Chain) -> EthereumHttpClient {
-        let network: EthereumNetwork
-        switch chain {
-        case .ethereum:
-            network = .mainnet
-        case .goerli:
-            network = .goerli
-        default:
-            network = .custom("\(chain.id)")
-        }
-        Logger.walletConnect.info(category: "V1Session", message: "New client with: \(chain)")
-        return EthereumHttpClient(url: chain.rpcServerURL, network: network)
     }
     
 }
@@ -122,7 +108,7 @@ extension WalletConnectV1Session: WalletConnectSession {
             requestPersonalSign(with: request)
         case .ethSignTypedData, .ethSignTypedDataV4:
             requestETHSignTypedData(with: request)
-        case .sendTransaction:
+        case .ethSendTransaction:
             requestSendTransaction(with: request)
         case .none:
             WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),

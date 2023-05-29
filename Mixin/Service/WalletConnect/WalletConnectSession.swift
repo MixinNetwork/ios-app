@@ -16,6 +16,20 @@ protocol WalletConnectSession {
 
 extension WalletConnectSession {
     
+    static func makeEthereumClient(with chain: WalletConnectService.Chain) -> EthereumHttpClient {
+        let network: EthereumNetwork
+        switch chain {
+        case .ethereum:
+            network = .mainnet
+        case .goerli:
+            network = .goerli
+        default:
+            network = .custom("\(chain.id)")
+        }
+        Logger.walletConnect.info(category: "V1Session", message: "New client with: \(chain)")
+        return EthereumHttpClient(url: chain.rpcServerURL, network: network)
+    }
+    
     @MainActor
     func requestSigning<Request, Signable>(
         with request: Request,

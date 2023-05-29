@@ -64,8 +64,7 @@ final class WalletConnectService {
                                description: walletDescription,
                                url: URL.mixinMessenger.absoluteString,
                                icons: ["https://mixin.one/assets/eccaf16dd38b2210f935.png"])
-        Web3Wallet.configure(metadata: meta,
-                             signerFactory: Web3SignerFactory())
+        Web3Wallet.configure(metadata: meta, crypto: Web3CryptoProvider())
         Web3Wallet.instance.sessionsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessions in
@@ -73,14 +72,14 @@ final class WalletConnectService {
             }
             .store(in: &subscribes)
         Web3Wallet.instance.sessionProposalPublisher
-            .sink { [weak self] proposal in
+            .sink { [weak self] (proposal, context) in
                 DispatchQueue.main.async {
                     self?.show(proposal: proposal)
                 }
             }
             .store(in: &subscribes)
         Web3Wallet.instance.sessionRequestPublisher
-            .sink { [weak self] request in
+            .sink { [weak self] (request, context) in
                 self?.handle(request: request)
             }
             .store(in: &subscribes)
@@ -175,28 +174,32 @@ extension WalletConnectService {
             internalID: ChainID.ethereum,
             name: "Ethereum",
             rpcServerURL: URL(string: "https://rpc.ankr.com/eth")!,
-            gasSymbol: "ETH"
+            gasSymbol: "ETH",
+            caip2: Blockchain("eip155:1")!
         )
         static let goerli = Chain(
             id: 5,
             internalID: ChainID.ethereum,
             name: "Goerli",
             rpcServerURL: URL(string: "https://rpc.ankr.com/eth_goerli")!,
-            gasSymbol: "ETH"
+            gasSymbol: "ETH",
+            caip2: Blockchain("eip155:5")!
         )
         static let bnbSmartChain = Chain(
             id: 56,
             internalID: ChainID.bnbSmartChain,
             name: "Binance Smart Chain",
             rpcServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
-            gasSymbol: "BSC"
+            gasSymbol: "BSC",
+            caip2: Blockchain("eip155:56")!
         )
         static let polygon = Chain(
             id: 137,
             internalID: ChainID.polygon,
             name: "Polygon",
             rpcServerURL: URL(string: "https://polygon.blockpi.network/v1/rpc/public")!,
-            gasSymbol: "MATIC"
+            gasSymbol: "MATIC",
+            caip2: Blockchain("eip155:137")!
         )
         
         let id: Int
@@ -204,6 +207,7 @@ extension WalletConnectService {
         let name: String
         let rpcServerURL: URL
         let gasSymbol: String
+        let caip2: Blockchain
         
         static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.id == rhs.id
@@ -423,19 +427,65 @@ extension WalletConnectService {
     
     @MainActor
     private func show(proposal: WalletConnectSign.Session.Proposal) {
-        connectionHud?.hide()
         guard let container = UIApplication.homeContainerViewController else {
+            connectionHud?.hide()
             return
         }
+        logger.info(category: "WalletConnectService", message: "Showing: \(proposal))")
+        
+        var chains = Self.supportedChains.values.map(\.caip2)
+        chains.removeAll { chain in
+            let isRequired = proposal.requiredNamespaces.values.contains { namespace in
+                namespace.chains?.contains(chain) ?? false
+            }
+            let isOptional: Bool
+            if let namespaces = proposal.optionalNamespaces {
+                isOptional = namespaces.values.contains { namespace in
+                    namespace.chains?.contains(chain) ?? false
+                }
+            } else {
+                isOptional = false
+            }
+            return !isRequired && !isOptional
+        }
+        guard !chains.isEmpty else {
+            let hud = self.loadHud()
+            logger.warn(category: "WalletConnectService", message: "Requires to support \(proposal.requiredNamespaces.values.compactMap(\.chains).flatMap { $0 })")
+            hud.set(style: .error, text: "No supported chain")
+            hud.scheduleAutoHidden()
+            return
+        }
+        
+        let events: Set<String> = ["accountsChanged", "chainChanged"]
+        let proposalEvents = proposal.requiredNamespaces.values.map(\.events).flatMap({ $0 })
+        guard events.isSuperset(of: proposalEvents) else {
+            let hud = self.loadHud()
+            logger.warn(category: "WalletConnectService", message: "Requires to support \(proposalEvents)")
+            hud.set(style: .error, text: "Lack of event support")
+            hud.scheduleAutoHidden()
+            return
+        }
+        
+        connectionHud?.hide()
         let connectWallet = ConnectWalletViewController(info: .v2(proposal))
         connectWallet.onApprove = { priv in
             Task {
                 let approvalError: Swift.Error?
                 do {
-                    let sessionNamespaces = try self.makeSessionNamespaces(for: proposal, with: priv)
+                    let keyStorage = InPlaceKeyStorage(raw: priv)
+                    let ethAddress = try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
+                    let accounts = chains.compactMap { chain in
+                        WalletConnectUtils.Account(blockchain: chain, address: ethAddress)
+                    }
+                    let sessionNamespaces = try AutoNamespaces.build(sessionProposal: proposal,
+                                                                     chains: chains,
+                                                                     methods: WalletConnectV2Session.Method.allCases.map(\.rawValue),
+                                                                     events: Array(events),
+                                                                     accounts: accounts)
                     try await Web3Wallet.instance.approve(proposalId: proposal.id, namespaces: sessionNamespaces)
                     approvalError = nil
                 } catch {
+                    logger.warn(category: "WalletConnectService", message: "Failed to approve: \(error)")
                     approvalError = error
                 }
                 await MainActor.run {
@@ -474,48 +524,6 @@ extension WalletConnectService {
                                       message: R.string.localizable.session_not_found())
             }
         }
-    }
-    
-    private func makeSessionNamespaces(for proposal: WalletConnectSign.Session.Proposal, with priv: Data) throws -> [String: SessionNamespace] {
-        var proposalNamespaces = proposal.requiredNamespaces
-        guard proposalNamespaces.allSatisfy({ $0.key.hasPrefix("eip155") }) else {
-            throw WalletConnectV2Session.Error.mismatchedNamespaces
-        }
-        if let optionalNamespaces = proposal.optionalNamespaces {
-            for namespace in optionalNamespaces where namespace.key.hasPrefix("eip155") {
-                proposalNamespaces[namespace.key] = namespace.value
-            }
-        }
-        
-        let keyStorage = InPlaceKeyStorage(raw: priv)
-        let ethAddress = try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
-        
-        var sessionNamespaces: [String: SessionNamespace] = [:]
-        for namespace in proposalNamespaces {
-            let caip2Namespace = namespace.key
-            let caip2NamespaceComponents = namespace.key.components(separatedBy: ":")
-            let proposalNamespace = namespace.value
-            var accounts = Set<WalletConnectUtils.Account>()
-            if let chains = proposalNamespace.chains {
-                accounts = Set(
-                    chains.compactMap { chain in
-                        WalletConnectUtils.Account(chain.absoluteString + ":" + ethAddress)
-                    }
-                )
-                let sessionNamespace = SessionNamespace(chains: chains, accounts: accounts, methods: proposalNamespace.methods, events: proposalNamespace.events)
-                sessionNamespaces[caip2Namespace] = sessionNamespace
-            } else if let network = caip2NamespaceComponents.first, let chain = caip2NamespaceComponents.last {
-                let accounts: Set<WalletConnectUtils.Account>
-                if let account = Account("\(network):\(chain):\(ethAddress)") {
-                    accounts = [account]
-                } else {
-                    accounts = []
-                }
-                let sessionNamespace = SessionNamespace(accounts: accounts, methods: proposalNamespace.methods, events: proposalNamespace.events)
-                sessionNamespaces[namespace.key] = sessionNamespace
-            }
-        }
-        return sessionNamespaces
     }
     
 }

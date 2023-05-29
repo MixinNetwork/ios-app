@@ -3,25 +3,10 @@ import CryptoSwift
 import web3
 import Auth
 
-final class Web3SignerFactory: SignerFactory {
-    
-    func createEthereumSigner() -> EthereumSigner {
-        Web3Signer()
-    }
-    
-}
-
-fileprivate final class Web3Signer: EthereumSigner {
+struct Web3CryptoProvider: CryptoProvider {
     
     enum Error: Swift.Error {
         case hexDecoding
-    }
-    
-    func sign(message: Data, with key: Data) throws -> EthereumSignature {
-        let storage = InPlaceKeyStorage(raw: key)
-        let account = try EthereumAccount(keyStorage: storage)
-        let signature = try account.sign(message: message)
-        return EthereumSignature(serialized: signature)
     }
     
     func recoverPubKey(signature: EthereumSignature, message: Data) throws -> Data {

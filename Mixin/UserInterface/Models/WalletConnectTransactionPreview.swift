@@ -2,7 +2,7 @@ import Foundation
 import BigInt
 import web3
 
-struct WalletConnectTransactionPreview: Decodable {
+struct WalletConnectTransactionPreview: Codable {
     
     enum Error: Swift.Error {
         case invalidValue

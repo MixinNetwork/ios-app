@@ -71,6 +71,8 @@
 "allow_bot_manage_bots" = "Allow bot to add or modify your bots.";
 "allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
 "allow_bot_send_messages" = "Allow bot to send messages represent of you.";
+"allow_dapp_access_public_address" = "Allow dapp to access your wallet balance and activity.";
+"allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "Разрешить сообщение ручного отчета";
 "amount" = "Количество";
 "app_card_shareable_false" = "Карта была настроена так, чтобы не разрешать совместное использование";
@@ -117,6 +119,7 @@
 "bots" = "БОТЫ";
 "bots_title" = "Боты";
 "business" = "Бизнес";
+"calculating" = "Calculating...";
 "call" = "Вызов";
 "call_declined" = "Вызов отклонен";
 "call_encryption_description" = "Никто за пределами этого звонка не может просматривать или прослушивать его. Даже Mixin.";
@@ -139,6 +142,7 @@
 "card" = "карта";
 "category_chats" = "Чаты";
 "chain" = "Цепь";
+"chain_not_supported" = "Chain not supported";
 "change" = "Изменить";
 "change_amount" = "Изменить сумму";
 "change_emergency_contact" = "Изменить экстренный контакт";
@@ -203,8 +207,11 @@
 "compressed" = "Сжатый";
 "confirm" = "Подтвердить";
 "connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
+"connect_wallet" = "Connect Wallet";
 "connected" = "Соединено";
+"connected_dapps" = "Connected Dapps";
 "connecting" = "Подключение";
+"connection_failed" = "Connection Failed";
 "connection_unstable" = "Нестабильное соединение";
 "connection_establishment_failed" = "Connection establishment failed";
 "contact" = "Контакт";
@@ -261,6 +268,7 @@
 "current_selected" = "Текущий выбранный";
 "custom_time" = "Пользовательское время";
 "daily" = "Повседневный";
+"dapp_description" = "This dapp has connected to your wallet, it can view your wallet balance, activity and request approval for transactions.";
 "dark" = "Темное";
 "data_and_storage_usage" = "Использование данных и хранилища";
 "data_parsing_error" = "Ошибка разбора данных";
@@ -316,6 +324,9 @@
 "disappearing_option_3" = "2 часа";
 "disappearing_option_4" = "1 день";
 "disappearing_option_5" = "1 неделя";
+"discard" = "Discard";
+"disconnect" = "Disconnect";
+"disconnected" = "Disconnected";
 "disconnecting" = "Отключение";
 "dismiss_as_admin" = "Закрыть как администратор";
 "done" = "Сделано";
@@ -389,6 +400,8 @@
 "failed_to_send_location" = "Не удалось отправить местоположение";
 "failed_to_send_photo" = "Не удалось отправить фото";
 "failed_to_send_video" = "Не удалось отправить видео";
+"failed_to_switch_network" = "Failed to switch network: %@";
+"fast" = "Fast";
 "fee" = "Комиссия";
 "feedback" = "Обратная связь";
 "file" = "Файл";
@@ -456,6 +469,7 @@
 "invites_you_to_a_voice_call" = "приглашает вас на голосовой вызов";
 "join_group" = "Присоединиться к группе";
 "joined_in" = "Присоединился к %@";
+"keep_network" = "Keep %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "Этикетка";
 "landing_delete_content" = "Ваш аккаунт будет удален %@. Если вы продолжите входить в систему, запрос на удаление вашего аккаунта будет отменен.";
@@ -504,6 +518,7 @@
 "message_preview" = "Предварительный просмотр сообщения";
 "message_sent" = "Сообщение отправлено";
 "messages" = "Сообщения";
+"method_not_supported" = "Method %@ is not supported";
 "minute" = "%d минута";
 "minute_count" = "%d минуты";
 "mixin" = "Mixin";
@@ -532,8 +547,10 @@
 "name" = "Имя";
 "name_or_phone_number" = "Имя или номер телефона";
 "need_help" = "Нужна помощь?";
+"network" = "Network";
 "network_connection_lost" = "Сетевое соединение было потеряно, проверьте свою сеть и повторите попытку позже.";
-"network_fee" = "Сетевая комисиия: %@";
+"network_fee" = "Сетевая комисиия";
+"network_switched" = "Network Switched";
 "never_auto_download" = "Никогда";
 "new_chat" = "Новый чат";
 "new_group" = "Новая группа";
@@ -547,6 +564,7 @@
 "no_blocked_users" = "Нет заблокированных пользователей";
 "no_bots" = "НЕТ БОТОВ";
 "no_contacts" = "НЕТ КОНТАКТОВ";
+"no_dapp" = "NO DAPP";
 "no_files" = "ФАЙЛОВ НЕТ";
 "no_hidden_assets" = "Нет скрытых активов";
 "no_items_selected" = "Элементы не выбраны";
@@ -561,6 +579,7 @@
 "no_transactions" = "Нет транзакций";
 "nobody" = "Никто";
 "none" = "Никто";
+"normal" = "Normal";
 "not_all_signer_success" = "Not all node success";
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Не найден";
@@ -653,6 +672,8 @@
 "post_sharing" = "публикация";
 "preparing" = "Подготовка...";
 "preparing_progress" = "Подготовка...(%@)";
+"preview_unavailable" = "Preview unavailable";
+"preview_unavailable_description" = "Unable to estimate asset changes. Please make sure you trust this dapp.";
 "privacy" = "Конфиденциальность";
 "privacy_policy" = "Политика конфиденциальности";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -668,6 +689,7 @@
 "read_your_contacts" = "Read your contacts";
 "read_your_nfts" = "Read your NFTs";
 "read_your_phone_number" = "Read your phone number";
+"read_your_public_address" = "Read your public address";
 "read_your_public_profile" = "Read your public profile";
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Скидка";
@@ -695,7 +717,11 @@
 "report_and_block" = "Пожаловаться и заблокировать?";
 "report_title" = "Отправить журнал бесед разработчикам?";
 "represent_send_messages" = "Represent send messages";
+"request_approval" = "Request approval";
 "request_authorization" = "Request Authorization";
+"request_rejected" = "Request Rejected";
+"request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
+"requests_switching_to_network" = "%1$@ requests switching to %2$@";
 "resend_code" = "Отправить код еще раз";
 "resend_code_pending" = "Повторно отправить код в %@";
 "reset_link" = "Сбросить ссылку";
@@ -741,6 +767,7 @@
 "search_open_link" = "Открыть ссылку: ";
 "search_placeholder_asset" = "Имя, Символ";
 "search_placeholder_contact" = "Mixin ID, имя, номер телефона";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Найдите Mixin ID или номер телефона: ";
 "search_related_message" = "%d связанное сообщение";
 "search_related_message_count" = "%d похожие сообщения";
@@ -766,6 +793,7 @@
 "send_message" = "Отправить сообщение";
 "send_photo" = "Отправить 1 фото";
 "send_photo_count" = "Отправить %d фото";
+"send_signed_message_confirmation" = "The message has been signed successfully, click the button below to send or discard the signed message";
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
 "send_to_developer" = "Отправить разработчику";
@@ -777,6 +805,7 @@
 "send_your_current_location" = "Отправить свое текущее местоположение";
 "send_count" = "Отправить(%d)";
 "senders" = "Отправители";
+"session_not_found" = "Session not found";
 "set" = "Установлен";
 "set_disappearing_message_time_to" = "%1$@ установил время исчезновения сообщения на %2$@.";
 "set_emergency_create_successfully" = "Set emergency contact successfully";
@@ -823,11 +852,15 @@
 "show" = "Показать";
 "show_asset" = "Показать актив";
 "show_in_chat" = "Показать в чате";
+"sign_by_pin" = "Sign by PIN";
 "sign_in" = "Войти";
 "sign_with_emergency_contact" = "Войти через контакт для экстренных случаев";
 "sign_with_phone_number" = "Войти через номер телефона";
+"signature_request" = "Signature Request";
+"signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "Пропустить";
 "slide_to_cancel" = "Сдвиньте, чтобы отменить";
+"slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Снимок не найден.";
 "social" = "Социальное";
@@ -849,6 +882,8 @@
 "stranger_hint" = "Этого отправителя нет в ваших контактах";
 "successful" = "Successful";
 "suspicious_link" = "Подозрительная ссылка";
+"switch_network" = "Switch Network";
+"switch_to_network" = "Switch to %@";
 "symbol" = "Символ";
 "symbol_withdrawal" = "%@ Снятие средств";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
@@ -878,8 +913,10 @@
 "track_not_found" = "Трек не найден";
 "trading" = "Трейдинг";
 "transaction" = "Сделка";
+"transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Хэш транзакции";
 "transaction_id" = "ID транзакции";
+"transaction_request" = "Transaction Request";
 "transaction_type" = "Тип операции";
 "transactions" = "Транзакции";
 "transfer_protocol_version_not_matched" = "Protocol version does not match, transfer failed. Please upgrade the application first.";
@@ -911,6 +948,7 @@
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "turn_on_notifications" = "Включить уведомления";
+"unable_to_decode_the_request" = "Unable to decode the request: %@";
 "unable_to_save_photo" = "Не удалось сохранить фото.";
 "unable_to_save_video" = "Не удалось сохранить видео.";
 "unable_to_share_content" = "Невозможно поделиться этим контентом";

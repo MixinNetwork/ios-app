@@ -2382,7 +2382,7 @@ extension ConversationViewController {
             shouldShowAnnouncement = true
         }
         if shouldShowAnnouncement {
-            announcementBadgeContentView.iconView.image = R.image.ic_warning()
+            announcementBadgeContentView.iconView.image = R.image.ic_warning()?.withRenderingMode(.alwaysOriginal)
             updateAnnouncementBadge(announcement: R.string.localizable.scam_warning())
         } else {
             updateAnnouncementBadge(announcement: nil)

@@ -90,6 +90,14 @@ class HomeContainerViewController: UIViewController {
         }
     }
     
+    func presentOnTopMostPresentedController(_ viewControllerToPresent: UIViewController, animated: Bool) {
+        var topMost: UIViewController = self
+        while let next = topMost.presentedViewController {
+            topMost = next
+        }
+        topMost.present(viewControllerToPresent, animated: true)
+    }
+    
     @objc private func applicationWillEnterForeground(_ notification: Notification) {
         if UIApplication.shared.isLandscape, let controller = pipController, controller.isAvPipActive {
             if #available(iOS 16.0, *) {

@@ -42,7 +42,7 @@ public struct CurrencyFormatter {
         guard let string = string, let decimal = Decimal(string: string, locale: locale), decimal.isZero || decimal.isNormal else {
             return nil
         }
-        return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
+        return localizedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
 
     public static func localizedPrice(price: String, priceUsd: String) -> String {
@@ -55,10 +55,10 @@ public struct CurrencyFormatter {
 
     public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
         let decimal = Decimal(number)
-        return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
+        return localizedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
     
-    private static func formattedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
+    public static func localizedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
         let number = NSDecimalNumber(decimal: decimal)
         var str: String
         

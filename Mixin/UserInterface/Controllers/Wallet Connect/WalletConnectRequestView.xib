@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WalletConnectRequestViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="chainNameLabel" destination="VhH-Vl-tYP" id="xRf-Ny-3AK"/>
+                <outlet property="feeButton" destination="0bT-vA-KNa" id="wN8-Lk-usA"/>
+                <outlet property="feeLabel" destination="cvt-69-wPa" id="QWZ-z2-cKb"/>
+                <outlet property="feeSelectorImageView" destination="AhN-xg-q9T" id="HFt-om-Jvb"/>
+                <outlet property="messageWrapperView" destination="LIM-Os-jYC" id="Z6q-ga-M0t"/>
+                <outlet property="networkStackView" destination="UF0-DO-fFr" id="QFL-Sw-Yu7"/>
+                <outlet property="networkStackViewBottomConstraint" destination="lHD-Ps-Ri6" id="OGE-WF-XuF"/>
+                <outlet property="signActionsStackView" destination="nqf-ki-SK0" id="Mxk-cI-ueX"/>
+                <outlet property="signActionsStackViewTopConstraint" destination="hLC-wq-pC0" id="IOr-TL-W7q"/>
+                <outlet property="signButton" destination="Rlh-mu-ZJ9" id="fMG-Qq-QYt"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="warningIconView" destination="Rsa-HV-Z4N" id="09D-a5-bpT"/>
+                <outlet property="warningLabel" destination="HXh-l9-9gn" id="ont-rm-FcQ"/>
+                <outlet property="warningWrapperView" destination="BcS-yh-7Ne" id="8yJ-Vd-hUX"/>
+                <outlet property="warningWrapperViewTopConstraint" destination="qei-Uk-yzf" id="05a-IF-ZtB"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="493"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="LIM-Os-jYC">
+                    <rect key="frame" x="20" y="25" width="353" height="149.66666666666666"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="UF0-DO-fFr" userLabel="Network Stack View">
+                    <rect key="frame" x="36" y="190.66666666666666" width="321" height="50"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="9F7-jX-QJU">
+                            <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" text="Network" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gp3-wz-hYg">
+                                    <rect key="frame" x="0.0" y="0.0" width="54.333333333333336" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_desc"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="network"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" text="Ethereum" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VhH-Vl-tYP">
+                                    <rect key="frame" x="58.333333333333343" y="0.0" width="262.66666666666663" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_desc"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gBF-HC-iHF">
+                            <rect key="frame" x="0.0" y="33" width="321" height="17"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" text="Network fee" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="By6-gF-Gdn">
+                                    <rect key="frame" x="0.0" y="0.0" width="78.333333333333329" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_desc"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="network_fee"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cvt-69-wPa">
+                                    <rect key="frame" x="86.333333333333329" y="0.0" width="234.66666666666669" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_desc"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_selector_down" translatesAutoresizingMaskIntoConstraints="NO" id="AhN-xg-q9T">
+                                    <rect key="frame" x="115" y="0.0" width="0.0" height="17"/>
+                                </imageView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0bT-vA-KNa" userLabel="Fee Button">
+                    <rect key="frame" x="122.33333333333333" y="223.66666666666666" width="28.666666666666671" height="17"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title=" "/>
+                    <connections>
+                        <action selector="changeFee:" destination="-1" eventType="touchUpInside" id="qi6-oQ-eys"/>
+                    </connections>
+                </button>
+                <view clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="BcS-yh-7Ne" userLabel="Warning Wrapper View">
+                    <rect key="frame" x="16" y="256.66666666666669" width="361" height="74.333333333333314"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nYi-Rz-kx5">
+                            <rect key="frame" x="16" y="12.000000000000004" width="329" height="50.333333333333343"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="ic_warning" translatesAutoresizingMaskIntoConstraints="NO" id="Rsa-HV-Z4N">
+                                    <rect key="frame" x="0.0" y="0.0" width="22" height="50.333333333333336"/>
+                                    <color key="tintColor" red="0.95686274509803915" green="0.6705882352941176" blue="0.1764705882352941" alpha="1" colorSpace="calibratedRGB"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="We cannot verify this signature request. Make sure you trust this app before signing this request." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HXh-l9-9gn">
+                                    <rect key="frame" x="38" y="0.0" width="291" height="50.333333333333336"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="signature_request_warning"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" name="background_warning"/>
+                    <constraints>
+                        <constraint firstItem="nYi-Rz-kx5" firstAttribute="top" secondItem="BcS-yh-7Ne" secondAttribute="top" constant="12" id="8FJ-I4-Uwl"/>
+                        <constraint firstAttribute="bottom" secondItem="nYi-Rz-kx5" secondAttribute="bottom" constant="12" id="AvV-hu-DCD"/>
+                        <constraint firstAttribute="trailing" secondItem="nYi-Rz-kx5" secondAttribute="trailing" constant="16" id="MRp-wt-JCI"/>
+                        <constraint firstItem="nYi-Rz-kx5" firstAttribute="leading" secondItem="BcS-yh-7Ne" secondAttribute="leading" constant="16" id="eJ9-S0-btH"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nqf-ki-SK0" userLabel="Sign Actions Stack View">
+                    <rect key="frame" x="16" y="371" width="361" height="104"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rlh-mu-ZJ9" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="138.66666666666666" y="0.0" width="84" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="3lY-lG-Wwq"/>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="SkD-CI-nEV"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                            <state key="normal" title="Sign by PIN"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sign_by_pin"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="signByPIN:" destination="-1" eventType="touchUpInside" id="o56-Ka-NFB"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zw8-zV-yrs">
+                            <rect key="frame" x="143.66666666666666" y="60" width="74" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="sVJ-2H-EYe"/>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="zjq-Qg-cn3"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Cancel">
+                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleCallout"/>
+                            </buttonConfiguration>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancelSigning:" destination="-1" eventType="touchUpInside" id="h8t-fs-gKo"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="0H3-LD-9bd"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="UF0-DO-fFr" firstAttribute="top" secondItem="LIM-Os-jYC" secondAttribute="bottom" constant="16" id="16l-HY-bol"/>
+                <constraint firstAttribute="trailing" secondItem="UF0-DO-fFr" secondAttribute="trailing" constant="36" id="1q1-r4-gcH"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="top" secondItem="cvt-69-wPa" secondAttribute="top" id="5sM-5F-XB8"/>
+                <constraint firstAttribute="trailing" secondItem="nqf-ki-SK0" secondAttribute="trailing" constant="16" id="73X-SP-Apb"/>
+                <constraint firstAttribute="trailing" secondItem="BcS-yh-7Ne" secondAttribute="trailing" constant="16" id="Gi5-MY-P35"/>
+                <constraint firstItem="BcS-yh-7Ne" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="Hpu-gP-HDt"/>
+                <constraint firstItem="nqf-ki-SK0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="X50-nq-0Wt"/>
+                <constraint firstAttribute="trailing" secondItem="LIM-Os-jYC" secondAttribute="trailing" constant="20" id="Xwh-c4-NuT"/>
+                <constraint firstItem="LIM-Os-jYC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="25" id="e0N-jY-MYb"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="leading" secondItem="cvt-69-wPa" secondAttribute="leading" id="fxP-UG-5qk"/>
+                <constraint firstItem="UF0-DO-fFr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="36" id="gFV-0M-5QH"/>
+                <constraint firstItem="nqf-ki-SK0" firstAttribute="top" secondItem="BcS-yh-7Ne" secondAttribute="bottom" constant="40" id="hLC-wq-pC0"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="bottom" secondItem="By6-gF-Gdn" secondAttribute="bottom" id="jQv-al-Z5r"/>
+                <constraint firstItem="0H3-LD-9bd" firstAttribute="bottom" secondItem="UF0-DO-fFr" secondAttribute="bottom" constant="252.33333333333334" id="lHD-Ps-Ri6"/>
+                <constraint firstItem="BcS-yh-7Ne" firstAttribute="top" secondItem="UF0-DO-fFr" secondAttribute="bottom" constant="16" id="qei-Uk-yzf"/>
+                <constraint firstItem="LIM-Os-jYC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="uo4-mz-hnY"/>
+                <constraint firstItem="0bT-vA-KNa" firstAttribute="trailing" secondItem="AhN-xg-q9T" secondAttribute="trailing" id="zLS-gu-0kC"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="136.64122137404578" y="738.38028169014092"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_selector_down" width="16" height="16"/>
+        <image name="ic_warning" width="22" height="23"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_warning">
+            <color red="1" green="0.96862745098039216" blue="0.67843137254901964" alpha="0.30000001192092896" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -2,6 +2,8 @@ import UIKit
 
 class PopupPresentationController: UIPresentationController {
     
+    static let willDismissPresentedViewControllerNotification = Notification.Name("one.mixin.messenger.PopupPresentationController.WillDismissPresentedViewController")
+    
     lazy var backgroundButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.black.withAlphaComponent(0.3)
@@ -79,6 +81,7 @@ class PopupPresentationController: UIPresentationController {
     }
     
     @objc func backgroundTapAction(sender: Any) {
+        NotificationCenter.default.post(name: Self.willDismissPresentedViewControllerNotification, object: self)
         presentingViewController.dismiss(animated: true, completion: nil)
     }
     

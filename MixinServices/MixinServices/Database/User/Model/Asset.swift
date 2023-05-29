@@ -107,20 +107,19 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
 extension Asset {
     
     public var usesTag: Bool {
-        // XRP 23dfb5a5-5d7b-48b6-905f-3970e3176e27
-        assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
+        assetId == AssetID.xrp
     }
     
     public var isBitcoinChain: Bool {
-        chainId == "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
+        chainId == ChainID.bitcoin
     }
     
     public var isEOSChain: Bool {
-        chainId == "6cfe566e-4aad-470b-8c9a-2fd35b49c68d"
+        chainId == ChainID.eos
     }
     
     public var isERC20: Bool {
-        chainId == "43d61dcd-e413-450d-80b8-101d5e903357"
+        chainId == ChainID.ethereum
     }
     
 }
@@ -132,9 +131,9 @@ extension Asset {
     }
     
     private static let depositNotSupportedAssetIds: Set<String> = [
-        "b207bce9-c248-4b8e-b6e3-e357146f3f4c", // MGD
-        "443e1ef5-bc9b-47d3-be77-07f328876c50", // Bytom Classic
-        "815b0b1a-2764-3736-8faa-42d694fa620a", // OMNI USDT
+        AssetID.mgd,
+        AssetID.classicBTM,
+        AssetID.omniUSDT,
     ]
     
 }

@@ -45,7 +45,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     }
     
     @objc func checkKeywordAction(_ sender: Any) {
-        let filteredKeyword = String(keyword.filter(legalKeywordCharactersSet.contains))
+        let filteredKeyword = keyword.filter(legalKeywordCharactersSet.contains)
         keywordTextField.text = filteredKeyword
         searchButton.isEnabled = isLegalKeyword(filteredKeyword)
     }

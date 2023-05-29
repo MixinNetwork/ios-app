@@ -1,31 +1,20 @@
 import XCTest
 @testable import MixinServices
 
-fileprivate let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
-fileprivate let eth = "43d61dcd-e413-450d-80b8-101d5e903357"
-fileprivate let ltc = "76c802a2-7c88-447f-a93e-c29c9e5dd9c8"
-fileprivate let dash = "6472e7e3-75fd-48b6-b1dc-28d294ee1476"
-fileprivate let doge = "6770a1e5-6086-44d5-b60f-545f9d9e8ffd"
-fileprivate let xmr = "05c5ac01-31f9-4a69-aa8a-ab796de1d041"
-fileprivate let sol = "64692c23-8971-4cf4-84a7-4dd1271dd887"
-fileprivate let xin = "c94ac88f-4671-3976-b60a-09064f1811e8"
-fileprivate let usdt = "4d8c508b-91c5-375b-92b0-ee702ed2dac5"
-fileprivate let usdc = "80b65786-7c75-3523-bc03-fb25378eae41"
-
 final class ExternalTransferTests: XCTestCase {
     
     // MARK: - BTC
     func testBitcoin() {
         let c1 = try! ExternalTransfer(string: "bitcoin:BC1QA7A84SQ2NNKPXUA5DLY6FG553D5V06NSL608SS?amount=0.00186487")
         assertEqual(transfer: c1,
-                    assetID: btc,
+                    assetID: AssetID.btc,
                     destination: "BC1QA7A84SQ2NNKPXUA5DLY6FG553D5V06NSL608SS",
                     resolvedAmount: "0.00186487",
                     memo: nil)
         
         let c2 = try! ExternalTransfer(string: "bitcoin:35pkcZ531UWYwVWRGeMG6eXkWbPptFg6AG?amount=0.00173492&fee=5&rbf=false&lightning=LNBC1734920N1P3EC8DGPP5NTUUNWS3GF9XUE4EZ2NCPEJCZHAJRVALFW8ALWFPN29LEE76NV5SDZ2GF5HGUN9VE5KCMPQV9SNYCMZVE3RWTF3XVMK2TF5XGMRJTFCXSCNSTF4VCCXYERYXQ6N2VRPVVCQZX7XQRP9SSP5Q4JSN54FHFQ8TRGHQGDQW2PUV790PXNSFVZG20CW322K0E6L7M8Q9QYYSSQA42ZJEMX44Y6PEW3YHWHXV9JUXTM96DMHKEPMD3LXUQTPH0HGSKX9TVZD2XVG7DETCVN450JXN25FM8G80GRYGU9ZHXC3XURSJ4Z20GPF8SQT7")
         assertEqual(transfer: c2,
-                    assetID: btc,
+                    assetID: AssetID.btc,
                     destination: "35pkcZ531UWYwVWRGeMG6eXkWbPptFg6AG",
                     resolvedAmount: "0.00173492",
                     memo: nil)
@@ -42,7 +31,7 @@ final class ExternalTransferTests: XCTestCase {
         let c1 = try! ExternalTransfer(string: "ethereum:0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359?value=2.014e18",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c1,
-                    assetID: eth,
+                    assetID: AssetID.ethereumUSDT,
                     destination: "0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359",
                     resolvedAmount: "2.014",
                     memo: nil)
@@ -50,7 +39,7 @@ final class ExternalTransferTests: XCTestCase {
         let c2 = try! ExternalTransfer(string: "ethereum:pay-0xdAC17F958D2ee523a2206206994597C13D831ec7@1/transfer?address=0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc&uint256=2e7&gasPrice=14",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c2,
-                    assetID: usdt,
+                    assetID: AssetID.ethereumUSDT,
                     destination: "0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc",
                     resolvedAmount: nil,
                     memo: nil)
@@ -59,7 +48,7 @@ final class ExternalTransferTests: XCTestCase {
         let c3 = try! ExternalTransfer(string: "ethereum:0xD994790d2905b073c438457c9b8933C0148862db@1?value=1.697e16&gasPrice=14&label=Bitrefill%2008cba4ee-b6cd-47c8-9768-c82959c0edce",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c3,
-                    assetID: eth,
+                    assetID: AssetID.eth,
                     destination: "0xD994790d2905b073c438457c9b8933C0148862db",
                     resolvedAmount: "0.01697",
                     memo: nil)
@@ -67,7 +56,7 @@ final class ExternalTransferTests: XCTestCase {
         let c4 = try! ExternalTransfer(string: "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&amount=1&uint256=1.24e18",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c4,
-                    assetID: xin,
+                    assetID: AssetID.xin,
                     destination: "0xB38F2E40e82F0AE5613D55203d84953aE4d5181B",
                     resolvedAmount: nil,
                     memo: nil)
@@ -81,7 +70,7 @@ final class ExternalTransferTests: XCTestCase {
         let c6 = try! ExternalTransfer(string: "ethereum:0xA974c709cFb4566686553a20790685A47acEAA33@1/transfer?a=b&c=d&uint256=1.24e18&e=f&amount=1&g=h&address=0xB38F2E40e82F0AE5613D55203d84953aE4d5181B&i=j&k=m&n=o&p=q",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c6,
-                    assetID: xin,
+                    assetID: AssetID.xin,
                     destination: "0xB38F2E40e82F0AE5613D55203d84953aE4d5181B",
                     resolvedAmount: nil,
                     memo: nil)
@@ -94,7 +83,7 @@ final class ExternalTransferTests: XCTestCase {
         let c8 = try! ExternalTransfer(string: "ethereum:0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174@137/transfer?address=0x1DB766A18aB5b70A38e2A8a8819Ba6472029E9Ac&uint256=3.27e6&gas=250000",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c8,
-                    assetID: usdc,
+                    assetID: AssetID.usdc,
                     destination: "0x1DB766A18aB5b70A38e2A8a8819Ba6472029E9Ac",
                     resolvedAmount: nil,
                     memo: nil)
@@ -103,7 +92,7 @@ final class ExternalTransferTests: XCTestCase {
         let c9 = try! ExternalTransfer(string: "ethereum:0x752420f80e0A6158f06c00A864Ff220503EB502a?amount=68.255292&label=R2PY8P&uuid=UHTR42MTTBSORZEB&req-asset=0xdAC17F958D2ee523a2206206994597C13D831ec7",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c9,
-                    assetID: usdt,
+                    assetID: AssetID.ethereumUSDT,
                     destination: "0x752420f80e0A6158f06c00A864Ff220503EB502a",
                     resolvedAmount: "68.255292",
                     memo: nil)
@@ -113,7 +102,7 @@ final class ExternalTransferTests: XCTestCase {
     func testLitecoin() {
         let c1 = try! ExternalTransfer(string: "litecoin:MAA5rAYDJcfpGShL2fHHyqdH5Sum4hC9My?amount=0.31837321")
         assertEqual(transfer: c1,
-                    assetID: ltc,
+                    assetID: AssetID.ltc,
                     destination: "MAA5rAYDJcfpGShL2fHHyqdH5Sum4hC9My",
                     resolvedAmount: "0.31837321",
                     memo: nil)
@@ -126,7 +115,7 @@ final class ExternalTransferTests: XCTestCase {
     func testDoge() {
         let c1 = try! ExternalTransfer(string: "dogecoin:DQDHx7KcDjq1uDR5MC8tHQPiUp1C3eQHcd?amount=258.69")
         assertEqual(transfer: c1,
-                    assetID: doge,
+                    assetID: AssetID.doge,
                     destination: "DQDHx7KcDjq1uDR5MC8tHQPiUp1C3eQHcd",
                     resolvedAmount: "258.69",
                     memo: nil)
@@ -139,7 +128,7 @@ final class ExternalTransferTests: XCTestCase {
     func testDash() {
         let c1 = try! ExternalTransfer(string: "dash:XimNHukVq5PFRkadrwybyuppbree51mByS?amount=0.47098703&IS=1")
         assertEqual(transfer: c1,
-                    assetID: dash,
+                    assetID: AssetID.dash,
                     destination: "XimNHukVq5PFRkadrwybyuppbree51mByS",
                     resolvedAmount: "0.47098703",
                     memo: nil)
@@ -152,7 +141,7 @@ final class ExternalTransferTests: XCTestCase {
     func testMonero() {
         let c1 = try! ExternalTransfer(string: "monero:83sfoqWFNrsGTAyuC3PxHeS9stn8TQiTkiBcizHwjyHN57NczsRJE8UfrnhTUxT5PLBWLnq5yXrtPKeAjWeoDTkCPHGVe1Y?tx_amount=1.61861962")
         assertEqual(transfer: c1,
-                    assetID: xmr,
+                    assetID: AssetID.xmr,
                     destination: "83sfoqWFNrsGTAyuC3PxHeS9stn8TQiTkiBcizHwjyHN57NczsRJE8UfrnhTUxT5PLBWLnq5yXrtPKeAjWeoDTkCPHGVe1Y",
                     resolvedAmount: "1.61861962",
                     memo: nil)
@@ -165,7 +154,7 @@ final class ExternalTransferTests: XCTestCase {
     func testSolana() {
         let c1 = try! ExternalTransfer(string: "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1&label=Michael&message=Thanks%20for%20all%20the%20fish&memo=OrderId12345")
         assertEqual(transfer: c1,
-                    assetID: sol,
+                    assetID: AssetID.sol,
                     destination: "mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN",
                     resolvedAmount: "1",
                     memo: "OrderId12345")
@@ -191,11 +180,11 @@ extension ExternalTransferTests {
     func mockAssetIDFinder(_ key: String) -> String? {
         switch key {
         case "0xdAC17F958D2ee523a2206206994597C13D831ec7":
-            return usdt
+            return AssetID.ethereumUSDT
         case "0xA974c709cFb4566686553a20790685A47acEAA33":
-            return xin
+            return AssetID.xin
         case "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174":
-            return usdc
+            return AssetID.usdc
         default:
             return nil
         }

@@ -6,7 +6,7 @@ protocol WebMoreMenuControllerDelegate: AnyObject {
 
 class WebMoreMenuViewController: UIViewController {
     
-    let titleView = R.nib.popupTitleView(owner: nil)!
+    let titleView = PopupTitleView()
     let tableViewController = SettingsTableViewController()
     
     var overrideStatusBarStyle: UIStatusBarStyle?
@@ -43,6 +43,7 @@ class WebMoreMenuViewController: UIViewController {
         titleView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
         view.addSubview(titleView)
         titleView.snp.makeConstraints { (make) in
+            make.height.equalTo(70)
             make.top.leading.trailing.equalToSuperview()
         }
         

@@ -1146,7 +1146,7 @@ extension UrlWindow {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: action, amount: payment.amount, memo: "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: action, amount: payment.amount, memo: payment.memo, error: error).presentPopupControllerAnimated()
             }
         }
     }

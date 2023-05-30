@@ -13,6 +13,8 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     private var server: DeviceTransferServer?
     private var startTransfering = false
     
+    private let userId = myUserId
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTipLabel()
@@ -22,6 +24,8 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         startTransfering = false
+        observers.forEach { $0.cancel() }
+        observers.removeAll()
         let server = DeviceTransferServer()
         server.$state
             .receive(on: DispatchQueue.main)
@@ -83,7 +87,7 @@ extension TransferToPhoneQRCodeViewController {
                                                             port: port,
                                                             code: server.code,
                                                             key: server.key,
-                                                            userID: myUserId)
+                                                            userID: userId)
             let push = DeviceTransferCommand(action: .push(context))
             do {
                 let jsonData = try JSONEncoder.default.encode(push)

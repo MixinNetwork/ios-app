@@ -5,7 +5,7 @@ import MixinServices
 class TransferToPhoneQRCodeViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var tipLabel: UILabel!
+    @IBOutlet weak var instructionsLabel: UILabel!
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
     
@@ -13,17 +13,17 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     private var server: DeviceTransferServer?
     private var startTransfering = false
     
-    private let userId = myUserId
+    private let userID = myUserId
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateTipLabel()
+        instructionsLabel.attributedText = makeInstructions()
         LoginManager.shared.inDeviceTransfer = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        startServer()
+        restartServer()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -52,20 +52,20 @@ extension TransferToPhoneQRCodeViewController: ContainerViewControllerDelegate {
 
 extension TransferToPhoneQRCodeViewController {
     
-    private func startServer() {
+    private func restartServer() {
         startTransfering = false
         observers.forEach { $0.cancel() }
         observers.removeAll()
         let server = DeviceTransferServer()
         server.$state
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
-                self.server(server, didChangeToState: state)
+            .sink { [weak self] state in
+                self?.server(server, didChangeToState: state)
             }
             .store(in: &observers)
         server.$lastConnectionRejectedReason
-            .sink { [unowned self] reason in
-                if let reason {
+            .sink { [weak self] reason in
+                if let self, let reason {
                     self.server(server, didBlockConnection: reason)
                 }
             }
@@ -82,17 +82,18 @@ extension TransferToPhoneQRCodeViewController {
     private func presentRestartServerAlert(message: String?) {
         let controller = UIAlertController(title: R.string.localizable.connection_establishment_failed(), message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: { (_) in
-            Logger.general.info(category: "TransferToPhoneQRCode", message: "Exist server")
+            Logger.general.info(category: "TransferToPhoneQRCode", message: "Cancelled on failure")
             self.navigationController?.popViewController(animated: true)
         }))
         controller.addAction(UIAlertAction(title: R.string.localizable.retry(), style: .default, handler: { (_) in
-            Logger.general.info(category: "TransferToPhoneQRCode", message: "Restar server")
-            self.startServer()
+            Logger.general.info(category: "TransferToPhoneQRCode", message: "Restart server on failure")
+            self.restartServer()
         }))
         present(controller, animated: true, completion: nil)
     }
     
     private func server(_ server: DeviceTransferServer, didChangeToState state: DeviceTransferServer.State) {
+        assert(Queue.main.isCurrent)
         switch state {
         case .idle:
             break
@@ -101,7 +102,7 @@ extension TransferToPhoneQRCodeViewController {
                                                             port: port,
                                                             code: server.code,
                                                             key: server.key,
-                                                            userID: userId)
+                                                            userID: userID)
             let push = DeviceTransferCommand(action: .push(context))
             do {
                 let jsonData = try JSONEncoder.default.encode(push)
@@ -139,7 +140,7 @@ extension TransferToPhoneQRCodeViewController {
         server.consumeLastConnectionBlockedReason()
     }
     
-    private func updateTipLabel() {
+    private func makeInstructions() -> NSAttributedString {
         let indentation: CGFloat = 10
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: indentation)]
@@ -175,7 +176,7 @@ extension TransferToPhoneQRCodeViewController {
             attributedString.addAttributes(bulletAttributes, range: rangeForBullet)
             bulletListString.append(attributedString)
         }
-        tipLabel.attributedText = bulletListString
+        return bulletListString
     }
     
     private func checkLogout(isBackAction: Bool) {

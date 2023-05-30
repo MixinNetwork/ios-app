@@ -52,14 +52,14 @@ extension TransferToDesktopViewController: UITableViewDelegate {
             let server = DeviceTransferServer()
             server.$state
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] state in
-                    self.server(server, didChangeToState: state)
+                .sink { [weak self] state in
+                    self?.server(server, didChangeToState: state)
                 }
                 .store(in: &observers)
             server.$lastConnectionRejectedReason
-                .sink { [unowned self] reason in
-                    if let reason {
-                        self.serverDidBlockConnection(reason)
+                .sink { [weak self] reason in
+                    if let self, let reason {
+                        self.server(server, didRejectConnection: reason)
                     }
                 }
                 .store(in: &observers)
@@ -149,7 +149,7 @@ extension TransferToDesktopViewController {
         }
     }
     
-    private func serverDidBlockConnection(_ reason: DeviceTransferServer.ConnectionRejectedReason) {
+    private func server(_ server: DeviceTransferServer, didRejectConnection reason: DeviceTransferServer.ConnectionRejectedReason) {
         tableView.isUserInteractionEnabled = true
         dataSource.replaceSection(at: 0, with: section, animation: .automatic)
         let title: String
@@ -161,7 +161,7 @@ extension TransferToDesktopViewController {
         }
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel) { [server] _ in
-            server?.consumeLastConnectionBlockedReason()
+            server.consumeLastConnectionBlockedReason()
         })
         present(alert, animated: true, completion: nil)
     }

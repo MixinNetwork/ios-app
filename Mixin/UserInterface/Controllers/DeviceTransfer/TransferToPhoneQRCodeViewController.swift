@@ -23,33 +23,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        startTransfering = false
-        observers.forEach { $0.cancel() }
-        observers.removeAll()
-        let server = DeviceTransferServer()
-        server.$state
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
-                self.server(server, didChangeToState: state)
-            }
-            .store(in: &observers)
-        server.$lastConnectionRejectedReason
-            .sink { [unowned self] reason in
-                if let reason {
-                    self.server(server, didBlockConnection: reason)
-                }
-            }
-            .store(in: &observers)
-        self.server = server
-        server.startListening() { [weak self] error in
-            guard let self else {
-                return
-            }
-            Logger.general.info(category: "TransferToPhoneQRCode", message: "Failed to start listening: \(error)")
-            self.alert(R.string.localizable.connection_establishment_failed()) { _ in
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
+        startServer()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -77,6 +51,46 @@ extension TransferToPhoneQRCodeViewController: ContainerViewControllerDelegate {
 }
 
 extension TransferToPhoneQRCodeViewController {
+    
+    private func startServer() {
+        startTransfering = false
+        observers.forEach { $0.cancel() }
+        observers.removeAll()
+        let server = DeviceTransferServer()
+        server.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                self.server(server, didChangeToState: state)
+            }
+            .store(in: &observers)
+        server.$lastConnectionRejectedReason
+            .sink { [unowned self] reason in
+                if let reason {
+                    self.server(server, didBlockConnection: reason)
+                }
+            }
+            .store(in: &observers)
+        self.server = server
+        server.startListening() { [weak self] error in
+            Logger.general.info(category: "TransferToPhoneQRCode", message: "Failed to start listening: \(error)")
+            DispatchQueue.main.async {
+                self?.presentRestartServerAlert(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    private func presentRestartServerAlert(message: String?) {
+        let controller = UIAlertController(title: R.string.localizable.connection_establishment_failed(), message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: { (_) in
+            Logger.general.info(category: "TransferToPhoneQRCode", message: "Exist server")
+            self.navigationController?.popViewController(animated: true)
+        }))
+        controller.addAction(UIAlertAction(title: R.string.localizable.retry(), style: .default, handler: { (_) in
+            Logger.general.info(category: "TransferToPhoneQRCode", message: "Restar server")
+            self.startServer()
+        }))
+        present(controller, animated: true, completion: nil)
+    }
     
     private func server(_ server: DeviceTransferServer, didChangeToState state: DeviceTransferServer.State) {
         switch state {
@@ -110,9 +124,7 @@ extension TransferToPhoneQRCodeViewController {
             case .finished:
                 break
             case .exception(let error):
-                alert(R.string.localizable.connection_establishment_failed(), message: error.localizedDescription) { _ in
-                    self.navigationController?.popViewController(animated: true)
-                }
+                presentRestartServerAlert(message: error.localizedDescription)
             }
         }
     }

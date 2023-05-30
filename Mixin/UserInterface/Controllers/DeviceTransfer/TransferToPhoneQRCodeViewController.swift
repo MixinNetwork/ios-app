@@ -11,7 +11,8 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     
     private var observers: Set<AnyCancellable> = []
     private var server: DeviceTransferServer?
-    private var startTransfering = false
+    private var hasTrasferStarted = false
+    private var isListening = false
     
     private let userID = myUserId
     
@@ -28,11 +29,12 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        guard !startTransfering else {
+        if isListening {
             server?.stopListening()
-            return
         }
-        checkLogout(isBackAction: false)
+        if !hasTrasferStarted {
+            checkLogout(isBackAction: false)
+        }
     }
     
     class func instance() -> UIViewController {
@@ -53,7 +55,8 @@ extension TransferToPhoneQRCodeViewController: ContainerViewControllerDelegate {
 extension TransferToPhoneQRCodeViewController {
     
     private func restartServer() {
-        startTransfering = false
+        hasTrasferStarted = false
+        isListening = false
         observers.forEach { $0.cancel() }
         observers.removeAll()
         let server = DeviceTransferServer()
@@ -96,8 +99,10 @@ extension TransferToPhoneQRCodeViewController {
         assert(Queue.main.isCurrent)
         switch state {
         case .idle:
+            isListening = false
             break
         case let .listening(hostname, port):
+            isListening = true
             let context = DeviceTransferCommand.PushContext(hostname: hostname,
                                                             port: port,
                                                             code: server.code,
@@ -116,11 +121,13 @@ extension TransferToPhoneQRCodeViewController {
                 Logger.general.error(category: "TransferToPhoneQRCode", message: "Unable to encode: \(error)")
             }
         case .transfer:
-            startTransfering = true
+            isListening = false
+            hasTrasferStarted = true
             observers.forEach { $0.cancel() }
             let progress = DeviceTransferProgressViewController(connection: .server(server, .phone))
             navigationController?.pushViewController(progress, animated: true)
         case let .closed(reason):
+            isListening = false
             switch reason {
             case .finished:
                 break

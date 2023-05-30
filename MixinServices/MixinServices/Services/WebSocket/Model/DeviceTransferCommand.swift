@@ -46,6 +46,18 @@ public struct DeviceTransferCommand {
     
 }
 
+extension DeviceTransferCommand: CustomStringConvertible {
+    
+    public var description: String {
+        if let jsonData = try? JSONEncoder.default.encode(self), let json = String(data: jsonData, encoding: .utf8) {
+            return json
+        } else {
+            return String(describing: action)
+        }
+    }
+    
+}
+
 extension DeviceTransferCommand: Codable {
     
     public enum DecodingError: Error {

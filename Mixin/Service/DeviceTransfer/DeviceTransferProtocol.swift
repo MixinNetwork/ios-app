@@ -99,9 +99,9 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
             case .none:
                 let result: ParseResult<DeviceTransferHeader> = parseContent(framer: framer)
                 switch result {
-                case .notEnough(let size):
+                case .notEnoughData(let size):
                     return size
-                case .enough(let header):
+                case .success(let header):
                     switch header.type {
                     case .command, .message:
                         receivingState = .pendingCommandOrMessageContent(header)
@@ -119,9 +119,9 @@ final class DeviceTransferProtocol: NWProtocolFramerImplementation {
             case let .pendingFileHeader(header):
                 let result: ParseResult<FileHeader> = parseContent(framer: framer)
                 switch result {
-                case .notEnough(let size):
+                case .notEnoughData(let size):
                     return size
-                case .enough(let fileHeader):
+                case .success(let fileHeader):
                     let remainingLength = Int(header.length) - FileHeader.bufferCount + Self.hmacDataCount
                     let context = FileContext(header: header, fileHeader: fileHeader, remainingLength: remainingLength)
                     receivingState = .pendingFileContent(context)
@@ -205,15 +205,15 @@ extension DeviceTransferProtocol {
 extension DeviceTransferProtocol {
     
     private enum ParseResult<Success> {
-        case enough(Success)
-        case notEnough(Int)
+        case success(Success)
+        case notEnoughData(Int)
     }
     
     private func parseContent<Content: RawBufferInitializable>(framer: NWProtocolFramer.Instance) -> ParseResult<Content> {
-        let contentSize = Content.bufferCount
+        let requiredSize = Content.bufferCount
         var content: Content?
-        let parsed = framer.parseInput(minimumIncompleteLength: contentSize, maximumLength: contentSize) { buffer, isComplete in
-            guard let buffer, buffer.count == contentSize else {
+        let parsed = framer.parseInput(minimumIncompleteLength: requiredSize, maximumLength: requiredSize) { buffer, isComplete in
+            guard let buffer, buffer.count == requiredSize else {
                 return 0
             }
             guard let currentContent = Content(buffer) else {
@@ -222,12 +222,12 @@ extension DeviceTransferProtocol {
                 return 0
             }
             content = currentContent
-            return contentSize
+            return requiredSize
         }
         if parsed, let content {
-            return .enough(content)
+            return .success(content)
         } else {
-            return .notEnough(contentSize)
+            return .notEnoughData(requiredSize)
         }
     }
     

@@ -89,8 +89,10 @@ extension DeviceTransferServer {
                     }
                 case let .failed(error), let .waiting(error):
                     Logger.general.warn(category: "DeviceTransferServer", message: "Not listening: \(error)")
-                case .setup, .cancelled:
-                    break
+                case .setup:
+                    Logger.general.info(category: "DeviceTransferServer", message: "Setting up listener")
+                case .cancelled:
+                    Logger.general.info(category: "DeviceTransferServer", message: "Listener cancelled")
                 @unknown default:
                     break
                 }

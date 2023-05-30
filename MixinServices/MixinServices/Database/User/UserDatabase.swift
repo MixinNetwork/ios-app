@@ -210,8 +210,8 @@ public final class UserDatabase: Database {
             .init(key: .traceId, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
             .init(key: .snapshotHash, constraints: "TEXT"),
-            .init(key: .openingBalance, constraints: "TEXT NOT NULL"),
-            .init(key: .closingBalance, constraints: "TEXT NOT NULL"),
+            .init(key: .openingBalance, constraints: "TEXT NOT NULL DEFAULT ''"),
+            .init(key: .closingBalance, constraints: "TEXT NOT NULL DEFAULT ''"),
         ]),
         ColumnMigratableTableDefinition<StickerRelationship>(constraints: "PRIMARY KEY(album_id, sticker_id)", columns: [
             .init(key: .albumId, constraints: "TEXT NOT NULL"),

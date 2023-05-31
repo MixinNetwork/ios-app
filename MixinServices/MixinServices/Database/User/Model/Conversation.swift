@@ -88,6 +88,27 @@ extension Conversation: Codable, DatabaseColumnConvertible, MixinFetchableRecord
         case createdAt = "created_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        conversationId = try container.decode(String.self, forKey: .conversationId)
+        ownerId = try container.decodeIfPresent(String.self, forKey: .ownerId)
+        category = try container.decodeIfPresent(String.self, forKey: .category)
+        name = try container.decodeIfPresent(String.self, forKey: .name)
+        iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl)
+        announcement = try container.decodeIfPresent(String.self, forKey: .announcement)
+        lastMessageId = try try container.decodeIfPresent(String.self, forKey: .lastMessageId)
+        lastMessageCreatedAt = try container.decodeIfPresent(String.self, forKey: .lastMessageCreatedAt)
+        lastReadMessageId = try container.decodeIfPresent(String.self, forKey: .lastReadMessageId)
+        unseenMessageCount = try container.decodeIfPresent(Int.self, forKey: .unseenMessageCount)
+        status = try container.decode(Int.self, forKey: .status)
+        draft = try container.decodeIfPresent(String.self, forKey: .draft)
+        muteUntil = try container.decodeIfPresent(String.self, forKey: .muteUntil)
+        codeUrl = try container.decodeIfPresent(String.self, forKey: .codeUrl)
+        pinTime = try container.decodeIfPresent(String.self, forKey: .pinTime)
+        expireIn = try container.decodeIfPresent(Int64.self, forKey: .expireIn)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
 }
 
 extension Conversation: TableRecord, PersistableRecord {

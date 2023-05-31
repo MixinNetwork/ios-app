@@ -1104,7 +1104,7 @@ extension UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: multisig.memo ?? "", error: error).presentPopupControllerAnimated()
             }
         }
     }
@@ -1193,7 +1193,7 @@ extension UrlWindow {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(token: token, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(token: token, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: collectible.memo ?? "", error: error).presentPopupControllerAnimated()
             }
         }
     }

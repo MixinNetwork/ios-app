@@ -9,6 +9,7 @@ final class DeviceTransferClient {
         case transfer(progress: Double, speed: String)
         case closed(DeviceTransferClosedReason)
         case importing(progress: Double)
+        case finished
     }
     
     @Published private(set) var state: State = .idle
@@ -104,10 +105,8 @@ final class DeviceTransferClient {
         }
         connection.cancel()
         switch reason {
-        case .transferFinished:
-            state = .closed(.transferFinished)
-        case .importFinished:
-            break
+        case .finished:
+            state = .closed(.finished)
         case .exception(let error):
             DispatchQueue.main.async {
                 self.dataWriter.delegate = nil
@@ -236,7 +235,7 @@ extension DeviceTransferClient {
                 self.dataWriter.delegate = self
             }
             dataWriter.transferFinished()
-            self.stop(reason: .transferFinished)
+            self.stop(reason: .finished)
         default:
             break
         }
@@ -280,12 +279,18 @@ extension DeviceTransferClient {
                 isReceivingNewFile = false
             } else {
                 assertionFailure("Should be closed by the end of previous call")
-                currentStream.close()
-                stream = DeviceTransferFileStream(context: context, key: key, client: self)
+                do {
+                    try currentStream.close()
+                } catch let DeviceTransferError.mismatchedHMAC(local, remote) {
+                    stop(reason: .exception(.mismatchedHMAC(local: local, remote: remote)))
+                } catch {
+                    stop(reason: .exception(.failed(error)))
+                }
+                stream = DeviceTransferFileStream(context: context, key: key)
                 isReceivingNewFile = true
             }
         } else {
-            stream = DeviceTransferFileStream(context: context, key: key, client: self)
+            stream = DeviceTransferFileStream(context: context, key: key)
             isReceivingNewFile = true
         }
         if isReceivingNewFile {
@@ -306,7 +311,13 @@ extension DeviceTransferClient {
             stop(reason: .exception(.receiveFile(error)))
         }
         if context.remainingLength == 0 {
-            stream.close()
+            do {
+                try stream.close()
+            } catch let DeviceTransferError.mismatchedHMAC(local, remote) {
+                stop(reason: .exception(.mismatchedHMAC(local: local, remote: remote)))
+            } catch {
+                stop(reason: .exception(.failed(error)))
+            }
             self.fileStream = nil
         }
     }
@@ -319,7 +330,7 @@ extension DeviceTransferClient: DeviceTransferDataWriterDelegate {
         if progress >= 1 {
             Logger.general.info(category: "DeviceTransferClient", message: "Import finished")
             ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
-            state = .closed(.importFinished)
+            state = .finished
         } else {
             state = .importing(progress: progress)
         }

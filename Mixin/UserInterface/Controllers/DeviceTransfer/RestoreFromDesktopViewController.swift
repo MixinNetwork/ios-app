@@ -140,7 +140,7 @@ extension RestoreFromDesktopViewController {
     
     private func stateDidChange(client: DeviceTransferClient, state: DeviceTransferClient.State) {
         switch state {
-        case .idle, .importing:
+        case .idle, .importing, .finished:
             break
         case .transfer:
             stateObserver?.cancel()

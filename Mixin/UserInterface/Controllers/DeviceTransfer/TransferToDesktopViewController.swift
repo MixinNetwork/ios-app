@@ -139,7 +139,7 @@ extension TransferToDesktopViewController {
             navigationController?.pushViewController(progress, animated: true)
         case let .closed(reason):
             switch reason {
-            case .transferFinished, .importFinished:
+            case .finished:
                 break
             case .exception(let error):
                 alert(R.string.localizable.connection_establishment_failed(), message: error.localizedDescription) { _ in

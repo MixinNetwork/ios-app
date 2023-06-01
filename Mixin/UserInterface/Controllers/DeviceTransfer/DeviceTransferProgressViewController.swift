@@ -178,6 +178,8 @@ extension DeviceTransferProgressViewController {
             handleConnectionClosing(reason: reason)
         case let .importing(progress):
             updateTitleLabel(with: progress)
+        case .finished:
+            importFinished()
         }
     }
     
@@ -197,7 +199,7 @@ extension DeviceTransferProgressViewController {
     
     private func handleConnectionClosing(reason: DeviceTransferClosedReason) {
         switch reason {
-        case .transferFinished:
+        case .finished:
             switch connection {
             case .server:
                 let hint = R.string.localizable.transfer_completed()
@@ -214,13 +216,6 @@ extension DeviceTransferProgressViewController {
             case .cloud:
                 return
             }
-        case .importFinished:
-            let hint = R.string.localizable.restore_completed()
-            titleLabel.text = hint
-            progressView.progress = 1
-            transferSucceeded(hint: hint)
-            stateObserver?.cancel()
-            Logger.general.info(category: "DeviceTransferProgress", message: "Transfer succeeded")
         case .exception(let error):
             let hint = R.string.localizable.transfer_failed()
             titleLabel.text = hint
@@ -234,6 +229,15 @@ extension DeviceTransferProgressViewController {
     private func updateTitleLabel(with importProgress: Double) {
         titleLabel.text = R.string.localizable.importing_chat_progress(String(format: "%.2f", importProgress * 100))
         progressView.progress = Float(importProgress)
+    }
+    
+    private func importFinished() {
+        let hint = R.string.localizable.restore_completed()
+        titleLabel.text = hint
+        progressView.progress = 1
+        transferSucceeded(hint: hint)
+        stateObserver?.cancel()
+        Logger.general.info(category: "DeviceTransferProgress", message: "Transfer succeeded")
     }
     
 }

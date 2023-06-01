@@ -17,7 +17,6 @@ final class DeviceTransferDataWriter {
             parsedRecordCount = 0
             totalRecordCount = 0
             fileHandle = nil
-            cleanUpIfNeeded()
         }
     }
     
@@ -79,14 +78,6 @@ final class DeviceTransferDataWriter {
 
 extension DeviceTransferDataWriter {
     
-    private func cleanUpIfNeeded() {
-        let path = DeviceTransferData.url().path
-        if FileManager.default.fileExists(atPath: path) {
-            try? FileManager.default.removeItem(atPath: path)
-            Logger.general.info(category: "DeviceTransferDataWriter", message: "Clean folder: \(path)")
-        }
-    }
-    
     private func openNextFile() {
         let filePath = DeviceTransferData.record.url(index: fileIndex).path
         if FileManager.default.fileExists(atPath: filePath) {
@@ -146,6 +137,7 @@ extension DeviceTransferDataWriter {
             }
         }
         fileHandle.closeFile()
+        try? FileManager.default.removeItem(at: filePath)
         queue.async {
             self.readAndParseRecordData()
         }
@@ -264,7 +256,7 @@ extension DeviceTransferDataWriter {
                 }
             }
         }
-        cleanUpIfNeeded()
+        try? FileManager.default.removeItem(atPath: DeviceTransferData.url().path)
     }
     
 }

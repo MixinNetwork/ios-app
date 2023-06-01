@@ -3,20 +3,17 @@ import MixinServices
 
 class DeviceTransferFileStream: InstanceInitializable {
     
-    weak var client: DeviceTransferClient?
-    
     let id: UUID
     
-    fileprivate init(id: UUID, client: DeviceTransferClient) {
+    fileprivate init(id: UUID) {
         self.id = id
-        self.client = client
     }
     
-    convenience init(context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey, client: DeviceTransferClient) {
-        if let impl = DeviceTransferFileStreamImpl(context, key: key, client: client) {
+    convenience init(context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey) {
+        if let impl = DeviceTransferFileStreamImpl(context, key: key) {
             self.init(instance: impl as! Self)
         } else {
-            self.init(id: context.fileHeader.id, client: client)
+            self.init(id: context.fileHeader.id)
         }
     }
     
@@ -24,7 +21,7 @@ class DeviceTransferFileStream: InstanceInitializable {
         
     }
     
-    func close() {
+    func close() throws {
         
     }
     
@@ -40,7 +37,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
     private var localHMAC: HMACSHA256
     private var remoteHMAC = Data(capacity: DeviceTransferProtocol.hmacDataCount)
     
-    init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey, client: DeviceTransferClient) {
+    init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey) {
         let decryptor: AESCryptor
         do {
             decryptor = try AESCryptor(operation: .decrypt, iv: context.fileHeader.iv, key: key.aes)
@@ -63,7 +60,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             self.decryptor = decryptor
             self.remainingDataCount = Int(context.header.length) - idData.count - DeviceTransferProtocol.ivDataCount
             self.localHMAC = HMACSHA256(key: key.hmac)
-            super.init(id: context.fileHeader.id, client: client)
+            super.init(id: context.fileHeader.id)
             
             localHMAC.update(data: idData)
             localHMAC.update(data: context.fileHeader.iv)
@@ -101,7 +98,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
         }
     }
     
-    override func close() {
+    override func close() throws {
         do {
             let finalData = try decryptor.finalize()
             handle.write(finalData)
@@ -115,8 +112,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             let local = localHMAC.base64EncodedString()
             let remote = remoteHMAC.base64EncodedString()
             Logger.general.error(category: "DeviceTransferFileStream", message: "\(id) Local HMAC: \(local), Remote HMAC: \(remote)")
-            client?.stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
-            return
+            throw DeviceTransferError.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)
         }
         #if DEBUG
         Logger.general.info(category: "DeviceTransferFileStream", message: "\(id) Closed")

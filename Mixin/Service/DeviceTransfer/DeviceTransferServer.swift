@@ -168,12 +168,10 @@ extension DeviceTransferServer {
         connection = nil
         DispatchQueue.main.sync(execute: stopSpeedInspecting)
         switch reason {
-        case .transferFinished:
-            state = .closed(.transferFinished)
+        case .finished:
+            state = .closed(.finished)
         case .exception(let error):
             state = .closed(.exception(error))
-        case .importFinished:
-            break
         }
     }
     
@@ -299,7 +297,7 @@ extension DeviceTransferServer {
                 }
             }
         case .finish:
-            self.stop(reason: .transferFinished)
+            self.stop(reason: .finished)
         case let .progress(progress):
             if case let .transfer(_, speed) = state {
                 state = .transfer(progress: progress, speed: speed)

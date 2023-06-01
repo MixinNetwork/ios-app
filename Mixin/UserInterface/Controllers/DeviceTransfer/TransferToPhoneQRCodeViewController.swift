@@ -129,7 +129,7 @@ extension TransferToPhoneQRCodeViewController {
         case let .closed(reason):
             isListening = false
             switch reason {
-            case .transferFinished, .importFinished:
+            case .finished:
                 break
             case .exception(let error):
                 presentRestartServerAlert(message: error.localizedDescription)

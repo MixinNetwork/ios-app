@@ -7,4 +7,5 @@ enum DeviceTransferError: Error {
     case mismatchedHMAC(local: Data, remote: Data)
     case failed(Error)
     case receiveFile(Error)
+    case unableSaveData
 }

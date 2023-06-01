@@ -8,6 +8,7 @@ final class DeviceTransferClient {
         case idle
         case transfer(progress: Double, speed: String)
         case closed(DeviceTransferClosedReason)
+        case importing(progress: Double)
     }
     
     @Published private(set) var state: State = .idle
@@ -20,6 +21,7 @@ final class DeviceTransferClient {
     private let connection: NWConnection
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferClient")
     private let speedInspector = NetworkSpeedInspector()
+    private let dataWriter: DeviceTransferDataWriter
     
     private weak var statisticsTimer: Timer?
     
@@ -45,6 +47,7 @@ final class DeviceTransferClient {
             let endpoint = NWEndpoint.hostPort(host: host, port: port)
             return NWConnection(to: endpoint, using: .deviceTransfer)
         }()
+        self.dataWriter = DeviceTransferDataWriter(remotePlatform: remotePlatform)
         Logger.general.info(category: "DeviceTransferClient", message: "\(opaquePointer) init")
     }
     
@@ -93,7 +96,7 @@ final class DeviceTransferClient {
         connection.start(queue: queue.dispatchQueue)
     }
     
-    private func stop(reason: DeviceTransferClosedReason) {
+    func stop(reason: DeviceTransferClosedReason) {
         assert(queue.isCurrent)
         Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(reason) Processed: \(processedCount) Total: \(totalCount)")
         DispatchQueue.main.sync {
@@ -101,9 +104,15 @@ final class DeviceTransferClient {
         }
         connection.cancel()
         switch reason {
-        case .finished:
-            state = .closed(.finished)
+        case .transferFinished:
+            state = .closed(.transferFinished)
+        case .importFinished:
+            break
         case .exception(let error):
+            DispatchQueue.main.async {
+                self.dataWriter.delegate = nil
+                self.dataWriter.canProcessData = false
+            }
             state = .closed(.exception(error))
         }
     }
@@ -209,12 +218,12 @@ extension DeviceTransferClient {
             Logger.general.info(category: "DeviceTransferClient", message: "Total count: \(count)")
             self.state = .transfer(progress: 0, speed: "")
             DispatchQueue.main.async {
+                self.dataWriter.canProcessData = true
                 self.totalCount = count
                 self.startUpdatingProgressAndSpeed()
             }
         case .finish:
             Logger.general.info(category: "DeviceTransferClient", message: "Received finish command")
-            ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
             do {
                 let command = DeviceTransferCommand(action: .finish)
                 let content = try DeviceTransferProtocol.output(command: command, key: key)
@@ -223,7 +232,11 @@ extension DeviceTransferClient {
             } catch {
                 Logger.general.error(category: "DeviceTransferClient", message: "Failed to finish command: \(error)")
             }
-            self.stop(reason: .finished)
+            DispatchQueue.main.async {
+                self.dataWriter.delegate = self
+            }
+            dataWriter.transferFinished()
+            self.stop(reason: .transferFinished)
         default:
             break
         }
@@ -244,71 +257,14 @@ extension DeviceTransferClient {
             stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
             return
         }
-        
-        let decryptedData: Data
         do {
-            decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
+            let decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
+            if !dataWriter.write(data: decryptedData) {
+                stop(reason: .exception(.unableSaveData))
+            }
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Unable to decrypt: \(error)")
             return
-        }
-        
-        do {
-            struct TypeWrapper: Decodable {
-                let type: DeviceTransferRecordType
-            }
-            
-            let decoder = JSONDecoder.default
-            let wrapper = try decoder.decode(TypeWrapper.self, from: decryptedData)
-            switch wrapper.type {
-            case .conversation:
-                let conversation = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferConversation>.self, from: decryptedData).data
-                ConversationDAO.shared.save(conversation: conversation.toConversation(from: remotePlatform))
-            case .participant:
-                let participant = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferParticipant>.self, from: decryptedData).data
-                ParticipantDAO.shared.save(participant: participant.toParticipant())
-            case .user:
-                let user = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferUser>.self, from: decryptedData).data
-                UserDAO.shared.save(user: user.toUser())
-            case .app:
-                let app = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferApp>.self, from: decryptedData).data
-                AppDAO.shared.save(app: app.toApp())
-            case .asset:
-                let asset = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferAsset>.self, from: decryptedData).data
-                AssetDAO.shared.save(asset: asset.toAsset())
-            case .snapshot:
-                let snapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSnapshot>.self, from: decryptedData).data
-                SnapshotDAO.shared.save(snapshot: snapshot.toSnapshot())
-            case .sticker:
-                let sticker = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSticker>.self, from: decryptedData).data
-                StickerDAO.shared.save(sticker: sticker.toSticker())
-            case .pinMessage:
-                let pinMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferPinMessage>.self, from: decryptedData).data
-                PinMessageDAO.shared.save(pinMessage: pinMessage.toPinMessage())
-            case .transcriptMessage:
-                let transcriptMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferTranscriptMessage>.self, from: decryptedData).data
-                TranscriptMessageDAO.shared.save(transcriptMessage: transcriptMessage.toTranscriptMessage())
-            case .message:
-                let message = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessage>.self, from: decryptedData).data
-                if MessageCategory.isLegal(category: message.category) {
-                    MessageDAO.shared.save(message: message.toMessage())
-                } else {
-                    Logger.general.warn(category: "DeviceTransferClient", message: "Message is illegal: \(message)")
-                }
-            case .messageMention:
-                let messageMention = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessageMention>.self, from: decryptedData).data
-                if let mention = messageMention.toMessageMention() {
-                    MessageMentionDAO.shared.save(messageMention: mention)
-                } else {
-                    Logger.general.warn(category: "DeviceTransferClient", message: "Message Mention does not exist: \(messageMention)")
-                }
-            case .expiredMessage:
-                let expiredMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferExpiredMessage>.self, from: decryptedData).data
-                ExpiredMessageDAO.shared.save(expiredMessage: expiredMessage.toExpiredMessage())
-            }
-        } catch {
-            let content = String(data: decryptedData, encoding: .utf8) ?? "Data(\(decryptedData.count))"
-            Logger.general.error(category: "DeviceTransferClient", message: "Error: \(error) Content: \(content)")
         }
     }
     
@@ -325,11 +281,11 @@ extension DeviceTransferClient {
             } else {
                 assertionFailure("Should be closed by the end of previous call")
                 currentStream.close()
-                stream = DeviceTransferFileStream(context: context, key: key)
+                stream = DeviceTransferFileStream(context: context, key: key, client: self)
                 isReceivingNewFile = true
             }
         } else {
-            stream = DeviceTransferFileStream(context: context, key: key)
+            stream = DeviceTransferFileStream(context: context, key: key, client: self)
             isReceivingNewFile = true
         }
         if isReceivingNewFile {
@@ -352,6 +308,20 @@ extension DeviceTransferClient {
         if context.remainingLength == 0 {
             stream.close()
             self.fileStream = nil
+        }
+    }
+    
+}
+
+extension DeviceTransferClient: DeviceTransferDataWriterDelegate {
+    
+    func deviceTransferDataWriter(_ writer: DeviceTransferDataWriter, update progress: Double) {
+        if progress >= 1 {
+            Logger.general.info(category: "DeviceTransferClient", message: "Import finished")
+            ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
+            state = .closed(.importFinished)
+        } else {
+            state = .importing(progress: progress)
         }
     }
     

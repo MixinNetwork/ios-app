@@ -429,6 +429,7 @@
 "i_am_good" = "我很好。";
 "image" = "圖片";
 "immediately" = "立刻";
+"importing_chat_progress" = "匯入聊天記錄（%@%%）";
 "in_connecting" = "正在連線...";
 "include_files" = "包括檔案";
 "include_videos" = "包括影片";

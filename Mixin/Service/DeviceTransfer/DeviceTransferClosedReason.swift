@@ -1,6 +1,7 @@
 import Foundation
 
 enum DeviceTransferClosedReason {
-    case finished
+    case transferFinished
+    case importFinished
     case exception(DeviceTransferError)
 }

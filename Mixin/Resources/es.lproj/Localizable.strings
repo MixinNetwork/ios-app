@@ -429,6 +429,7 @@
 "i_am_good" = "Estoy bien.";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
+"importing_chat_progress" = "Importing chat (%@%%)";
 "in_connecting" = "Conectando...";
 "include_files" = "Incluir archivos";
 "include_videos" = "Incluir vídeos";

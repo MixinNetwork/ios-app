@@ -422,33 +422,45 @@ extension MixinWebViewController {
             }
             self?.titleLabel.text = webView.title
         })
-        loadURLWithFraudulentWebsiteCheck(url: context.initialUrl)
+        loadURL(url: context.initialUrl, shouldCheckFraudulentWebsite: true)
     }
 
-    private func loadAppUrl(title: String, iconUrl: URL?) {
+    private func loadAppUrl(title: String, iconUrl: URL?, appID: String) {
         titleLabel.text = title
         if let iconUrl = iconUrl {
             titleImageView.isHidden = false
             titleImageView.sd_setImage(with: iconUrl, completed: nil)
         }
+        let url: URL
         if !context.extraParams.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
             var queryItems: [URLQueryItem] = components.queryItems ?? []
             for item in context.extraParams {
                 queryItems.append(URLQueryItem(name: item.key, value: item.value))
             }
             components.queryItems = queryItems
-            loadURLWithFraudulentWebsiteCheck(url: components.url ?? context.initialUrl)
+            url = components.url ?? context.initialUrl
         } else {
-            loadURLWithFraudulentWebsiteCheck(url: context.initialUrl)
+            url = context.initialUrl
+        }
+        DispatchQueue.global().async {
+            let user = UserDAO.shared.getUsers(withAppIds: [appID]).first
+            let isVerified = user?.isVerified ?? false
+            DispatchQueue.main.async {
+                self.loadURL(url: url, shouldCheckFraudulentWebsite: !isVerified)
+            }
         }
     }
     
-    private func loadURLWithFraudulentWebsiteCheck(url: URL) {
+    private func loadURL(url: URL, shouldCheckFraudulentWebsite: Bool) {
         let enabled: Bool
-        if let host = url.host {
-            enabled = !Self.whiteList.contains { host.contains($0) }
+        if shouldCheckFraudulentWebsite {
+            if let host = url.host {
+                enabled = !Self.whiteList.contains { host.contains($0) }
+            } else {
+                enabled = true
+            }
         } else {
-            enabled = true
+            enabled = false
         }
         webView.configuration.preferences.isFraudulentWebsiteWarningEnabled = enabled
         webView.load(URLRequest(url: url))
@@ -463,7 +475,7 @@ extension MixinWebViewController {
             let title = app.name
             let iconUrl = URL(string: app.iconUrl)
             if isHomeUrl {
-                loadAppUrl(title: title, iconUrl: iconUrl)
+                loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
             } else {
                 let validUrl = context.initialUrl.absoluteString + "/"
                 DispatchQueue.global().async { [weak self] in
@@ -479,7 +491,7 @@ extension MixinWebViewController {
                             return
                         }
                         if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                            self.loadAppUrl(title: title, iconUrl: iconUrl)
+                            self.loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
                         } else {
                             if self.suspicousLinkView.superview == nil {
                                 self.contentView.insertSubview(self.suspicousLinkView,

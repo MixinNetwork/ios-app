@@ -5,6 +5,19 @@ import MixinServices
 
 class MixinWebViewController: WebViewController {
     
+    private static let whiteList = [
+        "mixin.one",
+        "zeromesh.net",
+        "mixin.zone",
+        "kraken.fm",
+        "mixin.space",
+        "mixinwallet.com",
+        "ocean.one",
+        "mvm.app",
+        "mixin.dev",
+        "mixwallet.app",
+    ]
+    
     @IBOutlet weak var loadFailLabel: UILabel!
     @IBOutlet weak var contactDeveloperButton: UIButton!
     
@@ -409,7 +422,7 @@ extension MixinWebViewController {
             }
             self?.titleLabel.text = webView.title
         })
-        webView.load(URLRequest(url: context.initialUrl))
+        loadURLWithFraudulentWebsiteCheck(url: context.initialUrl)
     }
 
     private func loadAppUrl(title: String, iconUrl: URL?) {
@@ -424,10 +437,21 @@ extension MixinWebViewController {
                 queryItems.append(URLQueryItem(name: item.key, value: item.value))
             }
             components.queryItems = queryItems
-            webView.load(URLRequest(url: components.url ?? context.initialUrl))
+            loadURLWithFraudulentWebsiteCheck(url: components.url ?? context.initialUrl)
         } else {
-            webView.load(URLRequest(url: context.initialUrl))
+            loadURLWithFraudulentWebsiteCheck(url: context.initialUrl)
         }
+    }
+    
+    private func loadURLWithFraudulentWebsiteCheck(url: URL) {
+        let enabled: Bool
+        if let host = url.host {
+            enabled = !Self.whiteList.contains { host.contains($0) }
+        } else {
+            enabled = true
+        }
+        webView.configuration.preferences.isFraudulentWebsiteWarningEnabled = enabled
+        webView.load(URLRequest(url: url))
     }
     
     private func loadWebView() {

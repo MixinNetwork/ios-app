@@ -3,7 +3,7 @@ import MixinServices
 
 protocol DeviceTransferDataWriterDelegate: AnyObject {
     
-    func deviceTransferDataWriter(_ writer: DeviceTransferDataWriter, update progress: Double)
+    func deviceTransferDataWriter(_ writer: DeviceTransferDataWriter, update progress: Float)
     
 }
 
@@ -130,7 +130,7 @@ extension DeviceTransferDataWriter {
                             }
                         }
                     } else {
-                        let progress = Double(self.parsedRecordCount) / Double(self.totalRecordCount + 1)
+                        let progress = Float(self.parsedRecordCount) / Float(self.totalRecordCount + 1)
                         delegate.deviceTransferDataWriter(self, update: progress)
                     }
                 }

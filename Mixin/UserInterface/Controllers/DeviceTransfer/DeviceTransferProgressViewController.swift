@@ -226,9 +226,9 @@ extension DeviceTransferProgressViewController {
         }
     }
     
-    private func updateTitleLabel(with importProgress: Double) {
+    private func updateTitleLabel(with importProgress: Float) {
         titleLabel.text = R.string.localizable.importing_chat_progress(String(format: "%.2f", importProgress * 100))
-        progressView.progress = Float(importProgress)
+        progressView.progress = importProgress
     }
     
     private func importFinished() {

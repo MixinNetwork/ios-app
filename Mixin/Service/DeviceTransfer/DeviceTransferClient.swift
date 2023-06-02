@@ -8,7 +8,7 @@ final class DeviceTransferClient {
         case idle
         case transfer(progress: Double, speed: String)
         case closed(DeviceTransferClosedReason)
-        case importing(progress: Double)
+        case importing(progress: Float)
         case finished
     }
     
@@ -326,7 +326,7 @@ extension DeviceTransferClient {
 
 extension DeviceTransferClient: DeviceTransferDataWriterDelegate {
     
-    func deviceTransferDataWriter(_ writer: DeviceTransferDataWriter, update progress: Double) {
+    func deviceTransferDataWriter(_ writer: DeviceTransferDataWriter, update progress: Float) {
         if progress >= 1 {
             Logger.general.info(category: "DeviceTransferClient", message: "Import finished")
             ConversationDAO.shared.updateLastMessageIdAndCreatedAt()

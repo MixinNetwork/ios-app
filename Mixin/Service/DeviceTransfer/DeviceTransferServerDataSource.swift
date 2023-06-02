@@ -115,7 +115,7 @@ extension DeviceTransferServerDataSource {
     func enumerateItems(using block: (_ data: Data, _ stop: inout Bool) -> Void) throws {
         var nextLocation: Location? = Location(type: .allCases[0], primaryID: nil, secondaryID: nil)
         while let location = nextLocation {
-            let (transferItems, nextPrimaryID, nextSecondaryID) = items(on: location)
+            let (databaseItemCount, transferItems, nextPrimaryID, nextSecondaryID) = items(on: location)
             if transferItems.isEmpty {
                 Logger.general.info(category: "DeviceTransferServerDataSource", message: "\(location.type) is empty")
             }
@@ -129,7 +129,7 @@ extension DeviceTransferServerDataSource {
                     try readAttachment(attachment, using: block)
                 }
             }
-            if transferItems.count < limit {
+            if databaseItemCount < limit {
                 if let nextType = DeviceTransferRecordType.allCases.element(after: location.type) {
                     nextLocation = Location(type: nextType, primaryID: nil, secondaryID: nil)
                 } else {
@@ -141,14 +141,15 @@ extension DeviceTransferServerDataSource {
         }
     }
     
-    private func items(on location: Location) -> (items: [TransferItem], nextPrimaryID: String?, nextSecondaryID: String?) {
+    private func items(on location: Location) -> (databaseItemCount: Int, items: [TransferItem], nextPrimaryID: String?, nextSecondaryID: String?) {
         let transferItems: [TransferItem]
         let nextPrimaryID: String?
         let nextSecondaryID: String?
-        
+        let databaseItemCount: Int
         switch location.type {
         case .conversation:
             let conversations = ConversationDAO.shared.conversations(limit: limit, after: location.primaryID)
+            databaseItemCount = conversations.count
             nextPrimaryID = conversations.last?.conversationId
             nextSecondaryID = nil
             transferItems = conversations.compactMap { conversation in
@@ -163,6 +164,7 @@ extension DeviceTransferServerDataSource {
             }
         case .participant:
             let participants = ParticipantDAO.shared.participants(limit: limit, after: location.primaryID, with: location.secondaryID)
+            databaseItemCount = participants.count
             nextPrimaryID = participants.last?.conversationId
             nextSecondaryID = participants.last?.userId
             transferItems = participants.compactMap { participant in
@@ -177,6 +179,7 @@ extension DeviceTransferServerDataSource {
             }
         case .user:
             let users = UserDAO.shared.users(limit: limit, after: location.primaryID)
+            databaseItemCount = users.count
             nextPrimaryID = users.last?.userId
             nextSecondaryID = nil
             transferItems = users.compactMap { user in
@@ -191,6 +194,7 @@ extension DeviceTransferServerDataSource {
             }
         case .app:
             let apps = AppDAO.shared.apps(limit: limit, after: location.primaryID)
+            databaseItemCount = apps.count
             nextPrimaryID = apps.last?.appId
             nextSecondaryID = nil
             transferItems = apps.compactMap { app in
@@ -205,6 +209,7 @@ extension DeviceTransferServerDataSource {
             }
         case .asset:
             let assets = AssetDAO.shared.assets(limit: limit, after: location.primaryID)
+            databaseItemCount = assets.count
             nextPrimaryID = assets.last?.assetId
             nextSecondaryID = nil
             transferItems = assets.compactMap { asset in
@@ -219,6 +224,7 @@ extension DeviceTransferServerDataSource {
             }
         case .snapshot:
             let snapshots = SnapshotDAO.shared.snapshots(limit: limit, after: location.primaryID)
+            databaseItemCount = snapshots.count
             nextPrimaryID = snapshots.last?.snapshotId
             nextSecondaryID = nil
             transferItems = snapshots.compactMap { snapshot in
@@ -233,6 +239,7 @@ extension DeviceTransferServerDataSource {
             }
         case .sticker:
             let stickers = StickerDAO.shared.stickers(limit: limit, after: location.primaryID)
+            databaseItemCount = stickers.count
             nextPrimaryID = stickers.last?.stickerId
             nextSecondaryID = nil
             transferItems = stickers.compactMap { sticker in
@@ -247,6 +254,7 @@ extension DeviceTransferServerDataSource {
             }
         case .pinMessage:
             let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit, after: location.primaryID)
+            databaseItemCount = pinMessages.count
             nextPrimaryID = pinMessages.last?.messageId
             nextSecondaryID = nil
             transferItems = pinMessages.compactMap { pinMessage in
@@ -261,6 +269,7 @@ extension DeviceTransferServerDataSource {
             }
         case .transcriptMessage:
             let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: location.primaryID, with: location.secondaryID)
+            databaseItemCount = transcriptMessages.count
             nextPrimaryID = transcriptMessages.last?.transcriptId
             nextSecondaryID = transcriptMessages.last?.messageId
             transferItems = transcriptMessages.compactMap { transcriptMessage in
@@ -281,6 +290,7 @@ extension DeviceTransferServerDataSource {
             }
         case .message:
             let messages = MessageDAO.shared.messages(limit: limit, after: location.primaryID)
+            databaseItemCount = messages.count
             nextPrimaryID = messages.last?.messageId
             nextSecondaryID = nil
             transferItems = messages.compactMap { message in
@@ -301,6 +311,7 @@ extension DeviceTransferServerDataSource {
             }
         case .messageMention:
             let messageMentions = MessageMentionDAO.shared.messageMentions(limit: limit, after: location.primaryID)
+            databaseItemCount = messageMentions.count
             nextPrimaryID = messageMentions.last?.messageId
             nextSecondaryID = nil
             transferItems = messageMentions.compactMap { messageMention in
@@ -315,6 +326,7 @@ extension DeviceTransferServerDataSource {
             }
         case .expiredMessage:
             let expiredMessages = ExpiredMessageDAO.shared.expiredMessages(limit: limit, after: location.primaryID)
+            databaseItemCount = expiredMessages.count
             nextPrimaryID = expiredMessages.last?.messageId
             nextSecondaryID = nil
             transferItems = expiredMessages.compactMap { expiredMessage in
@@ -330,7 +342,7 @@ extension DeviceTransferServerDataSource {
         }
         
         Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(transferItems.count) \(location.type)")
-        return (transferItems, nextPrimaryID, nextSecondaryID)
+        return (databaseItemCount, transferItems, nextPrimaryID, nextSecondaryID)
     }
     
     // Only throw fatal errors, like encryption failure for now

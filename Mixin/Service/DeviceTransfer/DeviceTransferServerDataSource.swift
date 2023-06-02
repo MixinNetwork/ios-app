@@ -114,11 +114,14 @@ extension DeviceTransferServerDataSource {
     // Only throw fatal errors, like encryption failure for now
     func enumerateItems(using block: (_ data: Data, _ stop: inout Bool) -> Void) throws {
         var nextLocation: Location? = Location(type: .allCases[0], primaryID: nil, secondaryID: nil)
+        var recordCount = 0
+        var fileCount = 0
         while let location = nextLocation {
             let (databaseItemCount, transferItems, nextPrimaryID, nextSecondaryID) = items(on: location)
             if transferItems.isEmpty {
                 Logger.general.info(category: "DeviceTransferServerDataSource", message: "\(location.type) is empty")
             }
+            recordCount += transferItems.count
             for item in transferItems {
                 var stop = false
                 block(item.outputData, &stop)
@@ -126,7 +129,9 @@ extension DeviceTransferServerDataSource {
                     return
                 }
                 if let attachment = item.attachment {
-                    try readAttachment(attachment, using: block)
+                    if try readAttachment(attachment, using: block) {
+                        fileCount += 1
+                    }
                 }
             }
             if databaseItemCount < limit {
@@ -135,10 +140,13 @@ extension DeviceTransferServerDataSource {
                 } else {
                     nextLocation = nil
                 }
+                Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(location.type) \(recordCount)")
+                recordCount = 0
             } else {
                 nextLocation = Location(type: location.type, primaryID: nextPrimaryID, secondaryID: nextSecondaryID)
             }
         }
+        Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send file \(fileCount)")
     }
     
     private func items(on location: Location) -> (databaseItemCount: Int, items: [TransferItem], nextPrimaryID: String?, nextSecondaryID: String?) {
@@ -340,31 +348,28 @@ extension DeviceTransferServerDataSource {
                 }
             }
         }
-        
-        Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(transferItems.count) \(location.type)")
         return (databaseItemCount, transferItems, nextPrimaryID, nextSecondaryID)
     }
     
     // Only throw fatal errors, like encryption failure for now
-    private func readAttachment(_ attachment: TransferItem.Attachment, using block: (Data, inout Bool) -> Void) throws {
+    private func readAttachment(_ attachment: TransferItem.Attachment, using block: (Data, inout Bool) -> Void) throws -> Bool {
         let url = attachment.url
         let fileSize = Int(FileManager.default.fileSize(url.path))
         guard fileSize > 0 else {
-            Logger.general.error(category: "DeviceTransferServerDataSource", message: "File is empty: \(url)")
-            return
+            return false
         }
         
         guard let idData = UUID(uuidString: attachment.messageID)?.data else {
             Logger.general.error(category: "DeviceTransferServerDataSource", message: "Invalid mid: \(attachment.messageID)")
-            return
+            return false
         }
         guard let stream = InputStream(url: url) else {
             Logger.general.info(category: "DeviceTransferServerDataSource", message: "Open stream failed: \(url)")
-            return
+            return false
         }
         guard let iv = Data(withNumberOfSecuredRandomBytes: DeviceTransferProtocol.ivDataCount) else {
             Logger.general.error(category: "DeviceTransferServerDataSource", message: "Unable to generate iv for attachment")
-            return
+            return false
         }
 #if DEBUG
         Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
@@ -382,18 +387,18 @@ extension DeviceTransferServerDataSource {
         let headerData = header.encoded()
         block(headerData, &stop)
         if stop {
-            return
+            return false
         }
         
         block(idData, &stop)
         if stop {
-            return
+            return false
         }
         hmac.update(data: idData)
         
         block(iv, &stop)
         if stop {
-            return
+            return false
         }
         hmac.update(data: iv)
         
@@ -422,6 +427,7 @@ extension DeviceTransferServerDataSource {
         
         let hmacData = hmac.finalize()
         block(hmacData, &stop)
+        return true
     }
     
 }

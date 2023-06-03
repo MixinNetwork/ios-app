@@ -5,7 +5,7 @@ import MixinServices
 
 class MixinWebViewController: WebViewController {
     
-    private static let whiteList = [
+    private static let fraudulentWarningDisabledHosts = [
         "mixin.one",
         "zeromesh.net",
         "mixin.zone",
@@ -26,6 +26,11 @@ class MixinWebViewController: WebViewController {
         static let reloadTheme = "reloadTheme"
         static let playlist = "playlist"
         static let close = "close"
+    }
+    
+    private enum FradulentWarningBehavior {
+        case byWhitelist // See `fraudulentWarningDisabledHosts`
+        case disabled
     }
     
     weak var associatedClip: Clip?
@@ -422,7 +427,7 @@ extension MixinWebViewController {
             }
             self?.titleLabel.text = webView.title
         })
-        loadURL(url: context.initialUrl, shouldCheckFraudulentWebsite: true)
+        loadURL(url: context.initialUrl, fraudulentWarning: .byWhitelist)
     }
 
     private func loadAppUrl(title: String, iconUrl: URL?, appID: String) {
@@ -443,23 +448,23 @@ extension MixinWebViewController {
             url = context.initialUrl
         }
         DispatchQueue.global().async {
-            let user = UserDAO.shared.getUsers(withAppIds: [appID]).first
-            let isVerified = user?.isVerified ?? false
+            let isVerified = UserDAO.shared.isUserVerified(withAppID: appID)
             DispatchQueue.main.async {
-                self.loadURL(url: url, shouldCheckFraudulentWebsite: !isVerified)
+                self.loadURL(url: url, fraudulentWarning: isVerified ? .disabled : .byWhitelist)
             }
         }
     }
     
-    private func loadURL(url: URL, shouldCheckFraudulentWebsite: Bool) {
+    private func loadURL(url: URL, fraudulentWarning: FradulentWarningBehavior) {
         let enabled: Bool
-        if shouldCheckFraudulentWebsite {
+        switch fraudulentWarning {
+        case .byWhitelist:
             if let host = url.host {
-                enabled = !Self.whiteList.contains { host.contains($0) }
+                enabled = !Self.fraudulentWarningDisabledHosts.contains(host)
             } else {
                 enabled = true
             }
-        } else {
+        case .disabled:
             enabled = false
         }
         webView.configuration.preferences.isFraudulentWebsiteWarningEnabled = enabled

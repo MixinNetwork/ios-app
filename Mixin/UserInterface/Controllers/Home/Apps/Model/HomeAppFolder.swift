@@ -33,7 +33,7 @@ extension HomeAppFolder: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let name = try container.decode(String.self, forKey: .name)
         let ids = try container.decode([[String]].self, forKey: .id)
-        let userMap = UserDAO.shared.getUsers(withAppIds: ids.flatMap({ $0 }))
+        let userMap = UserDAO.shared.getFriendUsers(withAppIds: ids.flatMap({ $0 }))
             .reduce(into: [String: User]()) { result, user in
                 if let appId = user.appId {
                     result[appId] = user

@@ -49,6 +49,12 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [identityNumber])
     }
     
+    public func isUserVerified(withAppID id: String) -> Bool {
+        let sql = "SELECT u.is_verified FROM users u WHERE u.app_id = ?"
+        let verified: Bool? = db.select(with: sql, arguments: [id])
+        return verified ?? false
+    }
+    
     public func getUsers(keyword: String, limit: Int?) -> [UserItem] {
         var sql = """
         \(Self.sqlQueryColumns)
@@ -95,7 +101,7 @@ public final class UserDAO: UserDatabaseDAO {
         return ids.compactMap { userMap[$0] }
     }
     
-    public func getUsers(withAppIds ids: [String]) -> [User] {
+    public func getFriendUsers(withAppIds ids: [String]) -> [User] {
         guard ids.count > 0 else {
             return []
         }

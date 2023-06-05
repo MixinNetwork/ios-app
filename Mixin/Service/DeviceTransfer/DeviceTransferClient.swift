@@ -86,7 +86,7 @@ final class DeviceTransferClient {
             case .failed(let error):
                 Logger.general.warn(category: "DeviceTransferClient", message: "Failed: \(error)")
                 if let self {
-                    self.stop(error: .connectionFailed(error))
+                    self.fail(error: .connectionFailed(error))
                 }
             case .cancelled:
                 Logger.general.info(category: "DeviceTransferClient", message: "Connection cancelled")
@@ -97,7 +97,7 @@ final class DeviceTransferClient {
         connection.start(queue: queue.dispatchQueue)
     }
     
-    func stop(error: DeviceTransferError) {
+    private func fail(error: DeviceTransferError) {
         assert(queue.isCurrent)
         Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(error) Processed: \(processedCount) Total: \(totalCount)")
         DispatchQueue.main.sync {
@@ -158,7 +158,7 @@ extension DeviceTransferClient {
             else {
                 if isComplete {
                     if case .transfer = self.state {
-                        self.stop(error: .remoteComplete)
+                        self.fail(error: .remoteComplete)
                     }
                     Logger.general.warn(category: "DeviceTransferClient", message: "Remote closed")
                 }
@@ -196,7 +196,7 @@ extension DeviceTransferClient {
         let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
-            stop(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
+            fail(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
             return
         }
         
@@ -250,13 +250,13 @@ extension DeviceTransferClient {
         let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
-            stop(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
+            fail(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
             return
         }
         do {
             let decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
             if !dataWriter.write(data: decryptedData) {
-                stop(error: .unableSaveData)
+                fail(error: .unableSaveData)
             }
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Unable to decrypt: \(error)")
@@ -278,10 +278,10 @@ extension DeviceTransferClient {
                 assertionFailure("Should be closed by the end of previous call")
                 do {
                     try currentStream.close()
-                } catch let DeviceTransferError.mismatchedHMAC(local, remote) {
-                    stop(error: .mismatchedHMAC(local: local, remote: remote))
+                } catch let error as DeviceTransferError {
+                    fail(error: error)
                 } catch {
-                    stop(error: .failed(error))
+                    fail(error: .receiveFile(error))
                 }
                 stream = DeviceTransferFileStream(context: context, key: key)
                 isReceivingNewFile = true
@@ -305,15 +305,15 @@ extension DeviceTransferClient {
             try stream.write(data: content)
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Failed to write: \(error)")
-            stop(error: .receiveFile(error))
+            fail(error: .receiveFile(error))
         }
         if context.remainingLength == 0 {
             do {
                 try stream.close()
-            } catch let DeviceTransferError.mismatchedHMAC(local, remote) {
-                stop(error: .mismatchedHMAC(local: local, remote: remote))
+            } catch let error as DeviceTransferError {
+                fail(error: error)
             } catch {
-                stop(error: .failed(error))
+                fail(error: .receiveFile(error))
             }
             self.fileStream = nil
         }

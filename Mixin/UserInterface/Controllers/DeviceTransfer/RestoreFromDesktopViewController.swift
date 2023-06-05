@@ -148,14 +148,12 @@ extension RestoreFromDesktopViewController {
             tableView.isUserInteractionEnabled = true
             let progress = DeviceTransferProgressViewController(connection: .client(client, .desktop))
             navigationController?.pushViewController(progress, animated: true)
-        case let .closed(reason):
+        case let .failed(error):
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = true
             stateObserver?.cancel()
-            if case let .exception(error) = reason {
-                alert(R.string.localizable.connection_establishment_failed(), message: error.localizedDescription) { _ in
-                    self.navigationController?.popViewController(animated: true)
-                }
+            alert(R.string.localizable.connection_establishment_failed(), message: error.localizedDescription) { _ in
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }

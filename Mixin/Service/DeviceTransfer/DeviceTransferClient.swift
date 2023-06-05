@@ -7,7 +7,7 @@ final class DeviceTransferClient {
     enum State {
         case idle
         case transfer(progress: Double, speed: String)
-        case closed(DeviceTransferClosedReason)
+        case failed(DeviceTransferError)
         case importing(progress: Float)
         case finished
     }
@@ -86,7 +86,7 @@ final class DeviceTransferClient {
             case .failed(let error):
                 Logger.general.warn(category: "DeviceTransferClient", message: "Failed: \(error)")
                 if let self {
-                    self.stop(reason: .exception(.failed(error)))
+                    self.stop(error: .connectionFailed(error))
                 }
             case .cancelled:
                 Logger.general.info(category: "DeviceTransferClient", message: "Connection cancelled")
@@ -97,23 +97,18 @@ final class DeviceTransferClient {
         connection.start(queue: queue.dispatchQueue)
     }
     
-    func stop(reason: DeviceTransferClosedReason) {
+    func stop(error: DeviceTransferError) {
         assert(queue.isCurrent)
-        Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(reason) Processed: \(processedCount) Total: \(totalCount)")
+        Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(error) Processed: \(processedCount) Total: \(totalCount)")
         DispatchQueue.main.sync {
             self.statisticsTimer?.invalidate()
         }
         connection.cancel()
-        switch reason {
-        case .finished:
-            state = .closed(.finished)
-        case .exception(let error):
-            DispatchQueue.main.async {
-                self.dataWriter.delegate = nil
-                self.dataWriter.canProcessData = false
-            }
-            state = .closed(.exception(error))
+        DispatchQueue.main.async {
+            self.dataWriter.delegate = nil
+            self.dataWriter.canProcessData = false
         }
+        state = .failed(error)
     }
     
     private func startUpdatingProgressAndSpeed() {
@@ -162,7 +157,9 @@ extension DeviceTransferClient {
                 let message = contentContext?.protocolMetadata(definition: DeviceTransferProtocol.definition) as? NWProtocolFramer.Message
             else {
                 if isComplete {
-                    self.stop(reason: .exception(.remoteComplete))
+                    if case .transfer = self.state {
+                        self.stop(error: .remoteComplete)
+                    }
                     Logger.general.warn(category: "DeviceTransferClient", message: "Remote closed")
                 }
                 return
@@ -199,7 +196,7 @@ extension DeviceTransferClient {
         let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
-            stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
+            stop(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
             return
         }
         
@@ -234,8 +231,8 @@ extension DeviceTransferClient {
             DispatchQueue.main.async {
                 self.dataWriter.delegate = self
             }
+            state = .importing(progress: 0)
             dataWriter.transferFinished()
-            self.stop(reason: .finished)
         default:
             break
         }
@@ -253,13 +250,13 @@ extension DeviceTransferClient {
         let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
-            stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
+            stop(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
             return
         }
         do {
             let decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
             if !dataWriter.write(data: decryptedData) {
-                stop(reason: .exception(.unableSaveData))
+                stop(error: .unableSaveData)
             }
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Unable to decrypt: \(error)")
@@ -282,9 +279,9 @@ extension DeviceTransferClient {
                 do {
                     try currentStream.close()
                 } catch let DeviceTransferError.mismatchedHMAC(local, remote) {
-                    stop(reason: .exception(.mismatchedHMAC(local: local, remote: remote)))
+                    stop(error: .mismatchedHMAC(local: local, remote: remote))
                 } catch {
-                    stop(reason: .exception(.failed(error)))
+                    stop(error: .failed(error))
                 }
                 stream = DeviceTransferFileStream(context: context, key: key)
                 isReceivingNewFile = true
@@ -308,15 +305,15 @@ extension DeviceTransferClient {
             try stream.write(data: content)
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Failed to write: \(error)")
-            stop(reason: .exception(.receiveFile(error)))
+            stop(error: .receiveFile(error))
         }
         if context.remainingLength == 0 {
             do {
                 try stream.close()
             } catch let DeviceTransferError.mismatchedHMAC(local, remote) {
-                stop(reason: .exception(.mismatchedHMAC(local: local, remote: remote)))
+                stop(error: .mismatchedHMAC(local: local, remote: remote))
             } catch {
-                stop(reason: .exception(.failed(error)))
+                stop(error: .failed(error))
             }
             self.fileStream = nil
         }

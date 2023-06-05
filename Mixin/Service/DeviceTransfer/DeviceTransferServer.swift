@@ -13,7 +13,12 @@ final class DeviceTransferServer {
         case idle
         case listening(hostname: String, port: UInt16)
         case transfer(progress: Double, speed: String)
-        case closed(DeviceTransferClosedReason)
+        case closed(ClosedReason)
+    }
+    
+    enum ClosedReason {
+        case finished
+        case exception(DeviceTransferError)
     }
     
     let code: UInt16 = .random(in: 0...999)
@@ -85,7 +90,7 @@ extension DeviceTransferServer {
                         }
                     } catch {
                         Logger.general.warn(category: "DeviceTransferServer", message: "Listener ready without a hostname")
-                        self?.state = .closed(.exception(.failed(error)))
+                        self?.state = .closed(.exception(.connectionFailed(error)))
                     }
                 case let .failed(error), let .waiting(error):
                     Logger.general.warn(category: "DeviceTransferServer", message: "Not listening: \(error)")
@@ -159,7 +164,7 @@ extension DeviceTransferServer {
         lastConnectionRejectedReason = nil
     }
     
-    private func stop(reason: DeviceTransferClosedReason) {
+    private func stop(reason: ClosedReason) {
         assert(queue.isCurrent)
         Logger.general.info(category: "DeviceTransferServer", message: "Stop with reason: \(reason)")
         listener?.cancel()
@@ -186,7 +191,7 @@ extension DeviceTransferServer {
         }
         startListening { error in
             Logger.general.error(category: "DeviceTransferServer", message: "Failed to start listening after connection rejected")
-            self.state = .closed(.exception(.failed(error)))
+            self.state = .closed(.exception(.connectionFailed(error)))
         }
     }
     
@@ -214,7 +219,7 @@ extension DeviceTransferServer {
                 }
             case .failed(let error):
                 Logger.general.warn(category: "DeviceTransferServer", message: "Failed: \(error)")
-                self?.stop(reason: .exception(.failed(error)))
+                self?.stop(reason: .exception(.connectionFailed(error)))
             case .cancelled:
                 Logger.general.info(category: "DeviceTransferServer", message: "Connection cancelled")
             @unknown default:

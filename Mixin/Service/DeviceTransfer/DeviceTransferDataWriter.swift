@@ -58,7 +58,7 @@ final class DeviceTransferDataWriter {
         let lenghtData = UInt32(data.count).data(endianness: .big)
         fileHandle.write(lenghtData)
         fileHandle.write(data)
-        DispatchQueue.main.sync {
+        DispatchQueue.main.async {
             self.totalRecordCount += 1
         }
         return true

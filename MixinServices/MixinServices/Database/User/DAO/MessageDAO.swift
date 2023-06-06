@@ -1000,26 +1000,28 @@ extension MessageDAO {
                   order: [Message.column(of: .createdAt).desc])
     }
     
-    public func save(message: Message) {
+    public func save(messages: [Message]) {
         db.write { db in
-            let exists = try message.exists(db)
-            guard !exists else {
-                return
-            }
-            try message.save(db)
-            let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
-                && message.status != MessageStatus.FAILED.rawValue
-                && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
-            if shouldInsertIntoFTSTable {
-                let children: [TranscriptMessage]?
-                if message.category.hasSuffix("_TRANSCRIPT") {
-                    children = try TranscriptMessage
-                        .filter(TranscriptMessage.column(of: .transcriptId) == message.messageId)
-                        .fetchAll(db)
-                } else {
-                    children = nil
+            for message in messages {
+                let exists = try message.exists(db)
+                guard !exists else {
+                    continue
                 }
-                try insertFTSContent(db, message: message, children: children)
+                try message.save(db)
+                let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
+                    && message.status != MessageStatus.FAILED.rawValue
+                    && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
+                if shouldInsertIntoFTSTable {
+                    let children: [TranscriptMessage]?
+                    if message.category.hasSuffix("_TRANSCRIPT") {
+                        children = try TranscriptMessage
+                            .filter(TranscriptMessage.column(of: .transcriptId) == message.messageId)
+                            .fetchAll(db)
+                    } else {
+                        children = nil
+                    }
+                    try insertFTSContent(db, message: message, children: children)
+                }
             }
         }
     }

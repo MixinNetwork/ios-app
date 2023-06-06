@@ -28,6 +28,7 @@ final class DeviceTransferDataWriter {
     private var totalRecordCount = 0
     private var parsedRecordCount = 0
     private var pendingParsedRecordPath = [URL]()
+    private var pendingSaveMessages = [Message]()
     
     init(remotePlatform: DeviceTransferPlatform) {
         self.remotePlatform = remotePlatform
@@ -187,11 +188,16 @@ extension DeviceTransferDataWriter {
             case .message:
                 let message = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessage>.self, from: data).data
                 if MessageCategory.isLegal(category: message.category) {
-                    MessageDAO.shared.save(message: message.toMessage())
+                    pendingSaveMessages.append(message.toMessage())
+                    if pendingSaveMessages.count > 1000 {
+                        MessageDAO.shared.save(messages: pendingSaveMessages)
+                        pendingSaveMessages.removeAll()
+                    }
                 } else {
                     Logger.general.warn(category: "DeviceTransferDataWriter", message: "Message is illegal: \(message)")
                 }
             case .messageMention:
+                saveMessagesIfNeeded()
                 let messageMention = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessageMention>.self, from: data).data
                 if let mention = messageMention.toMessageMention() {
                     MessageMentionDAO.shared.save(messageMention: mention)
@@ -210,6 +216,7 @@ extension DeviceTransferDataWriter {
     
     private func processFiles() {
         assert(queue.isCurrent)
+        saveMessagesIfNeeded()
         guard
             let fileEnumerator = FileManager.default.enumerator(at: DeviceTransferData.file.url(name: nil),
                                                                 includingPropertiesForKeys: [.isRegularFileKey],
@@ -257,6 +264,13 @@ extension DeviceTransferDataWriter {
             }
         }
         try? FileManager.default.removeItem(atPath: DeviceTransferData.url().path)
+    }
+    
+    private func saveMessagesIfNeeded() {
+        if !pendingSaveMessages.isEmpty {
+            MessageDAO.shared.save(messages: pendingSaveMessages)
+            pendingSaveMessages.removeAll()
+        }
     }
     
 }

@@ -9,8 +9,8 @@ class DeviceTransferFileStream: InstanceInitializable {
         self.id = id
     }
     
-    convenience init(context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey) {
-        if let impl = DeviceTransferFileStreamImpl(context, key: key) {
+    convenience init(context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey, containerURL: URL) {
+        if let impl = DeviceTransferFileStreamImpl(context, key: key, containerURL: containerURL) {
             self.init(instance: impl as! Self)
         } else {
             self.init(id: context.fileHeader.id)
@@ -37,7 +37,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
     private var localHMAC: HMACSHA256
     private var remoteHMAC = Data(capacity: DeviceTransferProtocol.hmacDataCount)
     
-    init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey) {
+    init?(_ context: DeviceTransferProtocol.FileContext, key: DeviceTransferKey, containerURL: URL) {
         let decryptor: AESCryptor
         do {
             decryptor = try AESCryptor(operation: .decrypt, iv: context.fileHeader.iv, key: key.aes)
@@ -50,7 +50,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
         let idData = context.fileHeader.id.data
         
         do {
-            let fileURL = DeviceTransferData.file.url(name: id)
+            let fileURL = containerURL.appendingPathComponent(id)
             if fileManager.fileExists(atPath: fileURL.path) {
                 try fileManager.removeItem(at: fileURL)
             }
@@ -115,7 +115,7 @@ fileprivate final class DeviceTransferFileStreamImpl: DeviceTransferFileStream {
             throw DeviceTransferError.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)
         }
         #if DEBUG
-        Logger.general.info(category: "DeviceTransferFileStream", message: "\(id) Closed")
+        Logger.general.debug(category: "DeviceTransferFileStream", message: "\(id) Closed")
         #endif
     }
     

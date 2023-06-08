@@ -208,6 +208,13 @@ extension DeviceTransferProgressViewController {
         speedLabel.text = speed
     }
     
+    private func updateTitleLabel(with importProgress: Float) {
+        tipLabel.text = R.string.localizable.keep_running_foreground()
+        titleLabel.text = R.string.localizable.importing_chat_progress(String(format: "%.2f", importProgress * 100))
+        progressView.progress = importProgress
+        speedLabel.isHidden = true
+    }
+    
     private func handleConnectionClosing(error: DeviceTransferError) {
         let hint = R.string.localizable.transfer_failed()
         titleLabel.text = hint
@@ -215,13 +222,6 @@ extension DeviceTransferProgressViewController {
         speedLabel.isHidden = true
         stateObserver?.cancel()
         Logger.general.error(category: "DeviceTransferProgress", message: "Transfer failed: \(error)")
-    }
-    
-    private func updateTitleLabel(with importProgress: Float) {
-        speedLabel.isHidden = true
-        tipLabel.text = R.string.localizable.keep_running_foreground()
-        titleLabel.text = R.string.localizable.importing_chat_progress(String(format: "%.2f", importProgress * 100))
-        progressView.progress = importProgress
     }
     
     private func importFinished() {

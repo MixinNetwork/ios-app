@@ -11,6 +11,7 @@ final class DeviceTransferMessageProcessor {
     enum ProcessingError: Error {
         case createInputStream
         case readInputStream(Error?)
+        case enumerateFiles
     }
     
     private enum ReadStreamResult {
@@ -323,6 +324,7 @@ extension DeviceTransferMessageProcessor {
     private func processFiles() {
         assert(processingQueue.isCurrent)
         guard let fileEnumerator = fileManager.enumerator(at: cacheContainerURL, includingPropertiesForKeys: nil) else {
+            processingError = .enumerateFiles
             Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Can't create file enumerator")
             return
         }

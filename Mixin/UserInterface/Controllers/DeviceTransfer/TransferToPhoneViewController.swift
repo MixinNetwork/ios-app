@@ -44,7 +44,7 @@ extension TransferToPhoneViewController: UITableViewDelegate {
                 alert(R.string.localizable.devices_on_same_network())
                 return
             }
-            controller = TransferToPhoneQRCodeViewController.instance()
+            controller = TransferToPhoneQRCodeViewController.instance(range: range)
         default:
             switch indexPath.row {
             case 0:

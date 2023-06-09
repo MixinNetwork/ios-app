@@ -25,6 +25,7 @@ final class DeviceTransferServer {
     // Access on main queue
     @Published private(set) var lastConnectionRejectedReason: ConnectionRejectedReason?
     
+    private let range: DeviceTransferRange
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferServer")
     private let dataLoaderQueue = Queue(label: "one.mixin.messenger.DeviceTransferServer.Loader")
     private let speedInspector = NetworkSpeedInspector()
@@ -41,8 +42,9 @@ final class DeviceTransferServer {
         Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()
     }
     
-    init() {
-        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) init")
+    init(range: DeviceTransferRange) {
+        self.range = range
+        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) init with range: \(range)")
     }
     
     deinit {

@@ -168,7 +168,7 @@ extension TransferToDesktopViewController {
                                                rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
             section.setAccessory(.busy, forRowAt: 0)
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
-            let server = DeviceTransferServer()
+            let server = DeviceTransferServer(range: range)
             server.$state
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] state in

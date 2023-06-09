@@ -4,12 +4,21 @@ import MixinServices
 
 class TransferToDesktopViewController: DeviceTransferSettingViewController {
     
-    private let section = SettingsRadioSection(rows: [
-        SettingsRow(title: R.string.localizable.transfer_now(), titleStyle: .highlighted)
+    private lazy var actionSection = SettingsRadioSection(rows: [
+        SettingsRow(title: R.string.localizable.transfer_now(), titleStyle: .highlighted),
+    ])
+    private lazy var conversationRangeRow = SettingsRow(title: R.string.localizable.conversations(),
+                                                         subtitle: DeviceTransferRange.Conversation.all.title,
+                                                         accessory: .disclosure)
+    private lazy var dateRangeRow = SettingsRow(title: R.string.localizable.date(),
+                                                subtitle: DeviceTransferRange.Date.all.title,
+                                                accessory: .disclosure)
+    private lazy var dataSource = SettingsDataSource(sections: [
+        actionSection,
+        SettingsRadioSection(rows: [conversationRangeRow, dateRangeRow])
     ])
     
-    private lazy var dataSource = SettingsDataSource(sections: [section])
-    
+    private var range = DeviceTransferRange(conversation: .all, date: .all)
     private var observers: Set<AnyCancellable> = []
     private var server: DeviceTransferServer?
     
@@ -33,48 +42,20 @@ extension TransferToDesktopViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if AppGroupUserDefaults.Account.isDesktopLoggedIn {
-            guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
-                Logger.general.info(category: "TransferToDesktop", message: "Network is not reachable")
-                alert(R.string.localizable.devices_on_same_network())
-                return
+        switch indexPath.section {
+        case 0:
+            prepareTransfer()
+        default:
+            let controller: UIViewController
+            switch indexPath.row {
+            case 0:
+                controller = DeviceTransferConversationSelectionViewController.instance(range: range.conversation,
+                                                                                        rangeChanged: updateCoversationRangeRow(conversationRange:))
+            default:
+                controller = DeviceTransferDateSelectionViewController.instance(range: range.date,
+                                                                                rangeChanged: updateDateRangeRow(dateRange:))
             }
-            guard WebSocketService.shared.isRealConnected else {
-                Logger.general.info(category: "TransferToDesktop", message: "WebSocket is not connected")
-                alert(R.string.localizable.unable_connect_to_desktop())
-                return
-            }
-            tableView.isUserInteractionEnabled = false
-            let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
-                                               rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
-            section.setAccessory(.busy, forRowAt: indexPath.row)
-            dataSource.replaceSection(at: indexPath.section, with: section, animation: .automatic)
-            let server = DeviceTransferServer()
-            server.$state
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] state in
-                    self?.server(server, didChangeToState: state)
-                }
-                .store(in: &observers)
-            server.$lastConnectionRejectedReason
-                .sink { [weak self] reason in
-                    if let self, let reason {
-                        self.server(server, didRejectConnection: reason)
-                    }
-                }
-                .store(in: &observers)
-            self.server = server
-            server.startListening() { [weak self] error in
-                guard let self else {
-                    return
-                }
-                Logger.general.info(category: "TransferToDesktop", message: "Failed to start listening: \(error)")
-                self.alert(R.string.localizable.connection_establishment_failed()) { _ in
-                    self.navigationController?.popViewController(animated: true)
-                }
-            }
-        } else {
-            alert(R.string.localizable.login_desktop_first())
+            navigationController?.pushViewController(controller, animated: true)
         }
     }
     
@@ -94,7 +75,7 @@ extension TransferToDesktopViewController {
         }
         Logger.general.info(category: "TransferToDesktop", message: "Command: \(command))")
         tableView.isUserInteractionEnabled = true
-        dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+        dataSource.replaceSection(at: 0, with: actionSection, animation: .automatic)
         server?.stopListening()
     }
     
@@ -127,14 +108,14 @@ extension TransferToDesktopViewController {
                 Logger.general.info(category: "TransferToDesktop", message: "Send push command: \(success)")
                 if !success, let self {
                     self.alert(R.string.localizable.unable_connect_to_desktop())
-                    self.dataSource.replaceSection(at: 0, with: self.section, animation: .automatic)
+                    self.dataSource.replaceSection(at: 0, with: self.actionSection, animation: .automatic)
                     self.tableView.isUserInteractionEnabled = true
                 }
             }
         case .transfer:
             observers.forEach({ $0.cancel() })
             tableView.isUserInteractionEnabled = true
-            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+            dataSource.replaceSection(at: 0, with: actionSection, animation: .automatic)
             let progress = DeviceTransferProgressViewController(connection: .server(server, .desktop))
             navigationController?.pushViewController(progress, animated: true)
         case let .closed(reason):
@@ -151,7 +132,7 @@ extension TransferToDesktopViewController {
     
     private func server(_ server: DeviceTransferServer, didRejectConnection reason: DeviceTransferServer.ConnectionRejectedReason) {
         tableView.isUserInteractionEnabled = true
-        dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+        dataSource.replaceSection(at: 0, with: actionSection, animation: .automatic)
         let title: String
         switch reason {
         case .mismatchedUser:
@@ -164,6 +145,66 @@ extension TransferToDesktopViewController {
             server.consumeLastConnectionBlockedReason()
         })
         present(alert, animated: true, completion: nil)
+    }
+    
+}
+
+extension TransferToDesktopViewController {
+    
+    private func prepareTransfer() {
+        if AppGroupUserDefaults.Account.isDesktopLoggedIn {
+            guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+                Logger.general.info(category: "TransferToDesktop", message: "Network is not reachable")
+                alert(R.string.localizable.devices_on_same_network())
+                return
+            }
+            guard WebSocketService.shared.isRealConnected else {
+                Logger.general.info(category: "TransferToDesktop", message: "WebSocket is not connected")
+                alert(R.string.localizable.unable_connect_to_desktop())
+                return
+            }
+            tableView.isUserInteractionEnabled = false
+            let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
+                                               rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
+            section.setAccessory(.busy, forRowAt: 0)
+            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+            let server = DeviceTransferServer()
+            server.$state
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] state in
+                    self?.server(server, didChangeToState: state)
+                }
+                .store(in: &observers)
+            server.$lastConnectionRejectedReason
+                .sink { [weak self] reason in
+                    if let self, let reason {
+                        self.server(server, didRejectConnection: reason)
+                    }
+                }
+                .store(in: &observers)
+            self.server = server
+            server.startListening() { [weak self] error in
+                guard let self else {
+                    return
+                }
+                Logger.general.info(category: "TransferToDesktop", message: "Failed to start listening: \(error)")
+                self.alert(R.string.localizable.connection_establishment_failed()) { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        } else {
+            alert(R.string.localizable.login_desktop_first())
+        }
+    }
+    
+    private func updateCoversationRangeRow(conversationRange: DeviceTransferRange.Conversation) {
+        range.conversation = conversationRange
+        conversationRangeRow.subtitle = conversationRange.title
+    }
+    
+    private func updateDateRangeRow(dateRange: DeviceTransferRange.Date) {
+        range.date = dateRange
+        dateRangeRow.subtitle = dateRange.title
     }
     
 }

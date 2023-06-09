@@ -623,6 +623,9 @@
 		7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7579DD29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift */; };
 		7C7579E029DC61890002DA0B /* TransferToPhoneQRCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C7579DE29DC61890002DA0B /* TransferToPhoneQRCodeView.xib */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
+		7C7DBAD62A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7DBAD52A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift */; };
+		7C7DBAD82A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7DBAD72A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift */; };
+		7C7DBADA2A2F391C008D4B0E /* DeviceTransferRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7DBAD92A2F391C008D4B0E /* DeviceTransferRange.swift */; };
 		7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */; };
 		7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */; };
 		7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */; };
@@ -658,11 +661,14 @@
 		7CDBA58E28F7B6CB00AC3777 /* TransferSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */; };
 		7CDF316C29890FB200421808 /* ConversationFontSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDF316B29890FB200421808 /* ConversationFontSet.swift */; };
 		7CDF316E29891B1200421808 /* PresentationFontSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDF316D29891B1200421808 /* PresentationFontSize.swift */; };
+		7CDFFF6F2A30760500E0870E /* DeviceTransferSelectedConversationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDFFF6E2A30760500E0870E /* DeviceTransferSelectedConversationWindow.swift */; };
+		7CDFFF712A30761900E0870E /* DeviceTransferSelectedConversationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CDFFF702A30761900E0870E /* DeviceTransferSelectedConversationWindow.xib */; };
 		7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8BB58F234F36C000991ACB /* Colors.xcassets */; };
 		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
+		7CE78FB12A30883200FEB942 /* DeviceTransferDateSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE78FB02A30883200FEB942 /* DeviceTransferDateSelectionView.xib */; };
 		7CEB735429DB24F3006FB5B2 /* RestoreChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB735229DB24F3006FB5B2 /* RestoreChatViewController.swift */; };
 		7CEB735529DB24F3006FB5B2 /* RestoreChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */; };
 		7CEB735829DB272F006FB5B2 /* RestoreChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */; };
@@ -1696,6 +1702,9 @@
 		7C7579DD29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferToPhoneQRCodeViewController.swift; sourceTree = "<group>"; };
 		7C7579DE29DC61890002DA0B /* TransferToPhoneQRCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferToPhoneQRCodeView.xib; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
+		7C7DBAD52A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferDateSelectionViewController.swift; sourceTree = "<group>"; };
+		7C7DBAD72A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferConversationSelectionViewController.swift; sourceTree = "<group>"; };
+		7C7DBAD92A2F391C008D4B0E /* DeviceTransferRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferRange.swift; sourceTree = "<group>"; };
 		7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperViewController.swift; sourceTree = "<group>"; };
 		7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperCell.swift; sourceTree = "<group>"; };
 		7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountSettingViewController.swift; sourceTree = "<group>"; };
@@ -1732,10 +1741,13 @@
 		7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSearchViewController.swift; sourceTree = "<group>"; };
 		7CDF316B29890FB200421808 /* ConversationFontSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationFontSet.swift; sourceTree = "<group>"; };
 		7CDF316D29891B1200421808 /* PresentationFontSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationFontSize.swift; sourceTree = "<group>"; };
+		7CDFFF6E2A30760500E0870E /* DeviceTransferSelectedConversationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferSelectedConversationWindow.swift; sourceTree = "<group>"; };
+		7CDFFF702A30761900E0870E /* DeviceTransferSelectedConversationWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceTransferSelectedConversationWindow.xib; sourceTree = "<group>"; };
 		7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperImageView.swift; sourceTree = "<group>"; };
 		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
+		7CE78FB02A30883200FEB942 /* DeviceTransferDateSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceTransferDateSelectionView.xib; sourceTree = "<group>"; };
 		7CEB735229DB24F3006FB5B2 /* RestoreChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreChatViewController.swift; sourceTree = "<group>"; };
 		7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RestoreChatView.xib; sourceTree = "<group>"; };
 		7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreChatTableViewCell.swift; sourceTree = "<group>"; };
@@ -2669,6 +2681,7 @@
 				7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */,
 				7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */,
 				7CEB735729DB272F006FB5B2 /* RestoreChatTableViewCell.xib */,
+				7CE78FB02A30883200FEB942 /* DeviceTransferDateSelectionView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2786,6 +2799,9 @@
 				7C7579DD29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift */,
 				7C7579DB29DC60960002DA0B /* TransferToPhoneViewController.swift */,
 				7C7579D529DC573F0002DA0B /* DeviceTransferProgressViewController.swift */,
+				7C7DBAD72A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift */,
+				7C7DBAD52A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift */,
+				7C7DBAD92A2F391C008D4B0E /* DeviceTransferRange.swift */,
 			);
 			path = DeviceTransfer;
 			sourceTree = "<group>";
@@ -3173,6 +3189,8 @@
 				7C0FAAC827E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib */,
 				7C47352828571CC900ECD293 /* AccessPhoneContactHintWindow.swift */,
 				7C47352A28571D0300ECD293 /* AccessPhoneContactHintWindow.xib */,
+				7CDFFF6E2A30760500E0870E /* DeviceTransferSelectedConversationWindow.swift */,
+				7CDFFF702A30761900E0870E /* DeviceTransferSelectedConversationWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -4177,6 +4195,7 @@
 				7C7579E029DC61890002DA0B /* TransferToPhoneQRCodeView.xib in Resources */,
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
 				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,
+				7CDFFF712A30761900E0870E /* DeviceTransferSelectedConversationWindow.xib in Resources */,
 				94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */,
 				7C5DFE32284F3071008733FC /* UserCenterTableHeaderView.xib in Resources */,
 				7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */,
@@ -4297,6 +4316,7 @@
 				948E6CB628AF95CC00DFF5DF /* TIPIntroView.xib in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
+				7CE78FB12A30883200FEB942 /* DeviceTransferDateSelectionView.xib in Resources */,
 				7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */,
 				7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */,
 				E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */,
@@ -5105,6 +5125,7 @@
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
 				7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */,
 				7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */,
+				7C7DBAD82A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift in Sources */,
 				7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */,
 				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
 				941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */,
@@ -5139,6 +5160,7 @@
 				7B57186E24D9375300682D86 /* MixinAPIError+Description.swift in Sources */,
 				E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,
+				7C7DBADA2A2F391C008D4B0E /* DeviceTransferRange.swift in Sources */,
 				7B54F95922B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift in Sources */,
 				7B68F78B2191741300B79978 /* BiometryType.swift in Sources */,
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
@@ -5354,6 +5376,7 @@
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				7CEB736029DBC639006FB5B2 /* DeviceTransferUser.swift in Sources */,
+				7C7DBAD62A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift in Sources */,
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
 				DFAD89A1241B6D6400836EDD /* JobService.swift in Sources */,
 				94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */,
@@ -5362,6 +5385,7 @@
 				7BA1768E244ACE2E007D50FD /* PickerCell.swift in Sources */,
 				7B81BF2522893F5D00266A77 /* GroupParticipantsViewController.swift in Sources */,
 				7B2C8B2D2524D26900347AC3 /* ClipSwitcherViewController.swift in Sources */,
+				7CDFFF6F2A30760500E0870E /* DeviceTransferSelectedConversationWindow.swift in Sources */,
 				7B34A19722C0B59200665F41 /* MixinNavigationAnimating.swift in Sources */,
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
 				7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */,

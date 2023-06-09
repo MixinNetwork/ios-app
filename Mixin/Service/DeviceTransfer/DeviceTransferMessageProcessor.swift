@@ -142,6 +142,7 @@ final class DeviceTransferMessageProcessor {
         processingQueue.async {
             self.process(cache: lastCache)
             try? fileManager.removeItem(at: lastCache.url)
+            self.savePendingMessages()
             self.processFiles()
             DispatchQueue.main.async {
                 self.progress = 1
@@ -164,6 +165,15 @@ extension DeviceTransferMessageProcessor {
         DispatchQueue.main.async {
             self.progress = progress
         }
+    }
+    
+    private func savePendingMessages() {
+        guard !pendingMessages.isEmpty else {
+            return
+        }
+        MessageDAO.shared.save(messages: pendingMessages)
+        pendingMessages.removeAll(keepingCapacity: false)
+        Logger.general.info(category: "DeviceTransferMessageProcessor", message: "All pending messages are saved")
     }
     
     private func read(from stream: InputStream, to buffer: inout Data, length: Int) -> ReadStreamResult {
@@ -300,11 +310,7 @@ extension DeviceTransferMessageProcessor {
                     Logger.general.warn(category: "DeviceTransferMessageProcessor", message: "Message is illegal: \(message)")
                 }
             case .messageMention:
-                if !pendingMessages.isEmpty {
-                    MessageDAO.shared.save(messages: pendingMessages)
-                    pendingMessages.removeAll(keepingCapacity: false)
-                    Logger.general.info(category: "DeviceTransferMessageProcessor", message: "All pending messages are saved")
-                }
+                savePendingMessages()
                 let messageMention = try decoder.decode(DataWrapper<DeviceTransferMessageMention>.self, from: jsonData).data
                 if let mention = messageMention.toMessageMention() {
                     MessageMentionDAO.shared.save(messageMention: mention)

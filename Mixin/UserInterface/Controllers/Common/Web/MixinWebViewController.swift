@@ -5,7 +5,11 @@ import MixinServices
 
 class MixinWebViewController: WebViewController {
     
-    private static let fraudulentWarningDisabledHosts = [
+    // Only top 2 levels of the domain are matched
+    // Be careful when adding country specific SLDs into this list
+    // e.g. "anything.co.uk" will be matched if "something.co.uk" is added
+    // See `loadURL(url:fraudulentWarning:)` for details
+    private static let fraudulentWarningDisabledDomains = [
         "mixin.one",
         "zeromesh.net",
         "mixin.zone",
@@ -460,7 +464,15 @@ extension MixinWebViewController {
         switch fraudulentWarning {
         case .byWhitelist:
             if let host = url.host {
-                enabled = !Self.fraudulentWarningDisabledHosts.contains(host)
+                let domainComponents = host.components(separatedBy: ".")
+                if domainComponents.count < 2 {
+                    enabled = true
+                } else {
+                    let topLevelDomain = domainComponents[domainComponents.count - 1]
+                    let secondLevelDomain = domainComponents[domainComponents.count - 2]
+                    let domainSuffix = secondLevelDomain + "." + topLevelDomain
+                    enabled = !Self.fraudulentWarningDisabledDomains.contains(domainSuffix)
+                }
             } else {
                 enabled = true
             }

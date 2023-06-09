@@ -135,15 +135,6 @@ final class DeviceTransferMessageProcessor {
         processingQueue.async {
             self.process(cache: lastCache)
             try? fileManager.removeItem(at: lastCache.url)
-            if !self.pendingMessages.isEmpty {
-                if self.isCancelled {
-                    Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Cancelled on finish processing")
-                } else {
-                    MessageDAO.shared.save(messages: self.pendingMessages)
-                    self.pendingMessages.removeAll(keepingCapacity: false)
-                    Logger.general.info(category: "DeviceTransferMessageProcessor", message: "All pending messages are saved")
-                }
-            }
             self.processFiles()
             DispatchQueue.main.async {
                 self.progress = 1
@@ -323,6 +314,11 @@ extension DeviceTransferMessageProcessor {
                     return 0
                 }
             case .messageMention:
+                if !pendingMessages.isEmpty {
+                    MessageDAO.shared.save(messages: pendingMessages)
+                    pendingMessages.removeAll(keepingCapacity: false)
+                    Logger.general.info(category: "DeviceTransferMessageProcessor", message: "All pending messages are saved")
+                }
                 let messageMention = try decoder.decode(DataWrapper<DeviceTransferMessageMention>.self, from: jsonData).data
                 if let mention = messageMention.toMessageMention() {
                     MessageMentionDAO.shared.save(messageMention: mention)

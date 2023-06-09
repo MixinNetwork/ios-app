@@ -349,6 +349,7 @@ extension DeviceTransferClient {
                 fail(error: .receiveFile(error))
             }
             self.fileStream = nil
+            messageProcessor.reportFileReceived()
         }
     }
     

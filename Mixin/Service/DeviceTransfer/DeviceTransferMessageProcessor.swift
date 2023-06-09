@@ -124,6 +124,12 @@ final class DeviceTransferMessageProcessor {
         }
     }
     
+    func reportFileReceived() {
+        processingQueue.async {
+            self.totalCount += 1
+        }
+    }
+    
     func finishProcessing() {
         assert(inputQueue.isCurrent)
         guard let lastCache = writingCache else {
@@ -226,8 +232,7 @@ extension DeviceTransferMessageProcessor {
                 return
             case .success:
                 let content = cacheReadingBuffer[cacheReadingBuffer.startIndex..<cacheReadingBuffer.startIndex.advanced(by: length)]
-                let numberOfAttachments = process(jsonData: content)
-                totalCount += numberOfAttachments
+                process(jsonData: content)
                 processedCount += 1
                 if processedCount - processedCountOnLastProgressReporting == progressReportingInterval {
                     processedCountOnLastProgressReporting = processedCount
@@ -244,8 +249,7 @@ extension DeviceTransferMessageProcessor {
         Logger.general.info(category: "DeviceTransferMessageProcessor", message: "End processing cache \(cache.index)")
     }
     
-    // Return number of attachments
-    private func process(jsonData: Data) -> Int {
+    private func process(jsonData: Data) {
         struct TypeWrapper: Decodable {
             let type: DeviceTransferRecordType
         }
@@ -259,43 +263,30 @@ extension DeviceTransferMessageProcessor {
             case .conversation:
                 let conversation = try decoder.decode(DataWrapper<DeviceTransferConversation>.self, from: jsonData).data
                 ConversationDAO.shared.save(conversation: conversation.toConversation(from: remotePlatform))
-                return 0
             case .participant:
                 let participant = try decoder.decode(DataWrapper<DeviceTransferParticipant>.self, from: jsonData).data
                 ParticipantDAO.shared.save(participant: participant.toParticipant())
-                return 0
             case .user:
                 let user = try decoder.decode(DataWrapper<DeviceTransferUser>.self, from: jsonData).data
                 UserDAO.shared.save(user: user.toUser())
-                return 0
             case .app:
                 let app = try decoder.decode(DataWrapper<DeviceTransferApp>.self, from: jsonData).data
                 AppDAO.shared.save(app: app.toApp())
-                return 0
             case .asset:
                 let asset = try decoder.decode(DataWrapper<DeviceTransferAsset>.self, from: jsonData).data
                 AssetDAO.shared.save(asset: asset.toAsset())
-                return 0
             case .snapshot:
                 let snapshot = try decoder.decode(DataWrapper<DeviceTransferSnapshot>.self, from: jsonData).data
                 SnapshotDAO.shared.save(snapshot: snapshot.toSnapshot())
-                return 0
             case .sticker:
                 let sticker = try decoder.decode(DataWrapper<DeviceTransferSticker>.self, from: jsonData).data
                 StickerDAO.shared.save(sticker: sticker.toSticker())
-                return 0
             case .pinMessage:
                 let pinMessage = try decoder.decode(DataWrapper<DeviceTransferPinMessage>.self, from: jsonData).data
                 PinMessageDAO.shared.save(pinMessage: pinMessage.toPinMessage())
-                return 0
             case .transcriptMessage:
                 let transcriptMessage = try decoder.decode(DataWrapper<DeviceTransferTranscriptMessage>.self, from: jsonData).data
                 TranscriptMessageDAO.shared.save(transcriptMessage: transcriptMessage.toTranscriptMessage())
-                if transcriptMessage.mediaUrl.isNilOrEmpty {
-                    return 0
-                } else {
-                    return 1
-                }
             case .message:
                 let message = try decoder.decode(DataWrapper<DeviceTransferMessage>.self, from: jsonData).data
                 if MessageCategory.isLegal(category: message.category) {
@@ -304,14 +295,8 @@ extension DeviceTransferMessageProcessor {
                         MessageDAO.shared.save(messages: pendingMessages)
                         pendingMessages.removeAll(keepingCapacity: true)
                     }
-                    if message.mediaUrl.isNilOrEmpty {
-                        return 0
-                    } else {
-                        return 1
-                    }
                 } else {
                     Logger.general.warn(category: "DeviceTransferMessageProcessor", message: "Message is illegal: \(message)")
-                    return 0
                 }
             case .messageMention:
                 if !pendingMessages.isEmpty {
@@ -325,16 +310,13 @@ extension DeviceTransferMessageProcessor {
                 } else {
                     Logger.general.warn(category: "DeviceTransferMessageProcessor", message: "Message Mention does not exist: \(messageMention)")
                 }
-                return 0
             case .expiredMessage:
                 let expiredMessage = try decoder.decode(DataWrapper<DeviceTransferExpiredMessage>.self, from: jsonData).data
                 ExpiredMessageDAO.shared.save(expiredMessage: expiredMessage.toExpiredMessage())
-                return 0
             }
         } catch {
             let content = String(data: jsonData, encoding: .utf8) ?? "Data(\(jsonData.count))"
             Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Error: \(error) Content: \(content)")
-            return 0
         }
     }
     
@@ -383,7 +365,7 @@ extension DeviceTransferMessageProcessor {
                 }
             }
             
-            processedCount += destinationURLs.count
+            processedCount += 1
             if processedCount - processedCountOnLastProgressReporting == progressReportingInterval {
                 processedCountOnLastProgressReporting = processedCount
                 reportProgress()

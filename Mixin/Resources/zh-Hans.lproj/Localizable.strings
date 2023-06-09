@@ -55,7 +55,9 @@
 "alert_key_group_transcript_message" = "%@分享一个聊天记录";
 "alert_key_group_video_message" = "%@发送一个视频";
 "all" = "全部";
+"all_chats" = "所有聊天";
 "all_conversations" = "所有会话";
+"all_dates" = "所有日期";
 "all_photos" = "所有照片";
 "all_signer_failure" = "所有节点失败，也许 PIN 跟上次意外退出时设置的不一致";
 "all_transactions" = "所有交易记录";
@@ -179,6 +181,8 @@
 "chat_text_size" = "聊天字体大小";
 "chat_waiting" = "等待%1$@上线后建立加密会话。%2$@。";
 "chats" = "会话";
+"chats_count_one" = "1 个聊天";
+"chats_count" = "%d 个聊天";
 "choose_network" = "选择充值网络";
 "choose_network_tip" = "请选择 Mixin 支持的网络进行充值，否则您的充值将不会到账。";
 "choose_photo" = "选择照片";
@@ -299,6 +303,8 @@
 "deposit_tip_eos" = "支持所有基于 EOS 发行的代币。";
 "deposit_tip_eth" = "支持所有符合 ERC-20 标准的代币，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支持 TRX 和所有符合 TRC-10、TRC-20 标准的代币。";
+"deselect_all" = "取消所有选择";
+"designated_time_frame" = "指定时间段";
 "desktop_on_hint" = "桌面版已登入。";
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
 "detect_qr_tip" = "检测到一个 Mixin 二维码，点击识别";
@@ -454,6 +460,8 @@
 "invite_to_group_via_link" = "群邀请链接";
 "invited_by_stranger" = "邀请人不是你的联系人";
 "invites_you_to_a_voice_call" = "发起了语音通话";
+"items_selected_one" = "已选择 1 个";
+"items_selected_count" = "已选择 %d 个";
 "join_group" = "加入群组";
 "joined_in" = "%@ 加入";
 "keep_running_foreground" = "不要关闭屏幕并保持 Mixin 在前台运行";
@@ -465,6 +473,10 @@
 "large_amount_confirmation_with_symbol" = "大额转账确认（%@）";
 "last_active_time" = "最后登入于 %@";
 "last_backup_hint" = "上次备份是 %@，占用空间 %@。";
+"last_month" = "最近一个月";
+"last_month_count" = "最近 %d 个月";
+"last_year" = "最近一年";
+"last_year_count" = "最近 %d 年";
 "later" = "稍后";
 "learn_more" = "了解更多";
 "light" = "浅色";
@@ -512,6 +524,7 @@
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mobile_contacts" = "通讯录";
+"month" = "月";
 "monthly" = "每月";
 "more" = "更多";
 "move_and_scale" = "移动和缩放";
@@ -675,6 +688,7 @@
 "receive_money" = "我的收款码";
 "receiver" = "至";
 "receivers" = "交易接收人";
+"recent" = "最近";
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜索";
 "refresh" = "刷新";
@@ -749,6 +763,7 @@
 "security" = "安全";
 "select" = "选择";
 "select_a_country_or_region" = "选择一个国家或地区";
+"select_all" = "选择所有";
 "select_emergency_contact" = "选择紧急联系人";
 "select_more_photos" = "选择更多照片";
 "selected_count" = "选择了 %@ 个消息";
@@ -823,6 +838,7 @@
 "show" = "显示";
 "show_asset" = "显示资产";
 "show_in_chat" = "在聊天中展示";
+"show_selected" = "显示选择（%d）";
 "sign_in" = "登录";
 "sign_with_emergency_contact" = "通过紧急联系人登录";
 "sign_with_phone_number" = "通过手机号登录";
@@ -1007,6 +1023,7 @@
 "withdrawal_network_fee" = "网络手续费：";
 "withdrawal_no_memo" = "点击不使用 Memo（备注）";
 "withdrawal_to" = "提现到 %@";
+"year" = "年";
 "you" = "你";
 "you_deleted_this_message" = "你撤回了一条消息";
 "you_have_a_new_message" = "你收到了一条消息";

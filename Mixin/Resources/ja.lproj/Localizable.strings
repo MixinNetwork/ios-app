@@ -55,7 +55,9 @@
 "alert_key_group_transcript_message" = "%@がメッセージ履歴を共有しました";
 "alert_key_group_video_message" = "%@が動画を送信しました";
 "all" = "すべて";
+"all_chats" = "All chats";
 "all_conversations" = "すべてのチャットルーム";
+"all_dates" = "All dates";
 "all_photos" = "全ての画像";
 "all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
 "all_transactions" = "もらった・あげたコイン💰";
@@ -179,6 +181,8 @@
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "オンラインで暗号化されたやりとりを開始するまであと%1$@。%2$@";
 "chats" = "チャット";
+"chats_count_one" = "1 chat";
+"chats_count" = "%d chats";
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "画像を選ぶ";
@@ -299,6 +303,8 @@
 "deposit_tip_eos" = "このアドレスはEOSベースの全てのトークンをサポートしています";
 "deposit_tip_eth" = "このアドレスはETHやXINなど全てのERC-20トークンをサポートしています";
 "deposit_tip_trx" = "このアドレスは全てのTRC-10/TRC-20トークンをサポートしています";
+"deselect_all" = "Deselect All";
+"designated_time_frame" = "Designated time frame";
 "desktop_on_hint" = "デスクトップにログインしています";
 "desktop_upgrade" = "デスクトップ版Mixinを最新バージョンにアップデートしてください";
 "detect_qr_tip" = "Mixin QRコードを検出しました、タップしてアクセスします";
@@ -454,6 +460,8 @@
 "invite_to_group_via_link" = "リンクを使って招待する";
 "invited_by_stranger" = "招待者はあなたの連絡先に存在しません";
 "invites_you_to_a_voice_call" = "グループ通話に招待されました";
+"items_selected_one" = "1 Item Selected";
+"items_selected_count" = "%d Items Selected";
 "join_group" = "グループに参加";
 "joined_in" = "%@からMixinを利用しています";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
@@ -465,6 +473,10 @@
 "large_amount_confirmation_with_symbol" = "送金時に通知を行う金額の設定（%@）";
 "last_active_time" = "直近のアクティビティ%@";
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
+"last_month" = "Last month";
+"last_month_count" = "Last %d months";
+"last_year" = "Last year";
+"last_year_count" = "Last %d years";
 "later" = "後で";
 "learn_more" = "こちら";
 "light" = "ダーク";
@@ -512,6 +524,7 @@
 "mixin_messenger_desktop" = "Mixin デスクトップ";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mobile_contacts" = "連絡先";
+"month" = "Month";
 "monthly" = "月";
 "more" = "もっとみる";
 "move_and_scale" = "移動と拡大縮小";
@@ -675,6 +688,7 @@
 "receive_money" = "仮想通貨を受け取る";
 "receiver" = "受取人";
 "receivers" = "受取人";
+"recent" = "Recent";
 "recent_chats" = "チャット";
 "recent_searches" = "最近の検索";
 "refresh" = "更新";
@@ -749,6 +763,7 @@
 "security" = "セキュリティ";
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";
+"select_all" = "Select All";
 "select_emergency_contact" = "緊急連絡先を選択";
 "select_more_photos" = "さらに選択";
 "selected_count" = "%@を選択しています。";
@@ -823,6 +838,7 @@
 "show" = "表示";
 "show_asset" = "資産を表示する";
 "show_in_chat" = "チャット内で表示";
+"show_selected" = "Show Selected(%d)";
 "sign_in" = "ログイン";
 "sign_with_emergency_contact" = "緊急連絡先でログイン";
 "sign_with_phone_number" = "電話番号でログイン";
@@ -1007,6 +1023,7 @@
 "withdrawal_network_fee" = "ネットワーク手数料：";
 "withdrawal_no_memo" = "メモなし";
 "withdrawal_to" = "%@へ出金";
+"year" = "Year";
 "you" = "自分";
 "you_deleted_this_message" = "このメッセージを削除しました。";
 "you_have_a_new_message" = "新しいメッセージがあります";

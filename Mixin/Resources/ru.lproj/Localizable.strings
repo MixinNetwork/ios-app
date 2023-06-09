@@ -55,7 +55,9 @@
 "alert_key_group_transcript_message" = "%@ отправил стенограмму";
 "alert_key_group_video_message" = "%@ отправил видео";
 "all" = "Все";
+"all_chats" = "All chats";
 "all_conversations" = "Все разговоры";
+"all_dates" = "All dates";
 "all_photos" = "Все фотографии";
 "all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
 "all_transactions" = "Все транзакции";
@@ -179,6 +181,8 @@
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Ожидание, пока %1$@ подключится к сети и установит зашифрованный сеанс. %2$@.";
 "chats" = "ЧАТЫ";
+"chats_count_one" = "1 chat";
+"chats_count" = "%d chats";
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "Выбрать фото";
@@ -299,6 +303,8 @@
 "deposit_tip_eos" = "Этот адрес поддерживает всю базу токенов EOS.";
 "deposit_tip_eth" = "Этот адрес поддерживает все токены ERC-20, такие как ETH, XIN и т. д.";
 "deposit_tip_trx" = "Этот адрес поддерживает все токены TRC-10 и TRC-20.";
+"deselect_all" = "Deselect All";
+"designated_time_frame" = "Designated time frame";
 "desktop_on_hint" = "Вы вошли в свой рабочий стол";
 "desktop_upgrade" = "Пожалуйста, обновите Mixin Messenger Desktop до последней версии.";
 "detect_qr_tip" = "Обнаружен QR-код Mixin, нажмите, чтобы распознать";
@@ -454,6 +460,8 @@
 "invite_to_group_via_link" = "Пригласить в группу по ссылке";
 "invited_by_stranger" = "Приглашающего нет в ваших контактах";
 "invites_you_to_a_voice_call" = "приглашает вас на голосовой вызов";
+"items_selected_one" = "1 Item Selected";
+"items_selected_count" = "%d Items Selected";
 "join_group" = "Присоединиться к группе";
 "joined_in" = "Присоединился к %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
@@ -465,6 +473,10 @@
 "large_amount_confirmation_with_symbol" = "Подтверждение крупной суммы(%@)";
 "last_active_time" = "Последнее посещение %@";
 "last_backup_hint" = "Последняя резервная копия %@, общий размер %@.";
+"last_month" = "Last month";
+"last_month_count" = "Last %d months";
+"last_year" = "Last year";
+"last_year_count" = "Last %d years";
 "later" = "Потом";
 "learn_more" = "Узнать больше";
 "light" = "Светлое";
@@ -512,6 +524,7 @@
 "mixin_messenger_desktop" = "Рабочий стол Mixin Messenger";
 "mixin_server_encounters_errors" = "Сервер Mixin обнаруживает ошибки";
 "mobile_contacts" = "Мобильные контакты";
+"month" = "Month";
 "monthly" = "Ежемесячно";
 "more" = "Больше";
 "move_and_scale" = "Cдвиг и масштаб";
@@ -675,6 +688,7 @@
 "receive_money" = "Получить деньги";
 "receiver" = "Получатель";
 "receivers" = "Получатели";
+"recent" = "Recent";
 "recent_chats" = "ЧАТЫ";
 "recent_searches" = "Недавние поиски";
 "refresh" = "Обновить";
@@ -749,6 +763,7 @@
 "security" = "Безопасность";
 "select" = "Выбрать";
 "select_a_country_or_region" = "Выберите страну или регион";
+"select_all" = "Select All";
 "select_emergency_contact" = "Выберите экстренный контакт";
 "select_more_photos" = "Выберите больше фотографий";
 "selected_count" = "%@ Выбрано";
@@ -823,6 +838,7 @@
 "show" = "Показать";
 "show_asset" = "Показать актив";
 "show_in_chat" = "Показать в чате";
+"show_selected" = "Show Selected(%d)";
 "sign_in" = "Войти";
 "sign_with_emergency_contact" = "Войти через контакт для экстренных случаев";
 "sign_with_phone_number" = "Войти через номер телефона";
@@ -1007,6 +1023,7 @@
 "withdrawal_network_fee" = "Комиссия за сеть: ";
 "withdrawal_no_memo" = "Нет памятки";
 "withdrawal_to" = "Вывод на %@";
+"year" = "Year";
 "you" = "Вы";
 "you_deleted_this_message" = "Вы удалили это сообщение";
 "you_have_a_new_message" = "У вас новое сообщение";

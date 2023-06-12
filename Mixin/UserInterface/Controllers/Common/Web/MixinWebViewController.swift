@@ -5,6 +5,23 @@ import MixinServices
 
 class MixinWebViewController: WebViewController {
     
+    // Only top 2 levels of the domain are matched
+    // Be careful when adding country specific SLDs into this list
+    // e.g. "anything.co.uk" will be matched if "something.co.uk" is added
+    // See `loadURL(url:fraudulentWarning:)` for details
+    private static let fraudulentWarningDisabledDomains = [
+        "mixin.one",
+        "zeromesh.net",
+        "mixin.zone",
+        "kraken.fm",
+        "mixin.space",
+        "mixinwallet.com",
+        "ocean.one",
+        "mvm.app",
+        "mixin.dev",
+        "mixwallet.app",
+    ]
+    
     @IBOutlet weak var loadFailLabel: UILabel!
     @IBOutlet weak var contactDeveloperButton: UIButton!
     
@@ -13,6 +30,11 @@ class MixinWebViewController: WebViewController {
         static let reloadTheme = "reloadTheme"
         static let playlist = "playlist"
         static let close = "close"
+    }
+    
+    private enum FradulentWarningBehavior {
+        case byWhitelist // See `fraudulentWarningDisabledHosts`
+        case disabled
     }
     
     weak var associatedClip: Clip?
@@ -409,25 +431,56 @@ extension MixinWebViewController {
             }
             self?.titleLabel.text = webView.title
         })
-        webView.load(URLRequest(url: context.initialUrl))
+        loadURL(url: context.initialUrl, fraudulentWarning: .byWhitelist)
     }
 
-    private func loadAppUrl(title: String, iconUrl: URL?) {
+    private func loadAppUrl(title: String, iconUrl: URL?, appID: String) {
         titleLabel.text = title
         if let iconUrl = iconUrl {
             titleImageView.isHidden = false
             titleImageView.sd_setImage(with: iconUrl, completed: nil)
         }
+        let url: URL
         if !context.extraParams.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
             var queryItems: [URLQueryItem] = components.queryItems ?? []
             for item in context.extraParams {
                 queryItems.append(URLQueryItem(name: item.key, value: item.value))
             }
             components.queryItems = queryItems
-            webView.load(URLRequest(url: components.url ?? context.initialUrl))
+            url = components.url ?? context.initialUrl
         } else {
-            webView.load(URLRequest(url: context.initialUrl))
+            url = context.initialUrl
         }
+        DispatchQueue.global().async {
+            let isVerified = UserDAO.shared.isUserVerified(withAppID: appID)
+            DispatchQueue.main.async {
+                self.loadURL(url: url, fraudulentWarning: isVerified ? .disabled : .byWhitelist)
+            }
+        }
+    }
+    
+    private func loadURL(url: URL, fraudulentWarning: FradulentWarningBehavior) {
+        let enabled: Bool
+        switch fraudulentWarning {
+        case .byWhitelist:
+            if let host = url.host {
+                let domainComponents = host.components(separatedBy: ".")
+                if domainComponents.count < 2 {
+                    enabled = true
+                } else {
+                    let topLevelDomain = domainComponents[domainComponents.count - 1]
+                    let secondLevelDomain = domainComponents[domainComponents.count - 2]
+                    let domainSuffix = secondLevelDomain + "." + topLevelDomain
+                    enabled = !Self.fraudulentWarningDisabledDomains.contains(domainSuffix)
+                }
+            } else {
+                enabled = true
+            }
+        case .disabled:
+            enabled = false
+        }
+        webView.configuration.preferences.isFraudulentWebsiteWarningEnabled = enabled
+        webView.load(URLRequest(url: url))
     }
     
     private func loadWebView() {
@@ -439,7 +492,7 @@ extension MixinWebViewController {
             let title = app.name
             let iconUrl = URL(string: app.iconUrl)
             if isHomeUrl {
-                loadAppUrl(title: title, iconUrl: iconUrl)
+                loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
             } else {
                 let validUrl = context.initialUrl.absoluteString + "/"
                 DispatchQueue.global().async { [weak self] in
@@ -455,7 +508,7 @@ extension MixinWebViewController {
                             return
                         }
                         if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                            self.loadAppUrl(title: title, iconUrl: iconUrl)
+                            self.loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
                         } else {
                             if self.suspicousLinkView.superview == nil {
                                 self.contentView.insertSubview(self.suspicousLinkView,

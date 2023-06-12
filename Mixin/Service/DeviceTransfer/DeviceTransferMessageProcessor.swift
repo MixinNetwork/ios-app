@@ -51,10 +51,10 @@ final class DeviceTransferMessageProcessor {
     @Published private(set) var progress: Float = 0
     @Published private(set) var processingError: ProcessingError?
     
+    private let key: Data
     private let remotePlatform: DeviceTransferPlatform
     private let cacheContainerURL: URL
     private let inputQueue: Queue
-    private let key: Data
     private let processingQueue = Queue(label: "one.mixin.messenger.DeviceTransferMessageProcessor")
     private let messageSavingBatchCount = 100
     private let progressReportingInterval = 10 // Update progress every 10 items are processed
@@ -87,15 +87,15 @@ final class DeviceTransferMessageProcessor {
     // Messages are saved to database in batch. See `messageSavingBatchCount`
     private var pendingMessages: [Message] = []
     
-    init(remotePlatform: DeviceTransferPlatform, cacheContainerURL: URL, inputQueue: Queue, key: Data) {
+    init(key: Data, remotePlatform: DeviceTransferPlatform, cacheContainerURL: URL, inputQueue: Queue) {
+        self.key = key
         self.remotePlatform = remotePlatform
         self.cacheContainerURL = cacheContainerURL
         self.inputQueue = inputQueue
-        self.key = key
         pthread_rwlock_init(&cancellationLock, nil)
     }
     
-    func process(message: Data) throws {
+    func process(encryptedMessage: Data) throws {
         assert(inputQueue.isCurrent)
         
         let cache: Cache
@@ -107,11 +107,11 @@ final class DeviceTransferMessageProcessor {
             writingCache = cache
         }
         
-        let length = Cache.MessageLength(message.count).data(endianness: .little)
+        let length = Cache.MessageLength(encryptedMessage.count).data(endianness: .little)
         cache.handle.write(length)
         cache.wroteCount += length.count
-        cache.handle.write(message)
-        cache.wroteCount += message.count
+        cache.handle.write(encryptedMessage)
+        cache.wroteCount += encryptedMessage.count
         processingQueue.async {
             self.totalCount += 1
         }

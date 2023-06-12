@@ -52,10 +52,10 @@ final class DeviceTransferClient {
             let endpoint = NWEndpoint.hostPort(host: host, port: port)
             return NWConnection(to: endpoint, using: .deviceTransfer)
         }()
-        self.messageProcessor = .init(remotePlatform: remotePlatform,
+        self.messageProcessor = .init(key: key.aes,
+                                      remotePlatform: remotePlatform,
                                       cacheContainerURL: cacheContainerURL,
-                                      inputQueue: queue,
-                                      key: key.aes)
+                                      inputQueue: queue)
         Logger.general.info(category: "DeviceTransferClient", message: "\(opaquePointer) init")
     }
     
@@ -290,7 +290,7 @@ extension DeviceTransferClient {
             return
         }
         do {
-            try messageProcessor.process(message: encryptedData)
+            try messageProcessor.process(encryptedMessage: encryptedData)
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Handle message: \(error)")
             return

@@ -2,7 +2,7 @@ import Foundation
 
 enum MentionConverter {
     
-    // Due to historical reasons, we are using different serialization between database and transcript
+    // Due to historical reasons, we are using different serialization between local and outsend ones
     
     typealias LocalMentions = [String: String]
     
@@ -11,7 +11,7 @@ enum MentionConverter {
         let identityNumber: String
     }
     
-    static func transcriptMention(from localMention: Data?) -> String? {
+    static func generalMention(from localMention: Data?) -> String? {
         guard let localMention = localMention else {
             return nil
         }
@@ -27,8 +27,8 @@ enum MentionConverter {
         return String(data: encoded, encoding: .utf8)
     }
     
-    static func localMention(from transcriptMention: String?) -> Data? {
-        guard let data = transcriptMention?.data(using: .utf8) else {
+    static func localMention(from generalMention: String?) -> Data? {
+        guard let data = generalMention?.data(using: .utf8) else {
             return nil
         }
         guard let mentions = try? JSONDecoder.snakeCase.decode([TranscriptMention].self, from: data) else {

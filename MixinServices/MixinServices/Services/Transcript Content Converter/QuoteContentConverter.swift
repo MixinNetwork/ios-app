@@ -2,9 +2,9 @@ import Foundation
 
 public enum QuoteContentConverter {
     
-    // Due to historical reasons, we are using different serialization between database and transcript
+    // Due to historical reasons, we are using different serialization between local and outsend ones
     
-    public static func transcriptQuoteContent(from localQuoteContent: Data?) -> String? {
+    public static func generalQuoteContent(from localQuoteContent: Data?) -> String? {
         guard let localQuoteContent = localQuoteContent else {
             return nil
         }
@@ -70,6 +70,15 @@ public enum QuoteContentConverter {
             } else {
                 mediaDuration = nil
             }
+            let content: String?
+            switch type {
+            case MessageCategory.APP_CARD.rawValue:
+                content = AppCardContentConverter.localAppCard(from: self.content)
+            case MessageCategory.APP_BUTTON_GROUP.rawValue:
+                content = AppButtonGroupContentConverter.localAppButtonGroup(from: self.content)
+            default:
+                content = self.content
+            }
             return MessageItem(messageId: messageId,
                                conversationId: conversationId,
                                userId: userId,
@@ -131,7 +140,14 @@ public enum QuoteContentConverter {
             self.userFullName = i.userFullName ?? ""
             self.userIdentityNumber = i.userIdentityNumber ?? ""
             self.type = i.category
-            self.content = i.content
+            switch type {
+            case MessageCategory.APP_CARD.rawValue:
+                self.content = AppCardContentConverter.generalAppCard(from: i.content)
+            case MessageCategory.APP_BUTTON_GROUP.rawValue:
+                self.content = AppButtonGroupContentConverter.generalAppButtonGroup(from: i.content)
+            default:
+                self.content = i.content
+            }
             self.createdAt = i.createdAt
             self.status = i.status
             self.mediaStatus = i.mediaStatus

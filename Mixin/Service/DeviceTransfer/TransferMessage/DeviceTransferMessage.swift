@@ -34,80 +34,86 @@ struct DeviceTransferMessage {
     let albumId: String?
     
     init(message: Message, to platform: DeviceTransferPlatform) {
-        messageId = message.messageId
-        conversationId = message.conversationId
-        userId = message.userId
-        category = message.category
-        let jsonContent: String?
-        if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
-            if let content = message.content, let data = Data(base64Encoded: content) {
-                jsonContent = String(data: data, encoding: .utf8)
-            } else {
-                jsonContent = message.content
-            }
-        } else {
-            jsonContent = message.content
+        let content: String?
+        switch message.category {
+        case MessageCategory.APP_CARD.rawValue:
+            content = AppCardContentConverter.generalAppCard(from: message.content)
+        case MessageCategory.APP_BUTTON_GROUP.rawValue:
+            content = AppButtonGroupContentConverter.generalAppButtonGroup(from: message.content)
+        default:
+            content = message.content
         }
+        
         let duration: String?
         if let mediaDuration = message.mediaDuration {
             duration = "\(mediaDuration)"
         } else {
             duration = nil
         }
-        content = jsonContent
-        mediaUrl = message.mediaUrl
-        mediaMimeType = message.mediaMimeType
-        mediaSize = message.mediaSize
-        mediaDuration = duration
-        mediaWidth = message.mediaWidth
-        mediaHeight = message.mediaHeight
-        mediaHash = message.mediaHash
-        mediaKey = message.mediaKey
-        mediaDigest = message.mediaDigest
+        
+        self.messageId = message.messageId
+        self.conversationId = message.conversationId
+        self.userId = message.userId
+        self.category = message.category
+        self.content = content
+        self.mediaUrl = message.mediaUrl
+        self.mediaMimeType = message.mediaMimeType
+        self.mediaSize = message.mediaSize
+        self.mediaDuration = duration
+        self.mediaWidth = message.mediaWidth
+        self.mediaHeight = message.mediaHeight
+        self.mediaHash = message.mediaHash
+        self.mediaKey = message.mediaKey
+        self.mediaDigest = message.mediaDigest
         switch platform {
         case .iOS:
-            mediaStatus = message.mediaStatus
+            self.mediaStatus = message.mediaStatus
         case .other:
-            mediaStatus = message.mediaStatus == MediaStatus.PENDING.rawValue ? MediaStatus.CANCELED.rawValue : message.mediaStatus
+            if message.mediaStatus == MediaStatus.PENDING.rawValue {
+                self.mediaStatus = MediaStatus.CANCELED.rawValue
+            } else {
+                self.mediaStatus = message.mediaStatus
+            }
         }
-        mediaWaveform = message.mediaWaveform
-        thumbImage = message.thumbImage
-        thumbUrl = message.thumbUrl
-        status = message.status
-        action = message.action
-        participantId = message.participantId
-        snapshotId = message.snapshotId
-        name = message.name
-        stickerId = message.stickerId
-        sharedUserId = message.sharedUserId
-        quoteMessageId = message.quoteMessageId
-        quoteContent = QuoteContentConverter.transcriptQuoteContent(from: message.quoteContent)
-        createdAt = message.createdAt
-        albumId = message.albumId
+        self.mediaWaveform = message.mediaWaveform
+        self.thumbImage = message.thumbImage
+        self.thumbUrl = message.thumbUrl
+        self.status = message.status
+        self.action = message.action
+        self.participantId = message.participantId
+        self.snapshotId = message.snapshotId
+        self.name = message.name
+        self.stickerId = message.stickerId
+        self.sharedUserId = message.sharedUserId
+        self.quoteMessageId = message.quoteMessageId
+        self.quoteContent = QuoteContentConverter.generalQuoteContent(from: message.quoteContent)
+        self.createdAt = message.createdAt
+        self.albumId = message.albumId
     }
     
     func toMessage() -> Message {
-        let messageContent: String?
-        if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
-            if let content, let data = content.data(using: .utf8) {
-                messageContent = data.base64EncodedString()
-            } else {
-                messageContent = content
-            }
-        } else {
-            messageContent = content
+        let localContent: String?
+        switch category {
+        case MessageCategory.APP_CARD.rawValue:
+            localContent = AppCardContentConverter.localAppCard(from: content)
+        case MessageCategory.APP_BUTTON_GROUP.rawValue:
+            localContent = AppButtonGroupContentConverter.localAppButtonGroup(from: content)
+        default:
+            localContent = content
         }
+        
         let duration: Int64?
         if let mediaDuration {
             duration = Int64(mediaDuration)
         } else {
             duration = nil
         }
+        
         return Message(messageId: messageId,
                        conversationId: conversationId,
                        userId: userId,
                        category: category,
-                       content: messageContent,
+                       content: localContent,
                        mediaUrl: mediaUrl,
                        mediaMimeType: mediaMimeType,
                        mediaSize: mediaSize,

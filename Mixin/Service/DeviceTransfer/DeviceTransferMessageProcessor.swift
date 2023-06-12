@@ -11,11 +11,12 @@ final class DeviceTransferMessageProcessor {
     enum ProcessingError: Error {
         case createInputStream
         case readInputStream(Error?)
+        case mismatchedLengthRead(required: Int, read: Int)
         case enumerateFiles
     }
     
     private enum ReadStreamResult {
-        case success
+        case success(Int)
         case endOfStream
         case operationFailed(Error?)
     }
@@ -194,7 +195,7 @@ extension DeviceTransferMessageProcessor {
                 totalBytesRead += bytesRead
             }
         }
-        return .success
+        return .success(totalBytesRead)
     }
     
     private func process(cache: Cache) {
@@ -222,7 +223,7 @@ extension DeviceTransferMessageProcessor {
                 return
             }
             
-            let length: Int
+            let requiredLength: Int
             switch read(from: stream, to: &cacheReadingBuffer, length: Cache.messageLengthLayoutSize) {
             case .endOfStream:
                 break streamReadingLoop
@@ -230,21 +231,26 @@ extension DeviceTransferMessageProcessor {
                 processingError = .readInputStream(error)
                 return
             case .success:
-                length = Int(Cache.MessageLength(data: cacheReadingBuffer, endianess: .little))
+                requiredLength = Int(Cache.MessageLength(data: cacheReadingBuffer, endianess: .little))
             }
             
-            if cacheReadingBuffer.count < length {
-                cacheReadingBuffer.count = length
+            if cacheReadingBuffer.count < requiredLength {
+                cacheReadingBuffer.count = requiredLength
             }
-            switch read(from: stream, to: &cacheReadingBuffer, length: length) {
+            switch read(from: stream, to: &cacheReadingBuffer, length: requiredLength) {
             case .endOfStream:
                 assertionFailure("Impossible")
                 Logger.general.error(category: "DeviceTransferMessageProcessor", message: "EOS after length is read")
             case .operationFailed(let error):
                 processingError = .readInputStream(error)
                 return
-            case .success:
-                let encryptedData = cacheReadingBuffer[cacheReadingBuffer.startIndex..<cacheReadingBuffer.startIndex.advanced(by: length)]
+            case .success(let readLength):
+                guard requiredLength == readLength else {
+                    Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Error reading: \(readLength), required: \(requiredLength)")
+                    processingError = .mismatchedLengthRead(required: requiredLength, read: readLength)
+                    break streamReadingLoop
+                }
+                let encryptedData = cacheReadingBuffer[..<cacheReadingBuffer.startIndex.advanced(by: readLength)]
                 do {
                     let decryptedData = try AESCryptor.decrypt(encryptedData, with: key)
                     process(jsonData: decryptedData)

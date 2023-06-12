@@ -53,6 +53,7 @@ final class DeviceTransferMessageProcessor {
     private let remotePlatform: DeviceTransferPlatform
     private let cacheContainerURL: URL
     private let inputQueue: Queue
+    private let key: Data
     private let processingQueue = Queue(label: "one.mixin.messenger.DeviceTransferMessageProcessor")
     private let messageSavingBatchCount = 100
     private let progressReportingInterval = 10 // Update progress every 10 items are processed
@@ -85,10 +86,11 @@ final class DeviceTransferMessageProcessor {
     // Messages are saved to database in batch. See `messageSavingBatchCount`
     private var pendingMessages: [Message] = []
     
-    init(remotePlatform: DeviceTransferPlatform, cacheContainerURL: URL, inputQueue: Queue) {
+    init(remotePlatform: DeviceTransferPlatform, cacheContainerURL: URL, inputQueue: Queue, key: Data) {
         self.remotePlatform = remotePlatform
         self.cacheContainerURL = cacheContainerURL
         self.inputQueue = inputQueue
+        self.key = key
         pthread_rwlock_init(&cancellationLock, nil)
     }
     
@@ -242,8 +244,13 @@ extension DeviceTransferMessageProcessor {
                 processingError = .readInputStream(error)
                 return
             case .success:
-                let content = cacheReadingBuffer[cacheReadingBuffer.startIndex..<cacheReadingBuffer.startIndex.advanced(by: length)]
-                process(jsonData: content)
+                let encryptedData = cacheReadingBuffer[cacheReadingBuffer.startIndex..<cacheReadingBuffer.startIndex.advanced(by: length)]
+                do {
+                    let decryptedData = try AESCryptor.decrypt(encryptedData, with: key)
+                    process(jsonData: decryptedData)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Decrypt failed: \(error)")
+                }
                 processedCount += 1
                 if processedCount - processedCountOnLastProgressReporting == progressReportingInterval {
                     processedCountOnLastProgressReporting = processedCount

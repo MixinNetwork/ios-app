@@ -54,7 +54,8 @@ final class DeviceTransferClient {
         }()
         self.messageProcessor = .init(remotePlatform: remotePlatform,
                                       cacheContainerURL: cacheContainerURL,
-                                      inputQueue: queue)
+                                      inputQueue: queue,
+                                      key: key.aes)
         Logger.general.info(category: "DeviceTransferClient", message: "\(opaquePointer) init")
     }
     
@@ -289,8 +290,7 @@ extension DeviceTransferClient {
             return
         }
         do {
-            let decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
-            try messageProcessor.process(message: decryptedData)
+            try messageProcessor.process(message: encryptedData)
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Handle message: \(error)")
             return

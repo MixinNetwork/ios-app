@@ -126,10 +126,11 @@ extension AESCryptor {
         guard ivPlusCipher.count > ivSize else {
             throw Error.badInput
         }
-        return try crypt(input: ivPlusCipher[ivSize...],
+        let firstCipherIndex = ivPlusCipher.startIndex.advanced(by: ivSize)
+        return try crypt(input: ivPlusCipher[firstCipherIndex...],
                          operation: CCOperation(kCCDecrypt),
                          key: key,
-                         iv: ivPlusCipher[0..<ivSize])
+                         iv: ivPlusCipher[ivPlusCipher.startIndex..<firstCipherIndex])
     }
     
     private static func crypt(input: Data, operation: CCOperation, key: Data, iv: Data) throws -> Data {

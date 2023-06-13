@@ -130,7 +130,7 @@ extension AESCryptor {
         return try crypt(input: ivPlusCipher[firstCipherIndex...],
                          operation: CCOperation(kCCDecrypt),
                          key: key,
-                         iv: ivPlusCipher[ivPlusCipher.startIndex..<firstCipherIndex])
+                         iv: ivPlusCipher[..<firstCipherIndex])
     }
     
     private static func crypt(input: Data, operation: CCOperation, key: Data, iv: Data) throws -> Data {

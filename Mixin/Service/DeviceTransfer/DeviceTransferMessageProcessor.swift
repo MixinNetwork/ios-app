@@ -147,9 +147,7 @@ final class DeviceTransferMessageProcessor {
             try? fileManager.removeItem(at: lastCache.url)
             self.savePendingMessages()
             self.processFiles()
-            DispatchQueue.main.async {
-                self.progress = 1
-            }
+            self.progress = 1
         }
     }
     
@@ -164,10 +162,9 @@ extension DeviceTransferMessageProcessor {
     
     private func reportProgress() {
         assert(processingQueue.isCurrent)
-        let progress = Float(processedCount) / Float(totalCount)
-        DispatchQueue.main.async {
-            self.progress = progress
-        }
+        // Divide the count as integer to prevent `progress` from rounding when counts are large
+        let progress = Float(processedCount * 100 / totalCount) / 100
+        self.progress = progress
     }
     
     private func savePendingMessages() {

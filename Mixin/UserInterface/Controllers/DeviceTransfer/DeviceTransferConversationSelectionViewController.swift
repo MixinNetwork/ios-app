@@ -25,13 +25,13 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
         }
     }
     
-    private var range = DeviceTransferRange.Conversation.all
-    private var rangeChanged: ((DeviceTransferRange.Conversation) -> Void)?
+    private var filter: DeviceTransferFilter.Conversation = .all
+    private var changeHandler: DeviceTransferFilter.ConversationChangeHandler?
     
-    class func instance(range: DeviceTransferRange.Conversation, rangeChanged: @escaping ((DeviceTransferRange.Conversation) -> Void)) -> UIViewController {
+    class func instance(filter: DeviceTransferFilter.Conversation, changeHandler: @escaping DeviceTransferFilter.ConversationChangeHandler) -> UIViewController {
         let controller = DeviceTransferConversationSelectionViewController()
-        controller.range = range
-        controller.rangeChanged = rangeChanged
+        controller.filter = filter
+        controller.changeHandler = changeHandler
         return ContainerViewController.instance(viewController: controller, title: R.string.localizable.conversations())
     }
     
@@ -51,7 +51,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
             let conversations = ConversationDAO.shared.conversationList()
                 .compactMap(MessageReceiver.init)
             let selections: [MessageReceiver]
-            switch range {
+            switch filter {
             case .all:
                 selections = conversations
             case .designated(let conversationIDs):
@@ -183,9 +183,9 @@ extension DeviceTransferConversationSelectionViewController: ContainerViewContro
     
     func barRightButtonTappedAction() {
         if selections.count == models.count {
-            rangeChanged?(.all)
+            changeHandler?(.all)
         } else {
-            rangeChanged?(.designated(selections.map(\.conversationId)))
+            changeHandler?(.designated(selections.map(\.conversationId)))
         }
         navigationController?.popViewController(animated: true)
     }

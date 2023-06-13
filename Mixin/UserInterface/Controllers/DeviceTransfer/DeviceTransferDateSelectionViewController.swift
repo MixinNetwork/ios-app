@@ -7,8 +7,8 @@ class DeviceTransferDateSelectionViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    private var range = DeviceTransferRange.Date.all
-    private var rangeChanged: ((DeviceTransferRange.Date) -> Void)?
+    private var filter: DeviceTransferFilter.Time = .all
+    private var changeHandler: DeviceTransferFilter.TimeChangeHandler?
     
     convenience init() {
         self.init(nib: R.nib.deviceTransferDateSelectionView)
@@ -18,7 +18,7 @@ class DeviceTransferDateSelectionViewController: UIViewController {
         super.viewDidLoad()
         segmentedControl.setTitle(R.string.localizable.month(), forSegmentAt: 0)
         segmentedControl.setTitle(R.string.localizable.year(), forSegmentAt: 1)
-        switch range {
+        switch filter {
         case .all:
             updateAllDateSelection()
         case .lastMonths(let months):
@@ -32,10 +32,10 @@ class DeviceTransferDateSelectionViewController: UIViewController {
         }
     }
 
-    class func instance(range: DeviceTransferRange.Date, rangeChanged: @escaping ((DeviceTransferRange.Date) -> Void)) -> UIViewController {
+    class func instance(filter: DeviceTransferFilter.Time, changeHandler: @escaping DeviceTransferFilter.TimeChangeHandler) -> UIViewController {
         let controller = DeviceTransferDateSelectionViewController()
-        controller.range = range
-        controller.rangeChanged = rangeChanged
+        controller.filter = filter
+        controller.changeHandler = changeHandler
         return ContainerViewController.instance(viewController: controller, title: R.string.localizable.date())
     }
     
@@ -48,11 +48,11 @@ class DeviceTransferDateSelectionViewController: UIViewController {
     }
     
     @IBAction func dateUnitChangedAction(_ sender: Any) {
-        updateDateRange()
+        updateDateFilter()
     }
     
     @IBAction func textChangedAction(_ sender: Any) {
-        updateDateRange()
+        updateDateFilter()
     }
     
     @IBAction func editingBeginAction(_ sender: Any) {
@@ -68,7 +68,7 @@ extension DeviceTransferDateSelectionViewController: ContainerViewControllerDele
     }
     
     func barRightButtonTappedAction() {
-        rangeChanged?(range)
+        changeHandler?(filter)
         navigationController?.popViewController(animated: true)
     }
     
@@ -80,7 +80,7 @@ extension DeviceTransferDateSelectionViewController {
         allDateCheckmark.isHidden = false
         lastDateCheckmark.isHidden = true
         segmentedControl.isEnabled = false
-        range = .all
+        filter = .all
         container?.rightButton.isEnabled = true
         textField.resignFirstResponder()
     }
@@ -90,19 +90,19 @@ extension DeviceTransferDateSelectionViewController {
         lastDateCheckmark.isHidden = false
         segmentedControl.isEnabled = true
         textField.becomeFirstResponder()
-        updateDateRange()
+        updateDateFilter()
     }
     
-    private func updateDateRange() {
+    private func updateDateFilter() {
         guard let count = textField.text?.intValue, count > 0 else {
             container?.rightButton.isEnabled = false
             return
         }
         container?.rightButton.isEnabled = true
         if segmentedControl.selectedSegmentIndex == 0 {
-            range = .lastMonths(count)
+            filter = .lastMonths(count)
         } else {
-            range = .lastYears(count)
+            filter = .lastYears(count)
         }
     }
     

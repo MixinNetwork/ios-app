@@ -980,17 +980,62 @@ extension MessageDAO {
                                silentNotification: silentNotification)
     }
     
-    public func messages(limit: Int, after messageId: String?) -> [Message] {
+    public func messages(limit: Int, after messageId: String?, matching conversationIDs: String?, sinceDate date: String?) -> [Message] {
         var sql = "SELECT * FROM messages"
-        if let messageId {
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            if let date {
+                sql += " AND created_at >= '\(date)'"
+            }
+            if let messageId {
+                sql += " AND ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
+            }
+        } else if let date {
+            sql += " WHERE created_at >= '\(date)'"
+            if let messageId {
+                sql += " AND ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
+            }
+        } else if let messageId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
         }
         sql += " ORDER BY ROWID LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func messagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM messages")
+    public func messagesCount(matching conversationIDs: String?, sinceDate date: String?) -> Int {
+        var sql = "SELECT COUNT(*) FROM messages"
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            if let date {
+                sql += " AND created_at >= '\(date)'"
+            }
+        } else if let date {
+            sql += " WHERE created_at >= '\(date)'"
+        }
+        let count: Int? = db.select(with: sql)
+        return count ?? 0
+    }
+    
+    public func mediaMessagesCount(matching conversationIDs: String?) -> Int {
+        let categories = MessageCategory.allMediaCategories.map(\.rawValue).joined(separator: "', '")
+        var sql = "SELECT COUNT(*) FROM messages WHERE category in ('\(categories)')"
+        if let conversationIDs {
+            sql += " AND conversation_id in ('\(conversationIDs)')"
+        }
+        let count: Int? = db.select(with: sql)
+        return count ?? 0
+    }
+
+    public func transcriptMessageCount(matching conversationIDs: String?, sinceDate date: String?) -> Int {
+        let categories = MessageCategory.transcriptCategories.map(\.rawValue).joined(separator: "', '")
+        var sql = "SELECT COUNT(*) FROM messages WHERE category in ('\(categories)')"
+        if let conversationIDs {
+            sql += " AND conversation_id in ('\(conversationIDs)')"
+        }
+        if let date {
+            sql += " AND created_at >= '\(date)'"
+        }
+        let count: Int? = db.select(with: sql)
         return count ?? 0
     }
     

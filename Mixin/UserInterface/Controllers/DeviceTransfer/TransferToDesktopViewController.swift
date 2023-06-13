@@ -7,18 +7,18 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
     private lazy var actionSection = SettingsRadioSection(rows: [
         SettingsRow(title: R.string.localizable.transfer_now(), titleStyle: .highlighted),
     ])
-    private lazy var conversationRangeRow = SettingsRow(title: R.string.localizable.conversations(),
-                                                         subtitle: DeviceTransferRange.Conversation.all.title,
+    private lazy var conversationFilterRow = SettingsRow(title: R.string.localizable.conversations(),
+                                                         subtitle: DeviceTransferFilter.Conversation.all.title,
                                                          accessory: .disclosure)
-    private lazy var dateRangeRow = SettingsRow(title: R.string.localizable.date(),
-                                                subtitle: DeviceTransferRange.Date.all.title,
+    private lazy var dateFilterRow = SettingsRow(title: R.string.localizable.date(),
+                                                subtitle: DeviceTransferFilter.Time.all.title,
                                                 accessory: .disclosure)
     private lazy var dataSource = SettingsDataSource(sections: [
         actionSection,
-        SettingsRadioSection(rows: [conversationRangeRow, dateRangeRow])
+        SettingsRadioSection(rows: [conversationFilterRow, dateFilterRow])
     ])
     
-    private var range = DeviceTransferRange(conversation: .all, date: .all)
+    private var filter = DeviceTransferFilter(conversation: .all, time: .all)
     private var observers: Set<AnyCancellable> = []
     private var server: DeviceTransferServer?
     
@@ -49,11 +49,11 @@ extension TransferToDesktopViewController: UITableViewDelegate {
             let controller: UIViewController
             switch indexPath.row {
             case 0:
-                controller = DeviceTransferConversationSelectionViewController.instance(range: range.conversation,
-                                                                                        rangeChanged: updateCoversationRangeRow(conversationRange:))
+                controller = DeviceTransferConversationSelectionViewController.instance(filter: filter.conversation,
+                                                                                        changeHandler: updateCoversationFilterRow(conversationFilter:))
             default:
-                controller = DeviceTransferDateSelectionViewController.instance(range: range.date,
-                                                                                rangeChanged: updateDateRangeRow(dateRange:))
+                controller = DeviceTransferDateSelectionViewController.instance(filter: filter.time,
+                                                                                changeHandler: updateDateFilterRow(timeFilter:))
             }
             navigationController?.pushViewController(controller, animated: true)
         }
@@ -168,7 +168,7 @@ extension TransferToDesktopViewController {
                                                rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
             section.setAccessory(.busy, forRowAt: 0)
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
-            let server = DeviceTransferServer(range: range)
+            let server = DeviceTransferServer(filter: filter)
             server.$state
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] state in
@@ -197,14 +197,14 @@ extension TransferToDesktopViewController {
         }
     }
     
-    private func updateCoversationRangeRow(conversationRange: DeviceTransferRange.Conversation) {
-        range.conversation = conversationRange
-        conversationRangeRow.subtitle = conversationRange.title
+    private func updateCoversationFilterRow(conversationFilter: DeviceTransferFilter.Conversation) {
+        filter.conversation = conversationFilter
+        conversationFilterRow.subtitle = conversationFilter.title
     }
     
-    private func updateDateRangeRow(dateRange: DeviceTransferRange.Date) {
-        range.date = dateRange
-        dateRangeRow.subtitle = dateRange.title
+    private func updateDateFilterRow(timeFilter: DeviceTransferFilter.Time) {
+        filter.time = timeFilter
+        dateFilterRow.subtitle = timeFilter.title
     }
     
 }

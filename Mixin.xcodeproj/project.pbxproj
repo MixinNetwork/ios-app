@@ -625,7 +625,7 @@
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
 		7C7DBAD62A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7DBAD52A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift */; };
 		7C7DBAD82A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7DBAD72A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift */; };
-		7C7DBADA2A2F391C008D4B0E /* DeviceTransferRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7DBAD92A2F391C008D4B0E /* DeviceTransferRange.swift */; };
+		7C7DBADA2A2F391C008D4B0E /* DeviceTransferFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7DBAD92A2F391C008D4B0E /* DeviceTransferFilter.swift */; };
 		7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */; };
 		7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */; };
 		7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */; };
@@ -1704,7 +1704,7 @@
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
 		7C7DBAD52A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferDateSelectionViewController.swift; sourceTree = "<group>"; };
 		7C7DBAD72A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferConversationSelectionViewController.swift; sourceTree = "<group>"; };
-		7C7DBAD92A2F391C008D4B0E /* DeviceTransferRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferRange.swift; sourceTree = "<group>"; };
+		7C7DBAD92A2F391C008D4B0E /* DeviceTransferFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferFilter.swift; sourceTree = "<group>"; };
 		7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperViewController.swift; sourceTree = "<group>"; };
 		7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperCell.swift; sourceTree = "<group>"; };
 		7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountSettingViewController.swift; sourceTree = "<group>"; };
@@ -2801,7 +2801,7 @@
 				7C7579D529DC573F0002DA0B /* DeviceTransferProgressViewController.swift */,
 				7C7DBAD72A2F34CC008D4B0E /* DeviceTransferConversationSelectionViewController.swift */,
 				7C7DBAD52A2F3464008D4B0E /* DeviceTransferDateSelectionViewController.swift */,
-				7C7DBAD92A2F391C008D4B0E /* DeviceTransferRange.swift */,
+				7C7DBAD92A2F391C008D4B0E /* DeviceTransferFilter.swift */,
 			);
 			path = DeviceTransfer;
 			sourceTree = "<group>";
@@ -5160,7 +5160,7 @@
 				7B57186E24D9375300682D86 /* MixinAPIError+Description.swift in Sources */,
 				E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,
-				7C7DBADA2A2F391C008D4B0E /* DeviceTransferRange.swift in Sources */,
+				7C7DBADA2A2F391C008D4B0E /* DeviceTransferFilter.swift in Sources */,
 				7B54F95922B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift in Sources */,
 				7B68F78B2191741300B79978 /* BiometryType.swift in Sources */,
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,

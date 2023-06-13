@@ -1,8 +1,13 @@
 import Foundation
+import MixinServices
 
-struct DeviceTransferRange {
+struct DeviceTransferFilter {
+    
+    typealias TimeChangeHandler = (DeviceTransferFilter.Time) -> Void
+    typealias ConversationChangeHandler = (DeviceTransferFilter.Conversation) -> Void
     
     enum Conversation {
+        
         case all
         case designated(Array<String>)
         
@@ -18,9 +23,20 @@ struct DeviceTransferRange {
                 }
             }
         }
+        
+        var joinedIDs: String? {
+            switch self {
+            case .all:
+                return nil
+            case .designated(let ids):
+                return ids.joined(separator: "', '")
+            }
+        }
+        
     }
     
-    enum Date {
+    enum Time {
+        
         case all
         case lastMonths(Int)
         case lastYears(Int)
@@ -43,9 +59,29 @@ struct DeviceTransferRange {
                 }
             }
         }
+        
+        var utcString: String? {
+            let monthsAgo: Int
+            switch self {
+            case .all:
+                monthsAgo = 0
+            case .lastMonths(let months):
+                monthsAgo = months
+            case .lastYears(let years):
+                monthsAgo = years * 12
+            }
+            if monthsAgo == 0 {
+                return nil
+            } else {
+                let calendar = Calendar.current
+                let startOfToday = calendar.startOfDay(for: Date())
+                return calendar.date(byAdding: .month, value: -monthsAgo, to: startOfToday)?.toUTCString()
+            }
+        }
+        
     }
     
     var conversation: Conversation
-    var date: Date
+    var time: Time
     
 }

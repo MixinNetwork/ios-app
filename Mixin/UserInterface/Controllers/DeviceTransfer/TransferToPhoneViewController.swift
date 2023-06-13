@@ -3,19 +3,19 @@ import MixinServices
 
 class TransferToPhoneViewController: DeviceTransferSettingViewController {
     
-    private lazy var conversationRangeRow = SettingsRow(title: R.string.localizable.conversations(),
-                                                         subtitle: DeviceTransferRange.Conversation.all.title,
+    private lazy var conversationFilterRow = SettingsRow(title: R.string.localizable.conversations(),
+                                                         subtitle: DeviceTransferFilter.Conversation.all.title,
                                                          accessory: .disclosure)
-    private lazy var dateRangeRow = SettingsRow(title: R.string.localizable.date(),
-                                                subtitle: DeviceTransferRange.Date.all.title,
+    private lazy var dateFilterRow = SettingsRow(title: R.string.localizable.date(),
+                                                subtitle: DeviceTransferFilter.Time.all.title,
                                                 accessory: .disclosure)
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [SettingsRow(title: R.string.localizable.transfer_now(), titleStyle: .highlighted)]),
-        SettingsRadioSection(rows: [conversationRangeRow, dateRangeRow])
+        SettingsRadioSection(rows: [conversationFilterRow, dateFilterRow])
     ])
     
-    private var range = DeviceTransferRange(conversation: .all, date: .all)
+    private var filter = DeviceTransferFilter(conversation: .all, time: .all)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,15 +44,15 @@ extension TransferToPhoneViewController: UITableViewDelegate {
                 alert(R.string.localizable.devices_on_same_network())
                 return
             }
-            controller = TransferToPhoneQRCodeViewController.instance(range: range)
+            controller = TransferToPhoneQRCodeViewController.instance(filter: filter)
         default:
             switch indexPath.row {
             case 0:
-                controller = DeviceTransferConversationSelectionViewController.instance(range: range.conversation,
-                                                                                        rangeChanged: updateCoversationRangeRow(conversationRange:))
+                controller = DeviceTransferConversationSelectionViewController.instance(filter: filter.conversation,
+                                                                                        changeHandler: updateCoversationFilterRow(conversationFilter:))
             default:
-                controller = DeviceTransferDateSelectionViewController.instance(range: range.date,
-                                                                                rangeChanged: updateDateRangeRow(dateRange:))
+                controller = DeviceTransferDateSelectionViewController.instance(filter: filter.time,
+                                                                                changeHandler: updateDateFilterRow(timeFilter:))
             }
         }
         navigationController?.pushViewController(controller, animated: true)
@@ -62,14 +62,14 @@ extension TransferToPhoneViewController: UITableViewDelegate {
 
 extension TransferToPhoneViewController {
     
-    private func updateCoversationRangeRow(conversationRange: DeviceTransferRange.Conversation) {
-        range.conversation = conversationRange
-        conversationRangeRow.subtitle = conversationRange.title
+    private func updateCoversationFilterRow(conversationFilter: DeviceTransferFilter.Conversation) {
+        filter.conversation = conversationFilter
+        conversationFilterRow.subtitle = conversationFilter.title
     }
     
-    private func updateDateRangeRow(dateRange: DeviceTransferRange.Date) {
-        range.date = dateRange
-        dateRangeRow.subtitle = dateRange.title
+    private func updateDateFilterRow(timeFilter: DeviceTransferFilter.Time) {
+        filter.time = timeFilter
+        dateFilterRow.subtitle = timeFilter.title
     }
     
 }

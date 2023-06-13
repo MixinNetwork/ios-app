@@ -9,11 +9,17 @@ final class DeviceTransferServerDataSource {
     private let key: DeviceTransferKey
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
+    private let conversationIDs: String?
+    private let fromDate: String?
+    private let needsFilterData: Bool
     
-    init(key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform) {
+    init(key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform, filter: DeviceTransferFilter) {
         self.key = key
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
+        conversationIDs = filter.conversation.joinedIDs
+        fromDate = filter.time.utcString
+        needsFilterData = conversationIDs != nil || fromDate != nil
     }
     
     deinit {
@@ -27,22 +33,27 @@ extension DeviceTransferServerDataSource {
     
     func totalCount() -> Int {
         assert(!Queue.main.isCurrent)
-        let messagesCount = MessageDAO.shared.messagesCount()
-        let attachmentsCount = attachmentsCount()
-        let total = ConversationDAO.shared.conversationsCount()
-            + ParticipantDAO.shared.participantsCount()
+        let messagesCount = MessageDAO.shared.messagesCount(matching: conversationIDs, sinceDate: fromDate)
+        let attachmentsCount = needsFilterData
+            ? MessageDAO.shared.mediaMessagesCount(matching: conversationIDs)
+            : attachmentsCount()
+        let transcriptMessageCount = needsFilterData
+            ? MessageDAO.shared.transcriptMessageCount(matching: conversationIDs, sinceDate: fromDate)
+            : TranscriptMessageDAO.shared.transcriptMessagesCount()
+        let total = ConversationDAO.shared.conversationsCount(matching: conversationIDs)
+            + ParticipantDAO.shared.participantsCount(matching: conversationIDs)
             + UserDAO.shared.usersCount()
             + AppDAO.shared.appsCount()
             + AssetDAO.shared.assetsCount()
             + SnapshotDAO.shared.snapshotsCount()
             + StickerDAO.shared.stickersCount()
-            + PinMessageDAO.shared.pinMessagesCount()
-            + TranscriptMessageDAO.shared.transcriptMessagesCount()
+            + PinMessageDAO.shared.pinMessagesCount(matching: conversationIDs, sinceDate: fromDate)
+            + transcriptMessageCount
             + messagesCount
-            + MessageMentionDAO.shared.messageMentionsCount()
+            + MessageMentionDAO.shared.messageMentionsCount(matching: conversationIDs)
             + ExpiredMessageDAO.shared.expiredMessagesCount()
             + attachmentsCount
-        Logger.general.info(category: "DeviceTransferServerDataSource", message: "Total: \(total), Messages: \(messagesCount), attachments: \(attachmentsCount)")
+        Logger.general.info(category: "DeviceTransferServerDataSource", message: "Total: \(total), Messages: \(messagesCount), attachments: \(attachmentsCount), transcriptMessageCount: \(transcriptMessageCount)")
         return total
     }
     
@@ -156,7 +167,9 @@ extension DeviceTransferServerDataSource {
         let databaseItemCount: Int
         switch location.type {
         case .conversation:
-            let conversations = ConversationDAO.shared.conversations(limit: limit, after: location.primaryID)
+            let conversations = ConversationDAO.shared.conversations(limit: limit,
+                                                                     after: location.primaryID,
+                                                                     matching: conversationIDs)
             databaseItemCount = conversations.count
             nextPrimaryID = conversations.last?.conversationId
             nextSecondaryID = nil
@@ -171,7 +184,10 @@ extension DeviceTransferServerDataSource {
                 }
             }
         case .participant:
-            let participants = ParticipantDAO.shared.participants(limit: limit, after: location.primaryID, with: location.secondaryID)
+            let participants = ParticipantDAO.shared.participants(limit: limit,
+                                                                  after: location.primaryID,
+                                                                  with: location.secondaryID,
+                                                                  matching: conversationIDs)
             databaseItemCount = participants.count
             nextPrimaryID = participants.last?.conversationId
             nextSecondaryID = participants.last?.userId
@@ -261,7 +277,10 @@ extension DeviceTransferServerDataSource {
                 }
             }
         case .pinMessage:
-            let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit, after: location.primaryID)
+            let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit,
+                                                               after: location.primaryID,
+                                                               matching: conversationIDs,
+                                                               sinceDate: fromDate)
             databaseItemCount = pinMessages.count
             nextPrimaryID = pinMessages.last?.messageId
             nextSecondaryID = nil
@@ -276,49 +295,61 @@ extension DeviceTransferServerDataSource {
                 }
             }
         case .transcriptMessage:
-            let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: location.primaryID, with: location.secondaryID)
-            databaseItemCount = transcriptMessages.count
-            nextPrimaryID = transcriptMessages.last?.transcriptId
-            nextSecondaryID = transcriptMessages.last?.messageId
-            transferItems = transcriptMessages.compactMap { transcriptMessage in
-                let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage, to: remotePlatform)
-                do {
-                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferTranscriptMessage, key: key)
-                    if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty, transcriptMessage.mediaStatus == MediaStatus.DONE.rawValue {
-                        let url = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
-                        let attachment = TransferItem.Attachment(messageID: transcriptMessage.messageId, url: url)
-                        return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: attachment)
-                    } else {
-                        return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: nil)
-                    }
-                } catch {
-                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
-                    return nil
-                }
+            if needsFilterData {
+                databaseItemCount = 0
+                nextPrimaryID = nil
+                nextSecondaryID = nil
+                transferItems = []
+            } else {
+                let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: location.primaryID, with: location.secondaryID)
+                databaseItemCount = transcriptMessages.count
+                nextPrimaryID = transcriptMessages.last?.transcriptId
+                nextSecondaryID = transcriptMessages.last?.messageId
+                transferItems = transcriptTransferItems(for: transcriptMessages)
             }
         case .message:
-            let messages = MessageDAO.shared.messages(limit: limit, after: location.primaryID)
+            let messages = MessageDAO.shared.messages(limit: limit,
+                                                      after: location.primaryID,
+                                                      matching: conversationIDs,
+                                                      sinceDate: fromDate)
             databaseItemCount = messages.count
             nextPrimaryID = messages.last?.messageId
             nextSecondaryID = nil
-            transferItems = messages.compactMap { message in
+            var messageItems = [TransferItem]()
+            var transcriptMessageItems = [TransferItem]()
+            var transcriptMessageCount = 0
+            for message in messages {
                 let deviceTransferMessage = DeviceTransferMessage(message: message, to: remotePlatform)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessage, key: key)
+                    let attachment: TransferItem.Attachment?
                     if let mediaURL = message.mediaUrl, !mediaURL.isEmpty, message.mediaStatus == MediaStatus.DONE.rawValue, let category = AttachmentContainer.Category(messageCategory: message.category) {
                         let url = AttachmentContainer.url(for: category, filename: mediaURL)
-                        let attachment = TransferItem.Attachment(messageID: message.messageId, url: url)
-                        return TransferItem(rawItem: message, outputData: outputData, attachment: attachment)
+                        attachment = TransferItem.Attachment(messageID: message.messageId, url: url)
                     } else {
-                        return TransferItem(rawItem: message, outputData: outputData, attachment: nil)
+                        attachment = nil
+                    }
+                    if let item = TransferItem(rawItem: message, outputData: outputData, attachment: attachment) {
+                        messageItems.append(item)
                     }
                 } catch {
-                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
-                    return nil
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output message: \(error)")
+                }
+                // TranscriptMessage
+                if needsFilterData && message.category.hasSuffix("_TRANSCRIPT") {
+                    transcriptMessageCount += 1
+                    let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(transcriptId: message.messageId)
+                    transcriptMessageItems = transcriptTransferItems(for: transcriptMessages)
                 }
             }
+            if transcriptMessageCount != 0 {
+                Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send transcriptMessages along with messages: \(transcriptMessageCount)")
+            }
+            transferItems = transcriptMessageItems + messageItems
         case .messageMention:
-            let messageMentions = MessageMentionDAO.shared.messageMentions(limit: limit, after: location.primaryID)
+            let messageMentions = MessageMentionDAO.shared.messageMentions(limit: limit,
+                                                                           after: location.primaryID,
+                                                                           matching: conversationIDs)
             databaseItemCount = messageMentions.count
             nextPrimaryID = messageMentions.last?.messageId
             nextSecondaryID = nil
@@ -428,6 +459,25 @@ extension DeviceTransferServerDataSource {
         let hmacData = hmac.finalize()
         block(hmacData, &stop)
         return true
+    }
+    
+    private func transcriptTransferItems(for transcriptMessages: [TranscriptMessage]) -> [TransferItem] {
+        transcriptMessages.compactMap { transcriptMessage in
+            let deviceTransferTranscriptMessage = DeviceTransferTranscriptMessage(transcriptMessage: transcriptMessage, to: remotePlatform)
+            do {
+                let outputData = try DeviceTransferProtocol.output(type: .transcriptMessage, data: deviceTransferTranscriptMessage, key: key)
+                if let mediaURL = transcriptMessage.mediaUrl, !mediaURL.isEmpty, transcriptMessage.mediaStatus == MediaStatus.DONE.rawValue {
+                    let url = AttachmentContainer.url(transcriptId: transcriptMessage.transcriptId, filename: mediaURL)
+                    let attachment = TransferItem.Attachment(messageID: transcriptMessage.messageId, url: url)
+                    return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: attachment)
+                } else {
+                    return TransferItem(rawItem: transcriptMessage, outputData: outputData, attachment: nil)
+                }
+            } catch {
+                Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                return nil
+            }
+        }
     }
     
 }

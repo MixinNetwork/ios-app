@@ -113,17 +113,39 @@ public final class PinMessageDAO: UserDatabaseDAO {
                         where: PinMessage.column(of: .conversationId) == conversationId)
     }
     
-    public func pinMessages(limit: Int, after messageId: String?) -> [PinMessage] {
+    public func pinMessages(limit: Int, after messageId: String?, matching conversationIDs: String?, sinceDate date: String?) -> [PinMessage] {
         var sql = "SELECT * FROM pin_messages"
-        if let messageId {
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            if let date {
+                sql += " AND created_at >= '\(date)'"
+            }
+            if let messageId {
+                sql += " AND ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
+            }
+        } else if let date {
+            sql += " WHERE created_at >= '\(date)'"
+            if let messageId {
+                sql += " AND ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
+            }
+        } else if let messageId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
         }
         sql += " ORDER BY ROWID LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func pinMessagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM pin_messages")
+    public func pinMessagesCount(matching conversationIDs: String?, sinceDate date: String?) -> Int {
+        var sql = "SELECT COUNT(*) FROM pin_messages"
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            if let date {
+                sql += " AND created_at >= '\(date)'"
+            }
+        } else if let date {
+            sql += " WHERE created_at >= '\(date)'"
+        }
+        let count: Int? = db.select(with: sql)
         return count ?? 0
     }
     

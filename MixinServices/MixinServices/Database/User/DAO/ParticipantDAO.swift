@@ -175,17 +175,26 @@ public final class ParticipantDAO: UserDatabaseDAO {
             .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })
     }
     
-    public func participants(limit: Int, after conversationId: String?, with userId: String?) -> [Participant] {
+    public func participants(limit: Int, after conversationId: String?, with userId: String?, matching conversationIDs: String?) -> [Participant] {
         var sql = "SELECT * FROM participants"
-        if let conversationId, let userId {
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            if let conversationId, let userId {
+                sql += " AND ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+            }
+        } else if let conversationId, let userId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
         }
         sql += " ORDER BY ROWID LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func participantsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM participants")
+    public func participantsCount(matching conversationIDs: String?) -> Int {
+        var sql = "SELECT COUNT(*) FROM participants"
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+        }
+        let count: Int? = db.select(with: sql)
         return count ?? 0
     }
     

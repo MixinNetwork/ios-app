@@ -659,17 +659,26 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
     }
     
-    public func conversations(limit: Int, after conversationId: String?) -> [Conversation] {
+    public func conversations(limit: Int, after conversationId: String?, matching conversationIDs: String?) -> [Conversation] {
         var sql = "SELECT * FROM conversations"
-        if let conversationId {
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            if let conversationId {
+                sql += " AND ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
+            }
+        } else if let conversationId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
         }
         sql += " ORDER BY ROWID LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
 
-    public func conversationsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM conversations")
+    public func conversationsCount(matching conversationIDs: String?) -> Int {
+        var sql = "SELECT COUNT(*) FROM conversations"
+        if let conversationIDs {
+            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+        }
+        let count: Int? = db.select(with: sql)
         return count ?? 0
     }
     

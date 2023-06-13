@@ -13,7 +13,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     private var server: DeviceTransferServer?
     private var hasTrasferStarted = false
     private var isListening = false
-    private var range: DeviceTransferRange!
+    private var filter: DeviceTransferFilter!
     
     private let userID = myUserId
     
@@ -38,9 +38,9 @@ class TransferToPhoneQRCodeViewController: UIViewController {
         }
     }
     
-    class func instance(range: DeviceTransferRange) -> UIViewController {
+    class func instance(filter: DeviceTransferFilter) -> UIViewController {
         let vc = TransferToPhoneQRCodeViewController()
-        vc.range = range
+        vc.filter = filter
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.waiting_for_other_device())
     }
     
@@ -61,7 +61,7 @@ extension TransferToPhoneQRCodeViewController {
         isListening = false
         observers.forEach { $0.cancel() }
         observers.removeAll()
-        let server = DeviceTransferServer(range: range)
+        let server = DeviceTransferServer(filter: filter)
         server.$state
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in

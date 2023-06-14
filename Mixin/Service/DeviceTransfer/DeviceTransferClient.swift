@@ -21,10 +21,10 @@ final class DeviceTransferClient {
     private let key: DeviceTransferKey
     private let remotePlatform: DeviceTransferPlatform
     private let connection: NWConnection
-    private let queue = Queue(label: "one.mixin.messenger.DeviceTransferClient")
-    private let cacheContainerURL = FileManager.default.temporaryDirectory.appendingPathComponent("DeviceTransfer", isDirectory: true)
-    private let speedInspector = NetworkSpeedInspector()
+    private let cacheContainerURL: URL
     private let messageProcessor: DeviceTransferMessageProcessor
+    private let queue = Queue(label: "one.mixin.messenger.DeviceTransferClient")
+    private let speedInspector = NetworkSpeedInspector()
     
     private weak var statisticsTimer: Timer?
     
@@ -40,7 +40,18 @@ final class DeviceTransferClient {
         Unmanaged<DeviceTransferClient>.passUnretained(self).toOpaque()
     }
     
-    init(hostname: String, port: UInt16, code: UInt16, key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform) {
+    init(hostname: String, port: UInt16, code: UInt16, key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform) throws {
+        // https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html#//apple_ref/doc/uid/TP40010672-CH2-SW2
+        // In iOS 5.0 and later, the system may delete the Caches directory on rare occasions when the system is very low on disk space.
+        // This will never occur while an app is running.
+        let manager = FileManager.default
+        let cacheContainerURL = try manager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            .appendingPathComponent("DeviceTransfer")
+        if manager.fileExists(atPath: cacheContainerURL.path) {
+            try? manager.removeItem(at: cacheContainerURL)
+        }
+        try manager.createDirectory(at: cacheContainerURL, withIntermediateDirectories: true)
+        
         self.hostname = hostname
         self.port = port
         self.code = code
@@ -52,6 +63,7 @@ final class DeviceTransferClient {
             let endpoint = NWEndpoint.hostPort(host: host, port: port)
             return NWConnection(to: endpoint, using: .deviceTransfer)
         }()
+        self.cacheContainerURL = cacheContainerURL
         self.messageProcessor = .init(key: key.aes,
                                       remotePlatform: remotePlatform,
                                       cacheContainerURL: cacheContainerURL,
@@ -65,17 +77,6 @@ final class DeviceTransferClient {
     
     func start() {
         Logger.general.info(category: "DeviceTransferClient", message: "Will start connecting to [\(hostname)]:\(port)")
-        do {
-            let manager = FileManager.default
-            if manager.fileExists(atPath: cacheContainerURL.path) {
-                try? manager.removeItem(at: cacheContainerURL)
-            }
-            try manager.createDirectory(at: cacheContainerURL, withIntermediateDirectories: true)
-        } catch {
-            Logger.general.error(category: "DeviceTransferClient", message: "Failed to create cache container: \(error)")
-            fail(error: .createCacheContainer(error))
-            return
-        }
         messageProcessor.$processingError
             .receive(on: queue.dispatchQueue)
             .sink { error in

@@ -119,17 +119,24 @@ extension RestoreFromDesktopViewController {
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = true
         case let .push(context):
-            let client = DeviceTransferClient(hostname: context.hostname,
-                                              port: context.port,
-                                              code: context.code,
-                                              key: context.key,
-                                              remotePlatform: command.platform)
-            stateObserver = client.$state
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] state in
-                    self?.stateDidChange(client: client, state: state)
+            do {
+                let client = try DeviceTransferClient(hostname: context.hostname,
+                                                      port: context.port,
+                                                      code: context.code,
+                                                      key: context.key,
+                                                      remotePlatform: command.platform)
+                stateObserver = client.$state
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] state in
+                        self?.stateDidChange(client: client, state: state)
+                    }
+                client.start()
+            } catch {
+                Logger.general.error(category: "RestoreFromDesktop", message: "Unable to init client: \(error)")
+                alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
+                    self.navigationController?.popViewController(animated: true)
                 }
-            client.start()
+            }
         default:
             Logger.general.info(category: "RestoreFromDesktop", message: "Invalid command")
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in

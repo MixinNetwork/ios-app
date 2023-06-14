@@ -256,6 +256,9 @@ extension DeviceTransferClient {
                         ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
                         try? FileManager.default.removeItem(at: self.cacheContainerURL)
                         Logger.general.info(category: "DeviceTransferClient", message: "Cache container removed")
+                        DispatchQueue.main.sync {
+                            self.statisticsTimer?.invalidate()
+                        }
                         self.state = .finished
                     } else {
                         self.state = .importing(progress: progress)

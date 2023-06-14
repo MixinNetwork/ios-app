@@ -13,6 +13,8 @@ final class DeviceTransferServerDataSource {
     private let fromDate: String?
     private let needsFilterData: Bool
     
+    private var transcriptMessageCount = 0
+    
     init(key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform, filter: DeviceTransferFilter) {
         self.key = key
         self.remotePlatform = remotePlatform
@@ -53,7 +55,7 @@ extension DeviceTransferServerDataSource {
             + MessageMentionDAO.shared.messageMentionsCount(matching: conversationIDs)
             + ExpiredMessageDAO.shared.expiredMessagesCount()
             + attachmentsCount
-        Logger.general.info(category: "DeviceTransferServerDataSource", message: "Total: \(total), Messages: \(messagesCount), attachments: \(attachmentsCount), transcriptMessageCount: \(transcriptMessageCount)")
+        Logger.general.info(category: "DeviceTransferServerDataSource", message: "Total: \(total), Messages: \(messagesCount), Attachments: \(attachmentsCount), TranscriptMessages: \(transcriptMessageCount)")
         return total
     }
     
@@ -129,7 +131,7 @@ extension DeviceTransferServerDataSource {
         var fileCount = 0
         while let location = nextLocation {
             let (databaseItemCount, transferItems, nextPrimaryID, nextSecondaryID) = items(on: location)
-            if transferItems.isEmpty {
+            if transferItems.isEmpty && !(needsFilterData && location.type == .transcriptMessage) {
                 Logger.general.info(category: "DeviceTransferServerDataSource", message: "\(location.type) is empty")
             }
             recordCount += transferItems.count
@@ -151,7 +153,18 @@ extension DeviceTransferServerDataSource {
                 } else {
                     nextLocation = nil
                 }
-                Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(location.type) \(recordCount)")
+                if needsFilterData, location.type == .message {
+                    let message: String
+                    if transcriptMessageCount == 0 {
+                        message = "\(DeviceTransferRecordType.transcriptMessage) is empty"
+                    } else {
+                        message = "Send \(DeviceTransferRecordType.transcriptMessage) \(transcriptMessageCount)"
+                    }
+                    Logger.general.info(category: "DeviceTransferServerDataSource", message: message)
+                }
+                if !needsFilterData || location.type != .transcriptMessage {
+                    Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(location.type) \(recordCount)")
+                }
                 recordCount = 0
             } else {
                 nextLocation = Location(type: location.type, primaryID: nextPrimaryID, secondaryID: nextSecondaryID)
@@ -317,7 +330,6 @@ extension DeviceTransferServerDataSource {
             nextSecondaryID = nil
             var messageItems = [TransferItem]()
             var transcriptMessageItems = [TransferItem]()
-            var transcriptMessageCount = 0
             for message in messages {
                 let deviceTransferMessage = DeviceTransferMessage(message: message, to: remotePlatform)
                 do {
@@ -341,9 +353,6 @@ extension DeviceTransferServerDataSource {
                     let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(transcriptId: message.messageId)
                     transcriptMessageItems = transcriptTransferItems(for: transcriptMessages)
                 }
-            }
-            if transcriptMessageCount != 0 {
-                Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send transcriptMessages along with messages: \(transcriptMessageCount)")
             }
             transferItems = transcriptMessageItems + messageItems
         case .messageMention:

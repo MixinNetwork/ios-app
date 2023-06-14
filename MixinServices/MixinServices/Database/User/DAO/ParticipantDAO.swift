@@ -175,27 +175,46 @@ public final class ParticipantDAO: UserDatabaseDAO {
             .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })
     }
     
-    public func participants(limit: Int, after conversationId: String?, with userId: String?, matching conversationIDs: String?) -> [Participant] {
-        var sql = "SELECT * FROM participants"
+    public func participants(limit: Int, after conversationId: String?, with userId: String?, matching conversationIDs: [String]?) -> [Participant] {
         if let conversationIDs {
-            sql += " WHERE conversation_id in ('\(conversationIDs)')"
-            if let conversationId, let userId {
-                sql += " AND ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+            var totalParticipants = [Participant]()
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT * FROM participants WHERE conversation_id in ('\(ids)')"
+                if let conversationId, let userId {
+                    sql += " AND ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+                }
+                sql += " ORDER BY ROWID LIMIT ?"
+                let participants: [Participant] = db.select(with: sql, arguments: [limit])
+                totalParticipants += participants
             }
-        } else if let conversationId, let userId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+            return totalParticipants
+        } else {
+            var sql = "SELECT * FROM participants"
+            if let conversationId, let userId {
+                sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+            }
+            sql += " ORDER BY ROWID LIMIT ?"
+            return db.select(with: sql, arguments: [limit])
         }
-        sql += " ORDER BY ROWID LIMIT ?"
-        return db.select(with: sql, arguments: [limit])
     }
     
-    public func participantsCount(matching conversationIDs: String?) -> Int {
-        var sql = "SELECT COUNT(*) FROM participants"
+    public func participantsCount(matching conversationIDs: [String]?) -> Int {
         if let conversationIDs {
-            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                let sql = "SELECT COUNT(*) FROM participants WHERE conversation_id in ('\(conversationIDs)')"
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
+            }
+            return totalCount
+        } else {
+            let count: Int? = db.select(with: "SELECT COUNT(*) FROM participants")
+            return count ?? 0
         }
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
     public func save(participant: Participant) {

@@ -6,4 +6,6 @@ public class UserDatabaseDAO {
         UserDatabase.current
     }
     
+    public static let maxCountOfHostParameter = 999
+    
 }

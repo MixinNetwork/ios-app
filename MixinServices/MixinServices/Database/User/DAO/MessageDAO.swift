@@ -980,63 +980,104 @@ extension MessageDAO {
                                silentNotification: silentNotification)
     }
     
-    public func messages(limit: Int, after messageId: String?, matching conversationIDs: String?, sinceDate date: String?) -> [Message] {
-        var sql = "SELECT * FROM messages"
+    public func messages(limit: Int, after messageId: String?, matching conversationIDs: [String]?, sinceDate date: String?) -> [Message] {
         if let conversationIDs {
-            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            var totalMessages = [Message]()
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT * FROM messages WHERE conversation_id in ('\(ids)')"
+                if let date {
+                    sql += " AND created_at >= '\(date)'"
+                }
+                if let messageId {
+                    sql += " AND ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
+                }
+                sql += " ORDER BY ROWID LIMIT ?"
+                let messages: [Message] = db.select(with: sql, arguments: [limit])
+                totalMessages += messages
+            }
+            return totalMessages
+        } else {
+            var sql = "SELECT * FROM messages"
             if let date {
-                sql += " AND created_at >= '\(date)'"
+                sql += " WHERE created_at >= '\(date)'"
             }
             if let messageId {
-                sql += " AND ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
+                sql += date == nil ? " WHERE " : " AND "
+                sql += "ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
             }
-        } else if let date {
-            sql += " WHERE created_at >= '\(date)'"
-            if let messageId {
-                sql += " AND ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
-            }
-        } else if let messageId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
+            sql += " ORDER BY ROWID LIMIT ?"
+            return db.select(with: sql, arguments: [limit])
         }
-        sql += " ORDER BY ROWID LIMIT ?"
-        return db.select(with: sql, arguments: [limit])
     }
     
-    public func messagesCount(matching conversationIDs: String?, sinceDate date: String?) -> Int {
-        var sql = "SELECT COUNT(*) FROM messages"
+    public func messagesCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
         if let conversationIDs {
-            sql += " WHERE conversation_id in ('\(conversationIDs)')"
-            if let date {
-                sql += " AND created_at >= '\(date)'"
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id in ('\(ids)')"
+                if let date {
+                    sql += " AND created_at >= '\(date)'"
+                }
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
             }
-        } else if let date {
-            sql += " WHERE created_at >= '\(date)'"
+            return totalCount
+        } else {
+            var sql = "SELECT COUNT(*) FROM messages"
+            if let date {
+                sql += " WHERE created_at >= '\(date)'"
+            }
+            let count: Int? = db.select(with: sql)
+            return count ?? 0
         }
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
-    public func mediaMessagesCount(matching conversationIDs: String?) -> Int {
+    public func mediaMessagesCount(matching conversationIDs: [String]?) -> Int {
         let categories = MessageCategory.allMediaCategories.map(\.rawValue).joined(separator: "', '")
-        var sql = "SELECT COUNT(*) FROM messages WHERE category in ('\(categories)')"
         if let conversationIDs {
-            sql += " AND conversation_id in ('\(conversationIDs)')"
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id in ('\(ids)') AND category in ('\(categories)')"
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
+            }
+            return totalCount
+        } else {
+            var sql = "SELECT COUNT(*) FROM messages WHERE category in ('\(categories)')"
+            let count: Int? = db.select(with: sql)
+            return count ?? 0
         }
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
 
-    public func transcriptMessageCount(matching conversationIDs: String?, sinceDate date: String?) -> Int {
+    public func transcriptMessageCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
         let categories = MessageCategory.transcriptCategories.map(\.rawValue).joined(separator: "', '")
-        var sql = "SELECT COUNT(*) FROM messages WHERE category in ('\(categories)')"
         if let conversationIDs {
-            sql += " AND conversation_id in ('\(conversationIDs)')"
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id in ('\(ids)') AND category in ('\(categories)')"
+                if let date {
+                    sql += " AND created_at >= '\(date)'"
+                }
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
+            }
+            return totalCount
+        } else {
+            var sql = "SELECT COUNT(*) FROM messages WHERE category in ('\(categories)')"
+            if let date {
+                sql += " AND created_at >= '\(date)'"
+            }
+            let count: Int? = db.select(with: sql)
+            return count ?? 0
         }
-        if let date {
-            sql += " AND created_at >= '\(date)'"
-        }
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
     public func lastMessageCreatedAt() -> String? {

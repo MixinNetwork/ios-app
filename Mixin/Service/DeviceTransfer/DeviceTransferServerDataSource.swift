@@ -9,7 +9,7 @@ final class DeviceTransferServerDataSource {
     private let key: DeviceTransferKey
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
-    private let conversationIDs: String?
+    private let conversationIDs: [String]?
     private let fromDate: String?
     private let needsFilterData: Bool
     
@@ -17,7 +17,7 @@ final class DeviceTransferServerDataSource {
         self.key = key
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
-        conversationIDs = filter.conversation.joinedIDs
+        conversationIDs = filter.conversation.ids
         fromDate = filter.time.utcString
         needsFilterData = conversationIDs != nil || fromDate != nil
     }

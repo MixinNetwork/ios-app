@@ -24,12 +24,12 @@ struct DeviceTransferFilter {
             }
         }
         
-        var joinedIDs: String? {
+        var ids: [String]? {
             switch self {
             case .all:
                 return nil
             case .designated(let ids):
-                return ids.joined(separator: "', '")
+                return ids
             }
         }
         

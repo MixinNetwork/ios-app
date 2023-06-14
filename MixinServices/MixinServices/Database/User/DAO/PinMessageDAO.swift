@@ -113,40 +113,60 @@ public final class PinMessageDAO: UserDatabaseDAO {
                         where: PinMessage.column(of: .conversationId) == conversationId)
     }
     
-    public func pinMessages(limit: Int, after messageId: String?, matching conversationIDs: String?, sinceDate date: String?) -> [PinMessage] {
-        var sql = "SELECT * FROM pin_messages"
+    public func pinMessages(limit: Int, after messageId: String?, matching conversationIDs: [String]?, sinceDate date: String?) -> [PinMessage] {
         if let conversationIDs {
-            sql += " WHERE conversation_id in ('\(conversationIDs)')"
+            var totalPinMessages = [PinMessage]()
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT * FROM pin_messages WHERE conversation_id in ('\(ids)')"
+                if let date {
+                    sql += " AND created_at >= '\(date)'"
+                }
+                if let messageId {
+                    sql += " AND ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
+                }
+                sql += " ORDER BY ROWID LIMIT ?"
+                let pinMessages: [PinMessage] = db.select(with: sql, arguments: [limit])
+                totalPinMessages += pinMessages
+            }
+            return totalPinMessages
+        } else {
+            var sql = "SELECT * FROM pin_messages"
             if let date {
-                sql += " AND created_at >= '\(date)'"
+                sql += " WHERE created_at >= '\(date)'"
             }
             if let messageId {
-                sql += " AND ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
+                sql += date == nil ? " WHERE " : " AND "
+                sql += "ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
             }
-        } else if let date {
-            sql += " WHERE created_at >= '\(date)'"
-            if let messageId {
-                sql += " AND ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
-            }
-        } else if let messageId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
+            sql += " ORDER BY ROWID LIMIT ?"
+            return db.select(with: sql, arguments: [limit])
         }
-        sql += " ORDER BY ROWID LIMIT ?"
-        return db.select(with: sql, arguments: [limit])
     }
     
-    public func pinMessagesCount(matching conversationIDs: String?, sinceDate date: String?) -> Int {
-        var sql = "SELECT COUNT(*) FROM pin_messages"
+    public func pinMessagesCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
         if let conversationIDs {
-            sql += " WHERE conversation_id in ('\(conversationIDs)')"
-            if let date {
-                sql += " AND created_at >= '\(date)'"
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
+                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id in ('\(ids)')"
+                if let date {
+                    sql += " AND created_at >= '\(date)'"
+                }
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
             }
-        } else if let date {
-            sql += " WHERE created_at >= '\(date)'"
+            return totalCount
+        } else {
+            var sql = "SELECT COUNT(*) FROM pin_messages"
+            if let date {
+                sql += " WHERE created_at >= '\(date)'"
+            }
+            let count: Int? = db.select(with: sql)
+            return count ?? 0
         }
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
     public func save(pinMessage: PinMessage) {

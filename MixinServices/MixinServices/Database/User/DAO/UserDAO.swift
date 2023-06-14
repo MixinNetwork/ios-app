@@ -230,8 +230,8 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func usersCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM users")
+    public func usersCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM users")
         return count ?? 0
     }
     

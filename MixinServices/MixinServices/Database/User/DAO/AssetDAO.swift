@@ -113,8 +113,8 @@ public final class AssetDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func assetsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM assets")
+    public func assetsCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM assets")
         return count ?? 0
     }
     

@@ -7,9 +7,9 @@ final class DeviceTransferClient {
     
     enum State {
         case idle
-        case transfer(progress: Double, speed: String)
+        case transfer(progress: Float, speed: String) // `progress` is between 0.0 and 1.0
         case failed(DeviceTransferError)
-        case importing(progress: Float)
+        case importing(progress: Float) // `progress` is between 0.0 and 1.0
         case finished
     }
     
@@ -29,12 +29,10 @@ final class DeviceTransferClient {
     private weak var statisticsTimer: Timer?
     
     private var fileStream: DeviceTransferFileStream?
-    
-    // Access counts on main queue
-    private var processedCount = 0
-    private var totalCount: Int?
-    
     private var messageProcessingObservers: Set<AnyCancellable> = []
+    
+    // Access on main queue
+    private var progress = DeviceTransferProgress()
     
     private var opaquePointer: UnsafeMutableRawPointer {
         Unmanaged<DeviceTransferClient>.passUnretained(self).toOpaque()
@@ -126,7 +124,7 @@ final class DeviceTransferClient {
     
     private func fail(error: DeviceTransferError) {
         assert(queue.isCurrent)
-        Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(error) Processed: \(processedCount) Total: \(totalCount)")
+        Logger.general.info(category: "DeviceTransferClient", message: "Failed: \(error), progress: \(progress)")
         DispatchQueue.main.sync {
             self.statisticsTimer?.invalidate()
         }
@@ -139,7 +137,7 @@ final class DeviceTransferClient {
         state = .failed(error)
     }
     
-    private func startUpdatingProgressAndSpeed() {
+    private func startUpdatingStatistics() {
         assert(Queue.main.isCurrent)
         statisticsTimer?.invalidate()
         statisticsTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
@@ -149,12 +147,7 @@ final class DeviceTransferClient {
                 return
             }
             let speed = self.speedInspector.drain()
-            let progress: Double
-            if let totalCount = self.totalCount {
-                progress = Double(self.processedCount) * 100 / Double(totalCount)
-            } else {
-                progress = 0
-            }
+            let progress = self.progress.fractionCompleted
             self.queue.async {
                 guard case .transfer = self.state else {
                     DispatchQueue.main.sync(execute: timer.invalidate)
@@ -242,8 +235,8 @@ extension DeviceTransferClient {
             Logger.general.info(category: "DeviceTransferClient", message: "Total count: \(count)")
             self.state = .transfer(progress: 0, speed: "")
             DispatchQueue.main.async {
-                self.totalCount = count
-                self.startUpdatingProgressAndSpeed()
+                self.progress.totalUnitCount = count
+                self.startUpdatingStatistics()
             }
         case .finish:
             Logger.general.info(category: "DeviceTransferClient", message: "Received finish command")
@@ -279,7 +272,7 @@ extension DeviceTransferClient {
         assert(queue.isCurrent)
         DispatchQueue.main.sync {
             speedInspector.add(byteCount: content.count)
-            processedCount += 1
+            progress.completedUnitCount += 1
         }
         
         let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
@@ -331,7 +324,7 @@ extension DeviceTransferClient {
         DispatchQueue.main.sync {
             speedInspector.add(byteCount: content.count)
             if isReceivingNewFile {
-                processedCount += 1
+                progress.completedUnitCount += 1
             }
         }
         

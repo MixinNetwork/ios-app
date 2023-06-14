@@ -194,8 +194,8 @@ extension DeviceTransferProgressViewController {
         }
     }
     
-    private func updateTitleLabel(with transferProgress: Double, speed: String) {
-        let progress = String(format: "%.2f", transferProgress)
+    private func updateTitleLabel(with transferProgress: Float, speed: String) {
+        let progress = String(format: "%.2f", transferProgress * 100)
         switch connection {
         case .server:
             titleLabel.text = R.string.localizable.transferring_chat_progress(progress)
@@ -204,7 +204,7 @@ extension DeviceTransferProgressViewController {
         case .cloud:
             break
         }
-        progressView.progress = Float(transferProgress / 100)
+        progressView.progress = transferProgress
         speedLabel.text = speed
     }
     

@@ -719,6 +719,7 @@
 		94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF72862F302009C9147 /* libopusenc.xcframework */; };
 		94341C002863530B009C9147 /* libogg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BFF2862F454009C9147 /* libogg.xcframework */; };
 		9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438252625EE697300709B7D /* CacheableAssetFileManager.swift */; };
+		9439116A2A39EA4300CF6DC7 /* DeviceTransferProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943911692A39EA4300CF6DC7 /* DeviceTransferProgress.swift */; };
 		94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */; };
 		94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */; };
 		94396F2A29EBE52400A57833 /* DeviceTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2929EBE52400A57833 /* DeviceTransferClient.swift */; };
@@ -1796,6 +1797,7 @@
 		94341BF72862F302009C9147 /* libopusenc.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusenc.xcframework; sourceTree = "<group>"; };
 		94341BFF2862F454009C9147 /* libogg.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libogg.xcframework; sourceTree = "<group>"; };
 		9438252625EE697300709B7D /* CacheableAssetFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileManager.swift; sourceTree = "<group>"; };
+		943911692A39EA4300CF6DC7 /* DeviceTransferProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferProgress.swift; sourceTree = "<group>"; };
 		94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferProtocol.swift; sourceTree = "<group>"; };
 		94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWParameters+DeviceTransfer.swift"; sourceTree = "<group>"; };
 		94396F2929EBE52400A57833 /* DeviceTransferClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClient.swift; sourceTree = "<group>"; };
@@ -2869,6 +2871,7 @@
 				7C07A17C29D8FDBC00D4835C /* NetworkInterface.swift */,
 				940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */,
 				94149B422A17B4D5003E9E1A /* NetworkSpeedConditioner.swift */,
+				943911692A39EA4300CF6DC7 /* DeviceTransferProgress.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -5064,6 +5067,7 @@
 				9424C64B259246B600FFDAE0 /* main.swift in Sources */,
 				945278982626BCD600023A6C /* HighlightableButton.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
+				9439116A2A39EA4300CF6DC7 /* DeviceTransferProgress.swift in Sources */,
 				7CEB736429DBCBE5006FB5B2 /* DeviceTransferSnapshot.swift in Sources */,
 				7B59535122672D3500D59DB4 /* TopResultCell.swift in Sources */,
 				7CEB736629DBCD6A006FB5B2 /* DeviceTransferSticker.swift in Sources */,

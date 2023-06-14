@@ -24,8 +24,8 @@ public final class MessageMentionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func messageMentionsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM message_mentions")
+    public func messageMentionsCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM message_mentions")
         return count ?? 0
     }
     

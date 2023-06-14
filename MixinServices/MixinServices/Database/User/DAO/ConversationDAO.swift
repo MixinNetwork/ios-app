@@ -668,8 +668,8 @@ public final class ConversationDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
 
-    public func conversationsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM conversations")
+    public func conversationsCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM conversations")
         return count ?? 0
     }
     

@@ -184,8 +184,8 @@ public final class ParticipantDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func participantsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM participants")
+    public func participantsCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM participants")
         return count ?? 0
     }
     

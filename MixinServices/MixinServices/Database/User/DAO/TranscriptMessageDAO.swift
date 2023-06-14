@@ -99,8 +99,8 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func transcriptMessagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM transcript_messages")
+    public func transcriptMessagesCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM transcript_messages")
         return count ?? 0
     }
     

@@ -25,7 +25,7 @@ final class DeviceTransferServerDataSource {
 // MARK: - Data Count
 extension DeviceTransferServerDataSource {
     
-    func totalCount() -> Int {
+    func totalCount() -> Int64 {
         assert(!Queue.main.isCurrent)
         let messagesCount = MessageDAO.shared.messagesCount()
         let attachmentsCount = attachmentsCount()
@@ -46,9 +46,9 @@ extension DeviceTransferServerDataSource {
         return total
     }
     
-    private func attachmentsCount() -> Int {
+    private func attachmentsCount() -> Int64 {
         let folders = AttachmentContainer.Category.allCases.map(\.pathComponent) + ["Transcript"]
-        let count = folders.reduce(0) { previousCount, folder in
+        let count: Int64 = folders.reduce(0) { previousCount, folder in
             let folderURL = AttachmentContainer.url.appendingPathComponent(folder)
             let count = validFileCount(in: folderURL)
             return previousCount + count
@@ -56,8 +56,8 @@ extension DeviceTransferServerDataSource {
         return count
     }
     
-    private func validFileCount(in url: URL) -> Int {
-        var count = 0
+    private func validFileCount(in url: URL) -> Int64 {
+        var count: Int64 = 0
         guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) else {
             return 0
         }

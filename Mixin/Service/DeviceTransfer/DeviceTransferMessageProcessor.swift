@@ -71,11 +71,8 @@ final class DeviceTransferMessageProcessor {
         }
     }
     
-    private var totalCount = 0
-    private var processedCount = 0
-    
+    private var processingProgress = DeviceTransferProgress()
     private var writingCache: Cache?
-    
     private var cacheReadingBuffer = Data(count: Int(bytesPerKiloByte))
     
     // Messages are saved to database in batch. See `messageSavingBatchCount`
@@ -107,7 +104,7 @@ final class DeviceTransferMessageProcessor {
         cache.handle.write(encryptedMessage)
         cache.wroteCount += encryptedMessage.count
         processingQueue.async {
-            self.totalCount += 1
+            self.processingProgress.totalUnitCount += 1
         }
         
         if cache.isOversized {
@@ -124,14 +121,14 @@ final class DeviceTransferMessageProcessor {
     
     func reportFileReceived() {
         processingQueue.async {
-            self.totalCount += 1
+            self.processingProgress.totalUnitCount += 1
         }
     }
     
     func finishProcessing() {
         assert(inputQueue.isCurrent)
         guard let lastCache = writingCache else {
-            Logger.general.info(category: "DeviceTransferMessageProcessor", message: "All pending messages are saved")
+            Logger.general.error(category: "DeviceTransferMessageProcessor", message: "No writing cache on finished")
             return
         }
         writingCache = nil
@@ -141,6 +138,7 @@ final class DeviceTransferMessageProcessor {
             try? fileManager.removeItem(at: lastCache.url)
             self.savePendingMessages()
             self.processFiles()
+            Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Processing finished with progress: \(self.processingProgress)")
             self.progress = 1
         }
     }
@@ -157,9 +155,7 @@ extension DeviceTransferMessageProcessor {
     
     private func reportProgress() {
         assert(processingQueue.isCurrent)
-        // Divide the count as integer to prevent `progress` from rounding when counts are large
-        let progress = Float(processedCount * 100 / totalCount) / 100
-        self.progress = progress
+        self.progress = processingProgress.fractionCompleted
     }
     
     private func savePendingMessages() {
@@ -188,7 +184,7 @@ extension DeviceTransferMessageProcessor {
         }
         
         Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Begin processing cache \(cache.index)")
-        var processedCountOnLastProgressReporting = self.processedCount
+        var completedCountOnLastProgressReporting = processingProgress.completedUnitCount
         while stream.hasBytesAvailable {
             guard !isCancelled else {
                 Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Not processing cache \(cache.index) by cancellation")
@@ -236,9 +232,9 @@ extension DeviceTransferMessageProcessor {
                 } catch {
                     Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Decrypt failed: \(error)")
                 }
-                processedCount += 1
-                if processedCount - processedCountOnLastProgressReporting == progressReportingInterval {
-                    processedCountOnLastProgressReporting = processedCount
+                processingProgress.completedUnitCount += 1
+                if processingProgress.completedUnitCount - completedCountOnLastProgressReporting == progressReportingInterval {
+                    completedCountOnLastProgressReporting = processingProgress.completedUnitCount
                     reportProgress()
                 }
             }
@@ -356,7 +352,7 @@ extension DeviceTransferMessageProcessor {
             return
         }
         Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Start processing files")
-        var processedCountOnLastProgressReporting = processedCount
+        var processedCountOnLastProgressReporting = processingProgress.completedUnitCount
         
         for case let fileURL as URL in fileEnumerator {
             guard !isCancelled else {
@@ -394,9 +390,9 @@ extension DeviceTransferMessageProcessor {
                 }
             }
             
-            processedCount += 1
-            if processedCount - processedCountOnLastProgressReporting == progressReportingInterval {
-                processedCountOnLastProgressReporting = processedCount
+            processingProgress.completedUnitCount += 1
+            if processingProgress.completedUnitCount - processedCountOnLastProgressReporting == progressReportingInterval {
+                processedCountOnLastProgressReporting = processingProgress.completedUnitCount
                 reportProgress()
             }
             

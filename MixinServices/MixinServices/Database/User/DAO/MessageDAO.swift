@@ -989,8 +989,8 @@ extension MessageDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func messagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM messages")
+    public func messagesCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM messages")
         return count ?? 0
     }
     

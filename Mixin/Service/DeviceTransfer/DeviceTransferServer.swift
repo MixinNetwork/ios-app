@@ -12,7 +12,7 @@ final class DeviceTransferServer {
     enum State {
         case idle
         case listening(hostname: String, port: UInt16)
-        case transfer(progress: Double, speed: String)
+        case transfer(progress: Float, speed: String) // `progress` is between 0.0 and 1.0
         case closed(ClosedReason)
     }
     

@@ -159,9 +159,12 @@ extension TranscriptMessage {
         public init?(messageItem m: MessageItem) {
             self.name = m.userFullName
             self.category = m.category
-            if category == MessageCategory.APP_CARD.rawValue {
+            switch category {
+            case MessageCategory.APP_CARD.rawValue:
                 self.content = AppCardContentConverter.generalAppCard(from: m.content)
-            } else {
+            case MessageCategory.APP_BUTTON_GROUP.rawValue:
+                self.content = AppButtonGroupContentConverter.generalAppButtonGroup(from: m.content)
+            default:
                 self.content = m.content
             }
         }

@@ -15,12 +15,6 @@ final class DeviceTransferMessageProcessor {
         case enumerateFiles
     }
     
-    private enum ReadStreamResult {
-        case success(Int)
-        case endOfStream
-        case operationFailed(Error?)
-    }
-    
     private class Cache {
         
         typealias MessageLength = UInt32
@@ -158,6 +152,7 @@ final class DeviceTransferMessageProcessor {
     
 }
 
+// MARK: - Cache Processing
 extension DeviceTransferMessageProcessor {
     
     private func reportProgress() {
@@ -174,6 +169,91 @@ extension DeviceTransferMessageProcessor {
         MessageDAO.shared.save(messages: pendingMessages)
         pendingMessages.removeAll(keepingCapacity: false)
         Logger.general.info(category: "DeviceTransferMessageProcessor", message: "All pending messages are saved")
+    }
+    
+    private func process(cache: Cache) {
+        assert(processingQueue.isCurrent)
+        guard !isCancelled else {
+            Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Not processing cache \(cache.index) by cancellation")
+            return
+        }
+        
+        guard let stream = InputStream(url: cache.url) else {
+            processingError = .createInputStream
+            return
+        }
+        stream.open()
+        defer {
+            stream.close()
+        }
+        
+        Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Begin processing cache \(cache.index)")
+        var processedCountOnLastProgressReporting = self.processedCount
+        while stream.hasBytesAvailable {
+            guard !isCancelled else {
+                Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Not processing cache \(cache.index) by cancellation")
+                return
+            }
+            
+            let requiredLength: Int
+            switch read(from: stream, to: &cacheReadingBuffer, length: Cache.messageLengthLayoutSize) {
+            case .endOfStream:
+                if isCancelled {
+                    Logger.general.info(category: "DeviceTransferMessageProcessor", message: "End processing cache \(cache.index) with cancellation")
+                } else {
+                    reportProgress()
+                    Logger.general.info(category: "DeviceTransferMessageProcessor", message: "End processing cache \(cache.index)")
+                }
+                return
+            case .operationFailed(let error):
+                processingError = .readInputStream(error)
+                return
+            case .success:
+                requiredLength = Int(Cache.MessageLength(data: cacheReadingBuffer, endianess: .little))
+            }
+            
+            if cacheReadingBuffer.count < requiredLength {
+                cacheReadingBuffer.count = requiredLength
+            }
+            switch read(from: stream, to: &cacheReadingBuffer, length: requiredLength) {
+            case .endOfStream:
+                assertionFailure("Impossible")
+                Logger.general.error(category: "DeviceTransferMessageProcessor", message: "EOS after length is read")
+                return
+            case .operationFailed(let error):
+                processingError = .readInputStream(error)
+                return
+            case .success(let readLength):
+                guard requiredLength == readLength else {
+                    Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Error reading: \(readLength), required: \(requiredLength)")
+                    processingError = .mismatchedLengthRead(required: requiredLength, read: readLength)
+                    return
+                }
+                let encryptedData = cacheReadingBuffer[..<cacheReadingBuffer.startIndex.advanced(by: readLength)]
+                do {
+                    let decryptedData = try AESCryptor.decrypt(encryptedData, with: key)
+                    process(jsonData: decryptedData)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Decrypt failed: \(error)")
+                }
+                processedCount += 1
+                if processedCount - processedCountOnLastProgressReporting == progressReportingInterval {
+                    processedCountOnLastProgressReporting = processedCount
+                    reportProgress()
+                }
+            }
+        }
+    }
+    
+}
+
+// MARK: - Stream Reading
+extension DeviceTransferMessageProcessor {
+    
+    private enum ReadStreamResult {
+        case success(Int)
+        case endOfStream
+        case operationFailed(Error?)
     }
     
     private func read(from stream: InputStream, to buffer: inout Data, length: Int) -> ReadStreamResult {
@@ -195,80 +275,10 @@ extension DeviceTransferMessageProcessor {
         return .success(totalBytesRead)
     }
     
-    private func process(cache: Cache) {
-        assert(processingQueue.isCurrent)
-        guard !isCancelled else {
-            Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Not processing cache \(cache.index) by cancellation")
-            return
-        }
-        
-        guard let stream = InputStream(url: cache.url) else {
-            processingError = .createInputStream
-            return
-        }
-        stream.open()
-        defer {
-            stream.close()
-        }
-        
-        Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Begin processing cache \(cache.index)")
-        var processedCountOnLastProgressReporting = self.processedCount
-    streamReadingLoop:
-        while stream.hasBytesAvailable {
-            guard !isCancelled else {
-                Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Not processing cache \(cache.index) by cancellation")
-                return
-            }
-            
-            let requiredLength: Int
-            switch read(from: stream, to: &cacheReadingBuffer, length: Cache.messageLengthLayoutSize) {
-            case .endOfStream:
-                break streamReadingLoop
-            case .operationFailed(let error):
-                processingError = .readInputStream(error)
-                return
-            case .success:
-                requiredLength = Int(Cache.MessageLength(data: cacheReadingBuffer, endianess: .little))
-            }
-            
-            if cacheReadingBuffer.count < requiredLength {
-                cacheReadingBuffer.count = requiredLength
-            }
-            switch read(from: stream, to: &cacheReadingBuffer, length: requiredLength) {
-            case .endOfStream:
-                assertionFailure("Impossible")
-                Logger.general.error(category: "DeviceTransferMessageProcessor", message: "EOS after length is read")
-            case .operationFailed(let error):
-                processingError = .readInputStream(error)
-                return
-            case .success(let readLength):
-                guard requiredLength == readLength else {
-                    Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Error reading: \(readLength), required: \(requiredLength)")
-                    processingError = .mismatchedLengthRead(required: requiredLength, read: readLength)
-                    break streamReadingLoop
-                }
-                let encryptedData = cacheReadingBuffer[..<cacheReadingBuffer.startIndex.advanced(by: readLength)]
-                do {
-                    let decryptedData = try AESCryptor.decrypt(encryptedData, with: key)
-                    process(jsonData: decryptedData)
-                } catch {
-                    Logger.general.error(category: "DeviceTransferMessageProcessor", message: "Decrypt failed: \(error)")
-                }
-                processedCount += 1
-                if processedCount - processedCountOnLastProgressReporting == progressReportingInterval {
-                    processedCountOnLastProgressReporting = processedCount
-                    reportProgress()
-                }
-            }
-        }
-        
-        guard !isCancelled else {
-            Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Not processing cache \(cache.index) by cancellation")
-            return
-        }
-        reportProgress()
-        Logger.general.info(category: "DeviceTransferMessageProcessor", message: "End processing cache \(cache.index)")
-    }
+}
+
+// MARK: - Data Processing
+extension DeviceTransferMessageProcessor {
     
     private func process(jsonData: Data) {
         struct TypeWrapper: Decodable {

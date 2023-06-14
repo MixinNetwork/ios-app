@@ -18,8 +18,8 @@ public final class MessageMentionDAO: UserDatabaseDAO {
     public func messageMentions(limit: Int, after messageId: String?, matching conversationIDs: [String]?) -> [MessageMention] {
         if let conversationIDs {
             var totalMessageMentions = [MessageMention]()
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT * FROM message_mentions WHERE conversation_id in ('\(ids)')"
                 if let messageId {
@@ -43,8 +43,8 @@ public final class MessageMentionDAO: UserDatabaseDAO {
     public func messageMentionsCount(matching conversationIDs: [String]?) -> Int {
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 let sql = "SELECT COUNT(*) FROM message_mentions WHERE conversation_id in ('\(ids)')"
                 let count: Int? = db.select(with: sql)

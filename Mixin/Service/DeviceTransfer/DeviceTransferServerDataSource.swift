@@ -290,14 +290,32 @@ extension DeviceTransferServerDataSource {
                 }
             }
         case .pinMessage:
-            let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit,
-                                                               after: location.primaryID,
-                                                               matching: conversationIDs,
-                                                               sinceDate: fromDate)
+            let rowID: Int
+            if let primaryID = location.primaryID?.intValue {
+                rowID = primaryID
+            } else {
+                if let fromDate {
+                    if let startRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDate) {
+                        rowID = startRowID
+                    } else {
+                        return (0, [], nil, nil)
+                    }
+                } else {
+                    rowID = -1
+                }
+            }
+            let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit, after: rowID, matching: conversationIDs)
             databaseItemCount = pinMessages.count
-            nextPrimaryID = pinMessages.last?.messageId
+            if let messageID = pinMessages.last?.messageId, let rowID = PinMessageDAO.shared.messageRowID(messageID: messageID) {
+                nextPrimaryID = "\(rowID)"
+            } else {
+                nextPrimaryID = nil
+            }
             nextSecondaryID = nil
             transferItems = pinMessages.compactMap { pinMessage in
+                if let fromDate, pinMessage.createdAt < fromDate {
+                    return nil
+                }
                 let deviceTransferPinMessage = DeviceTransferPinMessage(pinMessage: pinMessage)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferPinMessage, key: key)
@@ -309,10 +327,7 @@ extension DeviceTransferServerDataSource {
             }
         case .transcriptMessage:
             if needsFilterData {
-                databaseItemCount = 0
-                nextPrimaryID = nil
-                nextSecondaryID = nil
-                transferItems = []
+                return (0, [], nil, nil)
             } else {
                 let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: location.primaryID, with: location.secondaryID)
                 databaseItemCount = transcriptMessages.count
@@ -321,16 +336,34 @@ extension DeviceTransferServerDataSource {
                 transferItems = transcriptTransferItems(for: transcriptMessages)
             }
         case .message:
-            let messages = MessageDAO.shared.messages(limit: limit,
-                                                      after: location.primaryID,
-                                                      matching: conversationIDs,
-                                                      sinceDate: fromDate)
+            let rowID: Int
+            if let primaryID = location.primaryID?.intValue {
+                rowID = primaryID
+            } else {
+                if let fromDate {
+                    if let startRowID = MessageDAO.shared.messageRowID(createdAt: fromDate) {
+                        rowID = startRowID
+                    } else {
+                        return (0, [], nil, nil)
+                    }
+                } else {
+                    rowID = -1
+                }
+            }
+            let messages = MessageDAO.shared.messages(limit: limit, after: rowID, matching: conversationIDs)
             databaseItemCount = messages.count
-            nextPrimaryID = messages.last?.messageId
+            if let messageID = messages.last?.messageId, let rowID = MessageDAO.shared.messageRowID(messageID: messageID) {
+                nextPrimaryID = "\(rowID)"
+            } else {
+                nextPrimaryID = nil
+            }
             nextSecondaryID = nil
             var messageItems = [TransferItem]()
             var transcriptMessageItems = [TransferItem]()
             for message in messages {
+                if let fromDate, message.createdAt < fromDate {
+                    continue
+                }
                 let deviceTransferMessage = DeviceTransferMessage(message: message, to: remotePlatform)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessage, key: key)
@@ -412,7 +445,7 @@ extension DeviceTransferServerDataSource {
             return false
         }
 #if DEBUG
-        Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
+        //Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
 #endif
         
         let encryptor = try AESCryptor(operation: .encrypt, iv: iv, key: key.aes)

@@ -113,43 +113,28 @@ public final class PinMessageDAO: UserDatabaseDAO {
                         where: PinMessage.column(of: .conversationId) == conversationId)
     }
     
-    public func pinMessages(limit: Int, after messageId: String?, matching conversationIDs: [String]?, sinceDate date: String?) -> [PinMessage] {
+    public func pinMessages(limit: Int, after rowID: Int, matching conversationIDs: [String]?) -> [PinMessage] {
         if let conversationIDs {
             var totalPinMessages = [PinMessage]()
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
-                var sql = "SELECT * FROM pin_messages WHERE conversation_id in ('\(ids)')"
-                if let date {
-                    sql += " AND created_at >= '\(date)'"
-                }
-                if let messageId {
-                    sql += " AND ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
-                }
-                sql += " ORDER BY ROWID LIMIT ?"
-                let pinMessages: [PinMessage] = db.select(with: sql, arguments: [limit])
+                let sql = "SELECT * FROM pin_messages WHERE ROWID > ? AND conversation_id in ('\(ids)') ORDER BY ROWID LIMIT ?"
+                let pinMessages: [PinMessage] = db.select(with: sql, arguments: [rowID, limit])
                 totalPinMessages += pinMessages
             }
             return totalPinMessages
         } else {
-            var sql = "SELECT * FROM pin_messages"
-            if let date {
-                sql += " WHERE created_at >= '\(date)'"
-            }
-            if let messageId {
-                sql += date == nil ? " WHERE " : " AND "
-                sql += "ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
-            }
-            sql += " ORDER BY ROWID LIMIT ?"
-            return db.select(with: sql, arguments: [limit])
+            let sql = "SELECT * FROM pin_messages WHERE ROWID > ? ORDER BY ROWID LIMIT ?"
+            return db.select(with: sql, arguments: [rowID, limit])
         }
     }
     
     public func pinMessagesCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id in ('\(ids)')"
                 if let date {
@@ -167,6 +152,14 @@ public final class PinMessageDAO: UserDatabaseDAO {
             let count: Int? = db.select(with: sql)
             return count ?? 0
         }
+    }
+    
+    public func messageRowID(createdAt: String) -> Int? {
+        db.select(with: "SELECT ROWID FROM pin_messages WHERE created_at >= ? LIMIT 1", arguments: [createdAt])
+    }
+    
+    public func messageRowID(messageID: String) -> Int? {
+        db.select(with: "SELECT ROWID FROM pin_messages WHERE message_id = ?", arguments: [messageID])
     }
     
     public func save(pinMessage: PinMessage) {

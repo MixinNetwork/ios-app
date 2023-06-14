@@ -662,8 +662,8 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func conversations(limit: Int, after conversationId: String?, matching conversationIDs: [String]?) -> [Conversation] {
         if let conversationIDs {
             var totalConversations = [Conversation]()
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT * FROM conversations WHERE conversation_id in ('\(ids)')"
                 if let conversationId {
@@ -687,8 +687,8 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func conversationsCount(matching conversationIDs: [String]?) -> Int {
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 let sql = "SELECT COUNT(*) FROM conversations WHERE conversation_id in ('\(ids)')"
                 let count: Int? = db.select(with: sql)

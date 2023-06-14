@@ -980,43 +980,36 @@ extension MessageDAO {
                                silentNotification: silentNotification)
     }
     
-    public func messages(limit: Int, after messageId: String?, matching conversationIDs: [String]?, sinceDate date: String?) -> [Message] {
+    public func messages(limit: Int, after rowID: Int, matching conversationIDs: [String]?) -> [Message] {
         if let conversationIDs {
             var totalMessages = [Message]()
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
-                var sql = "SELECT * FROM messages WHERE conversation_id in ('\(ids)')"
-                if let date {
-                    sql += " AND created_at >= '\(date)'"
-                }
-                if let messageId {
-                    sql += " AND ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
-                }
-                sql += " ORDER BY ROWID LIMIT ?"
-                let messages: [Message] = db.select(with: sql, arguments: [limit])
+                let sql = "SELECT * FROM messages WHERE ROWID > ? AND conversation_id in ('\(ids)') ORDER BY ROWID LIMIT ?"
+                let messages: [Message] = db.select(with: sql, arguments: [rowID, limit])
                 totalMessages += messages
             }
             return totalMessages
         } else {
-            var sql = "SELECT * FROM messages"
-            if let date {
-                sql += " WHERE created_at >= '\(date)'"
-            }
-            if let messageId {
-                sql += date == nil ? " WHERE " : " AND "
-                sql += "ROWID > IFNULL((SELECT ROWID FROM messages WHERE id = '\(messageId)'), 0)"
-            }
-            sql += " ORDER BY ROWID LIMIT ?"
-            return db.select(with: sql, arguments: [limit])
+            let sql = "SELECT * FROM messages WHERE ROWID > ? ORDER BY ROWID LIMIT ?"
+            return db.select(with: sql, arguments: [rowID, limit])
         }
+    }
+    
+    public func messageRowID(createdAt: String) -> Int? {
+        db.select(with: "SELECT ROWID FROM messages WHERE created_at >= ? LIMIT 1", arguments: [createdAt])
+    }
+    
+    public func messageRowID(messageID: String) -> Int? {
+        db.select(with: "SELECT ROWID FROM messages WHERE id = ?", arguments: [messageID])
     }
     
     public func messagesCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id in ('\(ids)')"
                 if let date {
@@ -1040,8 +1033,8 @@ extension MessageDAO {
         let categories = MessageCategory.allMediaCategories.map(\.rawValue).joined(separator: "', '")
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id in ('\(ids)') AND category in ('\(categories)')"
                 let count: Int? = db.select(with: sql)
@@ -1059,8 +1052,8 @@ extension MessageDAO {
         let categories = MessageCategory.transcriptCategories.map(\.rawValue).joined(separator: "', '")
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.maxCountOfHostParameter) {
-                let endIndex = min(i + Self.maxCountOfHostParameter, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id in ('\(ids)') AND category in ('\(categories)')"
                 if let date {

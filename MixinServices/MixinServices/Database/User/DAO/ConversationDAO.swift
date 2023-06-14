@@ -660,45 +660,27 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func conversations(limit: Int, after conversationId: String?, matching conversationIDs: [String]?) -> [Conversation] {
+        var sql = "SELECT * FROM conversations"
         if let conversationIDs {
-            var totalConversations = [Conversation]()
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
-                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
-                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
-                var sql = "SELECT * FROM conversations WHERE conversation_id in ('\(ids)')"
-                if let conversationId {
-                    sql += " AND ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
-                }
-                sql += " ORDER BY ROWID LIMIT ?"
-                let conversations: [Conversation] = db.select(with: sql, arguments: [limit])
-                totalConversations += conversations
-            }
-            return totalConversations
-        } else {
-            var sql = "SELECT * FROM conversations"
-            if let conversationId {
-                sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
-            }
-            sql += " ORDER BY ROWID LIMIT ?"
-            return db.select(with: sql, arguments: [limit])
+            let ids = conversationIDs.joined(separator: "', '")
+            sql += " WHERE conversation_id IN ('\(ids)')"
         }
+        if let conversationId {
+            sql += conversationIDs == nil ? " WHERE " : " AND "
+            sql += "ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
     }
 
     public func conversationsCount(matching conversationIDs: [String]?) -> Int {
+        var sql = "SELECT COUNT(*) FROM conversations"
         if let conversationIDs {
-            var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
-                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
-                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
-                let sql = "SELECT COUNT(*) FROM conversations WHERE conversation_id in ('\(ids)')"
-                let count: Int? = db.select(with: sql)
-                totalCount += (count ?? 0)
-            }
-            return totalCount
-        } else {
-            let count: Int? = db.select(with: "SELECT COUNT(*) FROM conversations")
-            return count ?? 0
+            let ids = conversationIDs.joined(separator: "', '")
+            sql += " WHERE conversation_id IN ('\(ids)')"
         }
+        let count: Int? = db.select(with: sql)
+        return count ?? 0
     }
     
     public func save(conversation: Conversation) {

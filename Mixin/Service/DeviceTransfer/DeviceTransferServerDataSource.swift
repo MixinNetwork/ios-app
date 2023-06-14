@@ -131,7 +131,7 @@ extension DeviceTransferServerDataSource {
         var fileCount = 0
         while let location = nextLocation {
             let (databaseItemCount, transferItems, nextPrimaryID, nextSecondaryID) = items(on: location)
-            if transferItems.isEmpty && !(needsFilterData && location.type == .transcriptMessage) {
+            if transferItems.isEmpty {
                 Logger.general.info(category: "DeviceTransferServerDataSource", message: "\(location.type) is empty")
             }
             recordCount += transferItems.count
@@ -154,13 +154,8 @@ extension DeviceTransferServerDataSource {
                     nextLocation = nil
                 }
                 if needsFilterData, location.type == .message {
-                    let message: String
-                    if transcriptMessageCount == 0 {
-                        message = "\(DeviceTransferRecordType.transcriptMessage) is empty"
-                    } else {
-                        message = "Send \(DeviceTransferRecordType.transcriptMessage) \(transcriptMessageCount)"
-                    }
-                    Logger.general.info(category: "DeviceTransferServerDataSource", message: message)
+                    recordCount -= transcriptMessageCount
+                    Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(DeviceTransferRecordType.transcriptMessage) \(transcriptMessageCount)")
                 }
                 if !needsFilterData || location.type != .transcriptMessage {
                     Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(location.type) \(recordCount)")
@@ -445,7 +440,7 @@ extension DeviceTransferServerDataSource {
             return false
         }
 #if DEBUG
-        //Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
+        Logger.general.debug(category: "DeviceTransferServerDataSource", message: "Send File: \(url)")
 #endif
         
         let encryptor = try AESCryptor(operation: .encrypt, iv: iv, key: key.aes)

@@ -68,7 +68,7 @@ public final class TranscriptMessage {
             }
             switch category {
             case .APP_CARD:
-                return (AppCardContentConverter.transcriptAppCard(from: item.content), nil)
+                return (AppCardContentConverter.generalAppCard(from: item.content), nil)
             case .SIGNAL_VIDEO, .PLAIN_VIDEO, .ENCRYPTED_VIDEO, .SIGNAL_IMAGE, .PLAIN_IMAGE, .ENCRYPTED_IMAGE:
                 if let data = item.content?.data(using: .utf8), let tad = try? JSONDecoder.default.decode(TransferAttachmentData.self, from: data) {
                     return (tad.attachmentId, tad.createdAt)
@@ -105,8 +105,8 @@ public final class TranscriptMessage {
         self.stickerId = item.stickerId
         self.sharedUserId = item.sharedUserId
         self.quoteMessageId = item.quoteMessageId
-        self.quoteContent = QuoteContentConverter.transcriptQuoteContent(from: item.quoteContent)
-        self.mentions = MentionConverter.transcriptMention(from: item.mentionsJson)
+        self.quoteContent = QuoteContentConverter.generalQuoteContent(from: item.quoteContent)
+        self.mentions = MentionConverter.generalMention(from: item.mentionsJson)
         self.createdAt = item.createdAt
     }
     
@@ -159,9 +159,12 @@ extension TranscriptMessage {
         public init?(messageItem m: MessageItem) {
             self.name = m.userFullName
             self.category = m.category
-            if category == MessageCategory.APP_CARD.rawValue {
-                self.content = AppCardContentConverter.transcriptAppCard(from: m.content)
-            } else {
+            switch category {
+            case MessageCategory.APP_CARD.rawValue:
+                self.content = AppCardContentConverter.generalAppCard(from: m.content)
+            case MessageCategory.APP_BUTTON_GROUP.rawValue:
+                self.content = AppButtonGroupContentConverter.generalAppButtonGroup(from: m.content)
+            default:
                 self.content = m.content
             }
         }

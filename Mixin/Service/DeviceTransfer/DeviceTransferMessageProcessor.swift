@@ -338,6 +338,7 @@ extension DeviceTransferMessageProcessor {
                     Logger.general.warn(category: "DeviceTransferMessageProcessor", message: "Message Mention does not exist: \(messageMention)")
                 }
             case .expiredMessage:
+                savePendingMessages()
                 let expiredMessage = try decoder.decode(DataWrapper<DeviceTransferExpiredMessage>.self, from: jsonData).data
                 ExpiredMessageDAO.shared.save(expiredMessage: expiredMessage.toExpiredMessage())
             }

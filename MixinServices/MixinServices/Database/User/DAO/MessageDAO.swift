@@ -998,23 +998,26 @@ extension MessageDAO {
         db.select(with: "SELECT ROWID FROM messages WHERE id = ?", arguments: [messageID])
     }
     
-    public func messagesCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
+    public func messagesCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
         var sql = "SELECT COUNT(*) FROM messages"
-        if let date {
-            sql += " WHERE created_at >= '\(date)'"
+        if let rowID {
+            sql += " WHERE ROWID >= \(rowID)"
         }
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
-            sql += date == nil ? " WHERE " : " AND "
+            sql += rowID == nil ? " WHERE " : " AND "
             sql += "conversation_id IN ('\(ids)')"
         }
         let count: Int? = db.select(with: sql)
         return count ?? 0
     }
     
-    public func mediaMessagesCount(matching conversationIDs: [String]?) -> Int {
+    public func mediaMessagesCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
         let categories = MessageCategory.allMediaCategories.map(\.rawValue).joined(separator: "', '")
         var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)') AND media_status IN ('DONE', 'READ')"
+        if let rowID {
+            sql += " AND ROWID >= \(rowID)"
+        }
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
             sql += " AND conversation_id IN ('\(ids)')"
@@ -1023,11 +1026,11 @@ extension MessageDAO {
         return count ?? 0
     }
 
-    public func transcriptMessageCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
+    public func transcriptMessageCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
         let categories = MessageCategory.transcriptCategories.map(\.rawValue).joined(separator: "', '")
         var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)')"
-        if let date {
-            sql += " AND created_at >= '\(date)'"
+        if let rowID {
+            sql += " AND ROWID >= \(rowID)"
         }
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")

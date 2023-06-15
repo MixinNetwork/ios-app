@@ -123,15 +123,15 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [rowID, limit])
     }
     
-    public func pinMessagesCount(matching conversationIDs: [String]?, sinceDate date: String?) -> Int {
+    public func pinMessagesCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
         var sql = "SELECT COUNT(*) FROM pin_messages"
+        if let rowID {
+            sql += " WHERE ROWID >= \(rowID)"
+        }
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
-            sql += " WHERE conversation_id IN ('\(ids)')"
-        }
-        if let date {
-            sql += conversationIDs == nil ? " WHERE " : " AND "
-            sql += "created_at >= '\(date)'"
+            sql += rowID == nil ? " WHERE " : " AND "
+            sql += "conversation_id IN ('\(ids)')"
         }
         let count: Int? = db.select(with: sql)
         return count ?? 0

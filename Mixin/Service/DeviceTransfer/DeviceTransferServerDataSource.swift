@@ -35,12 +35,18 @@ extension DeviceTransferServerDataSource {
     
     func totalCount() -> Int {
         assert(!Queue.main.isCurrent)
-        let messagesCount = MessageDAO.shared.messagesCount(matching: conversationIDs, sinceDate: fromDate)
+        let rowID: Int?
+        if let fromDate {
+            rowID = MessageDAO.shared.messageRowID(createdAt: fromDate)
+        } else {
+            rowID = nil
+        }
+        let messagesCount = MessageDAO.shared.messagesCount(matching: conversationIDs, after: rowID)
         let attachmentsCount = needsFilterData
-            ? MessageDAO.shared.mediaMessagesCount(matching: conversationIDs)
+            ? MessageDAO.shared.mediaMessagesCount(matching: conversationIDs, after: rowID)
             : attachmentsCount()
         let transcriptMessageCount = needsFilterData
-            ? MessageDAO.shared.transcriptMessageCount(matching: conversationIDs, sinceDate: fromDate)
+            ? MessageDAO.shared.transcriptMessageCount(matching: conversationIDs, after: rowID)
             : TranscriptMessageDAO.shared.transcriptMessagesCount()
         let total = ConversationDAO.shared.conversationsCount(matching: conversationIDs)
             + ParticipantDAO.shared.participantsCount(matching: conversationIDs)
@@ -49,7 +55,7 @@ extension DeviceTransferServerDataSource {
             + AssetDAO.shared.assetsCount()
             + SnapshotDAO.shared.snapshotsCount()
             + StickerDAO.shared.stickersCount()
-            + PinMessageDAO.shared.pinMessagesCount(matching: conversationIDs, sinceDate: fromDate)
+            + PinMessageDAO.shared.pinMessagesCount(matching: conversationIDs, after: rowID)
             + transcriptMessageCount
             + messagesCount
             + MessageMentionDAO.shared.messageMentionsCount(matching: conversationIDs)
@@ -291,7 +297,7 @@ extension DeviceTransferServerDataSource {
             } else {
                 if let fromDate {
                     if let startRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDate) {
-                        rowID = startRowID
+                        rowID = startRowID - 1
                     } else {
                         return (0, [], nil, nil)
                     }
@@ -337,7 +343,7 @@ extension DeviceTransferServerDataSource {
             } else {
                 if let fromDate {
                     if let startRowID = MessageDAO.shared.messageRowID(createdAt: fromDate) {
-                        rowID = startRowID
+                        rowID = startRowID - 1
                     } else {
                         return (0, [], nil, nil)
                     }

@@ -124,17 +124,27 @@ public final class PinMessageDAO: UserDatabaseDAO {
     }
     
     public func pinMessagesCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
-        var sql = "SELECT COUNT(*) FROM pin_messages"
-        if let rowID {
-            sql += " WHERE ROWID >= \(rowID)"
-        }
         if let conversationIDs {
-            let ids = conversationIDs.joined(separator: "', '")
-            sql += rowID == nil ? " WHERE " : " AND "
-            sql += "conversation_id IN ('\(ids)')"
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id in ('\(ids)')"
+                if let rowID {
+                    sql += " AND ROWID >= \(rowID)"
+                }
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
+            }
+            return totalCount
+        } else {
+            var sql = "SELECT COUNT(*) FROM pin_messages"
+            if let rowID {
+                sql += " WHERE ROWID >= \(rowID)"
+            }
+            let count: Int? = db.select(with: sql)
+            return count ?? 0
         }
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
     public func messageRowID(createdAt: String) -> Int? {

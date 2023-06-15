@@ -33,6 +33,15 @@ struct DeviceTransferFilter {
             }
         }
         
+        var idsForFetching: [String]? {
+            switch self {
+            case .all:
+                return nil
+            case .designated(let ids):
+                return ids.count > UserDatabaseDAO.strideForDeviceTransfer ? nil : ids
+            }
+        }
+        
     }
     
     enum Time {
@@ -89,6 +98,14 @@ struct DeviceTransferFilter {
         case (.all, .all):
             return false
         default:
+            return true
+        }
+    }
+    
+    func isValidItem(conversationID: String) -> Bool {
+        if case .designated(let ids) = conversation, ids.count > UserDatabaseDAO.strideForDeviceTransfer {
+            return ids.contains(conversationID)
+        } else {
             return true
         }
     }

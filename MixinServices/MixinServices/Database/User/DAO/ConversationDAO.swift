@@ -661,26 +661,34 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func conversations(limit: Int, after conversationId: String?, matching conversationIDs: [String]?) -> [Conversation] {
         var sql = "SELECT * FROM conversations"
+        if let conversationId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
+        }
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
-            sql += " WHERE conversation_id IN ('\(ids)')"
-        }
-        if let conversationId {
-            sql += conversationIDs == nil ? " WHERE " : " AND "
-            sql += "ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
+            sql += conversationId == nil ? " WHERE" : " AND"
+            sql += " conversation_id IN ('\(ids)')"
         }
         sql += " ORDER BY ROWID LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
 
     public func conversationsCount(matching conversationIDs: [String]?) -> Int {
-        var sql = "SELECT COUNT(*) FROM conversations"
         if let conversationIDs {
-            let ids = conversationIDs.joined(separator: "', '")
-            sql += " WHERE conversation_id IN ('\(ids)')"
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
+                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                let sql = "SELECT COUNT(*) FROM conversations WHERE conversation_id in ('\(ids)')"
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
+            }
+            return totalCount
+        } else {
+            let sql = "SELECT COUNT(*) FROM conversations"
+            let count: Int? = db.select(with: sql)
+            return count ?? 0
         }
-        let count: Int? = db.select(with: sql)
-        return count ?? 0
     }
     
     public func save(conversation: Conversation) {

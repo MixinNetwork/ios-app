@@ -10,8 +10,9 @@ final class DeviceTransferServerDataSource {
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
     private let filter: DeviceTransferFilter
-    private let conversationIDs: [String]?
     private let fromDate: String?
+    private let conversationIDs: [String]?
+    private let conversationIDsForFetching: [String]?
     
     private var transcriptMessageCount = 0
     
@@ -20,8 +21,9 @@ final class DeviceTransferServerDataSource {
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
         self.filter = filter
-        conversationIDs = filter.conversation.ids
         fromDate = filter.time.utcString
+        conversationIDs = filter.conversation.ids
+        conversationIDsForFetching = filter.conversation.idsForFetching
     }
     
     deinit {
@@ -186,11 +188,14 @@ extension DeviceTransferServerDataSource {
         case .conversation:
             let conversations = ConversationDAO.shared.conversations(limit: limit,
                                                                      after: location.primaryID,
-                                                                     matching: conversationIDs)
+                                                                     matching: conversationIDsForFetching)
             databaseItemCount = conversations.count
             nextPrimaryID = conversations.last?.conversationId
             nextSecondaryID = nil
             transferItems = conversations.compactMap { conversation in
+                guard filter.isValidItem(conversationID: conversation.conversationId) else {
+                    return nil
+                }
                 let deviceTransferConversation = DeviceTransferConversation(conversation: conversation, to: remotePlatform)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferConversation, key: key)
@@ -204,11 +209,14 @@ extension DeviceTransferServerDataSource {
             let participants = ParticipantDAO.shared.participants(limit: limit,
                                                                   after: location.primaryID,
                                                                   with: location.secondaryID,
-                                                                  matching: conversationIDs)
+                                                                  matching: conversationIDsForFetching)
             databaseItemCount = participants.count
             nextPrimaryID = participants.last?.conversationId
             nextSecondaryID = participants.last?.userId
             transferItems = participants.compactMap { participant in
+                guard filter.isValidItem(conversationID: participant.conversationId) else {
+                    return nil
+                }
                 let deviceTransferParticipant = DeviceTransferParticipant(participant: participant)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferParticipant, key: key)
@@ -308,7 +316,9 @@ extension DeviceTransferServerDataSource {
                     rowID = -1
                 }
             }
-            let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit, after: rowID, matching: conversationIDs)
+            let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit,
+                                                               after: rowID,
+                                                               matching: conversationIDsForFetching)
             databaseItemCount = pinMessages.count
             if let messageID = pinMessages.last?.messageId, let rowID = PinMessageDAO.shared.messageRowID(messageID: messageID) {
                 nextPrimaryID = "\(rowID)"
@@ -317,6 +327,9 @@ extension DeviceTransferServerDataSource {
             }
             nextSecondaryID = nil
             transferItems = pinMessages.compactMap { pinMessage in
+                guard filter.isValidItem(conversationID: pinMessage.conversationId) else {
+                    return nil
+                }
                 if let fromDate, pinMessage.createdAt < fromDate {
                     return nil
                 }
@@ -354,7 +367,9 @@ extension DeviceTransferServerDataSource {
                     rowID = -1
                 }
             }
-            let messages = MessageDAO.shared.messages(limit: limit, after: rowID, matching: conversationIDs)
+            let messages = MessageDAO.shared.messages(limit: limit,
+                                                      after: rowID,
+                                                      matching: conversationIDsForFetching)
             databaseItemCount = messages.count
             if let messageID = messages.last?.messageId, let rowID = MessageDAO.shared.messageRowID(messageID: messageID) {
                 nextPrimaryID = "\(rowID)"
@@ -365,6 +380,9 @@ extension DeviceTransferServerDataSource {
             var messageItems = [TransferItem]()
             var transcriptMessageItems = [TransferItem]()
             for message in messages {
+                guard filter.isValidItem(conversationID: message.conversationId) else {
+                    continue
+                }
                 if let fromDate, message.createdAt < fromDate {
                     continue
                 }
@@ -395,11 +413,14 @@ extension DeviceTransferServerDataSource {
         case .messageMention:
             let messageMentions = MessageMentionDAO.shared.messageMentions(limit: limit,
                                                                            after: location.primaryID,
-                                                                           matching: conversationIDs)
+                                                                           matching: conversationIDsForFetching)
             databaseItemCount = messageMentions.count
             nextPrimaryID = messageMentions.last?.messageId
             nextSecondaryID = nil
             transferItems = messageMentions.compactMap { messageMention in
+                guard filter.isValidItem(conversationID: messageMention.conversationId) else {
+                    return nil
+                }
                 let deviceTransferMessageMention = DeviceTransferMessageMention(messageMention: messageMention)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferMessageMention, key: key)

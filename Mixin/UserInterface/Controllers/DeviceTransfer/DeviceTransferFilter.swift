@@ -84,4 +84,13 @@ struct DeviceTransferFilter {
     var conversation: Conversation
     var time: Time
     
+    var shouldFilter: Bool {
+        switch (time, conversation) {
+        case (.all, .all):
+            return false
+        default:
+            return true
+        }
+    }
+    
 }

@@ -9,9 +9,9 @@ final class DeviceTransferServerDataSource {
     private let key: DeviceTransferKey
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
+    private let filter: DeviceTransferFilter
     private let conversationIDs: [String]?
     private let fromDate: String?
-    private let needsFilterData: Bool
     
     private var transcriptMessageCount = 0
     
@@ -19,9 +19,9 @@ final class DeviceTransferServerDataSource {
         self.key = key
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
+        self.filter = filter
         conversationIDs = filter.conversation.ids
         fromDate = filter.time.utcString
-        needsFilterData = conversationIDs != nil || fromDate != nil
     }
     
     deinit {
@@ -42,10 +42,10 @@ extension DeviceTransferServerDataSource {
             rowID = nil
         }
         let messagesCount = MessageDAO.shared.messagesCount(matching: conversationIDs, after: rowID)
-        let attachmentsCount = needsFilterData
+        let attachmentsCount = filter.shouldFilter
             ? MessageDAO.shared.mediaMessagesCount(matching: conversationIDs, after: rowID)
             : attachmentsCount()
-        let transcriptMessageCount = needsFilterData
+        let transcriptMessageCount = filter.shouldFilter
             ? MessageDAO.shared.transcriptMessageCount(matching: conversationIDs, after: rowID)
             : TranscriptMessageDAO.shared.transcriptMessagesCount()
         let total = ConversationDAO.shared.conversationsCount(matching: conversationIDs)
@@ -159,11 +159,11 @@ extension DeviceTransferServerDataSource {
                 } else {
                     nextLocation = nil
                 }
-                if needsFilterData, location.type == .message {
+                if filter.shouldFilter, location.type == .message {
                     recordCount -= transcriptMessageCount
                     Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(DeviceTransferRecordType.transcriptMessage) \(transcriptMessageCount)")
                 }
-                if !needsFilterData || location.type != .transcriptMessage {
+                if !filter.shouldFilter || location.type != .transcriptMessage {
                     Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(location.type) \(recordCount)")
                 }
                 recordCount = 0
@@ -327,7 +327,7 @@ extension DeviceTransferServerDataSource {
                 }
             }
         case .transcriptMessage:
-            if needsFilterData {
+            if filter.shouldFilter {
                 return (0, [], nil, nil)
             } else {
                 let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: location.primaryID, with: location.secondaryID)
@@ -382,7 +382,7 @@ extension DeviceTransferServerDataSource {
                     Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output message: \(error)")
                 }
                 // TranscriptMessage
-                if needsFilterData && message.category.hasSuffix("_TRANSCRIPT") {
+                if filter.shouldFilter && message.category.hasSuffix("_TRANSCRIPT") {
                     transcriptMessageCount += 1
                     let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(transcriptId: message.messageId)
                     transcriptMessageItems = transcriptTransferItems(for: transcriptMessages)

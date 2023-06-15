@@ -35,18 +35,21 @@ extension DeviceTransferServerDataSource {
     
     func totalCount() -> Int {
         assert(!Queue.main.isCurrent)
-        let rowID: Int?
+        let messageRowID: Int?
+        let pinMessageRowID: Int?
         if let fromDate {
-            rowID = MessageDAO.shared.messageRowID(createdAt: fromDate)
+            messageRowID = MessageDAO.shared.messageRowID(createdAt: fromDate)
+            pinMessageRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDate)
         } else {
-            rowID = nil
+            messageRowID = nil
+            pinMessageRowID = nil
         }
-        let messagesCount = MessageDAO.shared.messagesCount(matching: conversationIDs, after: rowID)
+        let messagesCount = MessageDAO.shared.messagesCount(matching: conversationIDs, after: messageRowID)
         let attachmentsCount = filter.shouldFilter
-            ? MessageDAO.shared.mediaMessagesCount(matching: conversationIDs, after: rowID)
+            ? MessageDAO.shared.mediaMessagesCount(matching: conversationIDs, after: messageRowID)
             : attachmentsCount()
         let transcriptMessageCount = filter.shouldFilter
-            ? MessageDAO.shared.transcriptMessageCount(matching: conversationIDs, after: rowID)
+            ? MessageDAO.shared.transcriptMessageCount(matching: conversationIDs, after: messageRowID)
             : TranscriptMessageDAO.shared.transcriptMessagesCount()
         let total = ConversationDAO.shared.conversationsCount(matching: conversationIDs)
             + ParticipantDAO.shared.participantsCount(matching: conversationIDs)
@@ -55,7 +58,7 @@ extension DeviceTransferServerDataSource {
             + AssetDAO.shared.assetsCount()
             + SnapshotDAO.shared.snapshotsCount()
             + StickerDAO.shared.stickersCount()
-            + PinMessageDAO.shared.pinMessagesCount(matching: conversationIDs, after: rowID)
+            + PinMessageDAO.shared.pinMessagesCount(matching: conversationIDs, after: pinMessageRowID)
             + transcriptMessageCount
             + messagesCount
             + MessageMentionDAO.shared.messageMentionsCount(matching: conversationIDs)

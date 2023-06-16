@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DeviceTransferConversationSelectionViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="operationAllButton" destination="rfT-1y-veu" id="OkV-dN-ofn"/>
+                <outlet property="showSelectedButton" destination="Csa-YX-P7n" id="lek-Zo-7T4"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Ch5-z7-fsr">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="68"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rfT-1y-veu">
+                    <rect key="frame" x="20" y="18" width="30" height="32"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="tintColor" name="AccentColor"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal">
+                        <color key="titleColor" name="AccentColor"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="operationAllAction:" destination="-1" eventType="touchUpInside" id="WNu-SW-DiQ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Csa-YX-P7n">
+                    <rect key="frame" x="343" y="18" width="30" height="32"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="tintColor" name="AccentColor"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal">
+                        <color key="titleColor" name="AccentColor"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="showSelectedAction:" destination="-1" eventType="touchUpInside" id="trA-vN-RoZ"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Csa-YX-P7n" secondAttribute="trailing" constant="20" id="2Ps-B9-Qrc"/>
+                <constraint firstItem="Csa-YX-P7n" firstAttribute="centerY" secondItem="Ch5-z7-fsr" secondAttribute="centerY" id="4rv-uO-br2"/>
+                <constraint firstItem="rfT-1y-veu" firstAttribute="leading" secondItem="Ch5-z7-fsr" secondAttribute="leading" constant="20" id="cDe-u9-gal"/>
+                <constraint firstItem="rfT-1y-veu" firstAttribute="centerY" secondItem="Ch5-z7-fsr" secondAttribute="centerY" id="lS0-HQ-7yC"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-173.2824427480916" y="320.42253521126764"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -11,17 +11,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PeerViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="actionView" destination="6Aw-Mg-aU0" id="hVm-HG-unO"/>
                 <outlet property="centerWrapperView" destination="XLl-Eh-ZIn" id="89v-iQ-htH"/>
                 <outlet property="centerWrapperViewBottomConstraint" destination="7Ce-TP-0yN" id="hWH-hV-Nvu"/>
                 <outlet property="centerWrapperViewHeightConstraint" destination="sQY-20-GMS" id="EJV-DX-aTS"/>
-                <outlet property="hideActionViewConstraint" destination="Lg4-Go-RbG" id="HBI-ea-VQT"/>
-                <outlet property="operationAllButton" destination="oCu-HN-dC3" id="1qK-Th-J1G"/>
                 <outlet property="searchBoxTrailingConstraint" destination="8Cf-gO-ALP" id="7Qv-cu-5M0"/>
                 <outlet property="searchBoxView" destination="SdH-R1-r2F" id="fsr-PS-V7d"/>
-                <outlet property="showActionViewConstraint" destination="e98-J3-uXg" id="hBl-SG-uwX"/>
-                <outlet property="showSelectedButton" destination="qyV-mb-Ut8" id="DgC-Qg-eHp"/>
                 <outlet property="tableView" destination="ZxV-oD-VPR" id="gFi-MX-Y5r"/>
+                <outlet property="tableViewBottomConstraint" destination="Lg4-Go-RbG" id="JQA-sL-7yE"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -48,76 +44,25 @@
                     <rect key="frame" x="0.0" y="100" width="375" height="567"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Aw-Mg-aU0">
-                    <rect key="frame" x="0.0" y="604" width="375" height="63"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oCu-HN-dC3">
-                            <rect key="frame" x="20" y="16" width="30" height="32"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <color key="tintColor" name="AccentColor"/>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal">
-                                <color key="titleColor" name="AccentColor"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="operationAllAction:" destination="-1" eventType="touchUpInside" id="cme-cc-OlU"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyV-mb-Ut8">
-                            <rect key="frame" x="325" y="16" width="30" height="32"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <color key="tintColor" name="AccentColor"/>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal">
-                                <color key="titleColor" name="AccentColor"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="showSelectedAction:" destination="-1" eventType="touchUpInside" id="EeI-Hu-85c"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" name="background"/>
-                    <constraints>
-                        <constraint firstItem="oCu-HN-dC3" firstAttribute="leading" secondItem="6Aw-Mg-aU0" secondAttribute="leading" constant="20" id="8eK-el-Wrx"/>
-                        <constraint firstAttribute="trailing" secondItem="qyV-mb-Ut8" secondAttribute="trailing" constant="20" id="Ak9-7O-DhA"/>
-                        <constraint firstItem="oCu-HN-dC3" firstAttribute="top" secondItem="6Aw-Mg-aU0" secondAttribute="top" constant="16" id="PA8-8Z-CKT"/>
-                        <constraint firstItem="qyV-mb-Ut8" firstAttribute="top" secondItem="6Aw-Mg-aU0" secondAttribute="top" constant="16" id="jLM-xq-YpJ"/>
-                    </constraints>
-                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="6Aw-Mg-aU0" secondAttribute="bottom" id="1gt-eY-HH7"/>
                 <constraint firstItem="SdH-R1-r2F" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="2vl-c4-nbs"/>
-                <constraint firstItem="6Aw-Mg-aU0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="5Ol-K7-jyL"/>
                 <constraint firstItem="ZxV-oD-VPR" firstAttribute="top" secondItem="XLl-Eh-ZIn" secondAttribute="bottom" id="7Ce-TP-0yN"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="SdH-R1-r2F" secondAttribute="trailing" constant="20" id="8Cf-gO-ALP"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="oCu-HN-dC3" secondAttribute="bottom" constant="15" id="8mm-EB-ZIv"/>
                 <constraint firstItem="SdH-R1-r2F" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="20" id="9vi-xC-hPh"/>
                 <constraint firstItem="XLl-Eh-ZIn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="HVz-sY-8dJ"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="qyV-mb-Ut8" secondAttribute="bottom" constant="15" id="HsJ-BM-APb"/>
                 <constraint firstAttribute="trailing" secondItem="ZxV-oD-VPR" secondAttribute="trailing" id="JeM-a7-yBf"/>
-                <constraint firstAttribute="bottom" secondItem="ZxV-oD-VPR" secondAttribute="bottom" priority="750" id="Lg4-Go-RbG"/>
+                <constraint firstAttribute="bottom" secondItem="ZxV-oD-VPR" secondAttribute="bottom" id="Lg4-Go-RbG"/>
                 <constraint firstItem="XLl-Eh-ZIn" firstAttribute="top" secondItem="SdH-R1-r2F" secondAttribute="bottom" constant="20" id="MQO-pw-Bzq"/>
                 <constraint firstItem="ZxV-oD-VPR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="SEc-BE-O98"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="6Aw-Mg-aU0" secondAttribute="trailing" id="bO1-d4-bmi"/>
-                <constraint firstItem="6Aw-Mg-aU0" firstAttribute="top" secondItem="ZxV-oD-VPR" secondAttribute="bottom" priority="250" id="e98-J3-uXg"/>
                 <constraint firstAttribute="trailing" secondItem="XLl-Eh-ZIn" secondAttribute="trailing" id="jYb-EU-nde"/>
             </constraints>
             <point key="canvasLocation" x="138.40000000000001" y="152.47376311844079"/>
         </view>
     </objects>
     <resources>
-        <namedColor name="AccentColor">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

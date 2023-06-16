@@ -4,12 +4,12 @@ import MixinServices
 
 class DeviceTransferConversationSelectionViewController: PeerViewController<MessageReceiver, CheckmarkPeerCell, MessageReceiverSearchResult> {
     
-    @IBOutlet weak var actionView: UIView!
     @IBOutlet weak var operationAllButton: UIButton!
     @IBOutlet weak var showSelectedButton: UIButton!
     
-    @IBOutlet weak var showActionViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideActionViewConstraint: NSLayoutConstraint!
+    private var toolbarView: UIView!
+    private var filter: DeviceTransferFilter.Conversation = .all
+    private var changeHandler: DeviceTransferFilter.ConversationChangeHandler?
     
     private var selections = [MessageReceiver]() {
         didSet {
@@ -25,9 +25,6 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
         }
     }
     
-    private var filter: DeviceTransferFilter.Conversation = .all
-    private var changeHandler: DeviceTransferFilter.ConversationChangeHandler?
-    
     class func instance(filter: DeviceTransferFilter.Conversation, changeHandler: @escaping DeviceTransferFilter.ConversationChangeHandler) -> UIViewController {
         let controller = DeviceTransferConversationSelectionViewController()
         controller.filter = filter
@@ -37,9 +34,15 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        actionView.isHidden = false
-        showActionViewConstraint.priority = .defaultHigh
-        hideActionViewConstraint.priority = .defaultLow
+        tableViewBottomConstraint.isActive = false
+        toolbarView = R.nib.deviceTransferConversationSelectionToolbarView(owner: self)
+        view.addSubview(toolbarView)
+        toolbarView.snp.makeConstraints { make in
+            make.height.equalTo(50)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(tableView.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
         tableView.allowsMultipleSelection = true
     }
     

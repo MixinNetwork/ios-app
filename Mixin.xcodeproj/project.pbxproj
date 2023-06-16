@@ -772,6 +772,7 @@
 		949569A8263B13BF00E043FE /* TranscriptMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
+		94B309012A3C910E004C96A4 /* DeviceTransferConversationSelectionToolbarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B309002A3C910E004C96A4 /* DeviceTransferConversationSelectionToolbarView.xib */; };
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
 		94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */; };
 		94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */; };
@@ -1857,6 +1858,7 @@
 		949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptMessageViewModel.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
+		94B309002A3C910E004C96A4 /* DeviceTransferConversationSelectionToolbarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceTransferConversationSelectionToolbarView.xib; sourceTree = "<group>"; };
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
 		94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SilentNotificationMessagePreviewView.xib; sourceTree = "<group>"; };
 		94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentNotificationMessagePreviewViewController.swift; sourceTree = "<group>"; };
@@ -2682,6 +2684,7 @@
 				7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */,
 				7CEB735729DB272F006FB5B2 /* RestoreChatTableViewCell.xib */,
 				7CE78FB02A30883200FEB942 /* DeviceTransferDateSelectionView.xib */,
+				94B309002A3C910E004C96A4 /* DeviceTransferConversationSelectionToolbarView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4279,6 +4282,7 @@
 				DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */,
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
 				7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */,
+				94B309012A3C910E004C96A4 /* DeviceTransferConversationSelectionToolbarView.xib in Resources */,
 				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
 				7C4C03A928532D2F003DE0C0 /* PhoneContactCell.xib in Resources */,
 				7BE73BFE230A8D0300B97FC6 /* group_separator_2.png in Resources */,

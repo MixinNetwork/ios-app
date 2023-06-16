@@ -148,7 +148,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
     }
     
     public func messageRowID(createdAt: String) -> Int? {
-        db.select(with: "SELECT ROWID FROM pin_messages WHERE created_at >= ? LIMIT 1", arguments: [createdAt])
+        db.select(with: "SELECT ROWID FROM pin_messages WHERE created_at >= ? ORDER BY ROWID LIMIT 1", arguments: [createdAt])
     }
     
     public func messageRowID(messageID: String) -> Int? {

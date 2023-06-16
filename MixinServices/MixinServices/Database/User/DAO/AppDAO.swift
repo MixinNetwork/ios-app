@@ -44,8 +44,8 @@ public final class AppDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func appsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM apps")
+    public func appsCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM apps")
         return count ?? 0
     }
     

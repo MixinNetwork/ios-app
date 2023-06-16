@@ -152,8 +152,8 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func expiredMessagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM expired_messages")
+    public func expiredMessagesCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM expired_messages")
         return count ?? 0
     }
     

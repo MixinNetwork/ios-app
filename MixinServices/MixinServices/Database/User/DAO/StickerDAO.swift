@@ -172,8 +172,8 @@ public final class StickerDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func stickersCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM stickers")
+    public func stickersCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM stickers")
         return count ?? 0
     }
     

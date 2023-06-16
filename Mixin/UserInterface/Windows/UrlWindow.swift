@@ -888,17 +888,22 @@ class UrlWindow {
             UIApplication.currentActivity()?.alert(R.string.localizable.unable_synced_between_different_account())
             return true
         }
-        let client = DeviceTransferClient(hostname: context.hostname,
-                                          port: context.port,
-                                          code: context.code,
-                                          key: context.key,
-                                          remotePlatform: command.platform)
-        client.start()
-        let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))
-        if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {
-            navigationController.pushViewController(progress, animated: true)
-        } else {
-            AppDelegate.current.mainWindow.rootViewController?.present(progress, animated: true)
+        do {
+            let client = try DeviceTransferClient(hostname: context.hostname,
+                                                  port: context.port,
+                                                  code: context.code,
+                                                  key: context.key,
+                                                  remotePlatform: command.platform)
+            client.start()
+            let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))
+            if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {
+                navigationController.pushViewController(progress, animated: true)
+            } else {
+                AppDelegate.current.mainWindow.rootViewController?.present(progress, animated: true)
+            }
+        } catch {
+            Logger.general.error(category: "UrlWindow", message: "Unable to init client: \(error)")
+            UIApplication.currentActivity()?.alert(R.string.localizable.connection_establishment_failed())
         }
         return true
     }

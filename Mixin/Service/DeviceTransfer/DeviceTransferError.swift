@@ -5,6 +5,7 @@ enum DeviceTransferError: Error {
     case mismatchedConnection
     case encrypt(Error)
     case mismatchedHMAC(local: Data, remote: Data)
-    case failed(Error)
+    case connectionFailed(Error)
     case receiveFile(Error)
+    case importing(DeviceTransferMessageProcessor.ProcessingError)
 }

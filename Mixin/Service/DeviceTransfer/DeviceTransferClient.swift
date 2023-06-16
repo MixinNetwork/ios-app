@@ -1,13 +1,16 @@
 import Foundation
 import Network
+import Combine
 import MixinServices
 
 final class DeviceTransferClient {
     
     enum State {
         case idle
-        case transfer(progress: Double, speed: String)
-        case closed(DeviceTransferClosedReason)
+        case transfer(progress: Float, speed: String) // `progress` is between 0.0 and 1.0
+        case failed(DeviceTransferError)
+        case importing(progress: Float) // `progress` is between 0.0 and 1.0
+        case finished
     }
     
     @Published private(set) var state: State = .idle
@@ -18,22 +21,35 @@ final class DeviceTransferClient {
     private let key: DeviceTransferKey
     private let remotePlatform: DeviceTransferPlatform
     private let connection: NWConnection
+    private let cacheContainerURL: URL
+    private let messageProcessor: DeviceTransferMessageProcessor
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferClient")
     private let speedInspector = NetworkSpeedInspector()
     
     private weak var statisticsTimer: Timer?
     
     private var fileStream: DeviceTransferFileStream?
+    private var messageProcessingObservers: Set<AnyCancellable> = []
     
-    // Access counts on main queue
-    private var processedCount = 0
-    private var totalCount: Int?
+    // Access on main queue
+    private var progress = DeviceTransferProgress()
     
     private var opaquePointer: UnsafeMutableRawPointer {
         Unmanaged<DeviceTransferClient>.passUnretained(self).toOpaque()
     }
     
-    init(hostname: String, port: UInt16, code: UInt16, key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform) {
+    init(hostname: String, port: UInt16, code: UInt16, key: DeviceTransferKey, remotePlatform: DeviceTransferPlatform) throws {
+        // https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html#//apple_ref/doc/uid/TP40010672-CH2-SW2
+        // In iOS 5.0 and later, the system may delete the Caches directory on rare occasions when the system is very low on disk space.
+        // This will never occur while an app is running.
+        let manager = FileManager.default
+        let cacheContainerURL = try manager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            .appendingPathComponent("DeviceTransfer")
+        if manager.fileExists(atPath: cacheContainerURL.path) {
+            try? manager.removeItem(at: cacheContainerURL)
+        }
+        try manager.createDirectory(at: cacheContainerURL, withIntermediateDirectories: true)
+        
         self.hostname = hostname
         self.port = port
         self.code = code
@@ -45,6 +61,11 @@ final class DeviceTransferClient {
             let endpoint = NWEndpoint.hostPort(host: host, port: port)
             return NWConnection(to: endpoint, using: .deviceTransfer)
         }()
+        self.cacheContainerURL = cacheContainerURL
+        self.messageProcessor = .init(key: key.aes,
+                                      remotePlatform: remotePlatform,
+                                      cacheContainerURL: cacheContainerURL,
+                                      inputQueue: queue)
         Logger.general.info(category: "DeviceTransferClient", message: "\(opaquePointer) init")
     }
     
@@ -54,6 +75,14 @@ final class DeviceTransferClient {
     
     func start() {
         Logger.general.info(category: "DeviceTransferClient", message: "Will start connecting to [\(hostname)]:\(port)")
+        messageProcessor.$processingError
+            .receive(on: queue.dispatchQueue)
+            .sink { error in
+                if let error {
+                    self.fail(error: .importing(error))
+                }
+            }
+            .store(in: &messageProcessingObservers)
         connection.stateUpdateHandler = { [weak self, unowned connection] state in
             switch state {
             case .setup:
@@ -82,7 +111,7 @@ final class DeviceTransferClient {
             case .failed(let error):
                 Logger.general.warn(category: "DeviceTransferClient", message: "Failed: \(error)")
                 if let self {
-                    self.stop(reason: .exception(.failed(error)))
+                    self.fail(error: .connectionFailed(error))
                 }
             case .cancelled:
                 Logger.general.info(category: "DeviceTransferClient", message: "Connection cancelled")
@@ -93,22 +122,22 @@ final class DeviceTransferClient {
         connection.start(queue: queue.dispatchQueue)
     }
     
-    private func stop(reason: DeviceTransferClosedReason) {
+    private func fail(error: DeviceTransferError) {
         assert(queue.isCurrent)
-        Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(reason) Processed: \(processedCount) Total: \(totalCount)")
+        Logger.general.info(category: "DeviceTransferClient", message: "Failed: \(error), progress: \(progress)")
         DispatchQueue.main.sync {
             self.statisticsTimer?.invalidate()
         }
         connection.cancel()
-        switch reason {
-        case .finished:
-            state = .closed(.finished)
-        case .exception(let error):
-            state = .closed(.exception(error))
-        }
+        messageProcessingObservers.forEach { $0.cancel() }
+        messageProcessingObservers.removeAll()
+        messageProcessor.cancel()
+        try? FileManager.default.removeItem(at: cacheContainerURL)
+        Logger.general.info(category: "DeviceTransferClient", message: "Cache container removed")
+        state = .failed(error)
     }
     
-    private func startUpdatingProgressAndSpeed() {
+    private func startUpdatingStatistics() {
         assert(Queue.main.isCurrent)
         statisticsTimer?.invalidate()
         statisticsTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
@@ -118,12 +147,7 @@ final class DeviceTransferClient {
                 return
             }
             let speed = self.speedInspector.drain()
-            let progress: Double
-            if let totalCount = self.totalCount {
-                progress = Double(self.processedCount) * 100 / Double(totalCount)
-            } else {
-                progress = 0
-            }
+            let progress = self.progress.fractionCompleted
             self.queue.async {
                 guard case .transfer = self.state else {
                     DispatchQueue.main.sync(execute: timer.invalidate)
@@ -154,7 +178,9 @@ extension DeviceTransferClient {
                 let message = contentContext?.protocolMetadata(definition: DeviceTransferProtocol.definition) as? NWProtocolFramer.Message
             else {
                 if isComplete {
-                    self.stop(reason: .exception(.remoteComplete))
+                    if case .transfer = self.state {
+                        self.fail(error: .remoteComplete)
+                    }
                     Logger.general.warn(category: "DeviceTransferClient", message: "Remote closed")
                 }
                 return
@@ -191,7 +217,7 @@ extension DeviceTransferClient {
         let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
-            stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
+            fail(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
             return
         }
         
@@ -209,12 +235,11 @@ extension DeviceTransferClient {
             Logger.general.info(category: "DeviceTransferClient", message: "Total count: \(count)")
             self.state = .transfer(progress: 0, speed: "")
             DispatchQueue.main.async {
-                self.totalCount = count
-                self.startUpdatingProgressAndSpeed()
+                self.progress.totalUnitCount = count
+                self.startUpdatingStatistics()
             }
         case .finish:
             Logger.general.info(category: "DeviceTransferClient", message: "Received finish command")
-            ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
             do {
                 let command = DeviceTransferCommand(action: .finish)
                 let content = try DeviceTransferProtocol.output(command: command, key: key)
@@ -223,7 +248,29 @@ extension DeviceTransferClient {
             } catch {
                 Logger.general.error(category: "DeviceTransferClient", message: "Failed to finish command: \(error)")
             }
-            self.stop(reason: .finished)
+            messageProcessor.$progress
+                .receive(on: queue.dispatchQueue)
+                .sink { progress in
+                    self.state = .importing(progress: progress)
+                }
+                .store(in: &messageProcessingObservers)
+            messageProcessor.$isFinished
+                .receive(on: queue.dispatchQueue)
+                .sink { isFinished in
+                    guard isFinished else {
+                        return
+                    }
+                    Logger.general.info(category: "DeviceTransferClient", message: "Import finished")
+                    ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
+                    try? FileManager.default.removeItem(at: self.cacheContainerURL)
+                    Logger.general.info(category: "DeviceTransferClient", message: "Cache container removed")
+                    DispatchQueue.main.sync {
+                        self.statisticsTimer?.invalidate()
+                    }
+                    self.state = .finished
+                }
+                .store(in: &messageProcessingObservers)
+            messageProcessor.finishProcessing()
         default:
             break
         }
@@ -233,7 +280,7 @@ extension DeviceTransferClient {
         assert(queue.isCurrent)
         DispatchQueue.main.sync {
             speedInspector.add(byteCount: content.count)
-            processedCount += 1
+            progress.completedUnitCount += 1
         }
         
         let firstHMACIndex = content.endIndex.advanced(by: -DeviceTransferProtocol.hmacDataCount)
@@ -241,74 +288,14 @@ extension DeviceTransferClient {
         let localHMAC = HMACSHA256.mac(for: encryptedData, using: key.hmac)
         let remoteHMAC = content[firstHMACIndex...]
         guard localHMAC == remoteHMAC else {
-            stop(reason: .exception(.mismatchedHMAC(local: localHMAC, remote: remoteHMAC)))
+            fail(error: .mismatchedHMAC(local: localHMAC, remote: remoteHMAC))
             return
         }
-        
-        let decryptedData: Data
         do {
-            decryptedData = try AESCryptor.decrypt(encryptedData, with: key.aes)
+            try messageProcessor.process(encryptedMessage: encryptedData)
         } catch {
-            Logger.general.error(category: "DeviceTransferClient", message: "Unable to decrypt: \(error)")
+            Logger.general.error(category: "DeviceTransferClient", message: "Handle message: \(error)")
             return
-        }
-        
-        do {
-            struct TypeWrapper: Decodable {
-                let type: DeviceTransferRecordType
-            }
-            
-            let decoder = JSONDecoder.default
-            let wrapper = try decoder.decode(TypeWrapper.self, from: decryptedData)
-            switch wrapper.type {
-            case .conversation:
-                let conversation = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferConversation>.self, from: decryptedData).data
-                ConversationDAO.shared.save(conversation: conversation.toConversation(from: remotePlatform))
-            case .participant:
-                let participant = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferParticipant>.self, from: decryptedData).data
-                ParticipantDAO.shared.save(participant: participant.toParticipant())
-            case .user:
-                let user = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferUser>.self, from: decryptedData).data
-                UserDAO.shared.save(user: user.toUser())
-            case .app:
-                let app = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferApp>.self, from: decryptedData).data
-                AppDAO.shared.save(app: app.toApp())
-            case .asset:
-                let asset = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferAsset>.self, from: decryptedData).data
-                AssetDAO.shared.save(asset: asset.toAsset())
-            case .snapshot:
-                let snapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSnapshot>.self, from: decryptedData).data
-                SnapshotDAO.shared.save(snapshot: snapshot.toSnapshot())
-            case .sticker:
-                let sticker = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSticker>.self, from: decryptedData).data
-                StickerDAO.shared.save(sticker: sticker.toSticker())
-            case .pinMessage:
-                let pinMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferPinMessage>.self, from: decryptedData).data
-                PinMessageDAO.shared.save(pinMessage: pinMessage.toPinMessage())
-            case .transcriptMessage:
-                let transcriptMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferTranscriptMessage>.self, from: decryptedData).data
-                TranscriptMessageDAO.shared.save(transcriptMessage: transcriptMessage.toTranscriptMessage())
-            case .message:
-                let message = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessage>.self, from: decryptedData).data
-                if MessageCategory.isLegal(category: message.category) {
-                    MessageDAO.shared.save(message: message.toMessage())
-                } else {
-                    Logger.general.warn(category: "DeviceTransferClient", message: "Message is illegal: \(message)")
-                }
-            case .messageMention:
-                let messageMention = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferMessageMention>.self, from: decryptedData).data
-                if let mention = messageMention.toMessageMention() {
-                    MessageMentionDAO.shared.save(messageMention: mention)
-                } else {
-                    Logger.general.warn(category: "DeviceTransferClient", message: "Message Mention does not exist: \(messageMention)")
-                }
-            case .expiredMessage:
-                let expiredMessage = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferExpiredMessage>.self, from: decryptedData).data
-                ExpiredMessageDAO.shared.save(expiredMessage: expiredMessage.toExpiredMessage())
-            }
-        } catch {
-            let content = String(data: decryptedData, encoding: .utf8) ?? "Data(\(decryptedData.count))"
-            Logger.general.error(category: "DeviceTransferClient", message: "Error: \(error) Content: \(content)")
         }
     }
     
@@ -324,12 +311,18 @@ extension DeviceTransferClient {
                 isReceivingNewFile = false
             } else {
                 assertionFailure("Should be closed by the end of previous call")
-                currentStream.close()
-                stream = DeviceTransferFileStream(context: context, key: key)
+                do {
+                    try currentStream.close()
+                } catch let error as DeviceTransferError {
+                    fail(error: error)
+                } catch {
+                    fail(error: .receiveFile(error))
+                }
+                stream = .init(context: context, key: key, containerURL: cacheContainerURL)
                 isReceivingNewFile = true
             }
         } else {
-            stream = DeviceTransferFileStream(context: context, key: key)
+            stream = .init(context: context, key: key, containerURL: cacheContainerURL)
             isReceivingNewFile = true
         }
         if isReceivingNewFile {
@@ -339,7 +332,7 @@ extension DeviceTransferClient {
         DispatchQueue.main.sync {
             speedInspector.add(byteCount: content.count)
             if isReceivingNewFile {
-                processedCount += 1
+                progress.completedUnitCount += 1
             }
         }
         
@@ -347,11 +340,18 @@ extension DeviceTransferClient {
             try stream.write(data: content)
         } catch {
             Logger.general.error(category: "DeviceTransferClient", message: "Failed to write: \(error)")
-            stop(reason: .exception(.receiveFile(error)))
+            fail(error: .receiveFile(error))
         }
         if context.remainingLength == 0 {
-            stream.close()
+            do {
+                try stream.close()
+            } catch let error as DeviceTransferError {
+                fail(error: error)
+            } catch {
+                fail(error: .receiveFile(error))
+            }
             self.fileStream = nil
+            messageProcessor.reportFileReceived()
         }
     }
     

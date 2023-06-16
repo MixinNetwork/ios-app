@@ -119,17 +119,24 @@ extension RestoreFromDesktopViewController {
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = true
         case let .push(context):
-            let client = DeviceTransferClient(hostname: context.hostname,
-                                              port: context.port,
-                                              code: context.code,
-                                              key: context.key,
-                                              remotePlatform: command.platform)
-            stateObserver = client.$state
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] state in
-                    self?.stateDidChange(client: client, state: state)
+            do {
+                let client = try DeviceTransferClient(hostname: context.hostname,
+                                                      port: context.port,
+                                                      code: context.code,
+                                                      key: context.key,
+                                                      remotePlatform: command.platform)
+                stateObserver = client.$state
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] state in
+                        self?.stateDidChange(client: client, state: state)
+                    }
+                client.start()
+            } catch {
+                Logger.general.error(category: "RestoreFromDesktop", message: "Unable to init client: \(error)")
+                alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
+                    self.navigationController?.popViewController(animated: true)
                 }
-            client.start()
+            }
         default:
             Logger.general.info(category: "RestoreFromDesktop", message: "Invalid command")
             alert(R.string.localizable.connection_establishment_failed(), message: nil) { _ in
@@ -140,7 +147,7 @@ extension RestoreFromDesktopViewController {
     
     private func stateDidChange(client: DeviceTransferClient, state: DeviceTransferClient.State) {
         switch state {
-        case .idle:
+        case .idle, .importing, .finished:
             break
         case .transfer:
             stateObserver?.cancel()
@@ -148,14 +155,12 @@ extension RestoreFromDesktopViewController {
             tableView.isUserInteractionEnabled = true
             let progress = DeviceTransferProgressViewController(connection: .client(client, .desktop))
             navigationController?.pushViewController(progress, animated: true)
-        case let .closed(reason):
+        case let .failed(error):
             dataSource.replaceSection(at: 0, with: section, animation: .automatic)
             tableView.isUserInteractionEnabled = true
             stateObserver?.cancel()
-            if case let .exception(error) = reason {
-                alert(R.string.localizable.connection_establishment_failed(), message: error.localizedDescription) { _ in
-                    self.navigationController?.popViewController(animated: true)
-                }
+            alert(R.string.localizable.connection_establishment_failed(), message: error.localizedDescription) { _ in
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }

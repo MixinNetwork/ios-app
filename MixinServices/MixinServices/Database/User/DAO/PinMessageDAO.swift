@@ -122,8 +122,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func pinMessagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM pin_messages")
+    public func pinMessagesCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM pin_messages")
         return count ?? 0
     }
     

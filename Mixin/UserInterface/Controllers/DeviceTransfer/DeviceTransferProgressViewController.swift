@@ -164,7 +164,18 @@ extension DeviceTransferProgressViewController {
         case let .transfer(progress, speed):
             updateTitleLabel(with: progress, speed: speed)
         case let .closed(reason):
-            handleConnectionClosing(reason: reason)
+            switch reason {
+            case .finished:
+                let hint = R.string.localizable.transfer_completed()
+                titleLabel.text = hint
+                progressView.progress = 1
+                transferSucceeded(hint: hint)
+                speedLabel.isHidden = true
+                stateObserver?.cancel()
+                Logger.general.info(category: "DeviceTransferProgress", message: "Transfer succeeded")
+            case .exception(let error):
+                handleConnectionClosing(error: error)
+            }
         }
     }
     
@@ -174,13 +185,17 @@ extension DeviceTransferProgressViewController {
             Logger.general.warn(category: "DeviceTransferProgress", message: "Invalid state: \(state)")
         case let .transfer(progress, speed):
             updateTitleLabel(with: progress, speed: speed)
-        case let .closed(reason):
-            handleConnectionClosing(reason: reason)
+        case let .failed(error):
+            handleConnectionClosing(error: error)
+        case let .importing(progress):
+            updateTitleLabel(with: progress)
+        case .finished:
+            importFinished()
         }
     }
     
-    private func updateTitleLabel(with transferProgress: Double, speed: String) {
-        let progress = String(format: "%.2f", transferProgress)
+    private func updateTitleLabel(with transferProgress: Float, speed: String) {
+        let progress = String(format: "%.2f", transferProgress * 100)
         switch connection {
         case .server:
             titleLabel.text = R.string.localizable.transferring_chat_progress(progress)
@@ -189,36 +204,33 @@ extension DeviceTransferProgressViewController {
         case .cloud:
             break
         }
-        progressView.progress = Float(transferProgress / 100)
+        progressView.progress = transferProgress
         speedLabel.text = speed
     }
     
-    private func handleConnectionClosing(reason: DeviceTransferClosedReason) {
-        switch reason {
-        case .finished:
-            let hint: String
-            switch connection {
-            case .server:
-                hint = R.string.localizable.transfer_completed()
-            case .client:
-                hint = R.string.localizable.restore_completed()
-            case .cloud:
-                return
-            }
-            titleLabel.text = hint
-            progressView.progress = 1
-            transferSucceeded(hint: hint)
-            speedLabel.isHidden = true
-            stateObserver?.cancel()
-            Logger.general.info(category: "DeviceTransferProgress", message: "Transfer succeeded")
-        case .exception(let error):
-            let hint = R.string.localizable.transfer_failed()
-            titleLabel.text = hint
-            transferFailed(hint: hint)
-            speedLabel.isHidden = true
-            stateObserver?.cancel()
-            Logger.general.error(category: "DeviceTransferProgress", message: "Transfer failed: \(error)")
-        }
+    private func updateTitleLabel(with importProgress: Float) {
+        tipLabel.text = R.string.localizable.keep_running_foreground()
+        titleLabel.text = R.string.localizable.importing_chat_progress(String(format: "%.2f", importProgress * 100))
+        progressView.progress = importProgress
+        speedLabel.isHidden = true
+    }
+    
+    private func handleConnectionClosing(error: DeviceTransferError) {
+        let hint = R.string.localizable.transfer_failed()
+        titleLabel.text = hint
+        transferFailed(hint: hint)
+        speedLabel.isHidden = true
+        stateObserver?.cancel()
+        Logger.general.error(category: "DeviceTransferProgress", message: "Transfer failed: \(error)")
+    }
+    
+    private func importFinished() {
+        let hint = R.string.localizable.restore_completed()
+        titleLabel.text = hint
+        progressView.progress = 1
+        transferSucceeded(hint: hint)
+        stateObserver?.cancel()
+        Logger.general.info(category: "DeviceTransferProgress", message: "Transfer succeeded")
     }
     
 }

@@ -663,6 +663,7 @@
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
+		7CE7ADD72A24983800A6259F /* DeviceTransferMessageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE7ADD62A24983800A6259F /* DeviceTransferMessageProcessor.swift */; };
 		7CEB735429DB24F3006FB5B2 /* RestoreChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB735229DB24F3006FB5B2 /* RestoreChatViewController.swift */; };
 		7CEB735529DB24F3006FB5B2 /* RestoreChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */; };
 		7CEB735829DB272F006FB5B2 /* RestoreChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */; };
@@ -697,7 +698,6 @@
 		940BAE222629741C00FFF753 /* AuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */; };
 		94149B432A17B4D5003E9E1A /* NetworkSpeedConditioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94149B422A17B4D5003E9E1A /* NetworkSpeedConditioner.swift */; };
 		94149B482A190889003E9E1A /* DeviceTransferRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94149B472A190889003E9E1A /* DeviceTransferRecord.swift */; };
-		94149B582A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94149B572A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift */; };
 		9416548325CD2D9A007E76D0 /* OggOpusRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */; };
 		9416548B25CD7190007E76D0 /* AudioMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548A25CD7190007E76D0 /* AudioMetadata.swift */; };
 		941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */; };
@@ -719,6 +719,7 @@
 		94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF72862F302009C9147 /* libopusenc.xcframework */; };
 		94341C002863530B009C9147 /* libogg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BFF2862F454009C9147 /* libogg.xcframework */; };
 		9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438252625EE697300709B7D /* CacheableAssetFileManager.swift */; };
+		9439116A2A39EA4300CF6DC7 /* DeviceTransferProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943911692A39EA4300CF6DC7 /* DeviceTransferProgress.swift */; };
 		94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */; };
 		94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */; };
 		94396F2A29EBE52400A57833 /* DeviceTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2929EBE52400A57833 /* DeviceTransferClient.swift */; };
@@ -1736,6 +1737,7 @@
 		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
+		7CE7ADD62A24983800A6259F /* DeviceTransferMessageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferMessageProcessor.swift; sourceTree = "<group>"; };
 		7CEB735229DB24F3006FB5B2 /* RestoreChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreChatViewController.swift; sourceTree = "<group>"; };
 		7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RestoreChatView.xib; sourceTree = "<group>"; };
 		7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreChatTableViewCell.swift; sourceTree = "<group>"; };
@@ -1773,7 +1775,6 @@
 		940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsContentViewController.swift; sourceTree = "<group>"; };
 		94149B422A17B4D5003E9E1A /* NetworkSpeedConditioner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSpeedConditioner.swift; sourceTree = "<group>"; };
 		94149B472A190889003E9E1A /* DeviceTransferRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferRecord.swift; sourceTree = "<group>"; };
-		94149B572A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClosedReason.swift; sourceTree = "<group>"; };
 		9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusRecorder.swift; sourceTree = "<group>"; };
 		9416548A25CD7190007E76D0 /* AudioMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMetadata.swift; sourceTree = "<group>"; };
 		941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionClientPriority.swift; sourceTree = "<group>"; };
@@ -1796,6 +1797,7 @@
 		94341BF72862F302009C9147 /* libopusenc.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusenc.xcframework; sourceTree = "<group>"; };
 		94341BFF2862F454009C9147 /* libogg.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libogg.xcframework; sourceTree = "<group>"; };
 		9438252625EE697300709B7D /* CacheableAssetFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileManager.swift; sourceTree = "<group>"; };
+		943911692A39EA4300CF6DC7 /* DeviceTransferProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferProgress.swift; sourceTree = "<group>"; };
 		94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferProtocol.swift; sourceTree = "<group>"; };
 		94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWParameters+DeviceTransfer.swift"; sourceTree = "<group>"; };
 		94396F2929EBE52400A57833 /* DeviceTransferClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClient.swift; sourceTree = "<group>"; };
@@ -2762,10 +2764,10 @@
 				7CEB735A29DBB6F3006FB5B2 /* TransferMessage */,
 				7C140F5829E19C9D00F05506 /* Metadata */,
 				94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */,
-				94149B572A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift */,
 				94E1D44D29E9393C00511267 /* DeviceTransferServer.swift */,
 				940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */,
 				94396F2929EBE52400A57833 /* DeviceTransferClient.swift */,
+				7CE7ADD62A24983800A6259F /* DeviceTransferMessageProcessor.swift */,
 				94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */,
 				94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */,
 				94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */,
@@ -2869,6 +2871,7 @@
 				7C07A17C29D8FDBC00D4835C /* NetworkInterface.swift */,
 				940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */,
 				94149B422A17B4D5003E9E1A /* NetworkSpeedConditioner.swift */,
+				943911692A39EA4300CF6DC7 /* DeviceTransferProgress.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -4700,7 +4703,6 @@
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,
 				DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */,
 				94DF7D5928DC0F17006E415B /* Acknowledgement.swift in Sources */,
-				94149B582A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift in Sources */,
 				7C427BC428373F8000FFDE12 /* Wallpaper.swift in Sources */,
 				E090B90F23B0B27F0012C7E9 /* ConversationDAO+Search.swift in Sources */,
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
@@ -4771,6 +4773,7 @@
 				7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
+				7CE7ADD72A24983800A6259F /* DeviceTransferMessageProcessor.swift in Sources */,
 				7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */,
 				7CEB736C29DBD1C0006FB5B2 /* DeviceTransferMessage.swift in Sources */,
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
@@ -5064,6 +5067,7 @@
 				9424C64B259246B600FFDAE0 /* main.swift in Sources */,
 				945278982626BCD600023A6C /* HighlightableButton.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
+				9439116A2A39EA4300CF6DC7 /* DeviceTransferProgress.swift in Sources */,
 				7CEB736429DBCBE5006FB5B2 /* DeviceTransferSnapshot.swift in Sources */,
 				7B59535122672D3500D59DB4 /* TopResultCell.swift in Sources */,
 				7CEB736629DBCD6A006FB5B2 /* DeviceTransferSticker.swift in Sources */,

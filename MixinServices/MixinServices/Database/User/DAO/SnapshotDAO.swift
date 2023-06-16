@@ -125,8 +125,8 @@ public final class SnapshotDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func snapshotsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM snapshots")
+    public func snapshotsCount() -> Int64 {
+        let count: Int64? = db.select(with: "SELECT COUNT(*) FROM snapshots")
         return count ?? 0
     }
     

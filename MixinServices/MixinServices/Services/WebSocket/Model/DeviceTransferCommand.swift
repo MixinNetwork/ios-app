@@ -25,9 +25,9 @@ public struct DeviceTransferCommand {
     public enum Action {
         case pull
         case push(PushContext)
-        case start(Int)
+        case start(Int64)
         case connect(code: UInt16, userID: String)
-        case progress(Double)
+        case progress(Float) // `progress` is between 0.0 and 1.0, encoded to / decoded from between 0.0 and 100.0
         case cancel
         case finish
     }
@@ -115,15 +115,15 @@ extension DeviceTransferCommand: Codable {
                                           userID: userID)
                 return .push(context)
             case ActionName.start:
-                let count = try container.decode(Int.self, forKey: .total)
+                let count = try container.decode(Int64.self, forKey: .total)
                 return .start(count)
             case ActionName.connect:
                 let code = try container.decode(UInt16.self, forKey: .code)
                 let userID = try container.decode(String.self, forKey: .userID)
                 return .connect(code: code, userID: userID)
             case ActionName.progress:
-                let progress = try container.decode(Double.self, forKey: .progress)
-                return .progress(progress)
+                let progress = try container.decode(Float.self, forKey: .progress)
+                return .progress(progress / 100)
             case ActionName.cancel:
                 return .cancel
             case ActionName.finish:
@@ -160,7 +160,7 @@ extension DeviceTransferCommand: Codable {
             try container.encode(userID, forKey: .userID)
         case let .progress(progress):
             try container.encode(ActionName.progress, forKey: .action)
-            try container.encode(progress, forKey: .progress)
+            try container.encode(progress * 100, forKey: .progress)
         case .cancel:
             try container.encode(ActionName.cancel, forKey: .action)
         case .finish:

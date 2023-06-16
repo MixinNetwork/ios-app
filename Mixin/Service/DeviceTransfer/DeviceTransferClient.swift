@@ -251,18 +251,23 @@ extension DeviceTransferClient {
             messageProcessor.$progress
                 .receive(on: queue.dispatchQueue)
                 .sink { progress in
-                    if progress == 1 {
-                        Logger.general.info(category: "DeviceTransferClient", message: "Import finished")
-                        ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
-                        try? FileManager.default.removeItem(at: self.cacheContainerURL)
-                        Logger.general.info(category: "DeviceTransferClient", message: "Cache container removed")
-                        DispatchQueue.main.sync {
-                            self.statisticsTimer?.invalidate()
-                        }
-                        self.state = .finished
-                    } else {
-                        self.state = .importing(progress: progress)
+                    self.state = .importing(progress: progress)
+                }
+                .store(in: &messageProcessingObservers)
+            messageProcessor.$isFinished
+                .receive(on: queue.dispatchQueue)
+                .sink { isFinished in
+                    guard isFinished else {
+                        return
                     }
+                    Logger.general.info(category: "DeviceTransferClient", message: "Import finished")
+                    ConversationDAO.shared.updateLastMessageIdAndCreatedAt()
+                    try? FileManager.default.removeItem(at: self.cacheContainerURL)
+                    Logger.general.info(category: "DeviceTransferClient", message: "Cache container removed")
+                    DispatchQueue.main.sync {
+                        self.statisticsTimer?.invalidate()
+                    }
+                    self.state = .finished
                 }
                 .store(in: &messageProcessingObservers)
             messageProcessor.finishProcessing()

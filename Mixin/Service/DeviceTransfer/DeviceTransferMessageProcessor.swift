@@ -44,6 +44,7 @@ final class DeviceTransferMessageProcessor {
     
     @Published private(set) var progress: Float = 0
     @Published private(set) var processingError: ProcessingError?
+    @Published private(set) var isFinished = false
     
     private let key: Data
     private let remotePlatform: DeviceTransferPlatform
@@ -139,7 +140,9 @@ final class DeviceTransferMessageProcessor {
             self.savePendingMessages()
             self.processFiles()
             Logger.general.info(category: "DeviceTransferMessageProcessor", message: "Processing finished with progress: \(self.processingProgress)")
-            self.progress = 1
+            if !self.isCancelled && self.processingError == nil {
+                self.isFinished = true
+            }
         }
     }
     

@@ -195,7 +195,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
             for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
                 let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
-                let sql = "SELECT COUNT(*) FROM participants WHERE conversation_id in ('\(ids)')"
+                let sql = "SELECT COUNT(*) FROM participants WHERE conversation_id IN ('\(ids)')"
                 let count: Int? = db.select(with: sql)
                 totalCount += (count ?? 0)
             }

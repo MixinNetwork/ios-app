@@ -129,7 +129,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
                 let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
-                var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id in ('\(ids)')"
+                var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id IN ('\(ids)')"
                 if let rowID {
                     sql += " AND ROWID >= \(rowID)"
                 }

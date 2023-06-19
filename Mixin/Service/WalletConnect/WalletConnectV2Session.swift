@@ -15,7 +15,9 @@ final class WalletConnectV2Session {
     
     enum Method: String, CaseIterable {
         case personalSign = "personal_sign"
+        case ethSign = "eth_sign"
         case ethSignTypedData = "eth_signTypedData"
+        case ethSignTransaction = "eth_signTransaction"
         case ethSendTransaction = "eth_sendTransaction"
     }
     
@@ -62,8 +64,19 @@ extension WalletConnectV2Session: WalletConnectSession {
         switch Method(rawValue: request.method) {
         case .personalSign:
             requestPersonalSign(with: request)
+        case .ethSign:
+            requestETHSign(with: request)
         case .ethSignTypedData:
             requestETHSignTypedData(with: request)
+        case .ethSignTransaction:
+            WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
+                                                         message: R.string.localizable.method_not_supported(request.method))
+            Logger.walletConnect.warn(category: "WalletConnectV2Session", message: "eth_signTransaction rejected")
+            Task {
+                try await Web3Wallet.instance.respond(topic: request.topic,
+                                                      requestId: request.id,
+                                                      response: .error(.init(code: 0, message: "Unsupported method")))
+            }
         case .ethSendTransaction:
             requestSendTransaction(with: request)
         case .none:
@@ -91,7 +104,32 @@ extension WalletConnectV2Session {
             }
             let address = params[1]
             let messageString = params[0]
-            let message = try WalletConnectMessage.personalSign(string: messageString)
+            let message = try WalletConnectMessage.message(string: messageString)
+            return (message: message, address: address)
+        } reject: { reason in
+            Task {
+                let error = JSONRPCError(code: 0, message: reason.description)
+                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+            }
+        } approve: { (message, account) in
+            let signature = try account.signMessage(message: message.signable)
+            let response = RPCResult.response(AnyCodable(signature))
+            Task {
+                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: response)
+            }
+        }
+    }
+    
+    @MainActor
+    private func requestETHSign(with request: Request) {
+        requestSigning(with: request) { request in
+            let params = try request.params.get([String].self)
+            guard params.count == 2 else {
+                throw Error.invalidParameters
+            }
+            let address = params[0]
+            let messageString = params[1]
+            let message = try WalletConnectMessage.message(string: messageString)
             return (message: message, address: address)
         } reject: { reason in
             Task {

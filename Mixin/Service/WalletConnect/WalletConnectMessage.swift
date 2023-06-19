@@ -15,7 +15,7 @@ struct WalletConnectMessage<Signable> {
 
 extension WalletConnectMessage where Signable == Any {
     
-    static func personalSign(string: String) throws -> WalletConnectMessage<Data> {
+    static func message(string: String) throws -> WalletConnectMessage<Data> {
         guard let decoded = Data(hex: string) else {
             throw Error.hexDecoding
         }

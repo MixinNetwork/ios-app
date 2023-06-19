@@ -165,7 +165,7 @@ extension WalletConnectV1Session {
         requestSigning(with: request) { request in
             let address = try request.parameter(of: String.self, at: 1)
             let messageString = try request.parameter(of: String.self, at: 0)
-            let message = try WalletConnectMessage.personalSign(string: messageString)
+            let message = try WalletConnectMessage.message(string: messageString)
             return (message: message, address: address)
         } reject: { _ in
             self.server.send(.reject(request))

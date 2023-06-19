@@ -304,7 +304,7 @@
 "deposit_tip_eth" = "Этот адрес поддерживает все токены ERC-20, такие как ETH, XIN и т. д.";
 "deposit_tip_trx" = "Этот адрес поддерживает все токены TRC-10 и TRC-20.";
 "deselect_all" = "Deselect All";
-"designated_time_frame" = "Designated time frame";
+"designated_time_period" = "Designated time period";
 "desktop_on_hint" = "Вы вошли в свой рабочий стол";
 "desktop_upgrade" = "Пожалуйста, обновите Mixin Messenger Desktop до последней версии.";
 "detect_qr_tip" = "Обнаружен QR-код Mixin, нажмите, чтобы распознать";

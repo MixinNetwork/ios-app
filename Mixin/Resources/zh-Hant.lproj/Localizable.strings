@@ -304,7 +304,7 @@
 "deposit_tip_eth" = "支援所有符合 ERC-20 標準的代幣，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支援 TRX 和所有符合 TRC-10、TRC-20 標準的代幣。";
 "deselect_all" = "取消所有選擇";
-"designated_time_frame" = "指定時間段";
+"designated_time_period" = "指定時間段";
 "desktop_on_hint" = "桌面版已登入。";
 "desktop_upgrade" = "請升級 Mixin Messenger 桌面端至最新版！";
 "detect_qr_tip" = "檢測到一個 Mixin 二維碼，點選識別";

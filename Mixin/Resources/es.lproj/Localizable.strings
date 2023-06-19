@@ -304,7 +304,7 @@
 "deposit_tip_eth" = "Esta dirección admite todos los tokens ERC-20, como ETH, XIN, etc.";
 "deposit_tip_trx" = "Esta dirección admite todos los tokens TRC-10 y TRC-20.";
 "deselect_all" = "Deselect All";
-"designated_time_frame" = "Designated time frame";
+"designated_time_period" = "Designated time period";
 "desktop_on_hint" = "Tienes tu escritorio conectado";
 "desktop_upgrade" = "Actualiza Mixin Messenger Desktop a la última versión.";
 "detect_qr_tip" = "Se ha detectado un código QR de Mixin, toca para reconocer";

@@ -304,7 +304,7 @@
 "deposit_tip_eth" = "このアドレスはETHやXINなど全てのERC-20トークンをサポートしています";
 "deposit_tip_trx" = "このアドレスは全てのTRC-10/TRC-20トークンをサポートしています";
 "deselect_all" = "Deselect All";
-"designated_time_frame" = "Designated time frame";
+"designated_time_period" = "Designated time period";
 "desktop_on_hint" = "デスクトップにログインしています";
 "desktop_upgrade" = "デスクトップ版Mixinを最新バージョンにアップデートしてください";
 "detect_qr_tip" = "Mixin QRコードを検出しました、タップしてアクセスします";

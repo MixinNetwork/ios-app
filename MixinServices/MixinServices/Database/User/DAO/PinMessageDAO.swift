@@ -119,7 +119,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             let ids = conversationIDs.joined(separator: "', '")
             sql += " AND conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [rowID, limit])
     }
     
@@ -148,7 +148,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
     }
     
     public func messageRowID(createdAt: String) -> Int? {
-        db.select(with: "SELECT ROWID FROM pin_messages WHERE created_at >= ? ORDER BY ROWID LIMIT 1", arguments: [createdAt])
+        db.select(with: "SELECT ROWID FROM pin_messages WHERE created_at >= ? ORDER BY ROWID ASC LIMIT 1", arguments: [createdAt])
     }
     
     public func messageRowID(messageID: String) -> Int? {

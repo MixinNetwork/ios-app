@@ -40,7 +40,7 @@ public final class AppDAO: UserDatabaseDAO {
         if let appId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM apps WHERE app_id = '\(appId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

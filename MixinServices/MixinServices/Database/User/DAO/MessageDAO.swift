@@ -986,12 +986,12 @@ extension MessageDAO {
             let ids = conversationIDs.joined(separator: "', '")
             sql += " AND conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [rowID, limit])
     }
     
     public func messageRowID(createdAt: String) -> Int? {
-        db.select(with: "SELECT ROWID FROM messages WHERE created_at >= ? ORDER BY ROWID LIMIT 1", arguments: [createdAt])
+        db.select(with: "SELECT ROWID FROM messages WHERE created_at >= ? ORDER BY ROWID ASC LIMIT 1", arguments: [createdAt])
     }
     
     public func messageRowID(messageID: String) -> Int? {

@@ -168,7 +168,7 @@ public final class StickerDAO: UserDatabaseDAO {
         if let stickerId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM stickers WHERE sticker_id = '\(stickerId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

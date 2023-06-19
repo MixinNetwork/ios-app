@@ -226,7 +226,7 @@ public final class UserDAO: UserDatabaseDAO {
         if let userId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM users WHERE user_id = '\(userId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

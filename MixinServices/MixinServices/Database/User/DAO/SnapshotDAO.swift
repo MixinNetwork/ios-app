@@ -121,7 +121,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
         if let snapshotId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM snapshots WHERE snapshot_id = '\(snapshotId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

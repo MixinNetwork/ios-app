@@ -25,7 +25,7 @@ public final class MessageMentionDAO: UserDatabaseDAO {
             let ids = conversationIDs.joined(separator: "', '")
             sql += " conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

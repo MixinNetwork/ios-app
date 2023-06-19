@@ -109,7 +109,7 @@ public final class AssetDAO: UserDatabaseDAO {
         if let assetId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM assets WHERE asset_id = '\(assetId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

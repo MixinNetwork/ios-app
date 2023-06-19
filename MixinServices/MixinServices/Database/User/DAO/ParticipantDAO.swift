@@ -185,7 +185,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
             sql += conversationId == nil ? " WHERE" : " AND"
             sql += " conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY ROWID ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

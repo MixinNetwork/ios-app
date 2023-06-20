@@ -187,7 +187,7 @@ extension DeviceTransferConversationSelectionViewController: ContainerViewContro
         if selections.count == models.count {
             filter.conversation = .all
         } else {
-            filter.conversation = .designated(selections.map(\.conversationId))
+            filter.conversation = .designated(Set(selections.map(\.conversationId)))
         }
         navigationController?.popViewController(animated: true)
     }

@@ -8,7 +8,7 @@ class DeviceTransferFilter {
     enum Conversation {
         
         case all
-        case designated(Array<String>)
+        case designated(Set<String>)
         
         var title: String {
             switch self {
@@ -28,7 +28,7 @@ class DeviceTransferFilter {
             case .all:
                 return nil
             case .designated(let ids):
-                return ids
+                return Array(ids)
             }
         }
         
@@ -37,7 +37,7 @@ class DeviceTransferFilter {
             case .all:
                 return nil
             case .designated(let ids):
-                return ids.count > UserDatabaseDAO.strideForDeviceTransfer ? nil : ids
+                return ids.count > UserDatabaseDAO.strideForDeviceTransfer ? nil : Array(ids)
             }
         }
         

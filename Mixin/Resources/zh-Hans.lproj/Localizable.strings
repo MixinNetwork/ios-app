@@ -845,6 +845,8 @@
 "stop_playing" = "停止播放";
 "stop_playing_this_list" = "确定要停止并关闭播放列表？";
 "stop_syncing_hint" = "确定中止聊天记录同步吗？";
+"storage_almost_full" = "存储空间几乎已满";
+"storage_almost_full_tip" = "您可以通过删除大的或已被多次转发的项目来释放存储空间。";
 "storage_usage" = "储存空间";
 "stranger_hint" = "对方不是你的联系人";
 "successful" = "成功";
@@ -962,6 +964,7 @@
 "videos" = "视频";
 "view_authorization" = "查看授权";
 "view_emergency_contact" = "查看紧急联系人";
+"view_storage" = "查看存储空间";
 "view_wallet" = "查看钱包";
 "voice_call_cancelled" = "对方已取消语音通话";
 "voice_call_has_been_declined" = "已拒绝通话";

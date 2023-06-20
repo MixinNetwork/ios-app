@@ -845,6 +845,8 @@
 "stop_playing" = "再生を止める";
 "stop_playing_this_list" = "再生を止めて、プレイリストを閉じますか？";
 "stop_syncing_hint" = "Do you want to stop syncing chat history?";
+"storage_almost_full" = "Storage almost full";
+"storage_almost_full_tip" = "You can free up storage by deleting items that are large or have been forwarded many times.";
 "storage_usage" = "ストレージ使用率";
 "stranger_hint" = "連絡先にない相手からのメッセージです";
 "successful" = "Successful";
@@ -962,6 +964,7 @@
 "videos" = "動画";
 "view_authorization" = "閲覧権限";
 "view_emergency_contact" = "緊急連絡先を確認";
+"view_storage" = "View Storage";
 "view_wallet" = "ウォレットを確認";
 "voice_call_cancelled" = "グループ通話がキャンセルされました";
 "voice_call_has_been_declined" = "権限不足です";

@@ -40,7 +40,6 @@ extension DataAndStorageSettingsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
-            
             func setAutoDownload(_ value: AutoDownload) {
                 switch indexPath.row {
                 case 0:
@@ -52,7 +51,6 @@ extension DataAndStorageSettingsViewController: UITableViewDelegate {
                 }
                 dataSource.row(at: indexPath).subtitle = value.description
             }
-            
             let message = dataSource.row(at: indexPath).title
             let alert = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: R.string.localizable.never_auto_download(), style: .default, handler: { (_) in
@@ -67,7 +65,7 @@ extension DataAndStorageSettingsViewController: UITableViewDelegate {
             alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
         } else {
-            let vc = StorageUsageViewController.instance()
+            let vc = StorageUsageViewController.instance(insufficientStorage: false)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

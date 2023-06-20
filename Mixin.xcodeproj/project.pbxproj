@@ -568,6 +568,7 @@
 		7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */; };
 		7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */; };
 		7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */; };
+		7C3CECCD29EE716D00442A6D /* InsufficientStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3CECCC29EE716D00442A6D /* InsufficientStorageViewController.swift */; };
 		7C427BC428373F8000FFDE12 /* Wallpaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C427BC328373F8000FFDE12 /* Wallpaper.swift */; };
 		7C4733A128533EB800ECD293 /* PhoneContactSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4733A028533EB800ECD293 /* PhoneContactSearchResult.swift */; };
 		7C47352928571CC900ECD293 /* AccessPhoneContactHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C47352828571CC900ECD293 /* AccessPhoneContactHintWindow.swift */; };
@@ -1641,6 +1642,7 @@
 		7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorePreviewCell.swift; sourceTree = "<group>"; };
 		7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerView.swift; sourceTree = "<group>"; };
 		7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerCell.swift; sourceTree = "<group>"; };
+		7C3CECCC29EE716D00442A6D /* InsufficientStorageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsufficientStorageViewController.swift; sourceTree = "<group>"; };
 		7C427BC328373F8000FFDE12 /* Wallpaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallpaper.swift; sourceTree = "<group>"; };
 		7C4733A028533EB800ECD293 /* PhoneContactSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactSearchResult.swift; sourceTree = "<group>"; };
 		7C47352828571CC900ECD293 /* AccessPhoneContactHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessPhoneContactHintWindow.swift; sourceTree = "<group>"; };
@@ -3473,6 +3475,7 @@
 				DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
 				DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */,
+				7C3CECCC29EE716D00442A6D /* InsufficientStorageViewController.swift */,
 				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
 				7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */,
 				7BBCABAD2524644C00601762 /* HomeOverlayViewController.swift */,
@@ -4865,6 +4868,7 @@
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
 				7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */,
+				7C3CECCD29EE716D00442A6D /* InsufficientStorageViewController.swift in Sources */,
 				7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */,
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				7C7579D229DC54120002DA0B /* RestoreFromDesktopViewController.swift in Sources */,

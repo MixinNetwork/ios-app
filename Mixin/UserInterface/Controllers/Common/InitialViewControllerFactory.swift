@@ -18,6 +18,8 @@ func makeInitialViewController(isUsernameJustInitialized: Bool = false) -> UIVie
         return DatabaseUpgradeViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
     } else if !AppGroupUserDefaults.Crypto.isPrekeyLoaded || !AppGroupUserDefaults.Crypto.isSessionSynchronized || !AppGroupUserDefaults.User.isCircleSynchronized {
         return SignalLoadingViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
+    } else if !isUsernameJustInitialized, InsufficientStorageViewController.needsFreeUpStorage {
+        return InsufficientStorageViewController.instance()
     } else {
         return HomeContainerViewController()
     }

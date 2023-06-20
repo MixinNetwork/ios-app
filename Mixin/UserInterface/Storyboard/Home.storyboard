@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -2071,6 +2071,101 @@
             </objects>
             <point key="canvasLocation" x="525.60000000000002" y="-1015.1424287856073"/>
         </scene>
+        <!--Insufficient Storage View Controller-->
+        <scene sceneID="TCH-0k-PCw">
+            <objects>
+                <viewController storyboardIdentifier="insufficient_storage" id="H0L-pk-Hcj" customClass="InsufficientStorageViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Lcy-db-tBR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_database" translatesAutoresizingMaskIntoConstraints="NO" id="L4b-oj-UUT">
+                                <rect key="frame" x="156.5" y="114" width="62" height="68"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Storage almost full" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n1o-Do-a4I">
+                                <rect key="frame" x="36" y="232" width="303" height="21.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <color key="textColor" name="title"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="storage_almost_full"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can free up storage by deleting items that are large or have been forwarded many times." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekQ-YB-uh3">
+                                <rect key="frame" x="36" y="283.5" width="303" height="58"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                <color key="textColor" name="text_accessory"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="storage_almost_full_tip"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1zc-UC-5l2">
+                                <rect key="frame" x="299" y="33" width="56" height="34"/>
+                                <color key="tintColor" name="AccentColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Skip">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
+                                </buttonConfiguration>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="skip"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="skipAction:" destination="H0L-pk-Hcj" eventType="touchUpInside" id="xWH-Or-yEy"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OEk-WX-eMd" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="127.5" y="569" width="120.5" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="ARo-H4-EcX"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="18" minY="0.0" maxX="18" maxY="0.0"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="View Storage">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
+                                </buttonConfiguration>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="21"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="view_storage"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="viewStorageAction:" destination="H0L-pk-Hcj" eventType="touchUpInside" id="NdS-oU-sVT"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="4TP-01-qab"/>
+                        <color key="backgroundColor" name="background_secondary"/>
+                        <constraints>
+                            <constraint firstItem="L4b-oj-UUT" firstAttribute="centerX" secondItem="4TP-01-qab" secondAttribute="centerX" id="2ds-Rx-cms"/>
+                            <constraint firstItem="1zc-UC-5l2" firstAttribute="top" secondItem="4TP-01-qab" secondAttribute="top" constant="13" id="CGm-lt-RSi"/>
+                            <constraint firstItem="ekQ-YB-uh3" firstAttribute="top" secondItem="n1o-Do-a4I" secondAttribute="bottom" constant="30" id="Dal-Pr-p4C"/>
+                            <constraint firstItem="n1o-Do-a4I" firstAttribute="top" secondItem="L4b-oj-UUT" secondAttribute="bottom" constant="50" id="VYe-yH-0to"/>
+                            <constraint firstItem="4TP-01-qab" firstAttribute="trailing" secondItem="1zc-UC-5l2" secondAttribute="trailing" constant="20" id="eeN-wF-h5T"/>
+                            <constraint firstItem="4TP-01-qab" firstAttribute="bottom" secondItem="OEk-WX-eMd" secondAttribute="bottom" constant="56" id="gBk-t7-cO3"/>
+                            <constraint firstItem="ekQ-YB-uh3" firstAttribute="leading" secondItem="4TP-01-qab" secondAttribute="leading" constant="36" id="jgD-Q6-zoY"/>
+                            <constraint firstItem="L4b-oj-UUT" firstAttribute="top" secondItem="4TP-01-qab" secondAttribute="top" constant="94" id="q0b-F3-TzP" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="4TP-01-qab" firstAttribute="trailing" secondItem="ekQ-YB-uh3" secondAttribute="trailing" constant="36" id="sDZ-S7-GMZ"/>
+                            <constraint firstItem="4TP-01-qab" firstAttribute="trailing" secondItem="n1o-Do-a4I" secondAttribute="trailing" constant="36" id="sfS-Sp-yFL"/>
+                            <constraint firstItem="n1o-Do-a4I" firstAttribute="leading" secondItem="4TP-01-qab" secondAttribute="leading" constant="36" id="tvE-iM-pfA"/>
+                            <constraint firstItem="OEk-WX-eMd" firstAttribute="centerX" secondItem="Lcy-db-tBR" secondAttribute="centerX" id="wOp-iq-QLv"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6zu-JL-eeK" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2726" y="462"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
@@ -2091,6 +2186,9 @@
         <image name="ic_title_desktop" width="24" height="24"/>
         <image name="ic_title_search" width="28.5" height="28"/>
         <image name="ic_user_bot" width="14" height="11"/>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -2113,7 +2211,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

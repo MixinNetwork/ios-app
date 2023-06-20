@@ -10,9 +10,11 @@ final class StorageUsageViewController: UIViewController {
     @IBOutlet weak var activityIndicatorHeightConstraint: NSLayoutConstraint!
     
     private var conversations = [ConversationStorageUsage]()
+    private var insufficientStorage = false
     
-    class func instance() -> UIViewController {
+    class func instance(insufficientStorage: Bool) -> UIViewController {
         let vc = R.storyboard.setting.storage_usage()!
+        vc.insufficientStorage = insufficientStorage
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.storage_usage())
         return container
     }
@@ -88,6 +90,22 @@ extension StorageUsageViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.pushViewController(ClearStorageViewController.instance(conversation: conversations[indexPath.row]), animated: true)
+    }
+    
+}
+
+extension StorageUsageViewController: ContainerViewControllerDelegate {
+    
+    func barLeftButtonTappedAction() {
+        if insufficientStorage {
+            if InsufficientStorageViewController.needsFreeUpStorage {
+                navigationController?.popViewController(animated: true)
+            } else {
+                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+            }
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
 }

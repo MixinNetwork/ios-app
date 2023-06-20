@@ -845,6 +845,8 @@
 "stop_playing" = "Dejar de reproducir";
 "stop_playing_this_list" = "¿Dejar de reproducir esta lista?";
 "stop_syncing_hint" = "Do you want to stop syncing chat history?";
+"storage_almost_full" = "Storage almost full";
+"storage_almost_full_tip" = "You can free up storage by deleting items that are large or have been forwarded many times.";
 "storage_usage" = "Uso de almacenamiento";
 "stranger_hint" = "Este remitente no está en tus contactos";
 "successful" = "Exitoso";
@@ -962,6 +964,7 @@
 "videos" = "Vídeos";
 "view_authorization" = "Ver autorización";
 "view_emergency_contact" = "Ver contacto de emergencia";
+"view_storage" = "View Storage";
 "view_wallet" = "Ver Cartera";
 "voice_call_cancelled" = "llamada de voz cancelada";
 "voice_call_has_been_declined" = "La llamada de voz ha sido rechazada";

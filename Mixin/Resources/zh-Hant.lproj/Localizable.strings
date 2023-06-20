@@ -845,6 +845,8 @@
 "stop_playing" = "停止播放";
 "stop_playing_this_list" = "確定要停止並關閉播放列表？";
 "stop_syncing_hint" = "確定中止聊天記錄同步嗎？";
+"storage_almost_full" = "存儲空間幾乎已滿";
+"storage_almost_full_tip" = "您可以通過刪除大的或已被多次轉發的項目來釋放存儲空間。";
 "storage_usage" = "儲存空間";
 "stranger_hint" = "對方不是你的聯絡人";
 "successful" = "成功";
@@ -962,6 +964,7 @@
 "videos" = "影片";
 "view_authorization" = "檢視授權";
 "view_emergency_contact" = "檢視緊急聯絡人";
+"view_storage" = "檢視儲存空間";
 "view_wallet" = "檢視錢包";
 "voice_call_cancelled" = "對方已取消語音通話";
 "voice_call_has_been_declined" = "已拒絕通話";

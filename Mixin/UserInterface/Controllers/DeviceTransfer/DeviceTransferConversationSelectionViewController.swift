@@ -44,6 +44,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         tableView.allowsMultipleSelection = true
+        showSelectedButton.titleLabel?.font = .monospacedDigitSystemFont(ofSize: 16, weight: .regular)
     }
     
     override func initData() {

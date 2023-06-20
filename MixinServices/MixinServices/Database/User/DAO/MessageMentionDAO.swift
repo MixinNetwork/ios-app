@@ -18,14 +18,14 @@ public final class MessageMentionDAO: UserDatabaseDAO {
     public func messageMentions(limit: Int, after messageId: String?, matching conversationIDs: [String]?) -> [MessageMention] {
         var sql = "SELECT * FROM message_mentions"
         if let messageId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM message_mentions WHERE message_id = '\(messageId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM message_mentions WHERE message_id = '\(messageId)'), 0)"
         }
         if let conversationIDs {
             sql += messageId == nil ? " WHERE" : " AND"
             let ids = conversationIDs.joined(separator: "', '")
             sql += " conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID ASC LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

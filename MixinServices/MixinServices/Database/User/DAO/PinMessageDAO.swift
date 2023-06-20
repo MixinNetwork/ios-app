@@ -114,12 +114,12 @@ public final class PinMessageDAO: UserDatabaseDAO {
     }
     
     public func pinMessages(limit: Int, after rowID: Int, matching conversationIDs: [String]?) -> [PinMessage] {
-        var sql = "SELECT * FROM pin_messages WHERE ROWID > ?"
+        var sql = "SELECT * FROM pin_messages WHERE rowid > ?"
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
             sql += " AND conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID ASC LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [rowID, limit])
     }
     
@@ -131,7 +131,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id IN ('\(ids)')"
                 if let rowID {
-                    sql += " AND ROWID >= \(rowID)"
+                    sql += " AND rowid >= \(rowID)"
                 }
                 let count: Int? = db.select(with: sql)
                 totalCount += (count ?? 0)
@@ -140,7 +140,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         } else {
             var sql = "SELECT COUNT(*) FROM pin_messages"
             if let rowID {
-                sql += " WHERE ROWID >= \(rowID)"
+                sql += " WHERE rowid >= \(rowID)"
             }
             let count: Int? = db.select(with: sql)
             return count ?? 0
@@ -148,11 +148,11 @@ public final class PinMessageDAO: UserDatabaseDAO {
     }
     
     public func messageRowID(createdAt: String) -> Int? {
-        db.select(with: "SELECT ROWID FROM pin_messages WHERE created_at >= ? ORDER BY ROWID ASC LIMIT 1", arguments: [createdAt])
+        db.select(with: "SELECT rowid FROM pin_messages WHERE created_at >= ? ORDER BY rowid ASC LIMIT 1", arguments: [createdAt])
     }
     
     public func messageRowID(messageID: String) -> Int? {
-        db.select(with: "SELECT ROWID FROM pin_messages WHERE message_id = ?", arguments: [messageID])
+        db.select(with: "SELECT rowid FROM pin_messages WHERE message_id = ?", arguments: [messageID])
     }
     
     public func save(pinMessage: PinMessage) {

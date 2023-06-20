@@ -662,14 +662,14 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func conversations(limit: Int, after conversationId: String?, matching conversationIDs: [String]?) -> [Conversation] {
         var sql = "SELECT * FROM conversations"
         if let conversationId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM conversations WHERE conversation_id = '\(conversationId)'), 0)"
         }
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
             sql += conversationId == nil ? " WHERE" : " AND"
             sql += " conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID ASC LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
 

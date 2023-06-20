@@ -146,9 +146,9 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
     public func expiredMessages(limit: Int, after messageId: String?) -> [ExpiredMessage] {
         var sql = "SELECT * FROM expired_messages"
         if let messageId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM expired_messages WHERE message_id = '\(messageId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM expired_messages WHERE message_id = '\(messageId)'), 0)"
         }
-        sql += " ORDER BY ROWID ASC LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

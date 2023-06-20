@@ -178,14 +178,14 @@ public final class ParticipantDAO: UserDatabaseDAO {
     public func participants(limit: Int, after conversationId: String?, with userId: String?, matching conversationIDs: [String]?) -> [Participant] {        
         var sql = "SELECT * FROM participants"
         if let conversationId, let userId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
         }
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
             sql += conversationId == nil ? " WHERE" : " AND"
             sql += " conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID ASC LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

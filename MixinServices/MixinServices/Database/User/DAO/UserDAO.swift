@@ -224,9 +224,9 @@ public final class UserDAO: UserDatabaseDAO {
     public func users(limit: Int, after userId: String?) -> [User] {
         var sql = "SELECT * FROM users"
         if let userId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM users WHERE user_id = '\(userId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM users WHERE user_id = '\(userId)'), 0)"
         }
-        sql += " ORDER BY ROWID ASC LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

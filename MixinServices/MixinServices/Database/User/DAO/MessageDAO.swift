@@ -981,17 +981,17 @@ extension MessageDAO {
     }
     
     public func messages(limit: Int, after rowID: Int, matching conversationIDs: [String]?) -> [Message] {
-        var sql = "SELECT * FROM messages WHERE ROWID > ?"
+        var sql = "SELECT * FROM messages WHERE rowid > ?"
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
             sql += " AND conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID ASC LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [rowID, limit])
     }
     
     public func messageRowID(createdAt: String) -> Int? {
-        db.select(with: "SELECT ROWID FROM messages WHERE created_at >= ? ORDER BY ROWID ASC LIMIT 1", arguments: [createdAt])
+        db.select(with: "SELECT ROWID FROM messages WHERE created_at >= ? ORDER BY rowid ASC LIMIT 1", arguments: [createdAt])
     }
     
     public func messageRowID(messageID: String) -> Int? {
@@ -1006,7 +1006,7 @@ extension MessageDAO {
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id IN ('\(ids)')"
                 if let rowID {
-                    sql += " AND ROWID >= \(rowID)"
+                    sql += " AND rowid >= \(rowID)"
                 }
                 let count: Int? = db.select(with: sql)
                 totalCount += (count ?? 0)
@@ -1015,7 +1015,7 @@ extension MessageDAO {
         } else {
             var sql = "SELECT COUNT(*) FROM messages"
             if let rowID {
-                sql += " WHERE ROWID >= \(rowID)"
+                sql += " WHERE rowid >= \(rowID)"
             }
             let count: Int? = db.select(with: sql)
             return count ?? 0
@@ -1031,7 +1031,7 @@ extension MessageDAO {
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)') AND media_status IN ('DONE', 'READ') AND conversation_id IN ('\(ids)')"
                 if let rowID {
-                    sql += " AND ROWID >= \(rowID)"
+                    sql += " AND rowid >= \(rowID)"
                 }
                 let count: Int? = db.select(with: sql)
                 totalCount += (count ?? 0)
@@ -1040,7 +1040,7 @@ extension MessageDAO {
         } else {
             var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)') AND media_status IN ('DONE', 'READ')"
             if let rowID {
-                sql += " AND ROWID >= \(rowID)"
+                sql += " AND rowid >= \(rowID)"
             }
             let count: Int? = db.select(with: sql)
             return count ?? 0
@@ -1056,7 +1056,7 @@ extension MessageDAO {
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)') AND conversation_id IN ('\(ids)')"
                 if let rowID {
-                    sql += " AND ROWID >= \(rowID)"
+                    sql += " AND rowid >= \(rowID)"
                 }
                 let count: Int? = db.select(with: sql)
                 totalCount += (count ?? 0)
@@ -1065,7 +1065,7 @@ extension MessageDAO {
         } else {
             var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)')"
             if let rowID {
-                sql += " AND ROWID >= \(rowID)"
+                sql += " AND rowid >= \(rowID)"
             }
             let count: Int? = db.select(with: sql)
             return count ?? 0

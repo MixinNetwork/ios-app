@@ -1,11 +1,10 @@
 import Foundation
 import MixinServices
 
-struct DeviceTransferFilter {
+class DeviceTransferFilter {
     
-    typealias TimeChangeHandler = (DeviceTransferFilter.Time) -> Void
-    typealias ConversationChangeHandler = (DeviceTransferFilter.Conversation) -> Void
-    
+    static let filterDidChangeNotification = Notification.Name("one.mixin.messager.DeviceTransferFilter")
+
     enum Conversation {
         
         case all
@@ -90,8 +89,21 @@ struct DeviceTransferFilter {
         
     }
     
-    var conversation: Conversation
-    var time: Time
+    var conversation: Conversation {
+        didSet {
+            NotificationCenter.default.post(onMainThread: Self.filterDidChangeNotification, object: nil)
+        }
+    }
+    var time: Time {
+        didSet {
+            NotificationCenter.default.post(onMainThread: Self.filterDidChangeNotification, object: nil)
+        }
+    }
+    
+    init(conversation: Conversation, time: Time) {
+        self.conversation = conversation
+        self.time = time
+    }
     
     var shouldFilter: Bool {
         switch (time, conversation) {

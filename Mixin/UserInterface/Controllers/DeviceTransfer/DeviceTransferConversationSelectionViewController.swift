@@ -8,8 +8,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
     @IBOutlet weak var showSelectedButton: UIButton!
     
     private var toolbarView: UIView!
-    private var filter: DeviceTransferFilter.Conversation = .all
-    private var changeHandler: DeviceTransferFilter.ConversationChangeHandler?
+    private var filter: DeviceTransferFilter!
     
     private var selections = [MessageReceiver]() {
         didSet {
@@ -25,10 +24,9 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
         }
     }
     
-    class func instance(filter: DeviceTransferFilter.Conversation, changeHandler: @escaping DeviceTransferFilter.ConversationChangeHandler) -> UIViewController {
+    class func instance(filter: DeviceTransferFilter) -> UIViewController {
         let controller = DeviceTransferConversationSelectionViewController()
         controller.filter = filter
-        controller.changeHandler = changeHandler
         return ContainerViewController.instance(viewController: controller, title: R.string.localizable.conversations())
     }
     
@@ -55,7 +53,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
             let conversations = ConversationDAO.shared.conversationList()
                 .compactMap(MessageReceiver.init)
             let selections: [MessageReceiver]
-            switch filter {
+            switch filter.conversation {
             case .all:
                 selections = conversations
             case .designated(let conversationIDs):
@@ -187,9 +185,9 @@ extension DeviceTransferConversationSelectionViewController: ContainerViewContro
     
     func barRightButtonTappedAction() {
         if selections.count == models.count {
-            changeHandler?(.all)
+            filter.conversation = .all
         } else {
-            changeHandler?(.designated(selections.map(\.conversationId)))
+            filter.conversation = .designated(selections.map(\.conversationId))
         }
         navigationController?.popViewController(animated: true)
     }

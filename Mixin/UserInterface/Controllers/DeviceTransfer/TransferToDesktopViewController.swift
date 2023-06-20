@@ -29,6 +29,7 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFilterRows), name: DeviceTransferFilter.filterDidChangeNotification, object: nil)
     }
     
     class func instance() -> UIViewController {
@@ -49,11 +50,9 @@ extension TransferToDesktopViewController: UITableViewDelegate {
             let controller: UIViewController
             switch indexPath.row {
             case 0:
-                controller = DeviceTransferConversationSelectionViewController.instance(filter: filter.conversation,
-                                                                                        changeHandler: updateCoversationFilterRow(conversationFilter:))
+                controller = DeviceTransferConversationSelectionViewController.instance(filter: filter)
             default:
-                controller = DeviceTransferDateSelectionViewController.instance(filter: filter.time,
-                                                                                changeHandler: updateDateFilterRow(timeFilter:))
+                controller = DeviceTransferDateSelectionViewController.instance(filter: filter)
             }
             navigationController?.pushViewController(controller, animated: true)
         }
@@ -197,14 +196,9 @@ extension TransferToDesktopViewController {
         }
     }
     
-    private func updateCoversationFilterRow(conversationFilter: DeviceTransferFilter.Conversation) {
-        filter.conversation = conversationFilter
-        conversationFilterRow.subtitle = conversationFilter.title
-    }
-    
-    private func updateDateFilterRow(timeFilter: DeviceTransferFilter.Time) {
-        filter.time = timeFilter
-        dateFilterRow.subtitle = timeFilter.title
+    @objc private func updateFilterRows() {
+        conversationFilterRow.subtitle = filter.conversation.title
+        dateFilterRow.subtitle = filter.time.title
     }
     
 }

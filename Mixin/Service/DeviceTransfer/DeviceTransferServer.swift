@@ -44,7 +44,7 @@ final class DeviceTransferServer {
     
     init(filter: DeviceTransferFilter) {
         self.filter = filter
-        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) init with filter: \(filter)")
+        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) init with filter conversation: \(filter.conversation), time: \(filter.time)")
     }
     
     deinit {

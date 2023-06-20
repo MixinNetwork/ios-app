@@ -7,8 +7,7 @@ class DeviceTransferDateSelectionViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    private var filter: DeviceTransferFilter.Time = .all
-    private var changeHandler: DeviceTransferFilter.TimeChangeHandler?
+    private var filter: DeviceTransferFilter!
     
     convenience init() {
         self.init(nib: R.nib.deviceTransferDateSelectionView)
@@ -18,7 +17,7 @@ class DeviceTransferDateSelectionViewController: UIViewController {
         super.viewDidLoad()
         segmentedControl.setTitle(R.string.localizable.month(), forSegmentAt: 0)
         segmentedControl.setTitle(R.string.localizable.year(), forSegmentAt: 1)
-        switch filter {
+        switch filter.time {
         case .all:
             updateAllDateSelection()
         case .lastMonths(let months):
@@ -32,10 +31,9 @@ class DeviceTransferDateSelectionViewController: UIViewController {
         }
     }
 
-    class func instance(filter: DeviceTransferFilter.Time, changeHandler: @escaping DeviceTransferFilter.TimeChangeHandler) -> UIViewController {
+    class func instance(filter: DeviceTransferFilter) -> UIViewController {
         let controller = DeviceTransferDateSelectionViewController()
         controller.filter = filter
-        controller.changeHandler = changeHandler
         return ContainerViewController.instance(viewController: controller, title: R.string.localizable.date())
     }
     
@@ -68,7 +66,15 @@ extension DeviceTransferDateSelectionViewController: ContainerViewControllerDele
     }
     
     func barRightButtonTappedAction() {
-        changeHandler?(filter)
+        if !allDateCheckmark.isHidden {
+            filter.time = .all
+        } else if let count = textField.text?.intValue {
+            if segmentedControl.selectedSegmentIndex == 0 {
+                filter.time = .lastMonths(count)
+            } else {
+                filter.time = .lastYears(count)
+            }
+        }
         navigationController?.popViewController(animated: true)
     }
     
@@ -80,7 +86,6 @@ extension DeviceTransferDateSelectionViewController {
         allDateCheckmark.isHidden = false
         lastDateCheckmark.isHidden = true
         segmentedControl.isEnabled = false
-        filter = .all
         container?.rightButton.isEnabled = true
         textField.resignFirstResponder()
     }
@@ -94,15 +99,10 @@ extension DeviceTransferDateSelectionViewController {
     }
     
     private func updateDateFilter() {
-        guard let count = textField.text?.intValue, count > 0 else {
-            container?.rightButton.isEnabled = false
-            return
-        }
-        container?.rightButton.isEnabled = true
-        if segmentedControl.selectedSegmentIndex == 0 {
-            filter = .lastMonths(count)
+        if let count = textField.text?.intValue, count > 0 {
+            container?.rightButton.isEnabled = true
         } else {
-            filter = .lastYears(count)
+            container?.rightButton.isEnabled = false
         }
     }
     

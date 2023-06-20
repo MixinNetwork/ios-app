@@ -10,7 +10,7 @@ final class DeviceTransferServerDataSource {
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
     private let filter: DeviceTransferFilter
-    private let fromDate: String?
+    private let fromDateString: String?
     private let conversationIDs: [String]?
     private let conversationIDsForFetching: [String]?
     
@@ -21,7 +21,7 @@ final class DeviceTransferServerDataSource {
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
         self.filter = filter
-        fromDate = filter.time.utcString
+        fromDateString = filter.time.utcString
         conversationIDs = filter.conversation.ids
         conversationIDsForFetching = filter.conversation.idsForFetching
     }
@@ -39,9 +39,9 @@ extension DeviceTransferServerDataSource {
         assert(!Queue.main.isCurrent)
         let messageRowID: Int?
         let pinMessageRowID: Int?
-        if let fromDate {
-            messageRowID = MessageDAO.shared.messageRowID(createdAt: fromDate)
-            pinMessageRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDate)
+        if let fromDateString {
+            messageRowID = MessageDAO.shared.messageRowID(createdAt: fromDateString)
+            pinMessageRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDateString)
         } else {
             messageRowID = nil
             pinMessageRowID = nil
@@ -306,8 +306,8 @@ extension DeviceTransferServerDataSource {
             if let primaryID = location.primaryID?.intValue {
                 rowID = primaryID
             } else {
-                if let fromDate {
-                    if let startRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDate) {
+                if let fromDateString {
+                    if let startRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDateString) {
                         rowID = startRowID - 1
                     } else {
                         return (0, [], nil, nil)
@@ -330,7 +330,7 @@ extension DeviceTransferServerDataSource {
                 guard filter.isValidItem(conversationID: pinMessage.conversationId) else {
                     return nil
                 }
-                if let fromDate, pinMessage.createdAt < fromDate {
+                if let fromDateString, pinMessage.createdAt < fromDateString {
                     return nil
                 }
                 let deviceTransferPinMessage = DeviceTransferPinMessage(pinMessage: pinMessage)
@@ -357,8 +357,8 @@ extension DeviceTransferServerDataSource {
             if let primaryID = location.primaryID?.intValue {
                 rowID = primaryID
             } else {
-                if let fromDate {
-                    if let startRowID = MessageDAO.shared.messageRowID(createdAt: fromDate) {
+                if let fromDateString {
+                    if let startRowID = MessageDAO.shared.messageRowID(createdAt: fromDateString) {
                         rowID = startRowID - 1
                     } else {
                         return (0, [], nil, nil)
@@ -383,7 +383,7 @@ extension DeviceTransferServerDataSource {
                 guard filter.isValidItem(conversationID: message.conversationId) else {
                     continue
                 }
-                if let fromDate, message.createdAt < fromDate {
+                if let fromDateString, message.createdAt < fromDateString {
                     continue
                 }
                 let deviceTransferMessage = DeviceTransferMessage(message: message, to: remotePlatform)

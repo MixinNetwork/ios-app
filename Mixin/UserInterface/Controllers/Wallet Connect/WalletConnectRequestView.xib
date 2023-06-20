@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -34,7 +34,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="LIM-Os-jYC">
-                    <rect key="frame" x="20" y="25" width="353" height="149.66666666666666"/>
+                    <rect key="frame" x="20" y="25.000000000000007" width="353" height="115.66666666666669"/>
                     <color key="backgroundColor" name="background_secondary"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -43,7 +43,7 @@
                     </userDefinedRuntimeAttributes>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="UF0-DO-fFr" userLabel="Network Stack View">
-                    <rect key="frame" x="36" y="190.66666666666666" width="321" height="50"/>
+                    <rect key="frame" x="36" y="156.66666666666666" width="321" height="50"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="9F7-jX-QJU">
                             <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
@@ -93,13 +93,14 @@
                                 </label>
                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_selector_down" translatesAutoresizingMaskIntoConstraints="NO" id="AhN-xg-q9T">
                                     <rect key="frame" x="115" y="0.0" width="0.0" height="17"/>
+                                    <color key="tintColor" name="text_emphasized_description"/>
                                 </imageView>
                             </subviews>
                         </stackView>
                     </subviews>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0bT-vA-KNa" userLabel="Fee Button">
-                    <rect key="frame" x="122.33333333333333" y="223.66666666666666" width="28.666666666666671" height="17"/>
+                    <rect key="frame" x="122.33333333333333" y="189.66666666666666" width="28.666666666666671" height="17"/>
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="plain" title=" "/>
                     <connections>
@@ -107,7 +108,7 @@
                     </connections>
                 </button>
                 <view clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="BcS-yh-7Ne" userLabel="Warning Wrapper View">
-                    <rect key="frame" x="16" y="256.66666666666669" width="361" height="74.333333333333314"/>
+                    <rect key="frame" x="16" y="222.66666666666666" width="361" height="74.333333333333343"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nYi-Rz-kx5">
                             <rect key="frame" x="16" y="12.000000000000004" width="329" height="50.333333333333343"/>
@@ -143,7 +144,7 @@
                     </userDefinedRuntimeAttributes>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="nqf-ki-SK0" userLabel="Sign Actions Stack View">
-                    <rect key="frame" x="16" y="371" width="361" height="104"/>
+                    <rect key="frame" x="16" y="337" width="361" height="104"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rlh-mu-ZJ9" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="138.66666666666666" y="0.0" width="84" height="44"/>
@@ -218,10 +219,13 @@
             <color red="1" green="0.96862745098039216" blue="0.67843137254901964" alpha="0.30000001192092896" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_emphasized_description">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

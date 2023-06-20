@@ -31,7 +31,7 @@ final class ExternalTransferTests: XCTestCase {
         let c1 = try! ExternalTransfer(string: "ethereum:0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359?value=2.014e18",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c1,
-                    assetID: AssetID.ethereumUSDT,
+                    assetID: AssetID.eth,
                     destination: "0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359",
                     resolvedAmount: "2.014",
                     memo: nil)

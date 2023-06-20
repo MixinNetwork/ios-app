@@ -6,6 +6,7 @@ class MixinAuthorizationsContentViewController: AuthorizationsContentViewControl
     var authorizations: [AuthorizationResponse] = [] {
         didSet {
             tableView.reloadData()
+            tableView.layoutIfNeeded()
         }
     }
     

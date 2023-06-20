@@ -117,6 +117,7 @@ extension WebMoreMenuViewController {
         case float
         case cancelFloat
         case about
+        case scanQRCode
         case copyLink
         case refresh
         case openInBrowser
@@ -132,6 +133,8 @@ extension WebMoreMenuViewController {
                 return R.image.web.ic_action_cancel_float()
             case .about:
                 return R.image.web.ic_action_about()
+            case .scanQRCode:
+                return R.image.web.ic_action_scan()
             case .copyLink:
                 return R.image.web.ic_action_copy()
             case .refresh:
@@ -153,6 +156,8 @@ extension WebMoreMenuViewController {
                 return R.string.localizable.cancel_floating()
             case .about:
                 return R.string.localizable.about()
+            case .scanQRCode:
+                return R.string.localizable.scan_qr_code()
             case .copyLink:
                 return R.string.localizable.copy_link()
             case .refresh:

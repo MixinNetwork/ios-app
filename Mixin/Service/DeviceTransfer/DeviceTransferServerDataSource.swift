@@ -11,8 +11,6 @@ final class DeviceTransferServerDataSource {
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
     
-    private var transcriptMessageCount = 0
-    
     init(key: DeviceTransferKey, filter: DeviceTransferFilter, remotePlatform: DeviceTransferPlatform) {
         self.key = key
         self.filter = filter
@@ -112,6 +110,7 @@ extension DeviceTransferServerDataSource {
         let type: DeviceTransferRecordType
         let primaryID: String?
         let secondaryID: String?
+        let rowID: Int?
     }
     
     private struct TransferItem {
@@ -136,27 +135,56 @@ extension DeviceTransferServerDataSource {
         
     }
     
-    private struct LocationItem {
+    private struct QueryResult {
+        
+        static let empty = QueryResult(databaseItemCount: 0,
+                                       transferItems: [],
+                                       dependenciesCount: 0,
+                                       lastPrimaryID: nil,
+                                       lastSecondaryID: nil,
+                                       lastRowID: nil)
+        
         let databaseItemCount: Int
         let transferItems: [TransferItem]
+        
+        // Some items in `transferItems` are dependencies of other items.
+        // Currently, there is only one case. When a non-passthrough filter is applied,
+        // transcript messages are not sent as a whole before sending messages.
+        // Instead, they are sent in batches along with the messages. In this case,
+        // `transferItems` includes two types of items: first, the dependent
+        // transcript messages, followed by the messages that depend on them.
+        // To separately count the quantity of these two types of items, it is necessary
+        // to specifically indicate the number of dependent items here.
+        let dependenciesCount: Int
+        
         let lastPrimaryID: String?
         let lastSecondaryID: String?
+        let lastRowID: Int?
+        
     }
     
     // Only throw fatal errors, like encryption failure for now
     func enumerateItems(using block: (_ data: Data, _ stop: inout Bool) -> Void) throws {
-        var nextLocation: Location? = Location(type: .allCases[0], primaryID: nil, secondaryID: nil)
-        var recordCount = 0
-        var fileCount = 0
         let applicationFilteringIDs = filter.conversation.applicationFilteringIDs
         let databaseFilteringIDs = filter.conversation.databaseFilteringIDs
+        let isPassthroughFilter = filter.isPassthrough
+        
+        var nextLocation: Location? = Location(type: .allCases[0], primaryID: nil, secondaryID: nil, rowID: nil)
+        var recordCount = 0
+        var dependenciesCount = 0 // See QueryResult.dependenciesCount
+        var fileCount = 0
+        
         while let location = nextLocation {
-            let locationItem = item(on: location, applicationFilteringIDs: applicationFilteringIDs, databaseFilteringIDs: databaseFilteringIDs)
-            if locationItem.transferItems.isEmpty {
-                Logger.general.info(category: "DeviceTransferServerDataSource", message: "\(location.type) is empty")
+            let result = queryItems(on: location,
+                                    applicationFilteringIDs: applicationFilteringIDs,
+                                    databaseFilteringIDs: databaseFilteringIDs)
+            if result.transferItems.isEmpty {
+                Logger.general.info(category: "DeviceTransferServerDataSource",
+                                    message: "\(location.type) is empty, passthrough: \(isPassthroughFilter)")
             }
-            recordCount += locationItem.transferItems.count
-            for item in locationItem.transferItems {
+            recordCount += (result.transferItems.count - result.dependenciesCount)
+            dependenciesCount += result.dependenciesCount
+            for item in result.transferItems {
                 var stop = false
                 block(item.outputData, &stop)
                 if stop {
@@ -168,41 +196,41 @@ extension DeviceTransferServerDataSource {
                     }
                 }
             }
-            if locationItem.databaseItemCount < limit {
+            if result.databaseItemCount < limit {
                 if let nextType = DeviceTransferRecordType.allCases.element(after: location.type) {
-                    nextLocation = Location(type: nextType, primaryID: nil, secondaryID: nil)
+                    nextLocation = Location(type: nextType, primaryID: nil, secondaryID: nil, rowID: nil)
                 } else {
                     nextLocation = nil
                 }
-                if !filter.isPassthrough, location.type == .message {
-                    recordCount -= transcriptMessageCount
-                    Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(DeviceTransferRecordType.transcriptMessage) \(transcriptMessageCount)")
+                if !isPassthroughFilter, location.type == .message {
+                    Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send transcript \(dependenciesCount)")
                 }
-                if filter.isPassthrough || location.type != .transcriptMessage {
+                if isPassthroughFilter || location.type != .transcriptMessage {
                     Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(location.type) \(recordCount)")
                 }
                 recordCount = 0
+                dependenciesCount = 0
             } else {
-                nextLocation = Location(type: location.type, primaryID: locationItem.lastPrimaryID, secondaryID: locationItem.lastSecondaryID)
+                nextLocation = Location(type: location.type,
+                                        primaryID: result.lastPrimaryID,
+                                        secondaryID: result.lastSecondaryID,
+                                        rowID: result.lastRowID)
             }
         }
         Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send file \(fileCount)")
     }
     
-    private func item(on location: Location, applicationFilteringIDs: Set<String>?, databaseFilteringIDs: Set<String>?) -> LocationItem {
-        let transferItems: [TransferItem]
-        let lastPrimaryID: String?
-        let lastSecondaryID: String?
-        let databaseItemCount: Int
+    private func queryItems(
+        on location: Location,
+        applicationFilteringIDs: Set<String>?,
+        databaseFilteringIDs: Set<String>?
+    ) -> QueryResult {
         switch location.type {
         case .conversation:
             let conversations = ConversationDAO.shared.conversations(limit: limit,
                                                                      after: location.primaryID,
                                                                      matching: databaseFilteringIDs)
-            databaseItemCount = conversations.count
-            lastPrimaryID = conversations.last?.conversationId
-            lastSecondaryID = nil
-            transferItems = conversations.compactMap { conversation in
+            let transferItems: [TransferItem] = conversations.compactMap { conversation in
                 if let applicationFilteringIDs, !applicationFilteringIDs.contains(conversation.conversationId) {
                     return nil
                 }
@@ -215,15 +243,18 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: conversations.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: conversations.last?.conversationId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         case .participant:
             let participants = ParticipantDAO.shared.participants(limit: limit,
                                                                   after: location.primaryID,
                                                                   with: location.secondaryID,
                                                                   matching: databaseFilteringIDs)
-            databaseItemCount = participants.count
-            lastPrimaryID = participants.last?.conversationId
-            lastSecondaryID = participants.last?.userId
-            transferItems = participants.compactMap { participant in
+            let transferItems: [TransferItem] = participants.compactMap { participant in
                 if let applicationFilteringIDs, !applicationFilteringIDs.contains(participant.conversationId) {
                     return nil
                 }
@@ -236,12 +267,15 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: participants.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: participants.last?.conversationId,
+                               lastSecondaryID: participants.last?.userId,
+                               lastRowID: nil)
         case .user:
             let users = UserDAO.shared.users(limit: limit, after: location.primaryID)
-            databaseItemCount = users.count
-            lastPrimaryID = users.last?.userId
-            lastSecondaryID = nil
-            transferItems = users.compactMap { user in
+            let transferItems: [TransferItem] = users.compactMap { user in
                 let deviceTransferUser = DeviceTransferUser(user: user)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferUser, key: key)
@@ -251,12 +285,15 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: users.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: users.last?.userId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         case .app:
             let apps = AppDAO.shared.apps(limit: limit, after: location.primaryID)
-            databaseItemCount = apps.count
-            lastPrimaryID = apps.last?.appId
-            lastSecondaryID = nil
-            transferItems = apps.compactMap { app in
+            let transferItems: [TransferItem] = apps.compactMap { app in
                 let deviceTransferApp = DeviceTransferApp(app: app)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferApp, key: key)
@@ -266,12 +303,15 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: apps.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: apps.last?.appId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         case .asset:
             let assets = AssetDAO.shared.assets(limit: limit, after: location.primaryID)
-            databaseItemCount = assets.count
-            lastPrimaryID = assets.last?.assetId
-            lastSecondaryID = nil
-            transferItems = assets.compactMap { asset in
+            let transferItems: [TransferItem] = assets.compactMap { asset in
                 let deviceTransferAsset = DeviceTransferAsset(asset: asset)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferAsset, key: key)
@@ -281,12 +321,15 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: assets.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: assets.last?.assetId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         case .snapshot:
             let snapshots = SnapshotDAO.shared.snapshots(limit: limit, after: location.primaryID)
-            databaseItemCount = snapshots.count
-            lastPrimaryID = snapshots.last?.snapshotId
-            lastSecondaryID = nil
-            transferItems = snapshots.compactMap { snapshot in
+            let transferItems: [TransferItem] = snapshots.compactMap { snapshot in
                 let deviceTransferSnapshot = DeviceTransferSnapshot(snapshot: snapshot)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSnapshot, key: key)
@@ -296,12 +339,15 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: snapshots.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: snapshots.last?.snapshotId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         case .sticker:
             let stickers = StickerDAO.shared.stickers(limit: limit, after: location.primaryID)
-            databaseItemCount = stickers.count
-            lastPrimaryID = stickers.last?.stickerId
-            lastSecondaryID = nil
-            transferItems = stickers.compactMap { sticker in
+            let transferItems: [TransferItem] = stickers.compactMap { sticker in
                 let deviceTransferSticker = DeviceTransferSticker(sticker: sticker)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSticker, key: key)
@@ -311,32 +357,35 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: stickers.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: stickers.last?.stickerId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         case .pinMessage:
             let rowID: Int
-            if let primaryID = location.primaryID?.intValue {
-                rowID = primaryID
-            } else {
-                if let createdAt = filter.earliestCreatedAt {
-                    if let startRowID = PinMessageDAO.shared.messageRowID(createdAt: createdAt) {
-                        rowID = startRowID - 1
-                    } else {
-                        return LocationItem(databaseItemCount: 0, transferItems: [], lastPrimaryID: nil, lastSecondaryID: nil)
-                    }
+            if let id = location.rowID {
+                rowID = id
+            } else if let createdAt = filter.earliestCreatedAt {
+                if let firstRowID = PinMessageDAO.shared.messageRowID(createdAt: createdAt) {
+                    rowID = firstRowID - 1
                 } else {
-                    rowID = -1
+                    return .empty
                 }
+            } else {
+                rowID = -1
             }
             let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit,
                                                                after: rowID,
                                                                matching: databaseFilteringIDs)
-            databaseItemCount = pinMessages.count
-            if let messageID = pinMessages.last?.messageId, let rowID = PinMessageDAO.shared.messageRowID(messageID: messageID) {
-                lastPrimaryID = "\(rowID)"
+            let lastRowID: Int?
+            if let messageID = pinMessages.last?.messageId {
+                lastRowID = PinMessageDAO.shared.messageRowID(messageID: messageID)
             } else {
-                lastPrimaryID = nil
+                lastRowID = nil
             }
-            lastSecondaryID = nil
-            transferItems = pinMessages.compactMap { pinMessage in
+            let transferItems: [TransferItem] = pinMessages.compactMap { pinMessage in
                 if let applicationFilteringIDs, !applicationFilteringIDs.contains(pinMessage.conversationId) {
                     return nil
                 }
@@ -352,41 +401,47 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: pinMessages.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: nil,
+                               lastSecondaryID: nil,
+                               lastRowID: lastRowID)
         case .transcriptMessage:
             if filter.isPassthrough {
                 let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(limit: limit, after: location.primaryID, with: location.secondaryID)
-                databaseItemCount = transcriptMessages.count
-                lastPrimaryID = transcriptMessages.last?.transcriptId
-                lastSecondaryID = transcriptMessages.last?.messageId
-                transferItems = transcriptTransferItems(for: transcriptMessages)
+                let transferItems = transcriptTransferItems(for: transcriptMessages)
+                return QueryResult(databaseItemCount: transcriptMessages.count,
+                                   transferItems: transferItems,
+                                   dependenciesCount: 0,
+                                   lastPrimaryID: transcriptMessages.last?.transcriptId,
+                                   lastSecondaryID: transcriptMessages.last?.messageId,
+                                   lastRowID: nil)
             } else {
-                return LocationItem(databaseItemCount: 0, transferItems: [], lastPrimaryID: nil, lastSecondaryID: nil)
+                return .empty
             }
         case .message:
             let rowID: Int
-            if let primaryID = location.primaryID?.intValue {
-                rowID = primaryID
-            } else {
-                if let dateString = filter.earliestCreatedAt {
-                    if let startRowID = MessageDAO.shared.messageRowID(createdAt: dateString) {
-                        rowID = startRowID - 1
-                    } else {
-                        return LocationItem(databaseItemCount: 0, transferItems: [], lastPrimaryID: nil, lastSecondaryID: nil)
-                    }
+            if let id = location.rowID {
+                rowID = id
+            } else if let createdAt = filter.earliestCreatedAt {
+                if let firstRowID = MessageDAO.shared.messageRowID(createdAt: createdAt) {
+                    rowID = firstRowID - 1
                 } else {
-                    rowID = -1
+                    return .empty
                 }
+            } else {
+                rowID = -1
             }
             let messages = MessageDAO.shared.messages(limit: limit,
                                                       after: rowID,
                                                       matching: databaseFilteringIDs)
-            databaseItemCount = messages.count
-            if let messageID = messages.last?.messageId, let rowID = MessageDAO.shared.messageRowID(messageID: messageID) {
-                lastPrimaryID = "\(rowID)"
+            let lastRowID: Int?
+            if let messageID = messages.last?.messageId {
+                lastRowID = MessageDAO.shared.messageRowID(messageID: messageID)
             } else {
-                lastPrimaryID = nil
+                lastRowID = nil
             }
-            lastSecondaryID = nil
             var messageItems = [TransferItem]()
             var transcriptMessageItems = [TransferItem]()
             for message in messages {
@@ -414,20 +469,21 @@ extension DeviceTransferServerDataSource {
                 }
                 // TranscriptMessage
                 if !filter.isPassthrough && message.category.hasSuffix("_TRANSCRIPT") {
-                    transcriptMessageCount += 1
                     let transcriptMessages = TranscriptMessageDAO.shared.transcriptMessages(transcriptId: message.messageId)
                     transcriptMessageItems = transcriptTransferItems(for: transcriptMessages)
                 }
             }
-            transferItems = transcriptMessageItems + messageItems
+            return QueryResult(databaseItemCount: messages.count,
+                               transferItems: transcriptMessageItems + messageItems,
+                               dependenciesCount: transcriptMessageItems.count,
+                               lastPrimaryID: nil,
+                               lastSecondaryID: nil,
+                               lastRowID: lastRowID)
         case .messageMention:
             let messageMentions = MessageMentionDAO.shared.messageMentions(limit: limit,
                                                                            after: location.primaryID,
                                                                            matching: databaseFilteringIDs)
-            databaseItemCount = messageMentions.count
-            lastPrimaryID = messageMentions.last?.messageId
-            lastSecondaryID = nil
-            transferItems = messageMentions.compactMap { messageMention in
+            let transferItems: [TransferItem] = messageMentions.compactMap { messageMention in
                 if let applicationFilteringIDs, !applicationFilteringIDs.contains(messageMention.conversationId) {
                     return nil
                 }
@@ -440,12 +496,15 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: messageMentions.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: messageMentions.last?.messageId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         case .expiredMessage:
             let expiredMessages = ExpiredMessageDAO.shared.expiredMessages(limit: limit, after: location.primaryID)
-            databaseItemCount = expiredMessages.count
-            lastPrimaryID = expiredMessages.last?.messageId
-            lastSecondaryID = nil
-            transferItems = expiredMessages.compactMap { expiredMessage in
+            let transferItems: [TransferItem] = expiredMessages.compactMap { expiredMessage in
                 let deviceTransferExpiredMessage = DeviceTransferExpiredMessage(expiredMessage: expiredMessage)
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferExpiredMessage, key: key)
@@ -455,8 +514,13 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+            return QueryResult(databaseItemCount: expiredMessages.count,
+                               transferItems: transferItems,
+                               dependenciesCount: 0,
+                               lastPrimaryID: expiredMessages.last?.messageId,
+                               lastSecondaryID: nil,
+                               lastRowID: nil)
         }
-        return LocationItem(databaseItemCount: databaseItemCount, transferItems: transferItems, lastPrimaryID: lastPrimaryID, lastSecondaryID: lastSecondaryID)
     }
     
     // Only throw fatal errors, like encryption failure for now

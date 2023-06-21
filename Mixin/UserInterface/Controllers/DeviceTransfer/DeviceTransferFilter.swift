@@ -54,9 +54,9 @@ extension DeviceTransferFilter {
         
         // There are two mechanisms for filtering Conversations/Messages:
         // 1. When the number of selected conversations is less than `deviceTransferStride`,
-        //    SQL statements are used for filtering.
+        //    SQL statements are in charge of filtering.
         // 2. When the number of selected conversations is greater than `deviceTransferStride`,
-        //    SQL queries do not perform filtering, and the filtering is done at the application layer.
+        //    SQL queries do not apply any filter, the filter is applied at the application layer.
         
         case all
         case byDatabase(Set<String>)

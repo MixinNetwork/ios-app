@@ -11,17 +11,17 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
     
     private var toolbarView: UIView!
     
-    private var selections: Set<String> = [] {
+    private var selectedConversationIDs: Set<String> = [] {
         didSet {
-            container?.rightButton.isEnabled = !selections.isEmpty
-            let title = !models.isEmpty && models.count == selections.count
+            container?.rightButton.isEnabled = !selectedConversationIDs.isEmpty
+            let title = !models.isEmpty && models.count == selectedConversationIDs.count
                 ? R.string.localizable.deselect_all()
                 : R.string.localizable.select_all()
             operationAllButton.setTitle(title, for: .normal)
-            let color = selections.isEmpty ? R.color.text_accessory() : R.color.theme()
+            let color = selectedConversationIDs.isEmpty ? R.color.text_accessory() : R.color.theme()
             showSelectedButton.setTitleColor(color, for: .normal)
-            showSelectedButton.setTitle(R.string.localizable.show_selected(selections.count), for: .normal)
-            showSelectedButton.isEnabled = !selections.isEmpty
+            showSelectedButton.setTitle(R.string.localizable.show_selected(selectedConversationIDs.count), for: .normal)
+            showSelectedButton.isEnabled = !selectedConversationIDs.isEmpty
         }
     }
     
@@ -71,7 +71,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
             }
             DispatchQueue.main.sync {
                 self.models = conversations
-                self.selections = selections
+                self.selectedConversationIDs = selections
                 self.tableView.reloadData()
                 self.reloadTableViewSelections()
             }
@@ -118,7 +118,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
         super.reloadTableViewSelections()
         if isSearching {
             for (index, result) in searchResults.enumerated() {
-                guard selections.contains(result.receiver.conversationId) else {
+                guard selectedConversationIDs.contains(result.receiver.conversationId) else {
                     continue
                 }
                 let indexPath = IndexPath(row: index, section: 0)
@@ -141,7 +141,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let receiver = messageReceiver(at: indexPath)
-        selections.insert(receiver.conversationId)
+        selectedConversationIDs.insert(receiver.conversationId)
         if !isSearching {
             updateSelectedRows()
         }
@@ -149,7 +149,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let receiver = messageReceiver(at: indexPath)
-        selections.remove(receiver.conversationId)
+        selectedConversationIDs.remove(receiver.conversationId)
         if !isSearching {
             if let row = models.firstIndex(where: { $0.conversationId == receiver.conversationId }) {
                 tableView.deselectRow(at: IndexPath(row: row, section: 0), animated: false)
@@ -158,13 +158,13 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
     }
     
     @IBAction func operationAllAction(_ sender: Any) {
-        if selections.count == models.count {
-            selections.removeAll()
+        if selectedConversationIDs.count == models.count {
+            selectedConversationIDs.removeAll()
             for index in 0..<models.count {
                 tableView.deselectRow(at: IndexPath(row: index, section: 0), animated: false)
             }
         } else {
-            selections = Set(models.map(\.conversationId))
+            selectedConversationIDs = Set(models.map(\.conversationId))
             for index in 0..<models.count {
                 tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .none)
             }
@@ -174,10 +174,10 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
     @IBAction func showSelectedAction(_ sender: Any) {
         let window = DeviceTransferSelectedConversationWindow.instance()
         let selections = models.filter { receiver in
-            self.selections.contains(receiver.conversationId)
+            self.selectedConversationIDs.contains(receiver.conversationId)
         }
         window.render(selections: selections) { id in
-            self.selections.remove(id)
+            self.selectedConversationIDs.remove(id)
             if let row = self.models.firstIndex(where: { $0.conversationId == id }) {
                 self.tableView.deselectRow(at: IndexPath(row: row, section: 0), animated: false)
             }
@@ -194,10 +194,10 @@ extension DeviceTransferConversationSelectionViewController: ContainerViewContro
     }
     
     func barRightButtonTappedAction() {
-        if selections.count == models.count {
+        if selectedConversationIDs.count == models.count {
             filter.conversation = .all
         } else {
-            filter.replaceSelectedConversations(with: selections)
+            filter.replaceSelectedConversations(with: selectedConversationIDs)
         }
         navigationController?.popViewController(animated: true)
     }
@@ -216,7 +216,7 @@ extension DeviceTransferConversationSelectionViewController {
     
     private func updateSelectedRows() {
         assert(!isSearching)
-        for (row, receiver) in models.enumerated() where selections.contains(receiver.conversationId) {
+        for (row, receiver) in models.enumerated() where selectedConversationIDs.contains(receiver.conversationId) {
             tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
         }
     }

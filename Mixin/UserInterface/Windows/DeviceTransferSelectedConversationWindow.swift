@@ -9,8 +9,8 @@ class DeviceTransferSelectedConversationWindow: BottomSheetView {
     
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
     
-    private let rowHeight = 70.0
-    private let maxTableViewHeight = 500.0
+    private let rowHeight: CGFloat = 70.0
+    private let maxTableViewHeight: CGFloat = 500.0
     
     private var onDelete: DeleteHandler?
     private var selections = [MessageReceiver]() {
@@ -20,7 +20,7 @@ class DeviceTransferSelectedConversationWindow: BottomSheetView {
             } else {
                 label.text = R.string.localizable.items_selected_count(selections.count)
             }
-            let height = Double(selections.count) * rowHeight
+            let height = CGFloat(selections.count) * rowHeight
             tableViewHeightConstraint.constant = min(height, maxTableViewHeight)
         }
     }

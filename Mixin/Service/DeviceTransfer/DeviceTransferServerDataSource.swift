@@ -10,9 +10,6 @@ final class DeviceTransferServerDataSource {
     private let remotePlatform: DeviceTransferPlatform
     private let fileContentBuffer: UnsafeMutablePointer<UInt8>
     private let filter: DeviceTransferFilter
-    private let fromDateString: String?
-    private let conversationIDs: [String]?
-    private let conversationIDsForFetching: [String]?
     
     private var transcriptMessageCount = 0
     
@@ -21,9 +18,6 @@ final class DeviceTransferServerDataSource {
         self.remotePlatform = remotePlatform
         self.fileContentBuffer = .allocate(capacity: fileChunkSize)
         self.filter = filter
-        fromDateString = filter.time.utcString
-        conversationIDs = filter.conversation.ids
-        conversationIDsForFetching = filter.conversation.idsForFetching
     }
     
     deinit {
@@ -39,13 +33,14 @@ extension DeviceTransferServerDataSource {
         assert(!Queue.main.isCurrent)
         let messageRowID: Int?
         let pinMessageRowID: Int?
-        if let fromDateString {
-            messageRowID = MessageDAO.shared.messageRowID(createdAt: fromDateString)
-            pinMessageRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDateString)
+        if let dateString = filter.dateString {
+            messageRowID = MessageDAO.shared.messageRowID(createdAt: dateString)
+            pinMessageRowID = PinMessageDAO.shared.messageRowID(createdAt: dateString)
         } else {
             messageRowID = nil
             pinMessageRowID = nil
         }
+        let conversationIDs = filter.conversation.ids
         let messagesCount = MessageDAO.shared.messagesCount(matching: conversationIDs, after: messageRowID)
         let attachmentsCount = filter.shouldFilter
             ? MessageDAO.shared.mediaMessagesCount(matching: conversationIDs, after: messageRowID)
@@ -188,7 +183,7 @@ extension DeviceTransferServerDataSource {
         case .conversation:
             let conversations = ConversationDAO.shared.conversations(limit: limit,
                                                                      after: location.primaryID,
-                                                                     matching: conversationIDsForFetching)
+                                                                     matching: filter.executor.ids)
             databaseItemCount = conversations.count
             nextPrimaryID = conversations.last?.conversationId
             nextSecondaryID = nil
@@ -209,7 +204,7 @@ extension DeviceTransferServerDataSource {
             let participants = ParticipantDAO.shared.participants(limit: limit,
                                                                   after: location.primaryID,
                                                                   with: location.secondaryID,
-                                                                  matching: conversationIDsForFetching)
+                                                                  matching: filter.executor.ids)
             databaseItemCount = participants.count
             nextPrimaryID = participants.last?.conversationId
             nextSecondaryID = participants.last?.userId
@@ -306,8 +301,8 @@ extension DeviceTransferServerDataSource {
             if let primaryID = location.primaryID?.intValue {
                 rowID = primaryID
             } else {
-                if let fromDateString {
-                    if let startRowID = PinMessageDAO.shared.messageRowID(createdAt: fromDateString) {
+                if let dateString = filter.dateString {
+                    if let startRowID = PinMessageDAO.shared.messageRowID(createdAt: dateString) {
                         rowID = startRowID - 1
                     } else {
                         return (0, [], nil, nil)
@@ -318,7 +313,7 @@ extension DeviceTransferServerDataSource {
             }
             let pinMessages = PinMessageDAO.shared.pinMessages(limit: limit,
                                                                after: rowID,
-                                                               matching: conversationIDsForFetching)
+                                                               matching: filter.executor.ids)
             databaseItemCount = pinMessages.count
             if let messageID = pinMessages.last?.messageId, let rowID = PinMessageDAO.shared.messageRowID(messageID: messageID) {
                 nextPrimaryID = "\(rowID)"
@@ -330,7 +325,7 @@ extension DeviceTransferServerDataSource {
                 guard filter.isValidItem(conversationID: pinMessage.conversationId) else {
                     return nil
                 }
-                if let fromDateString, pinMessage.createdAt < fromDateString {
+                guard filter.isValidTime(createdAt: pinMessage.createdAt) else {
                     return nil
                 }
                 let deviceTransferPinMessage = DeviceTransferPinMessage(pinMessage: pinMessage)
@@ -357,8 +352,8 @@ extension DeviceTransferServerDataSource {
             if let primaryID = location.primaryID?.intValue {
                 rowID = primaryID
             } else {
-                if let fromDateString {
-                    if let startRowID = MessageDAO.shared.messageRowID(createdAt: fromDateString) {
+                if let dateString = filter.dateString {
+                    if let startRowID = MessageDAO.shared.messageRowID(createdAt: dateString) {
                         rowID = startRowID - 1
                     } else {
                         return (0, [], nil, nil)
@@ -369,7 +364,7 @@ extension DeviceTransferServerDataSource {
             }
             let messages = MessageDAO.shared.messages(limit: limit,
                                                       after: rowID,
-                                                      matching: conversationIDsForFetching)
+                                                      matching: filter.executor.ids)
             databaseItemCount = messages.count
             if let messageID = messages.last?.messageId, let rowID = MessageDAO.shared.messageRowID(messageID: messageID) {
                 nextPrimaryID = "\(rowID)"
@@ -383,7 +378,7 @@ extension DeviceTransferServerDataSource {
                 guard filter.isValidItem(conversationID: message.conversationId) else {
                     continue
                 }
-                if let fromDateString, message.createdAt < fromDateString {
+                guard filter.isValidTime(createdAt: message.createdAt) else {
                     continue
                 }
                 let deviceTransferMessage = DeviceTransferMessage(message: message, to: remotePlatform)
@@ -413,7 +408,7 @@ extension DeviceTransferServerDataSource {
         case .messageMention:
             let messageMentions = MessageMentionDAO.shared.messageMentions(limit: limit,
                                                                            after: location.primaryID,
-                                                                           matching: conversationIDsForFetching)
+                                                                           matching: filter.executor.ids)
             databaseItemCount = messageMentions.count
             nextPrimaryID = messageMentions.last?.messageId
             nextSecondaryID = nil

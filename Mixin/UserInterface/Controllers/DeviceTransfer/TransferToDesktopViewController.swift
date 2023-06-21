@@ -18,7 +18,8 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
         SettingsRadioSection(rows: [conversationFilterRow, dateFilterRow])
     ])
     
-    private var filter = DeviceTransferFilter(conversation: .all, time: .all)
+    private let filter: DeviceTransferFilter = .passthrough()
+    
     private var observers: Set<AnyCancellable> = []
     private var server: DeviceTransferServer?
     
@@ -29,7 +30,7 @@ class TransferToDesktopViewController: DeviceTransferSettingViewController {
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateFilterRows), name: DeviceTransferFilter.filterDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFilterRows), name: DeviceTransferFilter.filterDidChangeNotification, object: filter)
     }
     
     class func instance() -> UIViewController {

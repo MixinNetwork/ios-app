@@ -113,7 +113,11 @@ public final class PinMessageDAO: UserDatabaseDAO {
                         where: PinMessage.column(of: .conversationId) == conversationId)
     }
     
-    public func pinMessages(limit: Int, after rowID: Int, matching conversationIDs: [String]?) -> [PinMessage] {
+    public func pinMessages(
+        limit: Int,
+        after rowID: Int,
+        matching conversationIDs: Set<String>?
+    ) -> [PinMessage] {
         var sql = "SELECT * FROM pin_messages WHERE rowid > ?"
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
@@ -126,8 +130,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public func pinMessagesCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
-                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.deviceTransferStride) {
+                let endIndex = min(i + Self.deviceTransferStride, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id IN ('\(ids)')"
                 if let rowID {

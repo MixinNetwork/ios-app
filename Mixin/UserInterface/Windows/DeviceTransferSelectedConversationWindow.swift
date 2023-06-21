@@ -2,6 +2,8 @@ import UIKit
 
 class DeviceTransferSelectedConversationWindow: BottomSheetView {
     
+    typealias DeleteHandler = (_ conversationID: String) -> Void
+    
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
@@ -10,7 +12,7 @@ class DeviceTransferSelectedConversationWindow: BottomSheetView {
     private let rowHeight = 70.0
     private let maxTableViewHeight = 500.0
     
-    private var deletionHandler: ((_ receiver: MessageReceiver) -> Void)?
+    private var onDelete: DeleteHandler?
     private var selections = [MessageReceiver]() {
         didSet {
             if selections.count == 1 {
@@ -34,9 +36,9 @@ class DeviceTransferSelectedConversationWindow: BottomSheetView {
         R.nib.deviceTransferSelectedConversationWindow(owner: self)!
     }
     
-    func render(selections: [MessageReceiver], deletionHandler: @escaping ((_ receiver: MessageReceiver) -> Void)) {
+    func render(selections: [MessageReceiver], onDelete: @escaping DeleteHandler) {
         self.selections = selections
-        self.deletionHandler = deletionHandler
+        self.onDelete = onDelete
         self.tableView.reloadData()
     }
     
@@ -67,7 +69,7 @@ extension DeviceTransferSelectedConversationWindow: UITableViewDataSource {
 extension DeviceTransferSelectedConversationWindow: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        deletionHandler?(selections[indexPath.row])
+        onDelete?(selections[indexPath.row].conversationId)
         if selections.count == 1 {
             dismissPopupController(animated: true)
         } else {

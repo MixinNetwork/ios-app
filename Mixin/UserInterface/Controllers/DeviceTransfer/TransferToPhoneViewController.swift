@@ -15,7 +15,7 @@ class TransferToPhoneViewController: DeviceTransferSettingViewController {
         SettingsRadioSection(rows: [conversationFilterRow, dateFilterRow])
     ])
     
-    private var filter = DeviceTransferFilter(conversation: .all, time: .all)
+    private let filter: DeviceTransferFilter = .passthrough()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +23,7 @@ class TransferToPhoneViewController: DeviceTransferSettingViewController {
         tableHeaderView.label.text = R.string.localizable.transfer_hint()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        NotificationCenter.default.addObserver(self, selector: #selector(updateFilterRows), name: DeviceTransferFilter.filterDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFilterRows), name: DeviceTransferFilter.filterDidChangeNotification, object: filter)
     }
     
     class func instance() -> UIViewController {

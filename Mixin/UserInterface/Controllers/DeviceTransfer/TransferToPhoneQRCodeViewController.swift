@@ -9,13 +9,28 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
     
+    private let filter: DeviceTransferFilter
+    private let userID = myUserId
+    
     private var observers: Set<AnyCancellable> = []
     private var server: DeviceTransferServer?
     private var hasTrasferStarted = false
     private var isListening = false
-    private var filter: DeviceTransferFilter!
     
-    private let userID = myUserId
+    init(filter: DeviceTransferFilter) {
+        self.filter = filter
+        let nib = R.nib.transferToPhoneQRCodeView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    class func instance(filter: DeviceTransferFilter) -> UIViewController {
+        let vc = TransferToPhoneQRCodeViewController(filter: filter)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.waiting_for_other_device())
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,12 +51,6 @@ class TransferToPhoneQRCodeViewController: UIViewController {
         if !hasTrasferStarted {
             checkLogout(isBackAction: false)
         }
-    }
-    
-    class func instance(filter: DeviceTransferFilter) -> UIViewController {
-        let vc = TransferToPhoneQRCodeViewController()
-        vc.filter = filter
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.waiting_for_other_device())
     }
     
 }

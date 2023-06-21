@@ -3,92 +3,47 @@ import MixinServices
 
 class DeviceTransferFilter {
     
-    static let filterDidChangeNotification = Notification.Name("one.mixin.messager.DeviceTransferFilter")
+    static let filterDidChangeNotification = Notification.Name("one.mixin.messenger.DeviceTransferFilter.Change")
     
-    private(set) var dateString: String?
-    private(set) var executor: ConversationExecutor
+    private(set) var earliestCreatedAt: String?
     
     var conversation: Conversation {
         didSet {
-            executor = ConversationExecutor(conversation: conversation)
-            NotificationCenter.default.post(onMainThread: Self.filterDidChangeNotification, object: nil)
+            NotificationCenter.default.post(name: Self.filterDidChangeNotification, object: self)
         }
     }
+    
     var time: Time {
         didSet {
-            dateString = time.utcString
-            NotificationCenter.default.post(onMainThread: Self.filterDidChangeNotification, object: nil)
+            earliestCreatedAt = time.utcString
+            NotificationCenter.default.post(name: Self.filterDidChangeNotification, object: self)
         }
     }
     
-    var shouldFilter: Bool {
+    var isPassthrough: Bool {
         switch (time, conversation) {
         case (.all, .all):
-            return false
-        default:
             return true
+        default:
+            return false
         }
     }
     
-    init(conversation: Conversation, time: Time) {
+    private init(conversation: Conversation, time: Time) {
         self.conversation = conversation
         self.time = time
-        dateString = time.utcString
-        executor = ConversationExecutor(conversation: conversation)
     }
     
-    func isValidItem(conversationID: String) -> Bool {
-        switch executor {
-        case .all, .designated:
-            return true
-        case .checked(let ids):
-            return ids.contains(conversationID)
-        }
+    static func passthrough() -> DeviceTransferFilter {
+        DeviceTransferFilter(conversation: .all, time: .all)
     }
     
-    func isValidTime(createdAt: String) -> Bool {
-        if let dateString {
-            return createdAt >= dateString
+    func replaceSelectedConversations(with ids: Set<String>) {
+        if ids.count > UserDatabaseDAO.deviceTransferStride {
+            conversation = .byApplication(ids)
         } else {
-            return true
+            conversation = .byDatabase(ids)
         }
-    }
-    
-}
-
-extension DeviceTransferFilter {
-    
-    enum ConversationExecutor {
-        
-        case all
-        case designated(Array<String>)
-        case checked(Array<String>)
-        
-        // Due to the limitation of the maximum value of a host parameter number,
-        // if the "ids" quantity exceeds "strideForDeviceTransfer" which is 900,
-        // then query all data and check according to the conversationID before sending
-        init(conversation: Conversation) {
-            switch conversation {
-            case .all:
-                self = .all
-            case .designated(let ids):
-                if ids.count > UserDatabaseDAO.strideForDeviceTransfer {
-                    self = .checked(Array(ids))
-                } else {
-                    self = .designated(Array(ids))
-                }
-            }
-        }
-        
-        var ids: [String]? {
-            switch self {
-            case .all, .checked:
-                return nil
-            case .designated(let ids):
-                return ids
-            }
-        }
-        
     }
     
 }
@@ -97,28 +52,44 @@ extension DeviceTransferFilter {
     
     enum Conversation {
         
+        // There are two mechanisms for filtering Conversations/Messages:
+        // 1. When the number of selected conversations is less than `deviceTransferStride`,
+        //    SQL statements are used for filtering.
+        // 2. When the number of selected conversations is greater than `deviceTransferStride`,
+        //    SQL queries do not perform filtering, and the filtering is done at the application layer.
+        
         case all
-        case designated(Set<String>)
+        case byDatabase(Set<String>)
+        case byApplication(Set<String>)
         
         var title: String {
             switch self {
             case .all:
                 return R.string.localizable.all_chats()
-            case .designated(let conversations):
-                if conversations.count == 1 {
+            case .byDatabase(let ids), .byApplication(let ids):
+                if ids.count == 1 {
                     return R.string.localizable.chats_count_one()
                 } else {
-                    return R.string.localizable.chats_count(conversations.count)
+                    return R.string.localizable.chats_count(ids.count)
                 }
             }
         }
         
-        var ids: [String]? {
+        var databaseFilteringIDs: Set<String>? {
             switch self {
-            case .all:
+            case .all, .byApplication:
                 return nil
-            case .designated(let ids):
-                return Array(ids)
+            case .byDatabase(let ids):
+                return ids
+            }
+        }
+        
+        var applicationFilteringIDs: Set<String>? {
+            switch self {
+            case .byApplication(let ids):
+                return ids
+            case .all, .byDatabase:
+                return nil
             }
         }
         

@@ -322,7 +322,7 @@ extension DeviceTransferServer {
             Logger.general.warn(category: "DeviceTransferServer", message: "Not transfering due to invalid state")
             return
         }
-        let dataSource = DeviceTransferServerDataSource(key: key, remotePlatform: remotePlatform, filter: filter)
+        let dataSource = DeviceTransferServerDataSource(key: key, filter: filter, remotePlatform: remotePlatform)
         let count = dataSource.totalCount()
         let start = DeviceTransferCommand(action: .start(count))
         do {

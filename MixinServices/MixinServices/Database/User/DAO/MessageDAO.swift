@@ -980,7 +980,11 @@ extension MessageDAO {
                                silentNotification: silentNotification)
     }
     
-    public func messages(limit: Int, after rowID: Int, matching conversationIDs: [String]?) -> [Message] {
+    public func messages(
+        limit: Int,
+        after rowID: Int,
+        matching conversationIDs: Set<String>?
+    ) -> [Message] {
         var sql = "SELECT * FROM messages WHERE rowid > ?"
         if let conversationIDs {
             let ids = conversationIDs.joined(separator: "', '")
@@ -1001,8 +1005,8 @@ extension MessageDAO {
     public func messagesCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
-                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.deviceTransferStride) {
+                let endIndex = min(i + Self.deviceTransferStride, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE conversation_id IN ('\(ids)')"
                 if let rowID {
@@ -1026,8 +1030,8 @@ extension MessageDAO {
         let categories = MessageCategory.allMediaCategories.map(\.rawValue).joined(separator: "', '")
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
-                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.deviceTransferStride) {
+                let endIndex = min(i + Self.deviceTransferStride, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)') AND media_status IN ('DONE', 'READ') AND conversation_id IN ('\(ids)')"
                 if let rowID {
@@ -1051,8 +1055,8 @@ extension MessageDAO {
         let categories = MessageCategory.transcriptCategories.map(\.rawValue).joined(separator: "', '")
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
-                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.deviceTransferStride) {
+                let endIndex = min(i + Self.deviceTransferStride, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 var sql = "SELECT COUNT(*) FROM messages WHERE category IN ('\(categories)') AND conversation_id IN ('\(ids)')"
                 if let rowID {

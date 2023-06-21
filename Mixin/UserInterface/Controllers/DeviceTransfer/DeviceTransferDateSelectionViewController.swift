@@ -7,10 +7,21 @@ class DeviceTransferDateSelectionViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    private var filter: DeviceTransferFilter!
+    private let filter: DeviceTransferFilter!
     
-    convenience init() {
-        self.init(nib: R.nib.deviceTransferDateSelectionView)
+    init(filter: DeviceTransferFilter) {
+        self.filter = filter
+        let nib = R.nib.deviceTransferDateSelectionView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    class func instance(filter: DeviceTransferFilter) -> UIViewController {
+        let controller = DeviceTransferDateSelectionViewController(filter: filter)
+        return ContainerViewController.instance(viewController: controller, title: R.string.localizable.date())
     }
     
     override func viewDidLoad() {
@@ -30,12 +41,6 @@ class DeviceTransferDateSelectionViewController: UIViewController {
             segmentedControl.selectedSegmentIndex = 1
         }
     }
-
-    class func instance(filter: DeviceTransferFilter) -> UIViewController {
-        let controller = DeviceTransferDateSelectionViewController()
-        controller.filter = filter
-        return ContainerViewController.instance(viewController: controller, title: R.string.localizable.date())
-    }
     
     @IBAction func selectAllDateAction(_ sender: Any) {
         updateAllDateSelection()
@@ -46,11 +51,11 @@ class DeviceTransferDateSelectionViewController: UIViewController {
     }
     
     @IBAction func dateUnitChangedAction(_ sender: Any) {
-        updateDateFilter()
+        updateSaveButton()
     }
     
     @IBAction func textChangedAction(_ sender: Any) {
-        updateDateFilter()
+        updateSaveButton()
     }
     
     @IBAction func editingBeginAction(_ sender: Any) {
@@ -95,10 +100,10 @@ extension DeviceTransferDateSelectionViewController {
         lastDateCheckmark.isHidden = false
         segmentedControl.isEnabled = true
         textField.becomeFirstResponder()
-        updateDateFilter()
+        updateSaveButton()
     }
     
-    private func updateDateFilter() {
+    private func updateSaveButton() {
         if let count = textField.text?.intValue, count > 0 {
             container?.rightButton.isEnabled = true
         } else {

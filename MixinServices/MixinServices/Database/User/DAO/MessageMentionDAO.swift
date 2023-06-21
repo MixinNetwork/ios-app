@@ -15,16 +15,25 @@ public final class MessageMentionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    public func messageMentions(limit: Int, after messageId: String?, matching conversationIDs: [String]?) -> [MessageMention] {
+    public func messageMentions(
+        limit: Int,
+        after messageId: String?,
+        matching conversationIDs: Set<String>?
+    ) -> [MessageMention] {
         var sql = "SELECT * FROM message_mentions"
+       
+        var conditions: [String] = []
         if let messageId {
-            sql += " WHERE rowid > IFNULL((SELECT rowid FROM message_mentions WHERE message_id = '\(messageId)'), 0)"
+            conditions.append("rowid > IFNULL((SELECT rowid FROM message_mentions WHERE message_id = '\(messageId)'), 0)")
         }
         if let conversationIDs {
-            sql += messageId == nil ? " WHERE" : " AND"
             let ids = conversationIDs.joined(separator: "', '")
-            sql += " conversation_id IN ('\(ids)')"
+            conditions.append("conversation_id IN ('\(ids)')")
         }
+        if !conditions.isEmpty {
+            sql += " WHERE " + conditions.joined(separator: " AND ")
+        }
+        
         sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
@@ -32,8 +41,8 @@ public final class MessageMentionDAO: UserDatabaseDAO {
     public func messageMentionsCount(matching conversationIDs: [String]?) -> Int {
         if let conversationIDs {
             var totalCount = 0
-            for i in stride(from: 0, to: conversationIDs.count, by: Self.strideForDeviceTransfer) {
-                let endIndex = min(i + Self.strideForDeviceTransfer, conversationIDs.count)
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.deviceTransferStride) {
+                let endIndex = min(i + Self.deviceTransferStride, conversationIDs.count)
                 let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
                 let sql = "SELECT COUNT(*) FROM message_mentions WHERE conversation_id IN ('\(ids)')"
                 let count: Int? = db.select(with: sql)

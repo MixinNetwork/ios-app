@@ -71,6 +71,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
                 }
             } catch {
                 await MainActor.run {
+                    Logger.walletConnect.error(category: "TransactionRequest", message: "Error: \(error)")
                     self.sendTransactionView.sendButton.isBusy = false
                     self.alert(R.string.localizable.transaction_failed(), message: "\(error)")
                 }
@@ -94,17 +95,20 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
                                      cost: "",
                                      duration: "",
                                      gas: gas,
-                                     gasPrice: prices.fastGasPrice),
+                                     gasPrice: prices.fastGasPrice,
+                                     gasLimit: prices.gasLimit),
                     NetworkFeeOption(speed: R.string.localizable.normal(),
                                      cost: "",
                                      duration: "",
                                      gas: gas,
-                                     gasPrice: prices.proposeGasPrice),
+                                     gasPrice: prices.proposeGasPrice,
+                                     gasLimit: prices.gasLimit),
                     NetworkFeeOption(speed: R.string.localizable.slow(),
                                      cost: "",
                                      duration: "",
                                      gas: gas,
-                                     gasPrice: prices.safeGasPrice),
+                                     gasPrice: prices.safeGasPrice,
+                                     gasLimit: prices.gasLimit),
                 ].compactMap({ $0 })
                 DispatchQueue.main.async {
                     guard let self else {
@@ -121,7 +125,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
                     }
                 }
             case .failure(let error):
-                Logger.tip.error(category: "WalletConnectV1Session", message: "Failed to get gas: \(error)")
+                Logger.walletConnect.error(category: "WalletConnectV1Session", message: "Failed to get gas: \(error)")
             }
         }
     }

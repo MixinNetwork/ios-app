@@ -227,6 +227,7 @@ extension WalletConnectV1Session {
                 if let account, let transaction {
                     Logger.walletConnect.debug(category: "WalletConnectService", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
                     let hash = try await self.ethereumClient.eth_sendRawTransaction(transaction, withAccount: account)
+                    Logger.walletConnect.debug(category: "WalletConnectService", message: "Will respond hash: \(hash)")
                     let response = try Response(url: request.url, value: hash, id: request.id!)
                     self.server.send(response)
                 } else {

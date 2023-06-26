@@ -59,7 +59,7 @@ final class WalletConnectService {
     
     private init() {
         Networking.configure(projectId: MixinKeys.walletConnect,
-                             socketFactory: URLSessionWebSocketFactory())
+                             socketFactory: StarscreamFactory())
         let meta = AppMetadata(name: walletName,
                                description: walletDescription,
                                url: URL.mixinMessenger.absoluteString,
@@ -197,7 +197,7 @@ extension WalletConnectService {
             id: 137,
             internalID: ChainID.polygon,
             name: "Polygon",
-            rpcServerURL: URL(string: "https://polygon.blockpi.network/v1/rpc/public")!,
+            rpcServerURL: URL(string: "https://polygon-rpc.com")!,
             gasSymbol: "MATIC",
             caip2: Blockchain("eip155:137")!
         )
@@ -245,7 +245,16 @@ extension WalletConnectService {
             }
             areV1SessionsRestored = true
         }
-        self.v2Sessions = Sign.instance.getSessions().map(WalletConnectV2Session.init(session:))
+        let v2Sessions = Sign.instance.getSessions().map(WalletConnectV2Session.init(session:))
+        let topics = v2Sessions.map(\.topic)
+        self.v2Sessions = v2Sessions
+        Task {
+            do {
+                try await Relay.instance.batchSubscribe(topics: topics)
+            } catch {
+                logger.error(category: "WalletConnectService", message: "Failed to subscribe: \(error)")
+            }
+        }
     }
     
     @objc private func saveSessions() {

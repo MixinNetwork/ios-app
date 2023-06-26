@@ -43,6 +43,7 @@ final class SignRequestViewController: WalletConnectRequestViewController {
         let attributedMessage = NSMutableAttributedString(string: "Message\n", attributes: [.font: UIFont.systemFont(ofSize: 14)])
         attributedMessage.append(NSAttributedString(string: " \n", attributes: [.font: UIFont.systemFont(ofSize: 8)]))
         attributedMessage.append(NSAttributedString(string: message, attributes: [.font: UIFont.systemFont(ofSize: 12)]))
+        attributedMessage.setAttributes([.foregroundColor: UIColor.text], range: NSRange(location: 0, length: attributedMessage.length))
         messageTextView.attributedText = attributedMessage
     }
     

@@ -17,6 +17,7 @@ final class WalletConnectV2Session {
         case personalSign = "personal_sign"
         case ethSign = "eth_sign"
         case ethSignTypedData = "eth_signTypedData"
+        case ethSignTypedDataV4 = "eth_signTypedData_v4"
         case ethSignTransaction = "eth_signTransaction"
         case ethSendTransaction = "eth_sendTransaction"
     }
@@ -66,7 +67,7 @@ extension WalletConnectV2Session: WalletConnectSession {
             requestPersonalSign(with: request)
         case .ethSign:
             requestETHSign(with: request)
-        case .ethSignTypedData:
+        case .ethSignTypedData, .ethSignTypedDataV4:
             requestETHSignTypedData(with: request)
         case .ethSignTransaction:
             WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
@@ -215,7 +216,7 @@ extension WalletConnectV2Session {
                                                   data: transactionPreview.data,
                                                   nonce: nil,
                                                   gasPrice: fee.gasPrice,
-                                                  gasLimit: transactionPreview.gas,
+                                                  gasLimit: fee.gasLimit,
                                                   chainId: chain.id)
             }
             transactionRequest.onSend = {
@@ -223,6 +224,7 @@ extension WalletConnectV2Session {
                 if let account, let transaction {
                     Logger.walletConnect.debug(category: "WalletConnectV2Session", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
                     let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
+                    Logger.walletConnect.debug(category: "WalletConnectService", message: "Will respond hash: \(hash)")
                     let response = RPCResult.response(AnyCodable(hash))
                     try await Web3Wallet.instance.respond(topic: request.topic,
                                                           requestId: request.id,

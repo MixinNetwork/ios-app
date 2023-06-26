@@ -26,7 +26,7 @@ extension WalletConnectSession {
         default:
             network = .custom("\(chain.id)")
         }
-        Logger.walletConnect.info(category: "V1Session", message: "New client with: \(chain)")
+        Logger.walletConnect.info(category: "WalletConnectSession", message: "New client with: \(chain)")
         return EthereumHttpClient(url: chain.rpcServerURL, network: network)
     }
     

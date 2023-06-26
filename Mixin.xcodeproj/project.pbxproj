@@ -797,6 +797,7 @@
 		947FA4D229957A2400EF13A0 /* AuthorizationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947FA4D129957A2400EF13A0 /* AuthorizationTableViewCell.xib */; };
 		947FA4D429957A4600EF13A0 /* AuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947FA4D329957A4600EF13A0 /* AuthorizationsContentViewController.swift */; };
 		94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94812DD926E082C400213F79 /* mixin_condensed.otf */; };
+		9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 9481C03B2A49A9AA0009DAF8 /* Starscream */; };
 		94822BC929B7071600DC21B2 /* WalletConnectRejectionReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94822BC829B7071600DC21B2 /* WalletConnectRejectionReason.swift */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */; };
 		948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */; };
@@ -2236,6 +2237,7 @@
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
 				F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */,
 				94341BFA2862F302009C9147 /* libopus.xcframework in Frameworks */,
+				9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4196,6 +4198,7 @@
 				9477E72A29A33FD600045094 /* WalletConnectSwift */,
 				9431379129AD2F8F00C2484B /* web3.swift */,
 				9416231929BEEFB800E540B9 /* OrderedCollections */,
+				9481C03B2A49A9AA0009DAF8 /* Starscream */,
 			);
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
@@ -4316,6 +4319,7 @@
 				9477E72929A33FD600045094 /* XCRemoteSwiftPackageReference "WalletConnectSwift" */,
 				9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */,
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -6372,6 +6376,14 @@
 				kind = branch;
 			};
 		};
+		9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream";
+			requirement = {
+				kind = exactVersion;
+				version = 3.1.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -6394,6 +6406,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9477E72929A33FD600045094 /* XCRemoteSwiftPackageReference "WalletConnectSwift" */;
 			productName = WalletConnectSwift;
+		};
+		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

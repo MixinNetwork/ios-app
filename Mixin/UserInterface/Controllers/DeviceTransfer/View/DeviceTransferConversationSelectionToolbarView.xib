@@ -10,8 +10,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DeviceTransferConversationSelectionViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="operationAllButton" destination="rfT-1y-veu" id="OkV-dN-ofn"/>
                 <outlet property="showSelectedButton" destination="Csa-YX-P7n" id="lek-Zo-7T4"/>
+                <outlet property="toggleAllSelectionButton" destination="rfT-1y-veu" id="OkV-dN-ofn"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

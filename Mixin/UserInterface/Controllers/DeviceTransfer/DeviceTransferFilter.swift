@@ -125,18 +125,16 @@ extension DeviceTransferFilter {
         }
         
         var utcString: String? {
-            let monthsAgo: Int
+            let calendar = Calendar.current
+            let startOfToday = calendar.startOfDay(for: Date())
             switch self {
             case .all:
                 return nil
             case .lastMonths(let months):
-                monthsAgo = months
+                return calendar.date(byAdding: .month, value: -months, to: startOfToday)?.toUTCString()
             case .lastYears(let years):
-                monthsAgo = years * 12
+                return calendar.date(byAdding: .year, value: -years, to: startOfToday)?.toUTCString()
             }
-            let calendar = Calendar.current
-            let startOfToday = calendar.startOfDay(for: Date())
-            return calendar.date(byAdding: .month, value: -monthsAgo, to: startOfToday)?.toUTCString()
         }
         
     }

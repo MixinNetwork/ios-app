@@ -152,48 +152,48 @@ extension TransferToDesktopViewController {
 extension TransferToDesktopViewController {
     
     private func prepareTransfer() {
-        if AppGroupUserDefaults.Account.isDesktopLoggedIn {
-            guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
-                Logger.general.info(category: "TransferToDesktop", message: "Network is not reachable")
-                alert(R.string.localizable.devices_on_same_network())
-                return
-            }
-            guard WebSocketService.shared.isRealConnected else {
-                Logger.general.info(category: "TransferToDesktop", message: "WebSocket is not connected")
-                alert(R.string.localizable.unable_connect_to_desktop())
-                return
-            }
-            tableView.isUserInteractionEnabled = false
-            let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
-                                               rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
-            section.setAccessory(.busy, forRowAt: 0)
-            dataSource.replaceSection(at: 0, with: section, animation: .automatic)
-            let server = DeviceTransferServer(filter: filter)
-            server.$state
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] state in
-                    self?.server(server, didChangeToState: state)
-                }
-                .store(in: &observers)
-            server.$lastConnectionRejectedReason
-                .sink { [weak self] reason in
-                    if let self, let reason {
-                        self.server(server, didRejectConnection: reason)
-                    }
-                }
-                .store(in: &observers)
-            self.server = server
-            server.startListening() { [weak self] error in
-                guard let self else {
-                    return
-                }
-                Logger.general.info(category: "TransferToDesktop", message: "Failed to start listening: \(error)")
-                self.alert(R.string.localizable.connection_establishment_failed()) { _ in
-                    self.navigationController?.popViewController(animated: true)
-                }
-            }
-        } else {
+        guard AppGroupUserDefaults.Account.isDesktopLoggedIn else {
             alert(R.string.localizable.login_desktop_first())
+            return
+        }
+        guard ReachabilityManger.shared.isReachableOnEthernetOrWiFi else {
+            Logger.general.info(category: "TransferToDesktop", message: "Network is not reachable")
+            alert(R.string.localizable.devices_on_same_network())
+            return
+        }
+        guard WebSocketService.shared.isRealConnected else {
+            Logger.general.info(category: "TransferToDesktop", message: "WebSocket is not connected")
+            alert(R.string.localizable.unable_connect_to_desktop())
+            return
+        }
+        tableView.isUserInteractionEnabled = false
+        let section = SettingsRadioSection(footer: R.string.localizable.open_desktop_to_confirm(),
+                                           rows: [SettingsRow(title: R.string.localizable.waiting(), titleStyle: .normal)])
+        section.setAccessory(.busy, forRowAt: 0)
+        dataSource.replaceSection(at: 0, with: section, animation: .automatic)
+        let server = DeviceTransferServer(filter: filter)
+        server.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                self?.server(server, didChangeToState: state)
+            }
+            .store(in: &observers)
+        server.$lastConnectionRejectedReason
+            .sink { [weak self] reason in
+                if let self, let reason {
+                    self.server(server, didRejectConnection: reason)
+                }
+            }
+            .store(in: &observers)
+        self.server = server
+        server.startListening() { [weak self] error in
+            guard let self else {
+                return
+            }
+            Logger.general.info(category: "TransferToDesktop", message: "Failed to start listening: \(error)")
+            self.alert(R.string.localizable.connection_establishment_failed()) { _ in
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
     

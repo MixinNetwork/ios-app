@@ -4,7 +4,7 @@ import MixinServices
 
 class DeviceTransferConversationSelectionViewController: PeerViewController<MessageReceiver, CheckmarkPeerCell, MessageReceiverSearchResult> {
     
-    @IBOutlet weak var operationAllButton: UIButton!
+    @IBOutlet weak var toggleAllSelectionButton: UIButton!
     @IBOutlet weak var showSelectedButton: UIButton!
     
     private let filter: DeviceTransferFilter!
@@ -17,7 +17,7 @@ class DeviceTransferConversationSelectionViewController: PeerViewController<Mess
             let title = !models.isEmpty && models.count == selectedConversationIDs.count
                 ? R.string.localizable.deselect_all()
                 : R.string.localizable.select_all()
-            operationAllButton.setTitle(title, for: .normal)
+            toggleAllSelectionButton.setTitle(title, for: .normal)
             let color = selectedConversationIDs.isEmpty ? R.color.text_accessory() : R.color.theme()
             showSelectedButton.setTitleColor(color, for: .normal)
             showSelectedButton.setTitle(R.string.localizable.show_selected(selectedConversationIDs.count), for: .normal)

@@ -202,11 +202,9 @@ extension DeviceTransferServerDataSource {
                 } else {
                     nextLocation = nil
                 }
-                if !isPassthroughFilter, location.type == .message {
-                    Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send transcript \(dependenciesCount)")
-                }
-                if isPassthroughFilter || location.type != .transcriptMessage {
-                    Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(location.type) \(recordCount)")
+                Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(recordCount) \(location.type)")
+                if dependenciesCount != 0 {
+                    Logger.general.info(category: "DeviceTransferServerDataSource", message: "Send \(dependenciesCount) dependencies")
                 }
                 recordCount = 0
                 dependenciesCount = 0

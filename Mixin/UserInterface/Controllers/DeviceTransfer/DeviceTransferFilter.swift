@@ -126,15 +126,27 @@ extension DeviceTransferFilter {
         
         var utcString: String? {
             let calendar = Calendar.current
-            let startOfToday = calendar.startOfDay(for: Date())
+            let now = Date()
+            let target: Date
             switch self {
             case .all:
                 return nil
             case .lastMonths(let months):
-                return calendar.date(byAdding: .month, value: -months, to: startOfToday)?.toUTCString()
+                if let added = calendar.date(byAdding: .month, value: -months, to: now) {
+                    target = added
+                } else {
+                    Logger.general.error(category: "DeviceTransferFilter", message: "Unable to add month: \(months), calendar: \(calendar)")
+                    return nil
+                }
             case .lastYears(let years):
-                return calendar.date(byAdding: .year, value: -years, to: startOfToday)?.toUTCString()
+                if let added = calendar.date(byAdding: .year, value: -years, to: now) {
+                    target = added
+                } else {
+                    Logger.general.error(category: "DeviceTransferFilter", message: "Unable to add year: \(years), calendar: \(calendar)")
+                    return nil
+                }
             }
+            return calendar.startOfDay(for: target).toUTCString()
         }
         
     }

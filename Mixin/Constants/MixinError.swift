@@ -5,7 +5,7 @@ enum MixinError: Error {
     case loadAvatar(url: URL, error: Error?)
     case invalidPin
     case missingBackup
-    case requestLoginVerificationCode([String: Any])
+    case requestLoginVerificationCode([String: String])
     case generateRsaKeyPair
     case unrecognizedCaptchaMessage(String)
     case unrecognizedUrl(URL)

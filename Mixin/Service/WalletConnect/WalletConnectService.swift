@@ -147,7 +147,7 @@ extension WalletConnectService {
             id: 1,
             internalID: ChainID.ethereum,
             name: "Ethereum",
-            rpcServerURL: URL(string: "https://rpc.ankr.com/eth")!,
+            rpcServerURL: URL(string: "https://cloudflare-eth.com")!,
             gasSymbol: "ETH",
             caip2: Blockchain("eip155:1")!
         )

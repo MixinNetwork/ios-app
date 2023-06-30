@@ -746,6 +746,7 @@
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
+		944B1BEE2A4CB0AA00C36B61 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 944B1BED2A4CB0AA00C36B61 /* CryptoSwift */; };
 		944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */; };
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
 		944ED8D22646535B00C97215 /* WebContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8D12646535B00C97215 /* WebContentView.xib */; };
@@ -780,13 +781,10 @@
 		947744DB26A9D2ED00B6BBDD /* ShakableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DA26A9D2ED00B6BBDD /* ShakableCell.swift */; };
 		947744DF26A9EBC800B6BBDD /* HomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DE26A9EBC800B6BBDD /* HomeAppCell.swift */; };
 		947744E126A9F2D300B6BBDD /* HomeAppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744E026A9F2D300B6BBDD /* HomeAppItem.swift */; };
-		9477E72B29A33FD600045094 /* WalletConnectSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9477E72A29A33FD600045094 /* WalletConnectSwift */; };
 		947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36A825DEB72A00146111 /* PlaylistManager.swift */; };
 		947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36AD25DEB75A00146111 /* PlaylistViewController.swift */; };
 		947B36B325DEB79100146111 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947B36B225DEB79100146111 /* PlaylistView.xib */; };
-		947C5E5729B0D41700838458 /* WalletConnectSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947C5E5629B0D41700838458 /* WalletConnectSession.swift */; };
-		947C5E5929B0D80700838458 /* WalletConnectV1Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947C5E5829B0D80700838458 /* WalletConnectV1Session.swift */; };
-		947C5E5B29B0FE9B00838458 /* WalletConnectV2Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947C5E5A29B0FE9B00838458 /* WalletConnectV2Session.swift */; };
+		947C5E5B29B0FE9B00838458 /* WalletConnectSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947C5E5A29B0FE9B00838458 /* WalletConnectSession.swift */; };
 		947E06572798562B0002669B /* PINIteratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E06562798562B0002669B /* PINIteratorView.swift */; };
 		947E0659279867870002669B /* PINIteratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E0658279867870002669B /* PINIteratorTest.swift */; };
 		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
@@ -1911,9 +1909,7 @@
 		947B36A825DEB72A00146111 /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
 		947B36AD25DEB75A00146111 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		947B36B225DEB79100146111 /* PlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistView.xib; sourceTree = "<group>"; };
-		947C5E5629B0D41700838458 /* WalletConnectSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSession.swift; sourceTree = "<group>"; };
-		947C5E5829B0D80700838458 /* WalletConnectV1Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectV1Session.swift; sourceTree = "<group>"; };
-		947C5E5A29B0FE9B00838458 /* WalletConnectV2Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectV2Session.swift; sourceTree = "<group>"; };
+		947C5E5A29B0FE9B00838458 /* WalletConnectSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSession.swift; sourceTree = "<group>"; };
 		947E01EE2797FE6A0002669B /* MixinDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MixinDebug.entitlements; sourceTree = "<group>"; };
 		947E06562798562B0002669B /* PINIteratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINIteratorView.swift; sourceTree = "<group>"; };
 		947E0658279867870002669B /* PINIteratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINIteratorTest.swift; sourceTree = "<group>"; };
@@ -2222,7 +2218,6 @@
 			files = (
 				94341C002863530B009C9147 /* libogg.xcframework in Frameworks */,
 				DFAA0DEF237823DA003E26B2 /* DeviceCheck.framework in Frameworks */,
-				9477E72B29A33FD600045094 /* WalletConnectSwift in Frameworks */,
 				9416231A29BEEFB800E540B9 /* OrderedCollections in Frameworks */,
 				DFCC4342206B668A006F50BE /* Security.framework in Frameworks */,
 				94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */,
@@ -2232,6 +2227,7 @@
 				94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */,
 				940C7541299AAE130006338F /* Web3Wallet in Frameworks */,
 				DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */,
+				944B1BEE2A4CB0AA00C36B61 /* CryptoSwift in Frameworks */,
 				DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */,
 				94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */,
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
@@ -2994,9 +2990,7 @@
 				94E35CA2298B836300ADB40D /* WalletConnectService.swift */,
 				940764C229B2633C00B779A6 /* WalletConnectMessage.swift */,
 				94822BC829B7071600DC21B2 /* WalletConnectRejectionReason.swift */,
-				947C5E5629B0D41700838458 /* WalletConnectSession.swift */,
-				947C5E5829B0D80700838458 /* WalletConnectV1Session.swift */,
-				947C5E5A29B0FE9B00838458 /* WalletConnectV2Session.swift */,
+				947C5E5A29B0FE9B00838458 /* WalletConnectSession.swift */,
 			);
 			path = WalletConnect;
 			sourceTree = "<group>";
@@ -4195,10 +4189,10 @@
 			name = Mixin;
 			packageProductDependencies = (
 				940C7540299AAE130006338F /* Web3Wallet */,
-				9477E72A29A33FD600045094 /* WalletConnectSwift */,
 				9431379129AD2F8F00C2484B /* web3.swift */,
 				9416231929BEEFB800E540B9 /* OrderedCollections */,
 				9481C03B2A49A9AA0009DAF8 /* Starscream */,
+				944B1BED2A4CB0AA00C36B61 /* CryptoSwift */,
 			);
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
@@ -4316,10 +4310,10 @@
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			packageReferences = (
 				940C753F299AAE130006338F /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */,
-				9477E72929A33FD600045094 /* XCRemoteSwiftPackageReference "WalletConnectSwift" */,
 				9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */,
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
+				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -4874,7 +4868,6 @@
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,
-				947C5E5929B0D80700838458 /* WalletConnectV1Session.swift in Sources */,
 				7BDFAE902559008800296F8B /* WalletSearchViewController.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
 				7B50DE112333C37E00FB651A /* FullScreenPopupEdgePanGestureRecognizer.swift in Sources */,
@@ -5235,7 +5228,7 @@
 				948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
-				947C5E5B29B0FE9B00838458 /* WalletConnectV2Session.swift in Sources */,
+				947C5E5B29B0FE9B00838458 /* WalletConnectSession.swift in Sources */,
 				7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */,
 				7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */,
 				7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */,
@@ -5532,7 +5525,6 @@
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,
 				7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */,
-				947C5E5729B0D41700838458 /* WalletConnectSession.swift in Sources */,
 				E0E3301F23962B2100276746 /* EditSharedAppsFooterView.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
@@ -6368,12 +6360,12 @@
 				version = 1.5.1;
 			};
 		};
-		9477E72929A33FD600045094 /* XCRemoteSwiftPackageReference "WalletConnectSwift" */ = {
+		944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/WalletConnect/WalletConnectSwift.git";
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */ = {
@@ -6402,10 +6394,10 @@
 			package = 9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */;
 			productName = web3.swift;
 		};
-		9477E72A29A33FD600045094 /* WalletConnectSwift */ = {
+		944B1BED2A4CB0AA00C36B61 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9477E72929A33FD600045094 /* XCRemoteSwiftPackageReference "WalletConnectSwift" */;
-			productName = WalletConnectSwift;
+			package = 944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;

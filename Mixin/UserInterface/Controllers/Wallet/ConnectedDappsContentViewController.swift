@@ -3,34 +3,17 @@ import Web3Wallet
 
 final class ConnectedDappsContentViewController: AuthorizationsContentViewController {
     
-    var v1Sessions: [WalletConnectV1Session] = [] {
+    var sessions: [WalletConnectSession] = [] {
         didSet {
             tableView.reloadData()
-            tableView.checkEmpty(dataCount: v1Sessions.count + v2Sessions.count,
+            tableView.checkEmpty(dataCount: sessions.count,
                                  text: R.string.localizable.no_dapp(),
                                  photo: R.image.emptyIndicator.ic_authorization()!)
         }
-    }
-    
-    var v2Sessions: [WalletConnectV2Session] = [] {
-        didSet {
-            tableView.reloadData()
-            tableView.checkEmpty(dataCount: v1Sessions.count + v2Sessions.count,
-                                 text: R.string.localizable.no_dapp(),
-                                 photo: R.image.emptyIndicator.ic_authorization()!)
-        }
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return v1Sessions.count
-        } else {
-            return v2Sessions.count
-        }
+        sessions.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -50,11 +33,7 @@ final class ConnectedDappsContentViewController: AuthorizationsContentViewContro
     }
     
     private func session(at indexPath: IndexPath) -> WalletConnectSession {
-        if indexPath.section == 0 {
-            return v1Sessions[indexPath.row]
-        } else {
-            return v2Sessions[indexPath.row]
-        }
+        sessions[indexPath.row]
     }
     
 }

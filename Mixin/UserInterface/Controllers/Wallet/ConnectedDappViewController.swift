@@ -48,35 +48,16 @@ final class ConnectedDappViewController: SettingsTableViewController {
         tableView.tableHeaderView = tableHeaderView
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        if let currentSession = session as? WalletConnectV1Session {
-            switchChainRow.subtitle = currentSession.chain.name
-            dataSource.insertSection(SettingsSection(rows: [switchChainRow]), at: 0, animation: .none)
-            sessionsSubscriber = WalletConnectService.shared.$v1Sessions
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] sessions in
-                    let hasCurrentSession = sessions.contains { session in
-                        session.topic == currentSession.topic
-                    }
-                    if let self, !hasCurrentSession {
-                        self.navigationController?.popViewController(animated: true)
-                    }
+        sessionsSubscriber = WalletConnectService.shared.$sessions
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sessions in
+                let hasCurrentSession = sessions.contains {
+                    $0.topic == session.topic
                 }
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(updateNetworkSubtitle),
-                                                   name: WalletConnectV1Session.didUpdateNotification,
-                                                   object: currentSession)
-        } else if let currentSession = session as? WalletConnectV2Session {
-            sessionsSubscriber = WalletConnectService.shared.$v2Sessions
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] sessions in
-                    let hasCurrentSession = sessions.contains { session in
-                        session.topic == currentSession.topic
-                    }
-                    if let self, !hasCurrentSession {
-                        self.navigationController?.popViewController(animated: true)
-                    }
+                if let self, !hasCurrentSession {
+                    self.navigationController?.popViewController(animated: true)
                 }
-        }
+            }
     }
     
     private func disconnect() {
@@ -104,48 +85,13 @@ final class ConnectedDappViewController: SettingsTableViewController {
         }
     }
     
-    private func presentChainSelection(session: WalletConnectV1Session) {
-        let sheet = UIAlertController(title: R.string.localizable.switch_network(), message: nil, preferredStyle: .actionSheet)
-        for chain in WalletConnectService.supportedChains.values {
-            sheet.addAction(UIAlertAction(title: chain.name, style: .default) { _ in
-                self.switch(session: session, to: chain)
-            })
-        }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
-        present(sheet, animated: true)
-    }
-    
-    private func `switch`(session: WalletConnectV1Session, to chain: WalletConnectService.Chain) {
-        do {
-            try session.switch(to: chain)
-        } catch {
-            showAutoHiddenHud(style: .error, text: error.localizedDescription)
-        }
-    }
-    
-    @objc private func updateNetworkSubtitle(_ notification: Notification) {
-        guard let session = notification.object as? WalletConnectV1Session else {
-            return
-        }
-        switchChainRow.subtitle = session.chain.name
-    }
-    
 }
 
 extension ConnectedDappViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let session = session as? WalletConnectV1Session {
-            switch indexPath.section {
-            case 0:
-                presentChainSelection(session: session)
-            default:
-                disconnect()
-            }
-        } else {
-            disconnect()
-        }
+        disconnect()
     }
     
 }

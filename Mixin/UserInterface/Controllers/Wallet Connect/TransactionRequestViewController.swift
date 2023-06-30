@@ -125,7 +125,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
                     }
                 }
             case .failure(let error):
-                Logger.walletConnect.error(category: "WalletConnectV1Session", message: "Failed to get gas: \(error)")
+                Logger.walletConnect.error(category: "TransactionRequest", message: "Failed to get gas: \(error)")
             }
         }
     }

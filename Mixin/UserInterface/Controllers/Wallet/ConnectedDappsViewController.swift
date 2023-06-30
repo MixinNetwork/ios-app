@@ -21,20 +21,13 @@ final class ConnectedDappsViewController: AuthorizationsViewController<Connected
     }
     
     override func reloadData() {
-        WalletConnectService.shared.$v1Sessions
+        WalletConnectService.shared.$sessions
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessions in
-                self?.contentViewController.v1Sessions = sessions
+                self?.contentViewController.sessions = sessions
             }
             .store(in: &subscribes)
-        WalletConnectService.shared.$v2Sessions
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessions in
-                self?.contentViewController.v2Sessions = sessions
-            }
-            .store(in: &subscribes)
-        contentViewController.v1Sessions = WalletConnectService.shared.v1Sessions
-        contentViewController.v2Sessions = WalletConnectService.shared.v2Sessions
+        contentViewController.sessions = WalletConnectService.shared.sessions
         isDataLoaded = true
         search(searchBoxView.textField)
     }
@@ -43,20 +36,12 @@ final class ConnectedDappsViewController: AuthorizationsViewController<Connected
         if keyword.isEmpty {
             contentContainerView.bringSubviewToFront(contentViewController.view)
         } else {
-            let v1Results = contentViewController.v1Sessions.filter { (session) -> Bool in
+            let results = contentViewController.sessions.filter { (session) -> Bool in
                 session.name.contains(keyword) || session.host.contains(keyword)
             }
-            let v2Results = contentViewController.v2Sessions.filter { (session) -> Bool in
-                session.name.contains(keyword) || session.host.contains(keyword)
-            }
-            searchContentViewController.v1Sessions = contentViewController.v1Sessions.filter { (session) -> Bool in
-                session.name.contains(keyword) || session.host.contains(keyword)
-            }
-            searchContentViewController.v2Sessions = contentViewController.v2Sessions.filter { (session) -> Bool in
-                session.name.contains(keyword) || session.host.contains(keyword)
-            }
+            searchContentViewController.sessions = results
             if isDataLoaded {
-                searchContentViewController.tableView.checkEmpty(dataCount: v1Results.count + v2Results.count,
+                searchContentViewController.tableView.checkEmpty(dataCount: results.count,
                                                                  text: R.string.localizable.no_results(),
                                                                  photo: R.image.emptyIndicator.ic_search_result()!)
             }

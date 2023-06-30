@@ -1,13 +1,11 @@
 import UIKit
-import WalletConnectSwift
 import Web3Wallet
 import MixinServices
 
 final class ConnectWalletViewController: UIViewController {
     
     enum Info {
-        case v1(WalletConnectSwift.Session.ClientMeta, WalletConnectService.Chain)
-        case v2(WalletConnectSign.Session.Proposal)
+        case walletConnect(WalletConnectSign.Session.Proposal)
         case bot(App)
         case page(String)
     }
@@ -44,9 +42,8 @@ final class ConnectWalletViewController: UIViewController {
         tableView.dataSource = self
         tableView.reloadData()
         switch info {
-        case let .v1(_, chain):
-            setChainName(chain.name)
-        case .v2, .bot, .page:
+        // TODO: Update with newest design
+        case .walletConnect, .bot, .page:
             setChainName(nil)
         }
     }
@@ -84,13 +81,7 @@ extension ConnectWalletViewController: AuthenticationIntentViewController {
     
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         switch info {
-        case let .v1(meta, _):
-            if let url = meta.icons.first {
-                return .url(url)
-            } else {
-                return nil
-            }
-        case let .v2(proposal):
+        case let .walletConnect(proposal):
             if let url = proposal.proposer.icons.lazy.compactMap(URL.init(string:)).first {
                 return .url(url)
             } else {
@@ -105,9 +96,7 @@ extension ConnectWalletViewController: AuthenticationIntentViewController {
     
     var intentSubtitle: String {
         switch info {
-        case let .v1(meta, _):
-            return meta.name
-        case let .v2(proposal):
+        case let .walletConnect(proposal):
             return proposal.proposer.name
         case let .bot(app):
             return app.name + " (" + app.appNumber + ")"

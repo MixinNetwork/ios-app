@@ -1,7 +1,6 @@
 import UIKit
 import WebKit
 import Alamofire
-import WalletConnectSwift
 import web3
 import MixinServices
 
@@ -32,7 +31,6 @@ class MixinWebViewController: WebViewController {
         case reloadTheme = "reloadTheme"
         case playlist = "playlist"
         case close = "close"
-        case log = "log"
         case getTIPAddress = "getTipAddress"
         case tipSign = "tipSign"
     }
@@ -368,10 +366,6 @@ extension MixinWebViewController: WKScriptMessageHandler {
             }
         case .close:
             dismissAsChild(animated: true, completion: nil)
-        case .log:
-            if WalletConnectService.isAvailable, let log = message.body as? String, let url = WCURL(log) {
-                WalletConnectService.shared.connect(to: url)
-            }
         case .getTIPAddress:
             if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 2 {
                 let chainId = body[0]

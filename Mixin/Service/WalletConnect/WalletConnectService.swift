@@ -4,7 +4,6 @@ import OrderedCollections
 import BigInt
 import web3
 import Auth
-import WalletConnectSwift
 import Web3Wallet
 import MixinServices
 
@@ -33,29 +32,17 @@ final class WalletConnectService {
     }
     
     @Published
-    private(set) var v1Sessions: [WalletConnectV1Session] = []
+    private(set) var sessions: [WalletConnectSession] = []
     
-    @Published
-    private(set) var v2Sessions: [WalletConnectV2Session] = []
-    
-    private let sessionsStorageKey = "walletconnect_sessions"
     private let walletName = "Mixin Messenger"
     private let walletDescription = "An open source cryptocurrency wallet with Signal messaging. Fully non-custodial and recoverable with phone number and TIP."
     
     private var connectionHud: Hud?
-    private var areV1SessionsRestored = false
     private var subscribes = Set<AnyCancellable>()
     
     // Only one request or proposal can be presented at a time
     // New incoming requests will be rejected if `presentedViewController` is not nil
     private weak var presentedViewController: UIViewController?
-    
-    private lazy var server: Server = {
-        let server = Server(delegate: self)
-        let handler = RequestHandlerProxy(handler: self)
-        server.register(handler: handler)
-        return server
-    }()
     
     private init() {
         Networking.configure(projectId: MixinKeys.walletConnect,
@@ -85,17 +72,16 @@ final class WalletConnectService {
             .store(in: &subscribes)
     }
     
-    func connect(to url: WCURL) {
-        logger.debug(category: "WalletConnectService", message: "Will connect to v1 topic: \(url.topic)")
-        assert(Thread.isMainThread)
-        let hud = loadHud()
-        do {
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            try server.connect(to: url)
-        } catch {
-            logger.error(category: "WalletConnectService", message: "Failed to connect to: \(url.absoluteString)")
-            hud.set(style: .error, text: error.localizedDescription)
-            hud.scheduleAutoHidden()
+    func reloadSessions() {
+        let sessions = Sign.instance.getSessions().map(WalletConnectSession.init(session:))
+        let topics = sessions.map(\.topic)
+        self.sessions = sessions
+        Task {
+            do {
+                try await Relay.instance.batchSubscribe(topics: topics)
+            } catch {
+                logger.error(category: "WalletConnectService", message: "Failed to subscribe: \(error)")
+            }
         }
     }
     
@@ -137,18 +123,6 @@ final class WalletConnectService {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
         container.presentOnTopMostPresentedController(alert, animated: true)
-    }
-    
-    private func firstV1Session(matches topic: String) -> WalletConnectV1Session? {
-        v1Sessions.first { session in
-            session.topic == topic
-        }
-    }
-    
-    private func firstV2Session(matches topic: String) -> WalletConnectV2Session? {
-        v2Sessions.first { session in
-            session.topic == topic
-        }
     }
     
     private func loadHud() -> Hud {
@@ -231,207 +205,7 @@ extension WalletConnectService {
     
 }
 
-// MARK: - Session
-extension WalletConnectService {
-    
-    func reloadSessions() {
-        if !areV1SessionsRestored, let data = UserDefaults.standard.data(forKey: sessionsStorageKey) {
-            do {
-                // Session will be appended afterwards in `server(_:, didConnect:)`
-                let sessions = try PropertyListDecoder.default.decode([WalletConnectSwift.Session].self, from: data)
-                try sessions.forEach(server.reconnect(to:))
-            } catch {
-                logger.error(category: "WalletConnectService", message: "Failed to restore: \(error)")
-            }
-            areV1SessionsRestored = true
-        }
-        let v2Sessions = Sign.instance.getSessions().map(WalletConnectV2Session.init(session:))
-        let topics = v2Sessions.map(\.topic)
-        self.v2Sessions = v2Sessions
-        Task {
-            do {
-                try await Relay.instance.batchSubscribe(topics: topics)
-            } catch {
-                logger.error(category: "WalletConnectService", message: "Failed to subscribe: \(error)")
-            }
-        }
-    }
-    
-    @objc private func saveSessions() {
-        // WalletConnect V2 sessions are saved by the SDK
-        do {
-            let data = try PropertyListEncoder.default.encode(v1Sessions.map(\.session))
-            UserDefaults.standard.set(data, forKey: sessionsStorageKey)
-        } catch {
-            logger.error(category: "WalletConnectService", message: "Unable to encode sessions: \(error)")
-        }
-    }
-    
-}
-
-// MARK: - V1 Delegate
-extension WalletConnectService: ServerDelegate {
-    
-    func server(_ server: Server, didFailToConnect url: WCURL) {
-        logger.debug(category: "WalletConnectService", message: "Failed connect to: \(url)")
-        DispatchQueue.main.async {
-            if let hud = self.connectionHud {
-                hud.set(style: .error, text: R.string.localizable.connection_failed())
-                hud.scheduleAutoHidden()
-            }
-        }
-    }
-    
-    func server(
-        _ server: Server,
-        shouldStart session: WalletConnectSwift.Session,
-        completion: @escaping (WalletConnectSwift.Session.WalletInfo) -> Void
-    ) {
-        let chain: Chain
-        if let id = session.dAppInfo.chainId, let supportedChain = Self.supportedChains[id] {
-            chain = supportedChain
-        } else {
-            chain = Self.defaultChain
-        }
-        let meta = WalletConnectSwift.Session.ClientMeta(name: walletName,
-                                                         description: walletDescription,
-                                                         icons: [],
-                                                         url: .mixinMessenger)
-        DispatchQueue.main.async {
-            self.connectionHud?.hide()
-            guard let container = UIApplication.homeContainerViewController else {
-                return
-            }
-            let connectWallet = ConnectWalletViewController(info: .v1(session.dAppInfo.peerMeta, chain))
-            connectWallet.onApprove = { priv in
-                do {
-                    let storage = InPlaceKeyStorage(raw: priv)
-                    let account = try EthereumAccount(keyStorage: storage)
-                    let info = WalletConnectSwift.Session.WalletInfo(approved: true,
-                                                                     accounts: [account.address.toChecksumAddress()],
-                                                                     chainId: chain.id,
-                                                                     peerId: UUID().uuidString,
-                                                                     peerMeta: meta)
-                    self.connectionHud?.show(style: .busy, text: "", on: container.view)
-                    completion(info)
-                } catch {
-                    logger.error(category: "WalletConnectService", message: "Failed to start: \(error)")
-                    self.connectionHud?.show(style: .error, text: error.localizedDescription, on: container.view)
-                    completion(.init(approved: false, accounts: [], chainId: chain.id, peerId: "", peerMeta: meta))
-                }
-            }
-            connectWallet.onReject = {
-                completion(.init(approved: false, accounts: [], chainId: chain.id, peerId: "", peerMeta: meta))
-            }
-            let authentication = AuthenticationViewController(intentViewController: connectWallet)
-            self.presentRequest(viewController: authentication)
-        }
-    }
-    
-    func server(_ server: Server, didConnect session: WalletConnectSwift.Session) {
-        logger.debug(category: "WalletConnectService", message: "Did connect")
-        DispatchQueue.main.async {
-            let chainId = session.walletInfo?.chainId ?? Self.defaultChain.id
-            guard let chain = Self.supportedChains[chainId] else {
-                if let hud = self.connectionHud {
-                    hud.set(style: .error, text: R.string.localizable.chain_not_supported())
-                    hud.scheduleAutoHidden()
-                }
-                try? self.server.disconnect(from: session)
-                logger.debug(category: "WalletConnectService", message: "Disconnected due to unsupported chain: \(chainId)")
-                return
-            }
-            let existedSessionIndex = self.v1Sessions.firstIndex { existedSession in
-                existedSession.topic == session.url.topic
-            }
-            let newSession = WalletConnectV1Session(server: server, chain: chain, session: session)
-            if let index = existedSessionIndex {
-                self.v1Sessions[index] = newSession
-            } else {
-                self.v1Sessions.append(newSession)
-            }
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.saveSessions),
-                                                   name: WalletConnectV1Session.didUpdateNotification,
-                                                   object: newSession)
-            self.saveSessions()
-            if let hud = self.connectionHud {
-                hud.set(style: .notification, text: R.string.localizable.connected())
-                hud.scheduleAutoHidden()
-            }
-        }
-    }
-    
-    func server(_ server: Server, didDisconnect session: WalletConnectSwift.Session) {
-        logger.debug(category: "WalletConnectService", message: "Did disconnect")
-        DispatchQueue.main.async {
-            self.v1Sessions.removeAll { existedSession in
-                if existedSession.topic == session.url.topic {
-                    NotificationCenter.default.removeObserver(self,
-                                                              name: WalletConnectV1Session.didUpdateNotification,
-                                                              object: existedSession)
-                    return true
-                } else {
-                    return false
-                }
-            }
-            self.saveSessions()
-        }
-    }
-    
-    func server(_ server: Server, didUpdate session: WalletConnectSwift.Session) {
-        logger.debug(category: "WalletConnectService", message: "Did update")
-        DispatchQueue.main.async {
-            self.firstV1Session(matches: session.url.topic)?.replace(session: session)
-        }
-    }
-    
-}
-
-// MARK: - V1 Request
-extension WalletConnectService: RequestHandler {
-    
-    private class RequestHandlerProxy: RequestHandler {
-        
-        private weak var handler: RequestHandler?
-        
-        init(handler: RequestHandler) {
-            self.handler = handler
-        }
-        
-        func canHandle(request: WalletConnectSwift.Request) -> Bool {
-            handler?.canHandle(request: request) ?? false
-        }
-        
-        func handle(request: WalletConnectSwift.Request) {
-            handler?.handle(request: request)
-        }
-        
-    }
-    
-    func canHandle(request: WalletConnectSwift.Request) -> Bool {
-        WalletConnectV1Session.Method.allCases.contains { method in
-            method.rawValue == request.method
-        }
-    }
-    
-    func handle(request: WalletConnectSwift.Request) {
-        DispatchQueue.main.async {
-            let topic = request.url.topic
-            if let session = self.firstV1Session(matches: topic) {
-                session.handle(request: request)
-            } else {
-                logger.warn(category: "WalletConnectService", message: "Missing session for topic: \(topic)")
-                self.presentRejection(title: R.string.localizable.request_rejected(),
-                                      message: R.string.localizable.session_not_found())
-                self.server.send(.reject(request))
-            }
-        }
-    }
-    
-}
-
-// MARK: - V2 Request
+// MARK: - WalletConnect Request
 extension WalletConnectService {
     
     @MainActor
@@ -476,7 +250,7 @@ extension WalletConnectService {
         }
         
         connectionHud?.hide()
-        let connectWallet = ConnectWalletViewController(info: .v2(proposal))
+        let connectWallet = ConnectWalletViewController(info: .walletConnect(proposal))
         connectWallet.onApprove = { priv in
             Task {
                 let approvalError: Swift.Error?
@@ -488,7 +262,7 @@ extension WalletConnectService {
                     }
                     let sessionNamespaces = try AutoNamespaces.build(sessionProposal: proposal,
                                                                      chains: chains,
-                                                                     methods: WalletConnectV2Session.Method.allCases.map(\.rawValue),
+                                                                     methods: WalletConnectSession.Method.allCases.map(\.rawValue),
                                                                      events: Array(events),
                                                                      accounts: accounts)
                     try await Web3Wallet.instance.approve(proposalId: proposal.id, namespaces: sessionNamespaces)
@@ -521,7 +295,7 @@ extension WalletConnectService {
     private func handle(request: WalletConnectSign.Request) {
         DispatchQueue.main.async {
             let topic = request.topic
-            if let session = self.firstV2Session(matches: topic) {
+            if let session = self.sessions.first(where: { $0.topic == topic }) {
                 session.handle(request: request)
             } else {
                 logger.warn(category: "WalletConnectService", message: "Missing session for topic: \(topic)")

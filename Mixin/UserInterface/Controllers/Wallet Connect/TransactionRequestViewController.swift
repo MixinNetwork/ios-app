@@ -126,6 +126,9 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
                 }
             case .failure(let error):
                 Logger.walletConnect.error(category: "TransactionRequest", message: "Failed to get gas: \(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self?.loadGas()
+                }
             }
         }
     }

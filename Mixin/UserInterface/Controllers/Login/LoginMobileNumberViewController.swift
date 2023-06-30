@@ -98,19 +98,19 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                         fallthrough
                     }
                 default:
-                    if !error.isTransportTimedOut {
-                        var userInfo = [String: Any]()
-                        userInfo["error"] = "\(error)"
-                        if let requestId = weakSelf.request?.response?.value(forHTTPHeaderField: "x-request-id")  {
-                            userInfo["requestId"] = requestId
-                        }
-                        if let statusCode = weakSelf.request?.response?.statusCode {
-                            userInfo["statusCode"] = "\(statusCode)"
-                        }
-                        userInfo["phone"] = ctx.mobileNumber
-                        userInfo["phoneCountryCode"] = ctx.callingCode
-                        reporter.report(error: MixinError.requestLoginVerificationCode(userInfo))
+                    var userInfo: [String: String] = [:]
+                    userInfo["error"] = "\(error)"
+                    if let requestId = weakSelf.request?.response?.value(forHTTPHeaderField: "x-request-id")  {
+                        userInfo["requestId"] = requestId
                     }
+                    if error.isTransportTimedOut {
+                        userInfo["timeout"] = "yes"
+                    } else if let statusCode = weakSelf.request?.response?.statusCode {
+                        userInfo["statusCode"] = "\(statusCode)"
+                    }
+                    userInfo["phone"] = ctx.mobileNumber
+                    userInfo["phoneCountryCode"] = ctx.callingCode
+                    reporter.report(error: MixinError.requestLoginVerificationCode(userInfo))
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false
                 }

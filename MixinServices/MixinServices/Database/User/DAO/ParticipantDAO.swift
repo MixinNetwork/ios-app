@@ -175,18 +175,45 @@ public final class ParticipantDAO: UserDatabaseDAO {
             .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })
     }
     
-    public func participants(limit: Int, after conversationId: String?, with userId: String?) -> [Participant] {
+    public func participants(
+        limit: Int,
+        after conversationId: String?,
+        with userId: String?,
+        matching conversationIDs: Set<String>?
+    ) -> [Participant] {
         var sql = "SELECT * FROM participants"
+        
+        var conditions: [String] = []
         if let conversationId, let userId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)"
+            conditions.append("rowid > IFNULL((SELECT rowid FROM participants WHERE conversation_id = '\(conversationId)' AND user_id = '\(userId)'), 0)")
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        if let conversationIDs {
+            let ids = conversationIDs.joined(separator: "', '")
+            conditions.append("conversation_id IN ('\(ids)')")
+        }
+        if !conditions.isEmpty {
+            sql += " WHERE " + conditions.joined(separator: " AND ")
+        }
+        
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     
-    public func participantsCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM participants")
-        return count ?? 0
+    public func participantsCount(matching conversationIDs: [String]?) -> Int {
+        if let conversationIDs {
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.deviceTransferStride) {
+                let endIndex = min(i + Self.deviceTransferStride, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                let sql = "SELECT COUNT(*) FROM participants WHERE conversation_id IN ('\(ids)')"
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
+            }
+            return totalCount
+        } else {
+            let count: Int? = db.select(with: "SELECT COUNT(*) FROM participants")
+            return count ?? 0
+        }
     }
     
     public func save(participant: Participant) {

@@ -166,9 +166,9 @@ public final class StickerDAO: UserDatabaseDAO {
     public func stickers(limit: Int, after stickerId: String?) -> [Sticker] {
         var sql = "SELECT * FROM stickers"
         if let stickerId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM stickers WHERE sticker_id = '\(stickerId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM stickers WHERE sticker_id = '\(stickerId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

@@ -93,9 +93,9 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
     public func transcriptMessages(limit: Int, after transcriptId: String?, with messageId: String?) -> [TranscriptMessage] {
         var sql = "SELECT * FROM transcript_messages"
         if let transcriptId, let messageId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM transcript_messages WHERE transcript_id = '\(transcriptId)' AND message_id = '\(messageId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM transcript_messages WHERE transcript_id = '\(transcriptId)' AND message_id = '\(messageId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

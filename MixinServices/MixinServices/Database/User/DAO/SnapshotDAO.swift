@@ -119,9 +119,9 @@ public final class SnapshotDAO: UserDatabaseDAO {
     public func snapshots(limit: Int, after snapshotId: String?) -> [Snapshot] {
         var sql = "SELECT * FROM snapshots"
         if let snapshotId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM snapshots WHERE snapshot_id = '\(snapshotId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM snapshots WHERE snapshot_id = '\(snapshotId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

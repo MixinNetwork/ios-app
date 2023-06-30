@@ -56,7 +56,9 @@
 "alert_key_group_video_message" = "%@傳送一個影片";
 "all" = "全部";
 "all_conversations" = "所有會話";
+"all_chats" = "所有聊天";
 "all_photos" = "所有照片";
+"all_dates" = "所有日期";
 "all_signer_failure" = "所有節點失敗，也許 PIN 跟上次意外退出時設定的不一致";
 "all_transactions" = "所有交易記錄";
 "allow" = "允許";
@@ -179,6 +181,8 @@
 "chat_text_size" = "聊天字型大小";
 "chat_waiting" = "等待%1$@上線後建立加密會話。%2$@。";
 "chats" = "會話";
+"chats_count_one" = "1 個聊天";
+"chats_count" = "%d 個聊天";
 "choose_network" = "選擇充值網路";
 "choose_network_tip" = "請選擇 Mixin 支援的網路進行充值，否則您的充值將不會到賬。";
 "choose_photo" = "選擇照片";
@@ -299,6 +303,8 @@
 "deposit_tip_eos" = "支援所有基於 EOS 發行的代幣。";
 "deposit_tip_eth" = "支援所有符合 ERC-20 標準的代幣，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支援 TRX 和所有符合 TRC-10、TRC-20 標準的代幣。";
+"deselect_all" = "取消所有選擇";
+"designated_time_period" = "指定時間段";
 "desktop_on_hint" = "桌面版已登入。";
 "desktop_upgrade" = "請升級 Mixin Messenger 桌面端至最新版！";
 "detect_qr_tip" = "檢測到一個 Mixin 二維碼，點選識別";
@@ -454,6 +460,8 @@
 "invite_to_group_via_link" = "群邀請連結";
 "invited_by_stranger" = "邀請人不是你的聯絡人";
 "invites_you_to_a_voice_call" = "發起了語音通話";
+"items_selected_one" = "已選擇 1 個";
+"items_selected_count" = "已選擇 %d 個";
 "join_group" = "加入群組";
 "joined_in" = "%@ 加入";
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";
@@ -465,6 +473,10 @@
 "large_amount_confirmation_with_symbol" = "大額轉賬確認（%@）";
 "last_active_time" = "最後登入於 %@";
 "last_backup_hint" = "上次備份是 %@，佔用空間 %@。";
+"last_month" = "最近一個月";
+"last_month_count" = "最近 %d 個月";
+"last_year" = "最近一年";
+"last_year_count" = "最近 %d 年";
 "later" = "稍後";
 "learn_more" = "瞭解更多";
 "light" = "淺色";
@@ -512,6 +524,7 @@
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mobile_contacts" = "通訊錄";
+"month" = "月";
 "monthly" = "每月";
 "more" = "更多";
 "move_and_scale" = "移動和縮放";
@@ -675,6 +688,7 @@
 "receive_money" = "我的收款碼";
 "receiver" = "至";
 "receivers" = "交易接收人";
+"recent" = "最近";
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜尋";
 "refresh" = "重新整理";
@@ -749,6 +763,7 @@
 "security" = "安全";
 "select" = "選擇";
 "select_a_country_or_region" = "選擇一個國家或地區";
+"select_all" = "選擇所有";
 "select_emergency_contact" = "選擇緊急聯絡人";
 "select_more_photos" = "選擇更多照片";
 "selected_count" = "選擇了 %@ 個訊息";
@@ -823,6 +838,7 @@
 "show" = "顯示";
 "show_asset" = "顯示資產";
 "show_in_chat" = "在聊天中展示";
+"show_selected" = "顯示選擇（%d）";
 "sign_in" = "登入";
 "sign_with_emergency_contact" = "透過緊急聯絡人登入";
 "sign_with_phone_number" = "透過手機號登入";
@@ -1007,6 +1023,7 @@
 "withdrawal_network_fee" = "網路手續費：";
 "withdrawal_no_memo" = "點選不使用 Memo（備註）";
 "withdrawal_to" = "提現到 %@";
+"year" = "年";
 "you" = "你";
 "you_deleted_this_message" = "你撤回了一條訊息";
 "you_have_a_new_message" = "你收到了一條訊息";

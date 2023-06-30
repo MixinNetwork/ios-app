@@ -370,6 +370,12 @@ public enum MessageCategory: String, Decodable {
     
     public static let allMediaCategoriesString: Set<String> = Set(allMediaCategories.map(\.rawValue))
     
+    public static let transcriptCategories: [MessageCategory] = [
+        .PLAIN_TRANSCRIPT,
+        .SIGNAL_TRANSCRIPT,
+        .ENCRYPTED_TRANSCRIPT
+    ]
+    
     public static let endCallCategories: [MessageCategory] = [
         .WEBRTC_AUDIO_END,
         .WEBRTC_AUDIO_BUSY,

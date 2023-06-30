@@ -25,6 +25,7 @@ final class DeviceTransferServer {
     // Access on main queue
     @Published private(set) var lastConnectionRejectedReason: ConnectionRejectedReason?
     
+    private let filter: DeviceTransferFilter
     private let queue = Queue(label: "one.mixin.messenger.DeviceTransferServer")
     private let dataLoaderQueue = Queue(label: "one.mixin.messenger.DeviceTransferServer.Loader")
     private let speedInspector = NetworkSpeedInspector()
@@ -41,8 +42,9 @@ final class DeviceTransferServer {
         Unmanaged<DeviceTransferServer>.passUnretained(self).toOpaque()
     }
     
-    init() {
-        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) init")
+    init(filter: DeviceTransferFilter) {
+        self.filter = filter
+        Logger.general.info(category: "DeviceTransferServer", message: "\(opaquePointer) init with filter conversation: \(filter.conversation), time: \(filter.time)")
     }
     
     deinit {
@@ -320,7 +322,7 @@ extension DeviceTransferServer {
             Logger.general.warn(category: "DeviceTransferServer", message: "Not transfering due to invalid state")
             return
         }
-        let dataSource = DeviceTransferServerDataSource(key: key, remotePlatform: remotePlatform)
+        let dataSource = DeviceTransferServerDataSource(key: key, filter: filter, remotePlatform: remotePlatform)
         let count = dataSource.totalCount()
         let start = DeviceTransferCommand(action: .start(count))
         do {

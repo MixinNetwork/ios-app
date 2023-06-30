@@ -107,9 +107,9 @@ public final class AssetDAO: UserDatabaseDAO {
     public func assets(limit: Int, after assetId: String?) -> [Asset] {
         var sql = "SELECT * FROM assets"
         if let assetId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM assets WHERE asset_id = '\(assetId)'), 0)"
+            sql += " WHERE rowid > IFNULL((SELECT rowid FROM assets WHERE asset_id = '\(assetId)'), 0)"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
+        sql += " ORDER BY rowid ASC LIMIT ?"
         return db.select(with: sql, arguments: [limit])
     }
     

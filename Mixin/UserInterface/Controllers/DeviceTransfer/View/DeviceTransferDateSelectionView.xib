@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DeviceTransferDateSelectionViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="allDateCheckmark" destination="cAt-Cz-Q4k" id="KUX-8Q-vlq"/>
+                <outlet property="lastDateCheckmark" destination="wxg-7G-bw0" id="ESA-cg-cR6"/>
+                <outlet property="segmentedControl" destination="bDs-E4-Poa" id="H9L-NY-Zd3"/>
+                <outlet property="textField" destination="TDt-m6-adz" id="sgu-de-n5M"/>
+                <outlet property="view" destination="iN0-l3-epB" id="1rF-76-FJG"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uND-Fg-mhJ">
+                    <rect key="frame" x="17" y="69" width="359" height="192"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Zvp-kg-0et">
+                            <rect key="frame" x="20" y="0.0" width="319" height="192"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="Xbh-9D-Ylq">
+                                    <rect key="frame" x="0.0" y="0.0" width="319" height="64"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="所有日期" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KbK-zW-L8O">
+                                            <rect key="frame" x="0.0" y="0.0" width="65.333333333333329" height="64"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" name="title"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="all_dates"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="cAt-Cz-Q4k">
+                                            <rect key="frame" x="289" y="0.0" width="30" height="64"/>
+                                        </imageView>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="6j0-GC-4U3">
+                                    <rect key="frame" x="0.0" y="64" width="319" height="64"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="指定时间段" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AtF-2i-9Jc">
+                                            <rect key="frame" x="0.0" y="0.0" width="319" height="64"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" name="title"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="designated_time_period"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="wxg-7G-bw0">
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="64"/>
+                                        </imageView>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="h0t-Lr-uKb">
+                                    <rect key="frame" x="0.0" y="128" width="319" height="64"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNu-Ps-evZ">
+                                            <rect key="frame" x="0.0" y="7" width="102.33333333333333" height="50"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="最近" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ay-Ue-tRL">
+                                            <rect key="frame" x="114.33333333333336" y="22.333333333333343" width="32.666666666666671" height="19.333333333333329"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" name="title"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="recent"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="center" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="TDt-m6-adz">
+                                            <rect key="frame" x="159" y="14" width="50" height="36"/>
+                                            <color key="backgroundColor" name="background_input_selected"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="50" id="Y33-n8-ltD"/>
+                                                <constraint firstAttribute="height" constant="36" id="YAY-l5-8Dx"/>
+                                            </constraints>
+                                            <color key="textColor" name="title"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="editingBeginAction:" destination="-1" eventType="editingDidBegin" id="6HX-K7-3bY"/>
+                                                <action selector="textChangedAction:" destination="-1" eventType="editingChanged" id="zhZ-tA-3Yd"/>
+                                            </connections>
+                                        </textField>
+                                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bDs-E4-Poa">
+                                            <rect key="frame" x="221" y="14" width="98" height="37"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="36" id="Box-WL-LU1"/>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="98" id="jNd-wE-q89"/>
+                                            </constraints>
+                                            <segments>
+                                                <segment title="月"/>
+                                                <segment title="年"/>
+                                            </segments>
+                                            <connections>
+                                                <action selector="dateUnitChangedAction:" destination="-1" eventType="valueChanged" id="ovi-FB-ibt"/>
+                                            </connections>
+                                        </segmentedControl>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bjx-OO-fzF">
+                            <rect key="frame" x="20" y="0.0" width="319" height="64"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <connections>
+                                <action selector="selectAllDateAction:" destination="-1" eventType="touchUpInside" id="AcO-0J-tPF"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HGG-ET-THP">
+                            <rect key="frame" x="20" y="64" width="319" height="64"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <connections>
+                                <action selector="selectLastDateAction:" destination="-1" eventType="touchUpInside" id="3Ks-m8-7ux"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background_input"/>
+                    <constraints>
+                        <constraint firstItem="Bjx-OO-fzF" firstAttribute="top" secondItem="Xbh-9D-Ylq" secondAttribute="top" id="5At-Cu-XZV"/>
+                        <constraint firstItem="HGG-ET-THP" firstAttribute="top" secondItem="6j0-GC-4U3" secondAttribute="top" id="HBQ-Pw-bwf"/>
+                        <constraint firstItem="Zvp-kg-0et" firstAttribute="leading" secondItem="uND-Fg-mhJ" secondAttribute="leading" constant="20" id="L9n-No-g0i"/>
+                        <constraint firstAttribute="trailing" secondItem="Zvp-kg-0et" secondAttribute="trailing" constant="20" id="NkY-oo-d3h"/>
+                        <constraint firstAttribute="height" constant="192" id="OIt-Do-FeV"/>
+                        <constraint firstItem="Bjx-OO-fzF" firstAttribute="leading" secondItem="Xbh-9D-Ylq" secondAttribute="leading" id="Pbi-iT-fsx"/>
+                        <constraint firstItem="Zvp-kg-0et" firstAttribute="top" secondItem="uND-Fg-mhJ" secondAttribute="top" id="Q3j-vv-kzd"/>
+                        <constraint firstItem="Bjx-OO-fzF" firstAttribute="bottom" secondItem="Xbh-9D-Ylq" secondAttribute="bottom" id="Vr6-1b-oe6"/>
+                        <constraint firstItem="HGG-ET-THP" firstAttribute="trailing" secondItem="6j0-GC-4U3" secondAttribute="trailing" id="aPT-UW-F8e"/>
+                        <constraint firstItem="HGG-ET-THP" firstAttribute="bottom" secondItem="6j0-GC-4U3" secondAttribute="bottom" id="pfn-ol-G3z"/>
+                        <constraint firstItem="Bjx-OO-fzF" firstAttribute="trailing" secondItem="Xbh-9D-Ylq" secondAttribute="trailing" id="s4j-Er-Beh"/>
+                        <constraint firstAttribute="bottom" secondItem="Zvp-kg-0et" secondAttribute="bottom" id="tbF-ri-FoW"/>
+                        <constraint firstItem="HGG-ET-THP" firstAttribute="leading" secondItem="6j0-GC-4U3" secondAttribute="leading" id="wsg-XG-0pN"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="uND-Fg-mhJ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="17" id="IBF-PO-7mb"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="uND-Fg-mhJ" secondAttribute="trailing" constant="17" id="ZTi-h0-U6o"/>
+                <constraint firstItem="uND-Fg-mhJ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="10" id="dOK-OC-xFv"/>
+            </constraints>
+            <point key="canvasLocation" x="139.69465648854961" y="203.52112676056339"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Setting/ic_checkmark" width="30" height="30"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_input_selected">
+            <color red="0.92549019607843142" green="0.92941176470588238" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

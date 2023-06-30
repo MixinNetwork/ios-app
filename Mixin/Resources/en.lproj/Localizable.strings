@@ -55,7 +55,9 @@
 "alert_key_group_transcript_message" = "%@ sent a transcript";
 "alert_key_group_video_message" = "%@ sent a video";
 "all" = "All";
+"all_chats" = "All chats";
 "all_conversations" = "All Conversations";
+"all_dates" = "All dates";
 "all_photos" = "All Photos";
 "all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
 "all_transactions" = "All Transactions";
@@ -179,6 +181,8 @@
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Waiting for %1$@ to get online and establish an encrypted session. %2$@.";
 "chats" = "CHATS";
+"chats_count_one" = "1 chat";
+"chats_count" = "%d chats";
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "Choose Photo";
@@ -299,6 +303,8 @@
 "deposit_tip_eos" = "This address supports all base on EOS tokens.";
 "deposit_tip_eth" = "This address supports all ERC-20 tokens, such as ETH, XIN, etc.";
 "deposit_tip_trx" = "This address supports all TRC-10 and TRC-20 tokens.";
+"deselect_all" = "Deselect All";
+"designated_time_period" = "Designated time period";
 "desktop_on_hint" = "You have your desktop logged in";
 "desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
 "detect_qr_tip" = "Detected a Mixin QR code, tap to recognize";
@@ -454,6 +460,8 @@
 "invite_to_group_via_link" = "Invite to Group via Link";
 "invited_by_stranger" = "The inviter is not in your contacts";
 "invites_you_to_a_voice_call" = "invites you to a voice call";
+"items_selected_one" = "1 Item Selected";
+"items_selected_count" = "%d Items Selected";
 "join_group" = "Join Group";
 "joined_in" = "Joined in %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
@@ -465,6 +473,10 @@
 "large_amount_confirmation_with_symbol" = "Large Amount Confirmation(%@)";
 "last_active_time" = "Last active %@";
 "last_backup_hint" = "Last backup on %@, total size %@.";
+"last_month" = "Last month";
+"last_month_count" = "Last %d months";
+"last_year" = "Last year";
+"last_year_count" = "Last %d years";
 "later" = "Later";
 "learn_more" = "Learn More";
 "light" = "Light";
@@ -512,6 +524,7 @@
 "mixin_messenger_desktop" = "Mixin Messenger Desktop";
 "mixin_server_encounters_errors" = "Mixin server encounters errors";
 "mobile_contacts" = "Mobile Contacts";
+"month" = "Month";
 "monthly" = "Monthly";
 "more" = "More";
 "move_and_scale" = "Move and Scale";
@@ -675,6 +688,7 @@
 "receive_money" = "Receive Money";
 "receiver" = "Receiver";
 "receivers" = "Receivers";
+"recent" = "Recent";
 "recent_chats" = "CHATS";
 "recent_searches" = "Recent searches";
 "refresh" = "Refresh";
@@ -749,6 +763,7 @@
 "security" = "Security";
 "select" = "Select";
 "select_a_country_or_region" = "Select a Country or Region";
+"select_all" = "Select All";
 "select_emergency_contact" = "Select Emergency Contact";
 "select_more_photos" = "Select More Photos";
 "selected_count" = "%@ Selected";
@@ -823,6 +838,7 @@
 "show" = "Show";
 "show_asset" = "Show asset";
 "show_in_chat" = "Show in chat";
+"show_selected" = "Show Selected(%d)";
 "sign_in" = "Sign in";
 "sign_with_emergency_contact" = "Sign in with emergency contact";
 "sign_with_phone_number" = "Sign in with phone number";
@@ -1007,6 +1023,7 @@
 "withdrawal_network_fee" = "Network fee: ";
 "withdrawal_no_memo" = "No Memo";
 "withdrawal_to" = "Withdraw to %@";
+"year" = "Year";
 "you" = "You";
 "you_deleted_this_message" = "You deleted this message";
 "you_have_a_new_message" = "You have a new message";

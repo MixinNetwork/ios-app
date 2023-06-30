@@ -113,18 +113,50 @@ public final class PinMessageDAO: UserDatabaseDAO {
                         where: PinMessage.column(of: .conversationId) == conversationId)
     }
     
-    public func pinMessages(limit: Int, after messageId: String?) -> [PinMessage] {
-        var sql = "SELECT * FROM pin_messages"
-        if let messageId {
-            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM pin_messages WHERE message_id = '\(messageId)'), 0)"
+    public func pinMessages(
+        limit: Int,
+        after rowID: Int,
+        matching conversationIDs: Set<String>?
+    ) -> [PinMessage] {
+        var sql = "SELECT * FROM pin_messages WHERE rowid > ?"
+        if let conversationIDs {
+            let ids = conversationIDs.joined(separator: "', '")
+            sql += " AND conversation_id IN ('\(ids)')"
         }
-        sql += " ORDER BY ROWID LIMIT ?"
-        return db.select(with: sql, arguments: [limit])
+        sql += " ORDER BY rowid ASC LIMIT ?"
+        return db.select(with: sql, arguments: [rowID, limit])
     }
     
-    public func pinMessagesCount() -> Int {
-        let count: Int? = db.select(with: "SELECT COUNT(*) FROM pin_messages")
-        return count ?? 0
+    public func pinMessagesCount(matching conversationIDs: [String]?, after rowID: Int?) -> Int {
+        if let conversationIDs {
+            var totalCount = 0
+            for i in stride(from: 0, to: conversationIDs.count, by: Self.deviceTransferStride) {
+                let endIndex = min(i + Self.deviceTransferStride, conversationIDs.count)
+                let ids = Array(conversationIDs[i..<endIndex]).joined(separator: "', '")
+                var sql = "SELECT COUNT(*) FROM pin_messages WHERE conversation_id IN ('\(ids)')"
+                if let rowID {
+                    sql += " AND rowid >= \(rowID)"
+                }
+                let count: Int? = db.select(with: sql)
+                totalCount += (count ?? 0)
+            }
+            return totalCount
+        } else {
+            var sql = "SELECT COUNT(*) FROM pin_messages"
+            if let rowID {
+                sql += " WHERE rowid >= \(rowID)"
+            }
+            let count: Int? = db.select(with: sql)
+            return count ?? 0
+        }
+    }
+    
+    public func messageRowID(createdAt: String) -> Int? {
+        db.select(with: "SELECT rowid FROM pin_messages WHERE created_at >= ? ORDER BY rowid ASC LIMIT 1", arguments: [createdAt])
+    }
+    
+    public func messageRowID(messageID: String) -> Int? {
+        db.select(with: "SELECT rowid FROM pin_messages WHERE message_id = ?", arguments: [messageID])
     }
     
     public func save(pinMessage: PinMessage) {

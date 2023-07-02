@@ -52,7 +52,6 @@ class MixinWebViewController: WebViewController {
         config.mediaTypesRequiringUserActionForPlayback = .video
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
-        config.userContentController.addUserScript(Script.forwardLog)
         for name in HandlerName.allCases.map(\.rawValue) {
             config.userContentController.add(scriptMessageProxy, name: name)
         }
@@ -760,21 +759,6 @@ extension MixinWebViewController {
             return WKUserScript(source: string,
                                 injectionTime: .atDocumentEnd,
                                 forMainFrameOnly: true)
-        }()
-        
-        static let forwardLog: WKUserScript = {
-            let string = """
-                let consoleLog = window.console.log;
-                window.console.log = function(message) {
-                    consoleLog.call(window.console, message);
-                    if ((typeof message === 'string' || message instanceof String) && message.startsWith('wc:')) {
-                        window.webkit.messageHandlers.log.postMessage(message);
-                    }
-                }
-            """
-            return WKUserScript(source: string,
-                                injectionTime: .atDocumentEnd,
-                                forMainFrameOnly: false)
         }()
         
     }

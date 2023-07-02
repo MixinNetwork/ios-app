@@ -62,7 +62,7 @@ final class WalletConnectSession {
         case .personalSign:
             requestPersonalSign(with: request)
         case .ethSign:
-            requestETHSign(with: request)
+            rejectETHSign(with: request)
         case .ethSignTypedData, .ethSignTypedDataV4:
             requestETHSignTypedData(with: request)
         case .ethSignTransaction:
@@ -118,28 +118,13 @@ extension WalletConnectSession {
     }
     
     @MainActor
-    private func requestETHSign(with request: Request) {
-        requestSigning(with: request) { request in
-            let params = try request.params.get([String].self)
-            guard params.count == 2 else {
-                throw Error.invalidParameters
-            }
-            let address = params[0]
-            let messageString = params[1]
-            let message = try WalletConnectMessage.message(string: messageString)
-            return (message: message, address: address)
-        } reject: { reason in
-            Task {
-                let error = JSONRPCError(code: 0, message: reason.description)
-                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
-            }
-        } approve: { (message, account) in
-            let signature = try account.signMessage(message: message.signable)
-            let response = RPCResult.response(AnyCodable(signature))
-            Task {
-                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: response)
-            }
+    private func rejectETHSign(with request: Request) {
+        Task {
+            let error = JSONRPCError(code: 0, message: "Method not supported")
+            try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(.methodNotFound))
         }
+        WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
+                                                     message: R.string.localizable.method_not_supported(request.method))
     }
     
     @MainActor

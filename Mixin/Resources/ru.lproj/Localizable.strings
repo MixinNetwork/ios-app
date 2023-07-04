@@ -142,7 +142,6 @@
 "card" = "карта";
 "category_chats" = "Чаты";
 "chain" = "Цепь";
-"chain_not_supported" = "Chain not supported";
 "change" = "Изменить";
 "change_amount" = "Изменить сумму";
 "change_emergency_contact" = "Изменить экстренный контакт";
@@ -400,7 +399,6 @@
 "failed_to_send_location" = "Не удалось отправить местоположение";
 "failed_to_send_photo" = "Не удалось отправить фото";
 "failed_to_send_video" = "Не удалось отправить видео";
-"failed_to_switch_network" = "Failed to switch network: %@";
 "fast" = "Fast";
 "fee" = "Комиссия";
 "feedback" = "Обратная связь";
@@ -469,7 +467,6 @@
 "invites_you_to_a_voice_call" = "приглашает вас на голосовой вызов";
 "join_group" = "Присоединиться к группе";
 "joined_in" = "Присоединился к %@";
-"keep_network" = "Keep %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "Этикетка";
 "landing_delete_content" = "Ваш аккаунт будет удален %@. Если вы продолжите входить в систему, запрос на удаление вашего аккаунта будет отменен.";
@@ -550,7 +547,6 @@
 "network" = "Network";
 "network_connection_lost" = "Сетевое соединение было потеряно, проверьте свою сеть и повторите попытку позже.";
 "network_fee" = "Сетевая комисиия";
-"network_switched" = "Network Switched";
 "never_auto_download" = "Никогда";
 "new_chat" = "Новый чат";
 "new_group" = "Новая группа";
@@ -721,7 +717,6 @@
 "request_authorization" = "Request Authorization";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
-"requests_switching_to_network" = "%1$@ requests switching to %2$@";
 "resend_code" = "Отправить код еще раз";
 "resend_code_pending" = "Повторно отправить код в %@";
 "reset_link" = "Сбросить ссылку";
@@ -882,8 +877,6 @@
 "stranger_hint" = "Этого отправителя нет в ваших контактах";
 "successful" = "Successful";
 "suspicious_link" = "Подозрительная ссылка";
-"switch_network" = "Switch Network";
-"switch_to_network" = "Switch to %@";
 "symbol" = "Символ";
 "symbol_withdrawal" = "%@ Снятие средств";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

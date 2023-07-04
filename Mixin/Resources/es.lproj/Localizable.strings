@@ -142,7 +142,6 @@
 "card" = "tarjeta";
 "category_chats" = "Chats";
 "chain" = "Cadena";
-"chain_not_supported" = "Chain not supported";
 "change" = "Cambiar";
 "change_amount" = "Cambiar cantidad";
 "change_emergency_contact" = "Cambiar contacto de emergencia";
@@ -400,7 +399,6 @@
 "failed_to_send_location" = "No se ha podido enviar la ubicación";
 "failed_to_send_photo" = "No se ha podido enviar la foto";
 "failed_to_send_video" = "No se ha podido enviar el video";
-"failed_to_switch_network" = "Failed to switch network: %@";
 "fast" = "Fast";
 "fee" = "Tarifa";
 "feedback" = "Comentario";
@@ -469,7 +467,6 @@
 "invites_you_to_a_voice_call" = "te invita a una llamada de voz";
 "join_group" = "Únete al grupo";
 "joined_in" = "Se ha unido en %@";
-"keep_network" = "Keep %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "Etiqueta";
 "landing_delete_content" = "Tu cuenta se eliminará el %@; si continúas iniciando sesión, se cancelará la solicitud para eliminar tu cuenta.";
@@ -549,8 +546,7 @@
 "need_help" = "¿Necesitas ayuda?";
 "network" = "Network";
 "network_connection_lost" = "Se ha perdido la conexión de red, verifica tu red e intenta nuevamente más tarde";
-"network_fee" = "Tarifa de red: %\@";
-"network_switched" = "Network Switched";
+"network_fee" = "Tarifa de red: %@";
 "never_auto_download" = "Nunca";
 "new_chat" = "Nueva chat";
 "new_group" = "Nuevo grupo";
@@ -721,7 +717,6 @@
 "request_authorization" = "Solicitar Autorización";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
-"requests_switching_to_network" = "%1$@ requests switching to %2$@";
 "resend_code" = "Reenviar codigo";
 "resend_code_pending" = "Reenviar código en %@";
 "reset_link" = "Restablecer enlace";
@@ -882,8 +877,6 @@
 "stranger_hint" = "Este remitente no está en tus contactos";
 "successful" = "Exitoso";
 "suspicious_link" = "Enlace sospechoso";
-"switch_network" = "Switch Network";
-"switch_to_network" = "Switch to %@";
 "symbol" = "Símbolo";
 "symbol_withdrawal" = "Retiro de %@";
 "syncing_and_verifying_tip" = "Mantén la aplicación en primer plano mientras verificas y sincronizas las claves fragmentadas con la red TIP; no fuerces el cierre de la aplicación durante el proceso de configuración.";

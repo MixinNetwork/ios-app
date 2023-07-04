@@ -59,7 +59,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
                 return
             }
         case 2:
-            vc = AuthorizationsViewController.instance()
+            vc = MixinAuthorizationsViewController.instance()
         default:
             vc = LogViewController.instance(category: .all)
         }

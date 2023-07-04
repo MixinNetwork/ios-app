@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-final class TIPAPI: MixinAPI {
+public final class TIPAPI: MixinAPI {
     
     static func ephemerals() async throws -> [TIPEphemeral] {
         try await withCheckedThrowingContinuation { continuation in
@@ -59,6 +59,10 @@ final class TIPAPI: MixinAPI {
             .validate(statusCode: 200...299)
             .serializingDecodable(TIPWatchResponse.self)
             .value
+    }
+    
+    public static func tipGas(id: String, completion: @escaping (MixinAPI.Result<TIPGas>) -> Void) {
+        request(method: .get, path: "/external/gastracker/\(id)", completion: completion)
     }
     
 }

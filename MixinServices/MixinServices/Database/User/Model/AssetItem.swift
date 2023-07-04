@@ -67,7 +67,7 @@ public final class AssetItem: Asset, NumberStringLocalizable {
 extension AssetItem {
     
     public static let xin: AssetItem = {
-        let asset = Asset(assetId: "c94ac88f-4671-3976-b60a-09064f1811e8",
+        let asset = Asset(assetId: AssetID.xin,
                           type: "asset",
                           symbol: "XIN",
                           name: "Mixin",
@@ -78,7 +78,7 @@ extension AssetItem {
                           priceBtc: "0",
                           priceUsd: "0",
                           changeUsd: "0",
-                          chainId: "43d61dcd-e413-450d-80b8-101d5e903357",
+                          chainId: ChainID.ethereum,
                           confirmations: 100,
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
                           reserve: "0",
@@ -97,17 +97,17 @@ extension AssetItem {
     
     public var depositNetworkName: String? {
         switch chainId {
-        case "43d61dcd-e413-450d-80b8-101d5e903357":
+        case ChainID.ethereum:
             return "Ethereum (ERC-20)"
-        case "cbc77539-0a20-4666-8c8a-4ded62b36f0a":
+        case ChainID.avalancheXChain:
             return "Avalanche X-Chain"
-        case "17f78d7c-ed96-40ff-980c-5dc62fecbc85":
+        case ChainID.bnbBeaconChain:
             return "BNB Beacon Chain (BEP-2)"
-        case "1949e683-6a08-49e2-b087-d6b72398588f":
+        case ChainID.bnbSmartChain:
             return "BNB Smart Chain (BEP-20)"
-        case "25dabac5-056a-48ff-b9f9-f67395dc407c":
+        case ChainID.tron:
             return assetKey.isDigitsOnly ? "Tron (TRC-10)" : "Tron (TRC-20)"
-        case "05891083-63d2-4f3d-bfbe-d14d7fb9b25a":
+        case ChainID.bitShares:
             return "BitShares"
         default:
             return chain?.name
@@ -115,24 +115,23 @@ extension AssetItem {
     }
     
     public var chainTag: String? {
-        // Show chain tag for BNB on BEP-2/BEP-20
-        if chainId == "17f78d7c-ed96-40ff-980c-5dc62fecbc85" {
+        if chainId == ChainID.bnbBeaconChain {
             return "BEP-2"
-        } else if chainId == "1949e683-6a08-49e2-b087-d6b72398588f" {
+        } else if chainId == ChainID.bnbSmartChain {
             return "BEP-20"
-        } else if chainId == "a0ffd769-5850-4b48-9651-d2ae44a3e64d" {
+        } else if chainId == ChainID.mvm {
             return "MVM"
         } else if assetId == chainId {
             return nil
         } else {
             switch chainId {
-            case "43d61dcd-e413-450d-80b8-101d5e903357":
+            case ChainID.ethereum:
                 return "ERC-20"
-            case "25dabac5-056a-48ff-b9f9-f67395dc407c":
+            case ChainID.tron:
                 return assetKey.isDigitsOnly ? "TRC-10" : "TRC-20"
-            case "6cfe566e-4aad-470b-8c9a-2fd35b49c68d":
+            case ChainID.eos:
                 return "EOS"
-            case "b7938396-3f94-4e0a-9179-d3440718156f":
+            case ChainID.polygon:
                 return "Polygon"
             default:
                 return nil

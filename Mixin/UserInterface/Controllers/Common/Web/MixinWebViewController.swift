@@ -1,6 +1,7 @@
 import UIKit
 import WebKit
 import Alamofire
+import web3
 import MixinServices
 
 class MixinWebViewController: WebViewController {
@@ -25,11 +26,13 @@ class MixinWebViewController: WebViewController {
     @IBOutlet weak var loadFailLabel: UILabel!
     @IBOutlet weak var contactDeveloperButton: UIButton!
     
-    private enum HandlerName {
-        static let mixinContext = "MixinContext"
-        static let reloadTheme = "reloadTheme"
-        static let playlist = "playlist"
-        static let close = "close"
+    private enum HandlerName: String, CaseIterable {
+        case mixinContext = "MixinContext"
+        case reloadTheme = "reloadTheme"
+        case playlist = "playlist"
+        case close = "close"
+        case getTIPAddress = "getTipAddress"
+        case tipSign = "tipSign"
     }
     
     private enum FradulentWarningBehavior {
@@ -49,10 +52,9 @@ class MixinWebViewController: WebViewController {
         config.mediaTypesRequiringUserActionForPlayback = .video
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.mixinContext)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.reloadTheme)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.playlist)
-        config.userContentController.add(scriptMessageProxy, name: HandlerName.close)
+        for name in HandlerName.allCases.map(\.rawValue) {
+            config.userContentController.add(scriptMessageProxy, name: name)
+        }
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
@@ -108,11 +110,9 @@ class MixinWebViewController: WebViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !isMessageHandlerAdded {
-            let controller = webView.configuration.userContentController
-            controller.add(scriptMessageProxy, name: HandlerName.mixinContext)
-            controller.add(scriptMessageProxy, name: HandlerName.reloadTheme)
-            controller.add(scriptMessageProxy, name: HandlerName.playlist)
-            controller.add(scriptMessageProxy, name: HandlerName.close)
+            for name in HandlerName.allCases.map(\.rawValue) {
+                webView.configuration.userContentController.add(scriptMessageProxy, name: name)
+            }
             isMessageHandlerAdded = true
         }
     }
@@ -141,7 +141,7 @@ class MixinWebViewController: WebViewController {
         case let .app(app, _):
             sections = [[.share, floatAction, .refresh], [.about, .viewAuthorization(app.appId)]]
         case .webPage:
-            sections = [[.share, floatAction, .refresh], [.copyLink, .openInBrowser]]
+            sections = [[.share, floatAction, .refresh], [.scanQRCode, .copyLink, .openInBrowser]]
         }
         let more = WebMoreMenuViewController(sections: sections)
         more.overrideStatusBarStyle = preferredStatusBarStyle
@@ -204,10 +204,8 @@ class MixinWebViewController: WebViewController {
             return
         }
         let controller = webView.configuration.userContentController
-        controller.removeScriptMessageHandler(forName: HandlerName.mixinContext)
-        controller.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
-        controller.removeScriptMessageHandler(forName: HandlerName.playlist)
-        controller.removeScriptMessageHandler(forName: HandlerName.close)
+        HandlerName.allCases.map(\.rawValue)
+            .forEach(controller.removeScriptMessageHandler(forName:))
         isMessageHandlerAdded = false
     }
     
@@ -331,7 +329,7 @@ extension MixinWebViewController: WKNavigationDelegate {
 extension MixinWebViewController: WKUIDelegate {
     
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
-        if prompt == HandlerName.mixinContext + ".getContext()" {
+        if prompt == HandlerName.mixinContext.rawValue + ".getContext()" {
             completionHandler(context.appContextString)
         } else {
             completionHandler("")
@@ -350,20 +348,84 @@ extension MixinWebViewController: WKUIDelegate {
 extension MixinWebViewController: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        switch message.name {
-        case HandlerName.reloadTheme:
+        guard let handlerName = HandlerName(rawValue: message.name) else {
+            return
+        }
+        switch handlerName {
+        case .mixinContext:
+            break
+        case .reloadTheme:
             reloadTheme(webView: webView)
-        case HandlerName.playlist:
+        case .playlist:
             if let body = message.body as? [String] {
                 let playlist = body.compactMap(PlaylistItem.init)
                 if !playlist.isEmpty {
                     PlaylistManager.shared.play(index: 0, in: playlist, source: .remote)
                 }
             }
-        case HandlerName.close:
+        case .close:
             dismissAsChild(animated: true, completion: nil)
-        default:
-            break
+        case .getTIPAddress:
+            if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 2 {
+                let chainId = body[0]
+                let callback = body[1]
+                let info: ConnectWalletViewController.Info
+                switch context.style {
+                case let .app(app, _):
+                    info = .bot(app)
+                case .webPage:
+                    info = .page(webView.url?.host ?? "")
+                }
+                let connectWallet = ConnectWalletViewController(info: info)
+                connectWallet.onApprove = { priv in
+                    let address: String
+                    do {
+                        let storage = InPlaceKeyStorage(raw: priv)
+                        let account = try EthereumAccount(keyStorage: storage)
+                        address = account.address.toChecksumAddress()
+                    } catch {
+                        address = ""
+                        Logger.tip.error(category: "WalletConnectService", message: "Failed to obtain address: \(error)")
+                    }
+                    let script = "\(callback)('\(address)');"
+                    self.webView.evaluateJavaScript(script)
+                }
+                connectWallet.onReject = {
+                    self.webView.evaluateJavaScript(callback + "('');")
+                }
+                let authentication = AuthenticationViewController(intentViewController: connectWallet)
+                WalletConnectService.shared.presentRequest(viewController: authentication)
+            }
+        case .tipSign:
+            if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 3 {
+                let chainId = body[0]
+                let message = body[1]
+                let callback = body[2]
+                let requester: SignRequestViewController.Requester
+                switch context.style {
+                case let .app(app, _):
+                    requester = .app(app)
+                case .webPage:
+                    requester = .page(webView.url?.host ?? "")
+                }
+                let signRequest = SignRequestViewController(requester: requester, message: message)
+                signRequest.onReject = {
+                    self.webView.evaluateJavaScript("\(callback)('');")
+                }
+                signRequest.onApprove = { priv in
+                    let signature: String
+                    do {
+                        let storage = InPlaceKeyStorage(raw: priv)
+                        let account = try EthereumAccount(keyStorage: storage)
+                        signature = try account.sign(message: message).hexEncodedString()
+                    } catch {
+                        signature = ""
+                    }
+                    self.webView.evaluateJavaScript("\(callback)('\(signature)');")
+                }
+                let authentication = AuthenticationViewController(intentViewController: signRequest)
+                WalletConnectService.shared.presentRequest(viewController: authentication)
+            }
         }
     }
     
@@ -405,6 +467,8 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 associatedClip = nil
             case .about:
                 aboutAction()
+            case .scanQRCode:
+                scanQRCodeOnCurrentPage()
             case .copyLink:
                 copyAction(currentUrl: url)
             case .refresh:
@@ -563,6 +627,35 @@ extension MixinWebViewController {
         }
     }
     
+    private func scanQRCodeOnCurrentPage() {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        let config = WKSnapshotConfiguration()
+        config.rect = webView.frame
+        config.snapshotWidth = NSNumber(value: Int(webView.frame.width))
+        webView.takeSnapshot(with: config) { image, error in
+            if let image, let cgImage = image.cgImage, let detector = qrCodeDetector {
+                let ciImage = CIImage(cgImage: cgImage)
+                for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
+                    guard let string = feature.messageString else {
+                        continue
+                    }
+                    hud.hide()
+                    UrlWindow.checkQrCodeDetection(string: string, clearNavigationStack: false)
+                    return
+                }
+                hud.set(style: .warning, text: R.string.localizable.qr_code_not_found())
+                hud.scheduleAutoHidden()
+            } else if let error {
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            } else {
+                hud.set(style: .error, text: R.string.localizable.qr_code_not_found())
+                hud.scheduleAutoHidden()
+            }
+        }
+    }
+    
     private func copyAction(currentUrl: URL) {
         UIPasteboard.general.string = currentUrl.absoluteString
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
@@ -643,6 +736,7 @@ extension MixinWebViewController {
 extension MixinWebViewController {
     
     enum Script {
+        
         static let getThemeColor = """
             function getColor() {
                 const metas = document.getElementsByTagName('meta');
@@ -655,6 +749,7 @@ extension MixinWebViewController {
             }
             getColor();
         """
+        
         static let disableImageSelection: WKUserScript = {
             let string = """
                 var style = document.createElement('style');
@@ -665,6 +760,7 @@ extension MixinWebViewController {
                                 injectionTime: .atDocumentEnd,
                                 forMainFrameOnly: true)
         }()
+        
     }
     
     struct Context {

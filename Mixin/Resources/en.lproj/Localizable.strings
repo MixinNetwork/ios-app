@@ -71,6 +71,8 @@
 "allow_bot_manage_bots" = "Allow bot to add or modify your bots.";
 "allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
 "allow_bot_send_messages" = "Allow bot to send messages represent of you.";
+"allow_dapp_access_public_address" = "Allow dapp to access your wallet balance and activity.";
+"allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "Allow Manual Report Message";
 "amount" = "Amount";
 "app_card_shareable_false" = "The card has been set to not allow sharing";
@@ -117,6 +119,7 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "business" = "Business";
+"calculating" = "Calculating...";
 "call" = "Call";
 "call_declined" = "Call declined";
 "call_encryption_description" = "No one outside of this call can view or listen to it. Not even Mixin.";
@@ -139,6 +142,7 @@
 "card" = "card";
 "category_chats" = "Chats";
 "chain" = "Chain";
+"chain_not_supported" = "Chain not supported";
 "change" = "Change";
 "change_amount" = "Change Amount";
 "change_emergency_contact" = "Change emergency contact";
@@ -203,8 +207,11 @@
 "compressed" = "Compressed";
 "confirm" = "Confirm";
 "connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
+"connect_wallet" = "Connect Wallet";
 "connected" = "Connected";
+"connected_dapps" = "Connected Dapps";
 "connecting" = "Connecting";
+"connection_failed" = "Connection Failed";
 "connection_unstable" = "Connection unstable";
 "connection_establishment_failed" = "Connection establishment failed";
 "contact" = "Contact";
@@ -261,6 +268,7 @@
 "current_selected" = "Current Selected";
 "custom_time" = "Custom Time";
 "daily" = "Daily";
+"dapp_description" = "This dapp has connected to your wallet, it can view your wallet balance, activity and request approval for transactions.";
 "dark" = "Dark";
 "data_and_storage_usage" = "Data and Storage Usage";
 "data_parsing_error" = "Data parsing error";
@@ -316,6 +324,9 @@
 "disappearing_option_3" = "2 hours";
 "disappearing_option_4" = "1 day";
 "disappearing_option_5" = "1 week";
+"discard" = "Discard";
+"disconnect" = "Disconnect";
+"disconnected" = "Disconnected";
 "disconnecting" = "Disconnecting";
 "dismiss_as_admin" = "Dismiss as Admin";
 "done" = "Done";
@@ -389,6 +400,8 @@
 "failed_to_send_location" = "Failed to send location";
 "failed_to_send_photo" = "Failed to send photo";
 "failed_to_send_video" = "Failed to send video";
+"failed_to_switch_network" = "Failed to switch network: %@";
+"fast" = "Fast";
 "fee" = "Fee";
 "feedback" = "Feedback";
 "file" = "File";
@@ -456,6 +469,7 @@
 "invites_you_to_a_voice_call" = "invites you to a voice call";
 "join_group" = "Join Group";
 "joined_in" = "Joined in %@";
+"keep_network" = "Keep %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "Label";
 "landing_delete_content" = "Your account will be deleted on %@, if you continue to log in, the request to delete your account will be cancelled.";
@@ -504,6 +518,7 @@
 "message_preview" = "Message Preview";
 "message_sent" = "Message sent";
 "messages" = "Messages";
+"method_not_supported" = "Method %@ is not supported";
 "minute" = "%d Minute";
 "minute_count" = "%d Minutes";
 "mixin" = "Mixin";
@@ -532,8 +547,10 @@
 "name" = "Name";
 "name_or_phone_number" = "Name or Phone number";
 "need_help" = "Need help?";
+"network" = "Network";
 "network_connection_lost" = "The network connection was lost, please check your network and try again later";
-"network_fee" = "Network fee: %@";
+"network_fee" = "Network Fee";
+"network_switched" = "Network Switched";
 "never_auto_download" = "Never";
 "new_chat" = "New Chat";
 "new_group" = "New Group";
@@ -547,6 +564,7 @@
 "no_blocked_users" = "No blocked users";
 "no_bots" = "NO BOTS";
 "no_contacts" = "NO CONTACTS";
+"no_dapp" = "NO DAPP";
 "no_files" = "NO FILES";
 "no_hidden_assets" = "No hidden assets";
 "no_items_selected" = "No Items Selected";
@@ -561,6 +579,7 @@
 "no_transactions" = "No transactions";
 "nobody" = "Nobody";
 "none" = "None";
+"normal" = "Normal";
 "not_all_signer_success" = "Not all node success";
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Not found";
@@ -653,6 +672,8 @@
 "post_sharing" = "post";
 "preparing" = "Preparing...";
 "preparing_progress" = "Preparing...(%@)";
+"preview_unavailable" = "Preview unavailable";
+"preview_unavailable_description" = "Unable to estimate asset changes. Please make sure you trust this dapp.";
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -668,6 +689,7 @@
 "read_your_contacts" = "Read your contacts";
 "read_your_nfts" = "Read your NFTs";
 "read_your_phone_number" = "Read your phone number";
+"read_your_public_address" = "Read your public address";
 "read_your_public_profile" = "Read your public profile";
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Rebate";
@@ -695,7 +717,11 @@
 "report_and_block" = "Report and block?";
 "report_title" = "Send the conversation log to developers?";
 "represent_send_messages" = "Represent send messages";
+"request_approval" = "Request approval";
 "request_authorization" = "Request Authorization";
+"request_rejected" = "Request Rejected";
+"request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
+"requests_switching_to_network" = "%1$@ requests switching to %2$@";
 "resend_code" = "Resend code";
 "resend_code_pending" = "Resend code in %@";
 "reset_link" = "Reset Link";
@@ -741,6 +767,7 @@
 "search_open_link" = "Open Link: ";
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_related_message" = "%d related message";
 "search_related_message_count" = "%d related messages";
@@ -766,6 +793,7 @@
 "send_message" = "Send Message";
 "send_photo" = "Send 1 Photo";
 "send_photo_count" = "Send %d Photos";
+"send_signed_message_confirmation" = "The message has been signed successfully, click the button below to send or discard the signed message";
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
 "send_to_developer" = "Send to Developer";
@@ -777,6 +805,7 @@
 "send_your_current_location" = "Send your Current Location";
 "send_count" = "Send(%d)";
 "senders" = "Senders";
+"session_not_found" = "Session not found";
 "set" = "Set";
 "set_disappearing_message_time_to" = "%1$@ set disappearing message time to %2$@";
 "set_emergency_create_successfully" = "Set emergency contact successfully";
@@ -823,11 +852,15 @@
 "show" = "Show";
 "show_asset" = "Show asset";
 "show_in_chat" = "Show in chat";
+"sign_by_pin" = "Sign by PIN";
 "sign_in" = "Sign in";
 "sign_with_emergency_contact" = "Sign in with emergency contact";
 "sign_with_phone_number" = "Sign in with phone number";
+"signature_request" = "Signature Request";
+"signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "Skip";
 "slide_to_cancel" = "Slide to Cancel";
+"slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
 "social" = "Social";
@@ -849,6 +882,8 @@
 "stranger_hint" = "This sender is not in your contacts";
 "successful" = "Successful";
 "suspicious_link" = "Suspicious Link";
+"switch_network" = "Switch Network";
+"switch_to_network" = "Switch to %@";
 "symbol" = "Symbol";
 "symbol_withdrawal" = "%@ Withdrawal";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
@@ -878,8 +913,10 @@
 "track_not_found" = "Track not found";
 "trading" = "Trading";
 "transaction" = "Transaction";
+"transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Transaction Hash";
 "transaction_id" = "Transaction Id";
+"transaction_request" = "Transaction Request";
 "transaction_type" = "Transaction Type";
 "transactions" = "Transactions";
 "transfer_protocol_version_not_matched" = "Protocol version does not match, transfer failed. Please upgrade the application first.";
@@ -911,6 +948,7 @@
 "turn_on_notifications" = "Turn On Notifications";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
+"unable_to_decode_the_request" = "Unable to decode the request: %@";
 "unable_to_save_photo" = "Unable to save photo.";
 "unable_to_save_video" = "Unable to save video.";
 "unable_to_share_content" = "Unable to share this content";

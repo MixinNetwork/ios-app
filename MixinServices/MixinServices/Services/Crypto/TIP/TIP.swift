@@ -58,7 +58,7 @@ public enum TIP {
         case synchronizing(Float)
     }
     
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case missingPINToken
         case unableToGenerateSecuredRandom
         case invalidPIN
@@ -371,27 +371,27 @@ extension TIP {
         return based
     }
     
-    static func encryptTIPPIN(pin: String, pinToken: Data, target: Data) async throws -> String {
+    // TODO: Revert this function to internal after dependencies are migrated to SPM
+    public static func getOrRecoverTIPPriv(pin: String, pinToken: Data) async throws -> Data {
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
         }
         let tipPriv: Data
         if let savedTIPPriv = AppGroupKeychain.tipPriv {
-            Logger.tip.info(category: "TIP", message: "encryptTIPPIN with saved priv")
+            Logger.tip.info(category: "TIP", message: "Using saved priv")
             let aesKey = try await getAESKey(pinData: pinData, pinToken: pinToken)
             guard let tipPrivKey = SHA3_256.hash(data: aesKey + pinData) else {
                 throw Error.unableToHashTIPPrivKey
             }
-            tipPriv = try AESCryptor.decrypt(savedTIPPriv, with: tipPrivKey)
+            return try AESCryptor.decrypt(savedTIPPriv, with: tipPrivKey)
         } else {
-            Logger.tip.info(category: "TIP", message: "encryptTIPPIN with new created priv")
-            tipPriv = try await createTIPPriv(pin: pin,
-                                              failedSigners: [],
-                                              legacyPIN: nil,
-                                              forRecover: true,
-                                              progressHandler: nil)
+            Logger.tip.info(category: "TIP", message: "Using new created priv")
+            return try await createTIPPriv(pin: pin,
+                                           failedSigners: [],
+                                           legacyPIN: nil,
+                                           forRecover: true,
+                                           progressHandler: nil)
         }
-        return try encryptTIPPIN(tipPriv: tipPriv, target: target)
     }
     
     static func pinIterator() -> UInt64 {

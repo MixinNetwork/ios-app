@@ -71,6 +71,8 @@
 "allow_bot_manage_bots" = "允許機器人新增或修改你的機器人列表。";
 "allow_bot_manage_circles" = "允許機器人新增、修改和刪除你所有的圈子。";
 "allow_bot_send_messages" = "允許機器人代表你發訊息。";
+"allow_dapp_access_public_address" = "允許 Dapp 訪問你的錢包餘額及活動。";
+"allow_dapp_request_approval" = "允許 Dapp 向你傳送請求，如轉賬請求等";
 "allow_manual_report_message" = "允許手動上報訊息";
 "amount" = "金額";
 "app_card_shareable_false" = "該卡片已被設定為不允許轉發";
@@ -117,6 +119,7 @@
 "bots" = "機器人";
 "bots_title" = "機器人";
 "business" = "商業";
+"calculating" = "正在計算...";
 "call" = "語音";
 "call_declined" = "對方已拒絕";
 "call_encryption_description" = "除了參與通話的人，其他人包含 Mixin 在內都無法聽取或檢視。";
@@ -139,6 +142,7 @@
 "card" = "卡片";
 "category_chats" = "最近聊天";
 "chain" = "所屬公鏈";
+"chain_not_supported" = "不支援此網路";
 "change" = "更改";
 "change_amount" = "修改金額";
 "change_emergency_contact" = "修改緊急聯絡人";
@@ -203,8 +207,11 @@
 "compressed" = "已壓縮";
 "confirm" = "確認";
 "connect_to_tip_network_failed" = "連線 TIP 網路失敗，請嘗試切換網路後重試";
+"connect_wallet" = "連線錢包";
 "connected" = "已連線";
+"connected_dapps" = "已連線的 Dapp";
 "connecting" = "正在連線";
+"connection_failed" = "連線失敗";
 "connection_unstable" = "當前通話網路不佳";
 "connection_establishment_failed" = "連線建立失敗";
 "contact" = "聯絡人";
@@ -261,6 +268,7 @@
 "current_selected" = "當前選擇";
 "custom_time" = "自定義時間";
 "daily" = "每天";
+"dapp_description" = "此 Dapp 已經與你的錢包連線，並被授權檢視你的錢包餘額及活動，也可向你發出轉賬請求。";
 "dark" = "深色";
 "data_and_storage_usage" = "資料與儲存空間";
 "data_parsing_error" = "資料解析錯誤";
@@ -316,6 +324,9 @@
 "disappearing_option_3" = "2 小時";
 "disappearing_option_4" = "1 天";
 "disappearing_option_5" = "1 週";
+"discard" = "廢棄";
+"disconnect" = "斷開連線";
+"disconnected" = "已斷開";
 "disconnecting" = "正在斷開";
 "dismiss_as_admin" = "撤銷管理員身份";
 "done" = "完成";
@@ -389,6 +400,8 @@
 "failed_to_send_location" = "傳送位置失敗，請稍後重試";
 "failed_to_send_photo" = "傳送圖片失敗，請稍後重試";
 "failed_to_send_video" = "傳送影片失敗，請稍後重試";
+"failed_to_switch_network" = "切換網路失敗: %@";
+"fast" = "快速";
 "fee" = "手續費";
 "feedback" = "反饋";
 "file" = "檔案";
@@ -456,6 +469,7 @@
 "invites_you_to_a_voice_call" = "發起了語音通話";
 "join_group" = "加入群組";
 "joined_in" = "%@ 加入";
+"keep_network" = "留在 %@";
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";
 "label" = "標題";
 "landing_delete_content" = "您的賬戶將於 %@ 被刪除，如果您繼續登入，刪除您賬戶的請求將被取消。";
@@ -504,6 +518,7 @@
 "message_preview" = "顯示訊息內容";
 "message_sent" = "訊息已傳送";
 "messages" = "訊息";
+"method_not_supported" = "不支援此方法: %@";
 "minute" = "%d 分鐘";
 "minute_count" = "%d 分鐘";
 "mixin" = "Mixin";
@@ -532,8 +547,10 @@
 "name" = "名稱";
 "name_or_phone_number" = "姓名或手機號";
 "need_help" = "需要幫助？";
+"network" = "網路";
 "network_connection_lost" = "網路連線超時，請檢查網路稍後重試";
-"network_fee" = "網路手續費：%@";
+"network_fee" = "網路費用";
+"network_switched" = "已切換網路";
 "never_auto_download" = "關閉";
 "new_chat" = "新聊天";
 "new_group" = "新建群組";
@@ -547,6 +564,7 @@
 "no_blocked_users" = "沒有封鎖任何人";
 "no_bots" = "沒有機器人";
 "no_contacts" = "沒有聯絡人";
+"no_dapp" = "沒有 Dapp";
 "no_files" = "沒有檔案";
 "no_hidden_assets" = "沒有隱藏的資產";
 "no_items_selected" = "未選定專案";
@@ -561,6 +579,7 @@
 "no_transactions" = "暫無轉賬記錄";
 "nobody" = "沒有人";
 "none" = "無";
+"normal" = "普通";
 "not_all_signer_success" = "有些節點失敗了";
 "not_enough_partials" = "沒有足夠的節點返回金鑰分片";
 "not_found" = "沒有找到相應的訊息";
@@ -653,6 +672,8 @@
 "post_sharing" = "文章";
 "preparing" = "準備...";
 "preparing_progress" = "準備中...（%@）";
+"preview_unavailable" = "預覽不可用";
+"preview_unavailable_description" = "無法預覽資產變化。請確保你信任此 dapp。";
 "privacy" = "隱私";
 "privacy_policy" = "隱私政策";
 "process_can_not_be_stop" = "流程一旦開始無法取消，請牢記 6 位數字 PIN，意外中止流程需要再次輸入";
@@ -668,6 +689,7 @@
 "read_your_contacts" = "讀取你的聯絡人列表";
 "read_your_nfts" = "讀取你的 NFT 列表";
 "read_your_phone_number" = "讀取你的手機號";
+"read_your_public_address" = "讀取你的地址";
 "read_your_public_profile" = "讀取你的個人資料";
 "read_your_snapshots" = "讀取你的轉賬記錄";
 "rebate" = "退款";
@@ -695,7 +717,11 @@
 "report_and_block" = "舉報並封鎖？";
 "report_title" = "給開發人員傳送聊天日誌？";
 "represent_send_messages" = "代表你發訊息";
+"request_approval" = "允許請求";
 "request_authorization" = "請求授權";
+"request_rejected" = "請求已拒絕";
+"request_rejected_reason_another_request_in_process" = "正在處理另一請求，請完成當前請求後重試";
+"requests_switching_to_network" = "%1$@ 請求切換到 %2$@";
 "resend_code" = "重發驗證碼";
 "resend_code_pending" = "%@ 後重新發送驗證碼";
 "reset_link" = "重置邀請連結";
@@ -741,6 +767,7 @@
 "search_open_link" = "開啟連結：";
 "search_placeholder_asset" = "名稱, 符號";
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
+"search_placeholder_dapp" = "名稱, URL";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";
 "search_related_message" = "%d 條相關的訊息";
 "search_related_message_count" = "%d 條相關的訊息";
@@ -766,6 +793,7 @@
 "send_message" = "發訊息";
 "send_photo" = "傳送 1 張圖片";
 "send_photo_count" = "傳送 %d 張圖片";
+"send_signed_message_confirmation" = "此訊息已被簽名，點選下方按鈕以傳送或丟棄";
 "send_this_location" = "傳送這個位置";
 "send_to" = "傳送給 %@";
 "send_to_developer" = "把日誌發給開發者";
@@ -777,6 +805,7 @@
 "send_your_current_location" = "傳送您當前的位置";
 "send_count" = "傳送（%d）";
 "senders" = "交易發起人";
+"session_not_found" = "沒有對應的連線";
 "set" = "設定";
 "set_disappearing_message_time_to" = "%1$@將限時訊息設定為 %2$@";
 "set_emergency_create_successfully" = "設定緊急聯絡人成功";
@@ -823,11 +852,15 @@
 "show" = "顯示";
 "show_asset" = "顯示資產";
 "show_in_chat" = "在聊天中展示";
+"sign_by_pin" = "使用 PIN 簽名";
 "sign_in" = "登入";
 "sign_with_emergency_contact" = "透過緊急聯絡人登入";
 "sign_with_phone_number" = "透過手機號登入";
+"signature_request" = "請求籤名";
+"signature_request_warning" = "我們無法驗證此請求。簽名前請確認你信任此 App。";
 "skip" = "跳過";
 "slide_to_cancel" = "滑動取消";
+"slow" = "緩慢";
 "snapshot_hash" = "快照雜湊";
 "snapshot_not_found" = "找不到該轉賬記錄。";
 "social" = "社交";
@@ -849,6 +882,8 @@
 "stranger_hint" = "對方不是你的聯絡人";
 "successful" = "成功";
 "suspicious_link" = "可疑連結";
+"switch_network" = "切換網路";
+"switch_to_network" = "切換到 %@";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";
 "syncing_and_verifying_tip" = "正在驗證並同步金鑰分片到 TIP 網路，請保持應用在前臺，設定過程中不要強制關閉應用";
@@ -879,7 +914,9 @@
 "trading" = "交易";
 "transaction" = "交易詳情";
 "transaction_hash" = "上鏈雜湊";
+"transaction_failed" = "轉賬失敗";
 "transaction_id" = "交易編號";
+"transaction_request" = "請求轉賬";
 "transaction_type" = "交易型別";
 "transactions" = "轉賬記錄";
 "transfer_protocol_version_not_matched" = "版本不匹配，無法同步資料，請先升級應用。";
@@ -911,6 +948,7 @@
 "turn_on_notifications" = "開啟通知";
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
 "unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
+"unable_to_decode_the_request" = "無法解析請求: %@";
 "unable_to_save_photo" = "儲存圖片失敗";
 "unable_to_save_video" = "儲存影片失敗";
 "unable_to_share_content" = "無法分享此內容";

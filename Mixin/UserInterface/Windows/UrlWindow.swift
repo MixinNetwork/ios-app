@@ -1,6 +1,8 @@
 import Foundation
 import UIKit
 import Alamofire
+import WalletConnectUtils
+import Web3Wallet
 import MixinServices
 
 class UrlWindow {
@@ -486,6 +488,19 @@ class UrlWindow {
         }
         if let url = URL(string: string), checkUrl(url: url, clearNavigationStack: clearNavigationStack) {
             return
+        }
+        if WalletConnectService.isAccountAllowed, let uri = WalletConnectURI(string: string) {
+            switch TIP.status {
+            case .ready:
+                WalletConnectService.shared.connect(to: uri)
+                return
+            case .needsInitialize:
+                let tip = TIPNavigationViewController(intent: .create, destination: nil)
+                UIApplication.homeNavigationController?.present(tip, animated: true)
+                return
+            case .unknown, .needsMigrate:
+                break
+            }
         }
         RecognizeWindow.instance().presentWindow(text: string)
     }

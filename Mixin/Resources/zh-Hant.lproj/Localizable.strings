@@ -547,6 +547,7 @@
 "network" = "網路";
 "network_connection_lost" = "網路連線超時，請檢查網路稍後重試";
 "network_fee" = "網路費用";
+"network_type" = "網路型別";
 "never_auto_download" = "關閉";
 "new_chat" = "新聊天";
 "new_group" = "新建群組";

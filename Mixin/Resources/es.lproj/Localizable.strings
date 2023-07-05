@@ -547,6 +547,7 @@
 "network" = "Network";
 "network_connection_lost" = "Se ha perdido la conexión de red, verifica tu red e intenta nuevamente más tarde";
 "network_fee" = "Tarifa de red: %@";
+"network_type" = "Tipo de red";
 "never_auto_download" = "Nunca";
 "new_chat" = "Nueva chat";
 "new_group" = "Nuevo grupo";

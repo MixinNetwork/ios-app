@@ -814,6 +814,11 @@
 		94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */; };
 		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
+		94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */; };
+		94B9FDA02A55E0DD00C1E286 /* DepositNetworkSwitchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B9FD9F2A55E0DD00C1E286 /* DepositNetworkSwitchView.xib */; };
+		94B9FDA32A55E47D00C1E286 /* CompactDepositNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B9FDA12A55E47D00C1E286 /* CompactDepositNetworkCell.swift */; };
+		94B9FDA42A55E47D00C1E286 /* CompactDepositNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B9FDA22A55E47D00C1E286 /* CompactDepositNetworkCell.xib */; };
+		94B9FDA62A55E74D00C1E286 /* DepositNetworkSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B9FDA52A55E74D00C1E286 /* DepositNetworkSwitchView.swift */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
 		94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */; };
 		94C199732A1CA9430098EDB3 /* DeviceTransferError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */; };
@@ -1939,6 +1944,11 @@
 		94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnoseViewController.swift; sourceTree = "<group>"; };
 		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
+		94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositAddressGeneratingView.xib; sourceTree = "<group>"; };
+		94B9FD9F2A55E0DD00C1E286 /* DepositNetworkSwitchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositNetworkSwitchView.xib; sourceTree = "<group>"; };
+		94B9FDA12A55E47D00C1E286 /* CompactDepositNetworkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactDepositNetworkCell.swift; sourceTree = "<group>"; };
+		94B9FDA22A55E47D00C1E286 /* CompactDepositNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompactDepositNetworkCell.xib; sourceTree = "<group>"; };
+		94B9FDA52A55E74D00C1E286 /* DepositNetworkSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNetworkSwitchView.swift; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
 		94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InPlaceKeyStorage.swift; sourceTree = "<group>"; };
 		94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferError.swift; sourceTree = "<group>"; };
@@ -3365,6 +3375,11 @@
 				7BC80A61221D1C06008586AD /* AssetTableHeaderView.swift */,
 				7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */,
 				7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */,
+				94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */,
+				94B9FD9F2A55E0DD00C1E286 /* DepositNetworkSwitchView.xib */,
+				94B9FDA52A55E74D00C1E286 /* DepositNetworkSwitchView.swift */,
+				94B9FDA22A55E47D00C1E286 /* CompactDepositNetworkCell.xib */,
+				94B9FDA12A55E47D00C1E286 /* CompactDepositNetworkCell.swift */,
 				7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */,
 				7B63C49021A4334C0044C4BF /* DepositFieldView.swift */,
 				7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */,
@@ -4368,6 +4383,7 @@
 				7C11E34A281BF4BC00D3362B /* ic_time_animation_dark@2x.gif in Resources */,
 				7BDFAE942559165800296F8B /* CompactAssetCell.xib in Resources */,
 				7BBB6F532451C9E7002798F2 /* BackupTableHeaderView.xib in Resources */,
+				94B9FDA02A55E0DD00C1E286 /* DepositNetworkSwitchView.xib in Resources */,
 				7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */,
 				94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */,
 				7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */,
@@ -4395,9 +4411,11 @@
 				7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */,
+				94B9FDA42A55E47D00C1E286 /* CompactDepositNetworkCell.xib in Resources */,
 				941C9CE9298E57BD00CB760E /* AuthenticationView.xib in Resources */,
 				7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */,
 				7C11E349281BF4BC00D3362B /* ic_time_animation@2x.gif in Resources */,
+				94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
 				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
@@ -5021,6 +5039,7 @@
 				7C7579DC29DC60960002DA0B /* TransferToPhoneViewController.swift in Sources */,
 				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
 				7BA24D77253438B9004906AD /* ViewPanningController.swift in Sources */,
+				94B9FDA62A55E74D00C1E286 /* DepositNetworkSwitchView.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,
 				DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */,
 				7BF42E3322DC860E005066E6 /* GalleryItemViewController.swift in Sources */,
@@ -5195,6 +5214,7 @@
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
 				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
 				7B054052243CCCD500C1FCB6 /* HomeTitleButton.swift in Sources */,
+				94B9FDA32A55E47D00C1E286 /* CompactDepositNetworkCell.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
 				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
 				944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */,

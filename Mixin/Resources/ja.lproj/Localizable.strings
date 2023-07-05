@@ -547,6 +547,7 @@
 "network" = "Network";
 "network_connection_lost" = "ネットワークが切断されました。確認してから再度接続してください";
 "network_fee" = "Network Fee";
+"network_type" = "Network Type";
 "never_auto_download" = "しない";
 "new_chat" = "チャットを作成";
 "new_group" = "グループを作成";

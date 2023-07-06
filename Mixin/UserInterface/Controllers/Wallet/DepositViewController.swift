@@ -28,7 +28,7 @@ class DepositViewController: UIViewController {
     private var networkSwitchableAsset: NetworkSwitchableAsset?
     private var needsShowChooseNetworkWindow = true
     private var addressGeneratingView: UIView?
-    private var networkSwitchViewObserver: NSKeyValueObservation?
+    private var networkSwitchViewContentSizeObserver: NSKeyValueObservation?
     private var switchableNetworks: [String] = []
     private var switchingToAssetID: String?
     
@@ -53,7 +53,10 @@ class DepositViewController: UIViewController {
             showAddressGeneratingView()
         }
         
-        if asset.assetId == AssetID.btc && asset.depositEntries.count == 2 {
+        if asset.assetId == AssetID.btc
+            && asset.depositEntries.count == 2
+            && asset.depositEntries[0].payToWitness != asset.depositEntries[1].payToWitness
+        {
             networkSwitchableAsset = .btc
             switchableNetworks = ["Bitcoin(Segwit)", "Bitcoin"]
             insertNetworkSwitchView(selectedIndex: 0)
@@ -80,7 +83,7 @@ class DepositViewController: UIViewController {
         let switchView = R.nib.depositNetworkSwitchView(owner: nil)!
         contentStackView.insertArrangedSubview(switchView, at: 0)
         let collectionView: UICollectionView = switchView.collectionView
-        networkSwitchViewObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
+        networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
             guard let newValue = change.newValue, let self else {
                 return
             }

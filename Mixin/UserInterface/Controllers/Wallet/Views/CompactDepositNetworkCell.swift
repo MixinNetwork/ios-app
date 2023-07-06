@@ -7,16 +7,22 @@ class CompactDepositNetworkCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        backgroundView = UIView()
-        backgroundView!.clipsToBounds = true
-        backgroundView!.layer.borderColor = R.color.line()!.cgColor
-        backgroundView!.layer.borderWidth = 1
-        backgroundView!.layer.cornerRadius = 8
+        backgroundView = {
+            let view = UIView()
+            view.clipsToBounds = true
+            view.layer.borderColor = R.color.line()!.cgColor
+            view.layer.borderWidth = 1
+            view.layer.cornerRadius = 8
+            return view
+        }()
         
-        selectedBackgroundView = UIView()
-        selectedBackgroundView!.backgroundColor = .inputBackground
-        selectedBackgroundView!.clipsToBounds = true
-        selectedBackgroundView!.layer.cornerRadius = 8
+        selectedBackgroundView = {
+            let view = UIView()
+            view.backgroundColor = .inputBackground
+            view.clipsToBounds = true
+            view.layer.cornerRadius = 8
+            return view
+        }()
     }
     
     override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {

@@ -19,14 +19,14 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="300"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="310"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zIa-ex-QbW">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="290"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="305.5"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Sfa-Qc-uEt">
-                            <rect key="frame" x="20" y="0.0" width="291" height="63"/>
+                            <rect key="frame" x="20" y="16" width="291" height="62.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocV-R6-UEn">
                                     <rect key="frame" x="0.0" y="0.0" width="46.5" height="14.5"/>
@@ -35,7 +35,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="0xA5B85583c2CbDf873D802A829845904696E7BD97" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L6b-gv-92p">
-                                    <rect key="frame" x="0.0" y="24.5" width="282.5" height="38.5"/>
+                                    <rect key="frame" x="0.0" y="24.5" width="282.5" height="38"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>
@@ -43,7 +43,7 @@
                             </subviews>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JSa-Ib-210">
-                            <rect key="frame" x="311" y="12" width="64" height="64"/>
+                            <rect key="frame" x="311" y="27.5" width="64" height="64"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="JSa-Ib-210" secondAttribute="height" id="0sR-7w-Sv5"/>
                                 <constraint firstAttribute="height" constant="64" id="Lxg-Qc-4mW"/>
@@ -55,7 +55,7 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0VM-3w-cAL">
-                            <rect key="frame" x="106" y="95" width="163" height="163"/>
+                            <rect key="frame" x="106" y="110.5" width="163" height="163"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="R7z-eB-YMg">
                                     <rect key="frame" x="0.0" y="0.0" width="163" height="163"/>
@@ -125,7 +125,7 @@
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="Sfa-Qc-uEt" firstAttribute="top" secondItem="zIa-ex-QbW" secondAttribute="top" id="4R7-D8-Wmu"/>
+                        <constraint firstItem="Sfa-Qc-uEt" firstAttribute="top" secondItem="zIa-ex-QbW" secondAttribute="top" constant="16" id="4R7-D8-Wmu"/>
                         <constraint firstItem="JSa-Ib-210" firstAttribute="centerY" secondItem="L6b-gv-92p" secondAttribute="centerY" id="YWb-qj-CbU"/>
                         <constraint firstItem="0VM-3w-cAL" firstAttribute="centerX" secondItem="zIa-ex-QbW" secondAttribute="centerX" id="YZG-4o-jcX"/>
                         <constraint firstAttribute="trailing" secondItem="JSa-Ib-210" secondAttribute="trailing" id="aWh-9a-3zU"/>
@@ -136,7 +136,7 @@
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqu-jH-FEz" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="290" width="375" height="10"/>
+                    <rect key="frame" x="0.0" y="305.5" width="375" height="4.5"/>
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
                         <constraint firstAttribute="height" priority="750" constant="10" id="VIJ-iS-VeW"/>
@@ -154,7 +154,7 @@
                 <constraint firstItem="fqu-jH-FEz" firstAttribute="top" secondItem="zIa-ex-QbW" secondAttribute="bottom" id="oQN-uD-HXf"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="41" y="72"/>
+            <point key="canvasLocation" x="40.799999999999997" y="76.46176911544228"/>
         </view>
     </objects>
     <resources>

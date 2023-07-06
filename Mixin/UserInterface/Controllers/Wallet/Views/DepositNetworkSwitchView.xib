@@ -11,11 +11,11 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DepositNetworkSwitchView" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="390" height="152"/>
+            <rect key="frame" x="0.0" y="0.0" width="390" height="146"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Network Type" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fjb-gv-8Zi">
-                    <rect key="frame" x="20" y="16" width="78.333333333333329" height="14"/>
+                    <rect key="frame" x="20" y="16" width="78.333333333333329" height="24"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <color key="textColor" name="text_accessory"/>
                     <nil key="highlightedColor"/>
@@ -24,7 +24,7 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="mzW-wj-JO5">
-                    <rect key="frame" x="20" y="46" width="350" height="90"/>
+                    <rect key="frame" x="20" y="56" width="350" height="90"/>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="90" id="x2d-wK-4BS"/>
@@ -43,7 +43,7 @@
                 <constraint firstItem="fjb-gv-8Zi" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="9Cn-YI-eYt"/>
                 <constraint firstItem="mzW-wj-JO5" firstAttribute="top" secondItem="fjb-gv-8Zi" secondAttribute="bottom" constant="16" id="J2y-ER-POS"/>
                 <constraint firstItem="fjb-gv-8Zi" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="ash-WV-ezT"/>
-                <constraint firstAttribute="bottom" secondItem="mzW-wj-JO5" secondAttribute="bottom" constant="16" id="f9K-1D-TqD"/>
+                <constraint firstAttribute="bottom" secondItem="mzW-wj-JO5" secondAttribute="bottom" id="f9K-1D-TqD"/>
                 <constraint firstAttribute="trailing" secondItem="mzW-wj-JO5" secondAttribute="trailing" constant="20" id="lVD-3b-Vdo"/>
                 <constraint firstItem="mzW-wj-JO5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="sbi-PV-hPL"/>
             </constraints>
@@ -52,7 +52,7 @@
                 <outlet property="collectionView" destination="mzW-wj-JO5" id="JkB-y2-Cqp"/>
                 <outlet property="collectionViewHeightConstraint" destination="x2d-wK-4BS" id="uRQ-L7-HUl"/>
             </connections>
-            <point key="canvasLocation" x="15.267175572519083" y="-204.92957746478874"/>
+            <point key="canvasLocation" x="15.267175572519083" y="-207.04225352112678"/>
         </view>
     </objects>
     <resources>

@@ -26,10 +26,11 @@ class DepositViewController: UIViewController {
     
     private var asset: AssetItem!
     private var networkSwitchableAsset: NetworkSwitchableAsset?
-    private var hasDepositChooseNetworkWindowPresented = false
+    private var needsShowChooseNetworkWindow = true
     private var addressGeneratingView: UIView?
     private var networkSwitchViewObserver: NSKeyValueObservation?
     private var switchableNetworks: [String] = []
+    private var switchingToAssetID: String?
     
     private lazy var depositWindow = QrcodeWindow.instance()
     
@@ -47,12 +48,9 @@ class DepositViewController: UIViewController {
         
         if let entry = asset.preferredDepositEntry, let chain = asset.chain {
             show(entry: entry)
-            showDepositChooseNetworkWindowIfNeeded(chain: chain)
+            showChooseNetworkWindowIfNeeded(chain: chain)
         } else {
-            let generatingView = R.nib.depositAddressGeneratingView(owner: nil)!
-            view.addSubview(generatingView)
-            generatingView.snp.makeEdgesEqualToSuperview()
-            self.addressGeneratingView = generatingView
+            showAddressGeneratingView()
         }
         
         if asset.assetId == AssetID.btc && asset.depositEntries.count == 2 {
@@ -127,6 +125,7 @@ extension DepositViewController: DepositFieldViewDelegate {
                              asset: asset)
         depositWindow.presentView()
     }
+    
 }
 
 extension DepositViewController: UICollectionViewDataSource {
@@ -165,6 +164,7 @@ extension DepositViewController: UICollectionViewDelegate {
             }
         case .usdt:
             let id = usdtNetworkNames.elements[indexPath.item].key
+            needsShowChooseNetworkWindow = true
             reloadAsset(with: id)
         }
     }
@@ -177,9 +177,10 @@ extension DepositViewController {
         guard let id = notification.userInfo?[AssetDAO.UserInfoKey.assetId] as? String else {
             return
         }
-        guard id == asset.assetId else {
+        guard id == asset.assetId || id == switchingToAssetID else {
             return
         }
+        switchingToAssetID = nil
         reloadAsset(with: id)
     }
     
@@ -187,28 +188,39 @@ extension DepositViewController {
         guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
             return
         }
-        guard id == asset.chainId else {
+        guard id == asset.assetId || id == switchingToAssetID else {
             return
         }
+        switchingToAssetID = nil
         reloadAsset(with: id)
     }
     
     private func reloadAsset(with id: String) {
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: id), let chain = asset.chain else {
-                return
-            }
-            DispatchQueue.main.sync {
-                guard let self = self else {
-                    return
-                }
-                self.asset = asset
-                if let entry = asset.preferredDepositEntry {
-                    self.addressGeneratingView?.removeFromSuperview()
-                    UIView.performWithoutAnimation {
-                        self.show(entry: entry)
+            if let asset = AssetDAO.shared.getAsset(assetId: id), let chain = asset.chain {
+                DispatchQueue.main.sync {
+                    guard let self = self else {
+                        return
                     }
-                    self.showDepositChooseNetworkWindowIfNeeded(chain: chain)
+                    self.asset = asset
+                    if let entry = asset.preferredDepositEntry {
+                        UIView.performWithoutAnimation {
+                            self.show(entry: entry)
+                        }
+                        self.hideAddressGeneratingView()
+                        self.showChooseNetworkWindowIfNeeded(chain: chain)
+                    }
+                }
+            } else {
+                DispatchQueue.main.sync {
+                    guard let self = self else {
+                        return
+                    }
+                    self.switchingToAssetID = id
+                    self.showAddressGeneratingView()
+                    let job = RefreshAssetsJob(request: .asset(id: id, untilDepositEntriesNotEmpty: true))
+                    self.job = job
+                    ConcurrentJobQueue.shared.addJob(job: job)
                 }
             }
         }
@@ -223,6 +235,7 @@ extension DepositViewController {
         upperDepositFieldView.shadowView.hasLowerShadow = true
         upperDepositFieldView.delegate = self
         if !entry.tag.isEmpty {
+            lowerDepositFieldView.isHidden = false
             if asset.usesTag {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.tag()
             } else {
@@ -246,12 +259,27 @@ extension DepositViewController {
         hintLabel.text = asset.depositTips
     }
     
-    private func showDepositChooseNetworkWindowIfNeeded(chain: Chain) {
-        guard !hasDepositChooseNetworkWindowPresented else {
+    private func showChooseNetworkWindowIfNeeded(chain: Chain) {
+        guard needsShowChooseNetworkWindow else {
             return
         }
-        hasDepositChooseNetworkWindowPresented = true
+        needsShowChooseNetworkWindow = false
         DepositChooseNetworkWindow.instance().render(asset: asset, chain: chain).presentPopupControllerAnimated()
+    }
+    
+    private func showAddressGeneratingView() {
+        guard self.addressGeneratingView == nil else {
+            return
+        }
+        let generatingView = R.nib.depositAddressGeneratingView(owner: nil)!
+        view.addSubview(generatingView)
+        generatingView.snp.makeEdgesEqualToSuperview()
+        self.addressGeneratingView = generatingView
+    }
+    
+    private func hideAddressGeneratingView() {
+        addressGeneratingView?.removeFromSuperview()
+        addressGeneratingView = nil
     }
     
 }

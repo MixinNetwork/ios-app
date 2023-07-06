@@ -167,6 +167,7 @@ extension DepositViewController: UICollectionViewDelegate {
             }
         case .usdt:
             let id = usdtNetworkNames.elements[indexPath.item].key
+            switchingToAssetID = id
             needsShowChooseNetworkWindow = true
             reloadAsset(with: id)
         }
@@ -219,7 +220,6 @@ extension DepositViewController {
                     guard let self = self else {
                         return
                     }
-                    self.switchingToAssetID = id
                     self.showAddressGeneratingView()
                     let job = RefreshAssetsJob(request: .asset(id: id, untilDepositEntriesNotEmpty: true))
                     self.job = job

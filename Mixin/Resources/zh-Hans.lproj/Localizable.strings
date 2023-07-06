@@ -142,7 +142,6 @@
 "card" = "卡片";
 "category_chats" = "最近聊天";
 "chain" = "所属公链";
-"chain_not_supported" = "不支持此网络";
 "change" = "更改";
 "change_amount" = "修改金额";
 "change_emergency_contact" = "修改紧急联系人";
@@ -400,7 +399,6 @@
 "failed_to_send_location" = "发送位置失败，请稍后重试";
 "failed_to_send_photo" = "发送图片失败，请稍后重试";
 "failed_to_send_video" = "发送视频失败，请稍后重试";
-"failed_to_switch_network" = "切换网络失败: %@";
 "fast" = "快速";
 "fee" = "手续费";
 "feedback" = "反馈";
@@ -469,7 +467,6 @@
 "invites_you_to_a_voice_call" = "发起了语音通话";
 "join_group" = "加入群组";
 "joined_in" = "%@ 加入";
-"keep_network" = "留在 %@";
 "keep_running_foreground" = "不要关闭屏幕并保持 Mixin 在前台运行";
 "label" = "标题";
 "landing_delete_content" = "您的账户将于 %@ 被删除，如果您继续登录，删除您账户的请求将被取消。";
@@ -550,7 +547,6 @@
 "network" = "网络";
 "network_connection_lost" = "网络连接超时，请检查网络稍后重试";
 "network_fee" = "网络费用";
-"network_switched" = "已切换网络";
 "never_auto_download" = "关闭";
 "new_chat" = "新聊天";
 "new_group" = "新建群组";
@@ -721,7 +717,6 @@
 "request_authorization" = "请求授权";
 "request_rejected" = "请求已拒绝";
 "request_rejected_reason_another_request_in_process" = "正在处理另一请求，请完成当前请求后重试";
-"requests_switching_to_network" = "%1$@ 请求切换到 %2$@";
 "resend_code" = "重发验证码";
 "resend_code_pending" = "%@ 后重新发送验证码";
 "reset_link" = "重置邀请链接";
@@ -882,8 +877,6 @@
 "stranger_hint" = "对方不是你的联系人";
 "successful" = "成功";
 "suspicious_link" = "可疑链接";
-"switch_network" = "切换网络";
-"switch_to_network" = "切换到 %@";
 "symbol" = "符号";
 "symbol_withdrawal" = "%@ 提现";
 "syncing_and_verifying_tip" = "正在验证并同步密钥分片到 TIP 网络，请保持应用在前台，设置过程中不要强制关闭应用";

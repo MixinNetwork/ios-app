@@ -142,7 +142,6 @@
 "card" = "ロボ";
 "category_chats" = "チャット";
 "chain" = "チェーン";
-"chain_not_supported" = "Chain not supported";
 "change" = "変更";
 "change_amount" = "数量を変更";
 "change_emergency_contact" = "緊急連絡先を変更";
@@ -400,7 +399,6 @@
 "failed_to_send_location" = "位置情報を送信できませんでした";
 "failed_to_send_photo" = "画像を送信できませんでした";
 "failed_to_send_video" = "動画を送信できませんでした";
-"failed_to_switch_network" = "Failed to switch network: %@";
 "fast" = "高速";
 "fee" = "手数料";
 "feedback" = "フィードバック";
@@ -469,7 +467,6 @@
 "invites_you_to_a_voice_call" = "グループ通話に招待されました";
 "join_group" = "グループに参加";
 "joined_in" = "%@からMixinを利用しています";
-"keep_network" = "Keep %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "ラベル";
 "landing_delete_content" = "あなたのアカウントは(%@) 後に消去されます。ログインを継続する場合、あなたのアカウント消去はキャンセルされます。";
@@ -550,7 +547,6 @@
 "network" = "Network";
 "network_connection_lost" = "ネットワークが切断されました。確認してから再度接続してください";
 "network_fee" = "Network Fee";
-"network_switched" = "Network Switched";
 "never_auto_download" = "しない";
 "new_chat" = "チャットを作成";
 "new_group" = "グループを作成";
@@ -721,7 +717,6 @@
 "request_authorization" = "Request Authorization";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
-"requests_switching_to_network" = "%1$@ requests switching to %2$@";
 "resend_code" = "コードを再送する";
 "resend_code_pending" = "%@ 後にコードを再送";
 "reset_link" = "リンクを取り消す";
@@ -882,8 +877,6 @@
 "stranger_hint" = "連絡先にない相手からのメッセージです";
 "successful" = "Successful";
 "suspicious_link" = "不審なリンクです";
-"switch_network" = "Switch Network";
-"switch_to_network" = "Switch to %@";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

@@ -183,7 +183,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         if isInputAssetAmount {
             if amountTextField.text == asset.balance {
                 hideInputAccessoryView()
-            } else if amountText.count >= 4, asset.balance.doubleValue != 0, asset.balance.hasPrefix(amountText) {
+            } else if amountText.count >= 4, asset.balance.doubleValue != 0, asset.localizedBalance.hasPrefix(amountText) {
                 showInputAccessoryView()
             } else {
                 hideInputAccessoryView()
@@ -314,7 +314,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     @objc func fillBalanceAction(_ sender: Any) {
-        amountTextField.text = asset?.balance
+        guard let asset else {
+            return
+        }
+        amountTextField.text = asset.localizedBalance
         amountEditingChanged(sender)
     }
     

@@ -109,6 +109,7 @@ extension SelectCountryViewController: UITableViewDataSource {
         }
         cell.flagImageView.image = UIImage(named: country.isoRegionCode.lowercased())
         cell.nameLabel.text = country.localizedName
+        cell.codeLabel.text = "+" + country.callingCode
         return cell
     }
     

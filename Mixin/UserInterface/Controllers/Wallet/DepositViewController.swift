@@ -4,11 +4,6 @@ import MixinServices
 
 class DepositViewController: UIViewController {
     
-    private enum NetworkSwitchableAsset {
-        case btc
-        case usdt
-    }
-    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var upperDepositFieldView: DepositFieldView!
@@ -25,7 +20,6 @@ class DepositViewController: UIViewController {
     ]
     
     private var asset: AssetItem!
-    private var networkSwitchableAsset: NetworkSwitchableAsset?
     private var needsShowChooseNetworkWindow = true
     private var addressGeneratingView: UIView?
     private var networkSwitchViewContentSizeObserver: NSKeyValueObservation?
@@ -53,17 +47,24 @@ class DepositViewController: UIViewController {
             showAddressGeneratingView()
         }
         
-        if asset.assetId == AssetID.btc
-            && asset.depositEntries.count == 2
-            && asset.depositEntries[0].payToWitness != asset.depositEntries[1].payToWitness
-        {
-            networkSwitchableAsset = .btc
-            switchableNetworks = ["Bitcoin(Segwit)", "Bitcoin"]
-            insertNetworkSwitchView(selectedIndex: 0)
-        } else if let index = usdtNetworkNames.index(forKey: asset.assetId) {
-            networkSwitchableAsset = .usdt
+        if let index = usdtNetworkNames.index(forKey: asset.assetId) {
             switchableNetworks = usdtNetworkNames.values.elements
-            insertNetworkSwitchView(selectedIndex: index)
+            let switchView = R.nib.depositNetworkSwitchView(owner: nil)!
+            contentStackView.insertArrangedSubview(switchView, at: 0)
+            let collectionView: UICollectionView = switchView.collectionView
+            networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
+                guard let newValue = change.newValue, let self else {
+                    return
+                }
+                switchView.collectionViewHeightConstraint.constant = newValue.height
+                self.view.layoutIfNeeded()
+            }
+            collectionView.register(R.nib.compactDepositNetworkCell)
+            collectionView.dataSource = self
+            collectionView.delegate = self
+            collectionView.reloadData()
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
@@ -77,25 +78,6 @@ class DepositViewController: UIViewController {
         let vc = R.storyboard.wallet.deposit()!
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.deposit())
-    }
-    
-    private func insertNetworkSwitchView(selectedIndex: Int) {
-        let switchView = R.nib.depositNetworkSwitchView(owner: nil)!
-        contentStackView.insertArrangedSubview(switchView, at: 0)
-        let collectionView: UICollectionView = switchView.collectionView
-        networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
-            guard let newValue = change.newValue, let self else {
-                return
-            }
-            switchView.collectionViewHeightConstraint.constant = newValue.height
-            self.view.layoutIfNeeded()
-        }
-        collectionView.register(R.nib.compactDepositNetworkCell)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.reloadData()
-        let indexPath = IndexPath(item: selectedIndex, section: 0)
-        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
     }
     
 }
@@ -152,25 +134,10 @@ extension DepositViewController: UICollectionViewDataSource {
 extension DepositViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch networkSwitchableAsset {
-        case .none:
-            break
-        case .btc:
-            if indexPath.item == 0 {
-                if let entry = asset.depositEntries.first(where: { $0.payToWitness }) {
-                    show(entry: entry)
-                }
-            } else {
-                if let entry = asset.depositEntries.first(where: { !$0.payToWitness }) {
-                    show(entry: entry)
-                }
-            }
-        case .usdt:
-            let id = usdtNetworkNames.elements[indexPath.item].key
-            switchingToAssetID = id
-            needsShowChooseNetworkWindow = true
-            reloadAsset(with: id)
-        }
+        let id = usdtNetworkNames.elements[indexPath.item].key
+        switchingToAssetID = id
+        needsShowChooseNetworkWindow = true
+        reloadAsset(with: id)
     }
     
 }

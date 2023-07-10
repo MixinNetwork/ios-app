@@ -72,7 +72,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="UbG-WP-4Yo">
-                                                    <rect key="frame" x="36" y="0.0" width="303" height="70"/>
+                                                    <rect key="frame" x="40" y="0.0" width="312" height="70"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6VU-1X-mt1">
                                                             <rect key="frame" x="0.0" y="24" width="30" height="22"/>
@@ -82,13 +82,13 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="China" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VIu-NH-Pq3">
-                                                            <rect key="frame" x="46" y="25.5" width="211" height="19.5"/>
+                                                            <rect key="frame" x="46" y="25.5" width="220" height="19.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                             <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="+86" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TZ1-qj-YKe">
-                                                            <rect key="frame" x="273" y="25.5" width="30" height="19.5"/>
+                                                            <rect key="frame" x="282" y="25.5" width="30" height="19.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                             <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
@@ -98,9 +98,9 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="UbG-WP-4Yo" secondAttribute="trailing" constant="36" id="FRV-c7-bdP"/>
+                                                <constraint firstAttribute="trailing" secondItem="UbG-WP-4Yo" secondAttribute="trailing" constant="23" id="FRV-c7-bdP"/>
                                                 <constraint firstAttribute="bottom" secondItem="UbG-WP-4Yo" secondAttribute="bottom" id="MO7-Ov-4mv"/>
-                                                <constraint firstItem="UbG-WP-4Yo" firstAttribute="leading" secondItem="qpK-Zy-S91" secondAttribute="leading" constant="36" id="iZg-N2-Uck"/>
+                                                <constraint firstItem="UbG-WP-4Yo" firstAttribute="leading" secondItem="qpK-Zy-S91" secondAttribute="leading" constant="40" id="iZg-N2-Uck"/>
                                                 <constraint firstItem="UbG-WP-4Yo" firstAttribute="top" secondItem="qpK-Zy-S91" secondAttribute="top" id="kjb-G9-Dgt"/>
                                             </constraints>
                                         </tableViewCellContentView>

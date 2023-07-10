@@ -17,7 +17,7 @@ class PhoneContactViewController: PeerViewController<[PhoneContact], PhoneContac
             let phoneContacts = ContactsManager.shared.contacts
                 .filter({ !contactPhoneNumbers.contains($0.phoneNumber) })
             let (titles, catalogedContacts) = UILocalizedIndexedCollation.current()
-                .catalogue(phoneContacts, usingSelector: #selector(getter: PhoneContact.fullName))
+                .catalog(phoneContacts, usingSelector: #selector(getter: PhoneContact.fullName))
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return

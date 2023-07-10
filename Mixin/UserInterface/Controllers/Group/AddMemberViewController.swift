@@ -51,7 +51,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
             let objcAccessibleUsers = UserDAO.shared.contacts()
                 .map(ObjcAccessibleUser.init)
             let (titles, objcUsers) = UILocalizedIndexedCollation.current()
-                .catalogue(objcAccessibleUsers, usingSelector: #selector(getter: ObjcAccessibleUser.fullName))
+                .catalog(objcAccessibleUsers, usingSelector: #selector(getter: ObjcAccessibleUser.fullName))
             let users = objcUsers.map({ $0.map({ $0.user }) })
             let participantUserIds: Set<String>
             if let conversationId = conversationId {

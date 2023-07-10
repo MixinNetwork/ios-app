@@ -75,6 +75,7 @@
 "allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "Allow Manual Report Message";
 "amount" = "Amount";
+"anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "The card has been set to not allow sharing";
 "app_update_short_hint" = "Please update Mixin from App Store to continue use the service.";
 "app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";

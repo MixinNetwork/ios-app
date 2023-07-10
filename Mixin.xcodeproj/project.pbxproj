@@ -923,7 +923,7 @@
 		DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */; };
 		DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */; };
 		DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F181F9C61530036D5FD /* UIViewControllerExtension.swift */; };
-		DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */; };
+		DF5D9F311F9C95410036D5FD /* CountryLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F301F9C95410036D5FD /* CountryLibrary.swift */; };
 		DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */; };
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
@@ -2050,7 +2050,7 @@
 		DF5D9F181F9C61530036D5FD /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		DF5D9F1B1F9C62990036D5FD /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodeLibrary.swift; sourceTree = "<group>"; };
+		DF5D9F301F9C95410036D5FD /* CountryLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryLibrary.swift; sourceTree = "<group>"; };
 		DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		DF5D9F401F9CD1620036D5FD /* CountryCode.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryCode.xcassets; sourceTree = "<group>"; };
 		DF5D9F411F9CD1630036D5FD /* CountryCode.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CountryCode.plist; sourceTree = "<group>"; };
@@ -3592,7 +3592,7 @@
 				DF5D9F411F9CD1630036D5FD /* CountryCode.plist */,
 				DF5D9F401F9CD1620036D5FD /* CountryCode.xcassets */,
 				945AA6572567B18200B39415 /* Country.swift */,
-				DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */,
+				DF5D9F301F9C95410036D5FD /* CountryLibrary.swift */,
 			);
 			path = CountryCode;
 			sourceTree = "<group>";
@@ -5040,7 +5040,7 @@
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
-				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,
+				DF5D9F311F9C95410036D5FD /* CountryLibrary.swift in Sources */,
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */,
 				7B91056022CF4A1E002E3608 /* LiveMessageViewModel.swift in Sources */,

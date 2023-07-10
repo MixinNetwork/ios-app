@@ -109,7 +109,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
             let objcAccessibleUsers = UserDAO.shared.contactsWithoutApp()
                 .map(ObjcAccessibleUser.init)
             let (titles, objcUsers) = UILocalizedIndexedCollation.current()
-                .catalogue(objcAccessibleUsers, usingSelector: #selector(getter: ObjcAccessibleUser.fullName))
+                .catalog(objcAccessibleUsers, usingSelector: #selector(getter: ObjcAccessibleUser.fullName))
             let users = objcUsers.map({ $0.map({ $0.user }) })
             DispatchQueue.main.sync {
                 guard let self = self else {

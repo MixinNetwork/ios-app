@@ -75,6 +75,7 @@
 "allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "Разрешить сообщение ручного отчета";
 "amount" = "Количество";
+"anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "Карта была настроена так, чтобы не разрешать совместное использование";
 "app_update_short_hint" = "Пожалуйста, обновите Mixin из App Store, чтобы продолжить пользоваться сервисом.";
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";

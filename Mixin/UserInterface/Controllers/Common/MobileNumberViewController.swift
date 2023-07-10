@@ -11,19 +11,31 @@ class MobileNumberViewController: ContinueButtonViewController {
     
     private let invertedPhoneNumberCharacterSet = CharacterSet(charactersIn: "0123456789+-() ").inverted
     private let phoneNumberValidator = PhoneNumberValidator()
+    private let countryLibrary = CountryLibrary()
     
     var mobileNumber: String {
         return textField.text?.components(separatedBy: invertedPhoneNumberCharacterSet).joined() ?? ""
     }
     
-    var country = CountryCodeLibrary.shared.deviceCountry {
+    var country: Country {
         didSet {
             updateCallingCodeButtonCaption()
         }
     }
     
+    required init?(coder: NSCoder) {
+        self.country = countryLibrary.deviceCountry
+        super.init(coder: coder)
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.country = countryLibrary.deviceCountry
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
     convenience init() {
-        self.init(nib: R.nib.mobileNumberView)
+        let nib = R.nib.mobileNumberView
+        self.init(nibName: nib.name, bundle: nib.bundle)
     }
     
     override func viewDidLoad() {
@@ -45,7 +57,7 @@ class MobileNumberViewController: ContinueButtonViewController {
     }
     
     @IBAction func selectCountryAction(_ sender: Any) {
-        let vc = SelectCountryViewController.instance(selectedCountry: country)
+        let vc = SelectCountryViewController.instance(library: countryLibrary, selectedCountry: country)
         vc.delegate = self
         present(vc, animated: true, completion: nil)
     }
@@ -65,7 +77,10 @@ extension MobileNumberViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         let numericsInText = newText.digits()
-        if newText != numericsInText, let parsedPhoneNumber = try? phoneNumberValidator.phoneNumberKit.parse(newText), let country = CountryCodeLibrary.shared.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) }) {
+        if newText != numericsInText,
+           let parsedPhoneNumber = try? phoneNumberValidator.phoneNumberKit.parse(newText),
+           let country = countryLibrary.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) })
+        {
             self.country = country
             textField.text = parsedPhoneNumber.adjustedNationalNumber()
             textField.selectedTextRange = textField.textRange(from: textField.endOfDocument, to: textField.endOfDocument)
@@ -104,7 +119,12 @@ extension MobileNumberViewController {
     }
     
     private func updateContinueButtonIsHidden() {
-        let isNumberValid = phoneNumberValidator.isValid(callingCode: country.callingCode, number: mobileNumber)
+        let isNumberValid: Bool
+        if country == .anonymous {
+            isNumberValid = !mobileNumber.isEmpty && mobileNumber.isDigitsOnly
+        } else {
+            isNumberValid = phoneNumberValidator.isValid(callingCode: country.callingCode, number: mobileNumber)
+        }
         continueButton.isHidden = !isNumberValid
     }
     

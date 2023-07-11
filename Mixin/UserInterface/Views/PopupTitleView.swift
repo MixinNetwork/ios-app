@@ -52,15 +52,17 @@ class PopupTitleView: UIView {
         
         titleLabel.textColor = .text
         titleLabel.dynamicTextSize = "semibold18"
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         titleStackView.addArrangedSubview(titleLabel)
         
         closeButton.setImage(R.image.ic_dialog_close(), for: .normal)
+        closeButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         addSubview(closeButton)
         
         contentStackView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.leading.equalToSuperview().offset(20)
-            make.trailing.equalTo(closeButton.snp.leading).offset(-8)
+            make.trailing.equalTo(closeButton.snp.leading).offset(-8).priority(.almostRequired)
         }
         closeButton.snp.makeConstraints { make in
             make.width.height.equalTo(44)

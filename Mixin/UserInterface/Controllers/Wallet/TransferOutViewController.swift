@@ -11,15 +11,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var opponentImageView: AvatarImageView!
-    @IBOutlet weak var assetIconView: AssetIconView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var balanceLabel: UILabel!
+    @IBOutlet weak var assetSelectorView: AssetComboBoxView!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoTextField: UITextField!
     @IBOutlet weak var continueButton: RoundedButton!
-    @IBOutlet weak var switchAssetButton: UIButton!
-    @IBOutlet weak var assetSwitchImageView: UIImageView!
     @IBOutlet weak var amountSymbolLabel: UILabel!
     @IBOutlet weak var transcationFeeHintView: UIView!
     @IBOutlet weak var transactionFeeHintLabel: UILabel!
@@ -56,6 +52,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        assetSelectorView.button.addTarget(self, action: #selector(switchAssetAction(_:)), for: .touchUpInside)
         amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
         switch opponent! {
         case .contact(let user):
@@ -291,17 +288,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    @IBAction func switchAssetAction(_ sender: Any) {
-        guard !assetSwitchImageView.isHidden else {
-            return
-        }
-        let vc = TransferTypeViewController()
-        vc.delegate = self
-        vc.assets = availableAssets
-        vc.asset = asset
-        present(vc, animated: true, completion: nil)
-    }
-    
     @IBAction func switchAmountAction(_ sender: Any) {
         guard let asset = self.asset else {
             return
@@ -321,8 +307,19 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountEditingChanged(sender)
     }
     
+    @objc private func switchAssetAction(_ sender: Any) {
+        guard !assetSelectorView.accessoryImageView.isHidden else {
+            return
+        }
+        let vc = TransferTypeViewController()
+        vc.delegate = self
+        vc.assets = availableAssets
+        vc.asset = asset
+        present(vc, animated: true, completion: nil)
+    }
+    
     @objc private func fetchAvailableAssets() {
-        switchAssetButton.isUserInteractionEnabled = false
+        assetSelectorView.button.isUserInteractionEnabled = false
         DispatchQueue.global().async { [weak self] in
             if let assetId = self?.asset?.assetId, let asset = AssetDAO.shared.getAsset(assetId: assetId) {
                 self?.asset = asset
@@ -347,8 +344,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
                 weakSelf.availableAssets = assets
                 if assets.count > 1 {
-                    weakSelf.assetSwitchImageView.isHidden = false
-                    weakSelf.switchAssetButton.isUserInteractionEnabled = true
+                    weakSelf.assetSelectorView.accessoryImageView.isHidden = false
+                    weakSelf.assetSelectorView.button.isUserInteractionEnabled = true
                 }
             }
         }
@@ -376,11 +373,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             return
         }
         switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
-        nameLabel.text = asset.name
-        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
-            ?? asset.localizedBalance
-        balanceLabel.text = balance + " " + asset.symbol
-        assetIconView.setIcon(asset: asset)
+        assetSelectorView.load(asset: asset)
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
     }
     

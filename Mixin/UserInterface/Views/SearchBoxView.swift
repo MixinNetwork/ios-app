@@ -2,7 +2,7 @@ import UIKit
 
 class SearchBoxView: UIView, XibDesignable {
     
-    @IBOutlet weak var textField: SearchBoxTextField!
+    @IBOutlet weak var textField: InsetTextField!
     
     private let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
     private let textFieldLeftView = SearchBoxLeftView(frame: CGRect(x: 0, y: 0, width: 17, height: 17))

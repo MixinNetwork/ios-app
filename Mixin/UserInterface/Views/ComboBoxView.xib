@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ComboBoxView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="accessoryImageView" destination="xDH-HJ-bgm" id="Ud9-gB-bSc"/>
+                <outlet property="button" destination="ZZz-Bq-ahC" id="bMD-yo-2kW"/>
+                <outlet property="contentStackView" destination="ta0-8K-LcI" id="zXm-a6-7mn"/>
+                <outlet property="subtitleLabel" destination="P1I-bU-2J3" id="9je-li-ya9"/>
+                <outlet property="titleLabel" destination="5cC-Zv-3ao" id="GvT-OG-WmC"/>
+                <outlet property="titleStackView" destination="9WX-hE-lt8" id="LVf-oZ-2kp"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AHa-hC-ddb">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ta0-8K-LcI">
+                    <rect key="frame" x="16" y="9" width="369" height="38"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="9WX-hE-lt8">
+                            <rect key="frame" x="0.0" y="1.6666666666666679" width="369" height="34.666666666666657"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Ether" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5cC-Zv-3ao">
+                                    <rect key="frame" x="0.0" y="0.0" width="369" height="19.333333333333332"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="0.0123456 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P1I-bU-2J3">
+                                    <rect key="frame" x="0.0" y="20.333333333333336" width="369" height="14.333333333333336"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <color key="textColor" name="text_accessory"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_input_menu" translatesAutoresizingMaskIntoConstraints="NO" id="xDH-HJ-bgm">
+                            <rect key="frame" x="0.0" y="3" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="xDH-HJ-bgm" secondAttribute="height" id="BZ1-7U-fQu"/>
+                                <constraint firstAttribute="width" constant="32" id="meC-D5-6GL"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZz-Bq-ahC">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" name="background_input"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="ZZz-Bq-ahC" secondAttribute="bottom" id="9bs-dS-u5t"/>
+                <constraint firstItem="ta0-8K-LcI" firstAttribute="top" secondItem="AHa-hC-ddb" secondAttribute="top" constant="9" id="Cum-jI-D1m"/>
+                <constraint firstItem="ta0-8K-LcI" firstAttribute="leading" secondItem="AHa-hC-ddb" secondAttribute="leading" constant="16" id="JyK-yH-lHP"/>
+                <constraint firstItem="ta0-8K-LcI" firstAttribute="centerY" secondItem="AHa-hC-ddb" secondAttribute="centerY" id="N6y-l2-aez"/>
+                <constraint firstItem="ZZz-Bq-ahC" firstAttribute="leading" secondItem="AHa-hC-ddb" secondAttribute="leading" id="f3q-IV-YYB"/>
+                <constraint firstAttribute="trailing" secondItem="ZZz-Bq-ahC" secondAttribute="trailing" id="fdO-Z4-fz1"/>
+                <constraint firstAttribute="bottom" secondItem="ta0-8K-LcI" secondAttribute="bottom" constant="9" id="gmL-Cc-Qo4"/>
+                <constraint firstItem="ZZz-Bq-ahC" firstAttribute="top" secondItem="AHa-hC-ddb" secondAttribute="top" id="sw1-ua-Rle"/>
+                <constraint firstAttribute="trailing" secondItem="ta0-8K-LcI" secondAttribute="trailing" constant="8" id="zEP-cg-OnH"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <real key="value" value="8"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <point key="canvasLocation" x="-37" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_input_menu" width="11" height="6"/>
+        <namedColor name="background_input">
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

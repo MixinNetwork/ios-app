@@ -601,7 +601,7 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
                                                             <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
@@ -611,7 +611,7 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
@@ -1381,67 +1381,14 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="aDo-Kz-cwh">
                                                 <rect key="frame" x="20" y="98" width="374" height="248"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mW0-rn-zIu" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mW0-rn-zIu" customClass="AssetComboBoxView" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="56"/>
-                                                        <subviews>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="fWG-zc-jBB">
-                                                                <rect key="frame" x="16" y="9" width="350" height="38"/>
-                                                                <subviews>
-                                                                    <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tdq-94-cad" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="3" width="32" height="32"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" secondItem="tdq-94-cad" secondAttribute="height" multiplier="1:1" id="RC1-e1-abA"/>
-                                                                            <constraint firstAttribute="width" constant="32" id="mkq-86-QLI"/>
-                                                                        </constraints>
-                                                                    </view>
-                                                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="uZy-dO-hDL">
-                                                                        <rect key="frame" x="42" y="1.6666666666666572" width="308" height="34.666666666666664"/>
-                                                                        <subviews>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Ether" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWj-mt-cR6">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="308" height="19.333333333333332"/>
-                                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                                                <color key="textColor" name="text"/>
-                                                                                <nil key="highlightedColor"/>
-                                                                            </label>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="0.0123456 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c71-Um-b7b">
-                                                                                <rect key="frame" x="0.0" y="20.333333333333343" width="308" height="14.333333333333336"/>
-                                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                                <color key="textColor" name="text_accessory"/>
-                                                                                <nil key="highlightedColor"/>
-                                                                            </label>
-                                                                        </subviews>
-                                                                    </stackView>
-                                                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_input_menu" translatesAutoresizingMaskIntoConstraints="NO" id="VeC-oB-tXb">
-                                                                        <rect key="frame" x="350" y="3" width="32" height="32"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="32" id="fkm-oY-mtb"/>
-                                                                            <constraint firstAttribute="width" secondItem="VeC-oB-tXb" secondAttribute="height" id="veh-is-AYh"/>
-                                                                        </constraints>
-                                                                    </imageView>
-                                                                </subviews>
-                                                            </stackView>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qRn-bb-fSw">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="56"/>
-                                                                <connections>
-                                                                    <action selector="switchAssetAction:" destination="Vz8-zS-KVr" eventType="touchUpInside" id="bGY-2M-H0c"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
                                                         <color key="backgroundColor" name="background_input"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="bottom" secondItem="qRn-bb-fSw" secondAttribute="bottom" id="29W-8r-Wfx"/>
                                                             <constraint firstAttribute="height" constant="56" id="8nw-xr-uc4"/>
-                                                            <constraint firstAttribute="trailing" secondItem="qRn-bb-fSw" secondAttribute="trailing" id="GkP-om-yit"/>
-                                                            <constraint firstAttribute="trailing" secondItem="fWG-zc-jBB" secondAttribute="trailing" constant="8" id="Oy8-SD-Aw5"/>
-                                                            <constraint firstItem="qRn-bb-fSw" firstAttribute="leading" secondItem="mW0-rn-zIu" secondAttribute="leading" id="RBQ-tp-Llt"/>
-                                                            <constraint firstItem="fWG-zc-jBB" firstAttribute="leading" secondItem="mW0-rn-zIu" secondAttribute="leading" constant="16" id="RoZ-BQ-3v6"/>
-                                                            <constraint firstItem="fWG-zc-jBB" firstAttribute="centerY" secondItem="mW0-rn-zIu" secondAttribute="centerY" id="XRi-YT-TSt"/>
-                                                            <constraint firstItem="fWG-zc-jBB" firstAttribute="top" secondItem="mW0-rn-zIu" secondAttribute="top" constant="9" id="frl-gb-3mG"/>
-                                                            <constraint firstAttribute="bottom" secondItem="fWG-zc-jBB" secondAttribute="bottom" constant="9" id="kva-yh-4zQ"/>
-                                                            <constraint firstItem="qRn-bb-fSw" firstAttribute="top" secondItem="mW0-rn-zIu" secondAttribute="top" id="vxr-Dr-1zx"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                 <real key="value" value="8"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
@@ -1633,19 +1580,15 @@
                         <outlet property="amountExchangeLabel" destination="sJA-0L-yz2" id="AiU-sZ-Iso"/>
                         <outlet property="amountSymbolLabel" destination="a3j-UI-lPy" id="meT-Dy-nK1"/>
                         <outlet property="amountTextField" destination="hAe-xD-xFu" id="GOx-nk-qhB"/>
-                        <outlet property="assetIconView" destination="tdq-94-cad" id="ZOU-NJ-Vbz"/>
-                        <outlet property="assetSwitchImageView" destination="VeC-oB-tXb" id="OgL-Qa-Zmw"/>
-                        <outlet property="balanceLabel" destination="c71-Um-b7b" id="vUH-Ly-e8f"/>
+                        <outlet property="assetSelectorView" destination="mW0-rn-zIu" id="vau-QS-hqP"/>
                         <outlet property="continueButton" destination="MaO-Zv-gld" id="T7q-b2-lkP"/>
                         <outlet property="continueWrapperBottomConstraint" destination="fut-A9-Y1V" id="WtV-BX-GQ0"/>
                         <outlet property="continueWrapperView" destination="DnA-iJ-ZZt" id="Afl-Hl-smf"/>
                         <outlet property="memoTextField" destination="Teg-Ls-XtU" id="O1M-H0-eEw"/>
                         <outlet property="memoView" destination="BeX-wN-FHz" id="R0V-mX-FJM"/>
-                        <outlet property="nameLabel" destination="hWj-mt-cR6" id="Vzg-t0-jak"/>
                         <outlet property="opponentImageView" destination="0iq-4M-Kbs" id="m2F-PU-LyB"/>
                         <outlet property="scrollView" destination="jqX-Er-b77" id="Wj3-1z-xd6"/>
                         <outlet property="switchAmountButton" destination="qOt-U1-LPb" id="xSj-LY-LaI"/>
-                        <outlet property="switchAssetButton" destination="qRn-bb-fSw" id="jJQ-Yc-Sqd"/>
                         <outlet property="symbolLeadingConstraint" destination="HlX-lu-rbz" id="3Ne-5X-5uv"/>
                         <outlet property="transactionFeeHintLabel" destination="t5g-rG-wY1" id="oHV-RU-qRT"/>
                         <outlet property="transcationFeeHintView" destination="Ia6-df-wMi" id="ieh-g7-nGG"/>
@@ -2063,7 +2006,6 @@
         <image name="ic_arrow_down" width="30" height="30"/>
         <image name="ic_deposit_warning" width="70" height="72"/>
         <image name="ic_dialog_close" width="26" height="26"/>
-        <image name="ic_input_menu" width="11" height="6"/>
         <image name="ic_scan_address" width="18" height="18"/>
         <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_title_more" width="24.333333969116211" height="24"/>
@@ -2085,7 +2027,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

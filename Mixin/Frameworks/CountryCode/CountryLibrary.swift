@@ -31,13 +31,21 @@ class CountryLibrary {
         
         let deviceCountry: Country = {
             let carrierCountryCode: String? = {
+                let result: String?
                 let networkInfo = CTTelephonyNetworkInfo()
                 if let id = networkInfo.dataServiceIdentifier, let code = networkInfo.serviceSubscriberCellularProviders?[id]?.isoCountryCode {
-                    return code.uppercased()
+                    result = code.uppercased()
                 } else if let code = networkInfo.serviceSubscriberCellularProviders?.values.compactMap(\.isoCountryCode).first {
-                    return code.uppercased()
+                    result = code.uppercased()
                 } else {
+                    result = nil
+                }
+                if result == "--" {
+                    // https://developer.apple.com/documentation/ios-ipados-release-notes/ios-ipados-16_4-release-notes
+                    // CTCarrier, a deprecated API, returns static values for apps that are built with the iOS 16.4 SDK or later. (76283818)
                     return nil
+                } else {
+                    return result
                 }
             }()
             let inferredCountryCode = (locale.object(forKey: .countryCode) as? String)?.uppercased()

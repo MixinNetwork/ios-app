@@ -19,7 +19,7 @@ class MobileNumberViewController: ContinueButtonViewController {
     
     var country: Country {
         didSet {
-            updateCallingCodeButtonCaption()
+            updateViews(with: country)
         }
     }
     
@@ -40,7 +40,7 @@ class MobileNumberViewController: ContinueButtonViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateCallingCodeButtonCaption()
+        updateViews(with: country)
         textField.delegate = self
         textField.becomeFirstResponder()
         
@@ -68,6 +68,28 @@ class MobileNumberViewController: ContinueButtonViewController {
     
     func fullNumber(withSpacing: Bool) -> String {
         return "+" + country.callingCode + (withSpacing ? " " : "") + mobileNumber
+    }
+    
+    func updateViews(with country: Country) {
+        let image = UIImage(named: country.isoRegionCode.lowercased())
+        callingCodeButton.setImage(image, for: .normal)
+        callingCodeButton.setTitle("+\(country.callingCode)", for: .normal)
+        
+        if country == .anonymous {
+            textField.placeholder = R.string.localizable.anonymous_number()
+        } else {
+            textField.placeholder = R.string.localizable.phone_number()
+        }
+    }
+    
+    private func updateContinueButtonIsHidden() {
+        let isNumberValid: Bool
+        if country == .anonymous {
+            isNumberValid = !mobileNumber.isEmpty && mobileNumber.isDigitsOnly
+        } else {
+            isNumberValid = phoneNumberValidator.isValid(callingCode: country.callingCode, number: mobileNumber)
+        }
+        continueButton.isHidden = !isNumberValid
     }
     
 }
@@ -106,26 +128,6 @@ extension MobileNumberViewController: SelectCountryViewControllerDelegate {
         viewController.dismiss(animated: true, completion: nil)
         self.country = country
         updateContinueButtonIsHidden()
-    }
-    
-}
-
-extension MobileNumberViewController {
-    
-    private func updateCallingCodeButtonCaption() {
-        let image = UIImage(named: country.isoRegionCode.lowercased())
-        callingCodeButton.setImage(image, for: .normal)
-        callingCodeButton.setTitle("+\(country.callingCode)", for: .normal)
-    }
-    
-    private func updateContinueButtonIsHidden() {
-        let isNumberValid: Bool
-        if country == .anonymous {
-            isNumberValid = !mobileNumber.isEmpty && mobileNumber.isDigitsOnly
-        } else {
-            isNumberValid = phoneNumberValidator.isValid(callingCode: country.callingCode, number: mobileNumber)
-        }
-        continueButton.isHidden = !isNumberValid
     }
     
 }

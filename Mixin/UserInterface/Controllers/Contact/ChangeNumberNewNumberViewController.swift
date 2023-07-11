@@ -9,16 +9,20 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
         CaptchaManager.shared.clean()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        titleLabel.text = R.string.localizable.enter_new_phone_number()
-    }
-    
     override func continueAction(_ sender: Any) {
         continueButton.isBusy = true
         context.newNumber = fullNumber(withSpacing: false)
         context.newNumberRepresentation = fullNumber(withSpacing: true)
         requestVerificationCode(captchaToken: nil)
+    }
+    
+    override func updateViews(with country: Country) {
+        super.updateViews(with: country)
+        if country == .anonymous {
+            titleLabel.text = R.string.localizable.enter_new_anonymous_number()
+        } else {
+            titleLabel.text = R.string.localizable.enter_new_phone_number()
+        }
     }
     
     private func requestVerificationCode(captchaToken token: CaptchaToken?) {

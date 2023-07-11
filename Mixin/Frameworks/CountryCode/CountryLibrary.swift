@@ -46,7 +46,7 @@ class CountryLibrary {
             if let code = deviceCountryCode, let country = countries.first(where: { $0.isoRegionCode == code }) {
                 return country
             } else {
-                return .anonymous
+                return .us
             }
         }()
         

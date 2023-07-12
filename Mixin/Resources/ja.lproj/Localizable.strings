@@ -356,10 +356,10 @@
 "enter_your_emergency_contact_mixin_id" = "あなたの緊急連絡先のMixin IDを入力してください";
 "enter_your_new_pin" = "Enter your new PIN";
 "enter_your_old_pin" = "Enter your old PIN";
-"enter_your_phone_number" = "電話番号を入力して下さい";
+"enter_your_phone_number" = "電話番号を入力してください";
 "enter_your_pin" = "PINコードを入力してください";
 "enter_your_pin_to_continue" = "PINコードを入力して、続けてください";
-"error_blockchain" = "エラー 30100：ブロックチェーンが同期できていません。後程もう一度お試し下さい。";
+"error_blockchain" = "エラー 30100：ブロックチェーンが同期できていません。後程もう一度お試しください。";
 "error_captcha_is_invalid" = "エラー10004：captchaが無効です";
 "error_connection_timeout" = "ネットワーク接続がタイムアウトしました";
 "error_expired_authorization_code" = "認証コードの期限切れ";
@@ -927,7 +927,7 @@
 "transfer_memo" = "メモ（オプション）";
 "transfer_notifications" = "送金の受取通知";
 "transfer_now" = "Transfer Now";
-"transfer_qrcode_prompt" = "私に送金するためにQRコードをスキャンして下さい。";
+"transfer_qrcode_prompt" = "私に送金するためにQRコードをスキャンしてください。";
 "transfer_to" = "%@に送金する";
 "transfer_to_another_phone" = "Transfer to Another Phone";
 "transfer_to_another_phone_hint" = "Transfer your chat history to another device";
@@ -1031,7 +1031,7 @@
 "withdrawal_addr_new" = "新しい%@アドレス";
 "withdrawal_addr_no_memo" = "宛先タグ、ID番号、またはメモを入力する必要がある場合は、「メモを追加」に設定することができます。";
 "withdrawal_addr_no_tag" = "宛先タグ、ID番号、またはメモを入力する必要がある場合は、「タグを追加」に設定することができます。";
-"withdrawal_addr_tag" = "宛先タグまたはID番号またはメモを入力して下さい。それ以外の場合「タグなし」に設定できます。";
+"withdrawal_addr_tag" = "宛先タグまたはID番号またはメモを入力してください。それ以外の場合「タグなし」に設定できます。";
 "withdrawal_address_tips" = "新しいアドレスへの最初の出金は必ず少額で行ってください。アドレスが間違っていると資産は失われます。";
 "withdrawal_label" = "ラベル (例. 取引所, ウォレットなど)";
 "withdrawal_memo" = "メモ";

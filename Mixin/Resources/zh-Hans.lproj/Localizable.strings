@@ -75,6 +75,7 @@
 "allow_dapp_request_approval" = "允许 Dapp 向你发送请求，如转账请求等";
 "allow_manual_report_message" = "允许手动上报消息";
 "amount" = "金额";
+"anonymous_number" = "匿名号码";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
 "app_update_short_hint" = "请从 App Store 更新 Mixin 至最新版";
 "app_update_tips" = "当前版本（%@）已失效！请点击下方\"更新\"从 App Store 更新至最新版。";
@@ -348,8 +349,10 @@
 "enable_pay_confirmation" = "启用%@支付？";
 "enable_touch_pay_hint" = "输入 PIN 启用指纹支付";
 "end_to_end_encryption" = "端到端加密";
+"enter_new_anonymous_number" = "输入你的新匿名号码";
 "enter_new_phone_number" = "输入你的新手机号码";
 "enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
+"enter_your_anonymous_number" = "输入你的匿名号码";
 "enter_your_emergency_contact_mixin_id" = "请输入紧急联系人的 Mixin ID";
 "enter_your_new_pin" = "输入你的新 PIN";
 "enter_your_old_pin" = "输入你的旧 PIN";

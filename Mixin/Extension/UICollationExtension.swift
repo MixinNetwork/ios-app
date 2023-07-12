@@ -1,18 +1,18 @@
 import UIKit
 
 extension UILocalizedIndexedCollation {
-
-    func catalogue<T>(_ objects: [T], usingSelector selector: Selector) -> (titles: [String], sections: [[T]]) {
-        var sections = Array(repeating: [], count: sectionTitles.count)
+    
+    func catalog<Object>(_ objects: [Object], usingSelector selector: Selector) -> (titles: [String], sections: [[Object]]) {
+        var sections: [[Object]] = Array(repeating: [], count: sectionTitles.count)
         for object in objects {
             let sectionIndex = section(for: object, collationStringSelector: selector)
             sections[sectionIndex].append(object)
         }
         var titles = sectionIndexTitles
-        var result = [[T]]()
+        var result = [[Object]]()
         for (index, section) in sections.enumerated().reversed() {
             if section.count > 0 {
-                let sorted = sortedArray(from: section, collationStringSelector: selector) as! [T]
+                let sorted = sortedArray(from: section, collationStringSelector: selector) as! [Object]
                 result.insert(sorted, at: 0)
             } else {
                 titles.remove(at: index)
@@ -20,5 +20,5 @@ extension UILocalizedIndexedCollation {
         }
         return (titles: titles, sections: result)
     }
-
+    
 }

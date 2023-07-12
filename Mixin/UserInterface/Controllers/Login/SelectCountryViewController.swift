@@ -11,9 +11,10 @@ class SelectCountryViewController: UIViewController {
     
     typealias Section = [Country]
     
-    enum SectionIndex {
-        static let currentSelected = 0
-        static let currentLocation = 1
+    enum FixedSection: Int, CaseIterable {
+        case currentSelected = 0
+        case currentLocation = 1
+        case anonymousNumber = 2
     }
     
     enum ReuseId {
@@ -21,10 +22,13 @@ class SelectCountryViewController: UIViewController {
         static let header = "country_header"
     }
     
+    var library: CountryLibrary!
     var selectedCountry: Country!
+    
     weak var delegate: SelectCountryViewControllerDelegate?
 
     private let sectionHeaderHeight: CGFloat = 38
+    
     private var sections = [Section]()
     private var sectionIndexTitles = [String]()
     private var filteredCountries = [Country]()
@@ -39,9 +43,8 @@ class SelectCountryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let countries = CountryCodeLibrary.shared.countries
         let selector = #selector(getter: Country.localizedName)
-        (sectionIndexTitles, sections) = UILocalizedIndexedCollation.current().catalogue(countries, usingSelector: selector)
+        (sectionIndexTitles, sections) = UILocalizedIndexedCollation.current().catalog(library.countries, usingSelector: selector)
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.delegate = self
         tableView.dataSource = self
@@ -71,10 +74,29 @@ class SelectCountryViewController: UIViewController {
         }
     }
     
-    static func instance(selectedCountry: Country) -> SelectCountryViewController {
+    static func instance(library: CountryLibrary, selectedCountry: Country) -> SelectCountryViewController {
         let vc = R.storyboard.login.selectCountry()!
+        vc.library = library
         vc.selectedCountry = selectedCountry
         return vc
+    }
+    
+    private func country(at indexPath: IndexPath) -> Country {
+        if isSearching {
+            return filteredCountries[indexPath.row]
+        } else {
+            switch indexPath.section {
+            case FixedSection.currentSelected.rawValue:
+                return selectedCountry
+            case FixedSection.currentLocation.rawValue:
+                return library.deviceCountry
+            case FixedSection.anonymousNumber.rawValue:
+                return .anonymous
+            default:
+                let section = sections[indexPath.section - FixedSection.allCases.count]
+                return section[indexPath.row]
+            }
+        }
     }
     
 }
@@ -85,35 +107,25 @@ extension SelectCountryViewController: UITableViewDataSource {
         if isSearching {
             return filteredCountries.count
         } else {
-            if section < 2 {
+            if section < FixedSection.allCases.count {
                 return 1
             } else {
-                return sections[section - 2].count
+                return sections[section - FixedSection.allCases.count].count
             }
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell)! as! CountryCell
-        let country: Country
-        if isSearching {
-            country = filteredCountries[indexPath.row]
-        } else {
-            if indexPath.section == SectionIndex.currentSelected {
-                country = selectedCountry
-            } else if indexPath.section == SectionIndex.currentLocation {
-                country = CountryCodeLibrary.shared.deviceCountry
-            } else {
-                country = sections[indexPath.section - 2][indexPath.row]
-            }
-        }
+        let country = country(at: indexPath)
         cell.flagImageView.image = UIImage(named: country.isoRegionCode.lowercased())
         cell.nameLabel.text = country.localizedName
+        cell.codeLabel.text = "+" + country.callingCode
         return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return isSearching ? 1 : sections.count + 2
+        return isSearching ? 1 : FixedSection.allCases.count + sections.count
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
@@ -121,7 +133,7 @@ extension SelectCountryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        return index + 2
+        return index + FixedSection.allCases.count
     }
 
 }
@@ -133,12 +145,15 @@ extension SelectCountryViewController: UITableViewDelegate {
             return nil
         }
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header)! as! GeneralTableViewHeader
-        if section == SectionIndex.currentSelected {
+        switch section {
+        case FixedSection.currentSelected.rawValue:
             header.label.text = R.string.localizable.current_selected()
-        } else if section == SectionIndex.currentLocation {
+        case FixedSection.currentLocation.rawValue:
             header.label.text = R.string.localizable.current_location()
-        } else {
-            header.label.text = sectionIndexTitles[section - 2]
+        case FixedSection.anonymousNumber.rawValue:
+            header.label.text = R.string.localizable.anonymous_number()
+        default:
+            header.label.text = sectionIndexTitles[section - FixedSection.allCases.count]
         }
         header.labelTopConstraint.constant = 10
         return header
@@ -149,17 +164,8 @@ extension SelectCountryViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isSearching {
-            delegate?.selectCountryViewController(self, didSelectCountry: filteredCountries[indexPath.row])
-        } else {
-            if indexPath.section == 0 {
-                delegate?.selectCountryViewController(self, didSelectCountry: selectedCountry)
-            } else if indexPath.section == 1 {
-                delegate?.selectCountryViewController(self, didSelectCountry: CountryCodeLibrary.shared.deviceCountry)
-            } else {
-                delegate?.selectCountryViewController(self, didSelectCountry: sections[indexPath.section - 2][indexPath.row])
-            }
-        }
+        let country = country(at: indexPath)
+        delegate?.selectCountryViewController(self, didSelectCountry: country)
     }
 
 }

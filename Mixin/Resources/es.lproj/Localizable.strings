@@ -75,6 +75,7 @@
 "allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "Permitir mensaje de informe manual";
 "amount" = "Cantidad";
+"anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "La tarjeta se ha configurado para no permitir compartir";
 "app_update_short_hint" = "Actualiza Mixin desde App Store para continuar usando el servicio.";
 "app_update_tips" = "¡La versión actual (%@) ya no está disponible! Haz clic en Actualizar a continuación para actualizar a la última versión de la App Store.";
@@ -348,8 +349,10 @@
 "enable_pay_confirmation" = "¿Habilitar %@ Pagar?";
 "enable_touch_pay_hint" = "Confirme el PIN para habilitar Touch Pay";
 "end_to_end_encryption" = "Cifrado de extremo a extremo";
+"enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Introduce tu nuevo número de teléfono";
 "enter_pin_to_delete_account" = "Introduce tu PIN para eliminar tu cuenta";
+"enter_your_anonymous_number" = "Enter your anonymous number";
 "enter_your_emergency_contact_mixin_id" = "Introduce tu contacto de emergencia Mixin ID";
 "enter_your_new_pin" = "Introduce tu nuevo PIN";
 "enter_your_old_pin" = "Introduce tu antiguo PIN";

@@ -58,6 +58,15 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    override func updateViews(with country: Country) {
+        super.updateViews(with: country)
+        if country == .anonymous {
+            titleLabel.text = R.string.localizable.enter_your_anonymous_number()
+        } else {
+            titleLabel.text = R.string.localizable.enter_your_phone_number()
+        }
+    }
+    
     private func requestVerificationCode(captchaToken token: CaptchaToken?) {
         continueButton.isBusy = true
         var ctx = LoginContext(callingCode: country.callingCode,

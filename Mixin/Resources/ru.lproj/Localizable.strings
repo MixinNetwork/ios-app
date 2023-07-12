@@ -75,6 +75,7 @@
 "allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "Разрешить сообщение ручного отчета";
 "amount" = "Количество";
+"anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "Карта была настроена так, чтобы не разрешать совместное использование";
 "app_update_short_hint" = "Пожалуйста, обновите Mixin из App Store, чтобы продолжить пользоваться сервисом.";
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";
@@ -348,8 +349,10 @@
 "enable_pay_confirmation" = "Включить %@ Pay?";
 "enable_touch_pay_hint" = "Подтвердите PIN-код, чтобы включить Touch Pay";
 "end_to_end_encryption" = "Сквозное шифрование";
+"enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Введите новый номер телефона";
 "enter_pin_to_delete_account" = "Введите свой PIN-код, чтобы удалить свою учетную запись";
+"enter_your_anonymous_number" = "Enter your anonymous number";
 "enter_your_emergency_contact_mixin_id" = "Введите свой контакт для экстренной связи Mixin ID";
 "enter_your_new_pin" = "Enter your new PIN";
 "enter_your_old_pin" = "Enter your old PIN";

@@ -75,6 +75,7 @@
 "allow_dapp_request_approval" = "Allow dapp to ask for your approval to make a transaction.";
 "allow_manual_report_message" = "メッセージ単位の報告を許可";
 "amount" = "数量";
+"anonymous_number" = "匿名番号";
 "app_card_shareable_false" = "このカードを共有することはできません";
 "app_update_short_hint" = "サービスを利用するためにApp StoreでMixinのアップデートをお願いします。";
 "app_update_tips" = "現在のバージョン(%@)はもう利用いただけません。App Storeで新しいバージョンを入手してください";
@@ -348,8 +349,10 @@
 "enable_pay_confirmation" = "%@の支払いを有効化しますか？";
 "enable_touch_pay_hint" = "PINコードを確認して指紋認証を利用可能にしてください";
 "end_to_end_encryption" = "E2E暗号化";
+"enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "新しい電話番号を入力してください";
 "enter_pin_to_delete_account" = "アカウントを削除するためにPINコードを入力してください";
+"enter_your_anonymous_number" = "Enter your anonymous number";
 "enter_your_emergency_contact_mixin_id" = "あなたの緊急連絡先のMixin IDを入力してください";
 "enter_your_new_pin" = "Enter your new PIN";
 "enter_your_old_pin" = "Enter your old PIN";

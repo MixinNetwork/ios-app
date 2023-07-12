@@ -550,6 +550,7 @@
 "network" = "网络";
 "network_connection_lost" = "网络连接超时，请检查网络稍后重试";
 "network_fee" = "网络费用";
+"network_type" = "网络类型";
 "never_auto_download" = "关闭";
 "new_chat" = "新聊天";
 "new_group" = "新建群组";

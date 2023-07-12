@@ -550,6 +550,7 @@
 "network" = "Network";
 "network_connection_lost" = "Сетевое соединение было потеряно, проверьте свою сеть и повторите попытку позже.";
 "network_fee" = "Сетевая комисиия";
+"network_type" = "Тип сети";
 "never_auto_download" = "Никогда";
 "new_chat" = "Новый чат";
 "new_group" = "Новая группа";

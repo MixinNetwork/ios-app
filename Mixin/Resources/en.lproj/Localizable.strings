@@ -550,6 +550,7 @@
 "network" = "Network";
 "network_connection_lost" = "The network connection was lost, please check your network and try again later";
 "network_fee" = "Network Fee";
+"network_type" = "Network Type";
 "never_auto_download" = "Never";
 "new_chat" = "New Chat";
 "new_group" = "New Group";

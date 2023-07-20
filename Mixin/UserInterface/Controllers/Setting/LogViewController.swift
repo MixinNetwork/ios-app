@@ -92,6 +92,8 @@ class LogViewController: UIViewController {
             return (R.string.localizable.pin_incorrect(), R.string.localizable.multisig_transaction())
         case "MULTISIG_UNLOCK":
             return (R.string.localizable.pin_incorrect(), R.string.localizable.revoke_multisig_transaction())
+        case "DO_AUTHORIZATION":
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.authorization())
         case "ACTIVITY_PIN_MODIFICATION":
             return (R.string.localizable.pin_change(), R.string.localizable.your_pin_has_been_changed())
         case "ACTIVITY_EMERGENCY_CONTACT_MODIFICATION":

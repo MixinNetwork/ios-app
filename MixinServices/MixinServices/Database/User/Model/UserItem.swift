@@ -14,11 +14,12 @@ public struct UserItem {
     public var appId: String?
     public let createdAt: String?
     public var isScam: Bool
+    public let isDeactivated: Bool
     public let relationship: String
     public var role: String
     public var appCreatorId: String?
     
-    internal init(userId: String, fullName: String, biography: String, identityNumber: String, avatarUrl: String, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, isScam: Bool, relationship: String, role: String, appCreatorId: String? = nil) {
+    internal init(userId: String, fullName: String, biography: String, identityNumber: String, avatarUrl: String, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, isScam: Bool, isDeactivated: Bool, relationship: String, role: String, appCreatorId: String? = nil) {
         self.userId = userId
         self.fullName = fullName
         self.biography = biography
@@ -30,6 +31,7 @@ public struct UserItem {
         self.appId = appId
         self.createdAt = createdAt
         self.isScam = isScam
+        self.isDeactivated = isDeactivated
         self.relationship = relationship
         self.role = role
         self.appCreatorId = appCreatorId
@@ -52,6 +54,7 @@ extension UserItem: Decodable, MixinFetchableRecord {
         case relationship
         case createdAt = "created_at"
         case isScam = "is_scam"
+        case isDeactivated = "is_deactivated"
         case appCreatorId
         case role
     }
@@ -75,6 +78,8 @@ extension UserItem: Decodable, MixinFetchableRecord {
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         
         self.isScam = try container.decodeIfPresent(Bool.self, forKey: .isScam) ?? false
+        self.isDeactivated = try container.decodeIfPresent(Bool.self, forKey: .isDeactivated) ?? false
+        
         self.relationship = try container.decodeIfPresent(String.self, forKey: .relationship) ?? Relationship.STRANGER.rawValue
         self.role = try container.decodeIfPresent(String.self, forKey: .role) ?? ""
         
@@ -122,19 +127,75 @@ extension UserItem {
     }
     
     public static func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String, appId: String?) -> UserItem {
-        return UserItem(userId: userId, fullName: fullName, biography: "", identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: appId, createdAt: nil, isScam: false, relationship: "", role: "", appCreatorId: nil)
+        UserItem(userId: userId,
+                 fullName: fullName,
+                 biography: "",
+                 identityNumber: identityNumber,
+                 avatarUrl: avatarUrl,
+                 phone: nil,
+                 isVerified: false,
+                 muteUntil: nil,
+                 appId: appId,
+                 createdAt: nil,
+                 isScam: false,
+                 isDeactivated: false,
+                 relationship: "",
+                 role: "",
+                 appCreatorId: nil)
     }
     
     public static func createUser(from user: UserResponse) -> UserItem {
-        return UserItem(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, isScam: user.isScam, relationship: user.relationship.rawValue, role: "", appCreatorId: user.app?.creatorId)
+        UserItem(userId: user.userId,
+                 fullName: user.fullName,
+                 biography: user.biography,
+                 identityNumber: user.identityNumber,
+                 avatarUrl: user.avatarUrl,
+                 phone: user.phone,
+                 isVerified: user.isVerified,
+                 muteUntil: user.muteUntil,
+                 appId: user.app?.appId,
+                 createdAt: user.createdAt,
+                 isScam: user.isScam,
+                 isDeactivated: user.isDeactivated ?? false,
+                 relationship: user.relationship.rawValue,
+                 role: "",
+                 appCreatorId: user.app?.creatorId)
     }
     
     public static func createUser(from user: User) -> UserItem {
-        return UserItem(userId: user.userId, fullName: user.fullName ?? "", biography: user.biography ?? "", identityNumber: user.identityNumber, avatarUrl: user.avatarUrl ?? "", phone: user.phone, isVerified: user.isVerified ?? false, muteUntil: user.muteUntil, appId: user.appId ?? "", createdAt: user.createdAt, isScam: user.isScam, relationship: user.relationship, role: "", appCreatorId: user.app?.creatorId)
+        UserItem(userId: user.userId,
+                 fullName: user.fullName ?? "",
+                 biography: user.biography ?? "",
+                 identityNumber: user.identityNumber,
+                 avatarUrl: user.avatarUrl ?? "",
+                 phone: user.phone,
+                 isVerified: user.isVerified ?? false,
+                 muteUntil: user.muteUntil,
+                 appId: user.appId ?? "",
+                 createdAt: user.createdAt,
+                 isScam: user.isScam,
+                 isDeactivated: user.isDeactivated,
+                 relationship: user.relationship,
+                 role: "",
+                 appCreatorId: user.app?.creatorId)
     }
     
     public static func createUser(from account: Account) -> UserItem {
-        return UserItem(userId: account.userID, fullName: account.fullName, biography: account.biography, identityNumber: account.identityNumber, avatarUrl: account.avatarURL, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.createdAt, isScam: false, relationship: "", role: "", appCreatorId: nil)
+        UserItem(userId: account.userID,
+                 fullName: account.fullName,
+                 biography: account.biography,
+                 identityNumber: account.identityNumber,
+                 avatarUrl: account.avatarURL,
+                 phone: account.phone,
+                 isVerified: false,
+                 muteUntil: nil,
+                 appId: nil,
+                 createdAt: account.createdAt,
+                 isScam: false,
+                 isDeactivated: false,
+                 relationship: "",
+                 role: "",
+                 appCreatorId: nil)
     }
     
     public static func makeUserItem(notificationUserInfo userInfo: [AnyHashable: Any]) -> UserItem? {

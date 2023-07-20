@@ -985,6 +985,7 @@
 "url_unrecognized_hint" = "%@ 識別失敗，請升級至 Mixin 最新版本或聯絡開發者檢查連結";
 "use_biometry" = "採用%@";
 "use_system_text_size" = "跟隨系統字型大小";
+"user_delete_hint" = "該使用者已經刪除了賬號。";
 "user_is_reported" = "已舉報";
 "user_not_found" = "找不到這個使用者";
 "validation_timed_out" = "驗證超時";

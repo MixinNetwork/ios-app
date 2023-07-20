@@ -13,7 +13,7 @@ public final class UserDAO: UserDatabaseDAO {
     public static let correspondingAppDidChange = NSNotification.Name("one.mixin.services.UserDAO.correspondingAppDidChange")
     
     private static let sqlQueryColumns = """
-    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, '' AS role, a.creator_id as appCreatorId
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, u.is_deactivated, '' AS role, a.creator_id as appCreatorId
     FROM users u
     LEFT JOIN apps a ON a.app_id = u.app_id
     """

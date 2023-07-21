@@ -15,6 +15,7 @@ struct DeviceTransferUser {
     let createdAt: String?
     let relationship: String
     let isScam: Bool?
+    let isDeactivated: Bool?
     
     init(user: User) {
         userId = user.userId
@@ -29,6 +30,7 @@ struct DeviceTransferUser {
         createdAt = user.createdAt
         relationship = user.relationship
         isScam = user.isScam
+        isDeactivated = user.isDeactivated
     }
     
     func toUser() -> User {
@@ -43,7 +45,8 @@ struct DeviceTransferUser {
              appId: appId,
              createdAt: createdAt,
              relationship: relationship,
-             isScam: isScam ?? false)
+             isScam: isScam ?? false,
+             isDeactivated: isDeactivated ?? false)
     }
     
 }
@@ -63,6 +66,7 @@ extension DeviceTransferUser: DeviceTransferRecord {
         case relationship
         case createdAt = "created_at"
         case isScam = "is_scam"
+        case isDeactivated = "is_deactivated"
     }
     
 }

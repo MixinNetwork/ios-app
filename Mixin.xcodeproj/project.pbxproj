@@ -719,6 +719,7 @@
 		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
 		941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */; };
 		942014D82A1E09DE0049CAB7 /* HMACSHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942014D72A1E09DE0049CAB7 /* HMACSHA256.swift */; };
+		9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9427D51425E0D31100B1EF0E /* MusicInfoView.xib */; };
 		9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */; };
@@ -1849,6 +1850,7 @@
 		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
 		941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertModifier.swift; sourceTree = "<group>"; };
 		942014D72A1E09DE0049CAB7 /* HMACSHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HMACSHA256.swift; sourceTree = "<group>"; };
+		9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountDeactivatedHintView.xib; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9427D51425E0D31100B1EF0E /* MusicInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicInfoView.xib; sourceTree = "<group>"; };
 		9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfoView.swift; sourceTree = "<group>"; };
@@ -2478,6 +2480,7 @@
 				E0BEB85A236C1BBC001FE534 /* ProfileView.xib */,
 				E039AB05237277E40071386E /* ProfileScrollView.swift */,
 				E09C5EB5236FF1860095F729 /* ProfileRelationshipView.swift */,
+				9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */,
 				7B7264EF209C56E500F234BE /* TextLabel.swift */,
 				7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */,
 				E09C5EBB237007650095F729 /* ProfileDescriptionView.swift */,
@@ -4397,6 +4400,7 @@
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				94333CB329960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
+				9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */,
 				7C7579E029DC61890002DA0B /* TransferToPhoneQRCodeView.xib in Resources */,
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
 				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,

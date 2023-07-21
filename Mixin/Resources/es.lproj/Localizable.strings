@@ -985,6 +985,7 @@
 "url_unrecognized_hint" = "%@ no se ha podido reconocer, actualiza Mixin a la última versión o comunícate con el desarrollador para verificar el enlace";
 "use_biometry" = "Usar %@";
 "use_system_text_size" = "Usar tamaño de texto del sistema";
+"user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "El usuario ha sido reportado";
 "user_not_found" = "Usuario no encontrado";
 "validation_timed_out" = "Se ha agotado el tiempo de validación";

@@ -985,6 +985,7 @@
 "url_unrecognized_hint" = "%@を認識できません、Mixinを最新版にアップデートするか、もしくは開発陣に連絡してリンクを確認してください。";
 "use_biometry" = "%@を使用する";
 "use_system_text_size" = "Use System Text Size";
+"user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "報告しました。";
 "user_not_found" = "ユーザーが見つかりませんでした";
 "validation_timed_out" = "認証時間切れ";

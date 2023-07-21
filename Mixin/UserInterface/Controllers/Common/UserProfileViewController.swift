@@ -29,6 +29,7 @@ final class UserProfileViewController: ProfileViewController {
         }
     }
     
+    private lazy var deactivatedHintView = R.nib.accountDeactivatedHintView(owner: nil)!
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
     private lazy var expiredMessageItemView: ProfileMenuItemView  = {
@@ -673,7 +674,9 @@ extension UserProfileViewController {
             badgeImageView.isHidden = true
         }
         
-        if isMessengerUser {
+        if user.isDeactivated {
+            centerStackView.addArrangedSubview(deactivatedHintView)
+        } else if isMessengerUser {
             switch relationship {
             case .ME, .FRIEND:
                 relationshipView.style = .none
@@ -704,13 +707,15 @@ extension UserProfileViewController {
                 centerStackView.addArrangedSubview(view)
             }
             
-            if user.isBot {
+            shortcutView.leftShortcutButton.removeTarget(nil, action: nil, for: .allEvents)
+            if user.isDeactivated {
+                shortcutView.leftShortcutButton.setImage(R.image.ic_share(), for: .normal)
+                shortcutView.leftShortcutButton.addTarget(self, action: #selector(shareUser), for: .touchUpInside)
+            } else if user.isBot {
                 shortcutView.leftShortcutButton.setImage(R.image.ic_open_app(), for: .normal)
-                shortcutView.leftShortcutButton.removeTarget(nil, action: nil, for: .allEvents)
                 shortcutView.leftShortcutButton.addTarget(self, action: #selector(openApp), for: .touchUpInside)
             } else {
                 shortcutView.leftShortcutButton.setImage(R.image.ic_transfer(), for: .normal)
-                shortcutView.leftShortcutButton.removeTarget(nil, action: nil, for: .allEvents)
                 shortcutView.leftShortcutButton.addTarget(self, action: #selector(transfer), for: .touchUpInside)
             }
             shortcutView.sendMessageButton.removeTarget(nil, action: nil, for: .allEvents)

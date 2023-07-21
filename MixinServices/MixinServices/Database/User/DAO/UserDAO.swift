@@ -13,10 +13,31 @@ public final class UserDAO: UserDatabaseDAO {
     public static let correspondingAppDidChange = NSNotification.Name("one.mixin.services.UserDAO.correspondingAppDidChange")
     
     private static let sqlQueryColumns = """
-    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, '' AS role, a.creator_id as appCreatorId
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, u.is_deactivated, '' AS role, a.creator_id as appCreatorId
     FROM users u
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
+    
+    private static let saveUserResponseWithoutDeactivationSQL = """
+    INSERT INTO users VALUES (
+        :user_id, :full_name, :biography, :identity_number, :avatar_url, :phone, :is_verified,
+        :mute_until, :app_id, :relationship, :created_at, :is_scam, :is_deactivated
+    )
+    ON CONFLICT DO UPDATE SET user_id = :user_id,
+        full_name = :full_name,
+        biography = :biography,
+        identity_number = :identity_number,
+        avatar_url = :avatar_url,
+        phone = :phone,
+        is_verified = :is_verified,
+        mute_until = :mute_until,
+        app_id = :app_id,
+        relationship = :relationship,
+        created_at = :created_at,
+        is_scam = :is_scam
+    """
+    
+    private static let saveUserResponseSQL = saveUserResponseWithoutDeactivationSQL + ", is_deactivated = :is_deactivated"
     
     public func deleteUser(userId: String) {
         db.delete(User.self, where: User.column(of: .userId) == userId)
@@ -274,14 +295,33 @@ public final class UserDAO: UserDatabaseDAO {
             }
             db.write { (db) in
                 for response in users {
-                    let user = User.createUser(from: response)
-                    try user.save(db)
-                    if let app = user.app {
+                    let sql: String
+                    if response.isDeactivated == nil {
+                        sql = Self.saveUserResponseWithoutDeactivationSQL
+                    } else {
+                        sql = Self.saveUserResponseSQL
+                    }
+                    try db.execute(sql: sql, arguments: [
+                        "user_id":          response.userId,
+                        "full_name":        response.fullName,
+                        "biography":        response.biography,
+                        "identity_number":  response.identityNumber,
+                        "avatar_url":       response.avatarUrl,
+                        "phone":            response.phone,
+                        "is_verified":      response.isVerified,
+                        "mute_until":       response.muteUntil,
+                        "app_id":           response.app?.appId,
+                        "relationship":     response.relationship.rawValue,
+                        "created_at":       response.createdAt,
+                        "is_scam":          response.isScam,
+                        "is_deactivated":   response.isDeactivated
+                    ])
+                    if let app = response.app {
                         try app.save(db)
                     }
                     if updateParticipantStatus {
                         try Participant
-                            .filter(Participant.column(of: .userId) == user.userId)
+                            .filter(Participant.column(of: .userId) == response.userId)
                             .updateAll(db, [Participant.column(of: .status).set(to: ParticipantStatus.SUCCESS.rawValue)])
                     }
                 }
@@ -303,21 +343,6 @@ public final class UserDAO: UserDatabaseDAO {
         db.update(User.self,
                   assignments: [User.column(of: .muteUntil).set(to: muteUntil)],
                   where: User.column(of: .userId) == userId)
-    }
-    
-    public func saveUser(user response: UserResponse) -> UserItem? {
-        var userItem: UserItem?
-        db.write { (db) in
-            let user = User.createUser(from: response)
-            try user.save(db)
-            if let app = user.app {
-                try app.save(db)
-            }
-            db.afterNextTransaction { (_) in
-                userItem = self.getUser(userId: user.userId)
-            }
-        }
-        return userItem
     }
     
 }

@@ -554,6 +554,13 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("deactivated_user") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(users)").map(\.name)
+            if !columns.contains("is_deactivated") {
+                try db.execute(sql: "ALTER TABLE users ADD COLUMN is_deactivated INTEGER")
+            }
+        }
+        
         return migrator
     }
     

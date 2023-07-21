@@ -17,10 +17,11 @@ public struct User {
     public let createdAt: String?
     public let relationship: String
     public var isScam: Bool
+    public let isDeactivated: Bool
     
     public var app: App?
     
-    public init(userId: String, fullName: String?, biography: String?, identityNumber: String, avatarUrl: String?, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, relationship: String, isScam: Bool, app: App? = nil) {
+    public init(userId: String, fullName: String?, biography: String?, identityNumber: String, avatarUrl: String?, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, relationship: String, isScam: Bool, isDeactivated: Bool, app: App? = nil) {
         self.userId = userId
         self.fullName = fullName
         self.biography = biography
@@ -33,19 +34,59 @@ public struct User {
         self.createdAt = createdAt
         self.relationship = relationship
         self.isScam = isScam
+        self.isDeactivated = isDeactivated
         self.app = app
     }
     
     public static func createSystemUser() -> User {
-        return User(userId: systemUser, fullName: "0", biography: "", identityNumber: "0", avatarUrl: nil, phone: nil, isVerified: false, muteUntil: nil, appId: nil, createdAt: nil, relationship: "", isScam: false, app: nil)
+        User(userId: systemUser,
+             fullName: "0",
+             biography: "",
+             identityNumber: "0",
+             avatarUrl: nil,
+             phone: nil,
+             isVerified: false,
+             muteUntil: nil,
+             appId: nil,
+             createdAt: nil,
+             relationship: "",
+             isScam: false,
+             isDeactivated: false,
+             app: nil)
     }
     
     public static func createUser(from user: UserResponse) -> User {
-        return User(userId: user.userId, fullName: user.fullName, biography: user.biography, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, isScam: user.isScam, app: user.app)
+        User(userId: user.userId,
+             fullName: user.fullName,
+             biography: user.biography,
+             identityNumber: user.identityNumber,
+             avatarUrl: user.avatarUrl,
+             phone: user.phone,
+             isVerified: user.isVerified,
+             muteUntil: user.muteUntil,
+             appId: user.app?.appId,
+             createdAt: user.createdAt,
+             relationship: user.relationship.rawValue,
+             isScam: user.isScam,
+             isDeactivated: user.isDeactivated ?? false,
+             app: user.app)
     }
 
     public static func createUser(from account: Account) -> User {
-        return User(userId: account.userID, fullName: account.fullName, biography: account.biography, identityNumber: account.identityNumber, avatarUrl: account.avatarURL, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.createdAt, relationship: Relationship.ME.rawValue, isScam: false, app: nil)
+        User(userId: account.userID,
+             fullName: account.fullName,
+             biography: account.biography,
+             identityNumber: account.identityNumber,
+             avatarUrl: account.avatarURL,
+             phone: account.phone,
+             isVerified: false,
+             muteUntil: nil,
+             appId: nil,
+             createdAt: account.createdAt,
+             relationship: Relationship.ME.rawValue,
+             isScam: false,
+             isDeactivated: false,
+             app: nil)
     }
     
 }
@@ -65,6 +106,7 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
         case relationship
         case createdAt = "created_at"
         case isScam = "is_scam"
+        case isDeactivated = "is_deactivated"
     }
     
     public init(from decoder: Decoder) throws {
@@ -89,6 +131,7 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
         self.relationship = try container.decodeIfPresent(String.self, forKey: .relationship) ?? Relationship.STRANGER.rawValue
         
         self.isScam = try container.decodeIfPresent(Bool.self, forKey: .isScam) ?? false
+        self.isDeactivated = try container.decodeIfPresent(Bool.self, forKey: .isDeactivated) ?? false
     }
     
 }

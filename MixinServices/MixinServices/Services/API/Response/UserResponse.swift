@@ -14,6 +14,7 @@ public struct UserResponse: Codable {
     public let createdAt: String
     public let app: App?
     public let isScam: Bool
+    public let isDeactivated: Bool?
     
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
@@ -28,6 +29,23 @@ public struct UserResponse: Codable {
         case createdAt = "created_at"
         case app
         case isScam = "is_scam"
+        case isDeactivated = "is_deactivated"
+    }
+    
+    public var deactivationIgnored: UserResponse {
+        UserResponse(userId: userId,
+                     fullName: fullName,
+                     biography: biography,
+                     relationship: relationship,
+                     identityNumber: identityNumber,
+                     avatarUrl: avatarUrl,
+                     phone: phone,
+                     isVerified: isVerified,
+                     muteUntil: muteUntil,
+                     createdAt: createdAt,
+                     app: app,
+                     isScam: isScam,
+                     isDeactivated: nil)
     }
     
 }
@@ -60,7 +78,19 @@ public enum Relationship: String, Codable {
 public extension UserResponse {
     
     static func createUser(account: Account) -> UserResponse {
-        return UserResponse(userId: account.userID, fullName: account.fullName, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identityNumber, avatarUrl: account.avatarURL, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.createdAt, app: nil, isScam: false)
+        UserResponse(userId: account.userID,
+                     fullName: account.fullName,
+                     biography: account.biography,
+                     relationship: Relationship.ME,
+                     identityNumber: account.identityNumber,
+                     avatarUrl: account.avatarURL,
+                     phone: account.phone,
+                     isVerified: false,
+                     muteUntil: nil,
+                     createdAt: account.createdAt,
+                     app: nil,
+                     isScam: false,
+                     isDeactivated: false)
     }
     
 }

@@ -296,10 +296,10 @@ public final class UserDAO: UserDatabaseDAO {
             db.write { (db) in
                 for response in users {
                     let sql: String
-                    if let isDeactivated = response.isDeactivated {
-                        sql = Self.saveUserResponseSQL
-                    } else {
+                    if response.isDeactivated == nil {
                         sql = Self.saveUserResponseWithoutDeactivationSQL
+                    } else {
+                        sql = Self.saveUserResponseSQL
                     }
                     try db.execute(sql: sql, arguments: [
                         "user_id":          response.userId,

@@ -32,6 +32,22 @@ public struct UserResponse: Codable {
         case isDeactivated = "is_deactivated"
     }
     
+    public var deactivationIgnored: UserResponse {
+        UserResponse(userId: userId,
+                     fullName: fullName,
+                     biography: biography,
+                     relationship: relationship,
+                     identityNumber: identityNumber,
+                     avatarUrl: avatarUrl,
+                     phone: phone,
+                     isVerified: isVerified,
+                     muteUntil: muteUntil,
+                     createdAt: createdAt,
+                     app: app,
+                     isScam: isScam,
+                     isDeactivated: nil)
+    }
+    
 }
 
 public enum Relationship: String, Codable {

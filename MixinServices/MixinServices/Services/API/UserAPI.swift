@@ -10,7 +10,7 @@ public final class UserAPI: MixinAPI {
         static func codes(codeId: String) -> String {
             return "/codes/" + codeId
         }
-        static func users(id: String) -> String {
+        static func getUser(id: String) -> String {
             return "/users/\(id)"
         }
         static func getFavorite(userId: String) -> String {
@@ -22,7 +22,7 @@ public final class UserAPI: MixinAPI {
         static func unfavorite(appId: String) -> String {
             return "/apps/\(appId)/unfavorite"
         }
-        static let users = "/users/fetch"
+        static let fetchUsers = "/users/fetch"
         static let relationships = "/relationships"
         static let reports = "/reports"
         static let blockingUsers = "/blocking_users"
@@ -33,11 +33,6 @@ public final class UserAPI: MixinAPI {
         request(method: .get, path: Path.codes(codeId: codeId), completion: completion)
     }
     
-    @discardableResult
-    public static func showUser(userId: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) -> Request? {
-        return request(method: .get, path: Path.users(id: userId), completion: completion)
-    }
-    
     public static func syncBlockingUsers() {
         request(method: .get, path: Path.blockingUsers) { (result: MixinAPI.Result<[UserResponse]>) in
             if case let .success(users) = result {
@@ -46,17 +41,31 @@ public final class UserAPI: MixinAPI {
         }
     }
     
+    @discardableResult
+    public static func showUser(userId: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) -> Request? {
+        return request(method: .get, path: Path.getUser(id: userId), completion: completion)
+    }
+    
     public static func showUser(userId: String) -> MixinAPI.Result<UserResponse> {
-        request(method: .get, path: Path.users(id: userId))
+        request(method: .get, path: Path.getUser(id: userId))
     }
     
     public static func showUsers(userIds: [String]) -> MixinAPI.Result<[UserResponse]> {
-        request(method: .post, path: Path.users, parameters: userIds)
+        request(method: .post, path: Path.fetchUsers, parameters: userIds).map { (responses: [UserResponse]) in
+            // `is_deactivated` is invalid from this endpoint
+            responses.map(\.deactivationIgnored)
+        }
     }
     
     @discardableResult
     public static func showUsers(userIds: [String], completion: @escaping (MixinAPI.Result<[UserResponse]>) -> Void) -> Request? {
-        return request(method: .post, path: Path.users, parameters: userIds, completion: completion)
+        request(method: .post, path: Path.fetchUsers, parameters: userIds) { result in
+            // `is_deactivated` is invalid from this endpoint
+            let deactivationIgnoredResult = result.map { (responses: [UserResponse]) in
+                responses.map(\.deactivationIgnored)
+            }
+            completion(deactivationIgnoredResult)
+        }
     }
     
     @discardableResult

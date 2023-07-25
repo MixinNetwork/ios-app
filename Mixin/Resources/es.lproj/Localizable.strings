@@ -584,7 +584,7 @@
 "not_enough_partials" = "No hay suficientes nodos que devuelvan fragmento de clave";
 "not_found" = "Extraviado";
 "not_playing" = "No se está reproduciendo";
-"not_supported_deposit" = "Mixin Wallet no admite el depósito de %1$@. Ten en cuenta que puedes seguir transfiriendo o retirando los %2$@ depositados. Lee el documento para obtener más información.";
+"not_supported_deposit" = "Mixin ceases support for deposit service on the %1$@. You can continue to withdraw and transfer %2$@ in the wallet balance. Read the document to learn more.";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "notification_and_confirmation" = "Notificación y Confirmación";
 "notification_content" = "No te pierdas los mensajes de tus amigos.";

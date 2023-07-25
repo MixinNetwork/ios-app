@@ -175,6 +175,22 @@ extension WalletConnectService {
             gasSymbol: "MATIC",
             caip2: Blockchain("eip155:137")!
         )
+        static let arbitrum = Chain(
+            id: 42161,
+            internalID: ChainID.arbitrum,
+            name: "Arbitrum One",
+            rpcServerURL: URL(string: "https://arb1.arbitrum.io/rpc")!,
+            gasSymbol: "ETH",
+            caip2: Blockchain("eip155:42161")!
+        )
+        static let optimism = Chain(
+            id: 10,
+            internalID: ChainID.optimism,
+            name: "OP Mainnet",
+            rpcServerURL: URL(string: "https://mainnet.optimism.io")!,
+            gasSymbol: "ETH",
+            caip2: Blockchain("eip155:10")!
+        )
         
         let id: Int
         let internalID: String
@@ -194,6 +210,8 @@ extension WalletConnectService {
             Chain.ethereum.id:      .ethereum,
             Chain.bnbSmartChain.id: .bnbSmartChain,
             Chain.polygon.id:       .polygon,
+            Chain.arbitrum.id:      .arbitrum,
+            Chain.optimism.id:      .optimism,
         ]
 #if DEBUG
         chains.updateValue(.goerli, forKey: Chain.goerli.id, insertingAt: 1)

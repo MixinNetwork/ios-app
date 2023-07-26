@@ -23,7 +23,7 @@ public final class UserDAO: UserDatabaseDAO {
         :user_id, :full_name, :biography, :identity_number, :avatar_url, :phone, :is_verified,
         :mute_until, :app_id, :relationship, :created_at, :is_scam, :is_deactivated
     )
-    ON CONFLICT DO UPDATE SET user_id = :user_id,
+    ON CONFLICT(user_id) DO UPDATE SET user_id = :user_id,
         full_name = :full_name,
         biography = :biography,
         identity_number = :identity_number,

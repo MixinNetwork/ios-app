@@ -152,7 +152,11 @@ class ConversationCell: ModernSelectedBackgroundCell {
             } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {
                 contentLabel.text = R.string.localizable.started_group_call(senderName)
             } else if category == MessageCategory.KRAKEN_CANCEL.rawValue {
-                contentLabel.text = R.string.localizable.chat_group_call_cancel(senderName)
+                if senderIsMe {
+                    contentLabel.text = R.string.localizable.chat_group_call_self_did_not_answer()
+                } else {
+                    contentLabel.text = R.string.localizable.chat_group_call_did_not_answer(senderName)
+                }
             } else if category == MessageCategory.KRAKEN_DECLINE.rawValue {
                 contentLabel.text = R.string.localizable.chat_group_call_decline(senderName)
             } else if category == MessageCategory.KRAKEN_INVITE.rawValue {

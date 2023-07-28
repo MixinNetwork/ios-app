@@ -168,9 +168,10 @@
 "chat_decryption_failed" = "此信息解密失败，请将 Mixin 升级到最新版本。";
 "chat_decryption_failed_hint" = "等待%@上线后建立加密会话。";
 "chat_group_add" = "%1$@添加了%2$@";
-"chat_group_call_cancel" = "%@已取消群组语音";
 "chat_group_call_decline" = "%@已拒绝群组语音";
+"chat_group_call_did_not_answer" = "%@未接听群组语音";
 "chat_group_call_invite" = "%@邀请你加入群组语音";
+"chat_group_call_self_did_not_answer" = "你未接听群组语音";
 "chat_group_exit" = "%@离开了群组";
 "chat_group_join" = "%@通过邀请链接加入群组";
 "chat_group_remove" = "%1$@移除了%2$@";

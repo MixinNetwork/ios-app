@@ -10,6 +10,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var memoScanButton: UIButton!
     @IBOutlet weak var saveButton: RoundedButton!
     @IBOutlet weak var assetView: AssetIconView!
+    @IBOutlet weak var memoHintWrapperView: UIView!
     @IBOutlet weak var memoHintTextView: UITextView!
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var memoView: CornerView!
@@ -17,24 +18,42 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     
-    private var asset: AssetItem!
+    private var asset: AssetItem! {
+        didSet {
+            memoPossibility = Asset.WithdrawalMemoPossibility(rawValue: asset.withdrawalMemoPossibility) ?? .possible
+        }
+    }
+    
+    private var successCallback: ((Address) -> Void)?
+    private var qrCodeScanningDestination: UIView?
+    private var shouldLayoutWithKeyboard = true
+    private var memoPossibility: Asset.WithdrawalMemoPossibility = .possible
+    
     private var addressValue: String {
         return addressTextView.text?.trim() ?? ""
     }
+    
     private var labelValue: String {
         return labelTextField.text?.trim() ?? ""
     }
+    
     private var memoValue: String {
         return memoTextView.text?.trim() ?? ""
     }
-    private var isLegalAddress: Bool {
-        return !addressValue.isEmpty && !labelValue.isEmpty && (noMemo || !memoValue.isEmpty)
+    
+    private var areInputsValid: Bool {
+        guard !labelValue.isEmpty else {
+            return false
+        }
+        guard !addressValue.isEmpty else {
+            return false
+        }
+        if memoPossibility.isRequired {
+            return !memoValue.isEmpty
+        } else {
+            return true
+        }
     }
-    private var successCallback: ((Address) -> Void)?
-    private var address: Address?
-    private var qrCodeScanningDestination: UIView?
-    private var shouldLayoutWithKeyboard = true
-    private var noMemo = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,58 +68,20 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             assetView.chainIconOutlineWidth = 4
         }
         assetView.setIcon(asset: asset)
-        if let address = address {
-            labelTextField.text = address.label
-            addressTextView.text = address.destination
-            memoTextView.text = address.tag
-            noMemo = address.tag.isEmpty
-            checkLabelAndAddressAction(self)
-            view.layoutIfNeeded()
-            textViewDidChange(addressTextView)
-            textViewDidChange(memoTextView)
-        }
-
         memoTextView.placeholder = asset.memoLabel
-        updateMemoTips()
-    }
-
-    private func updateMemoTips() {
-        var hint: String
-        var action: String
-        if noMemo {
-            if asset.usesTag {
-                hint = R.string.localizable.withdrawal_addr_no_tag()
-                action = R.string.localizable.add_tag()
-            } else {
-                hint = R.string.localizable.withdrawal_addr_no_memo()
-                action = R.string.localizable.add_memo()
-            }
-            memoView.isHidden = true
-        } else {
-            if asset.usesTag {
-                hint = R.string.localizable.withdrawal_addr_tag()
-                action = R.string.localizable.no_tag()
-            } else {
-                hint = R.string.localizable.withdrawal_addr_memo()
-                action = R.string.localizable.withdrawal_no_memo()
-            }
+        
+        switch memoPossibility {
+        case .positive:
             memoView.isHidden = false
+            memoHintWrapperView.isHidden = true
+        case .negative:
+            memoView.isHidden = true
+            memoHintWrapperView.isHidden = true
+        case .possible:
+            memoView.isHidden = true
+            memoHintWrapperView.isHidden = false
+            updateMemoHint()
         }
-
-        let nsIntro = hint as NSString
-        let fullRange = NSRange(location: 0, length: nsIntro.length)
-        let actionRange = nsIntro.range(of: action)
-        let attributedText = NSMutableAttributedString(string: hint)
-        let paragraphSytle = NSMutableParagraphStyle()
-        paragraphSytle.alignment = .left
-        let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 14),
-            .paragraphStyle: paragraphSytle,
-            .foregroundColor: UIColor.accessoryText
-        ]
-        attributedText.setAttributes(attrs, range: fullRange)
-        attributedText.addAttributes([NSAttributedString.Key.link: ""], range: actionRange)
-        memoHintTextView.attributedText = attributedText
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -109,7 +90,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
 
         if labelValue.isEmpty {
             labelTextField.becomeFirstResponder()
-        } else if addressValue.isEmpty || noMemo {
+        } else if addressValue.isEmpty || !memoPossibility.isRequired {
             addressTextView.becomeFirstResponder()
         } else {
             memoTextView.becomeFirstResponder()
@@ -117,15 +98,12 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        if keyboardFrame.height > 0 {
-            continueWrapperBottomConstraint.constant = keyboardFrame.height
-            scrollViewBottomConstraint.constant = keyboardFrame.height + 72
-            view.layoutIfNeeded()
-
-            if !noMemo {
-                scrollView.contentOffset.y = scrollView.contentSize.height - scrollView.bounds.height + scrollView.contentInset.bottom
-            }
+        guard keyboardFrame.height > 0 else {
+            return
         }
+        continueWrapperBottomConstraint.constant = keyboardFrame.height
+        scrollViewBottomConstraint.constant = keyboardFrame.height + 72
+        view.layoutIfNeeded()
     }
 
     override func keyboardWillChangeFrame(_ notification: Notification) {
@@ -136,7 +114,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func checkLabelAndAddressAction(_ sender: Any) {
-        saveButton.isEnabled = isLegalAddress
+        saveButton.isEnabled = areInputsValid
     }
 
     @IBAction func scanAddressAction(_ sender: Any) {
@@ -156,20 +134,20 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        guard isLegalAddress else {
+        guard areInputsValid else {
             return
         }
-
+        let assetId = asset.assetId
         var destination = addressValue
         if asset.isBitcoinChain {
             if destination.lowercased().hasPrefix("bitcoin:"), let address = URLComponents(string: destination)?.path {
                 destination = address
             }
         }
+        let tag = memoView.isHidden ? "" : memoValue
+        let requestAddress = AddressRequest(assetId: assetId, destination: destination, tag: tag, label: labelValue, pin: "")
         shouldLayoutWithKeyboard = false
-        let assetId = asset.assetId
-        let requestAddress = AddressRequest(assetId: assetId, destination: destination, tag: memoValue, label: labelValue, pin: "")
-        AddressWindow.instance().presentPopupControllerAnimated(action: address == nil ? .add : .update, asset: asset, addressRequest: requestAddress, address: nil, dismissCallback: { [weak self] (success) in
+        AddressWindow.instance().presentPopupControllerAnimated(action: .add, asset: asset, addressRequest: requestAddress, address: nil, dismissCallback: { [weak self] (success) in
             guard let weakSelf = self else {
                 return
             }
@@ -198,22 +176,54 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         guard attr != nil else {
             return
         }
-        noMemo.toggle()
-        if noMemo {
-            memoTextView.text = ""
-        }
+        memoView.isHidden.toggle()
+        updateMemoHint()
         checkLabelAndAddressAction(textView)
-        updateMemoTips()
     }
     
-    class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
+    class func instance(asset: AssetItem, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
         let vc = R.storyboard.wallet.new_address()!
         vc.asset = asset
         vc.successCallback = successCallback
-        vc.address = address
-        return ContainerViewController.instance(viewController: vc, title: address == nil ? R.string.localizable.withdrawal_addr_new(asset.symbol) : R.string.localizable.edit_address(asset.symbol))
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.withdrawal_addr_new(asset.symbol))
     }
-
+    
+    private func updateMemoHint() {
+        let action: String
+        let hint: String
+        if memoView.isHidden {
+            if asset.usesTag {
+                action = R.string.localizable.add_tag()
+            } else {
+                action = R.string.localizable.add_memo()
+            }
+            hint = R.string.localizable.withdrawal_addr_no_memo_or_tag(action)
+        } else {
+            if asset.usesTag {
+                action = R.string.localizable.no_tag()
+            } else {
+                action = R.string.localizable.withdrawal_no_memo()
+            }
+            hint = R.string.localizable.withdrawal_addr_has_memo_or_tag(action)
+        }
+        let nsHint = hint as NSString
+        let fullRange = NSRange(location: 0, length: nsHint.length)
+        let attributedText = NSMutableAttributedString(string: hint)
+        let paragraphSytle = NSMutableParagraphStyle()
+        paragraphSytle.alignment = .left
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14),
+            .paragraphStyle: paragraphSytle,
+            .foregroundColor: UIColor.accessoryText
+        ]
+        attributedText.setAttributes(attrs, range: fullRange)
+        let actionRange = nsHint.range(of: action)
+        if actionRange.location != NSNotFound && actionRange.length != 0 {
+            attributedText.addAttributes([NSAttributedString.Key.link: ""], range: actionRange)
+        }
+        memoHintTextView.attributedText = attributedText
+    }
+    
 }
 
 extension NewAddressViewController: UITextViewDelegate {

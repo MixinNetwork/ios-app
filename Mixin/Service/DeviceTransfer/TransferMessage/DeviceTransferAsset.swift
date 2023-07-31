@@ -19,6 +19,7 @@ struct DeviceTransferAsset {
     let assetKey: String?
     let reserve: String?
     let depositEntries: [Asset.DepositEntry]?
+    let withdrawalMemoPossibility: String?
     
     init(asset: Asset) {
         assetId = asset.assetId
@@ -37,6 +38,7 @@ struct DeviceTransferAsset {
         assetKey = asset.assetKey
         reserve = asset.reserve
         depositEntries = asset.depositEntries
+        withdrawalMemoPossibility = asset.withdrawalMemoPossibility
     }
     
     func toAsset() -> Asset {
@@ -55,7 +57,8 @@ struct DeviceTransferAsset {
               confirmations: confirmations,
               assetKey: assetKey ?? "",
               reserve: reserve ?? "",
-              depositEntries: depositEntries ?? [])
+              depositEntries: depositEntries ?? [],
+              withdrawalMemoPossibility: withdrawalMemoPossibility)
     }
     
 }
@@ -79,6 +82,7 @@ extension DeviceTransferAsset: DeviceTransferRecord {
         case assetKey = "asset_key"
         case reserve
         case depositEntries = "deposit_entries"
+        case withdrawalMemoPossibility = "withdrawal_memo_possibility"
     }
     
 }

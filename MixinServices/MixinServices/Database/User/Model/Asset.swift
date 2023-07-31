@@ -3,6 +3,30 @@ import GRDB
 
 public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
     
+    public enum WithdrawalMemoPossibility: String {
+        
+        case positive
+        case negative
+        case possible
+        
+        public var isRequired: Bool {
+            switch self {
+            case .positive:
+                return true
+            case .negative, .possible:
+                return false
+            }
+        }
+        
+        public init?(rawValue: String?) {
+            guard let rawValue else {
+                return nil
+            }
+            self.init(rawValue: rawValue)
+        }
+        
+    }
+    
     public struct DepositEntry: Codable {
         
         public let destination: String
@@ -35,6 +59,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let assetKey: String
     public let reserve: String
     public let depositEntries: [DepositEntry]
+    public let withdrawalMemoPossibility: String?
     
     public var preferredDepositEntry: DepositEntry? {
         if depositEntries.count > 1 {
@@ -62,9 +87,10 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         assetKey = try container.decodeIfPresent(String.self, forKey: .assetKey) ?? ""
         reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
         depositEntries = try container.decodeIfPresent([DepositEntry].self, forKey: .depositEntries) ?? []
+        withdrawalMemoPossibility = try container.decodeIfPresent(String.self, forKey: .withdrawalMemoPossibility)
     }
     
-    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String, depositEntries: [DepositEntry]) {
+    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String, depositEntries: [DepositEntry], withdrawalMemoPossibility: String?) {
         self.assetId = assetId
         self.type = type
         self.symbol = symbol
@@ -81,6 +107,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         self.assetKey = assetKey
         self.reserve = reserve
         self.depositEntries = depositEntries
+        self.withdrawalMemoPossibility = withdrawalMemoPossibility
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -100,6 +127,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case assetKey = "asset_key"
         case reserve
         case depositEntries = "deposit_entries"
+        case withdrawalMemoPossibility = "withdrawal_memo_possibility"
     }
     
 }

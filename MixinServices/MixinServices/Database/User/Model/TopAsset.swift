@@ -19,6 +19,7 @@ public struct TopAsset: Codable, DatabaseColumnConvertible, MixinFetchableRecord
         case confirmations
         case assetKey = "asset_key"
         case reserve
+        case withdrawalMemoPossibility = "withdrawal_memo_possibility"
     }
     
     public static var databaseTableName: String {
@@ -40,6 +41,7 @@ public struct TopAsset: Codable, DatabaseColumnConvertible, MixinFetchableRecord
     public let confirmations: Int
     public let assetKey: String
     public let reserve: String
+    public let withdrawalMemoPossibility: String?
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -58,6 +60,7 @@ public struct TopAsset: Codable, DatabaseColumnConvertible, MixinFetchableRecord
         confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations) ?? 0
         assetKey = try container.decodeIfPresent(String.self, forKey: .assetKey) ?? ""
         reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
+        withdrawalMemoPossibility = try container.decodeIfPresent(String.self, forKey: .withdrawalMemoPossibility)
     }
     
 }

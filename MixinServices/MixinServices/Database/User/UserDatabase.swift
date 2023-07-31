@@ -561,6 +561,18 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("withdrawal_memo") { db in
+            let assetColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(assets)").map(\.name)
+            if !assetColumns.contains("withdrawal_memo_possibility") {
+                try db.execute(sql: "ALTER TABLE assets ADD COLUMN withdrawal_memo_possibility TEXT")
+            }
+            
+            let topAssetColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(top_assets)").map(\.name)
+            if !topAssetColumns.contains("withdrawal_memo_possibility") {
+                try db.execute(sql: "ALTER TABLE top_assets ADD COLUMN withdrawal_memo_possibility TEXT")
+            }
+        }
+        
         return migrator
     }
     

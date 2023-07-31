@@ -1030,11 +1030,9 @@
 "wifi_and_cellular" = "WLAN 與行動數據";
 "withdraw_address" = "提現地址";
 "withdrawal" = "提現";
-"withdrawal_addr_memo" = "地址標籤、數字 ID 或備註。如果沒有，點選不使用 Memo（備註）。";
+"withdrawal_addr_has_memo_or_tag" = "地址標籤、數字 ID 或備註。如果沒有，%@。";
 "withdrawal_addr_new" = "新 %@ 地址";
-"withdrawal_addr_no_memo" = "如果你需要填寫地址標籤、數字 ID 或備註，點選新增 Memo（備註）。";
-"withdrawal_addr_no_tag" = "如果你需要填寫地址標籤、數字 ID 或備註，點選新增 Tag（標籤）。";
-"withdrawal_addr_tag" = "地址標籤、數字 ID 或備註。如果沒有，點選不使用 Tag（標籤）。";
+"withdrawal_addr_no_memo_or_tag" = "如果你需要填寫地址標籤、數字 ID 或備註，%@。";
 "withdrawal_address_tips" = "首次提現到新地址，建議小額嘗試！如果您提現到錯誤的地址資產將無法找回！";
 "withdrawal_label" = "地址名稱，例如 OceanOne";
 "withdrawal_memo" = "Memo（備註）";

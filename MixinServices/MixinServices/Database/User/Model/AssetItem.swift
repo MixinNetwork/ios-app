@@ -43,7 +43,8 @@ public final class AssetItem: Asset, NumberStringLocalizable {
                    confirmations: asset.confirmations,
                    assetKey: asset.assetKey,
                    reserve: asset.reserve,
-                   depositEntries: asset.depositEntries)
+                   depositEntries: asset.depositEntries,
+                   withdrawalMemoPossibility: asset.withdrawalMemoPossibility)
     }
     
     required init(from decoder: Decoder) throws {
@@ -82,7 +83,8 @@ extension AssetItem {
                           confirmations: 100,
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
                           reserve: "0",
-                          depositEntries: [])
+                          depositEntries: [],
+                          withdrawalMemoPossibility: WithdrawalMemoPossibility.negative.rawValue)
         let chain = Chain(chainId: asset.chainId,
                           name: "Ether",
                           symbol: "ETH",

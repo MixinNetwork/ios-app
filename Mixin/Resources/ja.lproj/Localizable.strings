@@ -1030,11 +1030,9 @@
 "wifi_and_cellular" = "Wi-Fiとデータ通信";
 "withdraw_address" = "アドレス";
 "withdrawal" = "出金";
-"withdrawal_addr_memo" = "宛先タグやID番号やメモがない場合は、「メモなし」に設定することができます。";
+"withdrawal_addr_has_memo_or_tag" = "宛先タグやID番号やメモがない場合は、「%@」に設定することができます。";
 "withdrawal_addr_new" = "新しい%@アドレス";
-"withdrawal_addr_no_memo" = "宛先タグ、ID番号、またはメモを入力する必要がある場合は、「メモを追加」に設定することができます。";
-"withdrawal_addr_no_tag" = "宛先タグ、ID番号、またはメモを入力する必要がある場合は、「タグを追加」に設定することができます。";
-"withdrawal_addr_tag" = "宛先タグまたはID番号またはメモを入力してください。それ以外の場合「タグなし」に設定できます。";
+"withdrawal_addr_no_memo_or_tag" = "宛先タグ、ID番号、またはメモを入力する必要がある場合は、「%@」に設定することができます。";
 "withdrawal_address_tips" = "新しいアドレスへの最初の出金は必ず少額で行ってください。アドレスが間違っていると資産は失われます。";
 "withdrawal_label" = "ラベル (例. 取引所, ウォレットなど)";
 "withdrawal_memo" = "メモ";

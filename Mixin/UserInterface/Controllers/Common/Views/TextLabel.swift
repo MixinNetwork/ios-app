@@ -96,6 +96,12 @@ class TextLabel: CoreTextLabel {
         }
     }
     
+    var boldRanges: [NSRange] = [] {
+        didSet {
+            typesetIfNeeded(oldValue: oldValue, newValue: boldRanges)
+        }
+    }
+    
     override var bounds: CGRect {
         didSet {
             typesetIfNeeded(oldValue: bounds.width, newValue: oldValue.width, epsilon: 1)
@@ -195,6 +201,14 @@ extension TextLabel {
         ]
         let fullRange = NSRange(location: 0, length: str.mutableString.length)
         str.setAttributes(attr, range: fullRange)
+        
+        if let boldFontDescriptor = desc.withSymbolicTraits(.traitBold) {
+            let boldFont = CTFontCreateWithFontDescriptor(boldFontDescriptor as CTFontDescriptor, 0, nil)
+            for range in boldRanges {
+                str.removeAttribute(.ctFont, range: range)
+                str.addAttributes([.ctFont: boldFont], range: range)
+            }
+        }
         
         var linksMap: [NSRange: URL]
         if detectLinks {

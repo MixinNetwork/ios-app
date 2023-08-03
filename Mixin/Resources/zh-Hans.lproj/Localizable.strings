@@ -585,7 +585,7 @@
 "not_enough_partials" = "没有足够的节点返回密钥分片";
 "not_found" = "没有找到相应的消息";
 "not_playing" = "未在播放";
-"not_supported_deposit" = "Mixin 钱包现已不支持 %1$@ 充值，注意已转入的 %2$@ 资产可以继续转账或提现，阅读文档了解更多。";
+"not_supported_deposit" = "Mixin 已停止支持 %1$@ 的充值服务。您可以继续提现和转账钱包余额中的 %2$@。了解更多请阅读文档。";
 "not_turn_off_screen_hint" = "同步时请不要关闭屏幕并保持 Mixin 在前台运行。";
 "notification_and_confirmation" = "通知和确认";
 "notification_content" = "不再遗漏好友的消息。";

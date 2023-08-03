@@ -585,7 +585,7 @@
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Not found";
 "not_playing" = "Not playing";
-"not_supported_deposit" = "Mixin Wallet does not support the deposit for %1$@. Please note that you can continue to transfer or withdraw the deposited %2$@. Read the document to learn more";
+"not_supported_deposit" = "Mixin ceases support for deposit service on the %1$@. You can continue to withdraw and transfer %2$@ in the wallet balance. Read the document to learn more.";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "notification_and_confirmation" = "Notification and Confirmation";
 "notification_content" = "Don't miss messages from your friends.";

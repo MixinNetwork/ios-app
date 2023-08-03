@@ -18,18 +18,47 @@ class DepositNotSupportedViewController: UIViewController {
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
         
+        let symbol: String
+        if asset.assetId == AssetID.omniUSDT {
+            symbol = "OMNI - USDT"
+        } else {
+            symbol = asset.symbol
+        }
+        let text = R.string.localizable.not_supported_deposit(symbol, symbol)
+        let nsText = text as NSString
+        
+        label.text = text
         label.delegate = self
-        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.font = .systemFont(ofSize: 14)
         label.lineSpacing = 10
         label.textColor = R.color.red()!
         label.linkColor = .theme
         label.detectLinks = false
-        let text = R.string.localizable.not_supported_deposit(asset.symbol, asset.symbol)
-        label.text = text
-        let linkRange = (text as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
-        if linkRange.location != NSNotFound && linkRange.length != 0 {
-            label.additionalLinksMap = [linkRange: .notSupportedDeposit]
+        
+        let learnMoreRange = nsText.range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
+        if learnMoreRange.location != NSNotFound && learnMoreRange.length != 0 {
+            label.additionalLinksMap = [learnMoreRange: .notSupportedDeposit]
         }
+        
+        label.boldRanges = {
+            var boldRanges: [NSRange] = []
+            boldRanges.reserveCapacity(2)
+            
+            var searchRange = NSRange(location: 0, length: nsText.length)
+            var foundRange = nsText.range(of: symbol, range: searchRange)
+            while foundRange.location != NSNotFound && foundRange.length != 0 {
+                boldRanges.append(foundRange)
+                
+                let nextLocation = foundRange.location + foundRange.length
+                let remainingLength = nsText.length - nextLocation
+                searchRange = NSRange(location: nextLocation, length: remainingLength)
+                foundRange = nsText.range(of: symbol, range: searchRange)
+            }
+            
+            return boldRanges
+        }()
+        
+        label.text = text
     }
     
     override func viewDidLayoutSubviews() {

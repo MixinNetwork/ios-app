@@ -83,9 +83,6 @@ class GroupCall: Call {
     
     override func end(reason: EndedReason, by side: EndedSide, completion: (() -> Void)? = nil) {
         queue.async {
-            // Group call can only be ended by remote side with cancellation
-            assert(side == .local || reason == .cancelled)
-            
             guard self.internalState != .disconnecting else {
                 if let completion = completion {
                     self.endCallCompletions.append(completion)
@@ -102,7 +99,8 @@ class GroupCall: Call {
                 self.rtcClient.close(permanently: true)
             }
             if side == .local {
-                if reason == .declined {
+                switch reason {
+                case .declined:
                     for userId in self.inviters.map(\.userId) {
                         let decline = KrakenRequest(callUUID: self.uuid,
                                                     conversationId: self.conversationId,
@@ -111,7 +109,19 @@ class GroupCall: Call {
                                                     retryOnFailure: true)
                         self.messenger.request(decline)
                     }
-                } else {
+                case .cancelled:
+                    let message = Message.createKrakenMessage(conversationId: self.conversationId,
+                                                              userId: myUserId,
+                                                              category: .KRAKEN_CANCEL,
+                                                              createdAt: Date().toUTCString())
+                    MessageDAO.shared.insertMessage(message: message, messageSource: "GroupCall")
+                    let cancel = KrakenRequest(callUUID: self.uuid,
+                                               conversationId: self.conversationId,
+                                               trackId: self.trackId,
+                                               action: .cancel,
+                                               retryOnFailure: true)
+                    self.messenger.request(cancel)
+                default:
                     let end = KrakenRequest(callUUID: self.uuid,
                                             conversationId: self.conversationId,
                                             trackId: self.trackId,
@@ -157,22 +167,25 @@ class GroupCall: Call {
         }
     }
     
-    func removeInviter(with userId: String, createdAt: String) {
+    func reportCancel(fromUserWith userId: String, createdAt: String) {
         queue.async {
             guard self.internalState != .disconnecting else {
                 return
             }
-            guard let index = self.inviters.firstIndex(where: { $0.userId == userId }) else {
-                return
-            }
-            self.inviters.remove(at: index)
-            if self.internalState == .incoming && self.inviters.isEmpty {
+            if let index = self.inviters.firstIndex(where: { $0.userId == userId }) {
+                self.inviters.remove(at: index)
+                if self.internalState == .incoming && self.inviters.isEmpty {
+                    self.end(reason: .cancelled, by: .remote)
+                }
+            } else {
+                DispatchQueue.main.sync {
+                    self.membersDataSource.reportStopInviting(with: userId)
+                }
                 let message = Message.createKrakenMessage(conversationId: self.conversationId,
                                                           userId: userId,
                                                           category: .KRAKEN_CANCEL,
                                                           createdAt: createdAt)
                 MessageDAO.shared.insertMessage(message: message, messageSource: "GroupCall")
-                self.end(reason: .cancelled, by: .remote)
             }
         }
     }

@@ -1118,7 +1118,7 @@ extension CallService {
             guard let call = self.groupCall(with: data.conversationId) else {
                 return
             }
-            call.removeInviter(with: data.userId, createdAt: data.createdAt)
+            call.reportCancel(fromUserWith: data.userId, createdAt: data.createdAt)
         }
     }
     

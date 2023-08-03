@@ -168,9 +168,10 @@
 "chat_decryption_failed" = "Не удалось расшифровать это сообщение, обновите Mixin до последней версии.";
 "chat_decryption_failed_hint" = "Ожидание подключения %@ к сети и установления зашифрованного сеанса.";
 "chat_group_add" = "%1$@ добавил %2$@";
-"chat_group_call_cancel" = "%@ отменил групповой вызов";
 "chat_group_call_decline" = "%@ отклонил групповой вызов";
+"chat_group_call_did_not_answer" = "%@ did not answer group call";
 "chat_group_call_invite" = "%@ пригласил вас на групповой вызов";
+"chat_group_call_self_did_not_answer" = "You did not answer group call";
 "chat_group_exit" = "%@ ушло";
 "chat_group_join" = "%@ присоединился к группе по ссылке-приглашению";
 "chat_group_remove" = "%1$@ удалил %2$@";

@@ -168,9 +168,10 @@
 "chat_decryption_failed" = "This message decryption failed, please upgrade Mixin to the latest version.";
 "chat_decryption_failed_hint" = "Waiting for %@ to get online and establish an encrypted session.";
 "chat_group_add" = "%1$@ added %2$@";
-"chat_group_call_cancel" = "%@ has canceled group call";
 "chat_group_call_decline" = "%@ has declined group call";
+"chat_group_call_did_not_answer" = "%@ did not answer group call";
 "chat_group_call_invite" = "%@ has invited you to a group call";
+"chat_group_call_self_did_not_answer" = "You did not answer group call";
 "chat_group_exit" = "%@ left";
 "chat_group_join" = "%@ joined the group via invite link";
 "chat_group_remove" = "%1$@ removed %2$@";

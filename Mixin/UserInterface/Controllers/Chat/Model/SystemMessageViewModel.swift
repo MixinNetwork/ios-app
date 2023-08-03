@@ -23,7 +23,11 @@ class SystemMessageViewModel: MessageViewModel {
         if message.category == MessageCategory.KRAKEN_PUBLISH.rawValue {
             text = R.string.localizable.started_group_call(senderName)
         } else if message.category == MessageCategory.KRAKEN_CANCEL.rawValue {
-            text = R.string.localizable.chat_group_call_cancel(senderName)
+            if senderIsMe {
+                text = R.string.localizable.chat_group_call_self_did_not_answer()
+            } else {
+                text = R.string.localizable.chat_group_call_did_not_answer(senderName)
+            }
         } else if message.category == MessageCategory.KRAKEN_DECLINE.rawValue {
             text = R.string.localizable.chat_group_call_decline(senderName)
         } else if message.category == MessageCategory.KRAKEN_INVITE.rawValue {

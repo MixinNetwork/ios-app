@@ -175,6 +175,22 @@ extension WalletConnectService {
             gasSymbol: "MATIC",
             caip2: Blockchain("eip155:137")!
         )
+        static let arbitrum = Chain(
+            id: 42161,
+            internalID: ChainID.arbitrum,
+            name: "Arbitrum One",
+            rpcServerURL: URL(string: "https://arb1.arbitrum.io/rpc")!,
+            gasSymbol: "ETH",
+            caip2: Blockchain("eip155:42161")!
+        )
+        static let optimism = Chain(
+            id: 10,
+            internalID: ChainID.optimism,
+            name: "OP Mainnet",
+            rpcServerURL: URL(string: "https://mainnet.optimism.io")!,
+            gasSymbol: "ETH",
+            caip2: Blockchain("eip155:10")!
+        )
         
         let id: Int
         let internalID: String
@@ -194,6 +210,8 @@ extension WalletConnectService {
             Chain.ethereum.id:      .ethereum,
             Chain.bnbSmartChain.id: .bnbSmartChain,
             Chain.polygon.id:       .polygon,
+            Chain.arbitrum.id:      .arbitrum,
+            Chain.optimism.id:      .optimism,
         ]
 #if DEBUG
         chains.updateValue(.goerli, forKey: Chain.goerli.id, insertingAt: 1)
@@ -210,8 +228,11 @@ extension WalletConnectService {
     
     @MainActor
     private func show(proposal: WalletConnectSign.Session.Proposal) {
+        connectionHud?.hide()
         guard let container = UIApplication.homeContainerViewController else {
-            connectionHud?.hide()
+            Task {
+                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
+            }
             return
         }
         logger.info(category: "WalletConnectService", message: "Showing: \(proposal))")
@@ -232,24 +253,36 @@ extension WalletConnectService {
             return !isRequired && !isOptional
         }
         guard !chains.isEmpty else {
-            let hud = self.loadHud()
             logger.warn(category: "WalletConnectService", message: "Requires to support \(proposal.requiredNamespaces.values.compactMap(\.chains).flatMap { $0 })")
-            hud.set(style: .error, text: "No supported chain")
-            hud.scheduleAutoHidden()
+            let requiredChains = proposal.requiredNamespaces.values
+                .flatMap { namespace in
+                    namespace.chains ?? []
+                }
+                .map(\.namespace)
+            let requiredNamespaces: String
+            if requiredChains.isEmpty {
+                requiredNamespaces = "<empty>"
+            } else {
+                requiredNamespaces = requiredChains.joined(separator: ", ")
+            }
+            presentRejection(title: "Chain not supported", message: "\(proposal.proposer.name) requires to support \(requiredNamespaces)")
+            Task {
+                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejectedChains)
+            }
             return
         }
         
         let events: Set<String> = ["accountsChanged", "chainChanged"]
         let proposalEvents = proposal.requiredNamespaces.values.map(\.events).flatMap({ $0 })
         guard events.isSuperset(of: proposalEvents) else {
-            let hud = self.loadHud()
             logger.warn(category: "WalletConnectService", message: "Requires to support \(proposalEvents)")
-            hud.set(style: .error, text: "Lack of event support")
-            hud.scheduleAutoHidden()
+            presentRejection(title: "Chain not supported", message: "\(proposal.proposer.name) requires to support \(proposalEvents.joined(separator: ", "))")
+            Task {
+                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejectedEvents)
+            }
             return
         }
         
-        connectionHud?.hide()
         let connectWallet = ConnectWalletViewController(info: .walletConnect(proposal))
         connectWallet.onApprove = { priv in
             Task {
@@ -270,15 +303,16 @@ extension WalletConnectService {
                 } catch {
                     logger.warn(category: "WalletConnectService", message: "Failed to approve: \(error)")
                     approvalError = error
+                    try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
                 }
                 await MainActor.run {
-                    let hud = self.loadHud()
                     if let error = approvalError {
-                        hud.show(style: .error, text: error.localizedDescription, on: container.view)
+                        self.presentRejection(title: "Connection Failed", message: error.localizedDescription)
                     } else {
+                        let hud = self.loadHud()
                         hud.show(style: .notification, text: R.string.localizable.connected(), on: container.view)
+                        hud.scheduleAutoHidden()
                     }
-                    hud.scheduleAutoHidden()
                 }
             }
         }

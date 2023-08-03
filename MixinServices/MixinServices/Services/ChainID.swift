@@ -12,5 +12,7 @@ public enum ChainID {
     public static let bnbBeaconChain = "17f78d7c-ed96-40ff-980c-5dc62fecbc85"
     public static let bitShares = "05891083-63d2-4f3d-bfbe-d14d7fb9b25a"
     public static let mvm = "a0ffd769-5850-4b48-9651-d2ae44a3e64d"
+    public static let arbitrum = "d0688ff7-6656-4a79-bd5f-d764bfa9bc46"
+    public static let optimism = "62d5b01f-24ee-4c96-8214-8e04981d05f2"
     
 }

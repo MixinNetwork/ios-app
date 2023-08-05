@@ -52,11 +52,8 @@ extension AddContactViewController {
         guard let account = LoginManager.shared.account else {
             return
         }
-        let window = QrcodeWindow.instance()
-        window.render(title: R.string.localizable.my_qr_code(),
-                      description: R.string.localizable.scan_code_add_me(),
-                      account: account)
-        window.presentPopupControllerAnimated()
+        let qrCode = QRCodeViewController(account: account)
+        present(qrCode, animated: true)
     }
     
     private func requestPhoneContactAuthorization() {

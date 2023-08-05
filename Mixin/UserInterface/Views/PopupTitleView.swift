@@ -1,6 +1,6 @@
 import UIKit
 
-class PopupTitleView: UIView {
+final class PopupTitleView: UIView {
     
     let contentStackView = UIStackView()
     let titleStackView = UIStackView()
@@ -20,7 +20,8 @@ class PopupTitleView: UIView {
     lazy var subtitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = R.color.text_accessory()
-        label.dynamicTextSize = "regular12"
+        label.font = .scaledFont(ofSize: 12, weight: .regular)
+        label.adjustsFontForContentSizeCategory = true
         titleStackView.addArrangedSubview(label)
         return label
     }()
@@ -51,7 +52,8 @@ class PopupTitleView: UIView {
         contentStackView.addArrangedSubview(titleStackView)
         
         titleLabel.textColor = .text
-        titleLabel.dynamicTextSize = "semibold18"
+        titleLabel.font = .scaledFont(ofSize: 18, weight: .semibold)
+        titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         titleStackView.addArrangedSubview(titleLabel)
         

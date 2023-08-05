@@ -363,17 +363,21 @@ extension AppDelegate {
     }
     
     private func showMyQrCode() {
-        if let window = UIApplication.currentActivity()?.view.subviews.compactMap({ $0 as? QrcodeWindow }).first, window.isShowingMyQrCode {
+        guard let container = UIApplication.homeContainerViewController else {
             return
         }
         guard let account = LoginManager.shared.account else {
             return
         }
-        let qrcodeWindow = QrcodeWindow.instance()
-        qrcodeWindow.render(title: R.string.localizable.my_qr_code(),
-                            description: R.string.localizable.scan_code_add_me(),
-                            account: account)
-        qrcodeWindow.presentView()
+        if let current = container.presentedViewController as? QRCodeViewController {
+            if current.isShowingAccount {
+                return
+            } else {
+                container.dismiss(animated: true)
+            }
+        }
+        let qrCode = QRCodeViewController(account: account)
+        container.present(qrCode, animated: true)
     }
     
 }

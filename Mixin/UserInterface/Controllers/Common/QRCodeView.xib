@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="QRCodeViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="codeImageView" destination="h9P-mT-Qpv" id="rfM-Xh-o49"/>
+                <outlet property="contentView" destination="ggp-un-Xpy" id="Gdl-6k-cbL"/>
+                <outlet property="descriptionLabel" destination="8Fh-0d-4n2" id="zl4-e7-uep"/>
+                <outlet property="imageViewWidthConstraint" destination="0PP-kG-7MN" id="egx-Nv-IwI"/>
+                <outlet property="titleView" destination="z1c-xT-QUh" id="FPo-Qp-tRe"/>
+                <outlet property="view" destination="jGK-ch-WzG" id="qXX-jf-ssp"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="jGK-ch-WzG">
+            <rect key="frame" x="0.0" y="0.0" width="395" height="617"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z1c-xT-QUh" customClass="PopupTitleView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="395" height="70"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="jwn-ID-Dda"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ggp-un-Xpy" userLabel="Content View">
+                    <rect key="frame" x="30" y="90" width="335" height="359"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="h9P-mT-Qpv">
+                            <rect key="frame" x="57.5" y="40" width="220" height="220"/>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="220" id="0PP-kG-7MN"/>
+                                <constraint firstAttribute="width" secondItem="h9P-mT-Qpv" secondAttribute="height" multiplier="1:1" id="b4n-TC-UMg"/>
+                            </constraints>
+                        </imageView>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dZf-Yw-zrU">
+                            <rect key="frame" x="145.5" y="128" width="44" height="44"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="dZf-Yw-zrU" secondAttribute="height" id="36a-za-jeo"/>
+                                <constraint firstAttribute="width" constant="44" id="qrs-Ak-ZkH"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="22"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Fh-0d-4n2" userLabel="Description Label">
+                            <rect key="frame" x="0.0" y="268" width="335" height="51"/>
+                            <string key="text">0xA5B85583c2CbDf873D802A8
+29845904696E7BD97</string>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="dZf-Yw-zrU" firstAttribute="centerX" secondItem="h9P-mT-Qpv" secondAttribute="centerX" id="48m-AM-spz"/>
+                        <constraint firstItem="h9P-mT-Qpv" firstAttribute="top" secondItem="ggp-un-Xpy" secondAttribute="top" constant="40" id="DtQ-kb-Gr1"/>
+                        <constraint firstAttribute="bottom" secondItem="8Fh-0d-4n2" secondAttribute="bottom" constant="40" id="FJw-If-IST"/>
+                        <constraint firstItem="h9P-mT-Qpv" firstAttribute="centerX" secondItem="ggp-un-Xpy" secondAttribute="centerX" id="Rog-GF-KTq"/>
+                        <constraint firstItem="8Fh-0d-4n2" firstAttribute="leading" secondItem="ggp-un-Xpy" secondAttribute="leading" id="Y4a-Lo-UI3"/>
+                        <constraint firstAttribute="trailing" secondItem="8Fh-0d-4n2" secondAttribute="trailing" id="cNG-0v-gcA"/>
+                        <constraint firstItem="8Fh-0d-4n2" firstAttribute="top" secondItem="h9P-mT-Qpv" secondAttribute="bottom" constant="8" id="evh-Be-N7w"/>
+                        <constraint firstItem="dZf-Yw-zrU" firstAttribute="centerY" secondItem="h9P-mT-Qpv" secondAttribute="centerY" id="xtJ-hn-BJY"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="52" translatesAutoresizingMaskIntoConstraints="NO" id="i3w-9v-nOX">
+                    <rect key="frame" x="103.5" y="529" width="188" height="68"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ulO-jn-dVe" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="68" height="68"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="ulO-jn-dVe" secondAttribute="height" id="BdP-T9-I9h"/>
+                            </constraints>
+                            <color key="tintColor" name="title"/>
+                            <state key="normal" image="ic_app_category_scan"/>
+                            <connections>
+                                <action selector="scan:" destination="-1" eventType="touchUpInside" id="TXf-9f-rXb"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSp-Dk-yhj" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="120" y="0.0" width="68" height="68"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="eSp-Dk-yhj" secondAttribute="height" id="fl3-8i-SZY"/>
+                            </constraints>
+                            <color key="tintColor" name="title"/>
+                            <state key="normal" image="Web/ic_action_share"/>
+                            <connections>
+                                <action selector="shareImage:" destination="-1" eventType="touchUpInside" id="s6J-X1-6Bo"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="68" id="WVD-rp-4Ev"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="S2q-fU-jbw"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ggp-un-Xpy" secondAttribute="trailing" constant="30" id="0We-JL-Kzj"/>
+                <constraint firstItem="ggp-un-Xpy" firstAttribute="leading" secondItem="jGK-ch-WzG" secondAttribute="leading" constant="30" id="3JW-RR-3e9"/>
+                <constraint firstItem="z1c-xT-QUh" firstAttribute="leading" secondItem="jGK-ch-WzG" secondAttribute="leading" id="3Tk-82-lAD"/>
+                <constraint firstItem="S2q-fU-jbw" firstAttribute="bottom" secondItem="i3w-9v-nOX" secondAttribute="bottom" priority="750" id="BSI-Ku-Pa8"/>
+                <constraint firstItem="z1c-xT-QUh" firstAttribute="top" secondItem="jGK-ch-WzG" secondAttribute="top" id="MBf-LV-75A"/>
+                <constraint firstItem="i3w-9v-nOX" firstAttribute="centerX" secondItem="S2q-fU-jbw" secondAttribute="centerX" id="O2j-0W-QXb"/>
+                <constraint firstAttribute="trailing" secondItem="z1c-xT-QUh" secondAttribute="trailing" id="T3f-7P-gWd"/>
+                <constraint firstItem="ggp-un-Xpy" firstAttribute="top" secondItem="z1c-xT-QUh" secondAttribute="bottom" constant="20" id="dsl-ah-by6"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="i3w-9v-nOX" secondAttribute="bottom" constant="20" id="faL-Ol-nNI"/>
+                <constraint firstItem="i3w-9v-nOX" firstAttribute="top" secondItem="ggp-un-Xpy" secondAttribute="bottom" constant="80" id="sOu-sT-CCU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="136.64122137404578" y="37.676056338028168"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Web/ic_action_share" width="24" height="24"/>
+        <image name="ic_app_category_scan" width="24" height="24"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

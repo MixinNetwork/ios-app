@@ -717,6 +717,8 @@
 		941C9CE8298E57BD00CB760E /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */; };
 		941C9CE9298E57BD00CB760E /* AuthenticationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941C9CE7298E57BD00CB760E /* AuthenticationView.xib */; };
 		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
+		941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D3BF82A7912C700538504 /* QRCodeViewController.swift */; };
+		941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941D3BF92A7912C700538504 /* QRCodeView.xib */; };
 		941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */; };
 		942014D82A1E09DE0049CAB7 /* HMACSHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942014D72A1E09DE0049CAB7 /* HMACSHA256.swift */; };
 		9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */; };
@@ -781,6 +783,7 @@
 		947744DB26A9D2ED00B6BBDD /* ShakableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DA26A9D2ED00B6BBDD /* ShakableCell.swift */; };
 		947744DF26A9EBC800B6BBDD /* HomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DE26A9EBC800B6BBDD /* HomeAppCell.swift */; };
 		947744E126A9F2D300B6BBDD /* HomeAppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744E026A9F2D300B6BBDD /* HomeAppItem.swift */; };
+		94787E182A7C071E00BB0124 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = 94787E172A7C071E00BB0124 /* QRCode */; };
 		947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36A825DEB72A00146111 /* PlaylistManager.swift */; };
 		947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36AD25DEB75A00146111 /* PlaylistViewController.swift */; };
 		947B36B325DEB79100146111 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947B36B225DEB79100146111 /* PlaylistView.xib */; };
@@ -917,7 +920,6 @@
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
 		DF3D191A24EA1E44000BFE53 /* AssetConfirmationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D191924EA1E44000BFE53 /* AssetConfirmationWindow.swift */; };
-		DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */; };
 		DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */; };
 		DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF43304422648B32006D971D /* AssetInfoWindow.swift */; };
 		DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF43304622648B4E006D971D /* AssetInfoWindow.xib */; };
@@ -941,7 +943,6 @@
 		DF68CD72244EC1970059A678 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF68CD71244EC1970059A678 /* Mixin-Keys.plist */; };
 		DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF6ABB132295019C00A012B2 /* AddressWindow.xib */; };
 		DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6ABB152295049E00A012B2 /* AddressWindow.swift */; };
-		DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */; };
 		DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */; };
 		DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768562200647CC0055F3FF /* BouncingButton.swift */; };
 		DF768569200687010055F3FF /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768568200687010055F3FF /* PreviewView.swift */; };
@@ -1853,6 +1854,8 @@
 		941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		941C9CE7298E57BD00CB760E /* AuthenticationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AuthenticationView.xib; sourceTree = "<group>"; };
 		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
+		941D3BF82A7912C700538504 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		941D3BF92A7912C700538504 /* QRCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRCodeView.xib; sourceTree = "<group>"; };
 		941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertModifier.swift; sourceTree = "<group>"; };
 		942014D72A1E09DE0049CAB7 /* HMACSHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HMACSHA256.swift; sourceTree = "<group>"; };
 		9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountDeactivatedHintView.xib; sourceTree = "<group>"; };
@@ -2054,7 +2057,6 @@
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		DF3D191924EA1E44000BFE53 /* AssetConfirmationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetConfirmationWindow.swift; sourceTree = "<group>"; };
-		DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QrcodeWindow.xib; sourceTree = "<group>"; };
 		DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadJob.swift; sourceTree = "<group>"; };
 		DF43304422648B32006D971D /* AssetInfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetInfoWindow.swift; sourceTree = "<group>"; };
 		DF43304622648B4E006D971D /* AssetInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetInfoWindow.xib; sourceTree = "<group>"; };
@@ -2081,7 +2083,6 @@
 		DF68CD71244EC1970059A678 /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Mixin-Keys.plist"; path = "Mixin/Supporting Files/Mixin-Keys.plist"; sourceTree = SOURCE_ROOT; };
 		DF6ABB132295019C00A012B2 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
 		DF6ABB152295049E00A012B2 /* AddressWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressWindow.swift; sourceTree = "<group>"; };
-		DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrcodeWindow.swift; sourceTree = "<group>"; };
 		DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 		DF768562200647CC0055F3FF /* BouncingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BouncingButton.swift; sourceTree = "<group>"; };
 		DF768568200687010055F3FF /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
@@ -2243,6 +2244,7 @@
 				9416231A29BEEFB800E540B9 /* OrderedCollections in Frameworks */,
 				DFCC4342206B668A006F50BE /* Security.framework in Frameworks */,
 				94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */,
+				94787E182A7C071E00BB0124 /* QRCode in Frameworks */,
 				DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */,
 				9431379229AD2F8F00C2484B /* web3.swift in Frameworks */,
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
@@ -2721,6 +2723,8 @@
 				948374802A5D49110011A2CA /* PopupSelectorViewController.swift */,
 				948E6CB428AF95CC00DFF5DF /* IntroView.xib */,
 				94980FC62A5D653A0051AE6D /* IntroViewController.swift */,
+				941D3BF92A7912C700538504 /* QRCodeView.xib */,
+				941D3BF82A7912C700538504 /* QRCodeViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -3357,8 +3361,6 @@
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
 				DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */,
 				DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */,
-				DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */,
-				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
 				DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */,
 				DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */,
 				DFDD89EA22C4D5F900128991 /* DepositChooseNetworkWindow.swift */,
@@ -4226,6 +4228,7 @@
 				9416231929BEEFB800E540B9 /* OrderedCollections */,
 				9481C03B2A49A9AA0009DAF8 /* Starscream */,
 				944B1BED2A4CB0AA00C36B61 /* CryptoSwift */,
+				94787E172A7C071E00BB0124 /* QRCode */,
 			);
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
@@ -4347,6 +4350,7 @@
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -4458,6 +4462,7 @@
 				7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
+				941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* captcha.html in Resources */,
 				7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */,
 				7B2C4B112436FF5E00D2EB99 /* CircleCell.xib in Resources */,
@@ -4516,7 +4521,6 @@
 				7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */,
 				94E34124261D829200E2F9D3 /* highlight.js in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
-				DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */,
 				7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */,
 				DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */,
 				E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */,
@@ -5126,7 +5130,6 @@
 				7C651D8F29F68277003331A4 /* MixinBot.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
 				5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */,
-				DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
 				7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */,
@@ -5249,6 +5252,7 @@
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,
+				941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
@@ -6384,8 +6388,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WalletConnect/WalletConnectSwiftV2";
 			requirement = {
-				kind = exactVersion;
-				version = 1.6.11;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.11;
 			};
 		};
 		9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
@@ -6400,8 +6404,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/argentlabs/web3.swift";
 			requirement = {
-				kind = exactVersion;
-				version = 1.5.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
 			};
 		};
 		944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
@@ -6410,6 +6414,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
+			};
+		};
+		94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WalletConnect/QRCode";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.0.0;
 			};
 		};
 		9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */ = {
@@ -6442,6 +6454,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
+		};
+		94787E172A7C071E00BB0124 /* QRCode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */;
+			productName = QRCode;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;

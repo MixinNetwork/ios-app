@@ -118,20 +118,20 @@ extension UserCenterViewController {
         guard let account = LoginManager.shared.account else {
             return
         }
-        let window = QrcodeWindow.instance()
-        window.render(title: R.string.localizable.my_qr_code(),
-                      description: R.string.localizable.scan_code_add_me(),
-                      account: account)
-        window.presentPopupControllerAnimated()
+        let qrCode = QRCodeViewController(account: account)
+        present(qrCode, animated: true)
     }
     
     private func showMyMoneyReceivingCode() {
         guard let account = LoginManager.shared.account else {
             return
         }
-        let window = QrcodeWindow.instance()
-        window.renderMoneyReceivingCode(account: account)
-        window.presentPopupControllerAnimated()
+        let qrCode = QRCodeViewController(title: R.string.localizable.receive_money(),
+                                          content: "mixin://transfer/\(account.userID)",
+                                          foregroundColor: .black,
+                                          description: R.string.localizable.transfer_qrcode_prompt(),
+                                          centerView: .receiveMoney({ $0.setImage(with: account) }))
+        present(qrCode, animated: true)
     }
     
 }

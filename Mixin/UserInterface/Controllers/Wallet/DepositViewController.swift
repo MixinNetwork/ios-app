@@ -26,8 +26,6 @@ class DepositViewController: UIViewController {
     private var switchableNetworks: [String] = []
     private var switchingToAssetID: String?
     
-    private lazy var depositWindow = QrcodeWindow.instance()
-    
     private weak var job: RefreshAssetsJob?
     
     deinit {
@@ -105,10 +103,15 @@ extension DepositViewController: DepositFieldViewDelegate {
     }
     
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {
-        depositWindow.render(title: view.titleLabel.text ?? "",
-                             content: view.contentLabel.text ?? "",
-                             asset: asset)
-        depositWindow.presentView()
+        guard let content = view.contentLabel.text else {
+            return
+        }
+        let qrCode = QRCodeViewController(title: view.titleLabel.text ?? "",
+                                          content: content,
+                                          foregroundColor: .black,
+                                          description: content,
+                                          centerView: .asset(asset))
+        present(qrCode, animated: true)
     }
     
 }

@@ -164,7 +164,7 @@ extension WalletConnectService {
             internalID: ChainID.bnbSmartChain,
             name: "Binance Smart Chain",
             rpcServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
-            gasSymbol: "BSC",
+            gasSymbol: "BNB",
             caip2: Blockchain("eip155:56")!
         )
         static let polygon = Chain(

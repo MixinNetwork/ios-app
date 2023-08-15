@@ -1,45 +1,62 @@
 import Foundation
 
-public enum MixinHost {
+public struct MixinHost {
     
-    public static var webSocket: String {
-        return all[MixinHost.serverIndex].0
+    public let index: Int
+    public let blaze: String
+    public let api: String
+    
+}
+
+extension MixinHost: Equatable {
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.index == rhs.index
     }
     
-    public static var http: String {
-        return all[MixinHost.serverIndex].1
+}
+
+extension MixinHost {
+    
+    public static var current: MixinHost {
+        indexLock.lock()
+        let host = all[currentIndex]
+        indexLock.unlock()
+        return host
     }
     
     public static let all = [
-        ("mixin-blaze.zeromesh.net", "mixin-api.zeromesh.net"),
-        ("blaze.mixin.one", "api.mixin.one")
+        MixinHost(
+            index: 0,
+            blaze: "mixin-blaze.zeromesh.net",
+            api: "mixin-api.zeromesh.net"
+        ),
+        MixinHost(
+            index: 1,
+            blaze: "blaze.mixin.one",
+            api: "api.mixin.one"
+        ),
     ]
     
-    @Synchronized(value: AppGroupUserDefaults.serverIndex)
-    private static var serverIndex: Int
+    private static let indexLock = NSLock()
     
-    public static func toggle(currentWebSocketHost host: String?) {
-        guard host == webSocket else {
+    private static var currentIndex: Int = AppGroupUserDefaults.serverIndex
+    
+    public static func toggle(from host: MixinHost) {
+        indexLock.lock()
+        defer {
+            indexLock.unlock()
+        }
+        guard host == all[currentIndex] else {
             return
         }
-        toggleIndex()
-    }
-    
-    public static func toggle(currentHttpHost host: String) {
-        guard host == http else {
-            return
-        }
-        toggleIndex()
-    }
-    
-    private static func toggleIndex() {
-        var nextIndex = serverIndex + 1
+        var nextIndex = currentIndex + 1
         if nextIndex >= all.count {
             nextIndex = 0
         }
-        serverIndex = nextIndex
+        currentIndex = nextIndex
         AppGroupUserDefaults.serverIndex = nextIndex
-        Logger.general.info(category: "MixinHost", message: "Toggled server to \(webSocket):\(http)")
+        Logger.general.info(category: "MixinHost", message: "Toggled server to \(all[nextIndex].api)")
     }
     
 }

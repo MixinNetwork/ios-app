@@ -7,7 +7,7 @@ public struct TIPSigner: Decodable {
     public let api: String
     
     var apiURL: URL {
-        URL(string: "https://" + MixinHost.http + api)!
+        URL(string: "https://" + MixinHost.current.api + api)!
     }
     
 }

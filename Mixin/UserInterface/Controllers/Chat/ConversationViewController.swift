@@ -951,7 +951,7 @@ class ConversationViewController: UIViewController {
         }
         
         let conversationId = self.conversationId
-        let alc = UIAlertController(title: R.string.localizable.report_title(), message: MixinHost.http, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: R.string.localizable.report_title(), message: MixinHost.current.api, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: R.string.localizable.send_to_developer(), style: .default, handler: { (_) in
             self.report(conversationId: conversationId)
         }))

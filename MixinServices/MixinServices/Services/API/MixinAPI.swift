@@ -22,13 +22,14 @@ open class MixinAPI {
     @discardableResult
     public static func request<Parameters: Encodable, Response>(
         method: HTTPMethod,
+        host: KeyPath<MixinHost, String> = \.api,
         path: String,
         parameters: Parameters,
         options: Options = [],
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
-        guard let url = url(with: path) else {
+        guard let url = url(host: host, path: path) else {
             queue.async {
                 completion(.failure(.invalidPath))
             }
@@ -42,13 +43,14 @@ open class MixinAPI {
     @discardableResult
     public static func request<Response>(
         method: HTTPMethod,
+        host: KeyPath<MixinHost, String> = \.api,
         path: String,
         parameters: [String: Any]? = nil,
         options: Options = [],
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
-        guard let url = url(with: path) else {
+        guard let url = url(host: host, path: path) else {
             queue.async {
                 completion(.failure(.invalidPath))
             }
@@ -62,10 +64,11 @@ open class MixinAPI {
     @discardableResult
     public static func request<Parameters: Encodable, Response>(
         method: HTTPMethod,
+        host: KeyPath<MixinHost, String> = \.api,
         path: String,
         parameters: Parameters
     ) -> MixinAPI.Result<Response> {
-        guard let url = url(with: path) else {
+        guard let url = url(host: host, path: path) else {
             return .failure(.invalidPath)
         }
         return request(makeRequest: { (session) -> DataRequest in
@@ -78,10 +81,11 @@ open class MixinAPI {
     @discardableResult
     public static func request<Response>(
         method: HTTPMethod,
+        host: KeyPath<MixinHost, String> = \.api,
         path: String,
         parameters: [String: Any]? = nil
     ) -> MixinAPI.Result<Response> {
-        guard let url = url(with: path) else {
+        guard let url = url(host: host, path: path) else {
             return .failure(.invalidPath)
         }
         return request(makeRequest: { (session) -> DataRequest in
@@ -110,8 +114,8 @@ extension MixinAPI {
         return session
     }()
     
-    private static func url(with path: String) -> URL? {
-        let string = "https://" + MixinHost.http + path
+    private static func url(host: KeyPath<MixinHost, String>, path: String) -> URL? {
+        let string = "https://" + MixinHost.current[keyPath: host] + path
         return URL(string: string)
     }
     
@@ -149,7 +153,7 @@ extension MixinAPI {
             return nil
         }
         let requestTime = Date()
-        let host = MixinHost.http
+        let host = MixinHost.current
         
         func handleDeauthorization(response: HTTPURLResponse?) {
             let xServerTime = TimeInterval(response?.value(forHTTPHeaderField: "x-server-time") ?? "0") ?? 0
@@ -216,7 +220,7 @@ extension MixinAPI {
                     let requestId = response.request?.value(forHTTPHeaderField: "x-request-id") ?? "(null)"
                     Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)" )
                     if shouldToggleServer(for: error) {
-                        MixinHost.toggle(currentHttpHost: host)
+                        MixinHost.toggle(from: host)
                     }
                     completion(.failure(.httpTransport(error)))
                 }

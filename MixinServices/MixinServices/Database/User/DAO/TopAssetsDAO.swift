@@ -7,13 +7,14 @@ public final class TopAssetsDAO: UserDatabaseDAO {
     
     public func getAssets() -> [AssetItem] {
         let sql = """
-        SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.destination, a1.tag, a1.price_btc,
-            a1.price_usd, a1.change_usd, a1.chain_id, a1.confirmations, a1.asset_key, a1.reserve, NULL AS deposit_entries,
+        SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.destination, a.tag, a.price_btc,
+            a.price_usd, a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve, NULL AS deposit_entries,
+            a.withdrawal_memo_possibility,
             c.icon_url as chainIconUrl, c.name as chainName, c.symbol as chainSymbol, c.chain_id as chainId, c.threshold as chainThreshold
-        FROM top_assets a1
-        LEFT JOIN chains c ON a1.chain_id = c.chain_id
-        WHERE a1.asset_id NOT IN (SELECT asset_id FROM assets)
-        ORDER BY a1.ROWID ASC
+        FROM top_assets a
+        LEFT JOIN chains c ON a.chain_id = c.chain_id
+        WHERE a.asset_id NOT IN (SELECT asset_id FROM assets)
+        ORDER BY a.ROWID ASC
         """
         return db.select(with: sql)
     }

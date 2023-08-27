@@ -244,7 +244,7 @@
                                                                     </userDefinedRuntimeAttributes>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
-                                                                    <rect key="frame" x="26" y="-0.6666666666666643" width="24" height="14.333333333333332"/>
+                                                                    <rect key="frame" x="26" y="-0.6666666666666643" width="24" height="14.333333333333334"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="textColor" name="text_accessory"/>
                                                                     <nil key="highlightedColor"/>
@@ -1914,6 +1914,7 @@
                         <outlet property="continueWrapperView" destination="rn4-tn-OhQ" id="Ely-2f-KKD"/>
                         <outlet property="labelTextField" destination="Y8d-9S-d2e" id="h13-7L-zrZ"/>
                         <outlet property="memoHintTextView" destination="ank-a7-2aP" id="tjh-9v-dok"/>
+                        <outlet property="memoHintWrapperView" destination="QtJ-bb-u1L" id="nMT-DS-6wA"/>
                         <outlet property="memoScanButton" destination="CCs-D5-Y9T" id="Vq4-79-38c"/>
                         <outlet property="memoTextView" destination="9QL-DW-rv5" id="rL2-xG-oY8"/>
                         <outlet property="memoView" destination="c8o-Ds-032" id="f2i-V7-zku"/>
@@ -2087,7 +2088,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

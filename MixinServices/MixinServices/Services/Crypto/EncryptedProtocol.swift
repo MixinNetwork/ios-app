@@ -1,5 +1,6 @@
 import Foundation
 import CommonCrypto
+import CryptoKit
 
 public enum EncryptedProtocol {
     
@@ -14,6 +15,7 @@ public enum EncryptedProtocol {
         case invalidAgreement
         case badCipher
         case noSessionIdMatches
+        case combineSealedBox
     }
     
     public static func encrypt(
@@ -26,23 +28,30 @@ public enum EncryptedProtocol {
         guard MemoryLayout<SessionCount>.size == Length.sessionCount else {
             throw Error.invalidPlatform
         }
-        guard let key = Data(withNumberOfSecuredRandomBytes: Length.key) else {
+        
+        guard let keyData = Data(withNumberOfSecuredRandomBytes: Length.key) else {
             throw Error.keyGeneration
         }
-        guard let iv = Data(withNumberOfSecuredRandomBytes: Length.messageIV) else {
-            throw Error.ivGeneration
-        }
+        let key = SymmetricKey(data: keyData)
+        
         let senderPublicKey = privateKey.publicKey.x25519Representation
         guard senderPublicKey.count == Length.publicKey else {
             throw Error.invalidPublicKey
         }
-        let encryptedKey = try encrypt(messageKey: key, privateKey: privateKey, remotePublicKey: remotePublicKey)
+        
+        let encryptedKey = try encrypt(messageKey: keyData, privateKey: privateKey, remotePublicKey: remotePublicKey)
         guard encryptedKey.count == Length.keyIV + Length.encryptedKey else {
             throw Error.invalidEncryptedKey
         }
-        let encryptedMessage = try AESGCMCryptor.encrypt(message, with: key, iv: iv)
+        
+        let nonce = AES.GCM.Nonce()
+        let sealedBox = try AES.GCM.seal(message, using: key, nonce: nonce)
+        guard let encryptedMessage = sealedBox.combined else {
+            throw Error.combineSealedBox
+        }
+        
         if let extensionSession = extensionSession, extensionSession.key.count == Length.publicKey {
-            let encryptedExtensionMessageKey = try encrypt(messageKey: key, privateKey: privateKey, remotePublicKey: extensionSession.key)
+            let encryptedExtensionMessageKey = try encrypt(messageKey: keyData, privateKey: privateKey, remotePublicKey: extensionSession.key)
             let cipher = Data([Self.version])
                 + numberOfSessions(2)
                 + senderPublicKey
@@ -50,7 +59,6 @@ public enum EncryptedProtocol {
                 + encryptedExtensionMessageKey
                 + remoteSessionID.data
                 + encryptedKey
-                + iv
                 + encryptedMessage
             return cipher
         } else {
@@ -59,7 +67,6 @@ public enum EncryptedProtocol {
                 + senderPublicKey
                 + remoteSessionID.data
                 + encryptedKey
-                + iv
                 + encryptedMessage
             return cipher
         }
@@ -105,12 +112,14 @@ public enum EncryptedProtocol {
         let keyIV = cipherSlice(start: sessionOffset + Length.sessionId, count: Length.keyIV)
         let encryptedKey = cipherSlice(start: sessionOffset + Length.sessionId + Length.keyIV, count: Length.encryptedKey)
         
-        let messageOffset = Length.version + Length.sessionCount + Length.publicKey + Int(numberOfSessions) * Length.sessionInfo
-        let messageIV = cipherSlice(start: messageOffset, count: Length.messageIV)
-        let encryptedMessage = cipherSlice(start: messageOffset + Length.messageIV)
+        let boxOffset = Length.version + Length.sessionCount + Length.publicKey + Int(numberOfSessions) * Length.sessionInfo
+        let sealedBoxData = cipherSlice(start: boxOffset)
         
-        let key = try decrypt(messageKey: encryptedKey, iv: keyIV, privateKey: privateKey, remotePublicKey: senderPublicKey)
-        let decryptedMessage = try AESGCMCryptor.decrypt(encryptedMessage, with: key, iv: messageIV)
+        let keyData = try decrypt(messageKey: encryptedKey, iv: keyIV, privateKey: privateKey, remotePublicKey: senderPublicKey)
+        let key = SymmetricKey(data: keyData)
+        let box = try AES.GCM.SealedBox(combined: sealedBoxData)
+        
+        let decryptedMessage = try AES.GCM.open(box, using: key)
         return decryptedMessage
     }
     

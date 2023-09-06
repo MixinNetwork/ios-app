@@ -19,7 +19,10 @@ public final class UserDAO: UserDatabaseDAO {
     """
     
     private static let saveUserResponseWithoutDeactivationSQL = """
-    INSERT INTO users VALUES (
+    INSERT INTO users(
+        user_id, full_name, biography, identity_number, avatar_url, phone, is_verified,
+        mute_until, app_id, relationship, created_at, is_scam, is_deactivated
+    ) VALUES (
         :user_id, :full_name, :biography, :identity_number, :avatar_url, :phone, :is_verified,
         :mute_until, :app_id, :relationship, :created_at, :is_scam, :is_deactivated
     )

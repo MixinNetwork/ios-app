@@ -2,7 +2,7 @@ import UIKit
 import Alamofire
 import MixinServices
 
-class TIPIntroViewController: UIViewController {
+class TIPIntroViewController: IntroViewController {
     
     enum Interruption {
         case unknown
@@ -16,16 +16,6 @@ class TIPIntroViewController: UIViewController {
         case counterCheckingFails
         case waitingForUser
     }
-    
-    @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionTextLabel: TextLabel!
-    @IBOutlet weak var noticeTextView: UITextView!
-    @IBOutlet weak var nextButton: RoundedButton!
-    @IBOutlet weak var actionDescriptionLabel: UILabel!
-    
-    @IBOutlet weak var noticeTextViewHeightConstraint: NSLayoutConstraint!
     
     var isDismissAllowed: Bool {
         switch interruption {
@@ -76,15 +66,12 @@ class TIPIntroViewController: UIViewController {
     private init(intent: TIP.Action, interruption: Interruption) {
         self.intent = intent
         self.interruption = interruption
-        let nib = R.nib.tipIntroView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentStackView.setCustomSpacing(24, after: iconImageView)
-        descriptionTextLabel.delegate = self
-        noticeTextView.textContainerInset = UIEdgeInsets(top: 12, left: 8, bottom: 12, right: 14)
+        iconImageView.image = R.image.ic_tip()
         let description: String
         switch intent {
         case .create:
@@ -136,14 +123,7 @@ class TIPIntroViewController: UIViewController {
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if noticeTextViewHeightConstraint.constant != noticeTextView.contentSize.height {
-            noticeTextViewHeightConstraint.constant = noticeTextView.contentSize.height
-        }
-    }
-    
-    @IBAction func continueToNext(_ sender: Any) {
+    override func continueToNext(_ sender: RoundedButton) {
         switch interruption {
         case .unknown:
             checkCounter()
@@ -185,18 +165,6 @@ class TIPIntroViewController: UIViewController {
             let viewController = TIPActionViewController(action: action)
             navigationController?.setViewControllers([viewController], animated: true)
         }
-    }
-    
-}
-
-extension TIPIntroViewController: CoreTextLabelDelegate {
-    
-    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-    }
-    
-    func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
-        
     }
     
 }

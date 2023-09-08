@@ -4,14 +4,7 @@ protocol NetworkFeeSelectorViewControllerDelegate: AnyObject {
     func networkFeeSelectorViewController(_ controller: NetworkFeeSelectorViewController, didSelectOption option: NetworkFeeOption)
 }
 
-class NetworkFeeSelectorViewController: UIViewController {
-    
-    @IBOutlet weak var titleView: PopupTitleView!
-    @IBOutlet weak var tableView: UITableView!
-    
-    @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
+class NetworkFeeSelectorViewController: PopupSelectorViewController {
     
     weak var delegate: NetworkFeeSelectorViewControllerDelegate?
     
@@ -21,10 +14,7 @@ class NetworkFeeSelectorViewController: UIViewController {
     init(options: [NetworkFeeOption], gasSymbol: String) {
         self.options = options
         self.gasSymbol = gasSymbol
-        let nib = R.nib.networkFeeSelectorView
-        super.init(nibName: nib.name, bundle: nib.bundle)
-        transitioningDelegate = PopupPresentationManager.shared
-        modalPresentationStyle = .custom
+        super.init()
     }
     
     required init?(coder: NSCoder) {
@@ -33,26 +23,10 @@ class NetworkFeeSelectorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.layer.cornerRadius = 13
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        view.layer.masksToBounds = true
-        titleView.titleLabel.text = R.string.localizable.network_fee("")
-        titleView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+        tableView.rowHeight = 75
         tableView.register(R.nib.networkFeeOptionCell)
         tableView.dataSource = self
         tableView.delegate = self
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        preferredContentSize.height = titleHeightConstraint.constant
-        + tableViewTopConstraint.constant
-        + tableView.contentSize.height
-        + tableViewBottomConstraint.constant
-    }
-    
-    @objc private func close(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
     }
     
 }

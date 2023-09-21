@@ -57,7 +57,7 @@
 "all" = "Todo";
 "all_conversations" = "Todas las conversaciones";
 "all_photos" = "Todas las fotos";
-"all_signer_failure" = "Falla de todos los nodos, tal vez el PIN no coincida con lo que se configuró la última vez que finalizó inesperadamente";
+"all_signer_failure" = "Falla de todos los nodos";
 "all_transactions" = "Todas las transacciones";
 "allow" = "Permitir";
 "allow_bot_access_asset" = "Permite que el bot acceda a tu lista de activos y saldo.";
@@ -902,6 +902,7 @@
 "tip_create_pin_title" = "Establece un PIN de 6 dígitos para crear tu primera cartera digital";
 "tip_creation_introduction" = "Establece un PIN de cartera de 6 dígitos para crear tu primera cartera digital, el PIN se basa en el Protocolo de identidad limitado, que es el protocolo de derivación de clave descentralizado, lee el documento para obtener más información.";
 "tip_introduction" = "El PIN de 6 dígitos se basa en el Throttled Identity Protocol, que es el protocolo de derivación de claves descentralizado, lee el documento para obtener más información.";
+"tip_recovery_failed" = "TIP private key recovery failed.";
 "title_participants" = "%d Participante";
 "title_participants_count" = "%d Participantes";
 "to" = "A";

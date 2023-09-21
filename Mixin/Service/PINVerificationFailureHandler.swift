@@ -16,6 +16,8 @@ enum PINVerificationFailureHandler {
         switch error {
         case .tooManyRequests:
             completion(R.string.localizable.error_pin_check_too_many_request())
+        case .pinEncryption(TIPNode.Error.tooManyRequests):
+            completion(R.string.localizable.error_too_many_request())
         case .incorrectPin:
             AccountAPI.logs(category: .incorrectPin, limit: 5) { (result) in
                 switch result {
@@ -35,8 +37,10 @@ enum PINVerificationFailureHandler {
                     completion(R.string.localizable.pin_incorrect())
                 }
             }
+        case .pinEncryption(TIPNode.Error.incorrectPIN):
+            completion(R.string.localizable.pin_incorrect())
         case .pinEncryption(let error as TIPNode.Error):
-            completion(error.description)
+            completion(error.localizedDescription)
         default:
             completion(error.localizedDescription)
         }

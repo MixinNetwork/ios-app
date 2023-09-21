@@ -29,6 +29,9 @@ public enum TIPNode {
         case differentIdentity
         case invalidAssignorData
         case retryLimitExceeded
+        case internalServerError
+        case tooManyRequests
+        case incorrectPIN
     }
     
     private struct TIPSignResponseData {
@@ -91,7 +94,7 @@ public enum TIPNode {
             assignee = nil
         }
         
-        let data: [TIPSignResponseData]
+        let results: [Result<TIPSignResponseData, Swift.Error>]
         let allSigners = TIPConfig.current.signers
         if !failedSigners.isEmpty, let assigneeSk = assigneeSk {
             let successfulSigners = allSigners.filter { signer in
@@ -107,7 +110,7 @@ public enum TIPNode {
                     progressHandler?(.synchronizing(overallFractionCompleted))
                 }
             }
-            if successfulData.isEmpty || successfulData.contains(where: { $0.counter <= 1 }) {
+            if successfulData.isEmpty || successfulData.compactMap({ try? $0.get() }).contains(where: { $0.counter <= 1 }) {
                 throw Error.differentIdentity
             }
             Logger.tip.info(category: "TIPNode", message: "successfulData ready")
@@ -121,15 +124,36 @@ public enum TIPNode {
                 }
             }
             Logger.tip.info(category: "TIPNode", message: "failedData ready")
-            data = failedData + successfulData
+            results = failedData + successfulData
         } else {
-            data = try await nodeSigs(userSk: userSk,
-                                      signers: allSigners,
-                                      ephemeral: ephemeral,
-                                      watcher: watcher,
-                                      assignee: assignee,
-                                      progressHandler: progressHandler)
+            results = try await nodeSigs(userSk: userSk,
+                                         signers: allSigners,
+                                         ephemeral: ephemeral,
+                                         watcher: watcher,
+                                         assignee: assignee,
+                                         progressHandler: progressHandler)
             Logger.tip.info(category: "TIPNode", message: "data ready")
+        }
+        
+        var data: [TIPSignResponseData] = []
+        var errorCodes: [Int] = []
+        for result in results {
+            switch result {
+            case .success(let datum):
+                data.append(datum)
+            case .failure(let error):
+                if let error = error as? TIPSignResponse.Failure.Error {
+                    errorCodes.append(error.code)
+                }
+            }
+        }
+        
+        if errorCodes.contains(500) {
+            throw Error.internalServerError
+        } else if errorCodes.contains(429) {
+            throw Error.tooManyRequests
+        } else if errorCodes.contains(403) {
+            throw Error.incorrectPIN
         }
         
         if !forRecover && data.count < allSigners.count {
@@ -213,7 +237,7 @@ public enum TIPNode {
         watcher: Data,
         assignee: Data?,
         progressHandler: (@MainActor (TIP.Progress) -> Void)?
-    ) async throws -> [TIPSignResponseData] {
+    ) async throws -> [Result<TIPSignResponseData, Swift.Error>] {
 #if DEBUG
         let nonce: UInt64 = await MainActor.run {
             if TIPDiagnostic.invalidNonceOnce {
@@ -237,7 +261,7 @@ public enum TIPNode {
                         try await MainActor.run {
                             if TIPDiagnostic.failLastSignerOnce, signer.index == signers.last?.index {
                                 TIPDiagnostic.failLastSignerOnce = false
-                                throw AFError.sessionTaskFailed(error: URLError(.badServerResponse))
+                                throw TIP.Error.mock
                             }
                         }
                     } catch {
@@ -258,15 +282,14 @@ public enum TIPNode {
                             Logger.tip.info(category: "TIPNode", message: "Node \(signer.index) sign succeed")
                             return .success(sig)
                         } catch {
-                            switch error {
-                            case let AFError.responseValidationFailed(reason: .unacceptableStatusCode(code)):
-                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(code), id: \(requestID)")
-                                if code == 429 || code == 500 {
+                            if let error = error as? TIPSignResponse.Failure.Error {
+                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(error.code), id: \(requestID)")
+                                if error.isFatal {
                                     return .failure(error)
                                 } else {
                                     continue
                                 }
-                            default:
+                            } else {
                                 Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with: \(error), id: \(requestID)")
                                 continue
                             }
@@ -276,17 +299,17 @@ public enum TIPNode {
                 }
             }
             
-            var sigs: [TIPSignResponseData] = []
+            var sigs: [Result<TIPSignResponseData, Swift.Error>] = []
             sigs.reserveCapacity(signers.count)
             for await result in group {
                 switch result {
                 case .success(let sig):
-                    sigs.append(sig)
                     let fractionCompleted = Float(sigs.count) / Float(signers.count)
                     await progressHandler?(.synchronizing(fractionCompleted))
                 case .failure(let error):
                     Logger.tip.error(category: "TIPNode", message: "Failed to sign: \(error)")
                 }
+                sigs.append(result)
             }
             return sigs
         }

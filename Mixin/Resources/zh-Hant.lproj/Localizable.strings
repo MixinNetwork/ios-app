@@ -57,7 +57,7 @@
 "all" = "全部";
 "all_conversations" = "所有會話";
 "all_photos" = "所有照片";
-"all_signer_failure" = "所有節點失敗，也許 PIN 跟上次意外退出時設定的不一致";
+"all_signer_failure" = "所有節點失敗";
 "all_transactions" = "所有交易記錄";
 "allow" = "允許";
 "allow_bot_access_asset" = "允許機器人檢視你的所有資產和餘額。";
@@ -902,6 +902,7 @@
 "tip_create_pin_title" = "設定 6 位數字 PIN 建立你的第一個數字錢包";
 "tip_creation_introduction" = "設定 6 位數字 PIN 建立你的第一個加密貨幣錢包，PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
 "tip_introduction" = "6 位數字 PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
+"tip_recovery_failed" = "TIP 私鑰恢復失敗。";
 "title_participants" = "%d 成員";
 "title_participants_count" = "%d 成員";
 "to" = "至";

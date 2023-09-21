@@ -57,7 +57,7 @@
 "all" = "すべて";
 "all_conversations" = "すべてのチャットルーム";
 "all_photos" = "全ての画像";
-"all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
+"all_signer_failure" = "All node failure";
 "all_transactions" = "もらった・あげたコイン💰";
 "allow" = "許可";
 "allow_bot_access_asset" = "Allow bot to access your asset list and balance.";
@@ -902,6 +902,7 @@
 "tip_create_pin_title" = "6桁のPINコードを作成してください";
 "tip_creation_introduction" = "Set a 6 digit Wallet PIN to create your first digital wallet, the PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "tip_introduction" = "The 6-digit PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
+"tip_recovery_failed" = "TIP private key recovery failed.";
 "title_participants" = "%d人の参加者";
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";

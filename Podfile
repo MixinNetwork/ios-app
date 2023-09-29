@@ -12,13 +12,8 @@ target 'Mixin' do
   use_frameworks!
   inhibit_all_warnings!
 
-  pod 'Firebase/Core'
-  pod 'Firebase/Analytics'
-  pod 'Firebase/Performance'
-  pod 'Firebase/Crashlytics'
   pod 'SnapKit'
   pod 'PhoneNumberKit', :git => 'https://github.com/marmelroy/PhoneNumberKit'
-  pod 'R.swift'
   pod 'libwebp'
   pod 'SDWebImageLottieCoder'
   mixin_services
@@ -28,7 +23,6 @@ target 'MixinNotificationService' do
   use_frameworks!
   inhibit_all_warnings!
   
-  pod 'R.swift'
   mixin_services
 end
 
@@ -36,7 +30,6 @@ target 'MixinShare' do
   use_frameworks!
   inhibit_all_warnings!
 
-  pod 'R.swift'
   mixin_services
 end
 

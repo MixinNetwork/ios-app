@@ -3,6 +3,9 @@ import UserNotifications
 import AVFoundation
 import WebKit
 import FirebaseCore
+import FirebaseAnalytics
+import FirebasePerformance
+import FirebaseCrashlytics
 import SDWebImage
 import SDWebImageLottieCoder
 import MixinServices
@@ -274,7 +277,7 @@ extension AppDelegate {
             if UIApplication.shared.isProtectedDataAvailable {
                 mainWindow.rootViewController = LoginNavigationController.instance()
             } else {
-                mainWindow.rootViewController = R.storyboard.launchScreen().instantiateInitialViewController()
+                mainWindow.rootViewController = R.storyboard.launchScreen.instantiateInitialViewController()
             }
         }
         UIApplication.shared.setShortcutItemsEnabled(LoginManager.shared.isLoggedIn)

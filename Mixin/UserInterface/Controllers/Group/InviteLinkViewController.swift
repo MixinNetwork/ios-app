@@ -8,7 +8,6 @@ class InviteLinkViewController: UIViewController {
     @IBOutlet weak var linkLabel: UILabel!
 
     private var conversation: ConversationItem!
-    private lazy var qrcodeWindow = QrcodeWindow.instance()
     
     private lazy var shareLinkController: UIActivityViewController? = {
         if let codeUrl = conversation.codeUrl {
@@ -42,8 +41,15 @@ class InviteLinkViewController: UIViewController {
     }
     
     @IBAction func qrCodeAction(_ sender: Any) {
-        qrcodeWindow.render(conversation: conversation)
-        qrcodeWindow.presentView()
+        guard let conversation, let code = conversation.codeUrl else {
+            return
+        }
+        let qrCode = QRCodeViewController(title: conversation.name,
+                                          content: code,
+                                          foregroundColor: .black,
+                                          description: R.string.localizable.group_qr_code_prompt(),
+                                          centerView: .avatar({ $0.setGroupImage(conversation: conversation) }))
+        present(qrCode, animated: true)
     }
     
     class func instance(conversation: ConversationItem) -> UIViewController {

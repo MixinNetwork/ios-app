@@ -120,7 +120,6 @@ extension WalletConnectSession {
     @MainActor
     private func rejectETHSign(with request: Request) {
         Task {
-            let error = JSONRPCError(code: 0, message: "Method not supported")
             try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(.methodNotFound))
         }
         WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),

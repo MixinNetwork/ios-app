@@ -7,7 +7,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     
     private lazy var editNameController = AlertEditorController(presentingViewController: self)
     private lazy var hintFooterView: UIView = {
-        let view = R.nib.circlesTableFooterView(owner: nil)!
+        let view = R.nib.circlesTableFooterView(withOwner: nil)!
         view.label.text = R.string.localizable.circle_info()
         view.buttonTopConstraint.constant = -80
         view.showsHintLabel = true

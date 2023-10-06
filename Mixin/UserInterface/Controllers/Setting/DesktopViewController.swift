@@ -27,7 +27,7 @@ class DesktopViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = R.nib.desktopTableHeaderView(owner: nil)
+        tableView.tableHeaderView = R.nib.desktopTableHeaderView(withOwner: nil)
         reloadData()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView

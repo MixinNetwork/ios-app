@@ -7,7 +7,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     let coverImageView = UIImageView()
     let player = AVPlayer()
     let playerView = PlayerView()
-    let controlView = R.nib.galleryVideoControlView(owner: nil)!
+    let controlView = R.nib.galleryVideoControlView(withOwner: nil)!
     
     var coverSize = CGSize(width: 1, height: 1)
     var videoRatio: CGFloat = 1

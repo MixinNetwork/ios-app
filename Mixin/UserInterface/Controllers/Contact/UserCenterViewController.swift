@@ -45,7 +45,7 @@ class UserCenterViewController: SettingsTableViewController, MixinNavigationAnim
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = R.nib.userCenterTableHeaderView(owner: nil)
+        tableView.tableHeaderView = R.nib.userCenterTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         reloadAccount()

@@ -35,7 +35,7 @@ class WebViewController: FullscreenPopupViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        webContentView = R.nib.webContentView(owner: self)!
+        webContentView = R.nib.webContentView(withOwner: self)!
         contentView.insertSubview(webContentView, belowSubview: pageControlView)
         webContentView.snp.makeEdgesEqualToSuperview()
         titleStackView.snp.makeConstraints { make in

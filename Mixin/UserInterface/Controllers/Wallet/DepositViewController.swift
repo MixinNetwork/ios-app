@@ -47,7 +47,7 @@ class DepositViewController: UIViewController {
         
         if let index = usdtNetworkNames.index(forKey: asset.assetId) {
             switchableNetworks = usdtNetworkNames.values.elements
-            let switchView = R.nib.depositNetworkSwitchView(owner: nil)!
+            let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
             contentStackView.insertArrangedSubview(switchView, at: 0)
             let collectionView: UICollectionView = switchView.collectionView
             networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
@@ -244,7 +244,7 @@ extension DepositViewController {
         guard self.addressGeneratingView == nil else {
             return
         }
-        let generatingView = R.nib.depositAddressGeneratingView(owner: nil)!
+        let generatingView = R.nib.depositAddressGeneratingView(withOwner: nil)!
         view.addSubview(generatingView)
         generatingView.snp.makeEdgesEqualToSuperview()
         self.addressGeneratingView = generatingView

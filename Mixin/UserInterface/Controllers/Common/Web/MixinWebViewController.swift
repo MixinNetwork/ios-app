@@ -64,9 +64,9 @@ class MixinWebViewController: WebViewController {
     private(set) var context: Context!
     
     private lazy var scriptMessageProxy = ScriptMessageProxy(target: self)
-    private lazy var suspicousLinkView = R.nib.suspiciousLinkView(owner: self)!
+    private lazy var suspicousLinkView = R.nib.suspiciousLinkView(withOwner: self)!
     private lazy var loadingFailureView: UIView = {
-        let view = R.nib.webLoadingFailureView(owner: self)!
+        let view = R.nib.webLoadingFailureView(withOwner: self)!
         loadingFailureViewIfLoaded = view
         return view
     }()

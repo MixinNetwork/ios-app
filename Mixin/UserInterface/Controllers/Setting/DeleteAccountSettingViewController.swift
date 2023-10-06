@@ -3,7 +3,7 @@ import MixinServices
 
 final class DeleteAccountSettingViewController: SettingsTableViewController {
     
-    private let tableHeaderView = R.nib.deleteAccountTableHeaderView(owner: nil)!
+    private let tableHeaderView = R.nib.deleteAccountTableHeaderView(withOwner: nil)!
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.delete_my_account(), titleStyle: .destructive)

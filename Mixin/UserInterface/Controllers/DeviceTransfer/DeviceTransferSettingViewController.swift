@@ -2,7 +2,7 @@ import UIKit
 
 class DeviceTransferSettingViewController: SettingsTableViewController {
     
-    let tableHeaderView = R.nib.deviceTransferActionTableHeaderView(owner: nil)!
+    let tableHeaderView = R.nib.deviceTransferActionTableHeaderView(withOwner: nil)!
     
     override func viewDidLoad() {
         super.viewDidLoad()

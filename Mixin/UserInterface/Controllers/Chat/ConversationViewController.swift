@@ -105,18 +105,18 @@ class ConversationViewController: UIViewController {
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
-    private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
-    private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
+    private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(withOwner: self)!
+    private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(withOwner: self)!
     
     private lazy var strangerHintView: StrangerHintView = {
-        let view = R.nib.strangerHintView(owner: nil)!
+        let view = R.nib.strangerHintView(withOwner: nil)!
         view.blockButton.addTarget(self, action: #selector(blockAction(_:)), for: .touchUpInside)
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
     
     private lazy var appReceptionView: AppReceptionView = {
-        let view = R.nib.appReceptionView(owner: nil)!
+        let view = R.nib.appReceptionView(withOwner: nil)!
         view.openHomePageButton.addTarget(conversationInputViewController,
                                           action: #selector(ConversationInputViewController.openOpponentAppAction(_:)),
                                           for: .touchUpInside)
@@ -125,13 +125,13 @@ class ConversationViewController: UIViewController {
     }()
     
     private lazy var invitationHintView: InvitationHintView = {
-        let view = R.nib.invitationHintView(owner: nil)!
+        let view = R.nib.invitationHintView(withOwner: nil)!
         view.exitButton.addTarget(self, action: #selector(exitGroupAndReportInviterAction(_:)), for: .touchUpInside)
         return view
     }()
     
     private lazy var groupCallIndicatorView: GroupCallIndicatorView = {
-        let indicator = R.nib.groupCallIndicatorView(owner: self)!
+        let indicator = R.nib.groupCallIndicatorView(withOwner: self)!
         indicator.isHidden = true
         if let banner = pinMessageBannerViewIfLoaded {
             view.insertSubview(indicator, aboveSubview: banner)
@@ -163,13 +163,13 @@ class ConversationViewController: UIViewController {
     }()
     
     private lazy var textPreviewView: TextPreviewView = {
-        let view = R.nib.textPreviewView(owner: nil)!
+        let view = R.nib.textPreviewView(withOwner: nil)!
         view.delegate = self
         return view
     }()
     
     private lazy var pinMessageBannerView: PinMessageBannerView = {
-        let banner = R.nib.pinMessageBannerView(owner: nil)!
+        let banner = R.nib.pinMessageBannerView(withOwner: nil)!
         banner.isHidden = true
         banner.delegate = self
         if let indicator = groupCallIndicatorViewIfLoaded {

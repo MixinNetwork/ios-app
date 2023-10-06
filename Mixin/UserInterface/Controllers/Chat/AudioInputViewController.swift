@@ -54,7 +54,7 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     
     private weak var recordDurationTimer: Timer?
     
-    private lazy var longPressHintView = R.nib.recorderLongPressHintView(owner: nil)!
+    private lazy var longPressHintView = R.nib.recorderLongPressHintView(withOwner: nil)!
     
     deinit {
         recorder?.cancel(for: .userInitiated)

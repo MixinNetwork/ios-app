@@ -263,7 +263,7 @@ extension MinimizedClipSwitcherViewController {
         if let reusableView = iconViews.first(where: { $0.superview == nil }) {
             view = reusableView
         } else {
-            view = R.nib.minimizedClipIconView(owner: nil)!
+            view = R.nib.minimizedClipIconView(withOwner: nil)!
             iconViews.append(view)
         }
         view.avatarImageView.imageView.tintColor = R.color.text_accessory()

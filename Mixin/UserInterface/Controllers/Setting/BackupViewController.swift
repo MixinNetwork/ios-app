@@ -64,7 +64,7 @@ class BackupViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = R.nib.backupTableHeaderView(owner: nil)
+        tableView.tableHeaderView = R.nib.backupTableHeaderView(withOwner: nil)
         updateAutoBackupSubtitle()
         updateActionSectionFooter()
         dataSource.tableViewDelegate = self

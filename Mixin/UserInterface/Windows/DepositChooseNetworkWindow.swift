@@ -27,7 +27,7 @@ class DepositChooseNetworkWindow: BottomSheetView {
     }
     
     class func instance() -> DepositChooseNetworkWindow {
-        R.nib.depositChooseNetworkWindow(owner: self)!
+        R.nib.depositChooseNetworkWindow(withOwner: self)!
     }
     
 }

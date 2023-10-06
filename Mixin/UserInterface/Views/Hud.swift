@@ -69,7 +69,7 @@ final class Hud: NSObject {
         isShowing = true
         
         if !isViewLoaded {
-            containerView = R.nib.hudView(owner: self)
+            containerView = R.nib.hudView(withOwner: self)
             containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             isViewLoaded = true
         }

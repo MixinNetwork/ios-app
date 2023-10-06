@@ -12,7 +12,7 @@ class CirclesViewController: UIViewController {
     @IBOutlet weak var hideTableViewConstraint: NSLayoutConstraint!
     
     private lazy var tableFooterView: CirclesTableFooterView = {
-        let view = R.nib.circlesTableFooterView(owner: nil)!
+        let view = R.nib.circlesTableFooterView(withOwner: nil)!
         view.label.text = R.string.localizable.circle_info()
         view.button.snp.makeConstraints { (make) in
             make.top.equalTo(view.contentView.snp.bottom)

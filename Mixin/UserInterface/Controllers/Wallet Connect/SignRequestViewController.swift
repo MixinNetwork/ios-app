@@ -5,7 +5,7 @@ final class SignRequestViewController: WalletConnectRequestViewController {
     private let message: String
     private let messageTextView = UITextView()
     
-    private lazy var successView = R.nib.sendSignatureSuccessView(owner: self)!
+    private lazy var successView = R.nib.sendSignatureSuccessView(withOwner: self)!
     
     private var messageTextViewHeightConstraint: NSLayoutConstraint!
     

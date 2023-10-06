@@ -29,7 +29,7 @@ final class UserProfileViewController: ProfileViewController {
         }
     }
     
-    private lazy var deactivatedHintView = R.nib.accountDeactivatedHintView(owner: nil)!
+    private lazy var deactivatedHintView = R.nib.accountDeactivatedHintView(withOwner: nil)!
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
     private lazy var expiredMessageItemView: ProfileMenuItemView  = {
@@ -1014,7 +1014,7 @@ extension UserProfileViewController {
                 favoriteAppViewIfLoaded = nil
             } else {
                 if favoriteAppViewIfLoaded == nil {
-                    let view = R.nib.profileFavoriteAppsView(owner: nil)!
+                    let view = R.nib.profileFavoriteAppsView(withOwner: nil)!
                     view.button.addTarget(self, action: #selector(showFavoriteApps), for: .touchUpInside)
                     if let shortcut = shortcutViewIfLoaded, let index = centerStackView.arrangedSubviews.firstIndex(of: shortcut) {
                         centerStackView.insertArrangedSubview(view, at: index)

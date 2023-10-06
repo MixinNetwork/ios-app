@@ -225,7 +225,7 @@ final class AuthenticationViewController: UIViewController {
     }
     
     private func layoutForAuthenticationFailure(description: String) {
-        let failureView = R.nib.authenticationFailureView(owner: nil)!
+        let failureView = R.nib.authenticationFailureView(withOwner: nil)!
         failureView.label.text = description
         failureView.tryAgainButton.addTarget(self, action: #selector(self.tryAgain(_:)), for: .touchUpInside)
         self.view.addSubview(failureView)

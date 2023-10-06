@@ -23,7 +23,7 @@ final class ExpiredMessageViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = R.nib.expiredMessageTableHeaderView(owner: nil)
+        tableView.tableHeaderView = R.nib.expiredMessageTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         setAccessory(.checkmark, forRowWith: currentExpireIn)

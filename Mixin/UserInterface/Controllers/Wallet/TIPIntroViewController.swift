@@ -251,11 +251,7 @@ extension TIPIntroViewController {
                 actionDescriptionLabel.text = nil
             case let .noInputNeeded(_, error):
                 nextButton.setTitle(R.string.localizable.retry(), for: .normal)
-                if let error = error as? TIPNode.Error {
-                    actionDescriptionLabel.text = error.description
-                } else {
-                    actionDescriptionLabel.text = error.localizedDescription
-                }
+                actionDescriptionLabel.text = error.localizedDescription
                 actionDescriptionLabel.textColor = .mixinRed
             }
             nextButton.isBusy = false

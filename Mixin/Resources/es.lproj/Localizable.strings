@@ -57,7 +57,7 @@
 "all" = "Todo";
 "all_conversations" = "Todas las conversaciones";
 "all_photos" = "Todas las fotos";
-"all_signer_failure" = "Falla de todos los nodos, tal vez el PIN no coincida con lo que se configuró la última vez que finalizó inesperadamente";
+"all_signer_failure" = "Falla de todos los nodos";
 "all_transactions" = "Todas las transacciones";
 "allow" = "Permitir";
 "allow_bot_access_asset" = "Permite que el bot acceda a tu lista de activos y saldo.";

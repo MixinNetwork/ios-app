@@ -180,7 +180,7 @@ class TIPActionViewController: UIViewController {
             } else {
                 try await MainActor.run {
                     guard let accountCounterAfter = LoginManager.shared.account?.tipCounter else {
-                        throw MixinAPIError.unauthorized
+                        throw TIP.Error.noAccount
                     }
                     if accountCounterAfter == accountCounterBefore {
                         Logger.tip.error(category: "TIPAction", message: "Nothing changed")

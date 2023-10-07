@@ -194,7 +194,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     loadingIndicator.stopAnimating()
                     titleLabel.text = R.string.localizable.enter_your_old_pin()
                     descriptionLabel.textColor = .mixinRed
-                    descriptionLabel.text = error.description
+                    descriptionLabel.text = error.localizedDescription
                     pinField.isHidden = false
                     pinField.clear()
                     pinField.receivesInput = true

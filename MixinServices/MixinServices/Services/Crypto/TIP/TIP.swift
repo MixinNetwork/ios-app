@@ -39,20 +39,20 @@ public enum TIP {
         
     }
     
-    public enum Action {
+    @frozen public enum Action {
         case create
         case change
         case migrate
     }
     
-    public enum Status {
+    @frozen public enum Status {
         case ready
         case needsInitialize
         case needsMigrate
         case unknown
     }
     
-    public enum Progress {
+    @frozen public enum Progress {
         case creating
         case connecting
         case synchronizing(Float)
@@ -73,6 +73,9 @@ public enum TIP {
         case tipCounterExceedsNodeCounter
         case invalidCounterGroups
         case hashTIPPrivToPrivSeed
+        #if DEBUG
+        case mock
+        #endif
     }
     
     public static let didUpdateNotification = Notification.Name("one.mixin.service.tip.update")
@@ -160,7 +163,7 @@ extension TIP {
         try await MainActor.run {
             if TIPDiagnostic.failPINUpdateServerSideOnce {
                 TIPDiagnostic.failPINUpdateServerSideOnce = false
-                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+                throw Error.mock
             }
         }
 #endif
@@ -170,7 +173,7 @@ extension TIP {
         try await MainActor.run {
             if TIPDiagnostic.failPINUpdateClientSideOnce {
                 TIPDiagnostic.failPINUpdateClientSideOnce = false
-                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+                throw Error.mock
             }
             if TIPDiagnostic.crashAfterUpdatePIN {
                 abort()
@@ -253,7 +256,7 @@ extension TIP {
         try await MainActor.run {
             if TIPDiagnostic.failPINUpdateServerSideOnce {
                 TIPDiagnostic.failPINUpdateServerSideOnce = false
-                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+                throw Error.mock
             }
         }
 #endif
@@ -263,7 +266,7 @@ extension TIP {
         try await MainActor.run {
             if TIPDiagnostic.failPINUpdateClientSideOnce {
                 TIPDiagnostic.failPINUpdateClientSideOnce = false
-                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+                throw Error.mock
             }
             if TIPDiagnostic.crashAfterUpdatePIN {
                 abort()
@@ -302,7 +305,7 @@ extension TIP {
         try await MainActor.run {
             if TIPDiagnostic.failCounterWatchOnce {
                 TIPDiagnostic.failCounterWatchOnce = false
-                throw AFError.sessionTaskFailed(error: URLError(.badServerResponse))
+                throw Error.mock
             }
         }
 #endif

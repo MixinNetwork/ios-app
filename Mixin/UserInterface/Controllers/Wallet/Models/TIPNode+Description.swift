@@ -1,9 +1,9 @@
 import Foundation
 import MixinServices
 
-extension TIPNode.Error {
+extension TIPNode.Error: LocalizedError {
     
-    var description: String {
+    public var errorDescription: String? {
         switch self {
         case .notEnoughPartials:
             return R.string.localizable.not_enough_partials()

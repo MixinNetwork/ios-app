@@ -57,7 +57,7 @@
 "all" = "全部";
 "all_conversations" = "所有会话";
 "all_photos" = "所有照片";
-"all_signer_failure" = "所有节点失败，也许 PIN 跟上次意外退出时设置的不一致";
+"all_signer_failure" = "所有节点失败";
 "all_transactions" = "所有交易记录";
 "allow" = "允许";
 "allow_bot_access_asset" = "允许机器人查看你的所有资产和余额。";

@@ -57,7 +57,7 @@
 "all" = "Все";
 "all_conversations" = "Все разговоры";
 "all_photos" = "Все фотографии";
-"all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
+"all_signer_failure" = "All node failure";
 "all_transactions" = "Все транзакции";
 "allow" = "Разрешить";
 "allow_bot_access_asset" = "Allow bot to access your asset list and balance.";

@@ -57,7 +57,7 @@
 "all" = "すべて";
 "all_conversations" = "すべてのチャットルーム";
 "all_photos" = "全ての画像";
-"all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
+"all_signer_failure" = "All node failure";
 "all_transactions" = "もらった・あげたコイン💰";
 "allow" = "許可";
 "allow_bot_access_asset" = "Allow bot to access your asset list and balance.";

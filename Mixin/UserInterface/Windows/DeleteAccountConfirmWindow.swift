@@ -60,7 +60,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
     }
     
     class func instance(context: VerifyNumberContext) -> DeleteAccountConfirmWindow {
-        let window = R.nib.deleteAccountConfirmWindow(owner: self)!
+        let window = R.nib.deleteAccountConfirmWindow(withOwner: self)!
         window.context = context
         return window
     }

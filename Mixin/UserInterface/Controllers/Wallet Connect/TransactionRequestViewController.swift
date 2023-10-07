@@ -14,7 +14,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
     
     private var feeOptions: [NetworkFeeOption] = []
     
-    private lazy var sendTransactionView = R.nib.sendTransactionView(owner: self)!
+    private lazy var sendTransactionView = R.nib.sendTransactionView(withOwner: self)!
     
     override var intentTitle: String {
         R.string.localizable.transaction_request()
@@ -40,7 +40,7 @@ final class TransactionRequestViewController: WalletConnectRequestViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let previewView = R.nib.transactionPreviewUnavailableView(owner: nil)!
+        let previewView = R.nib.transactionPreviewUnavailableView(withOwner: nil)!
         messageWrapperView.addSubview(previewView)
         previewView.snp.makeConstraints { make in
             let insets = UIEdgeInsets(top: 16, left: 16, bottom: 10, right: 16)

@@ -68,7 +68,7 @@ class HomeViewController: UIViewController {
     
     private lazy var circlesViewController = R.storyboard.home.circles()!
     private lazy var bulletinContentView: BulletinContentView = {
-        let view = R.nib.bulletinContentView(owner: self)!
+        let view = R.nib.bulletinContentView(withOwner: self)!
         bulletinWrapperView.addSubview(view)
         view.snp.makeConstraints { (make) in
             make.top.equalToSuperview().offset(bulletinContentTopMargin)

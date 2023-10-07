@@ -1,7 +1,6 @@
 import UIKit
 import Photos
 import MixinServices
-import Rswift
 import MobileCoreServices
 import Intents
 

@@ -45,7 +45,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     private lazy var traceId = UUID().uuidString.lowercased()
     private lazy var balanceInputAccessoryView: BalanceInputAccessoryView = {
-        let view = R.nib.balanceInputAccessoryView(owner: nil)!
+        let view = R.nib.balanceInputAccessoryView(withOwner: nil)!
         view.button.addTarget(self, action: #selector(fillBalanceAction(_:)), for: .touchUpInside)
         return view
     }()

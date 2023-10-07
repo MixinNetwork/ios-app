@@ -41,7 +41,7 @@ final class ConnectedDappViewController: SettingsTableViewController {
         guard isViewLoaded, let session else {
             return
         }
-        let tableHeaderView = R.nib.connectedDappTableHeaderView(owner: nil)!
+        let tableHeaderView = R.nib.connectedDappTableHeaderView(withOwner: nil)!
         tableHeaderView.imageView.sd_setImage(with: session.iconURL)
         tableHeaderView.nameLabel.text = session.name
         tableHeaderView.hostLabel.text = session.host

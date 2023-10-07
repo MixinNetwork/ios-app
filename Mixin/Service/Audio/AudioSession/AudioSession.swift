@@ -24,6 +24,8 @@ class AudioSession {
                 self = .appWasSuspended
             case .builtInMicMuted:
                 self = .builtInMicMuted
+            case .routeDisconnected:
+                self = .default
             @unknown default:
                 self = .default
             }

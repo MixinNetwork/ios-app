@@ -38,7 +38,7 @@ class DeleteAccountAbortWindow: BottomSheetView {
     }
     
     class func instance() -> DeleteAccountAbortWindow {
-        R.nib.deleteAccountAbortWindow(owner: self)!
+        R.nib.deleteAccountAbortWindow(withOwner: self)!
     }
     
     func render(deactivatedAt: String, completion: @escaping CompletionHandler) {

@@ -18,12 +18,12 @@ class NotificationController: NSObject {
     
     override init() {
         super.init()
-        view = R.nib.notificationView(owner: self)!
+        view = R.nib.notificationView(withOwner: self)!
     }
     
     init(delegate: NotificationControllerDelegate) {
         super.init()
-        view = R.nib.notificationView(owner: self)!
+        view = R.nib.notificationView(withOwner: self)!
         self.delegate = delegate
     }
     

@@ -58,7 +58,7 @@ class LocationPickerViewController: LocationViewController {
     private let locationManager = CLLocationManager()
     
     private lazy var geocoder = CLGeocoder()
-    private lazy var searchView = R.nib.locationSearchView(owner: self)!
+    private lazy var searchView = R.nib.locationSearchView(withOwner: self)!
     private lazy var mapViewPanRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
     private lazy var mapViewPinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
     private lazy var pinImageView: UIImageView = {
@@ -67,7 +67,7 @@ class LocationPickerViewController: LocationViewController {
         return view
     }()
     private lazy var noSearchResultsView: LocationSearchNoResultView = {
-        let view = R.nib.locationSearchNoResultView(owner: nil)!
+        let view = R.nib.locationSearchNoResultView(withOwner: nil)!
         noSearchResultsViewIfLoaded = view
         return view
     }()

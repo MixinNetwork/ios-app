@@ -35,7 +35,7 @@ class AuthorizationWindow: BottomSheetView {
     }
     
     class func instance() -> AuthorizationWindow {
-        R.nib.authorizationWindow(owner: self)!
+        R.nib.authorizationWindow(withOwner: self)!
     }
     
     func render(authInfo: AuthorizationResponse) -> AuthorizationWindow {

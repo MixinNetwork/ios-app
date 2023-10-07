@@ -38,9 +38,9 @@ struct TIPSignRequest: Encodable {
     let watcher: String
     let action = "SIGN"
     
-    init(id: String, userSk: CryptoScalar, signer: TIPSigner, ephemeral: Data, watcher: Data, nonce: UInt64, grace: UInt64, assignee: Data?) throws {
+    init(id: String, userSk: TipScalar, signer: TIPSigner, ephemeral: Data, watcher: Data, nonce: UInt64, grace: UInt64, assignee: Data?) throws {
         var error: NSError?
-        guard let signerPk = CryptoPubKeyFromBase58(signer.identity, &error) else {
+        guard let signerPk = TipPubKeyFromBase58(signer.identity, &error) else {
             throw InitError.signerPk(error)
         }
         guard let userPk = userSk.publicKey() else {
@@ -72,7 +72,7 @@ struct TIPSignRequest: Encodable {
                                 grace: grace,
                                 rotate: nil)
         let signJSON = try JSONEncoder.default.encode(signData)
-        guard let cipher = CryptoEncrypt(signerPk, userSk, signJSON) else {
+        guard let cipher = TipEncrypt(signerPk, userSk, signJSON) else {
             throw InitError.cryptoEncrypt
         }
         

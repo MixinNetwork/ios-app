@@ -64,7 +64,7 @@ public enum TIPNode {
         progressHandler: (@MainActor (TIP.Progress) -> Void)?
     ) async throws -> Data {
         Logger.tip.info(category: "TIPNode", message: "Sign with assigneePriv: \(assigneePriv != nil), failedSigners: \(failedSigners.map(\.index)), forRecover: \(forRecover)")
-        guard let suite = CryptoNewSuiteBn256() else {
+        guard let suite = TipNewSuiteBn256() else {
             throw Error.bn256SuiteNotAvailable
         }
         guard let userSk = suite.scalar() else {
@@ -72,7 +72,7 @@ public enum TIPNode {
         }
         userSk.setBytes(identityPriv)
         
-        let assigneeSk: CryptoScalar?
+        let assigneeSk: TipScalar?
         let assignee: Data?
         if let priv = assigneePriv {
             guard let sk = suite.scalar() else {
@@ -165,7 +165,7 @@ public enum TIPNode {
         let commitments = TIPConfig.current.commitments.joined(separator: ",")
         
         var error: NSError?
-        guard let signature = CryptoRecoverSignature(hexSigs, commitments, assignor, allSigners.count, &error) else {
+        guard let signature = TipRecoverSignature(hexSigs, commitments, assignor, allSigners.count, &error) else {
             throw Error.recoverSignature(error)
         }
         return signature
@@ -207,7 +207,7 @@ public enum TIPNode {
     }
     
     private static func nodeSigs(
-        userSk: CryptoScalar,
+        userSk: TipScalar,
         signers: [TIPSigner],
         ephemeral: Data,
         watcher: Data,
@@ -294,7 +294,7 @@ public enum TIPNode {
     
     private static func signTIPNode(
         requestID: String,
-        userSk: CryptoScalar,
+        userSk: TipScalar,
         signer: TIPSigner,
         ephemeral: Data,
         watcher: Data,
@@ -316,7 +316,7 @@ public enum TIPNode {
             throw response.error
         case .success(let response):
             var error: NSError?
-            guard let signerPk = CryptoPubKeyFromBase58(signer.identity, &error) else {
+            guard let signerPk = TipPubKeyFromBase58(signer.identity, &error) else {
                 throw Error.signTIPNode(error)
             }
             let msg = try JSONEncoder.default.encode(response.data)
@@ -328,7 +328,7 @@ public enum TIPNode {
             guard let responseCipher = Data(hexEncodedString: response.data.cipher) else {
                 throw Error.decodeResponseCipher
             }
-            guard let plain = CryptoDecrypt(signerPk, userSk, responseCipher) else {
+            guard let plain = TipDecrypt(signerPk, userSk, responseCipher) else {
                 throw Error.decryptResponseCipher
             }
             guard plain.count == 218 else {

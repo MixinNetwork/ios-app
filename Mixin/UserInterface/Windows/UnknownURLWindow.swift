@@ -7,7 +7,7 @@ class UnknownURLWindow: BottomSheetView {
     private var urlString: String!
     
     class func instance() -> UnknownURLWindow {
-        return R.nib.unknownURLWindow(owner: self)!
+        return R.nib.unknownURLWindow(withOwner: self)!
     }
     
     func render(url: URL) -> BottomSheetView {

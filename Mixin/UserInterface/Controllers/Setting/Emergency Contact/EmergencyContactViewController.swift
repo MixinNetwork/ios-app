@@ -40,7 +40,7 @@ final class EmergencyContactViewController: SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadData()
-        tableView.tableHeaderView = R.nib.emergencyContactTableHeaderView(owner: nil)
+        tableView.tableHeaderView = R.nib.emergencyContactTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: LoginManager.accountDidChangeNotification, object: nil)

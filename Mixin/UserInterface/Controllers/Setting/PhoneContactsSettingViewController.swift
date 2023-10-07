@@ -31,7 +31,7 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = R.nib.phoneContactsSettingTableHeaderView(owner: nil)
+        tableView.tableHeaderView = R.nib.phoneContactsSettingTableHeaderView(withOwner: nil)
         reloadData()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView

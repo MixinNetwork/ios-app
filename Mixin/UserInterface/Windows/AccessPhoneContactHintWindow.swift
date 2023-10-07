@@ -7,7 +7,7 @@ class AccessPhoneContactHintWindow: BottomSheetView {
     var action: (() -> Void)?
     
     class func instance() -> AccessPhoneContactHintWindow {
-        R.nib.accessPhoneContactHintWindow(owner: self)!
+        R.nib.accessPhoneContactHintWindow(withOwner: self)!
     }
     
     @IBAction func dismissAction(_ sender: Any) {

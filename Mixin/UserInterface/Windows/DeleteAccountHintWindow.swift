@@ -13,7 +13,7 @@ final class DeleteAccountHintWindow: BottomSheetView {
     private let maxTableHeight: CGFloat = AssetCell.height * 3
     
     class func instance() -> DeleteAccountHintWindow {
-        R.nib.deleteAccountHintWindow(owner: self)!
+        R.nib.deleteAccountHintWindow(withOwner: self)!
     }
     
     override func awakeFromNib() {

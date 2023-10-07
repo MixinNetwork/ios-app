@@ -103,8 +103,8 @@ extension CaptchaManager: UIAdaptivePresentationControllerDelegate {
 extension CaptchaManager {
     
     private func validateWithReCaptcha() {
-        guard let htmlFilePath = R.file.captchaHtml.path(),
-              let htmlString = try? String(contentsOfFile: htmlFilePath),
+        guard let htmlFileURL = R.file.captchaHtml.url(),
+              let htmlString = try? String(contentsOf: htmlFileURL),
               let reCaptchaKey = MixinKeys.reCaptcha
         else {
             assertionFailure("Failed to load captcha.html. Probably due to missing of Mixin-Keys.plist")
@@ -131,8 +131,8 @@ extension CaptchaManager {
         webView.load(URLRequest(url: .blank))
         WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         
-        guard let htmlFilePath = R.file.captchaHtml.path(),
-              let htmlString = try? String(contentsOfFile: htmlFilePath),
+        guard let htmlFileURL = R.file.captchaHtml.url(),
+              let htmlString = try? String(contentsOf: htmlFileURL),
               let hCaptchaKey = MixinKeys.hCaptcha
         else {
             assertionFailure("Failed to load captcha.html. Probably due to missing of Mixin-Keys.plist")

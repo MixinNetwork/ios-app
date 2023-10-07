@@ -146,7 +146,7 @@ class LoginConfirmWindow: BottomSheetView {
     }
     
     class func instance() -> LoginConfirmWindow {
-        R.nib.loginConfirmWindow(owner: self)!
+        R.nib.loginConfirmWindow(withOwner: self)!
     }
     
 }

@@ -26,7 +26,7 @@ class DeleteAccountVerifyPinWindow: BottomSheetView {
     }
     
     class func instance() -> DeleteAccountVerifyPinWindow {
-        R.nib.deleteAccountVerifyPinWindow(owner: self)!
+        R.nib.deleteAccountVerifyPinWindow(withOwner: self)!
     }
     
 }

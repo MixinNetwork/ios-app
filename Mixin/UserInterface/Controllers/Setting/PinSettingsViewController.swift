@@ -4,7 +4,7 @@ import MixinServices
 final class PinSettingsViewController: SettingsTableViewController {
     
     private let pinIntervals: [Double] = [60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24]
-    private let tableHeaderView = R.nib.pinSettingTableHeaderView(owner: nil)!
+    private let tableHeaderView = R.nib.pinSettingTableHeaderView(withOwner: nil)!
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.change_pin(), accessory: .disclosure)

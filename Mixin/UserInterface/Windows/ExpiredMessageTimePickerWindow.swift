@@ -33,7 +33,7 @@ class ExpiredMessageTimePickerWindow: BottomSheetView {
     }
     
     class func instance() -> ExpiredMessageTimePickerWindow {
-        R.nib.expiredMessageTimePickerWindow(owner: self)!
+        R.nib.expiredMessageTimePickerWindow(withOwner: self)!
     }
     
     func render(expireIn: Int64) {

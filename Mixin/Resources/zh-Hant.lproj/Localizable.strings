@@ -902,7 +902,6 @@
 "tip_create_pin_title" = "設定 6 位數字 PIN 建立你的第一個數字錢包";
 "tip_creation_introduction" = "設定 6 位數字 PIN 建立你的第一個加密貨幣錢包，PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
 "tip_introduction" = "6 位數字 PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
-"tip_recovery_failed" = "TIP 私鑰恢復失敗。";
 "title_participants" = "%d 成員";
 "title_participants_count" = "%d 成員";
 "to" = "至";

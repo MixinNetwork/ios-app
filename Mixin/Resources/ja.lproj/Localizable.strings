@@ -902,7 +902,6 @@
 "tip_create_pin_title" = "6桁のPINコードを作成してください";
 "tip_creation_introduction" = "Set a 6 digit Wallet PIN to create your first digital wallet, the PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "tip_introduction" = "The 6-digit PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
-"tip_recovery_failed" = "TIP private key recovery failed.";
 "title_participants" = "%d人の参加者";
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";

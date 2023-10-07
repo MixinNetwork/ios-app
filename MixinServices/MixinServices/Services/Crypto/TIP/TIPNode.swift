@@ -148,12 +148,12 @@ public enum TIPNode {
             }
         }
         
-        if errorCodes.contains(500) {
-            throw Error.internalServerError
-        } else if errorCodes.contains(429) {
+        if errorCodes.contains(429) {
             throw Error.tooManyRequests
         } else if errorCodes.contains(403) {
             throw Error.incorrectPIN
+        } else if errorCodes.contains(500) {
+            throw Error.internalServerError
         }
         
         if !forRecover && data.count < allSigners.count {

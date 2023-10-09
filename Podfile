@@ -16,7 +16,19 @@ target 'Mixin' do
   pod 'PhoneNumberKit', :git => 'https://github.com/marmelroy/PhoneNumberKit'
   pod 'libwebp'
   pod 'SDWebImageLottieCoder'
+  pod 'Frames', '~> 4'
+  pod 'Checkout3DS', :git => 'git@github.com:checkout/checkout-3ds-sdk-ios.git'
   mixin_services
+  
+  post_install do |installer|
+    installer.generated_projects.each do |project|
+      project.targets.each do |target|
+        target.build_configurations.each do |config|
+          config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+        end
+      end
+    end
+  end
 end
 
 target 'MixinNotificationService' do

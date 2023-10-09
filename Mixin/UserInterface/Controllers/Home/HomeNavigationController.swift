@@ -29,8 +29,22 @@ class HomeNavigationController: UINavigationController {
             .last
     }
     
+    static func navigationBarAppearance() -> UINavigationBarAppearance {
+        let backIndicatorImage = R.image.ic_title_back()
+        let backgroundColor = R.color.background()!
+        let image = backgroundColor.image
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = backgroundColor
+        appearance.shadowImage = image
+        appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+        return appearance
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationBar.tintColor = R.color.icon_tint()
+        updateNavigationBar()
         self.interactivePopGestureRecognizer?.isEnabled = true
         self.interactivePopGestureRecognizer?.delegate = self
         self.isNavigationBarHidden = true
@@ -43,6 +57,33 @@ class HomeNavigationController: UINavigationController {
                 WebSocketService.shared.connect(firstConnect: true)
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
             }
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
+            updateNavigationBar()
+        }
+    }
+    
+    private func updateNavigationBar() {
+        let backIndicatorImage = R.image.ic_title_back()
+        let backgroundColor = R.color.background()!
+        let image = backgroundColor.image
+        if #available(iOS 15.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = backgroundColor
+            appearance.shadowImage = image
+            appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        } else {
+            navigationBar.setBackgroundImage(image, for: .default)
+            navigationBar.shadowImage = image
+            navigationBar.backIndicatorImage = backIndicatorImage
+            navigationBar.backIndicatorTransitionMaskImage = backIndicatorImage
         }
     }
     

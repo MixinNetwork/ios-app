@@ -22,5 +22,6 @@ enum MixinKeys {
     static let hCaptcha = keys["hCaptcha"] as? String
     static let giphy = keys["Giphy"] as? String
     static let walletConnect = keys["WalletConnect"] as! String
+    static let frames = keys["Frames"] as! String
     
 }

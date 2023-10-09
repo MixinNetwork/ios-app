@@ -65,6 +65,14 @@ public final class AssetAPI: MixinAPI {
         return request(method: .get, path: Path.assets(assetId: assetId))
     }
     
+    public static func asset(assetId: String) async throws -> Asset {
+        try await withCheckedThrowingContinuation { continuation in
+            Self.asset(assetId: assetId) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
     public static func assetPrecision(assetId: String) -> MixinAPI.Result<AssetPrecisionResponse> {
         return request(method: .get, path: Path.assets(assetId: assetId))
     }
@@ -119,6 +127,14 @@ public final class AssetAPI: MixinAPI {
     
     public static func chain(chainId: String) -> MixinAPI.Result<Chain> {
         return request(method: .get, path: Path.chain(chainId: chainId))
+    }
+    
+    public static func chain(chainId: String) async throws -> Chain {
+        try await withCheckedThrowingContinuation { continuation in
+            Self.chain(chainId: chainId) { result in
+                continuation.resume(with: result)
+            }
+        }
     }
     
 }

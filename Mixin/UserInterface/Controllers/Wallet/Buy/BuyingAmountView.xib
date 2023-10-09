@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BuyingAmountViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="amountLabel" destination="cbS-rU-rOn" id="pJ3-Ma-CBk"/>
+                <outlet property="buyButton" destination="W8F-Bv-lIc" id="7Uu-iF-iV6"/>
+                <outlet property="calculatedValueLabel" destination="fhQ-Ea-Xwd" id="geq-n6-Vp6"/>
+                <outlet property="decimalSeparatorButton" destination="VAt-Xb-6QC" id="hUS-cI-rSF"/>
+                <outlet property="limitationLabel" destination="a8j-LY-PK2" id="8dZ-3O-9wN"/>
+                <outlet property="payingSelectorView" destination="RAB-rY-OYx" id="U6t-ue-cI8"/>
+                <outlet property="receivingSelectorView" destination="vDH-t7-m8V" id="Kbg-4d-8gz"/>
+                <outlet property="selectorStackView" destination="RoL-F9-nlp" id="aZp-Sg-DBd"/>
+                <outlet property="symbolLabel" destination="eEI-rj-Iyn" id="UtQ-q7-SAr"/>
+                <outlet property="view" destination="iN0-l3-epB" id="UIp-eP-7EW"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DlO-Gt-IZh">
+                    <rect key="frame" x="0.0" y="47" width="390" height="287.33333333333331"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="1WZ-x8-OIU">
+                            <rect key="frame" x="157" y="76.666666666666657" width="76" height="76.666666666666657"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="0" textAlignment="natural" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.25" translatesAutoresizingMaskIntoConstraints="NO" id="cbS-rU-rOn">
+                                    <rect key="frame" x="0.0" y="0.0" width="39.333333333333336" height="76.666666666666671"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="64"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eEI-rj-Iyn" userLabel="Symbol Label" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="39.333333333333343" y="0.0" width="36.666666666666657" height="21.666666666666668"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 USDC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhQ-Ea-Xwd">
+                            <rect key="frame" x="169.33333333333334" y="153.33333333333334" width="51.333333333333343" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_desc"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vbe-Ks-z2S">
+                            <rect key="frame" x="339" y="93" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="bl3-x6-jtr"/>
+                                <constraint firstAttribute="width" constant="44" id="w0h-Dv-D39"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_transfer_exchange"/>
+                            <connections>
+                                <action selector="toggleAmountIntent:" destination="-1" eventType="touchUpInside" id="2P7-5n-Dbe"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="fhQ-Ea-Xwd" secondAttribute="bottom" id="HsS-B6-JAS"/>
+                        <constraint firstAttribute="trailing" secondItem="Vbe-Ks-z2S" secondAttribute="trailing" constant="7" id="QEJ-Yf-Ga2"/>
+                        <constraint firstItem="Vbe-Ks-z2S" firstAttribute="centerY" secondItem="1WZ-x8-OIU" secondAttribute="centerY" id="RRY-z2-BhC"/>
+                        <constraint firstItem="Vbe-Ks-z2S" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1WZ-x8-OIU" secondAttribute="trailing" constant="7" id="YJA-t3-yey"/>
+                        <constraint firstItem="1WZ-x8-OIU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DlO-Gt-IZh" secondAttribute="leading" constant="20" id="YsR-bv-icy"/>
+                        <constraint firstItem="1WZ-x8-OIU" firstAttribute="centerY" secondItem="DlO-Gt-IZh" secondAttribute="centerY" multiplier="0.8" id="Zcz-Vr-Tnd"/>
+                        <constraint firstItem="fhQ-Ea-Xwd" firstAttribute="top" secondItem="1WZ-x8-OIU" secondAttribute="bottom" id="frO-sV-DEu"/>
+                        <constraint firstItem="1WZ-x8-OIU" firstAttribute="centerX" secondItem="DlO-Gt-IZh" secondAttribute="centerX" priority="250" id="kS0-75-GdE"/>
+                        <constraint firstItem="fhQ-Ea-Xwd" firstAttribute="centerX" secondItem="DlO-Gt-IZh" secondAttribute="centerX" id="xay-CO-qD5"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="RoL-F9-nlp">
+                    <rect key="frame" x="44" y="334.33333333333331" width="302" height="44"/>
+                    <subviews>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RAB-rY-OYx" customClass="CompactComboBoxView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="124" height="44"/>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <constraints>
+                                <constraint firstAttribute="width" priority="750" constant="124" id="Jpk-fs-VP3"/>
+                                <constraint firstAttribute="height" constant="44" id="LMh-xc-mEd"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="22"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/arrow_right" translatesAutoresizingMaskIntoConstraints="NO" id="kcG-OT-NIZ">
+                            <rect key="frame" x="139" y="10" width="24" height="24"/>
+                        </imageView>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vDH-t7-m8V" customClass="CompactComboBoxView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="178" y="0.0" width="124" height="44"/>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <constraints>
+                                <constraint firstAttribute="width" priority="750" constant="124" id="NQA-mm-Du4"/>
+                                <constraint firstAttribute="height" constant="44" id="Y5A-Ko-0Np"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="22"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="9Ri-aa-EhL"/>
+                        <constraint firstItem="vDH-t7-m8V" firstAttribute="width" secondItem="RAB-rY-OYx" secondAttribute="width" id="z3F-Bn-hEQ"/>
+                    </constraints>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="gGb-Mu-a5l">
+                    <rect key="frame" x="18" y="410.33333333333326" width="354" height="238"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="UBp-aW-xox">
+                            <rect key="frame" x="0.0" y="0.0" width="354" height="55"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Caq-Hm-dJF" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="1"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="I52-P4-ne9"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="chb-kb-0ny"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hIe-aS-MK7" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="120" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="2"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="J8G-rY-fF4"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="KFt-hi-Edi"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a7h-vj-spT" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="240" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="3"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="feC-Sg-34Q"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="ofc-xk-fv4"/>
+                                    </connections>
+                                </view>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="USf-VK-BEj">
+                            <rect key="frame" x="0.0" y="61" width="354" height="55"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrD-bJ-Z3y" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="4"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="yo4-oR-zmo"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="IGg-Gk-Viv"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HaM-j5-c0T" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="120" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="5"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="D90-g9-hiA"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="Vaq-hs-7YD"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eb9-s4-mzN" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="240" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="6"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="TWk-cM-b18"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="5uH-oJ-Axd"/>
+                                    </connections>
+                                </view>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="zDh-T2-IuU">
+                            <rect key="frame" x="0.0" y="122.00000000000006" width="354" height="55"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sZs-bC-9da" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="7"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="AYT-eH-Zzw"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="VV0-gR-gGs"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tFz-CY-ReE" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="120" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="lIC-tf-iId"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="ktT-iu-DyM"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bzy-JU-t9J" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="240" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="9"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="OAh-rd-xKx"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="1Zj-34-HY9"/>
+                                    </connections>
+                                </view>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="dnI-cS-B8o">
+                            <rect key="frame" x="0.0" y="183.00000000000006" width="354" height="55"/>
+                            <subviews>
+                                <button opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VAt-Xb-6QC" customClass="HighlightableButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                    <color key="tintColor" name="text"/>
+                                    <state key="normal">
+                                        <color key="titleColor" name="text"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="normalColor">
+                                            <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="highlightedColor">
+                                            <color key="value" name="background_secondary"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="crk-WE-LRR"/>
+                                        <action selector="inputDecimalSeparator:" destination="-1" eventType="touchUpInside" id="tAl-G6-0lq"/>
+                                    </connections>
+                                </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LRI-j6-Df6" customClass="DecimalButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="120" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                            <integer key="value" value="0"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="k9M-V0-FBy"/>
+                                        <action selector="inputValue:" destination="-1" eventType="touchUpInside" id="2e8-cr-I0x"/>
+                                    </connections>
+                                </view>
+                                <button opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pAe-af-HlB" customClass="HighlightableButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="240" y="0.0" width="114" height="55"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                    <color key="tintColor" name="text"/>
+                                    <state key="normal" image="ic_keyboard_delete">
+                                        <color key="titleColor" name="text"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="normalColor">
+                                            <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="highlightedColor">
+                                            <color key="value" name="background_secondary"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="deleteBackwards:" destination="-1" eventType="touchUpInside" id="jAO-hZ-Afc"/>
+                                        <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="8kb-Bn-cB5"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="gGb-Mu-a5l" secondAttribute="height" multiplier="339:228" id="c8n-Wx-qCs"/>
+                    </constraints>
+                </stackView>
+                <view contentMode="scaleToFill" verticalHuggingPriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="cpf-Ia-i69">
+                    <rect key="frame" x="0.0" y="694.33333333333337" width="390" height="109.66666666666663"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W8F-Bv-lIc" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="169" y="0.0" width="52" height="42"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <connections>
+                                <action selector="buy:" destination="-1" eventType="touchUpInside" id="na8-dm-sZy"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a8j-LY-PK2">
+                            <rect key="frame" x="0.0" y="56" width="390" height="14.333333333333329"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jxW-xi-ltX">
+                            <rect key="frame" x="0.0" y="88.333333333333258" width="390" height="1"/>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="4CI-30-IIn"/>
+                            </constraints>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="6U5-ZE-i3D">
+                            <rect key="frame" x="119" y="95.333333333333258" width="152" height="14.333333333333329"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Powered by" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pGf-Op-bam">
+                                    <rect key="frame" x="0.0" y="0.0" width="66" height="14.333333333333334"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" name="text_desc"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="powered_by_mixin_route_prefix"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/mixin_route" translatesAutoresizingMaskIntoConstraints="NO" id="9vq-78-u3U">
+                                    <rect key="frame" x="70" y="2.6666666666667425" width="12" height="9"/>
+                                    <color key="tintColor" name="text_desc"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin Route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vj5-VD-Ghl">
+                                    <rect key="frame" x="86" y="0.0" width="66" height="14.333333333333334"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" name="text_desc"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="powered_by_mixin_route_suffix"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="6U5-ZE-i3D" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cpf-Ia-i69" secondAttribute="leading" constant="8" id="02M-RE-i21"/>
+                        <constraint firstItem="a8j-LY-PK2" firstAttribute="top" secondItem="W8F-Bv-lIc" secondAttribute="bottom" constant="14" id="3Zk-ho-6d7"/>
+                        <constraint firstItem="W8F-Bv-lIc" firstAttribute="top" secondItem="cpf-Ia-i69" secondAttribute="top" id="6lm-ho-buf"/>
+                        <constraint firstAttribute="trailing" secondItem="jxW-xi-ltX" secondAttribute="trailing" id="6oe-fX-TfB"/>
+                        <constraint firstAttribute="trailing" secondItem="a8j-LY-PK2" secondAttribute="trailing" id="8qe-f5-vq7"/>
+                        <constraint firstItem="a8j-LY-PK2" firstAttribute="leading" secondItem="cpf-Ia-i69" secondAttribute="leading" id="Gx7-SO-Rt1"/>
+                        <constraint firstItem="6U5-ZE-i3D" firstAttribute="top" secondItem="jxW-xi-ltX" secondAttribute="bottom" constant="6" id="JQ5-DK-Kbn"/>
+                        <constraint firstItem="6U5-ZE-i3D" firstAttribute="centerX" secondItem="cpf-Ia-i69" secondAttribute="centerX" id="LKs-P1-9sq"/>
+                        <constraint firstAttribute="bottom" secondItem="6U5-ZE-i3D" secondAttribute="bottom" id="RR6-Ea-f2W"/>
+                        <constraint firstItem="jxW-xi-ltX" firstAttribute="leading" secondItem="cpf-Ia-i69" secondAttribute="leading" id="XVK-zj-q79"/>
+                        <constraint firstItem="jxW-xi-ltX" firstAttribute="top" secondItem="a8j-LY-PK2" secondAttribute="bottom" constant="18" id="Zvu-mg-OSS"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="6U5-ZE-i3D" secondAttribute="trailing" constant="8" id="baH-NG-aKI"/>
+                        <constraint firstItem="W8F-Bv-lIc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cpf-Ia-i69" secondAttribute="leading" id="gzV-2d-Sn3"/>
+                        <constraint firstItem="W8F-Bv-lIc" firstAttribute="centerX" secondItem="cpf-Ia-i69" secondAttribute="centerX" id="lO4-W4-Zb6"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="W8F-Bv-lIc" secondAttribute="trailing" id="tv9-um-h2G"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="RoL-F9-nlp" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="3Er-7I-ASu"/>
+                <constraint firstItem="cpf-Ia-i69" firstAttribute="top" secondItem="gGb-Mu-a5l" secondAttribute="bottom" constant="46" id="5tO-TC-dPj"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gGb-Mu-a5l" secondAttribute="trailing" constant="18" id="7j4-8K-fAy"/>
+                <constraint firstItem="RoL-F9-nlp" firstAttribute="top" secondItem="DlO-Gt-IZh" secondAttribute="bottom" id="BkZ-8c-ofu"/>
+                <constraint firstItem="DlO-Gt-IZh" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="G5Z-m5-OaO"/>
+                <constraint firstAttribute="trailing" secondItem="cpf-Ia-i69" secondAttribute="trailing" id="K8R-h9-4Pr"/>
+                <constraint firstItem="cpf-Ia-i69" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="QW6-I5-Stc"/>
+                <constraint firstItem="DlO-Gt-IZh" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="You-Yn-aF1"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="DlO-Gt-IZh" secondAttribute="trailing" id="aUx-Hy-yYa"/>
+                <constraint firstItem="RoL-F9-nlp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="cG2-I4-iOU"/>
+                <constraint firstItem="gGb-Mu-a5l" firstAttribute="top" secondItem="RoL-F9-nlp" secondAttribute="bottom" constant="32" id="cpo-hK-EDV" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="RoL-F9-nlp" secondAttribute="trailing" constant="20" id="oya-fM-GSM"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="cpf-Ia-i69" secondAttribute="bottom" constant="6" id="vze-7P-Z4f"/>
+                <constraint firstItem="gGb-Mu-a5l" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="18" id="xa0-2c-zeg"/>
+            </constraints>
+            <point key="canvasLocation" x="138.46153846153845" y="41.232227488151658"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Wallet/arrow_right" width="24" height="24"/>
+        <image name="Wallet/mixin_route" width="12" height="9"/>
+        <image name="ic_keyboard_delete" width="22" height="16"/>
+        <image name="ic_transfer_exchange" width="14" height="13"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

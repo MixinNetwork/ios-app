@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PriceExpiredViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="countdownLabel" destination="JN6-Rw-Gpf" id="nyc-KL-KiP"/>
+                <outlet property="newPriceLabel" destination="RbK-Lz-yAd" id="gQs-js-3Sp"/>
+                <outlet property="oldPriceLabel" destination="DbG-7L-nWj" id="bKV-kY-suQ"/>
+                <outlet property="view" destination="iN0-l3-epB" id="GrS-nv-b4c"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="508"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_price_expired" translatesAutoresizingMaskIntoConstraints="NO" id="AyD-8f-iBH">
+                    <rect key="frame" x="158.66666666666666" y="60" width="76" height="72"/>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="VJ2-2F-tXr">
+                    <rect key="frame" x="20" y="156" width="353" height="21.666666666666657"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price Expired" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KM8-0a-rHx">
+                            <rect key="frame" x="0.0" y="0.0" width="353" height="21.666666666666668"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="price_expired"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New price in 10s" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JN6-Rw-Gpf">
+                            <rect key="frame" x="0.0" y="0.0" width="353" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_desc"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="353" placeholderIntrinsicHeight="87" translatesAutoresizingMaskIntoConstraints="NO" id="5vs-fZ-fxW">
+                    <rect key="frame" x="20" y="197.66666666666663" width="353" height="132.33333333333337"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="nGw-dr-qs8">
+                            <rect key="frame" x="16" y="19.999999999999993" width="321" height="92.333333333333314"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="6To-i9-oHe">
+                                    <rect key="frame" x="0.0" y="0.0" width="321" height="29.333333333333332"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Old Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KGn-ma-kt1">
+                                            <rect key="frame" x="0.0" y="0.0" width="59.333333333333336" height="29.333333333333332"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.74117647060000003" green="0.74117647060000003" blue="0.74117647060000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="old_price"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DbG-7L-nWj">
+                                            <rect key="frame" x="63.333333333333343" y="0.0" width="257.66666666666663" height="29.333333333333332"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" name="text"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="7my-g8-CfR">
+                                    <rect key="frame" x="0.0" y="42.333333333333343" width="321" height="50"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="New Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGi-ae-H8H">
+                                            <rect key="frame" x="0.0" y="0.0" width="65.333333333333329" height="50"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.74117647060000003" green="0.74117647060000003" blue="0.74117647060000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="new_price"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RbK-Lz-yAd">
+                                            <rect key="frame" x="69.333333333333329" y="0.0" width="251.66666666666669" height="50"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" name="text"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstItem="nGw-dr-qs8" firstAttribute="top" secondItem="5vs-fZ-fxW" secondAttribute="top" constant="20" id="0JA-nd-e7a"/>
+                        <constraint firstAttribute="bottom" secondItem="nGw-dr-qs8" secondAttribute="bottom" constant="20" id="0Jy-KS-rES"/>
+                        <constraint firstAttribute="trailing" secondItem="nGw-dr-qs8" secondAttribute="trailing" constant="16" id="5Re-fm-laT"/>
+                        <constraint firstItem="nGw-dr-qs8" firstAttribute="leading" secondItem="5vs-fZ-fxW" secondAttribute="leading" constant="16" id="Y1f-cn-6Jm"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="kba-D9-bgD">
+                    <rect key="frame" x="120" y="360" width="153" height="97"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tV2-S2-CDB" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="153" height="42"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Use New Price">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="use_new_price"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="useNewPrice:" destination="-1" eventType="touchUpInside" id="xVW-9B-3sB"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXw-E2-Hw5">
+                            <rect key="frame" x="0.0" y="53" width="153" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="pKh-v8-zpr"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Cancel"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancelOrder:" destination="-1" eventType="touchUpInside" id="yrW-j7-g8t"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="kba-D9-bgD" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="0Jv-8O-fsG"/>
+                <constraint firstItem="VJ2-2F-tXr" firstAttribute="top" secondItem="AyD-8f-iBH" secondAttribute="bottom" constant="24" id="Fn7-nZ-0md"/>
+                <constraint firstItem="5vs-fZ-fxW" firstAttribute="top" secondItem="VJ2-2F-tXr" secondAttribute="bottom" constant="20" id="G3l-PK-7bs"/>
+                <constraint firstItem="5vs-fZ-fxW" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Itq-WS-hV5"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="5vs-fZ-fxW" secondAttribute="trailing" constant="20" id="R6M-Nd-76r"/>
+                <constraint firstItem="kba-D9-bgD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5vs-fZ-fxW" secondAttribute="bottom" constant="30" id="Tzc-Lf-2Ks"/>
+                <constraint firstItem="AyD-8f-iBH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="WOp-08-r6r"/>
+                <constraint firstItem="VJ2-2F-tXr" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="akW-fh-mS9"/>
+                <constraint firstItem="AyD-8f-iBH" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="gQH-0d-kpj"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="VJ2-2F-tXr" secondAttribute="trailing" constant="20" id="tWp-YK-7AW"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="kba-D9-bgD" secondAttribute="bottom" constant="17" id="wjq-Zd-XBA"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="180.91603053435114" y="275.7042253521127"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Wallet/ic_price_expired" width="76" height="72"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

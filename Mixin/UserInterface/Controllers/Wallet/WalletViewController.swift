@@ -191,20 +191,32 @@ extension WalletViewController: TransferActionViewDelegate {
     
     func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
         lastSelectedAction = action
-        let controller = TransferSearchViewController()
-        controller.delegate = self
         switch action {
+        case .buy:
+            view.buyButton.isBusy = true
+            BuyingAmountViewController.buy(on: self) { [weak self, weak view] error in
+                view?.buyButton.isBusy = false
+                if let error {
+                    self?.alert(R.string.localizable.network_connection_lost(),
+                                message: error.localizedDescription)
+                }
+            }
         case .send:
+            let controller = TransferSearchViewController()
+            controller.delegate = self
             controller.showEmptyHintIfNeeded = true
             controller.searchResultsFromServer = false
             controller.assets = assets.filter { $0.balance != "0" }
             controller.sendableAssets = sendableAssets
+            present(controller, animated: true, completion: nil)
         case .receive:
+            let controller = TransferSearchViewController()
+            controller.delegate = self
             controller.showEmptyHintIfNeeded = false
             controller.searchResultsFromServer = true
             controller.assets = assets
+            present(controller, animated: true, completion: nil)
         }
-        present(controller, animated: true, completion: nil)
     }
     
 }
@@ -215,18 +227,29 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
         guard let action = lastSelectedAction else {
             return
         }
-        let controller: UIViewController
         switch action {
+        case .buy:
+            let buyButton = tableHeaderView.transferActionView.buyButton
+            buyButton?.isBusy = true
+            BuyingAmountViewController.buy(on: self) { [weak self, weak buyButton] error in
+                buyButton?.isBusy = false
+                if let error {
+                    self?.alert(R.string.localizable.network_connection_lost(),
+                                message: error.localizedDescription)
+                }
+            }
         case .send:
-            controller = AssetViewController.instance(asset: asset, performSendOnAppear: true)
+            let controller = AssetViewController.instance(asset: asset, performSendOnAppear: true)
+            navigationController?.pushViewController(controller, animated: true)
         case .receive:
+            let controller: UIViewController
             if asset.isDepositSupported {
                 controller = DepositViewController.instance(asset: asset)
             } else {
                 controller = DepositNotSupportedViewController.instance(asset: asset)
             }
+            navigationController?.pushViewController(controller, animated: true)
         }
-        navigationController?.pushViewController(controller, animated: true)
     }
     
     func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController) {

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TransferActionView" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="buyButton" destination="Z5w-27-kYS" id="ZVw-CG-ngi"/>
                 <outlet property="receiveButton" destination="QDg-eP-7rS" id="3jT-FE-i1l"/>
                 <outlet property="sendButton" destination="k75-18-IY1" id="V1e-DE-fG8"/>
             </connections>
@@ -22,12 +23,25 @@
                 <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4me-wU-lkC">
                     <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k75-18-IY1">
-                            <rect key="frame" x="0.0" y="6" width="195" height="32"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z5w-27-kYS" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="6" width="130" height="32"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                             <color key="tintColor" name="title"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" title="SEND"/>
+                            <state key="normal" title="Buy"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="buy"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="buyAction:" destination="-1" eventType="touchUpInside" id="Tqw-ES-fQV"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k75-18-IY1">
+                            <rect key="frame" x="130" y="6" width="130" height="32"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                            <color key="tintColor" name="title"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Send"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="caption_send"/>
                             </userDefinedRuntimeAttributes>
@@ -36,11 +50,11 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDg-eP-7rS">
-                            <rect key="frame" x="195" y="6" width="195" height="32"/>
+                            <rect key="frame" x="260" y="6" width="130" height="32"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                             <color key="tintColor" name="title"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" title="RECEIVE"/>
+                            <state key="normal" title="Receive"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="receive"/>
                             </userDefinedRuntimeAttributes>
@@ -54,21 +68,31 @@
                     </constraints>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9TF-Va-rul">
-                    <rect key="frame" x="194" y="12" width="2" height="20"/>
+                    <rect key="frame" x="129" y="12" width="2" height="20"/>
                     <color key="backgroundColor" name="transfer_line_background"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="2" id="EYN-IF-ua2"/>
                         <constraint firstAttribute="height" constant="20" id="GHC-L0-fBe"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gIL-xd-JAt">
+                    <rect key="frame" x="259" y="12" width="2" height="20"/>
+                    <color key="backgroundColor" name="transfer_line_background"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="2" id="cxP-bU-xna"/>
+                        <constraint firstAttribute="height" constant="20" id="tw8-xZ-dmt"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" name="background_input"/>
             <constraints>
-                <constraint firstItem="9TF-Va-rul" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="JY9-zT-BEz"/>
+                <constraint firstItem="QDg-eP-7rS" firstAttribute="leading" secondItem="gIL-xd-JAt" secondAttribute="trailing" constant="-1" id="5em-5n-Yvj"/>
+                <constraint firstItem="9TF-Va-rul" firstAttribute="leading" secondItem="Z5w-27-kYS" secondAttribute="trailing" constant="-1" id="A5o-Kq-7NS"/>
                 <constraint firstAttribute="trailing" secondItem="4me-wU-lkC" secondAttribute="trailing" id="Kxg-TO-wYZ"/>
                 <constraint firstItem="4me-wU-lkC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bEC-M0-xPh"/>
                 <constraint firstItem="9TF-Va-rul" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="gqi-O8-eWo"/>
                 <constraint firstAttribute="top" secondItem="4me-wU-lkC" secondAttribute="top" id="sDF-QY-8CN"/>
+                <constraint firstItem="gIL-xd-JAt" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="t9W-hl-CwZ"/>
                 <constraint firstAttribute="bottom" secondItem="4me-wU-lkC" secondAttribute="bottom" id="zLc-fb-a6C"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -82,7 +106,7 @@
     </objects>
     <resources>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

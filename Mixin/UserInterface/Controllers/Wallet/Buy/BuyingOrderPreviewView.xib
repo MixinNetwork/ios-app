@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BuyingOrderPreviewViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="assetAmountLabel" destination="OV4-vN-Z5A" id="gts-RN-Z11"/>
+                <outlet property="assetIconView" destination="nId-Ml-nGG" id="DCB-2n-T5y"/>
+                <outlet property="detailsView" destination="iT1-xj-OGV" id="ODX-G1-1s7"/>
+                <outlet property="feeExplanationLabel" destination="Bqu-CA-RfS" id="Ady-ao-BU6"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nId-Ml-nGG" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="161.66666666666666" y="99" width="70" height="70"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="7Pl-k1-YmW"/>
+                        <constraint firstAttribute="height" constant="70" id="IKQ-Qh-Qvt"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                            <real key="value" value="22"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconOutlineWidth">
+                            <real key="value" value="0.0"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OV4-vN-Z5A">
+                    <rect key="frame" x="20" y="179" width="353" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="green"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="353" placeholderIntrinsicHeight="181" translatesAutoresizingMaskIntoConstraints="NO" id="iT1-xj-OGV" customClass="PaymentDetailsTableView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="20" y="209" width="353" height="181"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You may be charged fees outside of your order by your bank, please contact your bank for more details." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bqu-CA-RfS">
+                    <rect key="frame" x="36" y="398" width="321" height="30.333333333333314"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                    <color key="textColor" name="text_accessory"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="fees_explaination"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="OV4-vN-Z5A" firstAttribute="top" secondItem="nId-Ml-nGG" secondAttribute="bottom" constant="10" id="8HG-4O-S9q"/>
+                <constraint firstItem="OV4-vN-Z5A" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="9Xq-Br-cUv"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="iT1-xj-OGV" secondAttribute="trailing" constant="20" id="B5O-UJ-Wx2"/>
+                <constraint firstItem="nId-Ml-nGG" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="HlK-NP-dwU"/>
+                <constraint firstItem="iT1-xj-OGV" firstAttribute="top" secondItem="OV4-vN-Z5A" secondAttribute="bottom" constant="30" id="INh-0U-O9j"/>
+                <constraint firstItem="iT1-xj-OGV" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="QGE-Wq-vD3"/>
+                <constraint firstItem="Bqu-CA-RfS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="WqZ-J5-xiw"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Bqu-CA-RfS" secondAttribute="trailing" constant="36" id="kdS-Un-DNE"/>
+                <constraint firstItem="Bqu-CA-RfS" firstAttribute="top" secondItem="iT1-xj-OGV" secondAttribute="bottom" constant="8" id="l5R-c0-7dI"/>
+                <constraint firstItem="nId-Ml-nGG" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="40" id="mk8-lD-wcV"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="OV4-vN-Z5A" secondAttribute="trailing" constant="20" id="tDz-5c-ddq"/>
+            </constraints>
+            <point key="canvasLocation" x="95" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="green">
+            <color red="0.36470588235294116" green="0.73725490196078436" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -8,6 +8,18 @@ PODS:
   - AppCenter/Core (5.0.4)
   - AppCenter/Crashes (5.0.4):
     - AppCenter/Core
+  - Checkout (4.2.1):
+    - CheckoutEventLoggerKit (~> 1.2.4)
+  - Checkout3DS (3.2.0):
+    - Checkout3DS-Security (= 3.2.0)
+    - CheckoutEventLoggerKit (= 1.2.4)
+    - JOSESwift (= 2.2.1)
+  - Checkout3DS-Security (3.2.0)
+  - CheckoutEventLoggerKit (1.2.4)
+  - Frames (4.2.1):
+    - Checkout (= 4.2.1)
+    - CheckoutEventLoggerKit (~> 1.2.4)
+    - PhoneNumberKit
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
@@ -16,6 +28,7 @@ PODS:
   - GRDB.swift (6.19.0):
     - GRDB.swift/standard (= 6.19.0)
   - GRDB.swift/standard (6.19.0)
+  - JOSESwift (2.2.1)
   - librlottie (0.2.1)
   - libsignal-protocol-c (2.3.2)
   - libwebp (1.3.2):
@@ -66,6 +79,8 @@ PODS:
   - Zip (2.1.2)
 
 DEPENDENCIES:
+  - "Checkout3DS (from `git@github.com:checkout/checkout-3ds-sdk-ios.git`)"
+  - Frames (~> 4)
   - GCDWebServer
   - GCDWebServer/WebDAV
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
@@ -80,8 +95,13 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AppCenter
+    - Checkout
+    - Checkout3DS-Security
+    - CheckoutEventLoggerKit
+    - Frames
     - GCDWebServer
     - GRDB.swift
+    - JOSESwift
     - librlottie
     - libwebp
     - SDWebImage
@@ -92,6 +112,8 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
+  Checkout3DS:
+    :git: "git@github.com:checkout/checkout-3ds-sdk-ios.git"
   libsignal-protocol-c:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   MixinServices:
@@ -100,6 +122,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/marmelroy/PhoneNumberKit
 
 CHECKOUT OPTIONS:
+  Checkout3DS:
+    :commit: a607ad4a2356fb3900f0483667000398c8359189
+    :git: "git@github.com:checkout/checkout-3ds-sdk-ios.git"
   libsignal-protocol-c:
     :commit: 53e446e27b55283f026e14606e21b112349e4c75
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
@@ -110,8 +135,14 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 0e92e751b3e9e66d7982db43919d01f313b8eb91
   AppCenter: 85c92db0759d2792a65eb61d6842d2e86611a49a
+  Checkout: 36a9c9786deea2b037014843bbc81a255a1dafad
+  Checkout3DS: d870fefb2a1a44ff0a64870c5f39c49b281898d9
+  Checkout3DS-Security: 5f7244b3adddb1d5f72e68e2776ed873fe5b4466
+  CheckoutEventLoggerKit: b780dec46295a34942780ea6230d0d5fd08aa05a
+  Frames: 4194ebe4fc49bd8a63d71b079a43f20c75680ceb
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GRDB.swift: c08bdefb31fdae93e1009a087a912b71529a1084
+  JOSESwift: d65ba32c7bceae9982e85e62d35de1f8d135cc89
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
@@ -124,6 +155,6 @@ SPEC CHECKSUMS:
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: f990e0e248735304298c3ea9ff5ca97105732b29
+PODFILE CHECKSUM: 7e7172670abe627bf9a4e6672902aa2daa17902f
 
 COCOAPODS: 1.13.0

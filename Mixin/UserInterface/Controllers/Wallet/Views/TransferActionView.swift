@@ -8,6 +8,7 @@ protocol TransferActionViewDelegate: AnyObject {
 
 class TransferActionView: UIView, XibDesignable {
     
+    @IBOutlet weak var buyButton: BusyButton!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var receiveButton: UIButton!
     
@@ -22,7 +23,11 @@ class TransferActionView: UIView, XibDesignable {
         super.init(frame: frame)
         loadXib()
     }
-        
+    
+    @IBAction func buyAction(_ sender: Any) {
+        delegate?.transferActionView(self, didSelect: .buy)
+    }
+    
     @IBAction func sendAction(_ sender: Any) {
         delegate?.transferActionView(self, didSelect: .send)
     }
@@ -36,6 +41,7 @@ class TransferActionView: UIView, XibDesignable {
 extension TransferActionView {
     
     enum Action {
+        case buy
         case send
         case receive
     }

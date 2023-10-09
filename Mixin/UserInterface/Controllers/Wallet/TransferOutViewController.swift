@@ -579,6 +579,7 @@ extension TransferOutViewController: TransferTypeViewControllerDelegate {
             amountEditingChanged(amountTextField)
         }
         updateAssetUI()
+        dismiss(animated: true)
     }
     
 }

@@ -56,6 +56,14 @@ extension MixinAPIError {
             return R.string.localizable.error_requires_captcha()
         case .requiresUpdate:
             return R.string.localizable.app_update_short_hint()
+        case .cardExpired:
+            return R.string.localizable.error_card_expired()
+        case .priceExpired:
+            return R.string.localizable.error_price_expired()
+        case .paymentCaptureFailed:
+            return R.string.localizable.error_payment_capture_failed()
+        case .cardNotSupported:
+            return R.string.localizable.error_card_not_supported()
         case .invalidPhoneNumber:
             return R.string.localizable.error_phone_invalid_format()
         case .invalidPhoneVerificationCode:

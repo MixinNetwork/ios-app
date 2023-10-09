@@ -68,6 +68,10 @@ class ContainerViewController: UIViewController {
     private(set) var viewController: UIViewController!
     private var controllerTitle = ""
 
+    override var description: String {
+        "<Mixin.ContainerViewController \(viewController.description)>"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareBarButtons()

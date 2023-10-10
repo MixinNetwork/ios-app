@@ -144,7 +144,11 @@ final class BuyingAmountViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        selectorStackView.spacing = round(15 / 375 * view.bounds.width)
+        if ScreenWidth.current <= .short {
+            selectorStackView.spacing = 4
+        } else {
+            selectorStackView.spacing = round(15 / 375 * view.bounds.width)
+        }
     }
     
     @IBAction func toggleAmountIntent(_ sender: Any) {

@@ -58,7 +58,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You may be charged fees outside of your order by your bank, please contact your bank for more details." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bqu-CA-RfS">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You may be charged fees outside of your order by your bank, please contact your bank for more details." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bqu-CA-RfS">
                     <rect key="frame" x="36" y="398" width="321" height="30.333333333333314"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <color key="textColor" name="text_accessory"/>
@@ -80,7 +80,13 @@
                 <constraint firstItem="Bqu-CA-RfS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="WqZ-J5-xiw"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Bqu-CA-RfS" secondAttribute="trailing" constant="36" id="kdS-Un-DNE"/>
                 <constraint firstItem="Bqu-CA-RfS" firstAttribute="top" secondItem="iT1-xj-OGV" secondAttribute="bottom" constant="8" id="l5R-c0-7dI"/>
-                <constraint firstItem="nId-Ml-nGG" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="40" id="mk8-lD-wcV"/>
+                <constraint firstItem="nId-Ml-nGG" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="40" id="mk8-lD-wcV" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="OV4-vN-Z5A" secondAttribute="trailing" constant="20" id="tDz-5c-ddq"/>
             </constraints>
             <point key="canvasLocation" x="95" y="42"/>

@@ -403,7 +403,13 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="RoL-F9-nlp" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="3Er-7I-ASu"/>
-                <constraint firstItem="cpf-Ia-i69" firstAttribute="top" secondItem="gGb-Mu-a5l" secondAttribute="bottom" constant="46" id="5tO-TC-dPj"/>
+                <constraint firstItem="cpf-Ia-i69" firstAttribute="top" secondItem="gGb-Mu-a5l" secondAttribute="bottom" constant="46" id="5tO-TC-dPj" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gGb-Mu-a5l" secondAttribute="trailing" constant="18" id="7j4-8K-fAy"/>
                 <constraint firstItem="RoL-F9-nlp" firstAttribute="top" secondItem="DlO-Gt-IZh" secondAttribute="bottom" id="BkZ-8c-ofu"/>
                 <constraint firstItem="DlO-Gt-IZh" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="G5Z-m5-OaO"/>
@@ -441,7 +447,7 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

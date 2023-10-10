@@ -34,6 +34,7 @@ final class CompactComboBoxView: UIControl {
         label.text = text
         label.textColor = R.color.text()
         label.font = .systemFont(ofSize: 14)
+        label.adjustsFontSizeToFitWidth = true
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         imageView.image = R.image.ic_selector_down()

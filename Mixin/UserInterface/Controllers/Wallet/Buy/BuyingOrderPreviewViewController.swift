@@ -134,7 +134,8 @@ final class BuyingOrderPreviewViewController: UIViewController {
             make.top.greaterThanOrEqualTo(feeExplanationLabel.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
             make.height.equalTo(42)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-80)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-80).priority(.low)
+            make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-8)
             if case .applePay = payment {
                 make.width.equalTo(buyButton.intrinsicContentSize.width + 32)
             }

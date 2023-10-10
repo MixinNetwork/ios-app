@@ -12,6 +12,9 @@ final class PaymentDetailsTableView: UIView, XibDesignable {
     @IBOutlet weak var feeByMixinAmountLabel: UILabel!
     @IBOutlet weak var totalAmountLabel: UILabel!
     
+    // Works for `XibDesignable`
+    let contentEdgeInsets = UIEdgeInsets(top: 22, left: 16, bottom: 22, right: 16)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadXib()

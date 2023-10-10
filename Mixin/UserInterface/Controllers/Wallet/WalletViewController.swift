@@ -54,6 +54,11 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if false {
+            tableHeaderView.insertMigrationButtonIfNeeded { button in
+                button.addTarget(self, action: #selector(performUTXOMigration(_:)), for: .touchUpInside)
+            }
+        }
         tableHeaderView.transferActionView.delegate = self
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
@@ -288,6 +293,11 @@ extension WalletViewController {
         let now = Date()
         let showSnowfall = now.isChristmas || now.isChineseNewYear
         tableHeaderView.showSnowfallEffect = showSnowfall
+    }
+    
+    @objc private func performUTXOMigration(_ sender: Any) {
+        let migration = AssetMigrationViewController()
+        present(migration, animated: true)
     }
     
     private func hideAsset(of assetId: String) {

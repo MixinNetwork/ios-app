@@ -3,6 +3,8 @@ import MixinServices
 
 class WalletHeaderView: InfiniteTopView {
     
+    @IBOutlet weak var contentView: UIStackView!
+    
     @IBOutlet weak var fiatMoneySymbolLabel: UILabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     @IBOutlet weak var btcValueLabel: UILabel!
@@ -22,6 +24,8 @@ class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetWrapperView: UIView!
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
+    
+    @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
     
     var showSnowfallEffect = false {
         didSet {
@@ -65,6 +69,7 @@ class WalletHeaderView: InfiniteTopView {
     }()
     
     private weak var snowfallLayerIfLoaded: CAEmitterLayer?
+    private weak var migrationButton: UIButton?
     
     private var contentHeight: CGFloat = 232
     
@@ -162,6 +167,39 @@ class WalletHeaderView: InfiniteTopView {
             rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: assetPortions[2].percent))
             assetChartView.proportions = assetPortions.map { $0.percent }
         }
+    }
+    
+    func insertMigrationButtonIfNeeded(completion: (UIButton) -> Void) {
+        guard migrationButton == nil else {
+            return
+        }
+        let button = UIButton(type: .system)
+        button.backgroundColor = .theme
+        button.setTitle("You have unmigrated assets, click to start the migration", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        if let label = button.titleLabel {
+            label.font = .systemFont(ofSize: 12)
+            label.adjustsFontSizeToFitWidth = true
+        }
+        contentView.insertArrangedSubview(button, at: 0)
+        contentView.setCustomSpacing(25, after: button)
+        button.snp.makeConstraints { make in
+            make.height.equalTo(36)
+        }
+        migrationButton = button
+        contentViewTopConstraint.constant = 0
+        bounds.size.height = 232
+        layoutIfNeeded()
+        completion(button)
+    }
+    
+    func removeMigrationButton() {
+        contentViewTopConstraint.constant = 11
+        if let migrationButton {
+            migrationButton.removeFromSuperview()
+            bounds.size.height = 282
+        }
+        layoutIfNeeded()
     }
     
 }

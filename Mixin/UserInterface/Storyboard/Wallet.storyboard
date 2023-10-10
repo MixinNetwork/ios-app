@@ -196,11 +196,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="232"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="4E6-iF-HlL">
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="4E6-iF-HlL">
                                             <rect key="frame" x="0.0" y="11" width="414" height="221"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tQz-6B-PFb">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="206"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="211"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IHE-HM-Hdw">
                                                             <rect key="frame" x="143" y="0.0" width="128" height="40"/>
@@ -438,7 +438,7 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="0zG-Ga-0cS" secondAttribute="bottom" constant="14" id="2An-Hx-Cj6"/>
+                                                        <constraint firstAttribute="bottom" secondItem="0zG-Ga-0cS" secondAttribute="bottom" constant="19" id="2An-Hx-Cj6"/>
                                                         <constraint firstItem="0zG-Ga-0cS" firstAttribute="top" secondItem="Y25-bj-M31" secondAttribute="bottom" id="8pV-8N-YK7"/>
                                                         <constraint firstItem="JDj-Ex-KE6" firstAttribute="centerX" secondItem="tQz-6B-PFb" secondAttribute="centerX" id="9Vy-Xq-eNv"/>
                                                         <constraint firstItem="IHE-HM-Hdw" firstAttribute="centerX" secondItem="tQz-6B-PFb" secondAttribute="centerX" id="FBu-qC-mXN"/>
@@ -472,6 +472,8 @@
                                         <outlet property="assetChartView" destination="VuY-Uo-TGR" id="0sY-mx-MT0"/>
                                         <outlet property="assetChartWrapperView" destination="Y25-bj-M31" id="Qav-Si-efh"/>
                                         <outlet property="btcValueLabel" destination="7s3-8d-IEj" id="h9n-hD-GLH"/>
+                                        <outlet property="contentView" destination="4E6-iF-HlL" id="RAf-id-XjR"/>
+                                        <outlet property="contentViewTopConstraint" destination="rbK-9T-QMv" id="eLp-Ob-wHs"/>
                                         <outlet property="fiatMoneySymbolLabel" destination="Rtr-Z3-phX" id="13M-dB-Gav"/>
                                         <outlet property="fiatMoneyValueLabel" destination="eGd-qQ-SHD" id="jiK-m0-S7P"/>
                                         <outlet property="leftAssetPercentLabel" destination="Tnh-04-JMO" id="yXX-OA-Y1S"/>

@@ -371,33 +371,6 @@ extension BuyingAmountViewController {
     private static let phoneNumberKit = PhoneNumberKit()
     
     static func buy(on viewController: UIViewController, completion: @escaping (Error?) -> Void) {
-        let isRegionAvailable: Bool
-        if let deviceRegionCode = Locale.current.regionCode?.uppercased() {
-            let availableRegionCodes: Set<String> = [
-                "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU",
-                "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES",
-                "SE", "IS", "LI", "NO"
-            ]
-            let isDeviceLocaleInRegion = availableRegionCodes.contains(deviceRegionCode)
-            let isPhoneNumberOutOfRegion: Bool
-            if let phone = LoginManager.shared.account?.phone, let number = try? phoneNumberKit.parse(phone), let regionCode = phoneNumberKit.getRegionCode(of: number)?.uppercased() {
-                isPhoneNumberOutOfRegion = !availableRegionCodes.contains(regionCode)
-            } else {
-                isPhoneNumberOutOfRegion = false
-            }
-            isRegionAvailable = isDeviceLocaleInRegion && !isPhoneNumberOutOfRegion
-        } else {
-            isRegionAvailable = false
-        }
-        guard isRegionAvailable else {
-            let unavailable = BuyingUnavailableViewController(state: .unavailableRegion)
-            let container = ContainerViewController.instance(viewController: unavailable, title: "")
-            container.modalPresentationStyle = .fullScreen
-            viewController.present(container, animated: true)
-            completion(nil)
-            return
-        }
-        
         Task {
             do {
                 let profile = try await RouteAPI.profile()

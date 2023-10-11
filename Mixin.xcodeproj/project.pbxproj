@@ -4485,14 +4485,14 @@
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			packageReferences = (
 				940C753F299AAE130006338F /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */,
-				9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3.swift" */,
-				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections.git" */,
+				9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */,
+				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
-				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */,
+				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
-				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */,
+				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
 				94C958D92ACFEF5F00C1412F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS.git" */,
+				94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -5847,15 +5847,15 @@
 /* Begin PBXTargetDependency section */
 		94881FAE2AD0361100CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */;
 		};
 		94881FB02AD0361700CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */;
 		};
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
 		};
 		DFE861C22422673B009B1833 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -6054,7 +6054,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 590;
+				CURRENT_PROJECT_VERSION = 591;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
@@ -6108,7 +6108,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.41.1;
+				MARKETING_VERSION = 0.41.2;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-iquote",
@@ -6155,7 +6155,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 590;
+				CURRENT_PROJECT_VERSION = 591;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
@@ -6209,7 +6209,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.41.1;
+				MARKETING_VERSION = 0.41.2;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-iquote",
@@ -6327,7 +6327,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 590;
+				CURRENT_PROJECT_VERSION = 591;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinShare/Info.plist;
@@ -6337,7 +6337,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.41.1;
+				MARKETING_VERSION = 0.41.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.share;
@@ -6355,7 +6355,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 590;
+				CURRENT_PROJECT_VERSION = 591;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinShare/Info.plist;
@@ -6365,7 +6365,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.41.1;
+				MARKETING_VERSION = 0.41.2;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6382,7 +6382,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinNotificationService/MixinNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 590;
+				CURRENT_PROJECT_VERSION = 591;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
@@ -6392,7 +6392,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.41.1;
+				MARKETING_VERSION = 0.41.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "one.mixin.messenger.notification-service";
@@ -6410,7 +6410,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinNotificationService/MixinNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 590;
+				CURRENT_PROJECT_VERSION = 591;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
@@ -6420,7 +6420,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.41.1;
+				MARKETING_VERSION = 0.41.2;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "one.mixin.messenger.notification-service";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6489,7 +6489,7 @@
 				minimumVersion = 1.6.11;
 			};
 		};
-		9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections.git" */ = {
+		9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
@@ -6497,7 +6497,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3.swift" */ = {
+		9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/argentlabs/web3.swift";
 			requirement = {
@@ -6505,7 +6505,7 @@
 				minimumVersion = 1.5.1;
 			};
 		};
-		944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */ = {
+		944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
@@ -6529,7 +6529,7 @@
 				version = 3.1.2;
 			};
 		};
-		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */ = {
+		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
@@ -6545,7 +6545,7 @@
 				minimumVersion = 10.16.0;
 			};
 		};
-		94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS.git" */ = {
+		94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
 			requirement = {
@@ -6563,17 +6563,17 @@
 		};
 		9416231929BEEFB800E540B9 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections.git" */;
+			package = 9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
 		};
 		9431379129AD2F8F00C2484B /* web3.swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3.swift" */;
+			package = 9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */;
 			productName = web3.swift;
 		};
 		944B1BED2A4CB0AA00C36B61 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */;
+			package = 944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
 		};
 		94787E172A7C071E00BB0124 /* QRCode */ = {
@@ -6588,28 +6588,28 @@
 		};
 		94881FA72AD035C300CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
 		94881FA92AD035CC00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
 		94881FAB2AD035ED00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
-		94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
+		94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
+		94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */ = {
+		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
@@ -6630,12 +6630,12 @@
 		};
 		94F5DAA62A554EDB00EB1F5F /* IdensicMobileSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS.git" */;
+			package = 94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
 			productName = IdensicMobileSDK;
 		};
 		94F5DAA82A554EDB00EB1F5F /* IdensicMobileSDK_VideoIdent */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS.git" */;
+			package = 94F5DAA52A554EDB00EB1F5F /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
 			productName = IdensicMobileSDK_VideoIdent;
 		};
 /* End XCSwiftPackageProductDependency section */

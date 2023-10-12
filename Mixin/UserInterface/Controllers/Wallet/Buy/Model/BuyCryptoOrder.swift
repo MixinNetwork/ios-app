@@ -8,6 +8,7 @@ class BuyCryptoOrder {
     let paymentCurrency: String
     let formatter: CheckoutAmountFormatter
     let initialTicker: BuyingTicker
+    let phoneNumberRegionCode: String?
     
     var ticker: BuyingTicker {
         initialTicker
@@ -46,13 +47,15 @@ class BuyCryptoOrder {
         paymentAmount: Decimal,
         paymentCurrency: String,
         formatter: CheckoutAmountFormatter,
-        initialTicker: BuyingTicker
+        initialTicker: BuyingTicker,
+        phoneNumberRegionCode: String?
     ) {
         self.asset = asset
         self.paymentAmount = paymentAmount
         self.paymentCurrency = paymentCurrency
         self.formatter = formatter
         self.initialTicker = initialTicker
+        self.phoneNumberRegionCode = phoneNumberRegionCode
     }
     
 }
@@ -75,7 +78,8 @@ final class BuyCryptoConfirmedOrder: BuyCryptoOrder {
                    paymentAmount: order.paymentAmount,
                    paymentCurrency: order.paymentCurrency,
                    formatter: order.formatter,
-                   initialTicker: order.initialTicker)
+                   initialTicker: order.initialTicker,
+                   phoneNumberRegionCode: order.phoneNumberRegionCode)
     }
     
 }

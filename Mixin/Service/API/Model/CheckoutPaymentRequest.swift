@@ -13,6 +13,7 @@ struct CheckoutPaymentRequest {
     let amount: Int
     let assetAmount: String
     let currency: String
+    let countryCode: String
     
     init(
         assetID: String,
@@ -20,7 +21,8 @@ struct CheckoutPaymentRequest {
         scheme: String,
         amount: Int,
         assetAmount: String,
-        currency: String
+        currency: String,
+        countryCode: String
     ) {
         self.assetID = assetID
         self.payment = payment
@@ -28,6 +30,7 @@ struct CheckoutPaymentRequest {
         self.amount = amount
         self.assetAmount = assetAmount
         self.currency = currency
+        self.countryCode = countryCode
     }
     
 }
@@ -43,6 +46,7 @@ extension CheckoutPaymentRequest: Encodable {
         case assetAmount = "asset_amount"
         case currency
         case sessionID = "session_id"
+        case countryCode = "country_code"
     }
     
     func encode(to encoder: Encoder) throws {
@@ -59,6 +63,7 @@ extension CheckoutPaymentRequest: Encodable {
         try container.encode(amount, forKey: .amount)
         try container.encode(assetAmount, forKey: .assetAmount)
         try container.encode(currency, forKey: .currency)
+        try container.encode(countryCode, forKey: .countryCode)
     }
     
 }

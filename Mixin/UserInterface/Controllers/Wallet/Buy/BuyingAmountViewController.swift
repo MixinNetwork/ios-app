@@ -26,6 +26,7 @@ final class BuyingAmountViewController: UIViewController {
     
     private let allowedPayments: Set<RouteProfile.Payment>
     private let allowedCurrencyCodes: Set<String>
+    private let phoneNumberRegionCode: String?
     private let feedback = UIImpactFeedbackGenerator(style: .light)
     
     private lazy var sumsub = SNSMobileSDK(accessToken: "")
@@ -93,6 +94,7 @@ final class BuyingAmountViewController: UIViewController {
         assets: [AssetItem],
         allowedPayments: Set<RouteProfile.Payment>,
         allowedCurrencyCodes: Set<String>,
+        phoneNumberRegionCode: String?,
         currency: Currency,
         ticker: BuyingTicker
     ) {
@@ -100,6 +102,7 @@ final class BuyingAmountViewController: UIViewController {
         
         self.isKYCPassed = isKYCInitialized
         self.allowedCurrencyCodes = allowedCurrencyCodes
+        self.phoneNumberRegionCode = phoneNumberRegionCode
         self.asset = asset
         self.assets = assets
         self.allowedPayments = allowedPayments
@@ -189,7 +192,8 @@ final class BuyingAmountViewController: UIViewController {
                                        paymentAmount: payingAmount,
                                        paymentCurrency: currency.code,
                                        formatter: formatter,
-                                       initialTicker: ticker)
+                                       initialTicker: ticker,
+                                       phoneNumberRegionCode: phoneNumberRegionCode)
             let selector = PaymentSourceViewController(order: order, payments: allowedPayments)
             selector.synchronizeCardsBeforePresentingSelector = !areCardsSynchronized
             let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.select_payment_method())
@@ -372,7 +376,68 @@ extension BuyingAmountViewController: TransferTypeViewControllerDelegate {
 
 extension BuyingAmountViewController {
     
-    private static let phoneNumberKit = PhoneNumberKit()
+    struct PhoneNumberContext {
+        
+        let regionCode: String?
+        let inferredCurrencyCode: String?
+        
+        init() {
+            let kit = PhoneNumberKit()
+            guard
+                let phone = LoginManager.shared.account?.phone,
+                let number = try? kit.parse(phone),
+                let regionCode = kit.getRegionCode(of: number)
+            else {
+                self.regionCode = nil
+                self.inferredCurrencyCode = nil
+                return
+            }
+            
+            let currencyCode: String?
+            switch regionCode {
+            case "AE":
+                currencyCode = "AED"
+            case "AU":
+                currencyCode = "AUD"
+            case "CA":
+                currencyCode = "CAD"
+            case "CN":
+                currencyCode = "CNY"
+            case "IE", "FR", "DE", "AT", "BE", "BG", "CY", "HR", "EE", "FI", "GR", "IT", "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES":
+                currencyCode = "EUR"
+            case "GB":
+                currencyCode = "GBP"
+            case "HK":
+                currencyCode = "HKD"
+            case "ID":
+                currencyCode = "IDR"
+            case "JP":
+                currencyCode = "JPY"
+            case "KR":
+                currencyCode = "KRW"
+            case "MY":
+                currencyCode = "MYR"
+            case "PH":
+                currencyCode = "PHP"
+            case "SG":
+                currencyCode = "SGD"
+            case "TR":
+                currencyCode = "TRY"
+            case "TW":
+                currencyCode = "TWD"
+            case "US":
+                currencyCode = "USD"
+            case "VN":
+                currencyCode = "VND"
+            default:
+                currencyCode = nil
+            }
+            
+            self.regionCode = regionCode
+            self.inferredCurrencyCode = currencyCode
+        }
+        
+    }
     
     static func buy(on viewController: UIViewController, completion: @escaping (Error?) -> Void) {
         Task {
@@ -407,6 +472,8 @@ extension BuyingAmountViewController {
                         throw BuyingError.noAvailablePayment
                     }
                     
+                    let context = PhoneNumberContext()
+                    
                     let allowedCurrencyCodes = Set(profile.currencies)
                     let currencies = Currency.all.filter { currency in
                         allowedCurrencyCodes.contains(currency.code)
@@ -414,7 +481,7 @@ extension BuyingAmountViewController {
                     let currency: Currency
                     if let code = AppGroupUserDefaults.User.lastBuyingCurrencyCode, let lastChoice = currencies.first(where: { $0.code == code }) {
                         currency = lastChoice
-                    } else if let code = phoneNumberInferredCurrencyCode(), let inferred = currencies.first(where: { $0.code == code }) {
+                    } else if let code = context.inferredCurrencyCode, let inferred = currencies.first(where: { $0.code == code }) {
                         currency = inferred
                     } else if allowedCurrencyCodes.contains(Currency.current.code) {
                         currency = .current
@@ -448,6 +515,7 @@ extension BuyingAmountViewController {
                                                              assets: items,
                                                              allowedPayments: profile.supportPayments,
                                                              allowedCurrencyCodes: allowedCurrencyCodes,
+                                                             phoneNumberRegionCode: context.regionCode,
                                                              currency: currency,
                                                              ticker: ticker)
                         let container = ContainerViewController.instance(viewController: buy, title: "")
@@ -460,57 +528,6 @@ extension BuyingAmountViewController {
                     completion(error)
                 }
             }
-        }
-    }
-    
-    private static func phoneNumberInferredCurrencyCode() -> String? {
-        guard let numberString = LoginManager.shared.account?.phone else {
-            return nil
-        }
-        let phoneNumberKit = PhoneNumberKit()
-        guard let number = try? phoneNumberKit.parse(numberString) else {
-            return nil
-        }
-        guard let regionCode = phoneNumberKit.getRegionCode(of: number) else {
-            return nil
-        }
-        switch regionCode {
-        case "AE":
-            return "AED"
-        case "AU":
-            return "AUD"
-        case "CA":
-            return "CAD"
-        case "CN":
-            return "CNY"
-        case "IE", "FR", "DE", "AT", "BE", "BG", "CY", "HR", "EE", "FI", "GR", "IT", "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES":
-            return "EUR"
-        case "GB":
-            return "GBP"
-        case "HK":
-            return "HKD"
-        case "ID":
-            return "IDR"
-        case "JP":
-            return "JPY"
-        case "KR":
-            return "KRW"
-        case "MY":
-            return "MYR"
-        case "PH":
-            return "PHP"
-        case "SG":
-            return "SGD"
-        case "TR":
-            return "TRY"
-        case "TW":
-            return "TWD"
-        case "US":
-            return "USD"
-        case "VN":
-            return "VND"
-        default:
-            return nil
         }
     }
     

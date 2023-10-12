@@ -367,7 +367,8 @@ extension BuyingOrderPreviewViewController: PKPaymentAuthorizationControllerDele
                                                      scheme: token.scheme,
                                                      amount: order.checkoutAmount,
                                                      assetAmount: assetAmount,
-                                                     currency: order.paymentCurrency)
+                                                     currency: order.paymentCurrency,
+                                                     countryCode: order.phoneNumberRegionCode ?? "")
                 RouteAPI.createPayment(with: request) { result in
                     switch result {
                     case .success(let payment):

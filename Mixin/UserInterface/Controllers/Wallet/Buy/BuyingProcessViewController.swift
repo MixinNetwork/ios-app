@@ -227,7 +227,8 @@ extension BuyingProcessViewController {
                                                             scheme: card.scheme,
                                                             amount: order.checkoutAmount,
                                                             assetAmount: assetAmount,
-                                                            currency: order.paymentCurrency)
+                                                            currency: order.paymentCurrency,
+                                                            countryCode: order.phoneNumberRegionCode ?? "")
                 var payment: CheckoutPayment = try await RouteAPI.createPayment(with: paymentRequest)
                 while true {
                     switch payment.status {

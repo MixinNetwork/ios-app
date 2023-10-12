@@ -67,6 +67,10 @@ extension AppGroupUserDefaults {
             case wallpapers = "wallpapers"
             case chatFontSize = "chat_font_size"
             case useSystemFont = "use_system_font"
+            
+            case paymentCards = "payment_cards"
+            case lastBuyingAssetID = "last_buy_asset"
+            case lastBuyingCurrencyCode = "last_buy_currency"
         }
         
         public static let version = 31
@@ -260,6 +264,15 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(name: UIContentSizeCategory.didChangeNotification, object: nil)
             }
         }
+        
+        @Default(namespace: .user, key: Key.paymentCards, defaultValue: nil)
+        public static var paymentCards: [Data]?
+        
+        @Default(namespace: .user, key: Key.lastBuyingAssetID, defaultValue: nil)
+        public static var lastBuyingAssetID: String?
+        
+        @Default(namespace: .user, key: Key.lastBuyingCurrencyCode, defaultValue: nil)
+        public static var lastBuyingCurrencyCode: String?
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "amex.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

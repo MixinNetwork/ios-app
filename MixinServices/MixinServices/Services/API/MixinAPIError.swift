@@ -7,6 +7,7 @@ public enum MixinAPIError: Error {
     // Debug to reduce it once happended
     case foundNilResult
     
+    case emptyResponse
     case prerequistesNotFulfilled
     case invalidJSON(Error)
     case invalidServerPinToken
@@ -33,6 +34,10 @@ public enum MixinAPIError: Error {
     case invalidCaptchaToken
     case requiresCaptcha
     case requiresUpdate
+    case cardExpired
+    case priceExpired(price: Decimal, assetAmount: Decimal)
+    case paymentCaptureFailed
+    case cardNotSupported
     case invalidPhoneNumber
     case invalidPhoneVerificationCode
     case expiredPhoneVerificationCode
@@ -74,7 +79,7 @@ public enum MixinAPIError: Error {
 
 extension MixinAPIError {
     
-    init(status: Int, code: Int, description: String, extra: Extra?) {
+    init(status: Int, code: Int, description: String, container: KeyedDecodingContainer<CodingKeys>) throws {
         switch (status, code) {
         case (202, 400):
             self = .invalidRequestBody
@@ -95,6 +100,10 @@ extension MixinAPIError {
             self = .blazeOperationTimedOut
             
         case (202, 10002):
+            struct Extra: Decodable {
+                let field: String?
+            }
+            let extra = try container.decodeIfPresent(Extra.self, forKey: .extra)
             self = .invalidRequestData(field: extra?.field)
         case (202, 10003):
             self = .failedToDeliverSMS
@@ -104,6 +113,38 @@ extension MixinAPIError {
             self = .requiresCaptcha
         case (202, 10006):
             self = .requiresUpdate
+        case (202, 10601):
+            self = .cardExpired
+        case (202, 10602):
+            struct Extra: Decodable {
+                
+                struct Data: Decodable {
+                    
+                    enum CodingKeys: String, CodingKey {
+                        case price
+                        case assetAmount = "asset_amount"
+                    }
+                    
+                    let price: Decimal
+                    let assetAmount: Decimal
+                    
+                    init(from decoder: Decoder) throws {
+                        let container = try decoder.container(keyedBy: CodingKeys.self)
+                        self.price = try container.decodeDecimalString(forKey: .price)
+                        self.assetAmount = try container.decodeDecimalString(forKey: .assetAmount)
+                    }
+                    
+                }
+                
+                let data: Data
+                
+            }
+            let extra = try container.decode(Extra.self, forKey: .extra)
+            self = .priceExpired(price: extra.data.price, assetAmount: extra.data.assetAmount)
+        case (202, 10603):
+            self = .paymentCaptureFailed
+        case (202, 10604):
+            self = .cardNotSupported
         case (202, 20110):
             self = .invalidPhoneNumber
         case (202, 20113):
@@ -185,11 +226,6 @@ extension MixinAPIError: Decodable {
         case extra
     }
     
-    struct Extra: Decodable {
-        let field: String?
-        let reason: String?
-    }
-    
     public func encode(to encoder: Encoder) throws {
         fatalError("This func encodes nothing currently")
     }
@@ -199,8 +235,7 @@ extension MixinAPIError: Decodable {
         let status = try container.decode(Int.self, forKey: .status)
         let code = try container.decode(Int.self, forKey: .code)
         let description = try container.decode(String.self, forKey: .description)
-        let extra = try container.decodeIfPresent(Extra.self, forKey: .extra)
-        self.init(status: status, code: code, description: description, extra: extra)
+        try self.init(status: status, code: code, description: description, container: container)
     }
     
 }

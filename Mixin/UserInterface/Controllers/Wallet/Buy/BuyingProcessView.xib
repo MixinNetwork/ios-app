@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BuyingProcessViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="descriptionLabel" destination="hJf-iy-ohu" id="yN6-nj-Hig"/>
+                <outlet property="detailsView" destination="Xbt-wa-DhW" id="8v8-Ox-97y"/>
+                <outlet property="feeExplanationLabel" destination="Iuq-OL-2SY" id="6RL-nK-kH5"/>
+                <outlet property="iconImageView" destination="gjG-cT-JjZ" id="yiD-Ay-Bpo"/>
+                <outlet property="statusLabel" destination="tBL-7Z-tGD" id="RWN-xc-NMi"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gjG-cT-JjZ">
+                    <rect key="frame" x="172" y="128" width="70" height="70"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="coO-I9-0Ej"/>
+                        <constraint firstAttribute="width" constant="70" id="tK2-33-f2R"/>
+                    </constraints>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="mEV-Qi-Rnp">
+                    <rect key="frame" x="20" y="218" width="374" height="66"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tBL-7Z-tGD">
+                            <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hJf-iy-ohu">
+                            <rect key="frame" x="0.0" y="66" width="374" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                </stackView>
+                <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="353" placeholderIntrinsicHeight="181" translatesAutoresizingMaskIntoConstraints="NO" id="Xbt-wa-DhW" customClass="PaymentDetailsTableView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="20" y="324" width="374" height="181"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You may be charged fees outside of your order by your bank, please contact your bank for more details." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iuq-OL-2SY">
+                    <rect key="frame" x="36" y="513" width="342" height="30.333333333333371"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                    <color key="textColor" name="text_accessory"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="fees_explaination"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="Xbt-wa-DhW" firstAttribute="top" secondItem="mEV-Qi-Rnp" secondAttribute="bottom" constant="40" id="467-uH-WYh"/>
+                <constraint firstItem="Iuq-OL-2SY" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="8Ke-Lm-tFu"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Iuq-OL-2SY" secondAttribute="trailing" constant="36" id="EHW-Yi-QO3"/>
+                <constraint firstItem="gjG-cT-JjZ" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="YnV-k7-MfP"/>
+                <constraint firstItem="mEV-Qi-Rnp" firstAttribute="top" secondItem="gjG-cT-JjZ" secondAttribute="bottom" constant="20" id="eU6-Hv-KZ8"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Xbt-wa-DhW" secondAttribute="trailing" constant="20" id="f9q-yN-gU0"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="mEV-Qi-Rnp" secondAttribute="trailing" constant="20" id="g0g-2J-oY4"/>
+                <constraint firstItem="mEV-Qi-Rnp" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="gGE-xF-Scd"/>
+                <constraint firstItem="gjG-cT-JjZ" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="84" id="icp-8Q-kCP" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                            <real key="value" value="84"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="40"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="64"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
+                            <real key="value" value="84"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="Iuq-OL-2SY" firstAttribute="top" secondItem="Xbt-wa-DhW" secondAttribute="bottom" constant="8" id="j7i-Ot-pGD"/>
+                <constraint firstItem="Xbt-wa-DhW" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="man-D1-Nry"/>
+            </constraints>
+            <point key="canvasLocation" x="-30" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

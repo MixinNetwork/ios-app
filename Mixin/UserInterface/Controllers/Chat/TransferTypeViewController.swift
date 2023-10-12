@@ -66,7 +66,6 @@ extension TransferTypeViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
         delegate?.transferTypeViewController(self, didSelectAsset: asset)
-        dismiss(animated: true, completion: nil)
     }
     
 }

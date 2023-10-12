@@ -35,6 +35,7 @@ class AssetViewController: UIViewController {
         tableHeaderView.render(asset: asset)
         tableHeaderView.sizeToFit()
         tableHeaderView.transferActionView.delegate = self
+        tableHeaderView.transferActionView.buyButton.isHidden = true
         tableView.register(R.nib.snapshotCell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self
@@ -113,6 +114,8 @@ extension AssetViewController: TransferActionViewDelegate {
     
     func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
         switch action {
+        case .buy:
+            break
         case .send:
             send()
         case .receive:

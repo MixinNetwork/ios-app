@@ -1147,6 +1147,8 @@ extension ReceiveMessageService {
             }
         case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
             processSystemSnapshotMessage(data: data)
+        case MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue:
+            processSafeSnapshotMessage(data: data)
         case MessageCategory.SYSTEM_SESSION.rawValue:
             processSystemSessionMessage(data: data)
         case MessageCategory.SYSTEM_USER.rawValue:
@@ -1217,7 +1219,7 @@ extension ReceiveMessageService {
         } else {
             chainId = nil
         }
-        if let chainId, !ChainDAO.shared.isExist(chainId: chainId), case let .success(chain) = AssetAPI.chain(chainId: chainId) {
+        if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = AssetAPI.chain(chainId: chainId) {
             ChainDAO.shared.insertOrUpdateChains([chain])
         }
         let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
@@ -1229,7 +1231,31 @@ extension ReceiveMessageService {
         let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
-
+    
+    private func processSafeSnapshotMessage(data: BlazeMessageData) {
+        guard let base64Data = Data(base64Encoded: data.data), let snapshot = (try? JSONDecoder.default.decode(SafeSnapshot.self, from: base64Data)) else {
+            return
+        }
+        checkUser(userId: snapshot.opponentID, tryAgain: true)
+        let chainId: String?
+        if let token = TokenDAO.shared.tokenItem(with: snapshot.assetID) {
+            chainId = token.chainId
+        } else if case let .success(token) = SafeAPI.assets(id: snapshot.assetID) {
+            TokenDAO.shared.save(assets: [token])
+            chainId = token.chainId
+        } else {
+            chainId = nil
+        }
+        if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = NetworkAPI.chain(id: chainId) {
+            ChainDAO.shared.insertOrUpdateChains([chain])
+        }
+        SafeSnapshotDAO.shared.save(snapshot: snapshot)
+        let message = Message.createMessage(snapshot: snapshot, data: data)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
+        let job = SyncUTXOJob()
+        ConcurrentJobQueue.shared.addJob(job: job)
+    }
+    
     private func processSystemSessionMessage(data: BlazeMessageData) {
         guard let base64Data = Data(base64Encoded: data.data), let systemSession = (try? JSONDecoder.default.decode(SystemSessionMessagePayload.self, from: base64Data)) else {
             return

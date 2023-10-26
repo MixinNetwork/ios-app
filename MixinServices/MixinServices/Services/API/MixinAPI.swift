@@ -19,6 +19,25 @@ open class MixinAPI {
         
     }
     
+    public static func request<Parameters: Encodable, Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        parameters: Parameters,
+        options: Options = [],
+        queue: DispatchQueue = .main
+    ) async throws -> Response {
+        guard let url = url(with: path) else {
+            throw MixinAPIError.invalidPath
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            request(makeRequest: { (session) -> DataRequest in
+                session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
+            }, options: options, isAsync: true, queue: queue, completion: { result in
+                continuation.resume(with: result)
+            })
+        }
+    }
+    
     @discardableResult
     public static func request<Parameters: Encodable, Response>(
         method: HTTPMethod,
@@ -37,6 +56,26 @@ open class MixinAPI {
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
         }, options: options, isAsync: true, queue: queue, completion: completion)
+    }
+    
+    @discardableResult
+    public static func request<Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        parameters: [String: Any]? = nil,
+        options: Options = [],
+        queue: DispatchQueue = .main
+    ) async throws -> Response {
+        guard let url = url(with: path) else {
+            throw MixinAPIError.invalidPath
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            request(makeRequest: { (session) -> DataRequest in
+                session.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
+            }, options: options, isAsync: true, queue: queue, completion: { result in
+                continuation.resume(with: result)
+            })
+        }
     }
     
     @discardableResult
@@ -108,6 +147,20 @@ extension MixinAPI {
         let redirector = Redirector(behavior: .doNotFollow)
         let session = Alamofire.Session(configuration: config, interceptor: tokenInterceptor, redirectHandler: redirector)
         return session
+    }()
+    
+    private static let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .custom({ (decoder) in
+            let container = try decoder.singleValueContainer()
+            let string = try container.decode(String.self)
+            if let date = ISO8601CompatibleDateFormatter.date(from: string) {
+                return date
+            } else {
+                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode: \(string)")
+            }
+        })
+        return decoder
     }()
     
     private static func url(with path: String) -> URL? {
@@ -196,7 +249,7 @@ extension MixinAPI {
                         }
                     }
                     do {
-                        let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
+                        let responseObject = try decoder.decode(ResponseObject<Response>.self, from: data)
                         if let data = responseObject.data {
                             completion(.success(data))
                         } else if case .unauthorized = responseObject.error {
@@ -204,7 +257,7 @@ extension MixinAPI {
                         } else if let error = responseObject.error {
                             completion(.failure(error))
                         } else {
-                            completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
+                            completion(.success(try decoder.decode(Response.self, from: data)))
                         }
                     } catch {
                         Logger.general.error(category: "MixinAPI", message: "Failed to decode response: \(error)" )

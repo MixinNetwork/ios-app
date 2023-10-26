@@ -25,8 +25,8 @@ class AssetTableHeaderView: InfiniteTopView {
         return CGSize(width: size.width, height: layoutSize.height)
     }
     
-    func render(asset: AssetItem) {
-        assetIconView.setIcon(asset: asset)
+    func render(asset: TokenItem) {
+        assetIconView.setIcon(token: asset)
         let amount: String
         if asset.balance == "0" {
             amount = "0\(currentDecimalSeparator)00"

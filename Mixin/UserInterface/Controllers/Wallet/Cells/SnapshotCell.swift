@@ -32,11 +32,11 @@ class SnapshotCell: ModernSelectedBackgroundCell {
         delegate?.walletSnapshotCellDidSelectIcon(self)
     }
     
-    func render(snapshot: SnapshotItem, asset: AssetItem? = nil) {
-        if snapshot.type == SnapshotType.transfer.rawValue, let iconUrl = snapshot.opponentUserAvatarUrl, let userId = snapshot.opponentUserId, let name = snapshot.opponentUserFullName {
-            iconImageView.setImage(with: iconUrl, userId: userId, name: name)
+    func render(snapshot: SafeSnapshotItem, asset: TokenItem? = nil) {
+        if let userID = snapshot.opponentUserID, let name = snapshot.opponentFullname, let url = snapshot.opponentAvatarURL {
+            iconImageView.setImage(with: url, userId: userID, name: name)
         } else {
-            iconImageView.image = UIImage(named: "Wallet/ic_transaction_external")
+            iconImageView.image = R.image.wallet.ic_transaction_external()
         }
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
@@ -67,27 +67,27 @@ class SnapshotCell: ModernSelectedBackgroundCell {
             titleLabel.text = R.string.localizable.rebate()
         case SnapshotType.pendingDeposit.rawValue:
             amountLabel.textColor = .walletGray
-            if let finished = snapshot.confirmations, let total = asset?.confirmations {
-                titleLabel.text = R.string.localizable.pending_confirmations(finished, total)
-            } else {
-                titleLabel.text = nil
-            }
+//            if let finished = snapshot.confirmations, let total = asset?.confirmations {
+//                titleLabel.text = R.string.localizable.pending_confirmations(finished, total)
+//            } else {
+//                titleLabel.text = nil
+//            }
         default:
             break
         }
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
         symbolLabel.text = asset?.symbol ?? snapshot.assetSymbol
-        if snapshot.type == SnapshotType.pendingDeposit.rawValue, let finished = snapshot.confirmations, let total = asset?.confirmations {
-            pendingDepositProgressView.isHidden = false
-            let multiplier = CGFloat(finished) / CGFloat(total)
-            if abs(pendingDepositProgressConstraint.multiplier - multiplier) > 0.1 {
-                NSLayoutConstraint.deactivate([pendingDepositProgressConstraint])
-                pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: multiplier)
-                NSLayoutConstraint.activate([pendingDepositProgressConstraint])
-            }
-        } else {
-            pendingDepositProgressView.isHidden = true
-        }
+//        if snapshot.type == SnapshotType.pendingDeposit.rawValue, let finished = snapshot.confirmations, let total = asset?.confirmations {
+//            pendingDepositProgressView.isHidden = false
+//            let multiplier = CGFloat(finished) / CGFloat(total)
+//            if abs(pendingDepositProgressConstraint.multiplier - multiplier) > 0.1 {
+//                NSLayoutConstraint.deactivate([pendingDepositProgressConstraint])
+//                pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: multiplier)
+//                NSLayoutConstraint.activate([pendingDepositProgressConstraint])
+//            }
+//        } else {
+        pendingDepositProgressView.isHidden = true
+//        }
     }
     
 }

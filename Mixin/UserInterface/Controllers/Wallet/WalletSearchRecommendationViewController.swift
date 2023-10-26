@@ -15,8 +15,8 @@ class WalletSearchRecommendationViewController: WalletSearchTableViewController 
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.WalletSearchRecommendation")
     
-    private var history: [AssetItem] = []
-    private var trending: [AssetItem] = []
+    private var history: [TokenItem] = []
+    private var trending: [TokenItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +30,8 @@ class WalletSearchRecommendationViewController: WalletSearchTableViewController 
         
         queue.async { [weak self] in
             let history = AppGroupUserDefaults.User.assetSearchHistory
-                .compactMap(AssetDAO.shared.getAsset(assetId:))
-            let trending = TopAssetsDAO.shared.getAssets()
+                .compactMap(TokenDAO.shared.tokenItem(with:))
+            let trending: [TokenItem] = [] // TODO: Read from `top_tokens`
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return
@@ -43,17 +43,13 @@ class WalletSearchRecommendationViewController: WalletSearchTableViewController 
             }
         }
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(reloadTrending),
-                                               name: TopAssetsDAO.didChangeNotification,
-                                               object: nil)
-        ConcurrentJobQueue.shared.addJob(job: RefreshTopAssetsJob())
+        // TODO: Reload top tokens
     }
     
     @objc private func reloadTrending() {
         let trendingSection = IndexSet(arrayLiteral: Section.trending.rawValue)
         queue.async { [weak self] in
-            let trending = TopAssetsDAO.shared.getAssets()
+            let trending: [TokenItem] = [] // TODO: Read from `top_tokens`
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return
@@ -79,7 +75,7 @@ extension WalletSearchRecommendationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.compact_asset, for: indexPath)!
-        let item: AssetItem
+        let item: TokenItem
         switch Section(rawValue: indexPath.section)! {
         case .history:
             item = history[indexPath.row]
@@ -143,17 +139,16 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let item: AssetItem
+        let item: TokenItem
         switch Section(rawValue: indexPath.section)! {
         case .history:
             item = history[indexPath.row]
         case .trending:
             item = trending[indexPath.row]
             queue.async {
-                guard !AssetDAO.shared.isExist(assetId: item.assetId) else {
-                    return
+                if !TokenDAO.shared.tokenExists(assetID: item.assetId) {
+                    TokenDAO.shared.save(assets: [item])
                 }
-                AssetDAO.shared.insertOrUpdateAssets(assets: [item])
             }
         }
         let vc = AssetViewController.instance(asset: item)

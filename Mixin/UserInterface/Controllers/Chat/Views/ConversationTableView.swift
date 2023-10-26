@@ -231,7 +231,7 @@ extension ConversationTableView {
                 self = .transcript
             } else if category.hasPrefix("WEBRTC_") || category == MessageCategory.MESSAGE_RECALL.rawValue {
                 self = .iconPrefixedText
-            } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue || category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
                 self = .transfer
             } else if category == MessageCategory.EXT_UNREAD.rawValue {
                 self = .unreadHint

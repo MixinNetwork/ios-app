@@ -13,14 +13,14 @@ class AssetViewController: UIViewController {
     
     private let loadMoreThreshold = 20
     
-    private(set) var asset: AssetItem!
+    private(set) var asset: TokenItem!
     private var snapshotDataSource: SnapshotDataSource!
     private var performSendOnAppear = false
         
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
-    private lazy var filterController = AssetFilterViewController.instance(showFilters: true)
+    private lazy var filterController = AssetFilterViewController.instance()
     
-    private weak var job: RefreshAssetsJob?
+    private weak var job: AsynchronousJob?
     
     deinit {
         job?.cancel()
@@ -50,7 +50,7 @@ class AssetViewController: UIViewController {
         snapshotDataSource.reloadFromLocal()
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
-        let job = RefreshAssetsJob(request: .asset(id: asset.assetId, untilDepositEntriesNotEmpty: false))
+        let job = RefreshTokenJob(assetID: asset.assetId)
         self.job = job
         ConcurrentJobQueue.shared.addJob(job: job)
     }
@@ -98,7 +98,7 @@ class AssetViewController: UIViewController {
         AssetInfoWindow.instance().presentWindow(asset: asset)
     }
     
-    class func instance(asset: AssetItem, performSendOnAppear: Bool = false) -> UIViewController {
+    class func instance(asset: TokenItem, performSendOnAppear: Bool = false) -> UIViewController {
         let vc = R.storyboard.wallet.asset()!
         vc.asset = asset
         vc.performSendOnAppear = performSendOnAppear
@@ -183,8 +183,8 @@ extension AssetViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
-        let vc = TransactionViewController.instance(asset: asset, snapshot: snapshot)
-        navigationController?.pushViewController(vc, animated: true)
+        let viewController = SnapshotViewController(token: asset, snapshot: snapshot)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -211,10 +211,10 @@ extension AssetViewController: UITableViewDelegate {
 
 extension AssetViewController: AssetFilterViewControllerDelegate {
     
-    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
+    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort) {
         tableView.setContentOffset(.zero, animated: false)
         tableView.layoutIfNeeded()
-        snapshotDataSource.setSort(sort, filter: filter)
+        snapshotDataSource.setSort(sort)
         updateTableHeaderFooterView()
     }
     
@@ -227,7 +227,7 @@ extension AssetViewController: SnapshotCellDelegate {
             return
         }
         let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
-        guard snapshot.type == SnapshotType.transfer.rawValue, let userId = snapshot.opponentUserId else {
+        guard let userId = snapshot.opponentUserID else {
             return
         }
         DispatchQueue.global().async {
@@ -259,32 +259,32 @@ extension AssetViewController {
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
         
-        let withdrawToTIPAllowedChainIds = [
-            ChainID.ethereum,
-            ChainID.polygon,
-            ChainID.bnbSmartChain,
-        ]
-        if WalletConnectService.isAvailable, withdrawToTIPAllowedChainIds.contains(asset.chainId) {
-            alert.addAction(UIAlertAction(title: "Bridge", style: .default, handler: { _ in
-                self.sendToMyTIPWallet()
-            }))
-        }
+//        let withdrawToTIPAllowedChainIds = [
+//            ChainID.ethereum,
+//            ChainID.polygon,
+//            ChainID.bnbSmartChain,
+//        ]
+//        if WalletConnectService.isAvailable, withdrawToTIPAllowedChainIds.contains(asset.chainId) {
+//            alert.addAction(UIAlertAction(title: "Bridge", style: .default, handler: { _ in
+//                self.sendToMyTIPWallet()
+//            }))
+//        }
         
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     
     private func sendToMyTIPWallet() {
-        let reveal = RevealTIPWalletAddressViewController()
-        reveal.onApprove = { [asset] priv in
-            let storage = InPlaceKeyStorage(raw: priv)
-            let account = try! EthereumAccount(keyStorage: storage)
-            let address = account.address.toChecksumAddress()
-            let transfer = TransferOutViewController.instance(asset: asset, type: .tipWallet(address))
-            self.navigationController?.pushViewController(transfer, animated: true)
-        }
-        let authentication = AuthenticationViewController(intentViewController: reveal)
-        present(authentication, animated: true)
+//        let reveal = RevealTIPWalletAddressViewController()
+//        reveal.onApprove = { [asset] priv in
+//            let storage = InPlaceKeyStorage(raw: priv)
+//            let account = try! EthereumAccount(keyStorage: storage)
+//            let address = account.address.toChecksumAddress()
+//            let transfer = TransferOutViewController.instance(token: asset, to: .tipWallet(address))
+//            self.navigationController?.pushViewController(transfer, animated: true)
+//        }
+//        let authentication = AuthenticationViewController(intentViewController: reveal)
+//        present(authentication, animated: true)
     }
     
     private func updateTableViewContentInset() {
@@ -298,7 +298,7 @@ extension AssetViewController {
     private func reloadAsset() {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+            guard let asset = TokenDAO.shared.tokenItem(with: assetId) else {
                 return
             }
             DispatchQueue.main.sync {

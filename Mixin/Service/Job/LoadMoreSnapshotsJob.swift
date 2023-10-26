@@ -12,14 +12,14 @@ class LoadMoreSnapshotsJob: RefreshSnapshotsJob {
     }
     
     override func run() throws {
-        let result: MixinAPI.Result<[Snapshot]>
+        let result: MixinAPI.Result<[SafeSnapshot]>
         switch category {
         case .all:
-            result = AssetAPI.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category))
+            result = SafeAPI.snapshots(asset: nil, opponent: nil, offset: RefreshSnapshotsJob.offset(for: category), limit: limit)
         case .opponent(let id):
-            result = AssetAPI.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category), opponentId: id)
+            result = SafeAPI.snapshots(asset: nil, opponent: id, offset: RefreshSnapshotsJob.offset(for: category), limit: limit)
         case .asset(let id):
-            result = AssetAPI.snapshots(limit: limit, offset: RefreshSnapshotsJob.offset(for: category), assetId: id)
+            result = SafeAPI.snapshots(asset: id, opponent: nil, offset: RefreshSnapshotsJob.offset(for: category), limit: limit)
         }
         switch result {
         case let .success(snapshots):
@@ -27,8 +27,8 @@ class LoadMoreSnapshotsJob: RefreshSnapshotsJob {
                 LoadMoreSnapshotsJob.jobIdUserInfoKey: getJobId(),
                 LoadMoreSnapshotsJob.didLoadEarliestSnapshotUserInfoKey: snapshots.count < limit
             ]
-            SnapshotDAO.shared.saveSnapshots(snapshots: snapshots, userInfo: userInfo)
-            RefreshSnapshotsJob.setOffset(snapshots.last?.createdAt, for: category)
+            SafeSnapshotDAO.shared.save(snapshots: snapshots, userInfo: userInfo)
+            RefreshSnapshotsJob.setOffset(snapshots.last?.createdAt.toUTCString(), for: category)
         case let .failure(error):
             throw error
         }

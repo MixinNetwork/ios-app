@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TransactionViewController: UIViewController {
+class LegacyTransactionViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: InfiniteTopView!
@@ -51,24 +51,6 @@ class TransactionViewController: UIViewController {
         updateTableViewContentInsetBottom()
         fetchThatTimePrice()
         fetchTransaction()
-        
-        assetIconView.isUserInteractionEnabled = true
-        assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
-    }
-    
-    @objc func backToAsset(_ recognizer: UITapGestureRecognizer) {
-        guard let viewControllers = navigationController?.viewControllers else {
-            return
-        }
-        
-        if let assetViewController = viewControllers
-            .compactMap({ $0 as? ContainerViewController })
-            .compactMap({ $0.viewController as? AssetViewController })
-            .first(where: { $0.asset.assetId == asset.assetId })?.container {
-            navigationController?.popToViewController(assetViewController, animated: true)
-        } else {
-            navigationController?.pushViewController(AssetViewController.instance(asset: asset), animated: true)
-        }
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -111,9 +93,13 @@ class TransactionViewController: UIViewController {
         return container
     }
     
+    class func instance(asset: TokenItem, snapshot: SnapshotItem) -> UIViewController {
+        fatalError()
+    }
+    
 }
 
-extension TransactionViewController: ContainerViewControllerDelegate {
+extension LegacyTransactionViewController: ContainerViewControllerDelegate {
     
     var prefersNavigationBarSeparatorLineHidden: Bool {
         return true
@@ -121,7 +107,7 @@ extension TransactionViewController: ContainerViewControllerDelegate {
     
 }
 
-extension TransactionViewController: UITableViewDataSource {
+extension LegacyTransactionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return contents.count
@@ -136,7 +122,7 @@ extension TransactionViewController: UITableViewDataSource {
     
 }
 
-extension TransactionViewController: UITableViewDelegate {
+extension LegacyTransactionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -176,7 +162,7 @@ extension TransactionViewController: UITableViewDelegate {
     
 }
 
-extension TransactionViewController {
+extension LegacyTransactionViewController {
     
     private func updateTableViewContentInsetBottom() {
         if view.safeAreaInsets.bottom > 20 {

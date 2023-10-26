@@ -457,7 +457,7 @@ class PayWindow: BottomSheetView {
         }
         var viewControllers = navigationController.viewControllers.filter { (viewController) -> Bool in
             if let container = viewController as? ContainerViewController {
-                return !(container.viewController is TransferOutViewController)
+                return !(container.viewController is LegacyTransferOutViewController)
             } else {
                 return true
             }
@@ -799,48 +799,6 @@ extension PayWindow: PinFieldDelegate {
     private func dismissWindow() {
         processing = false
         dismissPopupController(animated: true)
-        
-        guard let navigation = UIApplication.homeNavigationController else {
-            return
-        }
-        var viewControllers = navigation.viewControllers
-        
-        switch pinAction! {
-        case let .transfer(_, user, fromWeb, _):
-            guard !fromWeb else {
-                return
-            }
-            if (viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController)?.dataSource.ownerUser?.userId == user.userId {
-                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
-                    viewControllers.removeLast()
-                }
-            } else {
-                while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
-                    viewControllers.removeLast()
-                }
-                viewControllers.append(ConversationViewController.instance(ownerUser: user))
-            }
-            navigation.setViewControllers(viewControllers, animated: true)
-        case let .withdraw(_, _, _, fromWeb):
-            guard !fromWeb else {
-                return
-            }
-            while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
-                if let _ = (viewControllers.last as? ContainerViewController)?.viewController as? AssetViewController {
-                    break
-                }
-                viewControllers.removeLast()
-            }
-            navigation.setViewControllers(viewControllers, animated: true)
-        case .multisig:
-            break
-        case .payment:
-            break
-        case .collectible:
-            break
-        case .externalTransfer:
-            break
-        }
     }
 
     private func playSuccessSound() {

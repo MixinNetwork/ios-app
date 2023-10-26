@@ -137,7 +137,7 @@ class MessageViewModelFactory {
                 viewModel = TranscriptMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
                 viewModel = CallMessageViewModel(message: message)
-            } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue || message.category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue{
                 viewModel = TransferMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
                 viewModel = SystemMessageViewModel(message: message)

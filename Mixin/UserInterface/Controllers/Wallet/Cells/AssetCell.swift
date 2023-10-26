@@ -30,8 +30,8 @@ class AssetCell: ModernSelectedBackgroundCell {
         assetIconView.prepareForReuse()
     }
     
-    func render(asset: AssetItem, attributedSymbol: NSAttributedString? = nil) {
-        assetIconView.setIcon(asset: asset)
+    func render(asset: TokenItem, attributedSymbol: NSAttributedString? = nil) {
+        assetIconView.setIcon(token: asset)
         let balance: String
         if asset.balance == "0" {
             balance = "0\(currentDecimalSeparator)00"

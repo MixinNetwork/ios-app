@@ -80,6 +80,10 @@ enum TIPBody {
         try hashData("TIP:PROVISIONING:UPDATE:", id, secret)
     }
     
+    static func registerSequencer(userID: String, publicKey: String) throws -> Data {
+        try hashData("SEQUENCER:REGISTER:", userID, publicKey)
+    }
+    
     @inline(__always)
     private static func hashData(_ arguments: String?...) throws -> Data {
         let string = arguments.compactMap({ $0 }).joined()

@@ -10,7 +10,7 @@ public final class ChainDAO: UserDatabaseDAO {
     
     public static let chainsDidChangeNotification = NSNotification.Name("one.mixin.services.ChainDAO.chainsDidChange")
     
-    public func isExist(chainId: String) -> Bool {
+    public func chainExists(chainId: String) -> Bool {
         db.recordExists(in: Chain.self, where: Chain.column(of: .chainId) == chainId)
     }
     

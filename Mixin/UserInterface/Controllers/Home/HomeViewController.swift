@@ -147,6 +147,7 @@ class HomeViewController: UIViewController {
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
+            ConcurrentJobQueue.shared.addJob(job: SyncUTXOJob())
             initializeFTSIfNeeded()
             refreshExternalSchemesIfNeeded()
             if SpotlightManager.isAvailable {
@@ -156,6 +157,22 @@ class HomeViewController: UIViewController {
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
         if WalletConnectService.isAvailable {
             WalletConnectService.shared.reloadSessions()
+        }
+        switch TIP.status {
+        case .ready:
+            if let account = LoginManager.shared.account, !account.hasSafe {
+                let register = RegisterToSafeViewController()
+                let authentication = AuthenticationViewController(intentViewController: register)
+                present(authentication, animated: true)
+            }
+        case .needsMigrate:
+            let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
+            navigationController?.present(tip, animated: true)
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            navigationController?.present(tip, animated: true)
+        case .unknown:
+            break
         }
     }
     
@@ -900,7 +917,7 @@ extension HomeViewController {
                 if checkWalletBalance {
                     let isRichEnough: Bool = await withCheckedContinuation { continuation in
                         DispatchQueue.global().async {
-                            let balance = AssetDAO.shared.getTotalUSDBalance()
+                            let balance = TokenDAO.shared.usdBalanceSum()
                             DispatchQueue.main.async {
                                 if balance > self.emergencyContactAlertingUSDBalance {
                                     continuation.resume(returning: true)

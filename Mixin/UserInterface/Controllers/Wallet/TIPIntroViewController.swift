@@ -18,11 +18,16 @@ class TIPIntroViewController: IntroViewController {
     }
     
     var isDismissAllowed: Bool {
-        switch interruption {
-        case .none, .noInputNeeded:
-            return true
-        case .unknown, .inputNeeded:
+        switch intent {
+        case .create, .migrate:
             return false
+        case .change:
+            switch interruption {
+            case .none, .noInputNeeded:
+                return true
+            case .unknown, .inputNeeded:
+                return false
+            }
         }
     }
     

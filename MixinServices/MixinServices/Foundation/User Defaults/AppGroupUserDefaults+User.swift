@@ -69,7 +69,7 @@ extension AppGroupUserDefaults {
             case useSystemFont = "use_system_font"
         }
         
-        public static let version = 31
+        public static let version = 32
         public static let uninitializedVersion = -1
         public static let deviceTransferVersion = 1
         

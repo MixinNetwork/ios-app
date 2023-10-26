@@ -573,6 +573,119 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("utxo") { db in
+            let sqls = [
+                """
+                CREATE TABLE IF NOT EXISTS `outputs` (
+                    `output_id` TEXT NOT NULL,
+                    `transaction_hash` TEXT NOT NULL,
+                    `output_index` INTEGER NOT NULL,
+                    `asset` TEXT NOT NULL,
+                    `amount` TEXT NOT NULL,
+                    `mask` TEXT NOT NULL,
+                    `keys` TEXT NOT NULL,
+                    `receivers` TEXT NOT NULL,
+                    `receivers_hash` TEXT NOT NULL,
+                    `receivers_threshold` INTEGER NOT NULL,
+                    `extra` TEXT NOT NULL,
+                    `state` TEXT NOT NULL,
+                    `created_at` TEXT NOT NULL,
+                    `updated_at` TEXT NOT NULL,
+                    `signed_by` TEXT NOT NULL,
+                    `signed_at` TEXT NOT NULL,
+                    `spent_at` TEXT NOT NULL,
+                    PRIMARY KEY(`output_id`)
+                )
+                """,
+                
+                """
+                CREATE TABLE IF NOT EXISTS `tokens` (
+                    `asset_id` TEXT NOT NULL,
+                    `kernel_asset_id` TEXT NOT NULL,
+                    `symbol` TEXT NOT NULL,
+                    `name` TEXT NOT NULL,
+                    `icon_url` TEXT NOT NULL,
+                    `price_btc` TEXT NOT NULL,
+                    `price_usd` TEXT NOT NULL,
+                    `chain_id` TEXT NOT NULL,
+                    `change_usd` TEXT NOT NULL,
+                    `change_btc` TEXT NOT NULL,
+                    `confirmations` INTEGER NOT NULL,
+                    `asset_key` TEXT NOT NULL,
+                    PRIMARY KEY(`asset_id`)
+                )
+                """,
+                
+                """
+                CREATE TABLE IF NOT EXISTS `tokens_extra` (
+                    `asset_id` TEXT NOT NULL,
+                    `kernel_asset_id` TEXT NOT NULL,
+                    `hidden` INTEGER,
+                    `balance` TEXT,
+                    `updated_at` TEXT NOT NULL,
+                    PRIMARY KEY(`asset_id`)
+                )
+                """,
+                
+                """
+                CREATE TABLE IF NOT EXISTS `safe_snapshots` (
+                    `snapshot_id` TEXT NOT NULL,
+                    `type` TEXT NOT NULL,
+                    `asset_id` TEXT NOT NULL,
+                    `amount` TEXT NOT NULL,
+                    `opponent_id` TEXT NOT NULL,
+                    `transaction_hash` TEXT NOT NULL,
+                    `memo` TEXT NOT NULL,
+                    `created_at` TEXT NOT NULL,
+                    `trace_id` TEXT,
+                    `sender` TEXT,
+                    `receiver` TEXT,
+                    `confirmations` INTEGER,
+                    `snapshot_hash` TEXT,
+                    `opening_balance` TEXT,
+                    `closing_balance` TEXT,
+                    PRIMARY KEY(`snapshot_id`)
+                )
+                """,
+                
+                """
+                CREATE TABLE IF NOT EXISTS `deposit_entries` (
+                    `entry_id` TEXT NOT NULL,
+                    `chain_id` TEXT NOT NULL,
+                    `is_primary` INTEGER NOT NULL,
+                    `members` TEXT NOT NULL,
+                    `destination` TEXT NOT NULL,
+                    `tag` TEXT,
+                    `signature` TEXT NOT NULL,
+                    `threshold` INTEGER NOT NULL,
+                    PRIMARY KEY(`entry_id`)
+                )
+                """,
+                
+                """
+                CREATE TABLE IF NOT EXISTS `raw_transactions` (
+                    `request_id` TEXT NOT NULL,
+                    `raw_transaction` TEXT NOT NULL,
+                    `receiver_id` TEXT NOT NULL,
+                    `created_at` TEXT NOT NULL,
+                    PRIMARY KEY(`request_id`)
+                )
+                """,
+                
+                "CREATE INDEX IF NOT EXISTS `index_outputs_asset_state_created_at` ON `outputs` (`asset`, `state`, `created_at`)",
+                "CREATE UNIQUE INDEX IF NOT EXISTS `index_outputs_transaction_hash_output_index` ON `outputs` (`transaction_hash`, `output_index`)"
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+            
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(chains)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("withdrawal_memo_possibility") {
+                try db.execute(sql: "ALTER TABLE chains ADD COLUMN withdrawal_memo_possibility TEXT NOT NULL DEFAULT 'possible'")
+            }
+        }
+        
         return migrator
     }
     

@@ -101,7 +101,7 @@ class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func render(assets: [AssetItem]) {
+    func render(assets: [TokenItem]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
         var btcTotalBalance: Double = 0

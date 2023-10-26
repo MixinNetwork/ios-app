@@ -5,7 +5,7 @@ class HiddenAssetViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    private var assets = [AssetItem]()
+    private var assets = [TokenItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +31,7 @@ class HiddenAssetViewController: UIViewController {
     @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
             let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
-            let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
+            let assets = TokenDAO.shared.allTokens().filter({ (asset) -> Bool in
                 return hiddenAssets[asset.assetId] != nil
             })
             DispatchQueue.main.async {

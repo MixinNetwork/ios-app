@@ -48,19 +48,31 @@ public final class AssetItem: Asset, NumberStringLocalizable {
     }
     
     required init(from decoder: Decoder) throws {
-        // GRDB does not support singleValueContainer
-        // Decode it in nasty way
-        if let container = try? decoder.container(keyedBy: Chain.JoinQueryCodingKeys.self),
+        try super.init(from: decoder)
+        
+        enum JoinQueryCodingKeys: String, CodingKey {
+            case chainId
+            case name = "chainName"
+            case symbol = "chainSymbol"
+            case iconUrl = "chainIconUrl"
+            case threshold = "chainThreshold"
+        }
+        
+        if let container = try? decoder.container(keyedBy: JoinQueryCodingKeys.self),
            let iconUrl = try? container.decodeIfPresent(String.self, forKey: .iconUrl),
            let name = try? container.decodeIfPresent(String.self, forKey: .name),
            let symbol = try? container.decodeIfPresent(String.self, forKey: .symbol),
            let chainId = try? container.decodeIfPresent(String.self, forKey: .chainId),
            let threshold = try? container.decodeIfPresent(Int.self, forKey: .threshold) {
-            self.chain = Chain(chainId: chainId, name: name, symbol: symbol, iconUrl: iconUrl, threshold: threshold)
+            self.chain = Chain(chainId: chainId,
+                               name: name,
+                               symbol: symbol,
+                               iconUrl: iconUrl,
+                               threshold: threshold,
+                               withdrawalMemoPossibility: self.withdrawalMemoPossibility ?? "")
         } else {
             self.chain = nil
         }
-        try super.init(from: decoder)
     }
     
 }
@@ -89,7 +101,8 @@ extension AssetItem {
                           name: "Ether",
                           symbol: "ETH",
                           iconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128",
-                          threshold: 0)
+                          threshold: 0,
+                          withdrawalMemoPossibility: WithdrawalMemoPossibility.negative.rawValue)
         return AssetItem(asset: asset, chain: chain)
     }()
     

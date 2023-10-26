@@ -67,6 +67,21 @@ class AssetIconView: UIView {
         chainIconIsHidden = shouldHideChainIcon
     }
     
+    func setIcon(token: TokenItem) {
+        iconImageView.sd_setImage(with: token.iconUrl, placeholderImage: nil, context: assetIconContext)
+        let shouldHideChainIcon: Bool
+        if let str = token.chain?.iconUrl, let url = URL(string: str) {
+            chainImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+            shouldHideChainIcon = false
+        } else {
+            shouldHideChainIcon = true
+        }
+        if chainIconIsHidden != shouldHideChainIcon {
+            updateShadowPath(chainIconIsHidden: shouldHideChainIcon)
+        }
+        chainIconIsHidden = shouldHideChainIcon
+    }
+    
     private func prepare() {
         backgroundColor = .clear
         chainBackgroundView.backgroundColorIgnoringSystemSettings = .background

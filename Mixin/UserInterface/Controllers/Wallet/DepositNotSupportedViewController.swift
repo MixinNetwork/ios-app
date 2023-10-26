@@ -11,7 +11,7 @@ class DepositNotSupportedViewController: UIViewController {
     @IBOutlet weak var labelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelHeightConstraint: NSLayoutConstraint!
     
-    private var asset: AssetItem!
+    private var asset: TokenItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,7 +73,7 @@ class DepositNotSupportedViewController: UIViewController {
         labelHeightConstraint.constant = textLabelHeight
     }
     
-    class func instance(asset: AssetItem) -> UIViewController {
+    class func instance(asset: TokenItem) -> UIViewController {
         let vc = R.storyboard.wallet.deposit_not_supported()!
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.deposit())

@@ -90,7 +90,7 @@ public final class AssetAPI: MixinAPI {
         request(method: .get, path: Path.pendingDeposits(assetId: assetId, destination: destination, tag: tag), completion: completion)
     }
     
-    public static func search(keyword: String) -> MixinAPI.Result<[Asset]>  {
+    public static func search(keyword: String) -> MixinAPI.Result<[Token]>  {
         guard let url = Path.search(keyword: keyword) else {
             return .success([])
         }

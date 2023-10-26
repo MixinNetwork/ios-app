@@ -13,4 +13,10 @@ class AddressCell: ModernSelectedBackgroundCell {
         dateLabel.text = address.updatedAt.toUTCDate().timeAgo()
     }
     
+    func render(address: Address, asset: TokenItem) {
+        nameLabel.text = address.label
+        addressLabel.text = address.fullAddress
+        dateLabel.text = address.updatedAt.toUTCDate().timeAgo()
+    }
+    
 }

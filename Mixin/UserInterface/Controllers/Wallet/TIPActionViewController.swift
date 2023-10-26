@@ -83,6 +83,7 @@ class TIPActionViewController: UIViewController {
                                                 forRecover: false,
                                                 progressHandler: showProgress)
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    try await TIP.registerToSafe(pin: pin)
                     await MainActor.run {
                         finish()
                     }
@@ -141,6 +142,7 @@ class TIPActionViewController: UIViewController {
                                                 forRecover: false,
                                                 progressHandler: showProgress)
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    try await TIP.registerToSafe(pin: pin)
                     await MainActor.run {
                         finish()
                     }

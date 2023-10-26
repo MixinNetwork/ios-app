@@ -13,7 +13,6 @@ public final class AccountAPI: MixinAPI {
         static func verifications(id: String) -> String {
             return "/verifications/\(id)"
         }
-        static let me = "/me"
         static let logout = "/logout"
         static let preferences = "/me/preferences"
         
@@ -67,7 +66,7 @@ public final class AccountAPI: MixinAPI {
     }
     
     public static func me(completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .get, path: Path.me, completion: completion)
+        request(method: .get, path: "/safe/me", completion: completion)
     }
     
     public static func me() async throws -> Account {
@@ -126,7 +125,7 @@ public final class AccountAPI: MixinAPI {
         if let avatarBase64 = avatarBase64 {
             param["avatar_base64"] = avatarBase64
         }
-        request(method: .post, path: Path.me, parameters: param, completion: completion)
+        request(method: .post, path: "/me", parameters: param, completion: completion)
     }
     
     public static func updateSession(deviceToken: String? = nil, voipToken: VoIPToken? = nil, deviceCheckToken: String? = nil) {

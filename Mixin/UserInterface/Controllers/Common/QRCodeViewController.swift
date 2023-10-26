@@ -8,7 +8,7 @@ class QRCodeViewController: UIViewController {
     enum CenterView {
         case avatar((AvatarImageView) -> Void)
         case receiveMoney((AvatarImageView) -> Void)
-        case asset(AssetItem)
+        case asset(TokenItem)
     }
     
     @IBOutlet weak var titleView: PopupTitleView!
@@ -103,7 +103,7 @@ class QRCodeViewController: UIViewController {
                 make.center.equalTo(codeImageView.snp.center)
                 make.width.height.equalTo(centerViewDimension)
             }
-            iconView.setIcon(asset: asset)
+            iconView.setIcon(token: asset)
         }
         
         codeImageView.layer.cornerCurve = .continuous

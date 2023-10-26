@@ -15,7 +15,7 @@ class AllTransactionsViewController: UITableViewController {
     
     private let loadNextPageThreshold = 20
     
-    private lazy var filterController = AssetFilterViewController.instance(showFilters: showFilters)
+    private lazy var filterController = AssetFilterViewController.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,11 +85,12 @@ extension AllTransactionsViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: snapshot.assetId) else {
+            guard let asset = TokenDAO.shared.tokenItem(with: snapshot.assetID) else {
                 return
             }
             DispatchQueue.main.async {
-                self?.navigationController?.pushViewController(TransactionViewController.instance(asset: asset, snapshot: snapshot), animated: true)
+                let viewController = SnapshotViewController.instance(token: asset, snapshot: snapshot)
+                self?.navigationController?.pushViewController(viewController, animated: true)
             }
         }
     }
@@ -128,9 +129,9 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
 
 extension AllTransactionsViewController: AssetFilterViewControllerDelegate {
     
-    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
+    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort) {
         tableView.setContentOffset(.zero, animated: false)
-        dataSource.setSort(sort, filter: filter)
+        dataSource.setSort(sort)
     }
     
 }
@@ -142,7 +143,7 @@ extension AllTransactionsViewController: SnapshotCellDelegate {
             return
         }
         let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
-        guard snapshot.type == SnapshotType.transfer.rawValue, let userId = snapshot.opponentUserId else {
+        guard let userId = snapshot.opponentUserID else {
             return
         }
         DispatchQueue.global().async {

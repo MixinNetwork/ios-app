@@ -16,6 +16,7 @@ public enum MixinAPIError: Error {
     case requestSigningTimeout
     case clockSkewDetected
     case pinEncryption(Error)
+    case invalidSignature
     case unknown(status: Int, code: Int, description: String)
     
     case invalidRequestBody

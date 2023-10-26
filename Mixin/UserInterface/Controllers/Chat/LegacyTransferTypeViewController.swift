@@ -1,13 +1,13 @@
 import UIKit
 import MixinServices
 
-protocol TransferTypeViewControllerDelegate: AnyObject {
-    func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem)
+protocol LegacyTransferTypeViewControllerDelegate: AnyObject {
+    func transferTypeViewController(_ viewController: LegacyTransferTypeViewController, didSelectAsset asset: AssetItem)
 }
 
-class TransferTypeViewController: PopupSearchableTableViewController {
+class LegacyTransferTypeViewController: PopupSearchableTableViewController {
     
-    weak var delegate: TransferTypeViewControllerDelegate?
+    weak var delegate: LegacyTransferTypeViewControllerDelegate?
     
     var assets = [AssetItem]()
     var asset: AssetItem?
@@ -44,7 +44,7 @@ class TransferTypeViewController: PopupSearchableTableViewController {
     
 }
 
-extension TransferTypeViewController: UITableViewDataSource {
+extension LegacyTransferTypeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isSearching ? searchResults.count : assets.count
@@ -60,7 +60,7 @@ extension TransferTypeViewController: UITableViewDataSource {
     
 }
 
-extension TransferTypeViewController: UITableViewDelegate {
+extension LegacyTransferTypeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

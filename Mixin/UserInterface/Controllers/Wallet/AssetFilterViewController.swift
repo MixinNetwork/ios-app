@@ -2,7 +2,7 @@ import UIKit
 import MixinServices
 
 protocol AssetFilterViewControllerDelegate: AnyObject {
-    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter)
+    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort)
 }
 
 class AssetFilterViewController: UIViewController {
@@ -15,7 +15,7 @@ class AssetFilterViewController: UIViewController {
     @IBOutlet weak var applyButtonTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var applyButtonBottomConstraint: NSLayoutConstraint!
     
-    var showFilters = true {
+    private var showFilters = false {
         didSet {
             if isViewLoaded {
                 collectionView.reloadData()
@@ -57,11 +57,10 @@ class AssetFilterViewController: UIViewController {
         }
     }
     
-    class func instance(showFilters: Bool) -> AssetFilterViewController {
+    class func instance() -> AssetFilterViewController {
         let vc = R.storyboard.wallet.asset_filter()!
         vc.transitioningDelegate = PopupPresentationManager.shared
         vc.modalPresentationStyle = .custom
-        vc.showFilters = showFilters
         return vc
     }
     
@@ -104,7 +103,7 @@ class AssetFilterViewController: UIViewController {
     @IBAction func applyAction(_ sender: Any) {
         sort = sortDraft
         filter = filterDraft
-        delegate?.assetFilterViewController(self, didApplySort: sort, filter: filter)
+        delegate?.assetFilterViewController(self, didApplySort: sort)
         dismiss(animated: true, completion: nil)
     }
     

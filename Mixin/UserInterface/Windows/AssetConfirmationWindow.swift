@@ -52,7 +52,21 @@ class AssetConfirmationWindow: BottomSheetView {
         initTimer()
         return self
     }
-
+    
+    func render(token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String, completion: @escaping CompletionHandler) {
+        self.completion = completion
+        
+        amountLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .whenNegative, symbol: .custom(token.symbol))
+        amountExchangeLabel.text = "≈ " + Currency.current.symbol + CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never)
+        
+        assetIconView.setIcon(token: token)
+        memoLabel.isHidden = memo.isEmpty
+        memoPlaceView.isHidden = memo.isEmpty
+        memoLabel.text = memo
+        
+        initTimer()
+    }
+    
     func initTimer() {
         confirmButton.setTitle("\(R.string.localizable.continue())(\(self.countDown))", for: .normal)
         confirmButton.isEnabled = false

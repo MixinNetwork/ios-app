@@ -244,7 +244,7 @@
                                                                     </userDefinedRuntimeAttributes>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
-                                                                    <rect key="frame" x="26" y="-0.6666666666666643" width="24" height="14.333333333333334"/>
+                                                                    <rect key="frame" x="26" y="-0.6666666666666643" width="24" height="14.333333333333332"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="textColor" name="text_accessory"/>
                                                                     <nil key="highlightedColor"/>
@@ -543,10 +543,10 @@
             </objects>
             <point key="canvasLocation" x="-455" y="703"/>
         </scene>
-        <!--Transaction View Controller-->
+        <!--Legacy Transaction View Controller-->
         <scene sceneID="jHO-cF-iCX">
             <objects>
-                <viewController storyboardIdentifier="transaction" automaticallyAdjustsScrollViewInsets="NO" id="nhr-qu-QcH" customClass="TransactionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="transaction" automaticallyAdjustsScrollViewInsets="NO" id="nhr-qu-QcH" customClass="LegacyTransactionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cl2-IT-9lz">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1348,10 +1348,10 @@
             </objects>
             <point key="canvasLocation" x="-455" y="2849"/>
         </scene>
-        <!--Transfer Out View Controller-->
+        <!--Legacy Transfer Out View Controller-->
         <scene sceneID="GuS-7v-ke8">
             <objects>
-                <viewController storyboardIdentifier="send" automaticallyAdjustsScrollViewInsets="NO" id="Vz8-zS-KVr" customClass="TransferOutViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="send" automaticallyAdjustsScrollViewInsets="NO" id="Vz8-zS-KVr" customClass="LegacyTransferOutViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3QK-5v-yEK">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2029,10 +2029,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

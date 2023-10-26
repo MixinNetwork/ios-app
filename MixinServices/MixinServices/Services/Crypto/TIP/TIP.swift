@@ -73,6 +73,7 @@ public enum TIP {
         case tipCounterExceedsNodeCounter
         case invalidCounterGroups
         case hashTIPPrivToPrivSeed
+        case invalidUserID
         #if DEBUG
         case mock
         #endif
@@ -344,6 +345,40 @@ extension TIP {
         } else {
             throw Error.invalidCounterGroups
         }
+    }
+    
+    public static func registerToSafe(pin: String) async throws {
+        guard let pinToken = AppGroupKeychain.pinToken else {
+            throw Error.missingPINToken
+        }
+        guard let data = myUserId.data(using: .utf8), let hash = SHA3_256.hash(data: data) else {
+            throw Error.invalidUserID
+        }
+        let privateKey = try await TIP.signingTIPPrivateKey(pin: pin)
+        let publicKey = privateKey.publicKey.rawRepresentation.hexEncodedString()
+        let signature = try privateKey.signature(for: hash).base64RawURLEncodedString()
+        let body = try TIPBody.registerSequencer(userID: myUserId, publicKey: publicKey)
+        let code = try privateKey.signature(for: body)
+        let pin = try encryptPIN(key: pinToken, code: code)
+        let account = try await SafeAPI.register(publicKey: publicKey, signature: signature, pin: pin)
+        LoginManager.shared.setAccount(account)
+        Logger.tip.info(category: "TIP", message: "Local account is updated with has_safe: \(account.hasSafe)")
+    }
+    
+    public static func signingTIPPrivateKey(pin: String) async throws -> Ed25519PrivateKey {
+        let pinToken: Data
+        if let token = AppGroupKeychain.pinToken {
+            pinToken = token
+        } else if let encoded = AppGroupUserDefaults.Account.pinToken, let token = Data(base64Encoded: encoded) {
+            pinToken = token
+        } else {
+            throw TIP.Error.missingPINToken
+        }
+        let tipPriv = try await getOrRecoverTIPPriv(pin: pin, pinToken: pinToken)
+        guard let privSeed = SHA3_256.hash(data: tipPriv) else {
+            throw Error.hashTIPPrivToPrivSeed
+        }
+        return try Ed25519PrivateKey(rawRepresentation: privSeed)
     }
     
 }

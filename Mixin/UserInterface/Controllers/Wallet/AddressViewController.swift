@@ -9,7 +9,7 @@ class AddressViewController: UIViewController {
     
     private let cellReuseId = "address"
     
-    private var asset: AssetItem!
+    private var asset: TokenItem!
     private var addresses = [Address]()
     private var searchResult = [Address]()
     private var isSearching: Bool {
@@ -61,7 +61,7 @@ class AddressViewController: UIViewController {
         UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
     
-    class func instance(asset: AssetItem) -> UIViewController {
+    class func instance(asset: TokenItem) -> UIViewController {
         let vc = R.storyboard.wallet.address_list()!
         vc.asset = asset
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.address())
@@ -105,7 +105,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
         }
         let address = isSearching ? searchResult[indexPath.row] : addresses[indexPath.row]
         
-        let vc = TransferOutViewController.instance(asset: asset, type: .address(address))
+        let vc = TransferOutViewController.instance(token: asset, to: .address(address))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
             viewControllers.remove(at: index)

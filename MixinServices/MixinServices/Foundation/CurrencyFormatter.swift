@@ -52,7 +52,11 @@ public struct CurrencyFormatter {
         
         return "≈ " + Currency.current.symbol + value
     }
-
+    
+    public static func estimatedFiatMoneyValue(amount: Decimal) -> String? {
+        "≈ " + Currency.current.symbol + CurrencyFormatter.localizedString(from: amount, format: .fiatMoney, sign: .never)
+    }
+    
     public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
         let decimal = Decimal(number)
         return localizedString(from: decimal, format: format, sign: sign, symbol: symbol)

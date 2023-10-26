@@ -43,6 +43,7 @@ public struct Account {
     public let tipKey: Data?
     public let tipCounter: UInt64
     public let features: [String]
+    public let hasSafe: Bool
     
 }
 
@@ -74,6 +75,7 @@ extension Account: Codable {
         case tipKey = "tip_key_base64"
         case tipCounter = "tip_counter"
         case features
+        case hasSafe = "has_safe"
     }
     
     public init(from decoder: Decoder) throws {
@@ -109,6 +111,7 @@ extension Account: Codable {
         }
         tipCounter = try container.decodeIfPresent(UInt64.self, forKey: .tipCounter) ?? 0
         features = try container.decodeIfPresent([String].self, forKey: .features) ?? []
+        hasSafe = try container.decodeIfPresent(Bool.self, forKey: .hasSafe) ?? false
     }
     
 }

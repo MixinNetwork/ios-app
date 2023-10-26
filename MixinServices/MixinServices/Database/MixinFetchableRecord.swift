@@ -8,7 +8,14 @@ public protocol MixinFetchableRecord: FetchableRecord {
 extension MixinFetchableRecord {
     
     public static var databaseDateDecodingStrategy: DatabaseDateDecodingStrategy {
-        .formatted(.iso8601Full)
+        .custom { value in
+            switch value.storage {
+            case .string(let string):
+                return ISO8601CompatibleDateFormatter.date(from: string)
+            default:
+                return nil
+            }
+        }
     }
     
 }

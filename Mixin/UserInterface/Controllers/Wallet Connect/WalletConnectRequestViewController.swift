@@ -103,18 +103,14 @@ extension WalletConnectRequestViewController: AuthenticationIntentViewController
         }
     }
     
-    var isBiometryAuthAllowed: Bool {
-        false
-    }
-    
-    var inputPINOnAppear: Bool {
-        false
+    var options: AuthenticationIntentOptions {
+        []
     }
     
     func authenticationViewController(
         _ controller: AuthenticationViewController,
         didInput pin: String,
-        completion: @escaping @MainActor (Swift.Error?) -> Void
+        completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
     ) {
         Task {
             do {
@@ -127,11 +123,11 @@ extension WalletConnectRequestViewController: AuthenticationIntentViewController
                         self.signingCompletionView.alpha = 1
                         self.updateConstraints(state: .sending)
                     }
-                    completion(nil)
+                    completion(.success)
                 }
             } catch {
                 await MainActor.run {
-                    completion(error)
+                    completion(.failure(error: error, allowsRetrying: true))
                 }
             }
         }

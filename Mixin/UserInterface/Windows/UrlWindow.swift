@@ -211,7 +211,7 @@ class UrlWindow {
             DispatchQueue.main.async {
                 func push() {
                     hud.hide()
-                    let vc = TransactionViewController.instance(asset: assetItem, snapshot: snapshot)
+                    let vc = LegacyTransactionViewController.instance(asset: assetItem, snapshot: snapshot)
                     UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
                 }
                 
@@ -389,7 +389,7 @@ class UrlWindow {
             DispatchQueue.main.async {
                 hud.hide()
                 func push() {
-                    let vc = TransferOutViewController.instance(asset: nil, type: .contact(user))
+                    let vc = LegacyTransferOutViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
                         UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                     } else {
@@ -705,7 +705,7 @@ class UrlWindow {
             var addressRequest: AddressRequest?
             var address: Address?
 
-            let addressAction: AddressView.action
+            let addressAction: LegacyAddressView.action
             if let action = query["action"]?.lowercased(), "delete" == action {
                 guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
                     hud.hideInMainThread()
@@ -743,7 +743,7 @@ class UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                AddressWindow.instance().presentPopupControllerAnimated(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil)
+                LegacyAddressWindow.instance().presentPopupControllerAnimated(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil)
             }
         }
         return true

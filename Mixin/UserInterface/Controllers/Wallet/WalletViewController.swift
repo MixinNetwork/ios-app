@@ -14,8 +14,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     private var lastSelectedAction: TransferActionView.Action?
 
     private var isSearchViewControllerPreloaded = false
-    private var assets = [AssetItem]()
-    private var sendableAssets = [AssetItem]()
+    private var assets = [TokenItem]()
+    private var sendableAssets = [TokenItem]()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -67,7 +67,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         tableView.delegate = self
         tableView.reloadData()
         updateTableHeaderVisualEffect()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: TokenDAO.assetsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: ChainDAO.chainsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
@@ -178,8 +178,9 @@ extension WalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = AssetViewController.instance(asset: assets[indexPath.row])
-        navigationController?.pushViewController(vc, animated: true)
+        let token = assets[indexPath.row]
+        let viewController = AssetViewController.instance(asset: token)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -202,12 +203,12 @@ extension WalletViewController: TransferActionViewDelegate {
         case .send:
             controller.showEmptyHintIfNeeded = true
             controller.searchResultsFromServer = false
-            controller.assets = assets.filter { $0.balance != "0" }
+            controller.tokens = assets.filter { $0.balance != "0" }
             controller.sendableAssets = sendableAssets
         case .receive:
             controller.showEmptyHintIfNeeded = false
             controller.searchResultsFromServer = true
-            controller.assets = assets
+            controller.tokens = assets
         }
         present(controller, animated: true, completion: nil)
     }
@@ -216,19 +217,19 @@ extension WalletViewController: TransferActionViewDelegate {
 
 extension WalletViewController: TransferSearchViewControllerDelegate {
     
-    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectAsset asset: AssetItem) {
+    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectToken token: TokenItem) {
         guard let action = lastSelectedAction else {
             return
         }
         let controller: UIViewController
         switch action {
         case .send:
-            controller = AssetViewController.instance(asset: asset, performSendOnAppear: true)
+            controller = AssetViewController.instance(asset: token, performSendOnAppear: true)
         case .receive:
-            if asset.isDepositSupported {
-                controller = DepositViewController.instance(asset: asset)
+            if token.isDepositSupported {
+                controller = DepositViewController.instance(asset: token)
             } else {
-                controller = DepositNotSupportedViewController.instance(asset: asset)
+                controller = DepositNotSupportedViewController.instance(asset: token)
             }
         }
         navigationController?.pushViewController(controller, animated: true)
@@ -237,7 +238,7 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
     func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController) {
         lastSelectedAction = .receive
         viewController.searchResultsFromServer = true
-        viewController.reloadAssets(assets)
+        viewController.reload(tokens: assets)
     }
     
 }
@@ -272,7 +273,7 @@ extension WalletViewController {
     
     @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
-            let allAssets = AssetDAO.shared.getAssets()
+            let allAssets = TokenDAO.shared.allTokens()
             let hiddenAssetIds = AppGroupUserDefaults.Wallet.hiddenAssetIds
             let assets = allAssets.filter { hiddenAssetIds[$0.assetId] == nil }
             let sendableAssets = allAssets.filter { $0.balance != "0" }

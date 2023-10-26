@@ -8,13 +8,15 @@ public struct Chain {
     public let symbol: String
     public let iconUrl: String
     public let threshold: Int
+    public let withdrawalMemoPossibility: String
     
-    public init(chainId: String, name: String, symbol: String, iconUrl: String, threshold: Int) {
+    public init(chainId: String, name: String, symbol: String, iconUrl: String, threshold: Int, withdrawalMemoPossibility: String) {
         self.chainId = chainId
         self.name = name
         self.symbol = symbol
         self.iconUrl = iconUrl
         self.threshold = threshold
+        self.withdrawalMemoPossibility = withdrawalMemoPossibility
     }
     
 }
@@ -27,14 +29,7 @@ extension Chain: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         case symbol
         case iconUrl = "icon_url"
         case threshold
-    }
-    
-    public enum JoinQueryCodingKeys: String, CodingKey {
-        case chainId
-        case name = "chainName"
-        case symbol = "chainSymbol"
-        case iconUrl = "chainIconUrl"
-        case threshold = "chainThreshold"
+        case withdrawalMemoPossibility = "withdrawal_memo_possibility"
     }
     
 }

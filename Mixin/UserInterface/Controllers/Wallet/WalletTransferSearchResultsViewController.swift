@@ -17,7 +17,7 @@ class WalletTransferSearchResultsViewController: WalletSearchResultsViewControll
         tableView.deselectRow(at: indexPath, animated: true)
         if let transferSearchController {
             let asset = searchResults[indexPath.row]
-            transferSearchController.delegate?.transferSearchViewController(transferSearchController, didSelectAsset: asset)
+            transferSearchController.delegate?.transferSearchViewController(transferSearchController, didSelectToken: asset)
             transferSearchController.dismiss(animated: true)
         }
     }

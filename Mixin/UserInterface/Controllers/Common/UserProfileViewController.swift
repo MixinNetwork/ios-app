@@ -400,7 +400,7 @@ extension UserProfileViewController {
     @objc func transfer() {
         switch TIP.status {
         case .ready, .needsMigrate:
-            let viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
+            let viewController = TransferOutViewController.instance(token: nil, to: .contact(user))
             dismissAndPush(viewController)
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .transfer(user: user))

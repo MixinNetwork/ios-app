@@ -21,8 +21,8 @@ class CompactAssetCell: UITableViewCell {
         assetIconView.prepareForReuse()
     }
     
-    func render(asset: AssetItem) {
-        assetIconView.setIcon(asset: asset)
+    func render(asset: TokenItem) {
+        assetIconView.setIcon(token: asset)
         nameLabel.text = asset.symbol
         descriptionLabel.text = asset.name
         if let tag = asset.chainTag {

@@ -24,7 +24,7 @@ class AddressWindow: BottomSheetView {
         super.dismissPopupController(animated: animated)
     }
 
-    func presentPopupControllerAnimated(action: AddressView.action, asset: AssetItem, addressRequest: AddressRequest?, address: Address?, dismissCallback: ((Bool) -> Void)?) {
+    func presentPopupControllerAnimated(action: AddressView.action, asset: TokenItem, addressRequest: AddressRequest?, address: Address?, dismissCallback: ((Bool) -> Void)?) {
         guard !isShowing else {
             return
         }
@@ -34,7 +34,7 @@ class AddressWindow: BottomSheetView {
     }
 
     class func instance() -> AddressWindow {
-        return Bundle.main.loadNibNamed("AddressWindow", owner: nil, options: nil)?.first as! AddressWindow
+        R.nib.addressWindow(withOwner: nil)!
     }
 }
 

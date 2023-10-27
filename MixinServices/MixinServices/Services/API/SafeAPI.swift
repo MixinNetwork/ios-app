@@ -3,11 +3,19 @@ import Alamofire
 
 public final class SafeAPI: MixinAPI {
     
-    public static func register(publicKey: String, signature: String, pin: String) async throws -> Account {
-        try await request(method: .post,
-                          path: "/safe/users",
-                          parameters: ["public_key": publicKey, "signature":  signature, "pin_base64": pin])
-
+    static func register(
+        publicKey: String,
+        signature: String,
+        pin: String,
+        salt: String
+    ) async throws -> Account {
+        let body = [
+            "public_key": publicKey,
+            "signature": signature,
+            "pin_base64": pin,
+            "salt": salt
+        ]
+        return try await request(method: .post, path: "/safe/users", parameters: body)
     }
     
     public static func ghostKeys(
@@ -115,6 +123,18 @@ public final class SafeAPI: MixinAPI {
             path.append(parameters.joined(separator: "&"))
         }
         return request(method: .get, path: path)
+    }
+    
+    public static func pendingDeposits(
+        assetID: String,
+        destination: String,
+        tag: String?
+    ) async throws -> [PendingDeposit] {
+        var path = "/external/transactions?asset=\(assetID)&destination=\(destination)"
+        if let tag {
+            path.append("&tag=\(tag)")
+        }
+        return try await request(method: .get, path: path)
     }
     
 }

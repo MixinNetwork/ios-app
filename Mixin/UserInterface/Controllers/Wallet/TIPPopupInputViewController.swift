@@ -32,15 +32,10 @@ class TIPPopupInputViewController: PinValidationViewController {
         case let .continue(context, _):
             switch context.action {
             case .change:
-                switch context.situation {
-                case .pendingUpdate:
+                if oldPIN == nil {
+                    titleLabel.text = R.string.localizable.enter_your_old_pin()
+                } else {
                     titleLabel.text = R.string.localizable.enter_your_new_pin()
-                case .pendingSign:
-                    if oldPIN == nil {
-                        titleLabel.text = R.string.localizable.enter_your_old_pin()
-                    } else {
-                        titleLabel.text = R.string.localizable.enter_your_new_pin()
-                    }
                 }
             case .create:
                 titleLabel.text = R.string.localizable.enter_your_pin()
@@ -78,21 +73,21 @@ class TIPPopupInputViewController: PinValidationViewController {
                     continueCreate(with: pin, failedSigners: [], onSuccess: onSuccess)
                 }
             case .change:
-                switch context.situation {
-                case .pendingSign(let failedSigners):
-                    if let old = oldPIN {
+                if let old = oldPIN {
+                    switch context.situation {
+                    case .pendingSign(let failedSigners):
                         continueChange(old: old, isOldPINLegacy: false, new: pin, failedSigners: failedSigners, onSuccess: onSuccess)
-                    } else {
-                        loadingIndicator.stopAnimating()
-                        titleLabel.text = R.string.localizable.enter_your_new_pin()
-                        descriptionLabel.text = nil
-                        pinField.clear()
-                        pinField.isHidden = false
-                        pinField.receivesInput = true
-                        self.oldPIN = pin
+                    case .pendingUpdate:
+                        continueChange(old: old, isOldPINLegacy: false, new: pin, failedSigners: [], onSuccess: onSuccess)
                     }
-                case .pendingUpdate:
-                    continueChange(old: nil, isOldPINLegacy: false, new: pin, failedSigners: [], onSuccess: onSuccess)
+                } else {
+                    loadingIndicator.stopAnimating()
+                    titleLabel.text = R.string.localizable.enter_your_new_pin()
+                    descriptionLabel.text = nil
+                    pinField.clear()
+                    pinField.isHidden = false
+                    pinField.receivesInput = true
+                    self.oldPIN = pin
                 }
             case .migrate:
                 if let old = oldPIN {
@@ -155,7 +150,7 @@ class TIPPopupInputViewController: PinValidationViewController {
     }
     
     private func continueChange(
-        old: String?,
+        old: String,
         isOldPINLegacy: Bool,
         new: String,
         failedSigners: [TIPSigner],
@@ -177,8 +172,16 @@ class TIPPopupInputViewController: PinValidationViewController {
                                                 forRecover: false,
                                                 progressHandler: nil)
                 } else {
+                    let isCounterBalanced: Bool
+                    switch action {
+                    case .continue(let context, _):
+                        isCounterBalanced = context.maxNodeCounter == context.accountTIPCounter
+                    case .migrate:
+                        isCounterBalanced = true
+                    }
                     try await TIP.updateTIPPriv(oldPIN: old,
                                                 newPIN: new,
+                                                isCounterBalanced: isCounterBalanced,
                                                 failedSigners: failedSigners,
                                                 progressHandler: nil)
                 }

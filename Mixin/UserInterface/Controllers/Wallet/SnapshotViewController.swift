@@ -14,10 +14,10 @@ class SnapshotViewController: UIViewController {
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
     private var token: TokenItem
-    private var snapshot: SafeSnapshot
+    private var snapshot: SafeSnapshotItem
     private var columns: [Column] = []
     
-    init(token: TokenItem, snapshot: SafeSnapshot) {
+    init(token: TokenItem, snapshot: SafeSnapshotItem) {
         self.token = token
         self.snapshot = snapshot
         super.init(nibName: nil, bundle: nil)
@@ -122,7 +122,7 @@ class SnapshotViewController: UIViewController {
         UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     
-    class func instance(token: TokenItem, snapshot: SafeSnapshot) -> UIViewController {
+    class func instance(token: TokenItem, snapshot: SafeSnapshotItem) -> UIViewController {
         let snapshot = SnapshotViewController(token: token, snapshot: snapshot)
         let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
         return container
@@ -318,7 +318,7 @@ extension SnapshotViewController {
              R.string.localizable.from(),
              R.string.localizable.to(),
              R.string.localizable.snapshot_hash():
-            return (true, subtitle ?? "")
+            return (true, subtitle)
         default:
             return (false, "")
         }

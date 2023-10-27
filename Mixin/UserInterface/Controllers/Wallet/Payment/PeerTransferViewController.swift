@@ -98,7 +98,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
             do {
                 let trace = Trace(traceId: traceID, assetId: token.assetId, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
                 TraceDAO.shared.saveTrace(trace: trace)
-                Logger.general.info(category: "PayWindow", message: "Will transfer \(amount)")
+                Logger.general.info(category: "PeerTransfer", message: "Will transfer \(amount)")
                 
                 var unspentUTXOs = OutputDAO.shared.unspentUTXOs(asset: kernelAssetID)
                 var spendingUTXOs: [Output] = []
@@ -115,7 +115,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 guard let lastSpendingUTXO = spendingUTXOs.last, utxosAmount >= tokenAmount else {
                     throw Error.insufficientBalance
                 }
-                Logger.general.info(category: "PayWindow", message: "Spending \(spendingUTXOs.count) UTXOs")
+                Logger.general.info(category: "PeerTransfer", message: "Spending \(spendingUTXOs.count) UTXOs")
                 
                 let ghostKeys = try await SafeAPI.ghostKeys(receiverID: receiverID,
                                                             receiverHint: UUID().uuidString.lowercased(),
@@ -150,7 +150,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 let inputKeysData = try JSONEncoder.default.encode(spendingUTXOs.map(\.keys))
                 let inputKeys = String(data: inputKeysData, encoding: .utf8)
                 let viewKeys = try await SafeAPI.requestTransaction(id: traceID, raw: tx, senderID: senderID).joined(separator: ",")
-                let spendKey = try await TIP.signingTIPPrivateKey(pin: pin).rawRepresentation.hexEncodedString()
+                let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
                 let signedTx = KernelSignTx(tx, inputKeys, viewKeys, spendKey, &error)
                 guard let signedTx else {
                     throw error ?? Error.nullSignature
@@ -164,8 +164,8 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                           outputIndex: change.index,
                                           asset: kernelAssetID,
                                           amount: change.amount,
-                                          mask: "",
-                                          keys: [],
+                                          mask: senderGhostKey.mask,
+                                          keys: senderGhostKey.keys,
                                           receivers: [],
                                           receiversHash: "",
                                           receiversThreshold: 1,
@@ -214,7 +214,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                     UIDevice.current.playPaymentSuccess()
                 }
             } catch {
-                Logger.general.error(category: "PayWindow", message: "Failed to transfer: \(error)")
+                Logger.general.error(category: "PeerTransfer", message: "Failed to transfer: \(error)")
                 let allowRetrying: Bool
                 switch error {
                 case MixinAPIError.malformedPin, MixinAPIError.incorrectPin, MixinAPIError.insufficientPool, MixinAPIError.internalServerError:

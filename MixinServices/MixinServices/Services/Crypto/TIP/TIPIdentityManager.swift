@@ -9,12 +9,7 @@ enum TIPIdentityManager {
     static func identityPair(pinData: Data, pinToken: Data) async throws -> (priv: Data, watcher: Data) {
         Logger.tip.info(category: "TIPIdentityManager", message: "Generating identity pair")
         let identitySeed = try await identitySeed(pinToken: pinToken)
-        let identityPriv = try Argon2i.hash(timeCost: 4,
-                                            memoryCost: 1024,
-                                            parallelism: 2,
-                                            password: pinData,
-                                            salt: identitySeed,
-                                            hashCount: 32)
+        let identityPriv = try Argon2i.hash(password: pinData, salt: identitySeed)
         let watcher = try watcher(pinToken: pinToken, identitySeed: identitySeed)
         return (identityPriv, watcher)
     }

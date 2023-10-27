@@ -9,6 +9,10 @@ public final class DepositEntryDAO: UserDatabaseDAO {
         db.select(where: DepositEntry.column(of: .chainID) == chainID && DepositEntry.column(of: .isPrimary) == true)
     }
     
+    public func entries(ofChainWith chainID: String) -> [DepositEntry] {
+        db.select(where: DepositEntry.column(of: .chainID) == chainID)
+    }
+    
     public func save(entries: [DepositEntry]) {
         db.save(entries)
     }

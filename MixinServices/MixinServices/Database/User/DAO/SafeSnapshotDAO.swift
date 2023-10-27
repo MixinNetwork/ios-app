@@ -6,8 +6,19 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
     
     public static let snapshotDidChangeNotification = NSNotification.Name("one.mixin.services.SafeSnapshotDAO.snapshotDidChange")
     
-    public func snapshot(id: String) -> SafeSnapshot? {
-        db.select(where: SafeSnapshot.column(of: .id) == id)
+    private static let querySQL = """
+        SELECT s.*, a.symbol AS \(SafeSnapshotItem.JoinedQueryCodingKeys.assetSymbol.rawValue),
+            u.user_id AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentUserID.rawValue),
+            u.full_name AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentFullname.rawValue),
+            u.avatar_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentAvatarURL.rawValue)
+        FROM safe_snapshots s
+            LEFT JOIN assets a ON s.asset_id = a.asset_id
+            LEFT JOIN users u ON s.opponent_id = u.user_id
+    
+    """
+    
+    public func snapshotItem(id: String) -> SafeSnapshotItem? {
+        db.select(with: Self.querySQL + "WHERE s.snapshot_id = ?", arguments: [id])
     }
     
     public func save(snapshot: SafeSnapshot) {
@@ -109,6 +120,44 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         db.save(snapshots) { (db) in
             NotificationCenter.default.post(onMainThread: SafeSnapshotDAO.snapshotDidChangeNotification, object: self, userInfo: userInfo)
         }
+    }
+    
+    @discardableResult
+    public func replacePendingDeposits(assetID: String, pendingDeposits: [PendingDeposit], snapshotId: String? = nil) -> SafeSnapshotItem? {
+        guard !pendingDeposits.isEmpty else {
+            return nil
+        }
+        var snapshotItem: SafeSnapshotItem?
+        let hashes = pendingDeposits.map(\.transactionHash)
+        
+        db.write { (db) in
+            let request = SafeSnapshot
+                .select(SafeSnapshot.column(of: .transactionHash))
+                .filter(SafeSnapshot.column(of: .assetID) == assetID && hashes.contains(Snapshot.column(of: .transactionHash)))
+            let transactionHashes = try String.fetchAll(db, request)
+            let snapshots: [SafeSnapshot]
+            if transactionHashes.isEmpty {
+                snapshots = pendingDeposits.map {
+                    SafeSnapshot(assetID: assetID, pendingDeposit: $0)
+                }
+            } else {
+                snapshots = pendingDeposits
+                    .filter { !transactionHashes.contains($0.transactionHash) }
+                    .map { SafeSnapshot(assetID: assetID, pendingDeposit: $0) }
+            }
+            
+            let condition: SQLSpecificExpressible = SafeSnapshot.column(of: .assetID) == assetID
+            && SafeSnapshot.column(of: .type) == SafeSnapshot.SnapshotType.pending.rawValue
+            try SafeSnapshot.filter(condition).deleteAll(db)
+            try snapshots.save(db)
+            
+            if let snapshotId = snapshotId {
+                db.afterNextTransaction { (db) in
+                    snapshotItem = try? SafeSnapshotItem.fetchOne(db, sql: Self.querySQL, arguments: [snapshotId])
+                }
+            }
+        }
+        return snapshotItem
     }
     
 }

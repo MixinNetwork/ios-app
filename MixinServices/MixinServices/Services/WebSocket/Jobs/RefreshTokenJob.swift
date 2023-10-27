@@ -25,11 +25,18 @@ public class RefreshTokenJob: AsynchronousJob {
                 if !MixinService.isStopProcessMessages {
                     ChainDAO.shared.insertOrUpdateChains([chain])
                 }
-                // Update fiats, pending deposits and snapshots?
+                // Update fiats and snapshots?
+                let entries = DepositEntryDAO.shared.entries(ofChainWith: token.chainId)
+                for entry in entries {
+                    let deposits = try await SafeAPI.pendingDeposits(assetID: token.assetId,
+                                                                     destination: entry.destination,
+                                                                     tag: entry.tag)
+                    
+                }
             } catch {
                 reporter.report(error: error)
-                self.finishJob()
             }
+            self.finishJob()
         }
         return true
     }

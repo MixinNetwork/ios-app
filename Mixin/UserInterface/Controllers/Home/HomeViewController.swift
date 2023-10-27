@@ -158,22 +158,6 @@ class HomeViewController: UIViewController {
         if WalletConnectService.isAvailable {
             WalletConnectService.shared.reloadSessions()
         }
-        switch TIP.status {
-        case .ready:
-            if let account = LoginManager.shared.account, !account.hasSafe {
-                let register = RegisterToSafeViewController()
-                let authentication = AuthenticationViewController(intentViewController: register)
-                present(authentication, animated: true)
-            }
-        case .needsMigrate:
-            let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
-            navigationController?.present(tip, animated: true)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            navigationController?.present(tip, animated: true)
-        case .unknown:
-            break
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -198,6 +182,22 @@ class HomeViewController: UIViewController {
                 self.present(vc, animated: true, completion: nil)
             }))
             present(alert, animated: true, completion: nil)
+        }
+        switch TIP.status {
+        case .ready:
+            if let account = LoginManager.shared.account, !account.hasSafe {
+                let register = RegisterToSafeViewController()
+                let authentication = AuthenticationViewController(intentViewController: register)
+                present(authentication, animated: true)
+            }
+        case .needsMigrate:
+            let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
+            navigationController?.present(tip, animated: true)
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            navigationController?.present(tip, animated: true)
+        case .unknown:
+            break
         }
     }
     

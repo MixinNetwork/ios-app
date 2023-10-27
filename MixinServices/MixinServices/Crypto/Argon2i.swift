@@ -7,12 +7,12 @@ enum Argon2i {
     }
     
     static func hash(
-        timeCost: UInt32,
-        memoryCost: UInt32,
-        parallelism: UInt32,
+        timeCost: UInt32 = 4,
+        memoryCost: UInt32 = 1024,
+        parallelism: UInt32 = 2,
         password: Data,
         salt: Data,
-        hashCount: Int
+        hashCount: Int = 32
     ) throws -> Data {
         var hash = Data(count: hashCount)
         let result = password.withUnsafeBytes { password in

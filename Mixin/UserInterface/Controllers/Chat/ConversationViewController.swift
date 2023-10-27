@@ -858,7 +858,7 @@ class ConversationViewController: UIViewController {
             } else if message.category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
                 conversationInputViewController.dismiss()
                 DispatchQueue.global().async { [weak self] in
-                    guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let token = TokenDAO.shared.tokenItem(with: assetId), let snapshot = SafeSnapshotDAO.shared.snapshot(id: snapshotId) else {
+                    guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let token = TokenDAO.shared.tokenItem(with: assetId), let snapshot = SafeSnapshotDAO.shared.snapshotItem(id: snapshotId) else {
                         return
                     }
                     DispatchQueue.main.async {

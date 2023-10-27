@@ -20,9 +20,9 @@ public final class SafeSnapshotItem: SafeSnapshot {
         
         self.assetSymbol = try container.decode(String.self, forKey: .assetSymbol)
         
-        self.opponentUserID = try container.decode(String.self, forKey: .opponentUserID)
-        self.opponentFullname = try container.decode(String.self, forKey: .opponentFullname)
-        self.opponentAvatarURL = try container.decode(String.self, forKey: .opponentAvatarURL)
+        self.opponentUserID = try container.decodeIfPresent(String.self, forKey: .opponentUserID)
+        self.opponentFullname = try container.decodeIfPresent(String.self, forKey: .opponentFullname)
+        self.opponentAvatarURL = try container.decodeIfPresent(String.self, forKey: .opponentAvatarURL)
         
         try super.init(from: decoder)
     }

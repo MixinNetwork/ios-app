@@ -5,6 +5,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     
     public enum SnapshotType: String, CaseIterable {
         case snapshot
+        case pending
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -62,6 +63,24 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.snapshotHash = snapshotHash
         self.openingBalance = openingBalance
         self.closingBalance = closingBalance
+    }
+    
+    public init(assetID: String, pendingDeposit: PendingDeposit) {
+        self.id = pendingDeposit.transactionId
+        self.type = SnapshotType.pending.rawValue
+        self.assetID = assetID
+        self.amount = pendingDeposit.amount
+        self.opponentID = myUserId
+        self.transactionHash = pendingDeposit.transactionHash
+        self.memo = ""
+        self.createdAt = pendingDeposit.createdAt.toUTCDate()
+        self.traceID = ""
+        self.sender = pendingDeposit.sender
+        self.receiver = nil
+        self.confirmations = pendingDeposit.confirmations
+        self.snapshotHash = nil
+        self.openingBalance = nil
+        self.closingBalance = nil
     }
     
 }

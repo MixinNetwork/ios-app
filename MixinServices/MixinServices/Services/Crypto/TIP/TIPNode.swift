@@ -65,7 +65,7 @@ public enum TIPNode {
         failedSigners: [TIPSigner],
         forRecover: Bool,
         progressHandler: (@MainActor (TIP.Progress) -> Void)?
-    ) async throws -> Data {
+    ) async throws -> (Data, UInt64) {
         Logger.tip.info(category: "TIPNode", message: "Sign with assigneePriv: \(assigneePriv != nil), failedSigners: \(failedSigners.map(\.index)), forRecover: \(forRecover)")
         guard let suite = TipNewSuiteBn256() else {
             throw Error.bn256SuiteNotAvailable
@@ -192,7 +192,8 @@ public enum TIPNode {
         guard let signature = TipRecoverSignature(hexSigs, commitments, assignor, allSigners.count, &error) else {
             throw Error.recoverSignature(error)
         }
-        return signature
+        let maxCounter = data.map(\.counter).max() ?? data[0].counter
+        return (signature, maxCounter)
     }
     
     public static func watch(watcher: Data, timeoutInterval: TimeInterval) async throws -> [TIPNode.Counter] {

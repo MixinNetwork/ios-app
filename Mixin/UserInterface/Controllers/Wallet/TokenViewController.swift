@@ -13,7 +13,8 @@ class TokenViewController: UIViewController {
     
     private let loadMoreThreshold = 20
     
-    private var token: TokenItem!
+    private(set) var token: TokenItem!
+    
     private var snapshotDataSource: SnapshotDataSource!
     private var performSendOnAppear = false
         
@@ -183,7 +184,7 @@ extension TokenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
-        let viewController = SnapshotViewController(token: token, snapshot: snapshot)
+        let viewController = SnapshotViewController.instance(token: token, snapshot: snapshot)
         navigationController?.pushViewController(viewController, animated: true)
     }
     

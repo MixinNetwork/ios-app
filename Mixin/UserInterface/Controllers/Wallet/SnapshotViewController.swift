@@ -40,6 +40,7 @@ class SnapshotViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableHeaderView = R.nib.snapshotTableHeaderView(withOwner: self)
+        tableView.tableHeaderView = tableHeaderView
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         assetIconView.setIcon(token: token)
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
@@ -63,6 +64,7 @@ class SnapshotViewController: UIViewController {
         layoutTableHeaderView()
         makeContents()
         tableView.backgroundColor = .background
+        tableView.separatorStyle = .none
         tableView.register(R.nib.snapshotColumnCell)
         tableView.dataSource = self
         tableView.delegate = self
@@ -76,18 +78,19 @@ class SnapshotViewController: UIViewController {
     }
     
     @objc func backToAsset(_ recognizer: UITapGestureRecognizer) {
-//        guard let viewControllers = navigationController?.viewControllers else {
-//            return
-//        }
-//
-//        if let assetViewController = viewControllers
-//            .compactMap({ $0 as? ContainerViewController })
-//            .compactMap({ $0.viewController as? AssetViewController })
-//            .first(where: { $0.token.assetId == token.assetId })?.container {
-//            navigationController?.popToViewController(assetViewController, animated: true)
-//        } else {
-//            navigationController?.pushViewController(AssetViewController.instance(asset: asset), animated: true)
-//        }
+        guard let viewControllers = navigationController?.viewControllers else {
+            return
+        }
+        if let viewController = viewControllers
+            .compactMap({ $0 as? ContainerViewController })
+            .compactMap({ $0.viewController as? TokenViewController })
+            .first(where: { $0.token.assetID == token.assetID })?.container
+        {
+            navigationController?.popToViewController(viewController, animated: true)
+        } else {
+            let viewController = TokenViewController.instance(token: token)
+            navigationController?.pushViewController(viewController, animated: true)
+        }
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -157,37 +160,36 @@ extension SnapshotViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-//        guard snapshot.type == SnapshotType.transfer.rawValue, indexPath.row == 3 else {
-//            return
-//        }
-//        guard let userId = snapshot.opponentId, !userId.isEmpty else {
-//            return
-//        }
-//        DispatchQueue.global().async {
-//            guard let user = UserDAO.shared.getUser(userId: userId) else {
-//                return
-//            }
-//            DispatchQueue.main.async { [weak self] in
-//                let vc = UserProfileViewController(user: user)
-//                self?.present(vc, animated: true, completion: nil)
-//            }
-//        }
+        let column = columns[indexPath.row]
+        switch columns[indexPath.row] {
+        case .fromUsername, .toUsername:
+            guard let id = snapshot.opponentUserID, !id.isEmpty else {
+                return
+            }
+            DispatchQueue.global().async {
+                guard let user = UserDAO.shared.getUser(userId: id) else {
+                    return
+                }
+                DispatchQueue.main.async { [weak self] in
+                    let profile = UserProfileViewController(user: user)
+                    self?.present(profile, animated: true, completion: nil)
+                }
+            }
+        default:
+            break
+        }
     }
     
     func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-        return canCopyAction(indexPath: indexPath).0
+        columns[indexPath.row].allowsCopy
     }
     
     func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return canCopyAction(indexPath: indexPath).0 && action == #selector(copy(_:))
+        columns[indexPath.row].allowsCopy && action == #selector(copy(_:))
     }
     
     func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
-        let copy: (can: Bool, body: String) = canCopyAction(indexPath: indexPath)
-        guard copy.can else {
-            return
-        }
-        UIPasteboard.general.string = copy.body
+        UIPasteboard.general.string = columns[indexPath.row].subtitle
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
@@ -195,9 +197,61 @@ extension SnapshotViewController: UITableViewDelegate {
 
 extension SnapshotViewController {
     
-    private struct Column {
-        let title: String
-        let subtitle: String
+    private enum Column {
+        
+        case id(String)
+        case transactionHash(String)
+        case tokenName(String)
+        case type(String)
+        case depositProgress(completed: Int, total: Int)
+        case fromUsername(String)
+        case toUsername(String)
+        case memo(String)
+        case date(String)
+        
+        var title: String {
+            switch self {
+            case .id:
+                return R.string.localizable.transaction_id()
+            case .transactionHash:
+                return R.string.localizable.transaction_hash()
+            case .tokenName:
+                return R.string.localizable.asset_type()
+            case .type:
+                return R.string.localizable.transaction_type()
+            case .depositProgress:
+                return R.string.localizable.status()
+            case .fromUsername:
+                return R.string.localizable.from()
+            case .toUsername:
+                return R.string.localizable.to()
+            case .memo:
+                return R.string.localizable.memo()
+            case .date:
+                return R.string.localizable.date()
+            }
+        }
+        
+        var subtitle: String {
+            switch self {
+            case let .id(value), let .transactionHash(value), let .tokenName(value),
+                let .type(value), let .fromUsername(value), let .toUsername(value),
+                let .memo(value), let .date(value):
+                return value
+            case let .depositProgress(completed, total):
+                return R.string.localizable.pending_confirmations(completed, total)
+            }
+        }
+        
+        var allowsCopy: Bool {
+            switch self {
+            case .id, .transactionHash, .memo, .fromUsername, .toUsername:
+                return true
+            default:
+                return false
+            }
+        }
+        
     }
     
     private func updateTableViewContentInsetBottom() {
@@ -284,15 +338,15 @@ extension SnapshotViewController {
     }
     
     private func makeContents() {
-        var columns = [
-            Column(title: R.string.localizable.transaction_id(), subtitle: snapshot.id),
-            Column(title: R.string.localizable.snapshot_hash(), subtitle: snapshot.transactionHash),
-            Column(title: R.string.localizable.asset_type(), subtitle: token.name),
+        var columns: [Column] = [
+            .id(snapshot.id),
+            .transactionHash(snapshot.transactionHash),
+            .tokenName(token.name),
         ]
         if !snapshot.memo.isEmpty {
-            columns.append(Column(title: R.string.localizable.memo(), subtitle: snapshot.memo))
+            columns.append(.memo(snapshot.memo))
         }
-        columns.append(Column(title: R.string.localizable.date(), subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt)))
+        columns.append(.date(DateFormatter.dateFull.string(from: snapshot.createdAt)))
         self.columns = columns
     }
     
@@ -304,24 +358,6 @@ extension SnapshotViewController {
             amount = CurrencyFormatter.localizedString(from: balance, format: .precision, sign: .never) ?? ""
         }
         return amount
-    }
-    
-    private func canCopyAction(indexPath: IndexPath) -> (Bool, String) {
-        let title = columns[indexPath.row].title
-        let subtitle = columns[indexPath.row].subtitle
-        switch title {
-        case R.string.localizable.transaction_id(),
-             R.string.localizable.transaction_hash(),
-             R.string.localizable.memo(),
-             token.memoLabel,
-             R.string.localizable.address(),
-             R.string.localizable.from(),
-             R.string.localizable.to(),
-             R.string.localizable.snapshot_hash():
-            return (true, subtitle)
-        default:
-            return (false, "")
-        }
     }
     
 }

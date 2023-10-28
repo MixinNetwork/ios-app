@@ -29,8 +29,6 @@ class UrlWindow {
                 } else {
                     result = false
                 }
-            case .withdrawal:
-                result = checkWithdrawal(url: url)
             case .address:
                 result = checkAddress(url: url)
             case let .users(id):
@@ -420,65 +418,6 @@ class UrlWindow {
         }
     }
     
-    class func checkWithdrawal(url: URL) -> Bool {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            return true
-        case .unknown:
-            return true
-        }
-        let query = url.getKeyVals()
-        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
-            return false
-        }
-        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty && AmountFormatter.isValid(amount) else {
-            return false
-        }
-        var memo = query["memo"]
-        if let urlDecodeMemo = memo?.removingPercentEncoding {
-            memo = urlDecodeMemo
-        }
-
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        DispatchQueue.global().async {
-            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.absoluteString)")
-                return
-            }
-            guard let address = syncAddress(addressId: addressId, hud: hud) else {
-                return
-            }
-            guard let feeAsset = syncAsset(assetId: address.feeAssetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.absoluteString)")
-                return
-            }
-            
-            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: true)
-            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
-
-                DispatchQueue.main.async {
-                    if canPay {
-                        hud.hide()
-                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
-                    } else if let error = errorMsg {
-                        Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url.absoluteString)")
-                        hud.set(style: .error, text: error)
-                        hud.scheduleAutoHidden()
-                    } else {
-                        hud.hide()
-                    }
-                }
-            }
-        }
-
-        return true
-    }
-
     class func checkQrCodeDetection(string: String, clearNavigationStack: Bool = true) {
         if checkPayment(string: string) {
             return

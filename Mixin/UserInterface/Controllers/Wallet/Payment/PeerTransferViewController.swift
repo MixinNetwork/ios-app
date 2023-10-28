@@ -96,7 +96,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
         let receiverID = opponent.userId
         Task {
             do {
-                let trace = Trace(traceId: traceID, assetId: token.assetId, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
+                let trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
                 TraceDAO.shared.saveTrace(trace: trace)
                 Logger.general.info(category: "PeerTransfer", message: "Will transfer \(amount)")
                 
@@ -188,7 +188,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 _ = try await SafeAPI.postTransaction(requestID: traceID, raw: signedTx.raw, senderID: senderID)
                 let snapshot = SafeSnapshot(id: "\(senderID):\(signedTx.hash)".uuidDigest(),
                                             type: SafeSnapshot.SnapshotType.snapshot.rawValue,
-                                            assetID: token.assetId,
+                                            assetID: token.assetID,
                                             amount: amount,
                                             opponentID: receiverID,
                                             transactionHash: signedTx.hash,

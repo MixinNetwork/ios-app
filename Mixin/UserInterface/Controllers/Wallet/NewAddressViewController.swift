@@ -141,7 +141,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         guard areInputsValid else {
             return
         }
-        let assetId = asset.assetId
+        let assetId = asset.assetID
         var destination = addressValue
         if asset.isBitcoinChain {
             if destination.lowercased().hasPrefix("bitcoin:"), let address = URLComponents(string: destination)?.path {

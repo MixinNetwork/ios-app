@@ -32,7 +32,7 @@ class HiddenAssetViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
             let assets = TokenDAO.shared.allTokens().filter({ (asset) -> Bool in
-                return hiddenAssets[asset.assetId] != nil
+                return hiddenAssets[asset.assetID] != nil
             })
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
@@ -70,7 +70,7 @@ class HiddenAssetViewController: UIViewController {
             guard let self = self else {
                 return
             }
-            let assetId = self.assets[indexPath.row].assetId
+            let assetId = self.assets[indexPath.row].assetID
             self.assets.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = nil
@@ -97,7 +97,7 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(AssetViewController.instance(asset: assets[indexPath.row]), animated: true)
+        navigationController?.pushViewController(TokenViewController.instance(token: assets[indexPath.row]), animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

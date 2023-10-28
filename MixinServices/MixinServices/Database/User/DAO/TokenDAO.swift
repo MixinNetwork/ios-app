@@ -35,7 +35,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func tokenExists(assetID: String) -> Bool {
-        db.recordExists(in: Token.self, where: Token.column(of: .assetId) == assetID)
+        db.recordExists(in: Token.self, where: Token.column(of: .assetID) == assetID)
     }
     
     public func assetID(ofAssetWith kernelAssetID: String) -> String? {
@@ -55,7 +55,7 @@ public final class TokenDAO: UserDatabaseDAO {
             if assets.count == 1 {
                 center.post(onMainThread: Self.assetsDidChangeNotification,
                             object: self,
-                            userInfo: [Self.UserInfoKey.assetId: assets[0].assetId])
+                            userInfo: [Self.UserInfoKey.assetId: assets[0].assetID])
             } else {
                 center.post(onMainThread: Self.assetsDidChangeNotification,
                             object: nil)

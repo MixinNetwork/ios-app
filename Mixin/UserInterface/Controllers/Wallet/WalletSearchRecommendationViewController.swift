@@ -146,12 +146,12 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
         case .trending:
             item = trending[indexPath.row]
             queue.async {
-                if !TokenDAO.shared.tokenExists(assetID: item.assetId) {
+                if !TokenDAO.shared.tokenExists(assetID: item.assetID) {
                     TokenDAO.shared.save(assets: [item])
                 }
             }
         }
-        let vc = AssetViewController.instance(asset: item)
+        let vc = TokenViewController.instance(token: item)
         navigationController?.pushViewController(vc, animated: true)
     }
     

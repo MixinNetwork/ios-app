@@ -2,7 +2,7 @@ import UIKit
 import web3 // Remove this after TIP Wallet transfer is removed
 import MixinServices
 
-class AssetViewController: UIViewController {
+class TokenViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: AssetTableHeaderView!
@@ -13,7 +13,7 @@ class AssetViewController: UIViewController {
     
     private let loadMoreThreshold = 20
     
-    private(set) var asset: TokenItem!
+    private var token: TokenItem!
     private var snapshotDataSource: SnapshotDataSource!
     private var performSendOnAppear = false
         
@@ -32,7 +32,7 @@ class AssetViewController: UIViewController {
         view.layoutIfNeeded()
         updateTableViewContentInset()
         updateTableHeaderFooterView()
-        tableHeaderView.render(asset: asset)
+        tableHeaderView.render(asset: token)
         tableHeaderView.sizeToFit()
         tableHeaderView.transferActionView.delegate = self
         tableView.register(R.nib.snapshotCell)
@@ -50,7 +50,7 @@ class AssetViewController: UIViewController {
         snapshotDataSource.reloadFromLocal()
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
-        let job = RefreshTokenJob(assetID: asset.assetId)
+        let job = RefreshTokenJob(assetID: token.assetID)
         self.job = job
         ConcurrentJobQueue.shared.addJob(job: job)
     }
@@ -72,7 +72,7 @@ class AssetViewController: UIViewController {
         guard let id = notification.userInfo?[AssetDAO.UserInfoKey.assetId] as? String else {
             return
         }
-        guard id == asset.assetId else {
+        guard id == token.assetID else {
             return
         }
         reloadAsset()
@@ -82,7 +82,7 @@ class AssetViewController: UIViewController {
         guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
             return
         }
-        guard id == asset.chainId else {
+        guard id == token.chainId else {
             return
         }
         reloadAsset()
@@ -95,21 +95,21 @@ class AssetViewController: UIViewController {
 
     
     @IBAction func infoAction(_ sender: Any) {
-        AssetInfoWindow.instance().presentWindow(asset: asset)
+        AssetInfoWindow.instance().presentWindow(asset: token)
     }
     
-    class func instance(asset: TokenItem, performSendOnAppear: Bool = false) -> UIViewController {
+    class func instance(token: TokenItem, performSendOnAppear: Bool = false) -> UIViewController {
         let vc = R.storyboard.wallet.asset()!
-        vc.asset = asset
+        vc.token = token
         vc.performSendOnAppear = performSendOnAppear
-        vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: asset.assetId))
-        let container = ContainerViewController.instance(viewController: vc, title: asset.name)
+        vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: token.assetID))
+        let container = ContainerViewController.instance(viewController: vc, title: token.name)
         return container
     }
     
 }
 
-extension AssetViewController: TransferActionViewDelegate {
+extension TokenViewController: TransferActionViewDelegate {
     
     func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
         switch action {
@@ -117,10 +117,10 @@ extension AssetViewController: TransferActionViewDelegate {
             send()
         case .receive:
             let controller: UIViewController
-            if asset.isDepositSupported {
-                controller = DepositViewController.instance(asset: asset)
+            if token.isDepositSupported {
+                controller = DepositViewController.instance(asset: token)
             } else {
-                controller = DepositNotSupportedViewController.instance(asset: asset)
+                controller = DepositNotSupportedViewController.instance(asset: token)
             }
             navigationController?.pushViewController(controller, animated: true)
         }
@@ -128,7 +128,7 @@ extension AssetViewController: TransferActionViewDelegate {
     
 }
 
-extension AssetViewController: ContainerViewControllerDelegate {
+extension TokenViewController: ContainerViewControllerDelegate {
     
     var prefersNavigationBarSeparatorLineHidden: Bool {
         return true
@@ -136,16 +136,16 @@ extension AssetViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let asset = self.asset!
-        let toggleAssetHiddenTitle = AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] == nil ? R.string.localizable.hide_asset() : R.string.localizable.show_asset()
+        let asset = self.token!
+        let toggleAssetHiddenTitle = AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetID] == nil ? R.string.localizable.hide_asset() : R.string.localizable.show_asset()
         alc.addAction(UIAlertAction(title: toggleAssetHiddenTitle, style: .default, handler: { [weak self](_) in
             guard let weakSelf = self else {
                 return
             }
-            if AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] ?? false {
-                AppGroupUserDefaults.Wallet.hiddenAssetIds.removeValue(forKey: asset.assetId)
+            if AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetID] ?? false {
+                AppGroupUserDefaults.Wallet.hiddenAssetIds.removeValue(forKey: asset.assetID)
             } else {
-                AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] = true
+                AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetID] = true
             }
             weakSelf.navigationController?.popViewController(animated: true)
         }))
@@ -159,7 +159,7 @@ extension AssetViewController: ContainerViewControllerDelegate {
     
 }
 
-extension AssetViewController: UITableViewDataSource {
+extension TokenViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return snapshotDataSource.titles.count
@@ -171,19 +171,19 @@ extension AssetViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-        cell.render(snapshot: snapshotDataSource.snapshots[indexPath.section][indexPath.row], asset: asset)
+        cell.render(snapshot: snapshotDataSource.snapshots[indexPath.section][indexPath.row], asset: token)
         cell.delegate = self
         return cell
     }
     
 }
 
-extension AssetViewController: UITableViewDelegate {
+extension TokenViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
-        let viewController = SnapshotViewController(token: asset, snapshot: snapshot)
+        let viewController = SnapshotViewController(token: token, snapshot: snapshot)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -209,7 +209,7 @@ extension AssetViewController: UITableViewDelegate {
     
 }
 
-extension AssetViewController: AssetFilterViewControllerDelegate {
+extension TokenViewController: AssetFilterViewControllerDelegate {
     
     func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort) {
         tableView.setContentOffset(.zero, animated: false)
@@ -220,7 +220,7 @@ extension AssetViewController: AssetFilterViewControllerDelegate {
     
 }
 
-extension AssetViewController: SnapshotCellDelegate {
+extension TokenViewController: SnapshotCellDelegate {
     
     func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {
@@ -243,10 +243,10 @@ extension AssetViewController: SnapshotCellDelegate {
     
 }
 
-extension AssetViewController {
+extension TokenViewController {
     
     private func send() {
-        guard let asset = self.asset else {
+        guard let asset = self.token else {
             return
         }
         let alert = UIAlertController(title: R.string.localizable.send_to_title(), message: nil, preferredStyle: .actionSheet)
@@ -296,7 +296,7 @@ extension AssetViewController {
     }
     
     private func reloadAsset() {
-        let assetId = asset.assetId
+        let assetId = token.assetID
         DispatchQueue.global().async { [weak self] in
             guard let asset = TokenDAO.shared.tokenItem(with: assetId) else {
                 return
@@ -305,7 +305,7 @@ extension AssetViewController {
                 guard let self = self else {
                     return
                 }
-                self.asset = asset
+                self.token = asset
                 UIView.performWithoutAnimation {
                     self.tableHeaderView.render(asset: asset)
                     self.tableHeaderView.sizeToFit()

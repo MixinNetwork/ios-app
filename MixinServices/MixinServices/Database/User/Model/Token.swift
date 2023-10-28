@@ -4,7 +4,7 @@ import GRDB
 public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
     
     public enum CodingKeys: String, CodingKey {
-        case assetId = "asset_id"
+        case assetID = "asset_id"
         case kernelAssetID = "kernel_asset_id"
         case symbol
         case name
@@ -20,7 +20,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     
     public static let databaseTableName = "tokens"
     
-    public let assetId: String
+    public let assetID: String
     public let kernelAssetID: String
     public let symbol: String
     public let name: String
@@ -41,7 +41,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
         btcChange: String, confirmations: Int, assetKey: String
     ) {
-        self.assetId = assetID
+        self.assetID = assetID
         self.kernelAssetID = kernelAssetID
         self.symbol = symbol
         self.name = name
@@ -60,7 +60,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
 extension Token {
     
     public var usesTag: Bool {
-        assetId == AssetID.xrp
+        assetID == AssetID.xrp
     }
     
     public var isBitcoinChain: Bool {
@@ -80,7 +80,7 @@ extension Token {
 extension Token {
     
     public var isDepositSupported: Bool {
-        !AssetID.depositNotSupported.contains(assetId)
+        !AssetID.depositNotSupported.contains(assetID)
     }
     
 }

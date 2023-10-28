@@ -953,7 +953,7 @@
 		DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B40A1FA9E7CF00243A8B /* CornerView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
-		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
+		DF5BF55F1FBB281E0092AFB8 /* TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
 		DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F1B1F9C62990036D5FD /* Constant.swift */; };
 		DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */; };
@@ -2106,7 +2106,7 @@
 		DF46B40A1FA9E7CF00243A8B /* CornerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
-		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
+		DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenViewController.swift; sourceTree = "<group>"; };
 		DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedExtension.swift; sourceTree = "<group>"; };
 		DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtension.swift; sourceTree = "<group>"; };
@@ -3945,7 +3945,7 @@
 				7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */,
 				7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */,
 				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
-				DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */,
+				DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
 				94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */,
 				DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */,
@@ -5378,7 +5378,7 @@
 				7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */,
 				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
 				941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */,
-				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
+				DF5BF55F1FBB281E0092AFB8 /* TokenViewController.swift in Sources */,
 				7B8BB57E234DD18C00991ACB /* SharedMediaTableHeaderView.swift in Sources */,
 				7B81D91623E93F470031E945 /* QuotedMessageViewModel.swift in Sources */,
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,

@@ -100,14 +100,14 @@ final class PaymentValidator {
             let createdAt = Date().addingTimeInterval(-6 * .hour).toUTCString()
             switch operation {
             case let .transfer(opponent):
-                trace = TraceDAO.shared.getTrace(assetId: token.assetId,
+                trace = TraceDAO.shared.getTrace(assetId: token.assetID,
                                                  amount: Token.amountString(from: tokenAmount),
                                                  opponentId: opponent.userId,
                                                  destination: nil,
                                                  tag: nil,
                                                  createdAt: createdAt)
             case let .withdraw(address):
-                trace = TraceDAO.shared.getTrace(assetId: token.assetId,
+                trace = TraceDAO.shared.getTrace(assetId: token.assetID,
                                                  amount: Token.amountString(from: tokenAmount),
                                                  opponentId: nil,
                                                  destination: address.destination,

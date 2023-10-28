@@ -23,7 +23,7 @@ class TokenSelectorViewController: PopupSearchableTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
-        if let assetId = token?.assetId, let index = tokens.firstIndex(where: { $0.assetId == assetId }) {
+        if let assetId = token?.assetID, let index = tokens.firstIndex(where: { $0.assetID == assetId }) {
             var reordered = tokens
             let selected = reordered.remove(at: index)
             reordered.insert(selected, at: 0)
@@ -53,7 +53,7 @@ extension TokenSelectorViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.transfer_type, for: indexPath)!
         let token = isSearching ? searchResults[indexPath.row] : tokens[indexPath.row]
-        cell.checkmarkView.isHidden = !(token.assetId == self.token?.assetId)
+        cell.checkmarkView.isHidden = !(token.assetID == self.token?.assetID)
         cell.render(token: token)
         return cell
     }

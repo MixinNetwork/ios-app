@@ -57,7 +57,7 @@ public final class SyncUTXOJob: AsynchronousJob {
                                     let chain = try await NetworkAPI.chain(id: token.chainId)
                                     newChains.append(chain)
                                 }
-                                assetIDs[kernelAssetID] = token.assetId
+                                assetIDs[kernelAssetID] = token.assetID
                             }
                         }
                         if output.state == Output.State.unspent.rawValue {

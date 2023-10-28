@@ -36,7 +36,7 @@ class AddressViewController: UIViewController {
                                                selector: #selector(reloadLocalAddresses),
                                                name: AddressDAO.addressDidChangeNotification,
                                                object: nil)
-        WithdrawalAPI.addresses(assetId: asset.assetId) { (result) in
+        WithdrawalAPI.addresses(assetId: asset.assetID) { (result) in
             guard case let .success(addresses) = result else {
                 return
             }
@@ -127,7 +127,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
 extension AddressViewController {
     
     @objc private func reloadLocalAddresses() {
-        let assetId = asset.assetId
+        let assetId = asset.assetID
         DispatchQueue.global().async { [weak self] in
             let addresses = AddressDAO.shared.getAddresses(assetId: assetId)
             DispatchQueue.main.async {

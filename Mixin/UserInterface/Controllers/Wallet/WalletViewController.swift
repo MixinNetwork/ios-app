@@ -179,7 +179,7 @@ extension WalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = assets[indexPath.row]
-        let viewController = AssetViewController.instance(asset: token)
+        let viewController = TokenViewController.instance(token: token)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -224,7 +224,7 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
         let controller: UIViewController
         switch action {
         case .send:
-            controller = AssetViewController.instance(asset: token, performSendOnAppear: true)
+            controller = TokenViewController.instance(token: token, performSendOnAppear: true)
         case .receive:
             if token.isDepositSupported {
                 controller = DepositViewController.instance(asset: token)
@@ -254,7 +254,7 @@ extension WalletViewController {
             let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(asset.symbol), message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
-                self.hideAsset(of: asset.assetId)
+                self.hideAsset(of: asset.assetID)
             }))
             self.present(alert, animated: true, completion: nil)
             completionHandler(true)
@@ -275,7 +275,7 @@ extension WalletViewController {
         DispatchQueue.global().async { [weak self] in
             let allAssets = TokenDAO.shared.allTokens()
             let hiddenAssetIds = AppGroupUserDefaults.Wallet.hiddenAssetIds
-            let assets = allAssets.filter { hiddenAssetIds[$0.assetId] == nil }
+            let assets = allAssets.filter { hiddenAssetIds[$0.assetID] == nil }
             let sendableAssets = allAssets.filter { $0.balance != "0" }
             DispatchQueue.main.async {
                 guard let self = self else {
@@ -302,7 +302,7 @@ extension WalletViewController {
     }
     
     private func hideAsset(of assetId: String) {
-        guard let index = assets.firstIndex(where: { $0.assetId == assetId }) else {
+        guard let index = assets.firstIndex(where: { $0.assetID == assetId }) else {
             return
         }
         assets.remove(at: index)

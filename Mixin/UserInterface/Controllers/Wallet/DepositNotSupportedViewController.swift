@@ -19,7 +19,7 @@ class DepositNotSupportedViewController: UIViewController {
         view.layoutIfNeeded()
         
         let symbol: String
-        if asset.assetId == AssetID.omniUSDT {
+        if asset.assetID == AssetID.omniUSDT {
             symbol = "OMNI - USDT"
         } else {
             symbol = asset.symbol

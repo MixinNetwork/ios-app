@@ -66,7 +66,7 @@ class DepositViewController: UIViewController {
     private func reloadEntry(token: TokenItem) {
         if let entry = DepositEntryDAO.shared.entry(ofChainWith: token.chainId) {
             DispatchQueue.main.async {
-                guard token.assetId == self.token.assetId, entry.isSignatureValid else {
+                guard token.assetID == self.token.assetID, entry.isSignatureValid else {
                     return
                 }
                 self.updateViews(token: token, entry: entry)
@@ -84,7 +84,7 @@ class DepositViewController: UIViewController {
             case .success(let entries):
                 DepositEntryDAO.shared.save(entries: entries)
                 if let entry = entries.first(where: \.isPrimary) {
-                    if let self, token.assetId == self.token.assetId {
+                    if let self, token.assetID == self.token.assetID {
                         self.updateViews(token: token, entry: entry)
                         self.hideAddressGeneratingView()
                     }

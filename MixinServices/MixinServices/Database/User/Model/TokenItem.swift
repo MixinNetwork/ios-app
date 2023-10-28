@@ -32,7 +32,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
     public init(token: Token, balance: String, chain: Chain) {
         self.balance = balance
         self.chain = chain
-        super.init(assetID: token.assetId,
+        super.init(assetID: token.assetID,
                    kernelAssetID: token.kernelAssetID,
                    symbol: token.symbol,
                    name: token.name,
@@ -135,7 +135,7 @@ extension TokenItem {
             return "BEP-20"
         } else if chainId == ChainID.mvm {
             return "MVM"
-        } else if assetId == chainId {
+        } else if assetID == chainId {
             return nil
         } else {
             switch chainId {

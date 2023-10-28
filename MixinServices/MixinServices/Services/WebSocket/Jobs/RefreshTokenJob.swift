@@ -28,7 +28,7 @@ public class RefreshTokenJob: AsynchronousJob {
                 // Update fiats and snapshots?
                 let entries = DepositEntryDAO.shared.entries(ofChainWith: token.chainId)
                 for entry in entries {
-                    let deposits = try await SafeAPI.pendingDeposits(assetID: token.assetId,
+                    let deposits = try await SafeAPI.pendingDeposits(assetID: token.assetID,
                                                                      destination: entry.destination,
                                                                      tag: entry.tag)
                     

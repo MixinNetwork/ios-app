@@ -98,9 +98,9 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             }
             
             localItems = localItems.filter{ $0.balance.doubleValue > 0 }
-            let localIds = Set(localItems.map(\.assetId))
+            let localIds = Set(localItems.map(\.assetID))
             let remoteItems = remoteAssets.compactMap({ (token) -> TokenItem? in
-                guard !localIds.contains(token.assetId) else {
+                guard !localIds.contains(token.assetID) else {
                     return nil
                 }
                 let chain: Chain
@@ -167,11 +167,11 @@ extension WalletSearchResultsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = searchResults[indexPath.row]
-        let vc = AssetViewController.instance(asset: item)
+        let vc = TokenViewController.instance(token: item)
         navigationController?.pushViewController(vc, animated: true)
         DispatchQueue.global().async {
-            AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetId)
-            if !TokenDAO.shared.tokenExists(assetID: item.assetId) {
+            AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
+            if !TokenDAO.shared.tokenExists(assetID: item.assetID) {
                 TokenDAO.shared.save(assets: [item])
             }
         }

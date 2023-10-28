@@ -192,11 +192,12 @@ extension DepositViewController {
             warningLabel.text = R.string.localizable.deposit_account_attention(token.symbol)
         } else {
             lowerDepositFieldView.isHidden = true
-//            if asset.reserve.doubleValue > 0 {
-//                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(asset.reserve, asset.chain?.symbol ?? "")
-//            } else {
-//                warningLabel.text = R.string.localizable.deposit_attention()
-//            }
+            if token.decimalDust > 0 {
+                let dust = CurrencyFormatter.localizedString(from: token.decimalDust, format: .precision, sign: .never)
+                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(dust, token.chain?.symbol ?? "")
+            } else {
+                warningLabel.text = R.string.localizable.deposit_attention()
+            }
         }
         hintLabel.text = token.depositTips
     }

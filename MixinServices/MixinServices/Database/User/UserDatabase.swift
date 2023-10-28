@@ -610,6 +610,7 @@ public final class UserDatabase: Database {
                     `chain_id` TEXT NOT NULL,
                     `change_usd` TEXT NOT NULL,
                     `change_btc` TEXT NOT NULL,
+                    `dust` TEXT NOT NULL,
                     `confirmations` INTEGER NOT NULL,
                     `asset_key` TEXT NOT NULL,
                     PRIMARY KEY(`asset_id`)

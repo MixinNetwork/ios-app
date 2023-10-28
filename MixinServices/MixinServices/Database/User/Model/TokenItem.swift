@@ -42,6 +42,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
                    chainID: token.chainId,
                    usdChange: token.changeUsd,
                    btcChange: token.btcChange,
+                   dust: token.dust,
                    confirmations: token.confirmations,
                    assetKey: token.assetKey)
     }
@@ -94,6 +95,7 @@ extension TokenItem {
                           chainID: ChainID.ethereum,
                           usdChange: "0",
                           btcChange: "0",
+                          dust: "0.0001",
                           confirmations: 100,
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33")
         let chain = Chain(chainId: token.chainId,

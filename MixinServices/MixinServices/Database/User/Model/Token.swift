@@ -14,6 +14,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case chainId = "chain_id"
         case changeUsd = "change_usd"
         case btcChange = "change_btc"
+        case dust
         case confirmations
         case assetKey = "asset_key"
     }
@@ -30,16 +31,18 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let chainId: String
     public let changeUsd: String
     public let btcChange: String
+    public let dust: String
     public let confirmations: Int
     public let assetKey: String
     
     public private(set) lazy var decimalBTCPrice = Decimal(string: priceBtc, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDPrice = Decimal(string: priceUsd, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
     public init(
         assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: URL?,
         btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
-        btcChange: String, confirmations: Int, assetKey: String
+        btcChange: String, dust: String, confirmations: Int, assetKey: String
     ) {
         self.assetID = assetID
         self.kernelAssetID = kernelAssetID
@@ -51,6 +54,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         self.chainId = chainID
         self.changeUsd = usdChange
         self.btcChange = btcChange
+        self.dust = dust
         self.confirmations = confirmations
         self.assetKey = assetKey
     }

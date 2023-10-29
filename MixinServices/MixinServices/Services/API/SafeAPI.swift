@@ -13,7 +13,7 @@ public final class SafeAPI: MixinAPI {
             "public_key": publicKey,
             "signature": signature,
             "pin_base64": pin,
-            "salt": salt
+            "salt_base64": salt
         ]
         return try await request(method: .post, path: "/safe/users", parameters: body)
     }
@@ -62,7 +62,7 @@ public final class SafeAPI: MixinAPI {
         state: String? = nil,
         user: String? = nil
     ) async throws -> [Output] {
-        var path = "/safe/outputs?receivers=\(members)&threshold=\(threshold)&limit=\(limit)"
+        var path = "/safe/outputs?members=\(members)&threshold=\(threshold)&limit=\(limit)"
         if let offset {
             path.append("&offset=\(offset)")
         }

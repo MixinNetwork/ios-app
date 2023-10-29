@@ -15,8 +15,8 @@ extension PINRequest: Encodable {
     enum CodingKeys: String, CodingKey {
         case pin = "pin_base64"
         case oldPIN = "old_pin_base64"
-        case salt
-        case oldSalt = "old_salt"
+        case salt = "salt_base64"
+        case oldSalt = "old_salt_base64"
         case timestamp
     }
     

@@ -594,6 +594,7 @@ public final class UserDatabase: Database {
                     `signed_by` TEXT NOT NULL,
                     `signed_at` TEXT NOT NULL,
                     `spent_at` TEXT NOT NULL,
+                    `sequence`  INTEGER NOT NULL,
                     PRIMARY KEY(`output_id`)
                 )
                 """,

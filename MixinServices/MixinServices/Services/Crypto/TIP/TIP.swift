@@ -258,21 +258,37 @@ extension TIP {
         let oldPIN = try encryptTIPPIN(tipPriv: tipPriv, target: body)
         let newEncryptPIN = try encryptPIN(key: pinToken, code: pub + (accountCounter + 1).data(endianness: .big))
         
-        let salt: (old: String, new: String)?
+        let pinTokenEncryptedSalt: (old: String, new: String)?
+        let encryptedSaltToSave: Data?
         if accountBeforeUpdate.hasSafe {
             let oldSaltAESKey = try saltAESKey(pin: oldPINData, tipPriv: tipPriv)
             let oldEncryptedSalt = try await Self.encryptedSalt()
             let plainSalt = try AESCryptor.decrypt(oldEncryptedSalt, with: oldSaltAESKey)
             let saltAESKey = try saltAESKey(pin: newPINData, tipPriv: tipPriv)
             let newEncryptedSalt = try AESCryptor.encrypt(plainSalt, with: saltAESKey)
-            salt = (old: oldEncryptedSalt.base64RawURLEncodedString(),
-                    new: newEncryptedSalt.base64RawURLEncodedString())
+            pinTokenEncryptedSalt = (
+                old: try AESCryptor.encrypt(oldEncryptedSalt, with: pinToken).base64RawURLEncodedString(),
+                new: try AESCryptor.encrypt(newEncryptedSalt, with: pinToken).base64RawURLEncodedString()
+            )
+            encryptedSaltToSave = newEncryptedSalt
+#if DEBUG
+            Logger.tip.info(category: "TIP", message: "Update with plain salt: \(plainSalt.base64RawURLEncodedString()), oldKey: \(oldSaltAESKey.base64RawURLEncodedString()), newKey: \(saltAESKey.base64RawURLEncodedString()), pinTokenEncrypted: \(pinTokenEncryptedSalt)")
+#endif
         } else {
-            salt = nil
+#if DEBUG
+            Logger.tip.info(category: "TIP", message: "No salt")
+#endif
+            pinTokenEncryptedSalt = nil
+            encryptedSaltToSave = nil
         }
         
-        let request = PINRequest(pin: newEncryptPIN, oldPIN: oldPIN, salt: salt?.new, oldSalt: salt?.old, timestamp: nil)
+        let request = PINRequest(pin: newEncryptPIN,
+                                 oldPIN: oldPIN,
+                                 salt: pinTokenEncryptedSalt?.new,
+                                 oldSalt: pinTokenEncryptedSalt?.old,
+                                 timestamp: nil)
         AppGroupKeychain.encryptedTIPPriv = nil
+        AppGroupKeychain.encryptedSalt = nil
         Logger.tip.info(category: "TIP", message: "TIP Priv is removed")
 #if DEBUG
         try await MainActor.run {
@@ -299,6 +315,8 @@ extension TIP {
         Logger.tip.info(category: "TIP", message: "Local account is updated with tip_counter: \(account.tipCounter)")
         try encryptAndSaveTIPPriv(pinData: newPINData, tipPriv: tipPriv, aesKey: aesKey)
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
+        AppGroupKeychain.encryptedSalt = encryptedSaltToSave
+        Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
         }
@@ -384,6 +402,9 @@ extension TIP {
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
         }
+        guard let pinToken = AppGroupKeychain.pinToken else {
+            throw Error.missingPINToken
+        }
         guard let userID = LoginManager.shared.account?.userID else {
             throw Error.noAccount
         }
@@ -391,24 +412,32 @@ extension TIP {
             throw Error.invalidUserID
         }
         let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
+        
         let salt = Data(withNumberOfSecuredRandomBytes: 32)!
         let saltAESKey = try saltAESKey(pin: pinData, tipPriv: tipPriv)
         let encryptedSalt = try AESCryptor.encrypt(salt, with: saltAESKey)
+        let pinTokenEncryptedSalt = try AESCryptor.encrypt(encryptedSalt, with: pinToken)
+        let base64Salt = pinTokenEncryptedSalt.base64RawURLEncodedString()
+        
         let spendSeed = try spendPriv(salt: salt, tipPriv: tipPriv)
         let keyPair = try Curve25519.Signing.PrivateKey(rawRepresentation: spendSeed)
         let pkHex = keyPair.publicKey.rawRepresentation.hexEncodedString()
-        let base64Salt = encryptedSalt.base64RawURLEncodedString()
         let registerSignature = try keyPair.signature(for: userIDHash).base64RawURLEncodedString()
         
         let body = try TIPBody.registerSequencer(userID: myUserId, publicKey: pkHex)
         let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
         
+#if DEBUG
+        Logger.tip.info(category: "TIP", message: "Register with plain salt: \(salt.base64RawURLEncodedString()), key: \(saltAESKey.base64RawURLEncodedString()), base64Salt: \(base64Salt), spendSeed: \(spendSeed.base64RawURLEncodedString()), pkHex: \(pkHex)")
+#endif
         let account = try await SafeAPI.register(publicKey: pkHex,
                                                  signature: registerSignature,
                                                  pin: pin,
                                                  salt: base64Salt)
         LoginManager.shared.setAccount(account)
         Logger.tip.info(category: "TIP", message: "Local account is updated with registration")
+        AppGroupKeychain.encryptedSalt = encryptedSalt
+        Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
     }
     
     public static func spendPriv(pin: String) async throws -> Data {
@@ -423,17 +452,21 @@ extension TIP {
     }
     
     public static func encryptedSalt() async throws -> Data {
-        if let salt = LoginManager.shared.account?.salt, let saltData = Data(base64URLEncoded: salt) {
-            return saltData
-        } else if let salt = AppGroupKeychain.encryptedSalt {
+        if let salt = AppGroupKeychain.encryptedSalt {
             return salt
         } else {
             let account = try await AccountAPI.me()
-            guard let salt = account.salt, let saltData = Data(base64URLEncoded: salt) else {
+            LoginManager.shared.setAccount(account, updateUserTable: false)
+            guard let accountSalt = account.salt, let pinTokenEncryptedSalt = Data(base64URLEncoded: accountSalt) else {
                 throw Error.noSalt
             }
-            LoginManager.shared.setAccount(account, updateUserTable: false)
-            return saltData
+            guard let pinToken = AppGroupKeychain.pinToken else {
+                throw Error.missingPINToken
+            }
+            let encryptedSalt = try AESCryptor.decrypt(pinTokenEncryptedSalt, with: pinToken)
+            AppGroupKeychain.encryptedSalt = encryptedSalt
+            Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+            return encryptedSalt
         }
     }
     

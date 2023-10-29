@@ -27,12 +27,14 @@ public struct Output {
     public let signedBy: String
     public let signedAt: Date
     public let spentAt: Date
+    public let sequence: Int
     
     public init(
         outputID: String, transactionHash: String, outputIndex: Int, asset: String,
         amount: String, mask: String, keys: [String], receivers: [String],
         receiversHash: String, receiversThreshold: Int, extra: String, state: String,
-        createdAt: Date, updatedAt: Date, signedBy: String, signedAt: Date, spentAt: Date
+        createdAt: Date, updatedAt: Date, signedBy: String, signedAt: Date,
+        spentAt: Date, sequence: Int
     ) {
         self.outputID = outputID
         self.transactionHash = transactionHash
@@ -51,6 +53,7 @@ public struct Output {
         self.signedBy = signedBy
         self.signedAt = signedAt
         self.spentAt = spentAt
+        self.sequence = sequence
     }
     
 }
@@ -75,6 +78,7 @@ extension Output: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixi
         case signedBy = "signed_by"
         case signedAt = "signed_at"
         case spentAt = "spent_at"
+        case sequence
     }
     
 }

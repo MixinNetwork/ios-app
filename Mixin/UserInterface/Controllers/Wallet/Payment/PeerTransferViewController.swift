@@ -175,7 +175,8 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                           updatedAt: now,
                                           signedBy: "",
                                           signedAt: .distantPast,
-                                          spentAt: .distantPast)
+                                          spentAt: .distantPast,
+                                          sequence: 0)
                 } else {
                     changeOutput = nil
                 }

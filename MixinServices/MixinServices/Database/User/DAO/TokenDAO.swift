@@ -28,7 +28,7 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public static let shared = TokenDAO()
     
-    public static let assetsDidChangeNotification = NSNotification.Name("one.mixin.services.TokenDAO.assetsDidChange")
+    public static let tokensDidChangeNotification = NSNotification.Name("one.mixin.services.TokenDAO.TokensDidChange")
     
     public func tokenExists(kernelAssetID: String) -> Bool {
         db.recordExists(in: Token.self, where: Token.column(of: .kernelAssetID) == kernelAssetID)
@@ -53,11 +53,11 @@ public final class TokenDAO: UserDatabaseDAO {
         db.save(assets) { _ in
             let center = NotificationCenter.default
             if assets.count == 1 {
-                center.post(onMainThread: Self.assetsDidChangeNotification,
+                center.post(onMainThread: Self.tokensDidChangeNotification,
                             object: self,
                             userInfo: [Self.UserInfoKey.assetId: assets[0].assetID])
             } else {
-                center.post(onMainThread: Self.assetsDidChangeNotification,
+                center.post(onMainThread: Self.tokensDidChangeNotification,
                             object: nil)
             }
         }

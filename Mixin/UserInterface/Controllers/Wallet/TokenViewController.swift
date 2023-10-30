@@ -49,7 +49,7 @@ class TokenViewController: UIViewController {
             weakSelf.updateTableHeaderFooterView()
         }
         snapshotDataSource.reloadFromLocal()
-        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: TokenDAO.tokensDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
         let job = RefreshTokenJob(assetID: token.assetID)
         self.job = job

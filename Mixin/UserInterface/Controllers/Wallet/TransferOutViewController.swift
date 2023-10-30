@@ -83,7 +83,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         } else {
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(fetchAvailableAssets),
-                                                   name: AssetDAO.assetsDidChangeNotification,
+                                                   name: TokenDAO.tokensDidChangeNotification,
                                                    object: nil)
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(fetchAvailableAssets),

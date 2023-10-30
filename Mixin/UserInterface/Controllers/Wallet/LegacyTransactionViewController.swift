@@ -93,10 +93,6 @@ class LegacyTransactionViewController: UIViewController {
         return container
     }
     
-    class func instance(asset: TokenItem, snapshot: SnapshotItem) -> UIViewController {
-        fatalError()
-    }
-    
 }
 
 extension LegacyTransactionViewController: ContainerViewControllerDelegate {

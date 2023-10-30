@@ -676,6 +676,7 @@ public final class UserDatabase: Database {
                 
                 "CREATE INDEX IF NOT EXISTS `index_outputs_asset_state_created_at` ON `outputs` (`asset`, `state`, `created_at`)",
                 "CREATE UNIQUE INDEX IF NOT EXISTS `index_outputs_transaction_hash_output_index` ON `outputs` (`transaction_hash`, `output_index`)",
+                "CREATE INDEX IF NOT EXISTS `index_tokens_kernel_asset_id` ON `tokens` (`kernel_asset_id`)",
                 "CREATE INDEX IF NOT EXISTS `index_tokens_extra_kernel_asset_id` ON `tokens_extra` (`kernel_asset_id`)",
             ]
             for sql in sqls {

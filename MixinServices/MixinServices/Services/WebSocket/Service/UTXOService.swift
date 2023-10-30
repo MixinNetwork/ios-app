@@ -71,7 +71,7 @@ public final class UTXOService {
                         }
                     }
                     
-                    OutputDAO.shared.save(outputs: outputs) { db in
+                    OutputDAO.shared.insertOrIgnore(outputs: outputs) { db in
                         for output in outputs {
                             if let assetID = assetIDs[output.asset] {
                                 try self.updateBalance(assetID: assetID, kernelAssetID: output.asset, db: db)

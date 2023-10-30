@@ -16,20 +16,22 @@ final class RecoverRawTransactionJob: AsynchronousJob {
     override func execute() -> Bool {
         Task {
             while let tx = RawTransactionDAO.shared.firstRawTransaction() {
+                Logger.general.info(category: "RecoverRawTransaction", message: "Found tx: \(tx.requestID)")
                 do {
                     let response = try await SafeAPI.transaction(id: tx.requestID)
                     try updateDatabase(with: response, transaction: tx)
+                    Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by finding")
                 } catch MixinAPIError.notFound {
                     do {
                         let response = try await SafeAPI.postTransaction(requestID: tx.requestID, raw: tx.rawTransaction)
                         try updateDatabase(with: response, transaction: tx)
+                        Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by posting")
                     } catch {
                         Logger.general.error(category: "RecoverRawTransaction", message: "Error: \(error)")
                     }
                 } catch {
                     Logger.general.error(category: "RecoverRawTransaction", message: "Error: \(error)")
                 }
-                RawTransactionDAO.shared.deleteRawTransaction(with: tx.requestID)
             }
             self.finishJob()
         }
@@ -89,7 +91,7 @@ extension RecoverRawTransactionJob {
         }
         
         let hash: String
-        let index: String
+        let index: Int
         
     }
     

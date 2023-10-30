@@ -5,9 +5,9 @@ public final class OutputDAO: UserDatabaseDAO {
     
     public static let shared = OutputDAO()
     
-    public func save(outputs: [Output], alongsideTransaction work: ((GRDB.Database) throws -> Void)?) {
+    public func insertOrIgnore(outputs: [Output], alongsideTransaction work: ((GRDB.Database) throws -> Void)?) {
         db.write { db in
-            try outputs.save(db)
+            try outputs.insert(db, onConflict: .ignore)
             try work?(db)
         }
     }

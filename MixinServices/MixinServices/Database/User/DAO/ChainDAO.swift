@@ -14,7 +14,7 @@ public final class ChainDAO: UserDatabaseDAO {
         db.recordExists(in: Chain.self, where: Chain.column(of: .chainId) == chainId)
     }
     
-    public func insertOrUpdateChains(_ chains: [Chain]) {
+    public func save(_ chains: [Chain]) {
         guard !chains.isEmpty else {
             return
         }

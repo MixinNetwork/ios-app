@@ -887,7 +887,7 @@ extension UrlWindow {
             if let chain = ChainDAO.shared.chain(chainId: chainId) {
                 asset?.chain = chain
             } else if case let .success(chain) = AssetAPI.chain(chainId: chainId) {
-                ChainDAO.shared.insertOrUpdateChains([chain])
+                ChainDAO.shared.save([chain])
                 asset?.chain = chain
             } else {
                 return nil

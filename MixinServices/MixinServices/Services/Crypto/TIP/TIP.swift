@@ -50,10 +50,24 @@ public enum TIP {
     }
     
     @frozen public enum Status {
+        
         case ready
         case needsInitialize
         case needsMigrate
         case unknown
+        
+        public init(account: Account) {
+            if account.tipCounter == 0 {
+                if account.hasPIN {
+                    self = .needsMigrate
+                } else {
+                    self = .needsInitialize
+                }
+            } else {
+                self = .ready
+            }
+        }
+        
     }
     
     @frozen public enum Progress {
@@ -87,17 +101,10 @@ public enum TIP {
     public static let didUpdateNotification = Notification.Name("one.mixin.service.tip.update")
     
     public static var status: Status {
-        guard let account = LoginManager.shared.account else {
-            return .unknown
-        }
-        if account.tipCounter == 0 {
-            if account.hasPIN {
-                return .needsMigrate
-            } else {
-                return .needsInitialize
-            }
+        if let account = LoginManager.shared.account {
+            return Status(account: account)
         } else {
-            return .ready
+            return .unknown
         }
     }
     

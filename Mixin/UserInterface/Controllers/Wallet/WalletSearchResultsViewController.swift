@@ -108,7 +108,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                     chain = localChain
                 } else if case let .success(remoteChain) = AssetAPI.chain(chainId: token.chainId) {
                     DispatchQueue.global().async {
-                        ChainDAO.shared.insertOrUpdateChains([remoteChain])
+                        ChainDAO.shared.save([remoteChain])
                     }
                     chain = remoteChain
                 } else {

@@ -197,12 +197,12 @@ final class AuthenticationViewController: UIViewController {
         }
     }
     
-    func endPINInputting(alongside animation: @escaping () -> Void) {
+    func endPINInputting(alongside animation: (() -> Void)? = nil) {
         UIView.animate(withDuration: 0.3) {
             self.pinFieldWrapperView.alpha = 0
             self.pinFieldWrapperHeightConstraint.constant = 0
             self.pinField.resignFirstResponder()
-            animation()
+            animation?()
             self.view.layoutIfNeeded()
         }
     }
@@ -366,6 +366,7 @@ extension AuthenticationViewController {
     
     @objc private func authenticateWithBiometry(_ sender: Any) {
         pinField.receivesInput = false
+        endPINInputting()
         let prompt = R.string.localizable.authorize_payment_via(BiometryType.payment.localizedName)
         DispatchQueue.global().async {
             DispatchQueue.main.sync {
@@ -375,6 +376,7 @@ extension AuthenticationViewController {
                 DispatchQueue.main.sync {
                     ScreenLockManager.shared.hasOtherBiometricAuthInProgress = false
                     self.pinField.receivesInput = true
+                    self.beginPINInputting()
                 }
                 return
             }

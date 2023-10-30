@@ -1220,7 +1220,7 @@ extension ReceiveMessageService {
             chainId = nil
         }
         if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = AssetAPI.chain(chainId: chainId) {
-            ChainDAO.shared.insertOrUpdateChains([chain])
+            ChainDAO.shared.save([chain])
         }
         let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -1247,13 +1247,12 @@ extension ReceiveMessageService {
             chainId = nil
         }
         if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = NetworkAPI.chain(id: chainId) {
-            ChainDAO.shared.insertOrUpdateChains([chain])
+            ChainDAO.shared.save([chain])
         }
         SafeSnapshotDAO.shared.save(snapshot: snapshot)
         let message = Message.createMessage(snapshot: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
-        let job = SyncUTXOJob()
-        ConcurrentJobQueue.shared.addJob(job: job)
+        UTXOService.shared.synchronize()
     }
     
     private func processSystemSessionMessage(data: BlazeMessageData) {

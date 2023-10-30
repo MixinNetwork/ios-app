@@ -13,15 +13,13 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case type
         case assetID = "asset_id"
         case amount
+        case userID = "user_id"
         case opponentID = "opponent_id"
-        case transactionHash = "transaction_hash"
         case memo
+        case transactionHash = "transaction_hash"
         case createdAt = "created_at"
         case traceID = "trace_id"
-        case sender
-        case receiver
         case confirmations
-        case snapshotHash = "snapshot_hash"
         case openingBalance = "opening_balance"
         case closingBalance = "closing_balance"
     }
@@ -30,37 +28,34 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let type: String
     public let assetID: String
     public let amount: String
+    public let userID: String
     public let opponentID: String
-    public let transactionHash: String
     public let memo: String
+    public let transactionHash: String
     public let createdAt: Date
     public let traceID: String?
-    public let sender: String?
-    public let receiver: String?
     public let confirmations: Int?
-    public let snapshotHash: String?
     public let openingBalance: String?
     public let closingBalance: String?
     
     public init(
-        id: String, type: String, assetID: String, amount: String, opponentID: String,
-        transactionHash: String, memo: String, createdAt: Date, traceID: String?,
-        sender: String?, receiver: String?, confirmations: Int?, snapshotHash: String?,
+        id: String, type: String, assetID: String, amount: String,
+        userID: String, opponentID: String, memo: String,
+        transactionHash: String, createdAt: Date,
+        traceID: String?, confirmations: Int?,
         openingBalance: String?, closingBalance: String?
     ) {
         self.id = id
         self.type = type
         self.assetID = assetID
         self.amount = amount
+        self.userID = userID
         self.opponentID = opponentID
-        self.transactionHash = transactionHash
         self.memo = memo
+        self.transactionHash = transactionHash
         self.createdAt = createdAt
         self.traceID = traceID
-        self.sender = sender
-        self.receiver = receiver
         self.confirmations = confirmations
-        self.snapshotHash = snapshotHash
         self.openingBalance = openingBalance
         self.closingBalance = closingBalance
     }
@@ -70,15 +65,13 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.type = SnapshotType.pending.rawValue
         self.assetID = assetID
         self.amount = pendingDeposit.amount
+        self.userID = ""
         self.opponentID = myUserId
         self.transactionHash = pendingDeposit.transactionHash
         self.memo = ""
         self.createdAt = pendingDeposit.createdAt.toUTCDate()
         self.traceID = ""
-        self.sender = pendingDeposit.sender
-        self.receiver = nil
         self.confirmations = pendingDeposit.confirmations
-        self.snapshotHash = nil
         self.openingBalance = nil
         self.closingBalance = nil
     }

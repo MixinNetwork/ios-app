@@ -23,7 +23,7 @@ public class RefreshTokenJob: AsynchronousJob {
                 }
                 let chain = try await NetworkAPI.chain(id: token.chainId)
                 if !MixinService.isStopProcessMessages {
-                    ChainDAO.shared.insertOrUpdateChains([chain])
+                    ChainDAO.shared.save([chain])
                 }
                 // Update fiats and snapshots?
                 let entries = DepositEntryDAO.shared.entries(ofChainWith: token.chainId)

@@ -6,11 +6,10 @@ public struct Output {
     public enum State: String {
         case unspent
         case signed
-        case pending
         case spent
     }
     
-    public let outputID: String
+    public let id: String
     public let transactionHash: String
     public let outputIndex: Int
     public let asset: String
@@ -30,13 +29,13 @@ public struct Output {
     public let sequence: Int
     
     public init(
-        outputID: String, transactionHash: String, outputIndex: Int, asset: String,
+        id: String, transactionHash: String, outputIndex: Int, asset: String,
         amount: String, mask: String, keys: [String], receivers: [String],
         receiversHash: String, receiversThreshold: Int, extra: String, state: String,
         createdAt: Date, updatedAt: Date, signedBy: String, signedAt: Date,
         spentAt: Date, sequence: Int
     ) {
-        self.outputID = outputID
+        self.id = id
         self.transactionHash = transactionHash
         self.outputIndex = outputIndex
         self.asset = asset
@@ -61,7 +60,7 @@ public struct Output {
 extension Output: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
     public enum CodingKeys: String, CodingKey {
-        case outputID = "output_id"
+        case id = "output_id"
         case transactionHash = "transaction_hash"
         case outputIndex = "output_index"
         case asset

@@ -147,7 +147,6 @@ class HomeViewController: UIViewController {
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
-            ConcurrentJobQueue.shared.addJob(job: SyncUTXOJob())
             initializeFTSIfNeeded()
             refreshExternalSchemesIfNeeded()
             if SpotlightManager.isAvailable {
@@ -183,21 +182,14 @@ class HomeViewController: UIViewController {
             }))
             present(alert, animated: true, completion: nil)
         }
-        switch TIP.status {
-        case .ready:
-            if let account = LoginManager.shared.account, !account.hasSafe {
-                let register = RegisterToSafeViewController()
-                let authentication = AuthenticationViewController(intentViewController: register)
-                present(authentication, animated: true)
-            }
-        case .needsMigrate:
-            let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
-            navigationController?.present(tip, animated: true)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            navigationController?.present(tip, animated: true)
-        case .unknown:
-            break
+        UTXOService.shared.synchronize()
+        if let account = LoginManager.shared.account, !account.hasSafe {
+            let register = RegisterToSafeViewController()
+            let authentication = AuthenticationViewController(intentViewController: register)
+            present(authentication, animated: true)
+        } else {
+            let job = RecoverRawTransactionJob()
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     

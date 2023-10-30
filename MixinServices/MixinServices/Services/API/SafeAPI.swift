@@ -48,7 +48,7 @@ public final class SafeAPI: MixinAPI {
         return request.views
     }
     
-    public static func postTransaction(requestID: String, raw: String, senderID: String) async throws -> Empty {
+    public static func postTransaction(requestID: String, raw: String) async throws -> TransactionResponse {
         try await request(method: .post,
                           path: "/safe/transactions",
                           parameters: ["request_id": requestID, "raw": raw])
@@ -57,7 +57,7 @@ public final class SafeAPI: MixinAPI {
     public static func outputs(
         members: String,
         threshold: Int,
-        offset: String? = nil,
+        offset: Int?,
         limit: Int = 200,
         state: String? = nil,
         user: String? = nil
@@ -135,6 +135,10 @@ public final class SafeAPI: MixinAPI {
             path.append("&tag=\(tag)")
         }
         return try await request(method: .get, path: path)
+    }
+    
+    public static func transaction(id: String) async throws -> TransactionResponse {
+        try await request(method: .get, path: "/safe/transactions/" + id)
     }
     
 }

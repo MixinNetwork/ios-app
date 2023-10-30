@@ -102,7 +102,7 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         sql += "\nLIMIT \(limit)"
         
         var arguments: [String: String] = [:]
-        arguments["location_created_at"] = location?.createdAt.toUTCString()
+        arguments["location_created_at"] = location?.createdAt
         arguments["location_amount"] = location?.amount
         for (key, value) in additionalArguments {
             arguments[key] = value

@@ -119,7 +119,7 @@ public final class UTXOService {
                                kernelAssetID: kernelAssetID,
                                isHidden: nil,
                                balance: Token.amountString(from: totalAmount),
-                               updatedAt: Date())
+                               updatedAt: Date().toUTCString())
         try TokenExtraDAO.shared.insertOrUpdateBalance(extra: extra, into: db)
     }
     

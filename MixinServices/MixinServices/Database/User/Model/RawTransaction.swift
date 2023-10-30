@@ -6,9 +6,9 @@ public struct RawTransaction {
     public let requestID: String
     public let rawTransaction: String
     public let receiverID: String
-    public let createdAt: Date
+    public let createdAt: String
     
-    public init(requestID: String, rawTransaction: String, receiverID: String, createdAt: Date) {
+    public init(requestID: String, rawTransaction: String, receiverID: String, createdAt: String) {
         self.requestID = requestID
         self.rawTransaction = rawTransaction
         self.receiverID = receiverID

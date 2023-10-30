@@ -156,7 +156,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 guard let signedTx else {
                     throw error ?? Error.nullSignature
                 }
-                let now = Date()
+                let now = Date().toUTCString()
                 let changeOutput: Output?
                 if let change = signedTx.change {
                     let outputID = "\(change.hash):\(change.index)".uuidDigest()
@@ -175,8 +175,8 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                           createdAt: lastSpendingOutput.createdAt,
                                           updatedAt: now,
                                           signedBy: "",
-                                          signedAt: .distantPast,
-                                          spentAt: .distantPast,
+                                          signedAt: "",
+                                          spentAt: "",
                                           sequence: 0)
                 } else {
                     changeOutput = nil

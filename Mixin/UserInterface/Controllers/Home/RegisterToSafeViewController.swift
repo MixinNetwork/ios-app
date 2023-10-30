@@ -43,12 +43,12 @@ final class RegisterToSafeViewController: UIViewController {
                             case .needsMigrate:
                                 self.authenticationViewController?.presentingViewController?.dismiss(animated: true) {
                                     let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
-                                    UIApplication.homeNavigationController?.navigationController?.present(tip, animated: true)
+                                    UIApplication.homeNavigationController?.present(tip, animated: true)
                                 }
                             case .needsInitialize:
                                 self.authenticationViewController?.presentingViewController?.dismiss(animated: true) {
                                     let tip = TIPNavigationViewController(intent: .create, destination: nil)
-                                    UIApplication.homeNavigationController?.navigationController?.present(tip, animated: true)
+                                    UIApplication.homeNavigationController?.present(tip, animated: true)
                                 }
                             case .unknown:
                                 break

@@ -41,7 +41,7 @@ class RefreshSnapshotsJob: BaseJob {
         switch result {
         case let .success(snapshots):
             SafeSnapshotDAO.shared.save(snapshots: snapshots)
-            RefreshSnapshotsJob.setOffset(snapshots.last?.createdAt.toUTCString(), for: category)
+            RefreshSnapshotsJob.setOffset(snapshots.last?.createdAt, for: category)
         case let .failure(error):
             RefreshSnapshotsJob.setOffset(nil, for: category)
             throw error

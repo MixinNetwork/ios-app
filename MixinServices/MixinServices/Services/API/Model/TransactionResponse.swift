@@ -15,10 +15,10 @@ public struct TransactionResponse {
     public let extra: String
     public let state: String
     public let rawTransaction: String
-    public let createdAt: Date
-    public let updatedAt: Date
+    public let createdAt: String
+    public let updatedAt: String
     public let snapshotHash: String
-    public let snapshotAt: Date
+    public let snapshotAt: String
     
 }
 

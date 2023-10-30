@@ -21,19 +21,19 @@ public struct Output {
     public let receiversThreshold: Int
     public let extra: String
     public let state: String
-    public let createdAt: Date
-    public let updatedAt: Date
+    public let createdAt: String
+    public let updatedAt: String
     public let signedBy: String
-    public let signedAt: Date
-    public let spentAt: Date
+    public let signedAt: String
+    public let spentAt: String
     public let sequence: Int
     
     public init(
         id: String, transactionHash: String, outputIndex: Int, asset: String,
         amount: String, mask: String, keys: [String], receivers: [String],
         receiversHash: String, receiversThreshold: Int, extra: String, state: String,
-        createdAt: Date, updatedAt: Date, signedBy: String, signedAt: Date,
-        spentAt: Date, sequence: Int
+        createdAt: String, updatedAt: String, signedBy: String, signedAt: String,
+        spentAt: String, sequence: Int
     ) {
         self.id = id
         self.transactionHash = transactionHash

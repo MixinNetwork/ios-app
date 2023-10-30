@@ -146,7 +146,7 @@ extension Message {
                       createdAt: data.createdAt)
     }
     
-    public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: Date) -> Message {
+    public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
         createMessage(messageId: UUID().uuidString.lowercased(),
                       conversationId: conversationID,
                       userId: myUserId,
@@ -154,7 +154,7 @@ extension Message {
                       status: MessageStatus.DELIVERED.rawValue,
                       action: snapshot.type,
                       snapshotId: snapshot.id,
-                      createdAt: createdAt.toUTCString())
+                      createdAt: createdAt)
     }
     
     public static func createMessage(textMessage plainText: String, data: BlazeMessageData) -> Message {

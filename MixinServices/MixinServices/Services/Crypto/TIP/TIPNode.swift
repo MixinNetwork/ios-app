@@ -305,7 +305,7 @@ public enum TIPNode {
             for await result in group {
                 switch result {
                 case .success(let sig):
-                    let fractionCompleted = Float(sigs.count) / Float(signers.count)
+                    let fractionCompleted = Float(sigs.count + 1) / Float(signers.count)
                     await progressHandler?(.synchronizing(fractionCompleted))
                 case .failure(let error):
                     Logger.tip.error(category: "TIPNode", message: "Failed to sign: \(error)")

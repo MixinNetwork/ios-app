@@ -8,9 +8,7 @@ protocol MixinEncodableRecord: EncodableRecord {
 extension MixinEncodableRecord {
     
     public static var databaseDateEncodingStrategy: DatabaseDateEncodingStrategy {
-        .custom { date in
-            ISO8601CompatibleDateFormatter.string(from: date)
-        }
+        .formatted(.iso8601Full)
     }
     
     public static var databaseUUIDEncodingStrategy: DatabaseUUIDEncodingStrategy {

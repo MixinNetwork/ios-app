@@ -251,7 +251,7 @@ extension SnapshotDataSource {
             var titles = [String]()
             var snapshots = [[SafeSnapshotItem]]()
             for item in items {
-                let title = DateFormatter.dateSimple.string(from: item.createdAt)
+                let title = DateFormatter.dateSimple.string(from: item.createdAt.toUTCDate())
                 if title == titles.last {
                     snapshots[snapshots.count - 1].append(item)
                 } else {

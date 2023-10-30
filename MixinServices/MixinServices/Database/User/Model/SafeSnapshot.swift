@@ -32,7 +32,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let opponentID: String
     public let memo: String
     public let transactionHash: String
-    public let createdAt: Date
+    public let createdAt: String
     public let traceID: String?
     public let confirmations: Int?
     public let openingBalance: String?
@@ -41,7 +41,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public init(
         id: String, type: String, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
-        transactionHash: String, createdAt: Date,
+        transactionHash: String, createdAt: String,
         traceID: String?, confirmations: Int?,
         openingBalance: String?, closingBalance: String?
     ) {
@@ -69,7 +69,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.opponentID = myUserId
         self.transactionHash = pendingDeposit.transactionHash
         self.memo = ""
-        self.createdAt = pendingDeposit.createdAt.toUTCDate()
+        self.createdAt = pendingDeposit.createdAt
         self.traceID = ""
         self.confirmations = pendingDeposit.confirmations
         self.openingBalance = nil

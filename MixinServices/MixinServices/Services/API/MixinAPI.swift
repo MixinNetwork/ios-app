@@ -149,20 +149,6 @@ extension MixinAPI {
         return session
     }()
     
-    private static let decoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .custom({ (decoder) in
-            let container = try decoder.singleValueContainer()
-            let string = try container.decode(String.self)
-            if let date = ISO8601CompatibleDateFormatter.date(from: string) {
-                return date
-            } else {
-                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode: \(string)")
-            }
-        })
-        return decoder
-    }()
-    
     private static func url(with path: String) -> URL? {
         let string = "https://" + MixinHost.http + path
         return URL(string: string)
@@ -249,7 +235,7 @@ extension MixinAPI {
                         }
                     }
                     do {
-                        let responseObject = try decoder.decode(ResponseObject<Response>.self, from: data)
+                        let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
                         if let data = responseObject.data {
                             completion(.success(data))
                         } else if case .unauthorized = responseObject.error {
@@ -257,7 +243,7 @@ extension MixinAPI {
                         } else if let error = responseObject.error {
                             completion(.failure(error))
                         } else {
-                            completion(.success(try decoder.decode(Response.self, from: data)))
+                            completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
                         }
                     } catch {
                         Logger.general.error(category: "MixinAPI", message: "Failed to decode response: \(error)" )

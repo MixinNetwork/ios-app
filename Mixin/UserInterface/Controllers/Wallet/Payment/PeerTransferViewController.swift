@@ -65,6 +65,27 @@ final class PeerTransferViewController: UIViewController {
         memoLabel.text = memo
     }
     
+    @objc private func close(_ sender: Any) {
+        let opponent = self.opponent
+        authenticationViewController?.presentingViewController?.dismiss(animated: true) {
+            guard let navigation = UIApplication.homeNavigationController else {
+                return
+            }
+            var viewControllers = navigation.viewControllers
+            if (viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController)?.dataSource.ownerUser?.userId == opponent.userId {
+                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+                    viewControllers.removeLast()
+                }
+            } else {
+                while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
+                    viewControllers.removeLast()
+                }
+                viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+            }
+            navigation.setViewControllers(viewControllers, animated: true)
+        }
+    }
+    
 }
 
 extension PeerTransferViewController: AuthenticationIntentViewController {
@@ -211,10 +232,9 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!
-                    if let parent = authenticationViewController {
-                        successView.doneButton.addTarget(parent, action: #selector(parent.close(_:)), for: .touchUpInside)
-                    }
+                    successView.doneButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
                     contentStackView.addArrangedSubview(successView)
+                    authenticationViewController?.endPINInputting()
                     UIDevice.current.playPaymentSuccess()
                 }
             } catch {

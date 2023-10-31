@@ -366,7 +366,6 @@ extension AuthenticationViewController {
     
     @objc private func authenticateWithBiometry(_ sender: Any) {
         pinField.receivesInput = false
-        endPINInputting()
         let prompt = R.string.localizable.authorize_payment_via(BiometryType.payment.localizedName)
         DispatchQueue.global().async {
             DispatchQueue.main.sync {
@@ -376,7 +375,6 @@ extension AuthenticationViewController {
                 DispatchQueue.main.sync {
                     ScreenLockManager.shared.hasOtherBiometricAuthInProgress = false
                     self.pinField.receivesInput = true
-                    self.beginPINInputting()
                 }
                 return
             }

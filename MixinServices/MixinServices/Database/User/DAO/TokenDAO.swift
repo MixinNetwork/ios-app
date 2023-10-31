@@ -46,23 +46,6 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: SQL.selectWithAssetID, arguments: [id])
     }
     
-    public func save(assets: [Token]) {
-        guard !assets.isEmpty else {
-            return
-        }
-        db.save(assets) { _ in
-            let center = NotificationCenter.default
-            if assets.count == 1 {
-                center.post(onMainThread: Self.tokensDidChangeNotification,
-                            object: self,
-                            userInfo: [Self.UserInfoKey.assetId: assets[0].assetID])
-            } else {
-                center.post(onMainThread: Self.tokensDidChangeNotification,
-                            object: nil)
-            }
-        }
-    }
-    
     public func search(keyword: String, sortResult: Bool, limit: Int?) -> [TokenItem] {
         var sql = """
         \(SQL.selector)
@@ -96,6 +79,23 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public func usdBalanceSum() -> Int {
         db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
+    }
+    
+    public func save(assets: [Token]) {
+        guard !assets.isEmpty else {
+            return
+        }
+        db.save(assets) { _ in
+            let center = NotificationCenter.default
+            if assets.count == 1 {
+                center.post(onMainThread: Self.tokensDidChangeNotification,
+                            object: self,
+                            userInfo: [Self.UserInfoKey.assetId: assets[0].assetID])
+            } else {
+                center.post(onMainThread: Self.tokensDidChangeNotification,
+                            object: nil)
+            }
+        }
     }
     
 }

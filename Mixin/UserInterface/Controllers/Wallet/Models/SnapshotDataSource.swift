@@ -62,7 +62,7 @@ class SnapshotDataSource {
             case .all:
                 items = SafeSnapshotDAO.shared.snapshots(sort: sort, limit: limit)
             }
-            // TODO: reload inexist snapshot opponents
+            Self.refreshUserIfNeeded(items)
             let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort)
             let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
             DispatchQueue.main.sync {
@@ -101,7 +101,7 @@ class SnapshotDataSource {
         }
         ConcurrentJobQueue.shared.addJob(job: job)
     }
-
+    
     func loadAddressSnapshots() {
         guard case let .address(asset, destination, tag) = category else {
             return
@@ -153,7 +153,7 @@ class SnapshotDataSource {
             case .address:
                 newItems = []
             }
-            // TODO: reload inexist snapshot opponents
+            Self.refreshUserIfNeeded(newItems)
             let items = oldItems + newItems
             let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort)
             let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
@@ -277,10 +277,8 @@ extension SnapshotDataSource {
         return (result, index)
     }
     
-    private static func refreshUserIfNeeded(_ snapshots: [SnapshotItem]) {
-        var inexistedUserIds = snapshots
-            .filter({ $0.opponentUserFullName == nil })
-            .compactMap({ $0.opponentId })
+    private static func refreshUserIfNeeded(_ snapshots: [SafeSnapshotItem]) {
+        var inexistedUserIds = snapshots.compactMap(\.opponentUserID)
         inexistedUserIds = Array(Set(inexistedUserIds))
         if !inexistedUserIds.isEmpty {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: inexistedUserIds))

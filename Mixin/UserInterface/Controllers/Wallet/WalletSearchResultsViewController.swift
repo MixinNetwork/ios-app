@@ -63,8 +63,8 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                     return oneCapitalization > anotherCapitalization
                 }
                 
-                let oneHasIcon = one.iconUrl?.absoluteString != defaultIconUrl
-                let anotherHasIcon = another.iconUrl?.absoluteString != defaultIconUrl
+                let oneHasIcon = one.iconUrl != defaultIconUrl
+                let anotherHasIcon = another.iconUrl != defaultIconUrl
                 if oneHasIcon && !anotherHasIcon {
                     return true
                 } else if !oneHasIcon && anotherHasIcon {

@@ -122,42 +122,24 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         }
     }
     
-    @discardableResult
-    public func replacePendingDeposits(assetID: String, pendingDeposits: [PendingDeposit], snapshotId: String? = nil) -> SafeSnapshotItem? {
+    public func saveSnapshots(with assetID: String, pendingDeposits: [SafePendingDeposit]) {
         guard !pendingDeposits.isEmpty else {
-            return nil
+            return
         }
-        var snapshotItem: SafeSnapshotItem?
-        let hashes = pendingDeposits.map(\.transactionHash)
-        
+        let ids = pendingDeposits.map(\.id).joined(separator: "','")
         db.write { (db) in
-            let request = SafeSnapshot
-                .select(SafeSnapshot.column(of: .transactionHash))
-                .filter(SafeSnapshot.column(of: .assetID) == assetID && hashes.contains(Snapshot.column(of: .transactionHash)))
-            let transactionHashes = try String.fetchAll(db, request)
-            let snapshots: [SafeSnapshot]
-            if transactionHashes.isEmpty {
-                snapshots = pendingDeposits.map {
-                    SafeSnapshot(assetID: assetID, pendingDeposit: $0)
+            let finishedDepositIDs: [String] = try String.fetchAll(db, sql: """
+                SELECT snapshot_id FROM safe_snapshots WHERE asset_id = ? AND type != ? AND id IN ('\(ids)')
+            """, arguments: [assetID, SafeSnapshot.SnapshotType.pending.rawValue])
+            let snapshots: [SafeSnapshot] = pendingDeposits.compactMap { deposit in
+                if finishedDepositIDs.contains(deposit.id) {
+                    return nil
+                } else {
+                    return SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
                 }
-            } else {
-                snapshots = pendingDeposits
-                    .filter { !transactionHashes.contains($0.transactionHash) }
-                    .map { SafeSnapshot(assetID: assetID, pendingDeposit: $0) }
             }
-            
-            let condition: SQLSpecificExpressible = SafeSnapshot.column(of: .assetID) == assetID
-            && SafeSnapshot.column(of: .type) == SafeSnapshot.SnapshotType.pending.rawValue
-            try SafeSnapshot.filter(condition).deleteAll(db)
             try snapshots.save(db)
-            
-            if let snapshotId = snapshotId {
-                db.afterNextTransaction { (db) in
-                    snapshotItem = try? SafeSnapshotItem.fetchOne(db, sql: Self.querySQL, arguments: [snapshotId])
-                }
-            }
         }
-        return snapshotItem
     }
     
 }

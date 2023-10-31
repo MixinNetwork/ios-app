@@ -160,7 +160,6 @@ extension SnapshotViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let column = columns[indexPath.row]
         switch columns[indexPath.row] {
         case .fromUsername, .toUsername:
             guard let id = snapshot.opponentUserID, !id.isEmpty else {
@@ -343,6 +342,13 @@ extension SnapshotViewController {
             .transactionHash(snapshot.transactionHash),
             .tokenName(token.name),
         ]
+        if let name = snapshot.opponentFullname {
+            if snapshot.amount.hasMinusPrefix {
+                columns.append(.toUsername(name))
+            } else {
+                columns.append(.fromUsername(name))
+            }
+        }
         if !snapshot.memo.isEmpty {
             columns.append(.memo(snapshot.memo))
         }

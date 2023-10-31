@@ -89,7 +89,7 @@ extension TokenItem {
                           kernelAssetID: "",
                           symbol: "XIN",
                           name: "Mixin",
-                          iconURL: URL(string: "https://images.mixin.one/UasWtBZO0TZyLTLCFQjvE_UYekjC7eHCuT_9_52ZpzmCC-X-NPioVegng7Hfx0XmIUavZgz5UL-HIgPCBECc-Ws=s128"),
+                          iconURL: "https://images.mixin.one/UasWtBZO0TZyLTLCFQjvE_UYekjC7eHCuT_9_52ZpzmCC-X-NPioVegng7Hfx0XmIUavZgz5UL-HIgPCBECc-Ws=s128",
                           btcPrice: "0",
                           usdPrice: "0",
                           chainID: ChainID.ethereum,

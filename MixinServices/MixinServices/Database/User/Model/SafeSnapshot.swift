@@ -60,13 +60,13 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.closingBalance = closingBalance
     }
     
-    public init(assetID: String, pendingDeposit: PendingDeposit) {
-        self.id = pendingDeposit.transactionId
+    public init(assetID: String, pendingDeposit: SafePendingDeposit) {
+        self.id = pendingDeposit.id
         self.type = SnapshotType.pending.rawValue
         self.assetID = assetID
         self.amount = pendingDeposit.amount
-        self.userID = ""
-        self.opponentID = myUserId
+        self.userID = myUserId
+        self.opponentID = ""
         self.transactionHash = pendingDeposit.transactionHash
         self.memo = ""
         self.createdAt = pendingDeposit.createdAt

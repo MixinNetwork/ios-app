@@ -47,7 +47,6 @@ public final class UTXOService {
                         break
                     }
                     
-                    var balances: [String: Decimal] = [:] // Key is `kernel_asset_id`
                     for output in outputs {
                         let kernelAssetID = output.asset
                         if assetIDs[kernelAssetID] == nil {
@@ -62,12 +61,6 @@ public final class UTXOService {
                                 }
                                 assetIDs[kernelAssetID] = token.assetID
                             }
-                        }
-                        let oldBalance: Decimal = balances[kernelAssetID] ?? 0
-                        if let newBalance = Decimal(string: output.amount, locale: .enUSPOSIX) {
-                            balances[kernelAssetID] = oldBalance + newBalance
-                        } else {
-                            Logger.general.error(category: "UTXO", message: "Invalid amount: \(output.amount)")
                         }
                     }
                     

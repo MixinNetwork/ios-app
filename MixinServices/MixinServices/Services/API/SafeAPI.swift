@@ -129,8 +129,8 @@ public final class SafeAPI: MixinAPI {
         assetID: String,
         destination: String,
         tag: String?
-    ) async throws -> [PendingDeposit] {
-        var path = "/external/transactions?asset=\(assetID)&destination=\(destination)"
+    ) async throws -> [SafePendingDeposit] {
+        var path = "/safe/external/transactions?asset=\(assetID)&destination=\(destination)"
         if let tag {
             path.append("&tag=\(tag)")
         }

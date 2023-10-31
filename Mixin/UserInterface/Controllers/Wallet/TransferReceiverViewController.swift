@@ -32,7 +32,7 @@ class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
             return
         }
         let user = self.user(at: indexPath)
-        let transfer = TransferOutViewController(token: asset, to: .contact(user))
+        let transfer = TransferOutViewController.instance(token: asset, to: .contact(user))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
             viewControllers.remove(at: index)

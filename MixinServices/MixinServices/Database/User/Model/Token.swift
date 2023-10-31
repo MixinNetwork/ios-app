@@ -25,7 +25,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let kernelAssetID: String
     public let symbol: String
     public let name: String
-    public let iconUrl: URL?
+    public let iconUrl: String
     public let priceBtc: String
     public let priceUsd: String
     public let chainId: String
@@ -40,7 +40,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
     public init(
-        assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: URL?,
+        assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: String,
         btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
         btcChange: String, dust: String, confirmations: Int, assetKey: String
     ) {

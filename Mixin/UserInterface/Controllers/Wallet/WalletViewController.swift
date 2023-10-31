@@ -297,8 +297,22 @@ extension WalletViewController {
     }
     
     @objc private func performAssetMigration(_ sender: Any) {
-        let migration = AssetMigrationViewController()
-        present(migration, animated: true)
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        UserAPI.showUser(userId: "84c9dfb1-bfcf-4cb4-8404-cc5a1354005b") { response in
+            switch response {
+            case let .success(response):
+                hud.hide()
+                UserDAO.shared.updateUsers(users: [response])
+                let userItem = UserItem.createUser(from: response)
+                let profile = UserProfileViewController(user: userItem)
+                profile.updateUserFromRemoteAfterReloaded = false
+                self.present(profile, animated: true, completion: nil)
+            case .failure:
+                hud.set(style: .error, text: R.string.localizable.network_connection_lost())
+                hud.scheduleAutoHidden()
+            }
+        }
     }
     
     private func hideAsset(of assetId: String) {

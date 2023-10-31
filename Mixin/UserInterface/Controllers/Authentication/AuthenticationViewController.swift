@@ -25,6 +25,7 @@ final class AuthenticationViewController: UIViewController {
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let intentViewController: AuthenticationIntentViewController
+    private let presentationManager: any UIViewControllerTransitioningDelegate
     
     private weak var authenticateWithBiometryButton: UIButton?
     private weak var failureView: UIView?
@@ -64,9 +65,14 @@ final class AuthenticationViewController: UIViewController {
     
     init(intentViewController: AuthenticationIntentViewController) {
         self.intentViewController = intentViewController
+        if intentViewController.options.contains(.blurBackground) {
+            self.presentationManager = PinValidationPresentationManager()
+        } else {
+            self.presentationManager = PopupPresentationManager.shared
+        }
         super.init(nibName: R.nib.authenticationView.name, bundle: nil)
         modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = presentationManager
     }
     
     required init?(coder: NSCoder) {
@@ -245,7 +251,9 @@ final class AuthenticationViewController: UIViewController {
         pinField.receivesInput = false
         authenticateWithBiometryButton?.isHidden = true
         intentViewController.authenticationViewController(self, didInput: pin) { result in
-            self.closeButton.isHidden = false
+            if !self.intentViewController.options.contains(.unskippable) {
+                self.closeButton.isHidden = false
+            }
             self.validatingIndicator.stopAnimating()
             switch result {
             case .success:

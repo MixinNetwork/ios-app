@@ -13,6 +13,7 @@ struct AuthenticationIntentOptions: OptionSet {
     static let allowsBiometricAuthentication = AuthenticationIntentOptions(rawValue: 1 << 0)
     static let becomesFirstResponderOnAppear = AuthenticationIntentOptions(rawValue: 1 << 1)
     static let unskippable = AuthenticationIntentOptions(rawValue: 1 << 2)
+    static let blurBackground = AuthenticationIntentOptions(rawValue: 1 << 3)
     
 }
 

@@ -17,7 +17,7 @@ final class RegisterToSafeViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
         view.snp.makeConstraints { make in
-            make.height.equalTo(60)
+            make.height.equalTo(36)
         }
         activityIndicator.startAnimating()
         reloadAccount()
@@ -96,7 +96,7 @@ extension RegisterToSafeViewController: AuthenticationIntentViewController {
     }
     
     var options: AuthenticationIntentOptions {
-        [.allowsBiometricAuthentication, .unskippable]
+        [.allowsBiometricAuthentication, .unskippable, .blurBackground]
     }
     
     func authenticationViewController(

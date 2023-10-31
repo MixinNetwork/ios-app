@@ -96,26 +96,7 @@ final class AuthenticationViewController: UIViewController {
         if intentViewController.options.contains(.unskippable) {
             closeButton.isHidden = true
         }
-        
-        titleLabel.text = intentViewController.intentTitle
-        subtitleLabel.text = intentViewController.intentSubtitle
-        if let icon = intentViewController.intentSubtitleIconURL {
-            let imageView = AvatarImageView()
-            imageView.layer.cornerRadius = 8
-            imageView.clipsToBounds = true
-            imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            subtitleStackView.insertArrangedSubview(imageView, at: 0)
-            imageView.snp.makeConstraints { make in
-                make.height.equalTo(imageView.snp.width)
-                make.width.equalTo(16)
-            }
-            switch icon {
-            case let .app(app):
-                imageView.setImage(app: app)
-            case let .url(url):
-                imageView.imageView.sd_setImage(with: url)
-            }
-        }
+        reloadTitleView()
         
         let biometryType = BiometryType.payment
         if canAuthenticateWithBiometry && biometryType != .none {
@@ -204,6 +185,28 @@ final class AuthenticationViewController: UIViewController {
             self.pinField.resignFirstResponder()
             animation?()
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    func reloadTitleView() {
+        titleLabel.text = intentViewController.intentTitle
+        subtitleLabel.text = intentViewController.intentSubtitle
+        if let icon = intentViewController.intentSubtitleIconURL {
+            let imageView = AvatarImageView()
+            imageView.layer.cornerRadius = 8
+            imageView.clipsToBounds = true
+            imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            subtitleStackView.insertArrangedSubview(imageView, at: 0)
+            imageView.snp.makeConstraints { make in
+                make.height.equalTo(imageView.snp.width)
+                make.width.equalTo(16)
+            }
+            switch icon {
+            case let .app(app):
+                imageView.setImage(app: app)
+            case let .url(url):
+                imageView.imageView.sd_setImage(with: url)
+            }
         }
     }
     

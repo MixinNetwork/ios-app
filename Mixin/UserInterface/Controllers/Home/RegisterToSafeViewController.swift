@@ -5,11 +5,21 @@ final class RegisterToSafeViewController: UIViewController {
     
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     
+    private var willRegisterToSafe = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.backgroundColor = .background
+        activityIndicator.tintColor = .text
         view.addSubview(activityIndicator)
-        activityIndicator.snp.makeEdgesEqualToSuperview()
+        activityIndicator.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
+        }
+        view.snp.makeConstraints { make in
+            make.height.equalTo(60)
+        }
+        activityIndicator.startAnimating()
         reloadAccount()
     }
     
@@ -37,8 +47,12 @@ final class RegisterToSafeViewController: UIViewController {
                                 if account.hasSafe {
                                     self.authenticationViewController?.presentingViewController?.dismiss(animated: true)
                                 } else {
+                                    self.willRegisterToSafe = true
                                     self.activityIndicator.removeFromSuperview()
-                                    self.authenticationViewController?.beginPINInputting()
+                                    if let authentication = self.authenticationViewController {
+                                        authentication.reloadTitleView()
+                                        authentication.beginPINInputting()
+                                    }
                                 }
                             case .needsMigrate:
                                 self.authenticationViewController?.presentingViewController?.dismiss(animated: true) {
@@ -70,7 +84,7 @@ final class RegisterToSafeViewController: UIViewController {
 extension RegisterToSafeViewController: AuthenticationIntentViewController {
     
     var intentTitle: String {
-        "Register to Safe"
+        willRegisterToSafe ? R.string.localizable.enter_your_pin_to_continue() : ""
     }
     
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
@@ -78,7 +92,7 @@ extension RegisterToSafeViewController: AuthenticationIntentViewController {
     }
     
     var intentSubtitle: String {
-        "Input PIN to register"
+        ""
     }
     
     var options: AuthenticationIntentOptions {

@@ -73,6 +73,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         fetchAssets()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
+        ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
     }
     
     override func viewDidAppear(_ animated: Bool) {

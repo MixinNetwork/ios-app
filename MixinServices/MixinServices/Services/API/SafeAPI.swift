@@ -75,6 +75,10 @@ public final class SafeAPI: MixinAPI {
         return try await request(method: .get, path: path)
     }
     
+    public static func assets() async throws -> [Token] {
+        try await request(method: .get, path: "/safe/assets")
+    }
+    
     public static func assets(id: String) async throws -> Token {
         try await request(method: .get, path: "/safe/assets/\(id)")
     }

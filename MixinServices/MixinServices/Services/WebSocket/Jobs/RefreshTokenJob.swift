@@ -1,6 +1,6 @@
 import Foundation
 
-public class RefreshTokenJob: AsynchronousJob {
+public final class RefreshTokenJob: AsynchronousJob {
     
     private let assetID: String
     

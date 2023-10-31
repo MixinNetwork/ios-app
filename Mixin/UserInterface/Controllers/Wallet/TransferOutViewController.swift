@@ -89,7 +89,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                    selector: #selector(fetchAvailableAssets),
                                                    name: ChainDAO.chainsDidChangeNotification,
                                                    object: nil)
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
+            ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             fetchAvailableAssets()
         }
         

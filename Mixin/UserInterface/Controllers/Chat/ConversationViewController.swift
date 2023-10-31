@@ -1936,7 +1936,7 @@ extension ConversationViewController {
             if message.mediaStatus == MediaStatus.DONE.rawValue {
                 actions.insert(.forward, at: 0)
             }
-        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+        } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
             actions = [.forward, .reply, .delete]

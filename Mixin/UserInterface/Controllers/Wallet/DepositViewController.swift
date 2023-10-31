@@ -169,6 +169,7 @@ extension DepositViewController: UICollectionViewDelegate {
 extension DepositViewController {
     
     private func updateViews(token: TokenItem, entry: DepositEntry) {
+        contentStackView.isHidden = false
         upperDepositFieldView.titleLabel.text = R.string.localizable.address()
         upperDepositFieldView.contentLabel.text = entry.destination
         let nameImage = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)

@@ -105,6 +105,11 @@ public final class AssetDAO: UserDatabaseDAO {
         db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
     }
     
+    public func hasPositiveBalancedAssets() -> Bool {
+        let value: Int = db.select(with: "SELECT 1 FROM assets WHERE balance > 0") ?? 0
+        return value != 0
+    }
+    
     public func assets(limit: Int, after assetId: String?) -> [Asset] {
         var sql = "SELECT * FROM assets"
         if let assetId {

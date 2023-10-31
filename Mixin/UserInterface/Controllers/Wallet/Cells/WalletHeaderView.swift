@@ -128,7 +128,11 @@ class WalletHeaderView: InfiniteTopView {
             }
         }
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
-        contentHeight = usdBalanceIsMoreThanZero ? 232 : 180
+        if let button = migrationButton, button.superview != nil {
+            updateContentHeight(isUSDBalancePositive: usdBalanceIsMoreThanZero, hasMigrationButton: true)
+        } else {
+            updateContentHeight(isUSDBalancePositive: usdBalanceIsMoreThanZero, hasMigrationButton: false)
+        }
         fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
@@ -188,7 +192,7 @@ class WalletHeaderView: InfiniteTopView {
         }
         migrationButton = button
         contentViewTopConstraint.constant = 0
-        bounds.size.height = 232
+        updateContentHeight(isUSDBalancePositive: !assetChartWrapperView.isHidden, hasMigrationButton: true)
         layoutIfNeeded()
         completion(button)
     }
@@ -197,9 +201,17 @@ class WalletHeaderView: InfiniteTopView {
         contentViewTopConstraint.constant = 11
         if let migrationButton {
             migrationButton.removeFromSuperview()
-            bounds.size.height = 282
+            updateContentHeight(isUSDBalancePositive: !assetChartWrapperView.isHidden, hasMigrationButton: false)
         }
         layoutIfNeeded()
+    }
+    
+    func updateContentHeight(isUSDBalancePositive: Bool, hasMigrationButton: Bool) {
+        var height: CGFloat = isUSDBalancePositive ? 232 : 180
+        if hasMigrationButton {
+            height += 36
+        }
+        contentHeight = height
     }
     
 }

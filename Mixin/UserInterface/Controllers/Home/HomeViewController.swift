@@ -143,7 +143,6 @@ class HomeViewController: UIViewController {
         }
         Logger.general.info(category: "HomeViewController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState != .background {
-            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
@@ -190,6 +189,7 @@ class HomeViewController: UIViewController {
         } else {
             let job = RecoverRawTransactionJob()
             ConcurrentJobQueue.shared.addJob(job: job)
+            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         }
     }
     

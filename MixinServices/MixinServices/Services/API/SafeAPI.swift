@@ -84,7 +84,7 @@ public final class SafeAPI: MixinAPI {
     }
     
     public static func depositEntries(chainID: String, completion: @escaping (MixinAPI.Result<[DepositEntry]>) -> Void) {
-        request(method: .post, path: "/safe/deposit_entries", parameters: ["chain_id": chainID]) { (result: MixinAPI.Result<[DepositEntry]>) in
+        request(method: .post, path: "/safe/deposit/entries", parameters: ["chain_id": chainID]) { (result: MixinAPI.Result<[DepositEntry]>) in
             switch result {
             case .success(let entries):
                 if entries.allSatisfy(\.isSignatureValid) {
@@ -125,12 +125,12 @@ public final class SafeAPI: MixinAPI {
         return request(method: .get, path: path)
     }
     
-    public static func pendingDeposits(
+    public static func deposits(
         assetID: String,
         destination: String,
         tag: String?
     ) async throws -> [SafePendingDeposit] {
-        var path = "/safe/external/transactions?asset=\(assetID)&destination=\(destination)"
+        var path = "/safe/deposits?asset=\(assetID)&destination=\(destination)"
         if let tag {
             path.append("&tag=\(tag)")
         }

@@ -10,7 +10,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var contentScrollView: UIScrollView!
     @IBOutlet weak var opponentImageView: AvatarImageView!
-    @IBOutlet weak var assetSelectorView: AssetComboBoxView!
+    @IBOutlet weak var tokenSelectorView: AssetComboBoxView!
     
     @IBOutlet weak var amountSymbolLabel: UILabel!
     @IBOutlet weak var amountTextField: UITextField!
@@ -60,6 +60,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tokenSelectorView.button.addTarget(self, action: #selector(switchToken(_:)), for: .touchUpInside)
         amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
         switch opponent {
         case .contact(let user):
@@ -237,7 +238,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    @IBAction func switchAmountAction(_ sender: Any) {
+    @IBAction func toggleAmountIntent(_ sender: Any) {
         guard let token else {
             return
         }
@@ -252,8 +253,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountEditingChanged(sender)
     }
     
-    @IBAction func switchAssetAction(_ sender: Any) {
-        guard !assetSelectorView.accessoryImageView.isHidden else {
+    @objc private func switchToken(_ sender: Any) {
+        guard !tokenSelectorView.accessoryImageView.isHidden else {
             return
         }
         let vc = TokenSelectorViewController()
@@ -263,7 +264,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         present(vc, animated: true, completion: nil)
     }
     
-    @objc func fillBalanceAction(_ sender: Any) {
+    @objc private func fillBalanceAction(_ sender: Any) {
         guard let token else {
             return
         }
@@ -272,7 +273,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     @objc private func fetchAvailableAssets() {
-        assetSelectorView.button.isUserInteractionEnabled = false
+        tokenSelectorView.button.isUserInteractionEnabled = false
         DispatchQueue.global().async { [weak self] in
             let token: TokenItem
             if let id = self?.token?.assetID, let selected = TokenDAO.shared.tokenItem(with: id) {
@@ -294,8 +295,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
                 self.availableTokens = tokens
                 if tokens.count > 1 {
-                    self.assetSelectorView.accessoryImageView.isHidden = false
-                    self.assetSelectorView.button.isUserInteractionEnabled = true
+                    self.tokenSelectorView.accessoryImageView.isHidden = false
+                    self.tokenSelectorView.button.isUserInteractionEnabled = true
                 }
             }
         }
@@ -320,7 +321,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     private func updateViews(token: TokenItem) {
         switchAmountIntentButton.isHidden = token.decimalBTCPrice <= 0
-        assetSelectorView.load(token: token)
+        tokenSelectorView.load(token: token)
         switch amountIntent {
         case .byToken:
             amountSymbolLabel.text = token.symbol

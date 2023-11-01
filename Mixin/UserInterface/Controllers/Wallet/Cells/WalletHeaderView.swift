@@ -105,14 +105,14 @@ class WalletHeaderView: InfiniteTopView {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
         var btcTotalBalance: Double = 0
-        let usdTotalBalance: Double = assets.map { $0.balance.doubleValue * $0.priceUsd.doubleValue }.reduce(0, +)
+        let usdTotalBalance: Double = assets.map { $0.balance.doubleValue * $0.usdPrice.doubleValue }.reduce(0, +)
         var maxPortion = 3
 
         for asset in assets {
             let balance = asset.balance.doubleValue
-            let usdBalance = balance * asset.priceUsd.doubleValue
+            let usdBalance = balance * asset.usdPrice.doubleValue
             if usdBalance > 0 {
-                let btcBalance = balance * asset.priceBtc.doubleValue
+                let btcBalance = balance * asset.btcPrice.doubleValue
                 btcTotalBalance += btcBalance
                 if assetPortions.count < maxPortion {
                     let percent: Double = (usdBalance / usdTotalBalance).roundTo(places: 2)

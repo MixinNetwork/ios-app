@@ -31,10 +31,9 @@ class CompactAssetCell: UITableViewCell {
         } else {
             chainTagLabel.isHidden = true
         }
-        // TODO: Update these after decimal calculation is merged
-        if asset.priceUsd.doubleValue > 0 {
+        if asset.decimalUSDPrice > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"
-            if asset.changeUsd.doubleValue > 0 {
+            if asset.decimalUSDChange > 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed

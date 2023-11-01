@@ -1239,10 +1239,10 @@ extension ReceiveMessageService {
         checkUser(userId: snapshot.opponentID, tryAgain: true)
         let chainId: String?
         if let token = TokenDAO.shared.tokenItem(with: snapshot.assetID) {
-            chainId = token.chainId
+            chainId = token.chainID
         } else if case let .success(token) = SafeAPI.assets(id: snapshot.assetID) {
             TokenDAO.shared.save(assets: [token])
-            chainId = token.chainId
+            chainId = token.chainID
         } else {
             chainId = nil
         }

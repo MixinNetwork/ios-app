@@ -56,8 +56,8 @@ public final class UTXOService {
                                 do {
                                     let token = try await SafeAPI.assets(id: kernelAssetID)
                                     TokenDAO.shared.save(assets: [token])
-                                    if !ChainDAO.shared.chainExists(chainId: token.chainId) {
-                                        let chain = try await NetworkAPI.chain(id: token.chainId)
+                                    if !ChainDAO.shared.chainExists(chainId: token.chainID) {
+                                        let chain = try await NetworkAPI.chain(id: token.chainID)
                                         ChainDAO.shared.save([chain])
                                     }
                                     assetIDs[kernelAssetID] = token.assetID

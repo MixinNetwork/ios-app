@@ -44,9 +44,9 @@ class AssetCell: ModernSelectedBackgroundCell {
         } else {
             symbolLabel.attributedText = NSAttributedString(string: asset.symbol, attributes: AssetCell.symbolAttributes)
         }
-        if asset.priceUsd.doubleValue > 0 {
+        if asset.decimalUSDPrice > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"
-            if asset.changeUsd.doubleValue > 0 {
+            if asset.decimalUSDChange > 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed

@@ -8,11 +8,11 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case kernelAssetID = "kernel_asset_id"
         case symbol
         case name
-        case iconUrl = "icon_url"
-        case priceBtc = "price_btc"
-        case priceUsd = "price_usd"
-        case chainId = "chain_id"
-        case changeUsd = "change_usd"
+        case iconURL = "icon_url"
+        case btcPrice = "price_btc"
+        case usdPrice = "price_usd"
+        case chainID = "chain_id"
+        case usdChange = "change_usd"
         case btcChange = "change_btc"
         case dust
         case confirmations
@@ -25,18 +25,19 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let kernelAssetID: String
     public let symbol: String
     public let name: String
-    public let iconUrl: String
-    public let priceBtc: String
-    public let priceUsd: String
-    public let chainId: String
-    public let changeUsd: String
+    public let iconURL: String
+    public let btcPrice: String
+    public let usdPrice: String
+    public let chainID: String
+    public let usdChange: String
     public let btcChange: String
     public let dust: String
     public let confirmations: Int
     public let assetKey: String
     
-    public private(set) lazy var decimalBTCPrice = Decimal(string: priceBtc, locale: .enUSPOSIX) ?? 0
-    public private(set) lazy var decimalUSDPrice = Decimal(string: priceUsd, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalBTCPrice = Decimal(string: btcPrice, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalUSDPrice = Decimal(string: usdPrice, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalUSDChange = Decimal(string: usdChange, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
     public init(
@@ -48,11 +49,11 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         self.kernelAssetID = kernelAssetID
         self.symbol = symbol
         self.name = name
-        self.iconUrl = iconURL
-        self.priceBtc = btcPrice
-        self.priceUsd = usdPrice
-        self.chainId = chainID
-        self.changeUsd = usdChange
+        self.iconURL = iconURL
+        self.btcPrice = btcPrice
+        self.usdPrice = usdPrice
+        self.chainID = chainID
+        self.usdChange = usdChange
         self.btcChange = btcChange
         self.dust = dust
         self.confirmations = confirmations
@@ -68,15 +69,15 @@ extension Token {
     }
     
     public var isBitcoinChain: Bool {
-        chainId == ChainID.bitcoin
+        chainID == ChainID.bitcoin
     }
     
     public var isEOSChain: Bool {
-        chainId == ChainID.eos
+        chainID == ChainID.eos
     }
     
     public var isERC20: Bool {
-        chainId == ChainID.ethereum
+        chainID == ChainID.ethereum
     }
     
 }

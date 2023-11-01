@@ -57,14 +57,14 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                     return false
                 }
                 
-                let oneCapitalization = one.balance.doubleValue * one.priceUsd.doubleValue
-                let anotherCapitalization = another.balance.doubleValue * another.priceUsd.doubleValue
+                let oneCapitalization = one.decimalBalance * one.decimalUSDPrice
+                let anotherCapitalization = another.decimalBalance * another.decimalUSDPrice
                 if oneCapitalization != anotherCapitalization {
                     return oneCapitalization > anotherCapitalization
                 }
                 
-                let oneHasIcon = one.iconUrl != defaultIconUrl
-                let anotherHasIcon = another.iconUrl != defaultIconUrl
+                let oneHasIcon = one.iconURL != defaultIconUrl
+                let anotherHasIcon = another.iconURL != defaultIconUrl
                 if oneHasIcon && !anotherHasIcon {
                     return true
                 } else if !oneHasIcon && anotherHasIcon {
@@ -104,9 +104,9 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                     return nil
                 }
                 let chain: Chain
-                if let localChain = ChainDAO.shared.chain(chainId: token.chainId) {
+                if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
                     chain = localChain
-                } else if case let .success(remoteChain) = AssetAPI.chain(chainId: token.chainId) {
+                } else if case let .success(remoteChain) = AssetAPI.chain(chainId: token.chainID) {
                     DispatchQueue.global().async {
                         ChainDAO.shared.save([remoteChain])
                     }

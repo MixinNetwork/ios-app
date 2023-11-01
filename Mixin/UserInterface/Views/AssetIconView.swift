@@ -68,7 +68,7 @@ class AssetIconView: UIView {
     }
     
     func setIcon(token: TokenItem) {
-        iconImageView.sd_setImage(with: URL(string: token.iconUrl),
+        iconImageView.sd_setImage(with: URL(string: token.iconURL),
                                   placeholderImage: nil,
                                   context: assetIconContext)
         let shouldHideChainIcon: Bool

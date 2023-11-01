@@ -212,7 +212,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                     try rawTransaction.save(db)
                     try UTXOService.shared.updateBalance(assetID: token.assetID, kernelAssetID: kernelAssetID, db: db)
                 }
-                _ = try await SafeAPI.postTransaction(requestID: traceID, raw: signedTx.raw)
+                let transactionResponse = try await SafeAPI.postTransaction(requestID: traceID, raw: signedTx.raw)
                 let snapshot = SafeSnapshot(id: "\(senderID):\(signedTx.hash)".uuidDigest(),
                                             type: SafeSnapshot.SnapshotType.snapshot.rawValue,
                                             assetID: token.assetID,
@@ -221,7 +221,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                             opponentID: receiverID,
                                             memo: memo,
                                             transactionHash: signedTx.hash,
-                                            createdAt: now,
+                                            createdAt: transactionResponse.createdAt,
                                             traceID: traceID,
                                             confirmations: nil,
                                             openingBalance: nil,

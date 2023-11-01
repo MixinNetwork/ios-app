@@ -54,7 +54,7 @@ class SnapshotViewController: UIViewController {
             }
         }
         amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
-        fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + getFormatValue(priceUsd: token.priceUsd)) + "\n "
+        fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + getFormatValue(priceUsd: token.usdPrice)) + "\n "
         symbolLabel.text = token.symbol
         if ScreenHeight.current >= .extraLong {
             assetIconView.chainIconWidth = 28

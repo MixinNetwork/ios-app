@@ -4,7 +4,7 @@ import MixinServices
 extension TokenItem {
     
     var depositTips: String {
-        switch chainId {
+        switch chainID {
         case ChainID.bitcoin:
             return R.string.localizable.deposit_tip_btc() + R.string.localizable.deposit_confirmation_count(confirmations)
         case ChainID.eos:

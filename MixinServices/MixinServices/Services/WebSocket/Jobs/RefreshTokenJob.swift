@@ -21,11 +21,11 @@ public final class RefreshTokenJob: AsynchronousJob {
                 if !MixinService.isStopProcessMessages {
                     TokenDAO.shared.save(assets: [token])
                 }
-                let chain = try await NetworkAPI.chain(id: token.chainId)
+                let chain = try await NetworkAPI.chain(id: token.chainID)
                 if !MixinService.isStopProcessMessages {
                     ChainDAO.shared.save([chain])
                 }
-                let entries = DepositEntryDAO.shared.entries(ofChainWith: token.chainId)
+                let entries = DepositEntryDAO.shared.entries(ofChainWith: token.chainID)
                 for entry in entries {
                     let deposits = try await SafeAPI.pendingDeposits(assetID: token.assetID,
                                                                      destination: entry.destination,

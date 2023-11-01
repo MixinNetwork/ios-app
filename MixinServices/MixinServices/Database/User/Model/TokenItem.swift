@@ -11,12 +11,12 @@ public final class TokenItem: Token, NumberStringLocalizable {
     public lazy var localizedBalance = localizedNumberString(balance)
     
     public lazy var localizedFiatMoneyPrice: String = {
-        let value = priceUsd.doubleValue * Currency.current.rate
+        let value = usdPrice.doubleValue * Currency.current.rate
         return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never) ?? ""
     }()
     
     public lazy var localizedFiatMoneyBalance: String = {
-        let fiatMoneyBalance = balance.doubleValue * priceUsd.doubleValue * Currency.current.rate
+        let fiatMoneyBalance = balance.doubleValue * usdPrice.doubleValue * Currency.current.rate
         if let value = CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never) {
             return "≈ " + Currency.current.symbol + value
         } else {
@@ -25,7 +25,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
     }()
     
     public lazy var localizedUsdChange: String = {
-        let usdChange = changeUsd.doubleValue * 100
+        let usdChange = usdChange.doubleValue * 100
         return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
     }()
     
@@ -36,11 +36,11 @@ public final class TokenItem: Token, NumberStringLocalizable {
                    kernelAssetID: token.kernelAssetID,
                    symbol: token.symbol,
                    name: token.name,
-                   iconURL: token.iconUrl,
-                   btcPrice: token.priceBtc,
-                   usdPrice: token.priceUsd,
-                   chainID: token.chainId,
-                   usdChange: token.changeUsd,
+                   iconURL: token.iconURL,
+                   btcPrice: token.btcPrice,
+                   usdPrice: token.usdPrice,
+                   chainID: token.chainID,
+                   usdChange: token.usdChange,
                    btcChange: token.btcChange,
                    dust: token.dust,
                    confirmations: token.confirmations,
@@ -98,7 +98,7 @@ extension TokenItem {
                           dust: "0.0001",
                           confirmations: 100,
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33")
-        let chain = Chain(chainId: token.chainId,
+        let chain = Chain(chainId: token.chainID,
                           name: "Ether",
                           symbol: "ETH",
                           iconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128",
@@ -112,7 +112,7 @@ extension TokenItem {
 extension TokenItem {
     
     public var depositNetworkName: String? {
-        switch chainId {
+        switch chainID {
         case ChainID.ethereum:
             return "Ethereum (ERC-20)"
         case ChainID.avalancheXChain:
@@ -131,16 +131,16 @@ extension TokenItem {
     }
     
     public var chainTag: String? {
-        if chainId == ChainID.bnbBeaconChain {
+        if chainID == ChainID.bnbBeaconChain {
             return "BEP-2"
-        } else if chainId == ChainID.bnbSmartChain {
+        } else if chainID == ChainID.bnbSmartChain {
             return "BEP-20"
-        } else if chainId == ChainID.mvm {
+        } else if chainID == ChainID.mvm {
             return "MVM"
-        } else if assetID == chainId {
+        } else if assetID == chainID {
             return nil
         } else {
-            switch chainId {
+            switch chainID {
             case ChainID.ethereum:
                 return "ERC-20"
             case ChainID.tron:

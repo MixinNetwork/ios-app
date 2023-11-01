@@ -83,7 +83,7 @@ class TokenViewController: UIViewController {
         guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
             return
         }
-        guard id == token.chainId else {
+        guard id == token.chainID else {
             return
         }
         reloadAsset()

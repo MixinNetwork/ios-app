@@ -77,7 +77,7 @@ extension Account: Codable {
         case tipCounter = "tip_counter"
         case features
         case hasSafe = "has_safe"
-        case salt
+        case salt = "salt_base64"
     }
     
     public init(from decoder: Decoder) throws {

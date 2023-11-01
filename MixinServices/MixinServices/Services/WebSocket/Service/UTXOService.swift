@@ -40,8 +40,7 @@ public final class UTXOService {
                                                         threshold: 1,
                                                         offset: sequence,
                                                         limit: limit,
-                                                        state: Output.State.unspent.rawValue,
-                                                        user: userID)
+                                                        state: Output.State.unspent.rawValue)
                     guard let lastOutput = outputs.last else {
                         Logger.general.info(category: "UTXO", message: "No new outputs")
                         break

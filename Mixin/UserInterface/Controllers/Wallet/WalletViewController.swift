@@ -302,7 +302,7 @@ extension WalletViewController {
         let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: botUserID)
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        UserAPI.showUser(userId: "84c9dfb1-bfcf-4cb4-8404-cc5a1354005b") { response in
+        UserAPI.showUser(userId: botUserID) { response in
             switch response {
             case let .success(response):
                 hud.hide()

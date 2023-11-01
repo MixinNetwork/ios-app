@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="This multisig link has already been signed by yourself, you can not make a duplicate operation." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="408-fH-Oqa">
-                    <rect key="frame" x="30" y="30" width="333" height="39"/>
+                    <rect key="frame" x="30" y="30" width="333" height="31"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" name="red"/>
                     <nil key="highlightedColor"/>
@@ -24,7 +24,7 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FTF-Af-J8b" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="134.66666666666666" y="113" width="123.99999999999997" height="42"/>
+                    <rect key="frame" x="134.66666666666666" y="105" width="123.99999999999997" height="42"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="42" id="lTX-IT-HdO"/>
                     </constraints>
@@ -40,7 +40,7 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="FTF-Af-J8b" firstAttribute="top" secondItem="408-fH-Oqa" secondAttribute="bottom" constant="44" id="JqA-e0-g9y"/>
-                <constraint firstAttribute="bottom" secondItem="FTF-Af-J8b" secondAttribute="bottom" id="Ngu-pJ-VXd"/>
+                <constraint firstAttribute="bottom" secondItem="FTF-Af-J8b" secondAttribute="bottom" constant="8" id="Ngu-pJ-VXd"/>
                 <constraint firstItem="408-fH-Oqa" firstAttribute="leading" secondItem="ZnY-Dz-YPS" secondAttribute="leading" constant="30" id="P73-LE-PiB"/>
                 <constraint firstAttribute="trailing" secondItem="408-fH-Oqa" secondAttribute="trailing" constant="30" id="i5f-oX-GNZ"/>
                 <constraint firstItem="408-fH-Oqa" firstAttribute="top" secondItem="ZnY-Dz-YPS" secondAttribute="top" constant="30" id="l1w-JD-9pl"/>

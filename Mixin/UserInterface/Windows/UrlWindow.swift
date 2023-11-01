@@ -23,7 +23,12 @@ class UrlWindow {
             case let .codes(code):
                 result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
             case .pay:
-                result = false
+                if let transfer = try? InternalTransfer(string: url.absoluteString) {
+                    performInternalTransfer(transfer)
+                    result = true
+                } else {
+                    result = false
+                }
             case .address:
                 result = checkAddress(url: url)
             case let .users(id):
@@ -454,6 +459,47 @@ class UrlWindow {
             Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
             return true
+        }
+    }
+    
+    class func performInternalTransfer(_ transfer: InternalTransfer) {
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            break
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            UIApplication.homeNavigationController?.present(tip, animated: true)
+            return
+        case .unknown:
+            return
+        }
+        let memo = transfer.memo ?? ""
+        let traceId = transfer.traceID
+        let recipientId = transfer.recipientID
+        let amount = transfer.amount
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            guard let asset = syncAsset(assetId: transfer.assetID, hud: hud) else {
+                return
+            }
+            guard let (user, _) = syncUser(userId: recipientId, hud: hud) else {
+                return
+            }
+            let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: true, returnTo: transfer.returnTo)
+            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: recipientId, amount: amount, memo: memo, fromWeb: true) { (canPay, errorMsg) in
+                DispatchQueue.main.async {
+                    if canPay {
+                        hud.hide()
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
+                    } else if let error = errorMsg {
+                        hud.set(style: .error, text: error)
+                        hud.scheduleAutoHidden()
+                    } else {
+                        hud.hide()
+                    }
+                }
+            }
         }
     }
     

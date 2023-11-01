@@ -53,13 +53,19 @@ public final class UTXOService {
                             if let id = TokenDAO.shared.assetID(ofAssetWith: kernelAssetID) {
                                 assetIDs[kernelAssetID] = id
                             } else {
-                                let token = try await SafeAPI.assets(id: kernelAssetID)
-                                TokenDAO.shared.save(assets: [token])
-                                if !ChainDAO.shared.chainExists(chainId: token.chainId) {
-                                    let chain = try await NetworkAPI.chain(id: token.chainId)
-                                    ChainDAO.shared.save([chain])
+                                do {
+                                    let token = try await SafeAPI.assets(id: kernelAssetID)
+                                    TokenDAO.shared.save(assets: [token])
+                                    if !ChainDAO.shared.chainExists(chainId: token.chainId) {
+                                        let chain = try await NetworkAPI.chain(id: token.chainId)
+                                        ChainDAO.shared.save([chain])
+                                    }
+                                    assetIDs[kernelAssetID] = token.assetID
+                                } catch MixinAPIError.notFound {
+                                    // Tokens and chains may be absent. Ignore the output
+                                } catch {
+                                    throw error
                                 }
-                                assetIDs[kernelAssetID] = token.assetID
                             }
                         }
                     }

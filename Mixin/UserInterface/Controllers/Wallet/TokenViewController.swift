@@ -255,11 +255,11 @@ extension TokenViewController {
             let vc = TransferReceiverViewController.instance(asset: asset)
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
-        alert.addAction(UIAlertAction(title: R.string.localizable.address(), style: .default, handler: { [weak self](_) in
-            let vc = AddressViewController.instance(asset: asset)
-            self?.navigationController?.pushViewController(vc, animated: true)
-        }))
-        
+//        alert.addAction(UIAlertAction(title: R.string.localizable.address(), style: .default, handler: { [weak self](_) in
+//            let vc = AddressViewController.instance(asset: asset)
+//            self?.navigationController?.pushViewController(vc, animated: true)
+//        }))
+//        
 //        let withdrawToTIPAllowedChainIds = [
 //            ChainID.ethereum,
 //            ChainID.polygon,

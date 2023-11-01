@@ -82,6 +82,7 @@
 "appearance" = "Appearance";
 "apply" = "Apply";
 "asset_key" = "Asset Key";
+"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
 "asset_not_found" = "Asset not found.";
 "asset_type" = "Asset Type";
 "assets" = "ASSETS";
@@ -372,6 +373,7 @@
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid emergency contact";
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";
 "error_not_found" = "ERROR 404: Not found";
+"error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "ERROR 20110: Invalid phone number";
 "error_phone_sms_delivery" = "ERROR 10003: Failed to deliver SMS";
 "error_phone_verification_code_expired" = "ERROR 20114: Expired phone verification code";

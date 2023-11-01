@@ -179,7 +179,7 @@ class WalletHeaderView: InfiniteTopView {
         }
         let button = UIButton(type: .system)
         button.backgroundColor = .theme
-        button.setTitle("You have unmigrated assets, click to start the migration", for: .normal)
+        button.setTitle(R.string.localizable.asset_migration_hint(), for: .normal)
         button.setTitleColor(.white, for: .normal)
         if let label = button.titleLabel {
             label.font = .systemFont(ofSize: 12)

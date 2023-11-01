@@ -82,6 +82,7 @@
 "appearance" = "言語とテーマ";
 "apply" = "適用";
 "asset_key" = "資産のキー";
+"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
 "asset_not_found" = "資産が存在しません";
 "asset_type" = "資産タイプ";
 "assets" = "資産";
@@ -372,6 +373,7 @@
 "error_invalid_emergency_contact" = "エラー 20130：無効な緊急連絡先です";
 "error_network_task_failed" = "ネットワーク接続に失敗しました。ネットワーク接続状態を確認した後にもう一度試してください。";
 "error_not_found" = "エラー 404：結果なし";
+"error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "エラー 20110：無効な電話番号です";
 "error_phone_sms_delivery" = "エラー 10003：SMSの送信に失敗しました";
 "error_phone_verification_code_expired" = "期限切れ";

@@ -141,7 +141,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 Logger.general.info(category: "PeerTransfer", message: "Spending \(spendingOutputs.count) UTXOs")
                 
                 let ghostKeys = try await SafeAPI.ghostKeys(receiverID: receiverID,
-                                                            receiverHint: UUID().uuidString.lowercased(),
+                                                            receiverHint: traceID,
                                                             senderID: senderID,
                                                             senderHint: UUID().uuidString.lowercased())
                 let receiverGhostKey = ghostKeys[0]
@@ -243,6 +243,8 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 switch error {
                 case MixinAPIError.malformedPin, MixinAPIError.incorrectPin, MixinAPIError.insufficientPool, MixinAPIError.internalServerError:
                     allowRetrying = true
+                case MixinAPIError.notRegisteredToSafe:
+                    allowRetrying = false
                 default:
                     allowRetrying = false
                 }

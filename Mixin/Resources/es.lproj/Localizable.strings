@@ -82,6 +82,7 @@
 "appearance" = "Apariencia";
 "apply" = "Aplicar";
 "asset_key" = "Clave de activo";
+"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
 "asset_not_found" = "Activo no encontrado.";
 "asset_type" = "Tipo de activo";
 "assets" = "ACTIVOS";
@@ -372,6 +373,7 @@
 "error_invalid_emergency_contact" = "ERROR 20130: Contacto de emergencia no válido";
 "error_network_task_failed" = "La conexión de red ha fallado. Comprueba o cambia tu red e inténtalo de nuevo";
 "error_not_found" = "Error 404 no encontrado";
+"error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "ERROR 20110: Número de teléfono no válido";
 "error_phone_sms_delivery" = "ERROR 10003: Error al entregar SMS";
 "error_phone_verification_code_expired" = "ERROR 20114: Código de verificación del teléfono caducado";

@@ -18,16 +18,20 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     
-    private var asset: AssetItem! {
+    private var asset: TokenItem! {
         didSet {
-            memoPossibility = Asset.WithdrawalMemoPossibility(rawValue: asset.withdrawalMemoPossibility) ?? .possible
+            if let chain = asset.chain {
+                memoPossibility = WithdrawalMemoPossibility(rawValue: chain.withdrawalMemoPossibility) ?? .possible
+            } else {
+                memoPossibility = .possible
+            }
         }
     }
     
     private var successCallback: ((Address) -> Void)?
     private var qrCodeScanningDestination: UIView?
     private var shouldLayoutWithKeyboard = true
-    private var memoPossibility: Asset.WithdrawalMemoPossibility = .possible
+    private var memoPossibility: WithdrawalMemoPossibility = .possible
     
     private var addressValue: String {
         return addressTextView.text?.trim() ?? ""
@@ -67,7 +71,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             assetView.chainIconWidth = 28
             assetView.chainIconOutlineWidth = 4
         }
-        assetView.setIcon(asset: asset)
+        assetView.setIcon(token: asset)
         memoTextView.placeholder = asset.memoLabel
         
         switch memoPossibility {
@@ -137,7 +141,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         guard areInputsValid else {
             return
         }
-        let assetId = asset.assetId
+        let assetId = asset.assetID
         var destination = addressValue
         if asset.isBitcoinChain {
             if destination.lowercased().hasPrefix("bitcoin:"), let address = URLComponents(string: destination)?.path {
@@ -181,7 +185,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         checkLabelAndAddressAction(textView)
     }
     
-    class func instance(asset: AssetItem, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
+    class func instance(asset: TokenItem, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
         let vc = R.storyboard.wallet.new_address()!
         vc.asset = asset
         vc.successCallback = successCallback

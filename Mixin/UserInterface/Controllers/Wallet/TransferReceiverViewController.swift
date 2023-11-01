@@ -3,9 +3,9 @@ import MixinServices
 
 class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
     
-    private var asset: AssetItem!
+    private var asset: TokenItem!
     
-    class func instance(asset: AssetItem) -> UIViewController {
+    class func instance(asset: TokenItem) -> UIViewController {
         let vc = TransferReceiverViewController()
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.send_to_title())
@@ -32,12 +32,12 @@ class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
             return
         }
         let user = self.user(at: indexPath)
-        let vc = TransferOutViewController.instance(asset: asset, type: .contact(user))
+        let transfer = TransferOutViewController.instance(token: asset, to: .contact(user))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
             viewControllers.remove(at: index)
         }
-        viewControllers.append(vc)
+        viewControllers.append(transfer)
         navigationController.setViewControllers(viewControllers, animated: true)
     }
     

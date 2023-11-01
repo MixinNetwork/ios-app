@@ -29,18 +29,18 @@ class RefreshSnapshotsJob: BaseJob {
     }
     
     override func run() throws {
-        let result: MixinAPI.Result<[Snapshot]>
+        let result: MixinAPI.Result<[SafeSnapshot]>
         switch category {
         case .all:
-            result = AssetAPI.snapshots(limit: limit)
+            result = SafeAPI.snapshots(asset: nil, opponent: nil, offset: nil, limit: limit)
         case .opponent(let id):
-            result = AssetAPI.snapshots(limit: limit, opponentId: id)
+            result = SafeAPI.snapshots(asset: nil, opponent: id, offset: nil, limit: limit)
         case .asset(let id):
-            result = AssetAPI.snapshots(limit: limit, assetId: id)
+            result = SafeAPI.snapshots(asset: id, opponent: nil, offset: nil, limit: limit)
         }
         switch result {
         case let .success(snapshots):
-            SnapshotDAO.shared.saveSnapshots(snapshots: snapshots)
+            SafeSnapshotDAO.shared.save(snapshots: snapshots)
             RefreshSnapshotsJob.setOffset(snapshots.last?.createdAt, for: category)
         case let .failure(error):
             RefreshSnapshotsJob.setOffset(nil, for: category)

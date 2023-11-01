@@ -19,63 +19,87 @@ class DepositViewController: UIViewController {
         AssetID.bep20USDT:      "BEP-20",
     ]
     
-    private var asset: AssetItem!
-    private var needsShowChooseNetworkWindow = true
+    private var token: TokenItem!
     private var addressGeneratingView: UIView?
     private var networkSwitchViewContentSizeObserver: NSKeyValueObservation?
     private var switchableNetworks: [String] = []
-    private var switchingToAssetID: String?
-    
-    private weak var job: RefreshAssetsJob?
     
     deinit {
-        job?.cancel()
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    class func instance(asset: TokenItem) -> UIViewController {
+        let vc = R.storyboard.wallet.deposit()!
+        vc.token = asset
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.deposit())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.setSubtitle(subtitle: asset.symbol)
+        container?.setSubtitle(subtitle: token.symbol)
         view.layoutIfNeeded()
-        
-        if let entry = asset.preferredDepositEntry, let chain = asset.chain {
-            show(entry: entry)
-            showChooseNetworkWindowIfNeeded(chain: chain)
-        } else {
-            showAddressGeneratingView()
+        let token = self.token!
+        DispatchQueue.global().async {
+            self.reloadEntry(token: token)
         }
-        
-        if let index = usdtNetworkNames.index(forKey: asset.assetId) {
-            switchableNetworks = usdtNetworkNames.values.elements
-            let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
-            contentStackView.insertArrangedSubview(switchView, at: 0)
-            let collectionView: UICollectionView = switchView.collectionView
-            networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
-                guard let newValue = change.newValue, let self else {
-                    return
-                }
-                switchView.collectionViewHeightConstraint.constant = newValue.height
-                self.view.layoutIfNeeded()
-            }
-            collectionView.register(R.nib.compactDepositNetworkCell)
-            collectionView.dataSource = self
-            collectionView.delegate = self
-            collectionView.reloadData()
-            let indexPath = IndexPath(item: index, section: 0)
-            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
-        }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
-        let job = RefreshAssetsJob(request: .asset(id: asset.assetId, untilDepositEntriesNotEmpty: true))
-        self.job = job
-        ConcurrentJobQueue.shared.addJob(job: job)
+//        if let index = usdtNetworkNames.index(forKey: token.assetId) {
+//            switchableNetworks = usdtNetworkNames.values.elements
+//            let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
+//            contentStackView.insertArrangedSubview(switchView, at: 0)
+//            let collectionView: UICollectionView = switchView.collectionView
+//            networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
+//                guard let newValue = change.newValue, let self else {
+//                    return
+//                }
+//                switchView.collectionViewHeightConstraint.constant = newValue.height
+//                self.view.layoutIfNeeded()
+//            }
+//            collectionView.register(R.nib.compactDepositNetworkCell)
+//            collectionView.dataSource = self
+//            collectionView.delegate = self
+//            collectionView.reloadData()
+//            let indexPath = IndexPath(item: index, section: 0)
+//            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
+//        }
     }
     
-    class func instance(asset: AssetItem) -> UIViewController {
-        let vc = R.storyboard.wallet.deposit()!
-        vc.asset = asset
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.deposit())
+    private func reloadEntry(token: TokenItem) {
+        if let entry = DepositEntryDAO.shared.entry(ofChainWith: token.chainID) {
+            DispatchQueue.main.async {
+                guard token.assetID == self.token.assetID, entry.isSignatureValid else {
+                    return
+                }
+                self.updateViews(token: token, entry: entry)
+                self.hideAddressGeneratingView()
+            }
+        } else {
+            self.reloadEntryFromRemote(token: token)
+        }
+    }
+    
+    private func reloadEntryFromRemote(token: TokenItem) {
+        Queue.main.autoAsync(execute: showAddressGeneratingView)
+        SafeAPI.depositEntries(chainID: token.chainID) { [weak self] result in
+            switch result {
+            case .success(let entries):
+                DepositEntryDAO.shared.save(entries: entries)
+                if let entry = entries.first(where: \.isPrimary) {
+                    if let self, token.assetID == self.token.assetID {
+                        self.updateViews(token: token, entry: entry)
+                        self.hideAddressGeneratingView()
+                    }
+                } else {
+                    Logger.general.error(category: "Deposit", message: "No primary entry: \(token.name)")
+                }
+            case .failure(.invalidSignature):
+                break
+            case .failure(let error):
+                Logger.general.error(category: "Deposit", message: "Failed to load: \(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self?.reloadEntryFromRemote(token: token)
+                }
+            }
+        }
     }
     
 }
@@ -110,7 +134,7 @@ extension DepositViewController: DepositFieldViewDelegate {
                                           content: content,
                                           foregroundColor: .black,
                                           description: content,
-                                          centerView: .asset(asset))
+                                          centerView: .asset(token))
         present(qrCode, animated: true)
     }
     
@@ -138,106 +162,57 @@ extension DepositViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let id = usdtNetworkNames.elements[indexPath.item].key
-        switchingToAssetID = id
-        needsShowChooseNetworkWindow = true
-        reloadAsset(with: id)
     }
     
 }
 
 extension DepositViewController {
     
-    @objc private func assetsDidChange(_ notification: Notification) {
-        guard let id = notification.userInfo?[AssetDAO.UserInfoKey.assetId] as? String else {
-            return
-        }
-        guard id == asset.assetId || id == switchingToAssetID else {
-            return
-        }
-        switchingToAssetID = nil
-        reloadAsset(with: id)
-    }
-    
-    @objc private func chainsDidChange(_ notification: Notification) {
-        guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
-            return
-        }
-        guard id == asset.assetId || id == switchingToAssetID else {
-            return
-        }
-        switchingToAssetID = nil
-        reloadAsset(with: id)
-    }
-    
-    private func reloadAsset(with id: String) {
-        DispatchQueue.global().async { [weak self] in
-            if let asset = AssetDAO.shared.getAsset(assetId: id), let chain = asset.chain {
-                DispatchQueue.main.sync {
-                    guard let self = self else {
-                        return
-                    }
-                    self.asset = asset
-                    if let entry = asset.preferredDepositEntry {
-                        UIView.performWithoutAnimation {
-                            self.show(entry: entry)
-                        }
-                        self.hideAddressGeneratingView()
-                        self.showChooseNetworkWindowIfNeeded(chain: chain)
-                    }
-                }
-            } else {
-                DispatchQueue.main.sync {
-                    guard let self = self else {
-                        return
-                    }
-                    self.showAddressGeneratingView()
-                    let job = RefreshAssetsJob(request: .asset(id: id, untilDepositEntriesNotEmpty: true))
-                    self.job = job
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                }
-            }
-        }
-    }
-    
-    private func show(entry: Asset.DepositEntry) {
-        upperDepositFieldView.titleLabel.text = R.string.localizable.address()
-        upperDepositFieldView.contentLabel.text = entry.destination
-        let nameImage = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
-        upperDepositFieldView.qrCodeImageView.image = nameImage
-        upperDepositFieldView.assetIconView.setIcon(asset: asset)
+    private func updateViews(token: TokenItem, entry: DepositEntry) {
+        contentStackView.isHidden = false
         upperDepositFieldView.shadowView.hasLowerShadow = true
         upperDepositFieldView.delegate = self
-        if !entry.tag.isEmpty {
-            lowerDepositFieldView.isHidden = false
-            if asset.usesTag {
-                lowerDepositFieldView.titleLabel.text = R.string.localizable.tag()
+        lowerDepositFieldView.shadowView.hasLowerShadow = false
+        lowerDepositFieldView.delegate = self
+        if let tag = entry.tag, !tag.isEmpty {
+            if token.usesTag {
+                upperDepositFieldView.titleLabel.text = R.string.localizable.tag()
             } else {
-                lowerDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
+                upperDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
             }
-            lowerDepositFieldView.contentLabel.text = entry.tag
-            let memoImage = UIImage(qrcode: entry.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
-            lowerDepositFieldView.qrCodeImageView.image = memoImage
-            lowerDepositFieldView.assetIconView.setIcon(asset: asset)
-            lowerDepositFieldView.shadowView.hasLowerShadow = false
-            lowerDepositFieldView.delegate = self
-            warningLabel.text = R.string.localizable.deposit_account_attention(asset.symbol)
+            upperDepositFieldView.contentLabel.text = entry.tag
+            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: tag, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.assetIconView.setIcon(token: token)
+            
+            lowerDepositFieldView.titleLabel.text = R.string.localizable.address()
+            lowerDepositFieldView.contentLabel.text = entry.destination
+            lowerDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
+            lowerDepositFieldView.assetIconView.setIcon(token: token)
+            lowerDepositFieldView.isHidden = false
+            
+            warningLabel.text = R.string.localizable.deposit_account_attention(token.symbol)
         } else {
+            upperDepositFieldView.titleLabel.text = R.string.localizable.address()
+            upperDepositFieldView.contentLabel.text = entry.destination
+            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.assetIconView.setIcon(token: token)
+            upperDepositFieldView.shadowView.hasLowerShadow = true
+            upperDepositFieldView.delegate = self
+            
             lowerDepositFieldView.isHidden = true
-            if asset.reserve.doubleValue > 0 {
-                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(asset.reserve, asset.chain?.symbol ?? "")
+            
+            if token.decimalDust > 0 {
+                let dust = CurrencyFormatter.localizedString(from: token.decimalDust, format: .precision, sign: .never)
+                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(dust, token.chain?.symbol ?? "")
             } else {
                 warningLabel.text = R.string.localizable.deposit_attention()
             }
         }
-        hintLabel.text = asset.depositTips
+        hintLabel.text = token.depositTips
     }
     
     private func showChooseNetworkWindowIfNeeded(chain: Chain) {
-        guard needsShowChooseNetworkWindow else {
-            return
-        }
-        needsShowChooseNetworkWindow = false
-        DepositChooseNetworkWindow.instance().render(asset: asset, chain: chain).presentPopupControllerAnimated()
+        DepositChooseNetworkWindow.instance().render(token: token, chain: chain).presentPopupControllerAnimated()
     }
     
     private func showAddressGeneratingView() {

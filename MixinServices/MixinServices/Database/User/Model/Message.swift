@@ -135,6 +135,28 @@ extension Message {
         return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: snapshot.type, snapshotId: snapshot.snapshotId, createdAt: data.createdAt)
     }
     
+    public static func createMessage(snapshot: SafeSnapshot, data: BlazeMessageData) -> Message {
+        createMessage(messageId: data.messageId,
+                      conversationId: data.conversationId,
+                      userId: data.userId,
+                      category: data.category,
+                      status: MessageStatus.DELIVERED.rawValue,
+                      action: snapshot.type,
+                      snapshotId: snapshot.id,
+                      createdAt: data.createdAt)
+    }
+    
+    public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
+        createMessage(messageId: UUID().uuidString.lowercased(),
+                      conversationId: conversationID,
+                      userId: myUserId,
+                      category: MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue,
+                      status: MessageStatus.DELIVERED.rawValue,
+                      action: snapshot.type,
+                      snapshotId: snapshot.id,
+                      createdAt: createdAt)
+    }
+    
     public static func createMessage(textMessage plainText: String, data: BlazeMessageData) -> Message {
         let quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
         return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: plainText, status: getStatus(data: data), quoteMessageId: quoteMessageId, createdAt: data.createdAt)
@@ -312,6 +334,7 @@ public enum MessageCategory: String, Decodable {
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION
     case SYSTEM_ACCOUNT_SNAPSHOT
+    case SYSTEM_SAFE_SNAPSHOT
     case SYSTEM_SESSION
     case SYSTEM_USER
     case SYSTEM_CIRCLE

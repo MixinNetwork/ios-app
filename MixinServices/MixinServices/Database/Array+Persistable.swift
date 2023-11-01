@@ -9,9 +9,12 @@ extension Array where Element: PersistableRecord {
         }
     }
     
-    public func insert(_ db: GRDB.Database) throws {
+    public func insert(
+        _ db: GRDB.Database,
+        onConflict conflictResolution: GRDB.Database.ConflictResolution? = nil
+    ) throws {
         for record in self {
-            try record.insert(db)
+            try record.insert(db, onConflict: conflictResolution)
         }
     }
     

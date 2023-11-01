@@ -42,6 +42,7 @@ class HomeNavigationController: UINavigationController {
             if UIApplication.shared.applicationState == .active {
                 WebSocketService.shared.connect(firstConnect: true)
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
+                ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             }
         }
     }

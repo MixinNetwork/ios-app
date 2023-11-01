@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 import Alamofire
 import Tip
 
@@ -13,12 +14,14 @@ public enum TIP {
         
         public let action: Action
         public let situation: Situation
+        public let accountTIPCounter: UInt64
         public let maxNodeCounter: UInt64
         
 #if DEBUG
-        public init(action: Action, situation: Situation, maxNodeCounter: UInt64) {
+        public init(action: Action, situation: Situation, accountTIPCounter: UInt64, maxNodeCounter: UInt64) {
             self.action = action
             self.situation = situation
+            self.accountTIPCounter = accountTIPCounter
             self.maxNodeCounter = maxNodeCounter
         }
 #endif
@@ -34,6 +37,7 @@ public enum TIP {
                 self.action = .change
             }
             self.situation = situation
+            self.accountTIPCounter = account.tipCounter
             self.maxNodeCounter = maxNodeCounter
         }
         
@@ -46,10 +50,24 @@ public enum TIP {
     }
     
     @frozen public enum Status {
+        
         case ready
         case needsInitialize
         case needsMigrate
         case unknown
+        
+        public init(account: Account) {
+            if account.tipCounter == 0 {
+                if account.hasPIN {
+                    self = .needsMigrate
+                } else {
+                    self = .needsInitialize
+                }
+            } else {
+                self = .ready
+            }
+        }
+        
     }
     
     @frozen public enum Progress {
@@ -73,6 +91,8 @@ public enum TIP {
         case tipCounterExceedsNodeCounter
         case invalidCounterGroups
         case hashTIPPrivToPrivSeed
+        case invalidUserID
+        case noSalt
         #if DEBUG
         case mock
         #endif
@@ -81,17 +101,10 @@ public enum TIP {
     public static let didUpdateNotification = Notification.Name("one.mixin.service.tip.update")
     
     public static var status: Status {
-        guard let account = LoginManager.shared.account else {
-            return .unknown
-        }
-        if account.tipCounter == 0 {
-            if account.hasPIN {
-                return .needsMigrate
-            } else {
-                return .needsInitialize
-            }
+        if let account = LoginManager.shared.account {
+            return Status(account: account)
         } else {
-            return .ready
+            return .unknown
         }
     }
     
@@ -122,18 +135,18 @@ extension TIP {
         Logger.tip.info(category: "TIP", message: "Identity pair ready")
         
         await progressHandler?(.connecting)
-        let aggSig = try await TIPNode.sign(identityPriv: identityPriv,
-                                            ephemeral: ephemeralSeed,
-                                            watcher: watcher,
-                                            assigneePriv: nil,
-                                            failedSigners: failedSigners,
-                                            forRecover: false,
-                                            progressHandler: progressHandler)
+        let (aggSig, _) = try await TIPNode.sign(identityPriv: identityPriv,
+                                                 ephemeral: ephemeralSeed,
+                                                 watcher: watcher,
+                                                 assigneePriv: nil,
+                                                 failedSigners: failedSigners,
+                                                 forRecover: false,
+                                                 progressHandler: progressHandler)
         Logger.tip.info(category: "TIP", message: "aggSig ready")
-        guard let privSeed = SHA3_256.hash(data: aggSig) else {
+        guard let tipPriv = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
-        let priv = try Ed25519PrivateKey(rawRepresentation: privSeed)
+        let priv = try Ed25519PrivateKey(rawRepresentation: tipPriv)
         let pub = priv.publicKey.rawRepresentation
         if let localPub = LoginManager.shared.account?.tipKey, !localPub.isEmpty, pub != localPub {
             throw Error.incorrectPIN
@@ -143,8 +156,8 @@ extension TIP {
         Logger.tip.info(category: "TIP", message: "AES key ready")
         if forRecover {
             Logger.tip.info(category: "TIP", message: "Recovering")
-            try await encryptAndSaveTIPPriv(pinData: pinData, aggSig: aggSig, aesKey: aesKey)
-            return aggSig
+            try await encryptAndSaveTIPPriv(pinData: pinData, tipPriv: tipPriv, aesKey: aesKey)
+            return tipPriv
         }
         
         let oldEncryptedPIN: String?
@@ -158,7 +171,7 @@ extension TIP {
             oldEncryptedPIN = nil
         }
         let new = try encryptPIN(key: pinToken, code: pub + UInt64(1).data(endianness: .big))
-        let request = PINRequest(pin: new, oldPIN: oldEncryptedPIN, timestamp: nil)
+        let request = PINRequest(pin: new, oldPIN: oldEncryptedPIN, salt: nil, oldSalt: nil, timestamp: nil)
 #if DEBUG
         try await MainActor.run {
             if TIPDiagnostic.failPINUpdateServerSideOnce {
@@ -183,22 +196,26 @@ extension TIP {
         LoginManager.shared.setAccount(account)
         Logger.tip.info(category: "TIP", message: "Local account is updated with tip_counter: \(account.tipCounter)")
         
-        try encryptAndSaveTIPPriv(pinData: pinData, aggSig: aggSig, aesKey: aesKey)
+        try encryptAndSaveTIPPriv(pinData: pinData, tipPriv: tipPriv, aesKey: aesKey)
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
         }
-        return aggSig
+        return tipPriv
     }
     
     @discardableResult
     public static func updateTIPPriv(
-        oldPIN: String?,
+        oldPIN: String,
         newPIN: String,
+        isCounterBalanced: Bool,
         failedSigners: [TIPSigner],
         progressHandler: (@MainActor (Progress) -> Void)?
     ) async throws -> Data {
         Logger.tip.info(category: "TIP", message: "Update priv with oldPIN: \(oldPIN != nil), failedSigners: \(failedSigners.map(\.index))")
+        guard let oldPINData = oldPIN.data(using: .utf8) else {
+            throw Error.invalidPIN
+        }
         guard let newPINData = newPIN.data(using: .utf8) else {
             throw Error.invalidPIN
         }
@@ -212,10 +229,7 @@ extension TIP {
         let identityPriv: Data
         let watcher: Data
         let assigneePriv: Data?
-        if let oldPIN = oldPIN {
-            guard let oldPINData = oldPIN.data(using: .utf8) else {
-                throw Error.invalidPIN
-            }
+        if isCounterBalanced {
             (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: oldPINData, pinToken: pinToken)
             Logger.tip.info(category: "TIP", message: "Identity pair ready")
             assigneePriv = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken).priv
@@ -228,29 +242,60 @@ extension TIP {
         }
         
         await progressHandler?(.connecting)
-        let aggSig = try await TIPNode.sign(identityPriv: identityPriv,
-                                            ephemeral: ephemeralSeed,
-                                            watcher: watcher,
-                                            assigneePriv: assigneePriv,
-                                            failedSigners: failedSigners,
-                                            forRecover: false,
-                                            progressHandler: progressHandler)
+        let (aggSig, nodeCounter) = try await TIPNode.sign(identityPriv: identityPriv,
+                                                           ephemeral: ephemeralSeed,
+                                                           watcher: watcher,
+                                                           assigneePriv: assigneePriv,
+                                                           failedSigners: failedSigners,
+                                                           forRecover: false,
+                                                           progressHandler: progressHandler)
         Logger.tip.info(category: "TIP", message: "aggSig ready")
-        let aesKey = try await generateAESKey(pinData: newPINData, pinToken: pinToken)
-        Logger.tip.info(category: "TIP", message: "AES key ready")
-        guard let privSeed = SHA3_256.hash(data: aggSig) else {
+        guard let tipPriv = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
-        let privateKey = try Ed25519PrivateKey(rawRepresentation: privSeed)
+        let aesKey = try await generateAESKey(pinData: newPINData, pinToken: pinToken)
+        Logger.tip.info(category: "TIP", message: "AES key ready")
+        let privateKey = try Ed25519PrivateKey(rawRepresentation: tipPriv)
         let pub = privateKey.publicKey.rawRepresentation
-        guard let counter = LoginManager.shared.account?.tipCounter else {
+        guard let accountBeforeUpdate = LoginManager.shared.account else {
             throw Error.noAccount
         }
-        let body = try TIPBody.verify(timestamp: counter)
-        let oldPIN = try encryptTIPPIN(tipPriv: aggSig, target: body)
-        let newEncryptPIN = try encryptPIN(key: pinToken, code: pub + (counter + 1).data(endianness: .big))
-        let request = PINRequest(pin: newEncryptPIN, oldPIN: oldPIN, timestamp: nil)
-        AppGroupKeychain.tipPriv = nil
+        let accountCounter = accountBeforeUpdate.tipCounter
+        let body = try TIPBody.verify(timestamp: accountCounter)
+        let oldPIN = try encryptTIPPIN(tipPriv: tipPriv, target: body)
+        let newEncryptPIN = try encryptPIN(key: pinToken, code: pub + (accountCounter + 1).data(endianness: .big))
+        
+        let pinTokenEncryptedSalt: (old: String, new: String)?
+        let encryptedSaltToSave: Data?
+        if accountBeforeUpdate.hasSafe {
+            let oldSaltAESKey = try saltAESKey(pin: oldPINData, tipPriv: tipPriv)
+            let oldEncryptedSalt = try await Self.encryptedSalt()
+            let plainSalt = try AESCryptor.decrypt(oldEncryptedSalt, with: oldSaltAESKey)
+            let saltAESKey = try saltAESKey(pin: newPINData, tipPriv: tipPriv)
+            let newEncryptedSalt = try AESCryptor.encrypt(plainSalt, with: saltAESKey)
+            pinTokenEncryptedSalt = (
+                old: try AESCryptor.encrypt(oldEncryptedSalt, with: pinToken).base64RawURLEncodedString(),
+                new: try AESCryptor.encrypt(newEncryptedSalt, with: pinToken).base64RawURLEncodedString()
+            )
+            encryptedSaltToSave = newEncryptedSalt
+#if DEBUG
+            Logger.tip.info(category: "TIP", message: "Update with plain salt: \(plainSalt.base64RawURLEncodedString()), oldKey: \(oldSaltAESKey.base64RawURLEncodedString()), newKey: \(saltAESKey.base64RawURLEncodedString()), pinTokenEncrypted: \(pinTokenEncryptedSalt)")
+#endif
+        } else {
+#if DEBUG
+            Logger.tip.info(category: "TIP", message: "No salt")
+#endif
+            pinTokenEncryptedSalt = nil
+            encryptedSaltToSave = nil
+        }
+        
+        let request = PINRequest(pin: newEncryptPIN,
+                                 oldPIN: oldPIN,
+                                 salt: pinTokenEncryptedSalt?.new,
+                                 oldSalt: pinTokenEncryptedSalt?.old,
+                                 timestamp: nil)
+        AppGroupKeychain.encryptedTIPPriv = nil
+        AppGroupKeychain.encryptedSalt = nil
         Logger.tip.info(category: "TIP", message: "TIP Priv is removed")
 #if DEBUG
         try await MainActor.run {
@@ -275,12 +320,14 @@ extension TIP {
 #endif
         LoginManager.shared.setAccount(account)
         Logger.tip.info(category: "TIP", message: "Local account is updated with tip_counter: \(account.tipCounter)")
-        try encryptAndSaveTIPPriv(pinData: newPINData, aggSig: aggSig, aesKey: aesKey)
+        try encryptAndSaveTIPPriv(pinData: newPINData, tipPriv: tipPriv, aesKey: aesKey)
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
+        AppGroupKeychain.encryptedSalt = encryptedSaltToSave
+        Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
         }
-        return aggSig
+        return tipPriv
     }
     
     public static func checkCounter(with freshAccount: Account? = nil, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
@@ -346,6 +393,90 @@ extension TIP {
         }
     }
     
+    public static func getOrRecoverTIPPriv(pin: String) async throws -> Data {
+        let pinToken: Data
+        if let token = AppGroupKeychain.pinToken {
+            pinToken = token
+        } else if let encoded = AppGroupUserDefaults.Account.pinToken, let token = Data(base64Encoded: encoded) {
+            pinToken = token
+        } else {
+            throw Error.missingPINToken
+        }
+        return try await getOrRecoverTIPPriv(pin: pin, pinToken: pinToken)
+    }
+    
+    public static func registerToSafe(pin: String) async throws {
+        guard let pinData = pin.data(using: .utf8) else {
+            throw Error.invalidPIN
+        }
+        guard let pinToken = AppGroupKeychain.pinToken else {
+            throw Error.missingPINToken
+        }
+        guard let userID = LoginManager.shared.account?.userID else {
+            throw Error.noAccount
+        }
+        guard let userIDData = userID.data(using: .utf8), let userIDHash = SHA3_256.hash(data: userIDData) else {
+            throw Error.invalidUserID
+        }
+        let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
+        
+        let salt = Data(withNumberOfSecuredRandomBytes: 32)!
+        let saltAESKey = try saltAESKey(pin: pinData, tipPriv: tipPriv)
+        let encryptedSalt = try AESCryptor.encrypt(salt, with: saltAESKey)
+        let pinTokenEncryptedSalt = try AESCryptor.encrypt(encryptedSalt, with: pinToken)
+        let base64Salt = pinTokenEncryptedSalt.base64RawURLEncodedString()
+        
+        let spendSeed = try spendPriv(salt: salt, tipPriv: tipPriv)
+        let keyPair = try Curve25519.Signing.PrivateKey(rawRepresentation: spendSeed)
+        let pkHex = keyPair.publicKey.rawRepresentation.hexEncodedString()
+        let registerSignature = try keyPair.signature(for: userIDHash).base64RawURLEncodedString()
+        
+        let body = try TIPBody.registerSequencer(userID: myUserId, publicKey: pkHex)
+        let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
+        
+#if DEBUG
+        Logger.tip.info(category: "TIP", message: "Register with plain salt: \(salt.base64RawURLEncodedString()), key: \(saltAESKey.base64RawURLEncodedString()), base64Salt: \(base64Salt), spendSeed: \(spendSeed.base64RawURLEncodedString()), pkHex: \(pkHex)")
+#endif
+        let account = try await SafeAPI.register(publicKey: pkHex,
+                                                 signature: registerSignature,
+                                                 pin: pin,
+                                                 salt: base64Salt)
+        LoginManager.shared.setAccount(account)
+        Logger.tip.info(category: "TIP", message: "Local account is updated with registration")
+        AppGroupKeychain.encryptedSalt = encryptedSalt
+        Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+    }
+    
+    public static func spendPriv(pin: String) async throws -> Data {
+        guard let pinData = pin.data(using: .utf8) else {
+            throw Error.invalidPIN
+        }
+        let tipPriv = try await TIP.getOrRecoverTIPPriv(pin: pin)
+        let encryptedSalt = try await TIP.encryptedSalt()
+        let key = try saltAESKey(pin: pinData, tipPriv: tipPriv)
+        let salt = try AESCryptor.decrypt(encryptedSalt, with: key)
+        return try Argon2i.hash(password: tipPriv, salt: salt)
+    }
+    
+    public static func encryptedSalt() async throws -> Data {
+        if let salt = AppGroupKeychain.encryptedSalt {
+            return salt
+        } else {
+            let account = try await AccountAPI.me()
+            LoginManager.shared.setAccount(account, updateUserTable: false)
+            guard let accountSalt = account.salt, let pinTokenEncryptedSalt = Data(base64URLEncoded: accountSalt) else {
+                throw Error.noSalt
+            }
+            guard let pinToken = AppGroupKeychain.pinToken else {
+                throw Error.missingPINToken
+            }
+            let encryptedSalt = try AESCryptor.decrypt(pinTokenEncryptedSalt, with: pinToken)
+            AppGroupKeychain.encryptedSalt = encryptedSalt
+            Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+            return encryptedSalt
+        }
+    }
+    
 }
 
 extension TIP {
@@ -362,10 +493,7 @@ extension TIP {
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }
-        guard let privSeed = SHA3_256.hash(data: tipPriv) else {
-            throw Error.hashTIPPrivToPrivSeed
-        }
-        let privateKey = try Ed25519PrivateKey(rawRepresentation: privSeed)
+        let privateKey = try Ed25519PrivateKey(rawRepresentation: tipPriv)
         let sig = try privateKey.signature(for: target)
         let pinData = sig
             + UInt64(Date().timeIntervalSince1970).data(endianness: .little)
@@ -374,19 +502,30 @@ extension TIP {
         return based
     }
     
-    // TODO: Revert this function to internal after dependencies are migrated to SPM
-    public static func getOrRecoverTIPPriv(pin: String, pinToken: Data) async throws -> Data {
+    private static func getOrRecoverTIPPriv(pin: String, pinToken: Data) async throws -> Data {
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
         }
-        let tipPriv: Data
-        if let savedTIPPriv = AppGroupKeychain.tipPriv {
-            Logger.tip.info(category: "TIP", message: "Using saved priv")
+        if let savedTIPPriv = AppGroupKeychain.encryptedTIPPriv {
+            Logger.tip.info(category: "TIP", message: "Using saved priv: \(savedTIPPriv.count)")
             let aesKey = try await getAESKey(pinData: pinData, pinToken: pinToken)
             guard let tipPrivKey = SHA3_256.hash(data: aesKey + pinData) else {
                 throw Error.unableToHashTIPPrivKey
             }
-            return try AESCryptor.decrypt(savedTIPPriv, with: tipPrivKey)
+            let decrypted = try AESCryptor.decrypt(savedTIPPriv, with: tipPrivKey)
+            if decrypted.count == 64 {
+                // In history versions aggSig(64 bytes) was saved in Keychain instead of TIP Priv(32 bytes)
+                // Migrate to TIP priv once found
+                guard let tipPriv = SHA3_256.hash(data: decrypted) else {
+                    throw Error.hashAggSigToPrivSeed
+                }
+                let encrypted = try AESCryptor.encrypt(tipPriv, with: tipPrivKey)
+                AppGroupKeychain.encryptedTIPPriv = encrypted
+                Logger.tip.info(category: "TIP", message: "TIP Priv is migrated from: \(decrypted.count), to: \(tipPriv.count)")
+                return tipPriv
+            } else {
+                return decrypted
+            }
         } else {
             Logger.tip.info(category: "TIP", message: "Using new created priv")
             return try await createTIPPriv(pin: pin,
@@ -447,12 +586,13 @@ extension TIP {
 
 extension TIP {
     
-    private static func encryptAndSaveTIPPriv(pinData: Data, aggSig: Data, aesKey: Data) throws {
+    private static func encryptAndSaveTIPPriv(pinData: Data, tipPriv: Data, aesKey: Data) throws {
         guard let key = SHA3_256.hash(data: aesKey + pinData) else {
             throw Error.generateTIPPrivKey
         }
-        let tipPriv = try AESCryptor.encrypt(aggSig, with: key)
-        AppGroupKeychain.tipPriv = tipPriv
+        let encryptedTIPPriv = try AESCryptor.encrypt(tipPriv, with: key)
+        AppGroupKeychain.encryptedTIPPriv = encryptedTIPPriv
+        Logger.tip.info(category: "TIP", message: "Saved TIP Priv: \(encryptedTIPPriv.count)")
     }
     
     private static func generateAESKey(pinData: Data, pinToken: Data) async throws -> Data {
@@ -500,7 +640,7 @@ extension TIP {
             return try AESCryptor.decrypt(seed, with: pinToken)
         } catch {
             if case DecodingError.dataCorrupted = error {
-                AppGroupKeychain.tipPriv = nil
+                AppGroupKeychain.encryptedTIPPriv = nil
                 Logger.tip.warn(category: "TIP", message: "TIP Priv is removed due to invalid secret")
             }
             throw error
@@ -511,6 +651,14 @@ extension TIP {
         let body = try TIPBody.verify(timestamp: timestamp)
         let signature = try key.signature(for: body)
         return signature.base64RawURLEncodedString()
+    }
+    
+    private static func spendPriv(salt: Data, tipPriv: Data) throws -> Data {
+        try Argon2i.hash(password: tipPriv, salt: salt)
+    }
+    
+    private static func saltAESKey(pin: Data, tipPriv: Data) throws -> Data {
+        try Argon2i.hash(password: pin, salt: tipPriv)
     }
     
 }

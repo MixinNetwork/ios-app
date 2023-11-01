@@ -1,18 +1,18 @@
 import UIKit
 import MixinServices
 
-protocol TransferTypeViewControllerDelegate: AnyObject {
-    func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem)
+protocol TokenSelectorViewControllerDelegate: AnyObject {
+    func tokenSelectorViewController(_ viewController: TokenSelectorViewController, didSelectToken token: TokenItem)
 }
 
-class TransferTypeViewController: PopupSearchableTableViewController {
+class TokenSelectorViewController: PopupSearchableTableViewController {
     
-    weak var delegate: TransferTypeViewControllerDelegate?
+    weak var delegate: TokenSelectorViewControllerDelegate?
     
-    var assets = [AssetItem]()
-    var asset: AssetItem?
+    var tokens = [TokenItem]()
+    var token: TokenItem?
     
-    private var searchResults = [AssetItem]()
+    private var searchResults = [TokenItem]()
     
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
@@ -23,11 +23,11 @@ class TransferTypeViewController: PopupSearchableTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
-        if let assetId = asset?.assetId, let index = assets.firstIndex(where: { $0.assetId == assetId }) {
-            var reordered = assets
+        if let assetId = token?.assetID, let index = tokens.firstIndex(where: { $0.assetID == assetId }) {
+            var reordered = tokens
             let selected = reordered.remove(at: index)
             reordered.insert(selected, at: 0)
-            self.assets = reordered
+            self.tokens = reordered
         }
         tableView.register(R.nib.transferTypeCell)
         tableView.dataSource = self
@@ -36,7 +36,7 @@ class TransferTypeViewController: PopupSearchableTableViewController {
     }
     
     override func updateSearchResults(keyword: String) {
-        searchResults = assets.filter({ (asset) -> Bool in
+        searchResults = tokens.filter({ (asset) -> Bool in
             asset.symbol.lowercased().contains(keyword)
                 || asset.name.lowercased().contains(keyword)
         })
@@ -44,28 +44,28 @@ class TransferTypeViewController: PopupSearchableTableViewController {
     
 }
 
-extension TransferTypeViewController: UITableViewDataSource {
+extension TokenSelectorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResults.count : assets.count
+        return isSearching ? searchResults.count : tokens.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.transfer_type, for: indexPath)!
-        let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
-        cell.checkmarkView.isHidden = !(asset.assetId == self.asset?.assetId)
-        cell.render(asset: asset)
+        let token = isSearching ? searchResults[indexPath.row] : tokens[indexPath.row]
+        cell.checkmarkView.isHidden = !(token.assetID == self.token?.assetID)
+        cell.render(token: token)
         return cell
     }
     
 }
 
-extension TransferTypeViewController: UITableViewDelegate {
+extension TokenSelectorViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
-        delegate?.transferTypeViewController(self, didSelectAsset: asset)
+        let token = isSearching ? searchResults[indexPath.row] : tokens[indexPath.row]
+        delegate?.tokenSelectorViewController(self, didSelectToken: token)
         dismiss(animated: true, completion: nil)
     }
     

@@ -82,6 +82,7 @@
 "appearance" = "Вид";
 "apply" = "Подать заявление";
 "asset_key" = "Ключ актива";
+"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
 "assets" = "АКТИВЫ";
@@ -372,6 +373,7 @@
 "error_invalid_emergency_contact" = "ОШИБКА 20130: Недопустимый экстренный контакт";
 "error_network_task_failed" = "Не удалось подключиться к сети. Проверьте или переключите сеть и повторите попытку.";
 "error_not_found" = "Ошибка 404: Не найдено";
+"error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "ОШИБКА 20110: Неверный номер телефона";
 "error_phone_sms_delivery" = "ОШИБКА 10003: Не удалось доставить SMS";
 "error_phone_verification_code_expired" = "ОШИБКА 20114: Срок действия кода подтверждения телефона истек";
@@ -450,6 +452,7 @@
 "incoming_voice_call" = "Входящий голосовой вызов";
 "info" = "Информация";
 "initializing" = "Инициализация...";
+"insufficient_balance" = "Insufficient balance";
 "insufficient_transaction_fee" = "Недостаточная комиссия за транзакцию";
 "interface_style" = "Стиль интерфейса";
 "invalid_candidate" = "Недействительный кандидат";
@@ -989,6 +992,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "Сообщено о пользователе";
 "user_not_found" = "Пользователь не найден";
+"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
 "validation_timed_out" = "Время проверки истекло";
 "value_now" = "значение сейчас %@";
 "value_then" = "значение затем %@";

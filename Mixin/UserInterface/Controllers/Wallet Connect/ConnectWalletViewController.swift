@@ -105,30 +105,26 @@ extension ConnectWalletViewController: AuthenticationIntentViewController {
         }
     }
     
-    var isBiometryAuthAllowed: Bool {
-        true
-    }
-    
-    var inputPINOnAppear: Bool {
-        true
+    var options: AuthenticationIntentOptions {
+        [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
     }
     
     func authenticationViewController(
         _ controller: AuthenticationViewController,
         didInput pin: String,
-        completion: @escaping @MainActor (Swift.Error?) -> Void
+        completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
     ) {
         Task {
             do {
                 let priv = try await TIP.ethereumPrivateKey(pin: pin)
                 await MainActor.run {
                     self.onApprove?(priv)
-                    completion(nil)
+                    completion(.success)
                     self.dismiss(animated: true)
                 }
             } catch {
                 await MainActor.run {
-                    completion(error)
+                    completion(.failure(error: error, allowsRetrying: true))
                 }
             }
         }

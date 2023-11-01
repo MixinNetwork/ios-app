@@ -3,7 +3,7 @@ import MixinServices
 
 protocol TransferSearchViewControllerDelegate: AnyObject {
     
-    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectAsset asset: AssetItem)
+    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectToken token: TokenItem)
     func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController)
     
 }
@@ -12,8 +12,8 @@ class TransferSearchViewController: PopupSearchableTableViewController {
     
     weak var delegate: TransferSearchViewControllerDelegate?
     
-    var assets = [AssetItem]()
-    var sendableAssets = [AssetItem]()
+    var tokens = [TokenItem]()
+    var sendableAssets = [TokenItem]()
     var showEmptyHintIfNeeded = false
     var searchResultsFromServer = false
     
@@ -37,8 +37,8 @@ class TransferSearchViewController: PopupSearchableTableViewController {
         }
         searchResultsController.didMove(toParent: self)
         searchResultsController.transferSearchController = self
-        reloadSearchResults(assets)
-        if assets.isEmpty, showEmptyHintIfNeeded {
+        reloadSearchResults(tokens)
+        if tokens.isEmpty, showEmptyHintIfNeeded {
             loadEmptyHintView()
             searchBoxView.isUserInteractionEnabled = false
         }
@@ -51,15 +51,15 @@ class TransferSearchViewController: PopupSearchableTableViewController {
         if searchResultsFromServer {
             if keyword.isEmpty {
                 searchResultsController.lastKeyword = keyword
-                reloadSearchResults(assets)
+                reloadSearchResults(tokens)
             } else {
                 searchResultsController.update(with: keyword)
             }
         } else {
             searchResultsController.lastKeyword = keyword
-            let results: [AssetItem]
+            let results: [TokenItem]
             if keyword.isEmpty {
-                results = assets
+                results = tokens
             } else {
                 results = sendableAssets.filter({ (asset) -> Bool in
                     asset.symbol.lowercased().contains(keyword) || asset.name.lowercased().contains(keyword)
@@ -69,11 +69,11 @@ class TransferSearchViewController: PopupSearchableTableViewController {
         }
     }
     
-    func reloadAssets(_ assets: [AssetItem]) {
+    func reload(tokens: [TokenItem]) {
         emptyHintViewIfLoaded?.removeFromSuperview()
         searchBoxView.isUserInteractionEnabled = true
-        self.assets = assets
-        reloadSearchResults(assets)
+        self.tokens = tokens
+        reloadSearchResults(tokens)
     }
     
 }
@@ -115,8 +115,8 @@ extension TransferSearchViewController {
         emptyHintViewIfLoaded = emptyHintView
     }
 
-    private func reloadSearchResults(_ assets: [AssetItem]) {
-        searchResultsController.searchResults = assets
+    private func reloadSearchResults(_ tokens: [TokenItem]) {
+        searchResultsController.searchResults = tokens
         searchResultsController.tableView.reloadData()
     }
     

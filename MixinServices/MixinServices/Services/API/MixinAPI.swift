@@ -19,6 +19,25 @@ open class MixinAPI {
         
     }
     
+    public static func request<Parameters: Encodable, Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        parameters: Parameters,
+        options: Options = [],
+        queue: DispatchQueue = .main
+    ) async throws -> Response {
+        guard let url = url(with: path) else {
+            throw MixinAPIError.invalidPath
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            request(makeRequest: { (session) -> DataRequest in
+                session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
+            }, options: options, isAsync: true, queue: queue, completion: { result in
+                continuation.resume(with: result)
+            })
+        }
+    }
+    
     @discardableResult
     public static func request<Parameters: Encodable, Response>(
         method: HTTPMethod,
@@ -37,6 +56,26 @@ open class MixinAPI {
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
         }, options: options, isAsync: true, queue: queue, completion: completion)
+    }
+    
+    @discardableResult
+    public static func request<Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        parameters: [String: Any]? = nil,
+        options: Options = [],
+        queue: DispatchQueue = .main
+    ) async throws -> Response {
+        guard let url = url(with: path) else {
+            throw MixinAPIError.invalidPath
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            request(makeRequest: { (session) -> DataRequest in
+                session.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
+            }, options: options, isAsync: true, queue: queue, completion: { result in
+                continuation.resume(with: result)
+            })
+        }
     }
     
     @discardableResult

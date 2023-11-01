@@ -83,6 +83,7 @@ class TIPActionViewController: UIViewController {
                                                 forRecover: false,
                                                 progressHandler: showProgress)
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    try await TIP.registerToSafe(pin: pin)
                     await MainActor.run {
                         finish()
                     }
@@ -110,6 +111,7 @@ class TIPActionViewController: UIViewController {
                     case let .tip(old):
                         try await TIP.updateTIPPriv(oldPIN: old,
                                                     newPIN: new,
+                                                    isCounterBalanced: true,
                                                     failedSigners: [],
                                                     progressHandler: showProgress)
                     }
@@ -141,6 +143,7 @@ class TIPActionViewController: UIViewController {
                                                 forRecover: false,
                                                 progressHandler: showProgress)
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    try await TIP.registerToSafe(pin: pin)
                     await MainActor.run {
                         finish()
                     }
@@ -259,14 +262,14 @@ class TIPActionViewController: UIViewController {
                 if TIPDiagnostic.failLastSignerOnce {
                     TIPDiagnostic.failLastSignerOnce = false
                     situation = .pendingSign([])
-                } else if TIPDiagnostic.failPINUpdateServerSideOnce {
-                    TIPDiagnostic.failPINUpdateServerSideOnce = false
-                    situation = .pendingUpdate
+//                } else if TIPDiagnostic.failPINUpdateServerSideOnce {
+//                    TIPDiagnostic.failPINUpdateServerSideOnce = false
+//                    situation = .pendingUpdate
                 } else {
                     fatalError()
                 }
                 
-                let context = TIP.InterruptionContext(action: action, situation: situation, maxNodeCounter: 2)
+                let context = TIP.InterruptionContext(action: action, situation: situation, accountTIPCounter: 2, maxNodeCounter: 2)
                 let intro = TIPIntroViewController(context: context)
                 self.navigationController?.setViewControllers([intro], animated: true)
             } else {

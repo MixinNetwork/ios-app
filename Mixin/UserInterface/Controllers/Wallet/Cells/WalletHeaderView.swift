@@ -3,6 +3,8 @@ import MixinServices
 
 class WalletHeaderView: InfiniteTopView {
     
+    @IBOutlet weak var contentView: UIStackView!
+    
     @IBOutlet weak var fiatMoneySymbolLabel: UILabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     @IBOutlet weak var btcValueLabel: UILabel!
@@ -22,6 +24,8 @@ class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetWrapperView: UIView!
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
+    
+    @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
     
     var showSnowfallEffect = false {
         didSet {
@@ -65,6 +69,7 @@ class WalletHeaderView: InfiniteTopView {
     }()
     
     private weak var snowfallLayerIfLoaded: CAEmitterLayer?
+    private weak var migrationButton: UIButton?
     
     private var contentHeight: CGFloat = 232
     
@@ -96,18 +101,18 @@ class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func render(assets: [AssetItem]) {
+    func render(assets: [TokenItem]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
         var btcTotalBalance: Double = 0
-        let usdTotalBalance: Double = assets.map { $0.balance.doubleValue * $0.priceUsd.doubleValue }.reduce(0, +)
+        let usdTotalBalance: Double = assets.map { $0.balance.doubleValue * $0.usdPrice.doubleValue }.reduce(0, +)
         var maxPortion = 3
 
         for asset in assets {
             let balance = asset.balance.doubleValue
-            let usdBalance = balance * asset.priceUsd.doubleValue
+            let usdBalance = balance * asset.usdPrice.doubleValue
             if usdBalance > 0 {
-                let btcBalance = balance * asset.priceBtc.doubleValue
+                let btcBalance = balance * asset.btcPrice.doubleValue
                 btcTotalBalance += btcBalance
                 if assetPortions.count < maxPortion {
                     let percent: Double = (usdBalance / usdTotalBalance).roundTo(places: 2)
@@ -123,7 +128,11 @@ class WalletHeaderView: InfiniteTopView {
             }
         }
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
-        contentHeight = usdBalanceIsMoreThanZero ? 232 : 180
+        if let button = migrationButton, button.superview != nil {
+            updateContentHeight(isUSDBalancePositive: usdBalanceIsMoreThanZero, hasMigrationButton: true)
+        } else {
+            updateContentHeight(isUSDBalancePositive: usdBalanceIsMoreThanZero, hasMigrationButton: false)
+        }
         fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
@@ -162,6 +171,47 @@ class WalletHeaderView: InfiniteTopView {
             rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: assetPortions[2].percent))
             assetChartView.proportions = assetPortions.map { $0.percent }
         }
+    }
+    
+    func insertMigrationButtonIfNeeded(completion: (UIButton) -> Void) {
+        guard migrationButton == nil else {
+            return
+        }
+        let button = UIButton(type: .system)
+        button.backgroundColor = .theme
+        button.setTitle(R.string.localizable.asset_migration_hint(), for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        if let label = button.titleLabel {
+            label.font = .systemFont(ofSize: 12)
+            label.adjustsFontSizeToFitWidth = true
+        }
+        contentView.insertArrangedSubview(button, at: 0)
+        contentView.setCustomSpacing(25, after: button)
+        button.snp.makeConstraints { make in
+            make.height.equalTo(36)
+        }
+        migrationButton = button
+        contentViewTopConstraint.constant = 0
+        updateContentHeight(isUSDBalancePositive: !assetChartWrapperView.isHidden, hasMigrationButton: true)
+        layoutIfNeeded()
+        completion(button)
+    }
+    
+    func removeMigrationButton() {
+        contentViewTopConstraint.constant = 11
+        if let migrationButton {
+            migrationButton.removeFromSuperview()
+            updateContentHeight(isUSDBalancePositive: !assetChartWrapperView.isHidden, hasMigrationButton: false)
+        }
+        layoutIfNeeded()
+    }
+    
+    func updateContentHeight(isUSDBalancePositive: Bool, hasMigrationButton: Bool) {
+        var height: CGFloat = isUSDBalancePositive ? 232 : 180
+        if hasMigrationButton {
+            height += 36
+        }
+        contentHeight = height
     }
     
 }

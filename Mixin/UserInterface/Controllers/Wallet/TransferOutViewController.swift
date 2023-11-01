@@ -6,57 +6,64 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     enum Opponent {
         case contact(UserItem)
         case address(Address)
-        case tipWallet(String)
     }
     
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var contentScrollView: UIScrollView!
     @IBOutlet weak var opponentImageView: AvatarImageView!
-    @IBOutlet weak var assetSelectorView: AssetComboBoxView!
+    @IBOutlet weak var tokenSelectorView: AssetComboBoxView!
+    
+    @IBOutlet weak var amountSymbolLabel: UILabel!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var amountExchangeLabel: UILabel!
+    @IBOutlet weak var switchAmountIntentButton: UIButton!
+    
+    @IBOutlet weak var memoView: CornerView!
     @IBOutlet weak var memoTextField: UITextField!
-    @IBOutlet weak var continueButton: RoundedButton!
-    @IBOutlet weak var amountSymbolLabel: UILabel!
+    
     @IBOutlet weak var transcationFeeHintView: UIView!
     @IBOutlet weak var transactionFeeHintLabel: UILabel!
+    
     @IBOutlet weak var continueWrapperView: UIView!
-    @IBOutlet weak var switchAmountButton: UIButton!
-    @IBOutlet weak var memoView: CornerView!
-
+    @IBOutlet weak var continueButton: RoundedButton!
+    
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var symbolLeadingConstraint: NSLayoutConstraint!
     
     private let placeHolderFont = UIFont.preferredFont(forTextStyle: .callout)
     private let amountFont = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 17, weight: .semibold))
     private let maxMemoDataCount = 200
+    private let traceID = UUID().uuidString.lowercased()
     
-    private var availableAssets = [AssetItem]()
-    private var opponent: Opponent!
-    private var asset: AssetItem?
-    private var targetUser: UserItem?
-    private var feeAsset: AssetItem?
-    private var isInputAssetAmount = true
+    private var token: TokenItem?
+    private var opponent: Opponent
+    private var amountIntent: AmountIntent = .byToken
+    
+    private var availableTokens = [TokenItem]()
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
     
-    // Remove after TIP Wallet transfer is removed
-    private var fee: String?
-    
-    private weak var payWindowIfLoaded: PayWindow?
-    
-    private lazy var traceId = UUID().uuidString.lowercased()
     private lazy var balanceInputAccessoryView: BalanceInputAccessoryView = {
         let view = R.nib.balanceInputAccessoryView(withOwner: nil)!
         view.button.addTarget(self, action: #selector(fillBalanceAction(_:)), for: .touchUpInside)
         return view
     }()
     
+    init(token: TokenItem?, to opponent: Opponent) {
+        self.token = token
+        self.opponent = opponent
+        let nib = R.nib.transferOutView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        assetSelectorView.button.addTarget(self, action: #selector(switchAssetAction(_:)), for: .touchUpInside)
+        tokenSelectorView.button.addTarget(self, action: #selector(switchToken(_:)), for: .touchUpInside)
         amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
-        switch opponent! {
+        switch opponent {
         case .contact(let user):
-            targetUser = user
             opponentImageView.setImage(with: user)
             container?.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
             container?.titleLabel.text = R.string.localizable.send_to_title() + " " + user.fullName
@@ -70,49 +77,20 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                    selector: #selector(reloadAddress),
                                                    name: AddressDAO.addressDidChangeNotification,
                                                    object: nil)
-        case let .tipWallet(address):
-            opponentImageView.image = R.image.wallet.ic_transaction_external_large()
-            container?.titleLabel.text = "Bridge"
-            container?.setSubtitle(subtitle: address.toSimpleKey())
-            memoView.isHidden = true
-            if let asset = asset {
-                DispatchQueue.global().async { [weak self] in
-                    let response = ExternalSchemeAPI.checkAddress(assetId: asset.assetId,
-                                                                  destination: address,
-                                                                  tag: nil)
-                    guard case let .success(response) = response else {
-                        return
-                    }
-                    guard let feeAsset = AssetDAO.shared.getAsset(assetId: response.feeAssetId) else {
-                        return
-                    }
-                    let feeRepresentation = response.fee + " " + feeAsset.symbol
-                    let feeHint = R.string.localizable.withdrawal_network_fee() + feeRepresentation
-                    DispatchQueue.main.async {
-                        guard let self else {
-                            return
-                        }
-                        self.feeAsset = feeAsset
-                        self.fee = response.fee
-                        self.transactionFeeHintLabel.text = feeHint
-                        self.continueButton.isBusy = false
-                    }
-                }
-            }
         }
         
-        if self.asset != nil {
-            updateAssetUI()
+        if let token {
+            updateViews(token: token)
         } else {
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(fetchAvailableAssets),
-                                                   name: AssetDAO.assetsDidChangeNotification,
+                                                   name: TokenDAO.tokensDidChangeNotification,
                                                    object: nil)
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(fetchAvailableAssets),
                                                    name: ChainDAO.chainsDidChangeNotification,
                                                    object: nil)
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
+            ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             fetchAvailableAssets()
         }
         
@@ -122,7 +100,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         memoTextField.delegate = self
         
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            guard let self = self, self.payWindowIfLoaded == nil else {
+            guard let self = self, self.presentedViewController == nil else {
                 return
             }
             self.amountTextField.becomeFirstResponder()
@@ -143,49 +121,51 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     override func layout(for keyboardFrame: CGRect) {
         let keyboardHeight = view.bounds.height - keyboardFrame.origin.y
         continueWrapperBottomConstraint.constant = keyboardHeight
-        scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
-        scrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+        contentScrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
+        contentScrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
         view.layoutIfNeeded()
         if !viewHasAppeared, ScreenHeight.current <= .short {
-            scrollView.contentOffset.y = opponentImageView.frame.maxY
+            contentScrollView.contentOffset.y = opponentImageView.frame.maxY
         }
     }
     
     @IBAction func amountEditingChanged(_ sender: Any) {
-        guard let asset = self.asset else {
-            return
-        }
         let amountText = amountTextField.text ?? ""
         amountTextField.font = amountText.isEmpty ? placeHolderFont : amountFont
-        guard amountText.isNumeric else {
-            if isInputAssetAmount {
+        guard let token, let amount = Decimal(string: amountText, locale: .current) else {
+            switch amountIntent {
+            case .byToken:
                 amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
-            } else {
-                amountExchangeLabel.text = "0 " + asset.symbol
+            case .byFiatMoney:
+                if let token {
+                    amountExchangeLabel.text = "0 " + token.symbol
+                    amountExchangeLabel.isHidden = false
+                } else {
+                    amountExchangeLabel.isHidden = true
+                }
             }
             amountSymbolLabel.isHidden = true
             continueButton.isEnabled = false
             return
         }
         
-        let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
-        if isInputAssetAmount {
-            let fiatMoneyAmount = amountText.doubleValue * fiatMoneyPrice
+        let fiatMoneyPrice = token.decimalUSDPrice * Decimal(Currency.current.rate)
+        switch amountIntent {
+        case .byToken:
+            let fiatMoneyAmount = amount * fiatMoneyPrice
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
-        } else {
-            let assetAmount = amountText.doubleValue / fiatMoneyPrice
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
-        }
-        
-        if isInputAssetAmount {
-            if amountTextField.text == asset.balance {
+            
+            if amount == token.decimalBalance {
                 hideInputAccessoryView()
-            } else if amountText.count >= 4, asset.balance.doubleValue != 0, asset.localizedBalance.hasPrefix(amountText) {
+            } else if amountText.count >= 4, token.decimalBalance != 0, token.localizedBalance.hasPrefix(amountText) {
                 showInputAccessoryView()
             } else {
                 hideInputAccessoryView()
             }
-        } else {
+        case .byFiatMoney:
+            let assetAmount = amount / fiatMoneyPrice
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(token.symbol))
+            
             hideInputAccessoryView()
         }
         
@@ -195,288 +175,202 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             amountSymbolLabel.superview?.layoutIfNeeded()
         }
         
-        continueButton.isEnabled = amountText.doubleValue > 0
+        continueButton.isEnabled = amount > 0
     }
     
     @IBAction func continueAction(_ sender: Any) {
-        guard let asset = self.asset else {
-            return
-        }
-        guard !continueButton.isBusy else {
+        guard
+            !continueButton.isBusy,
+            let token,
+            let inputText = amountTextField.text?.trim(),
+            let inputAmount = Decimal(string: inputText, locale: .current)
+        else {
             return
         }
         continueButton.isBusy = true
         
-        let memo = memoTextField.text?.trim() ?? ""
-        var amount = amountTextField.text?.trim() ?? ""
-        var fiatMoneyAmount: String? = nil
-        if !isInputAssetAmount {
-            fiatMoneyAmount = amount
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .none
-            formatter.usesGroupingSeparator = false
-            formatter.maximumFractionDigits = 8
-            formatter.roundingMode = .down
-            let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
-            let number = NSNumber(value: amount.doubleValue / fiatMoneyPrice)
-            amount = formatter.string(from: number) ?? ""
+        let tokenAmount: Decimal
+        let fiatMoneyAmount: Decimal
+        let fiatMoneyPrice = token.decimalUSDPrice * Decimal(Currency.current.rate)
+        switch amountIntent {
+        case .byToken:
+            tokenAmount = inputAmount
+            fiatMoneyAmount = tokenAmount * fiatMoneyPrice
+        case .byFiatMoney:
+            tokenAmount = inputAmount / fiatMoneyPrice
+            fiatMoneyAmount = inputAmount
         }
+        
+        let memo = memoTextField.text?.trim() ?? ""
+        let traceID = self.traceID
+        let validator = PaymentValidator(traceID: traceID, token: token, memo: memo)
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
-
-        let feeAsset = self.feeAsset
-        let traceId = self.traceId
-        let payWindow = PayWindow.instance()
-        payWindow.onDismiss = { [weak self] in
-            self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
-        }
-        self.payWindowIfLoaded = payWindow
         
-        switch opponent! {
-        case .contact(let user):
-            DispatchQueue.global().async { [weak self] in
-                let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false, returnTo: nil)
-                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
-                    DispatchQueue.main.async {
-                        guard let weakSelf = self else {
-                            return
-                        }
-                        weakSelf.continueButton.isBusy = false
-                        if canPay {
-                            payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
-                        } else {
-                            weakSelf.amountTextField.becomeFirstResponder()
-                            if let error = errorMsg {
-                                showAutoHiddenHud(style: .error, text: error)
-                            }
-                        }
-                    }
-                }
-            }
-        case .address(let address):
-            DispatchQueue.global().async { [weak self] in
-                guard let feeAsset = feeAsset ?? AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
+        switch opponent {
+        case let .contact(opponent):
+            validator.transfer(to: opponent, amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount) { [weak self] result in
+                guard let self else {
                     return
                 }
-
-                let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: false)
-                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
-                    DispatchQueue.main.async {
-                        guard let weakSelf = self else {
-                            return
-                        }
-                        weakSelf.continueButton.isBusy = false
-                        if canPay {
-                            payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
-                        } else {
-                            weakSelf.amountTextField.becomeFirstResponder()
-                            if let error = errorMsg {
-                                showAutoHiddenHud(style: .error, text: error)
-                            }
-                        }
-                    }
+                self.continueButton.isBusy = false
+                switch result {
+                case .passed:
+                    let transfer = PeerTransferViewController(opponent: opponent,
+                                                              token: token,
+                                                              amountDisplay: amountIntent,
+                                                              tokenAmount: tokenAmount,
+                                                              fiatMoneyAmount: fiatMoneyAmount,
+                                                              memo: memo,
+                                                              traceID: traceID)
+                    let authentication = AuthenticationViewController(intentViewController: transfer)
+                    self.present(authentication, animated: true)
+                case .userCancelled:
+                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                case .failure(let message):
+                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                    self.amountTextField.becomeFirstResponder()
+                    showAutoHiddenHud(style: .error, text: message)
                 }
             }
-        case let .tipWallet(address):
-            continueButton.isBusy = false
-            guard let fee, let feeAsset else {
-                return
-            }
-            let addressId = (myUserId + asset.assetId + address).uuidDigest()
-            let action: PayWindow.PinAction = .externalTransfer(destination: address, fee: fee, feeAsset: feeAsset, addressId: addressId, traceId: UUID().uuidString.lowercased())
-            payWindow.render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
+        case let .address(address):
+            break
         }
     }
     
-    @IBAction func switchAmountAction(_ sender: Any) {
-        guard let asset = self.asset else {
+    @IBAction func toggleAmountIntent(_ sender: Any) {
+        guard let token else {
             return
         }
-        isInputAssetAmount = !isInputAssetAmount
-        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
-        if let amountTextField = amountTextField {
-            amountEditingChanged(amountTextField)
+        switch amountIntent {
+        case .byToken:
+            amountIntent = .byFiatMoney
+            amountSymbolLabel.text = Currency.current.code
+        case .byFiatMoney:
+            amountIntent = .byToken
+            amountSymbolLabel.text = token.symbol
         }
-    }
-    
-    @objc func fillBalanceAction(_ sender: Any) {
-        guard let asset else {
-            return
-        }
-        amountTextField.text = asset.localizedBalance
         amountEditingChanged(sender)
     }
     
-    @objc private func switchAssetAction(_ sender: Any) {
-        guard !assetSelectorView.accessoryImageView.isHidden else {
+    @objc private func switchToken(_ sender: Any) {
+        guard !tokenSelectorView.accessoryImageView.isHidden else {
             return
         }
-        let vc = TransferTypeViewController()
+        let vc = TokenSelectorViewController()
         vc.delegate = self
-        vc.assets = availableAssets
-        vc.asset = asset
+        vc.tokens = availableTokens
+        vc.token = token
         present(vc, animated: true, completion: nil)
     }
     
+    @objc private func fillBalanceAction(_ sender: Any) {
+        guard let token else {
+            return
+        }
+        amountTextField.text = token.localizedBalance
+        amountEditingChanged(sender)
+    }
+    
     @objc private func fetchAvailableAssets() {
-        assetSelectorView.button.isUserInteractionEnabled = false
+        tokenSelectorView.button.isUserInteractionEnabled = false
         DispatchQueue.global().async { [weak self] in
-            if let assetId = self?.asset?.assetId, let asset = AssetDAO.shared.getAsset(assetId: assetId) {
-                self?.asset = asset
-                DispatchQueue.main.async {
-                    self?.updateAssetUI()
-                }
+            let token: TokenItem
+            if let id = self?.token?.assetID, let selected = TokenDAO.shared.tokenItem(with: id) {
+                token = selected
+            } else if let `default` = TokenDAO.shared.defaultTransferToken() {
+                token = `default`
             } else {
-                if let defaultAsset = AssetDAO.shared.getDefaultTransferAsset() {
-                    self?.asset = defaultAsset
-                } else {
-                    self?.asset = .xin
-                }
-                DispatchQueue.main.async {
-                    self?.updateAssetUI()
-                }
+                token = .xin
+            }
+            self?.token = token
+            DispatchQueue.main.async {
+                self?.updateViews(token: token)
             }
             
-            let assets = AssetDAO.shared.getAvailableAssets()
+            let tokens = TokenDAO.shared.positiveBalancedTokens()
             DispatchQueue.main.async {
-                guard let weakSelf = self else {
+                guard let self else {
                     return
                 }
-                weakSelf.availableAssets = assets
-                if assets.count > 1 {
-                    weakSelf.assetSelectorView.accessoryImageView.isHidden = false
-                    weakSelf.assetSelectorView.button.isUserInteractionEnabled = true
+                self.availableTokens = tokens
+                if tokens.count > 1 {
+                    self.tokenSelectorView.accessoryImageView.isHidden = false
+                    self.tokenSelectorView.button.isUserInteractionEnabled = true
                 }
             }
         }
     }
     
     @objc private func reloadAddress() {
-        if case let .address(address) = opponent {
-            DispatchQueue.global().async { [weak self] in
-                guard let address = AddressDAO.shared.getAddress(addressId: address.addressId) else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    guard let self = self else {
-                        return
-                    }
-                    self.opponent = .address(address)
-                    self.fillFeeHint(address: address, onFinished: nil)
-                }
-            }
-        }
+//        if case let .address(address) = opponent {
+//            DispatchQueue.global().async { [weak self] in
+//                guard let address = AddressDAO.shared.getAddress(addressId: address.addressId) else {
+//                    return
+//                }
+//                DispatchQueue.main.async {
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    self.opponent = .address(address)
+//                    self.fillFeeHint(address: address, onFinished: nil)
+//                }
+//            }
+//        }
     }
     
-    private func updateAssetUI() {
-        guard let asset = self.asset else {
-            return
+    private func updateViews(token: TokenItem) {
+        switchAmountIntentButton.isHidden = token.decimalBTCPrice <= 0
+        tokenSelectorView.load(token: token)
+        switch amountIntent {
+        case .byToken:
+            amountSymbolLabel.text = token.symbol
+        case .byFiatMoney:
+            amountSymbolLabel.text = Currency.current.code
         }
-        switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
-        assetSelectorView.load(asset: asset)
-        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
     }
     
     private func reloadTransactionFeeHint(addressId: String) {
-        continueButton.isBusy = true
-        DispatchQueue.global().async { [weak self] in
-            if let address = AddressDAO.shared.getAddress(addressId: addressId), !address.feeAssetId.isEmpty {
-                self?.fillFeeHint(address: address) {
-                    self?.reloadFeeFromRemote(addressId: address.addressId)
-                }
-            } else {
-                self?.reloadFeeFromRemote(addressId: addressId)
-            }
-        }
+//        continueButton.isBusy = true
+//        DispatchQueue.global().async { [weak self] in
+//            if let address = AddressDAO.shared.getAddress(addressId: addressId), !address.feeAssetId.isEmpty {
+//                self?.fillFeeHint(address: address) {
+//                    self?.reloadFeeFromRemote(addressId: address.addressId)
+//                }
+//            } else {
+//                self?.reloadFeeFromRemote(addressId: addressId)
+//            }
+//        }
     }
     
     private func reloadFeeFromRemote(addressId: String) {
-        WithdrawalAPI.address(addressId: addressId) { [weak self](result) in
-            guard let weakSelf = self else {
-                return
-            }
-            switch result {
-            case let .success(address):
-                DispatchQueue.global().async {
-                    AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-                }
-                if case .address = weakSelf.opponent {
-                    weakSelf.opponent = .address(address)
-                }
-                weakSelf.fillFeeHint(address: address, onFinished: nil)
-            case .failure:
-                DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {
-                    self?.reloadFeeFromRemote(addressId: addressId)
-                })
-            }
-        }
-    }
-    
-    private func fillFeeHint(address: Address, onFinished: (() -> Void)?) {
-        let asset = self.asset
-        DispatchQueue.global().async { [weak self] in
-            guard let feeAsset = AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
-                DispatchQueue.main.async {
-                    guard let self else {
-                        return
-                    }
-                    self.transactionFeeHintLabel.text = ""
-                    self.continueButton.isBusy = false
-                }
-                onFinished?()
-                return
-            }
-            var hint: String
-            var highlightRanges = [NSRange]()
-
-            let feeRepresentation = address.fee + " " + feeAsset.symbol
-            let feeHint = R.string.localizable.withdrawal_network_fee() + feeRepresentation
-            hint = feeHint
-            let range = (hint as NSString).range(of: feeRepresentation)
-            highlightRanges.append(range)
-            
-            if let asset, address.dust.doubleValue > 0 {
-                let dustRepresentation = address.dust + " " + asset.symbol
-                let dustHint = R.string.localizable.withdrawal_minimum_withdrawal() + dustRepresentation
-                hint += "\n" + dustHint
-                let range = (hint as NSString).range(of: dustRepresentation, options: .backwards)
-                highlightRanges.append(range)
-            }
-            
-            if address.reserve.doubleValue > 0 {
-                let reserveRepresentation = address.reserve + " " + feeAsset.symbol
-                let reserveHint = R.string.localizable.withdrawal_minimum_reserve() + reserveRepresentation
-                hint += "\n" + reserveHint
-                let range = (hint as NSString).range(of: reserveRepresentation, options: .backwards)
-                highlightRanges.append(range)
-            }
-            
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = 4
-            let attributedHint = NSMutableAttributedString(string: hint, attributes: [.paragraphStyle: paragraphStyle])
-            highlightRanges.forEach { range in
-                attributedHint.addAttribute(.foregroundColor, value: UIColor.text, range: range)
-            }
-            DispatchQueue.main.async {
-                if let self {
-                    self.feeAsset = feeAsset
-                    self.transactionFeeHintLabel.attributedText = attributedHint
-                    self.continueButton.isBusy = false
-                }
-                onFinished?()
-            }
-        }
+//        WithdrawalAPI.address(addressId: addressId) { [weak self](result) in
+//            guard let weakSelf = self else {
+//                return
+//            }
+//            switch result {
+//            case let .success(address):
+//                DispatchQueue.global().async {
+//                    AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
+//                }
+//                if case .address = weakSelf.opponent {
+//                    weakSelf.opponent = .address(address)
+//                }
+//                weakSelf.fillFeeHint(address: address, onFinished: nil)
+//            case .failure:
+//                DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {
+//                    self?.reloadFeeFromRemote(addressId: addressId)
+//                })
+//            }
+//        }
     }
     
     private func showInputAccessoryView() {
-        guard amountTextField.inputAccessoryView == nil else {
+        guard let token, amountTextField.inputAccessoryView == nil else {
             return
         }
-        guard let asset = asset else {
-            return
-        }
-        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
-            ?? asset.localizedBalance
+        let balance = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never)
+            ?? token.localizedBalance
         balanceInputAccessoryView.balanceLabel.text = balance
         amountTextField.inputAccessoryView = balanceInputAccessoryView
         amountTextField.reloadInputViews()
@@ -490,11 +384,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountTextField.reloadInputViews()
     }
     
-    class func instance(asset: AssetItem?, type: Opponent) -> UIViewController {
-        let vc = R.storyboard.wallet.send()!
-        vc.opponent = type
-        vc.asset = asset
-        let container = ContainerViewController.instance(viewController: vc, title: "")
+    class func instance(token: TokenItem?, to opponent: Opponent) -> UIViewController {
+        let controller = TransferOutViewController(token: token, to: opponent)
+        let container = ContainerViewController.instance(viewController: controller, title: "")
         return container
     }
     
@@ -507,22 +399,18 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
     }
 
     func barRightButtonTappedAction() {
-        switch opponent! {
+        switch opponent {
         case let .contact(user):
             let vc = PeerTransactionsViewController.instance(opponentId: user.userId)
             navigationController?.pushViewController(vc, animated: true)
         case let .address(address):
             let vc = AddressTransactionsViewController.instance(asset: address.assetId, destination: address.destination, tag: address.tag)
             navigationController?.pushViewController(vc, animated: true)
-        case .tipWallet:
-            break
         }
     }
 
     func imageBarRightButton() -> UIImage? {
         switch opponent {
-        case .tipWallet:
-            return nil
         default:
             return R.image.ic_title_transaction()
         }
@@ -540,9 +428,10 @@ extension TransferOutViewController: UITextFieldDelegate {
                 return true
             } else if newText.isNumeric {
                 let components = newText.components(separatedBy: currentDecimalSeparator)
-                if isInputAssetAmount {
+                switch amountIntent {
+                case .byToken:
                     return components.count == 1 || components[1].count <= 8
-                } else {
+                case .byFiatMoney:
                     return components.count == 1 || components[1].count <= 2
                 }
             } else {
@@ -569,16 +458,14 @@ extension TransferOutViewController: UITextFieldDelegate {
     
 }
 
-extension TransferOutViewController: TransferTypeViewControllerDelegate {
+extension TransferOutViewController: TokenSelectorViewControllerDelegate {
     
-    func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
-        self.asset = asset
-        isInputAssetAmount = true
-        if let amountTextField = amountTextField {
-            amountTextField.text = nil
-            amountEditingChanged(amountTextField)
-        }
-        updateAssetUI()
+    func tokenSelectorViewController(_ viewController: TokenSelectorViewController, didSelectToken token: TokenItem) {
+        self.token = token
+        amountIntent = .byToken
+        amountTextField.text = nil
+        amountEditingChanged(viewController)
+        updateViews(token: token)
     }
     
 }

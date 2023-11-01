@@ -196,11 +196,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="232"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="4E6-iF-HlL">
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="4E6-iF-HlL">
                                             <rect key="frame" x="0.0" y="11" width="414" height="221"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tQz-6B-PFb">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="206"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="211"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IHE-HM-Hdw">
                                                             <rect key="frame" x="143" y="0.0" width="128" height="40"/>
@@ -438,7 +438,7 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="0zG-Ga-0cS" secondAttribute="bottom" constant="14" id="2An-Hx-Cj6"/>
+                                                        <constraint firstAttribute="bottom" secondItem="0zG-Ga-0cS" secondAttribute="bottom" constant="19" id="2An-Hx-Cj6"/>
                                                         <constraint firstItem="0zG-Ga-0cS" firstAttribute="top" secondItem="Y25-bj-M31" secondAttribute="bottom" id="8pV-8N-YK7"/>
                                                         <constraint firstItem="JDj-Ex-KE6" firstAttribute="centerX" secondItem="tQz-6B-PFb" secondAttribute="centerX" id="9Vy-Xq-eNv"/>
                                                         <constraint firstItem="IHE-HM-Hdw" firstAttribute="centerX" secondItem="tQz-6B-PFb" secondAttribute="centerX" id="FBu-qC-mXN"/>
@@ -472,6 +472,8 @@
                                         <outlet property="assetChartView" destination="VuY-Uo-TGR" id="0sY-mx-MT0"/>
                                         <outlet property="assetChartWrapperView" destination="Y25-bj-M31" id="Qav-Si-efh"/>
                                         <outlet property="btcValueLabel" destination="7s3-8d-IEj" id="h9n-hD-GLH"/>
+                                        <outlet property="contentView" destination="4E6-iF-HlL" id="RAf-id-XjR"/>
+                                        <outlet property="contentViewTopConstraint" destination="rbK-9T-QMv" id="eLp-Ob-wHs"/>
                                         <outlet property="fiatMoneySymbolLabel" destination="Rtr-Z3-phX" id="13M-dB-Gav"/>
                                         <outlet property="fiatMoneyValueLabel" destination="eGd-qQ-SHD" id="jiK-m0-S7P"/>
                                         <outlet property="leftAssetPercentLabel" destination="Tnh-04-JMO" id="yXX-OA-Y1S"/>
@@ -541,10 +543,10 @@
             </objects>
             <point key="canvasLocation" x="-455" y="703"/>
         </scene>
-        <!--Transaction View Controller-->
+        <!--Legacy Transaction View Controller-->
         <scene sceneID="jHO-cF-iCX">
             <objects>
-                <viewController storyboardIdentifier="transaction" automaticallyAdjustsScrollViewInsets="NO" id="nhr-qu-QcH" customClass="TransactionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="transaction" automaticallyAdjustsScrollViewInsets="NO" id="nhr-qu-QcH" customClass="LegacyTransactionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cl2-IT-9lz">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -739,10 +741,10 @@
             </objects>
             <point key="canvasLocation" x="1075" y="-2"/>
         </scene>
-        <!--Asset View Controller-->
+        <!--Token View Controller-->
         <scene sceneID="c47-Rw-nB5">
             <objects>
-                <viewController storyboardIdentifier="asset" id="kef-KV-TZS" customClass="AssetViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="asset" id="kef-KV-TZS" customClass="TokenViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HQg-2L-Eme">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1047,7 +1049,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QBi-Sl-cc1">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3jx-1E-qdc">
+                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3jx-1E-qdc">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="628.66666666666663"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tB5-S1-fay" customClass="DepositFieldView" customModule="Mixin" customModuleProvider="target">
@@ -1346,10 +1348,10 @@
             </objects>
             <point key="canvasLocation" x="-455" y="2849"/>
         </scene>
-        <!--Transfer Out View Controller-->
+        <!--Legacy Transfer Out View Controller-->
         <scene sceneID="GuS-7v-ke8">
             <objects>
-                <viewController storyboardIdentifier="send" automaticallyAdjustsScrollViewInsets="NO" id="Vz8-zS-KVr" customClass="TransferOutViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="send" automaticallyAdjustsScrollViewInsets="NO" id="Vz8-zS-KVr" customClass="LegacyTransferOutViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3QK-5v-yEK">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2015,7 +2017,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2027,7 +2029,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

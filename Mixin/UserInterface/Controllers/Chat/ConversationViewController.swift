@@ -852,7 +852,18 @@ class ConversationViewController: UIViewController {
                         return
                     }
                     DispatchQueue.main.async {
-                        self?.navigationController?.pushViewController(TransactionViewController.instance(asset: asset, snapshot: snapshot), animated: true)
+                        self?.navigationController?.pushViewController(LegacyTransactionViewController.instance(asset: asset, snapshot: snapshot), animated: true)
+                    }
+                }
+            } else if message.category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
+                conversationInputViewController.dismiss()
+                DispatchQueue.global().async { [weak self] in
+                    guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let token = TokenDAO.shared.tokenItem(with: assetId), let snapshot = SafeSnapshotDAO.shared.snapshotItem(id: snapshotId) else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        let viewController = SnapshotViewController.instance(token: token, snapshot: snapshot)
+                        self?.navigationController?.pushViewController(viewController, animated: true)
                     }
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
@@ -1286,7 +1297,7 @@ class ConversationViewController: UIViewController {
         }
         switch TIP.status {
         case .ready, .needsMigrate:
-            let transfer = TransferOutViewController.instance(asset: nil, type: .contact(user))
+            let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
             navigationController?.pushViewController(transfer, animated: true)
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
@@ -1925,7 +1936,7 @@ extension ConversationViewController {
             if message.mediaStatus == MediaStatus.DONE.rawValue {
                 actions.insert(.forward, at: 0)
             }
-        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+        } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
             actions = [.forward, .reply, .delete]

@@ -26,7 +26,7 @@ extension MessageItem {
             return name ?? ""
         } else if category.hasSuffix("_LOCATION") {
             return R.string.localizable.location()
-        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+        } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
             return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
         } else if category.hasSuffix("_CONTACT") {
             return sharedUserIdentityNumber ?? ""

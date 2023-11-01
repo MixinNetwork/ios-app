@@ -38,18 +38,7 @@ enum PINEncryptor {
         case .ready:
             Task {
                 do {
-                    let pinToken: Data
-                    if let token = AppGroupKeychain.pinToken {
-                        pinToken = token
-                    } else if let encoded = AppGroupUserDefaults.Account.pinToken, let token = Data(base64Encoded: encoded) {
-                        pinToken = token
-                    } else {
-                        throw Error.missingPINToken
-                    }
-                    guard let pinData = pin.data(using: .utf8) else {
-                        throw Error.invalidPIN
-                    }
-                    let priv = try await TIP.getOrRecoverTIPPriv(pin: pin, pinToken: pinToken)
+                    let priv = try await TIP.getOrRecoverTIPPriv(pin: pin)
                     let body = try tipBody()
                     let encrypted = try await TIP.encryptTIPPIN(tipPriv: priv, target: body)
                     await MainActor.run {

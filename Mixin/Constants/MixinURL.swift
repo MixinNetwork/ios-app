@@ -16,7 +16,6 @@ enum MixinURL {
         static let send = "send"
         static let device = "device"
         static let auth = "auth"
-        static let withdrawal = "withdrawal"
         static let address = "address"
         static let apps = "apps"
         static let snapshots = "snapshots"
@@ -34,7 +33,6 @@ enum MixinURL {
     case send(ExternalSharingContext)
     case device(id: String, publicKey: String)
     case unknown(URL)
-    case withdrawal
     case address
     case upgradeDesktop
     case deviceTransfer(DeviceTransferCommand)
@@ -68,8 +66,6 @@ enum MixinURL {
                 } else {
                     self = .unknown(url)
                 }
-            } else if url.host == Host.withdrawal {
-                self = .withdrawal
             } else if url.host == Host.address {
                 self = .address
             } else if url.host == Host.deviceTransfer {
@@ -102,8 +98,6 @@ enum MixinURL {
                 self = .apps(url.pathComponents[2])
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.transfer {
                 self = .transfer(url.pathComponents[2])
-            } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.withdrawal {
-                self = .withdrawal
             } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.address {
                 self = .address
             } else {

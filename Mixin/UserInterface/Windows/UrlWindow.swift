@@ -29,8 +29,6 @@ class UrlWindow {
                 } else {
                     result = false
                 }
-            case .withdrawal:
-                result = checkWithdrawal(url: url)
             case .address:
                 result = checkAddress(url: url)
             case let .users(id):
@@ -211,7 +209,7 @@ class UrlWindow {
             DispatchQueue.main.async {
                 func push() {
                     hud.hide()
-                    let vc = TransactionViewController.instance(asset: assetItem, snapshot: snapshot)
+                    let vc = LegacyTransactionViewController.instance(asset: assetItem, snapshot: snapshot)
                     UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
                 }
                 
@@ -389,7 +387,7 @@ class UrlWindow {
             DispatchQueue.main.async {
                 hud.hide()
                 func push() {
-                    let vc = TransferOutViewController.instance(asset: nil, type: .contact(user))
+                    let vc = LegacyTransferOutViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
                         UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                     } else {
@@ -420,65 +418,6 @@ class UrlWindow {
         }
     }
     
-    class func checkWithdrawal(url: URL) -> Bool {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            return true
-        case .unknown:
-            return true
-        }
-        let query = url.getKeyVals()
-        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
-            return false
-        }
-        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty && AmountFormatter.isValid(amount) else {
-            return false
-        }
-        var memo = query["memo"]
-        if let urlDecodeMemo = memo?.removingPercentEncoding {
-            memo = urlDecodeMemo
-        }
-
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        DispatchQueue.global().async {
-            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.absoluteString)")
-                return
-            }
-            guard let address = syncAddress(addressId: addressId, hud: hud) else {
-                return
-            }
-            guard let feeAsset = syncAsset(assetId: address.feeAssetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.absoluteString)")
-                return
-            }
-            
-            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: true)
-            PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
-
-                DispatchQueue.main.async {
-                    if canPay {
-                        hud.hide()
-                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
-                    } else if let error = errorMsg {
-                        Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url.absoluteString)")
-                        hud.set(style: .error, text: error)
-                        hud.scheduleAutoHidden()
-                    } else {
-                        hud.hide()
-                    }
-                }
-            }
-        }
-
-        return true
-    }
-
     class func checkQrCodeDetection(string: String, clearNavigationStack: Bool = true) {
         if checkPayment(string: string) {
             return
@@ -507,25 +446,15 @@ class UrlWindow {
     
     class func checkPayment(string: String) -> Bool {
         do {
-            let transfer = try InternalTransfer(string: string)
-            performInternalTransfer(transfer)
+            let transfer = try ExternalTransfer(string: string)
+            performExternalTransfer(transfer)
             return true
         } catch TransferLinkError.notTransferLink {
-            do {
-                let transfer = try ExternalTransfer(string: string)
-                performExternalTransfer(transfer)
-                return true
-            } catch TransferLinkError.notTransferLink {
-                return false
-            } catch TransferLinkError.assetNotFound {
-                Logger.general.error(category: "URLWindow", message: "Asset not found: \(string)")
-                showAutoHiddenHud(style: .error, text: R.string.localizable.asset_not_found())
-                return true
-            } catch {
-                Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
-                showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-                return true
-            }
+            return false
+        } catch TransferLinkError.assetNotFound {
+            Logger.general.error(category: "URLWindow", message: "Asset not found: \(string)")
+            showAutoHiddenHud(style: .error, text: R.string.localizable.asset_not_found())
+            return true
         } catch {
             Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
@@ -705,7 +634,7 @@ class UrlWindow {
             var addressRequest: AddressRequest?
             var address: Address?
 
-            let addressAction: AddressView.action
+            let addressAction: LegacyAddressView.action
             if let action = query["action"]?.lowercased(), "delete" == action {
                 guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
                     hud.hideInMainThread()
@@ -743,7 +672,7 @@ class UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                AddressWindow.instance().presentPopupControllerAnimated(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil)
+                LegacyAddressWindow.instance().presentPopupControllerAnimated(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil)
             }
         }
         return true
@@ -1004,7 +933,7 @@ extension UrlWindow {
             if let chain = ChainDAO.shared.chain(chainId: chainId) {
                 asset?.chain = chain
             } else if case let .success(chain) = AssetAPI.chain(chainId: chainId) {
-                ChainDAO.shared.insertOrUpdateChains([chain])
+                ChainDAO.shared.save([chain])
                 asset?.chain = chain
             } else {
                 return nil

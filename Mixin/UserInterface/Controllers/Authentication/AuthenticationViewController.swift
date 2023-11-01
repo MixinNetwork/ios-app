@@ -3,7 +3,13 @@ import MixinServices
 
 final class AuthenticationViewController: UIViewController {
     
+    enum AuthenticationResult {
+        case success
+        case failure(error: Error, allowsRetrying: Bool)
+    }
+    
     @IBOutlet weak var backgroundView: UIView!
+    @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleStackView: UIStackView!
@@ -19,12 +25,13 @@ final class AuthenticationViewController: UIViewController {
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let intentViewController: AuthenticationIntentViewController
+    private let presentationManager: any UIViewControllerTransitioningDelegate
     
     private weak var authenticateWithBiometryButton: UIButton?
     private weak var failureView: UIView?
     
     private var canAuthenticateWithBiometry: Bool {
-        guard intentViewController.isBiometryAuthAllowed else {
+        guard intentViewController.options.contains(.allowsBiometricAuthentication) else {
             return false
         }
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
@@ -58,9 +65,14 @@ final class AuthenticationViewController: UIViewController {
     
     init(intentViewController: AuthenticationIntentViewController) {
         self.intentViewController = intentViewController
+        if intentViewController.options.contains(.blurBackground) {
+            self.presentationManager = PinValidationPresentationManager()
+        } else {
+            self.presentationManager = PopupPresentationManager.shared
+        }
         super.init(nibName: R.nib.authenticationView.name, bundle: nil)
         modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = presentationManager
     }
     
     required init?(coder: NSCoder) {
@@ -86,25 +98,11 @@ final class AuthenticationViewController: UIViewController {
             make.bottom.equalTo(pinFieldWrapperView.snp.top)
         })
         intentViewController.didMove(toParent: self)
-        titleLabel.text = intentViewController.intentTitle
-        subtitleLabel.text = intentViewController.intentSubtitle
-        if let icon = intentViewController.intentSubtitleIconURL {
-            let imageView = AvatarImageView()
-            imageView.layer.cornerRadius = 8
-            imageView.clipsToBounds = true
-            imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            subtitleStackView.insertArrangedSubview(imageView, at: 0)
-            imageView.snp.makeConstraints { make in
-                make.height.equalTo(imageView.snp.width)
-                make.width.equalTo(16)
-            }
-            switch icon {
-            case let .app(app):
-                imageView.setImage(app: app)
-            case let .url(url):
-                imageView.imageView.sd_setImage(with: url)
-            }
+        
+        if intentViewController.options.contains(.unskippable) {
+            closeButton.isHidden = true
         }
+        reloadTitleView()
         
         let biometryType = BiometryType.payment
         if canAuthenticateWithBiometry && biometryType != .none {
@@ -143,7 +141,7 @@ final class AuthenticationViewController: UIViewController {
             authenticateWithBiometryButton = button
         }
         
-        if intentViewController.inputPINOnAppear {
+        if intentViewController.options.contains(.becomesFirstResponderOnAppear) {
             pinFieldWrapperView.alpha = 1
             pinFieldWrapperHeightConstraint.constant = pinFieldWrapperHeight
         } else {
@@ -167,7 +165,7 @@ final class AuthenticationViewController: UIViewController {
                            selector: #selector(presentationViewControllerWillDismissPresentedViewController(_:)),
                            name: PopupPresentationController.willDismissPresentedViewControllerNotification,
                            object: nil)
-        if intentViewController.inputPINOnAppear {
+        if intentViewController.options.contains(.becomesFirstResponderOnAppear) {
             pinField.becomeFirstResponder()
         }
     }
@@ -186,13 +184,35 @@ final class AuthenticationViewController: UIViewController {
         }
     }
     
-    func endPINInputting(alongside animation: @escaping () -> Void) {
+    func endPINInputting(alongside animation: (() -> Void)? = nil) {
         UIView.animate(withDuration: 0.3) {
             self.pinFieldWrapperView.alpha = 0
             self.pinFieldWrapperHeightConstraint.constant = 0
             self.pinField.resignFirstResponder()
-            animation()
+            animation?()
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    func reloadTitleView() {
+        titleLabel.text = intentViewController.intentTitle
+        subtitleLabel.text = intentViewController.intentSubtitle
+        if let icon = intentViewController.intentSubtitleIconURL {
+            let imageView = AvatarImageView()
+            imageView.layer.cornerRadius = 8
+            imageView.clipsToBounds = true
+            imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            subtitleStackView.insertArrangedSubview(imageView, at: 0)
+            imageView.snp.makeConstraints { make in
+                make.height.equalTo(imageView.snp.width)
+                make.width.equalTo(16)
+            }
+            switch icon {
+            case let .app(app):
+                imageView.setImage(app: app)
+            case let .url(url):
+                imageView.imageView.sd_setImage(with: url)
+            }
         }
     }
     
@@ -206,28 +226,62 @@ final class AuthenticationViewController: UIViewController {
         intentViewController.authenticationViewControllerWillDismiss(self)
     }
     
-    private func authenticate(with pin: String) {
+    @objc private func enableBiometricAuthentication(_ sender: Any) {
+        intentViewController.authenticationViewControllerWillDismiss(self)
+        presentingViewController?.dismiss(animated: true) {
+            guard let navigationController = UIApplication.homeNavigationController else {
+                return
+            }
+            var viewControllers = navigationController.viewControllers.filter { (viewController) -> Bool in
+                if let container = viewController as? ContainerViewController {
+                    return !(container.viewController is TransferOutViewController)
+                } else {
+                    return true
+                }
+            }
+            viewControllers.append(PinSettingsViewController.instance())
+            navigationController.setViewControllers(viewControllers, animated: true)
+        }
+    }
+    
+    private func authenticate(with pin: String, onSuccess: (() -> Void)?) {
+        closeButton.isHidden = true
         validatingIndicator.startAnimating()
         pinField.isHidden = true
         pinField.receivesInput = false
         authenticateWithBiometryButton?.isHidden = true
-        intentViewController.authenticationViewController(self, didInput: pin) { error in
-            if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {
-                PINVerificationFailureHandler.handle(error: error) { description in
-                    self.layoutForAuthenticationFailure(description: description)
+        intentViewController.authenticationViewController(self, didInput: pin) { result in
+            if !self.intentViewController.options.contains(.unskippable) {
+                self.closeButton.isHidden = false
+            }
+            self.validatingIndicator.stopAnimating()
+            switch result {
+            case .success:
+                onSuccess?()
+            case let .failure(error, allowsRetrying):
+                if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {
+                    PINVerificationFailureHandler.handle(error: error) { description in
+                        self.layoutForAuthenticationFailure(description: description,
+                                                            allowsRetrying: allowsRetrying)
+                    }
+                } else {
+                    self.layoutForAuthenticationFailure(description: error.localizedDescription,
+                                                        allowsRetrying: allowsRetrying)
                 }
-            } else if let error {
-                self.layoutForAuthenticationFailure(description: error.localizedDescription)
-            } else {
-                self.validatingIndicator.stopAnimating()
             }
         }
     }
     
-    private func layoutForAuthenticationFailure(description: String) {
+    private func layoutForAuthenticationFailure(description: String, allowsRetrying: Bool) {
         let failureView = R.nib.authenticationFailureView(withOwner: nil)!
         failureView.label.text = description
-        failureView.tryAgainButton.addTarget(self, action: #selector(self.tryAgain(_:)), for: .touchUpInside)
+        if allowsRetrying {
+            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
+        } else {
+            failureView.continueButton.setTitle(R.string.localizable.ok(), for: .normal)
+            failureView.continueButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
+        }
         self.view.addSubview(failureView)
         failureView.snp.makeConstraints { make in
             make.top.equalTo(self.pinFieldWrapperView.snp.top)
@@ -254,6 +308,53 @@ final class AuthenticationViewController: UIViewController {
         }
     }
     
+    private func addEnableBiometricAuthButtonIfNeeded() {
+        guard !canAuthenticateWithBiometry else {
+            return
+        }
+        let image: UIImage
+        let paymentType: String
+        switch BiometryType.payment {
+        case .touchID:
+            image = R.image.ic_pay_touch()!
+            paymentType = R.string.localizable.touch_id()
+        case .faceID:
+            image = R.image.ic_pay_face()!
+            paymentType = R.string.localizable.face_id()
+        case .none:
+            return
+        }
+        let button = UIButton(type: .system)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -6, bottom: 0, right: 0)
+        button.setImage(image, for: .normal)
+        button.setTitle(R.string.localizable.enable_pay_confirmation(paymentType), for: .normal)
+        button.addTarget(self, action: #selector(enableBiometricAuthentication(_:)), for: .touchUpInside)
+        view.addSubview(button)
+        button.snp.makeConstraints { make in
+            make.width.height.greaterThanOrEqualTo(44)
+            make.top.equalTo(pinFieldWrapperView.snp.top)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+        view.layoutIfNeeded()
+        
+        UIView.animate(withDuration: 0.3) {
+            self.pinField.resignFirstResponder()
+            self.pinFieldWrapperHeightConstraint.priority = .almostInexist
+            button.snp.makeConstraints { make in
+                let bottomOffset: CGFloat
+                if self.view.safeAreaInsets.bottom > 0 {
+                    bottomOffset = 0
+                } else {
+                    bottomOffset = 20
+                }
+                make.bottom.equalTo(self.keyboardPlaceholderView.snp.top).offset(-bottomOffset)
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+    
 }
 
 // MARK: - Actions
@@ -268,7 +369,10 @@ extension AuthenticationViewController {
         guard pinField.text.count == pinField.numberOfDigits else {
             return
         }
-        authenticate(with: pinField.text)
+        authenticate(with: pinField.text, onSuccess: {
+            AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+            self.addEnableBiometricAuthButtonIfNeeded()
+        })
     }
     
     @objc private func authenticateWithBiometry(_ sender: Any) {
@@ -287,7 +391,7 @@ extension AuthenticationViewController {
             }
             DispatchQueue.main.sync {
                 ScreenLockManager.shared.hasOtherBiometricAuthInProgress = false
-                self.authenticate(with: pin)
+                self.authenticate(with: pin, onSuccess: nil)
             }
         }
     }

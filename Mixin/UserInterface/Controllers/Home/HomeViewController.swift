@@ -143,7 +143,6 @@ class HomeViewController: UIViewController {
         }
         Logger.general.info(category: "HomeViewController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState != .background {
-            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
@@ -181,6 +180,16 @@ class HomeViewController: UIViewController {
                 self.present(vc, animated: true, completion: nil)
             }))
             present(alert, animated: true, completion: nil)
+        }
+        UTXOService.shared.synchronize()
+        if let account = LoginManager.shared.account, !account.hasSafe {
+            let register = RegisterToSafeViewController()
+            let authentication = AuthenticationViewController(intentViewController: register)
+            present(authentication, animated: true)
+        } else {
+            let job = RecoverRawTransactionJob()
+            ConcurrentJobQueue.shared.addJob(job: job)
+            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         }
     }
     
@@ -900,7 +909,7 @@ extension HomeViewController {
                 if checkWalletBalance {
                     let isRichEnough: Bool = await withCheckedContinuation { continuation in
                         DispatchQueue.global().async {
-                            let balance = AssetDAO.shared.getTotalUSDBalance()
+                            let balance = TokenDAO.shared.usdBalanceSum()
                             DispatchQueue.main.async {
                                 if balance > self.emergencyContactAlertingUSDBalance {
                                     continuation.resume(returning: true)

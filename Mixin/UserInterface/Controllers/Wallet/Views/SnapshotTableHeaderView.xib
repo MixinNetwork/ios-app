@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="mixin_condensed.otf">
+            <string>MixinCondensed-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SnapshotViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="amountLabel" destination="P9h-ae-m2f" id="wUX-5g-uy0"/>
+                <outlet property="amountStackView" destination="KPp-KY-UgW" id="qea-5h-nwo"/>
+                <outlet property="assetIconView" destination="rqn-Iq-NhJ" id="EXd-VY-3as"/>
+                <outlet property="fiatMoneyValueLabel" destination="DWF-GB-gKf" id="Kam-Tx-M1u"/>
+                <outlet property="headerContentStackView" destination="u3L-Nc-1Cs" id="rrC-h1-wiq"/>
+                <outlet property="symbolLabel" destination="Z0P-cq-qAP" id="Wfj-mv-oH3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="KFW-NW-lZu" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="190"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="-4" translatesAutoresizingMaskIntoConstraints="NO" id="u3L-Nc-1Cs">
+                    <rect key="frame" x="20" y="18" width="353" height="146"/>
+                    <subviews>
+                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rqn-Iq-NhJ" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="141.66666666666666" y="0.0" width="70" height="70"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="rqn-Iq-NhJ" secondAttribute="height" id="KKr-AC-tSe"/>
+                                <constraint firstAttribute="width" constant="70" id="d04-NQ-2rq" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                            <real key="value" value="44"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                                            <real key="value" value="90"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                    <real key="value" value="18"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconOutlineWidth">
+                                    <real key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QZw-gg-Nyo">
+                            <rect key="frame" x="151.66666666666666" y="66" width="50" height="18"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="18" id="Ky9-em-6DZ"/>
+                            </constraints>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="KPp-KY-UgW">
+                            <rect key="frame" x="59.333333333333329" y="80" width="234.66666666666669" height="55.666666666666657"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Rn-vU-k45">
+                                    <rect key="frame" x="0.0" y="6" width="3" height="49.666666666666664"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="3" id="drn-3k-NGR"/>
+                                    </constraints>
+                                </view>
+                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P9h-ae-m2f">
+                                    <rect key="frame" x="7" y="6" width="200" height="49.666666666666664"/>
+                                    <gestureRecognizers/>
+                                    <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
+                                    <color key="textColor" red="0.16078431369999999" green="0.74509803919999995" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z0P-cq-qAP" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="211" y="6" width="23.666666666666657" height="49.666666666666664"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <edgeInsets key="layoutMargins" top="6" left="0.0" bottom="0.0" right="0.0"/>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="≈ $4080.73" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DWF-GB-gKf">
+                            <rect key="frame" x="143.66666666666666" y="131.66666666666666" width="66" height="14.333333333333343"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <color key="textColor" name="text_accessory"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0OM-lb-5R8" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="180" width="393" height="10"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="10" id="hpU-b1-76q"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="u3L-Nc-1Cs" firstAttribute="top" secondItem="KFW-NW-lZu" secondAttribute="top" constant="18" id="0ou-VY-MIT"/>
+                <constraint firstAttribute="trailing" secondItem="0OM-lb-5R8" secondAttribute="trailing" id="32n-lg-zaa"/>
+                <constraint firstItem="0OM-lb-5R8" firstAttribute="leading" secondItem="KFW-NW-lZu" secondAttribute="leading" id="6h9-3Q-3YM"/>
+                <constraint firstItem="u3L-Nc-1Cs" firstAttribute="leading" secondItem="KFW-NW-lZu" secondAttribute="leading" constant="20" id="Hfp-EM-SpU"/>
+                <constraint firstItem="0OM-lb-5R8" firstAttribute="top" secondItem="u3L-Nc-1Cs" secondAttribute="bottom" constant="16" id="OYq-fX-8Na"/>
+                <constraint firstAttribute="trailing" secondItem="u3L-Nc-1Cs" secondAttribute="trailing" constant="20" id="Pnh-RT-FRg"/>
+                <constraint firstAttribute="bottom" secondItem="0OM-lb-5R8" secondAttribute="bottom" id="s0h-Ae-HY6"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-853" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -1,6 +1,7 @@
 framework module "Tip" {
 	header "ref.h"
     header "Tip.objc.h"
+    header "Kernel.objc.h"
     header "Universe.objc.h"
     header "Tip.h"
 

@@ -66,9 +66,9 @@ extension HomeSearchViewController where Self: UIViewController {
         }
     }
     
-    func pushAssetViewController(asset: AssetItem) {
-        let vc = AssetViewController.instance(asset: asset)
-        homeNavigationController?.pushViewController(vc, animated: true)
+    func pushAssetViewController(asset: TokenItem) {
+        let viewController = TokenViewController.instance(token: asset)
+        homeNavigationController?.pushViewController(viewController, animated: true)
     }
     
 }

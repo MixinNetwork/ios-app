@@ -16,6 +16,7 @@ public enum MixinAPIError: Error {
     case requestSigningTimeout
     case clockSkewDetected
     case pinEncryption(Error)
+    case invalidSignature
     case unknown(status: Int, code: Int, description: String)
     
     case invalidRequestBody
@@ -33,6 +34,7 @@ public enum MixinAPIError: Error {
     case invalidCaptchaToken
     case requiresCaptcha
     case requiresUpdate
+    case notRegisteredToSafe
     case invalidPhoneNumber
     case invalidPhoneVerificationCode
     case expiredPhoneVerificationCode
@@ -104,6 +106,8 @@ extension MixinAPIError {
             self = .requiresCaptcha
         case (202, 10006):
             self = .requiresUpdate
+        case (202, 10404):
+            self = .notRegisteredToSafe
         case (202, 20110):
             self = .invalidPhoneNumber
         case (202, 20113):

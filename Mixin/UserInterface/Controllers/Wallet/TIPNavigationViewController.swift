@@ -92,7 +92,7 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
                 let wallet = R.storyboard.wallet.wallet()!
                 navigationController.pushViewController(withBackRoot: wallet)
             case let .transfer(user):
-                let transfer = TransferOutViewController.instance(asset: nil, type: .contact(user))
+                let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
                 navigationController.pushViewController(withBackChat: transfer)
             case .changePhone:
                 let verify = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())

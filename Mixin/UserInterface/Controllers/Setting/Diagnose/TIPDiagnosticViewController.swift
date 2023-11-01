@@ -62,7 +62,7 @@ extension TIPDiagnosticViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 2:
-            AppGroupKeychain.tipPriv = nil
+            AppGroupKeychain.encryptedTIPPriv = nil
             showAutoHiddenHud(style: .notification, text: "Removed")
         case 3:
             navigationController?.popToRootViewController(animated: true)

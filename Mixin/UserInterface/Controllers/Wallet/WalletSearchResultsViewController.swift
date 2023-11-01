@@ -5,7 +5,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
     
     let activityIndicator = ActivityIndicatorView()
     
-    var searchResults: [AssetItem] = []
+    var searchResults: [TokenItem] = []
     var lastKeyword: String?
     
     private let queue = OperationQueue()
@@ -48,7 +48,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             
             let lowercasedKeyword = keyword.lowercased()
             let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-            func assetSorting(_ one: AssetItem, _ another: AssetItem) -> Bool {
+            func assetSorting(_ one: TokenItem, _ another: TokenItem) -> Bool {
                 let oneSymbolEqualsToKeyword = one.symbol.lowercased() == lowercasedKeyword
                 let anotherSymbolEqualsToKeyword = another.symbol.lowercased() == lowercasedKeyword
                 if oneSymbolEqualsToKeyword && !anotherSymbolEqualsToKeyword {
@@ -57,14 +57,14 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                     return false
                 }
                 
-                let oneCapitalization = one.balance.doubleValue * one.priceUsd.doubleValue
-                let anotherCapitalization = another.balance.doubleValue * another.priceUsd.doubleValue
+                let oneCapitalization = one.decimalBalance * one.decimalUSDPrice
+                let anotherCapitalization = another.decimalBalance * another.decimalUSDPrice
                 if oneCapitalization != anotherCapitalization {
                     return oneCapitalization > anotherCapitalization
                 }
                 
-                let oneHasIcon = one.iconUrl != defaultIconUrl
-                let anotherHasIcon = another.iconUrl != defaultIconUrl
+                let oneHasIcon = one.iconURL != defaultIconUrl
+                let anotherHasIcon = another.iconURL != defaultIconUrl
                 if oneHasIcon && !anotherHasIcon {
                     return true
                 } else if !oneHasIcon && anotherHasIcon {
@@ -74,8 +74,8 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 return one.name < another.name
             }
             
-            var localItems = AssetDAO.shared
-                .getAssets(keyword: keyword, sortResult: false, limit: nil)
+            var localItems = TokenDAO.shared
+                .search(keyword: keyword, sortResult: false, limit: nil)
                 .sorted(by: assetSorting)
             guard !op.isCancelled else {
                 return
@@ -86,7 +86,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 self.tableView.removeEmptyIndicator()
             }
             
-            let remoteAssets: [Asset]
+            let remoteAssets: [Token]
             switch AssetAPI.search(keyword: keyword) {
             case .success(let assets):
                 remoteAssets = assets
@@ -98,27 +98,27 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             }
             
             localItems = localItems.filter{ $0.balance.doubleValue > 0 }
-            let localIds = Set(localItems.map(\.assetId))
-            let remoteItems = remoteAssets.compactMap({ (asset) -> AssetItem? in
-                guard !localIds.contains(asset.assetId) else {
+            let localIds = Set(localItems.map(\.assetID))
+            let remoteItems = remoteAssets.compactMap({ (token) -> TokenItem? in
+                guard !localIds.contains(token.assetID) else {
                     return nil
                 }
-                let assetChain: Chain
-                if let chain = ChainDAO.shared.chain(chainId: asset.chainId) {
-                    assetChain = chain
-                } else if case let .success(chain) = AssetAPI.chain(chainId: asset.chainId) {
+                let chain: Chain
+                if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
+                    chain = localChain
+                } else if case let .success(remoteChain) = AssetAPI.chain(chainId: token.chainID) {
                     DispatchQueue.global().async {
-                        ChainDAO.shared.insertOrUpdateChains([chain])
+                        ChainDAO.shared.save([remoteChain])
                     }
-                    assetChain = chain
+                    chain = remoteChain
                 } else {
                     return nil
                 }
-                let item = AssetItem(asset: asset, chain: assetChain)
+                let item = TokenItem(token: token, balance: "0", chain: chain)
                 return item
             })
             
-            let allItems: [AssetItem]?
+            let allItems: [TokenItem]?
             if remoteItems.isEmpty {
                 allItems = nil
             } else {
@@ -167,14 +167,13 @@ extension WalletSearchResultsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = searchResults[indexPath.row]
-        let vc = AssetViewController.instance(asset: item)
+        let vc = TokenViewController.instance(token: item)
         navigationController?.pushViewController(vc, animated: true)
         DispatchQueue.global().async {
-            AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetId)
-            guard !AssetDAO.shared.isExist(assetId: item.assetId) else {
-                return
+            AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
+            if !TokenDAO.shared.tokenExists(assetID: item.assetID) {
+                TokenDAO.shared.save(assets: [item])
             }
-            AssetDAO.shared.insertOrUpdateAssets(assets: [item])
         }
     }
     

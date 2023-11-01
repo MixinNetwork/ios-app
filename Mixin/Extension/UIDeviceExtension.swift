@@ -33,8 +33,24 @@ extension UIDevice {
         #endif
     }()
     
+}
+
+extension UIDevice {
+    
+    private static var paymentSuccessSoundID: SystemSoundID = 0
+    
     func playInputDelete() {
         AudioServicesPlaySystemSound(1155)
+    }
+    
+    func playPaymentSuccess() {
+        assert(Thread.isMainThread)
+        if Self.paymentSuccessSoundID == 0, let url = R.file.payment_successCaf.url() {
+            AudioServicesCreateSystemSoundID(url as CFURL, &Self.paymentSuccessSoundID)
+        }
+        if Self.paymentSuccessSoundID != 0 {
+            AudioServicesPlaySystemSound(Self.paymentSuccessSoundID)
+        }
     }
     
 }

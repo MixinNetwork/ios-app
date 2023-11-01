@@ -75,7 +75,7 @@ extension DeleteAccountSettingViewController {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async { [weak self] in
-            let assets = AssetDAO.shared.getAvailableAssets()
+            let assets = TokenDAO.shared.positiveBalancedTokens()
             DispatchQueue.main.async {
                 hud.hide()
                 guard let self = self else {
@@ -114,7 +114,7 @@ extension DeleteAccountSettingViewController {
         window.presentPopupControllerAnimated()
     }
     
-    private func presentDeleteAccountHintWindow(assets: [AssetItem]) {
+    private func presentDeleteAccountHintWindow(assets: [TokenItem]) {
         let window = DeleteAccountHintWindow.instance()
         window.onViewWallet = presentWallet
         window.onContinue = verifyNumber

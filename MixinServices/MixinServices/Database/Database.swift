@@ -24,6 +24,7 @@ open class Database {
                 }
             }
         }
+        config.qos = .userInitiated
         return config
     }
     

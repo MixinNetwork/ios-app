@@ -114,6 +114,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             }
             logBackup()
             UserDAO.shared.updateAccount(account: account)
+            OutputDAO.shared.deleteAll()
+            RawTransactionDAO.shared.deleteAll()
             DispatchQueue.main.sync {
                 if account.fullName.isEmpty {
                     let vc = UsernameViewController()

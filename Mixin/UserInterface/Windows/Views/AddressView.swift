@@ -26,7 +26,7 @@ class AddressView: UIStackView {
     private var addressRequest: AddressRequest?
     private var address: Address?
     private var fromWeb = false
-    private var asset: AssetItem!
+    private var asset: TokenItem!
     
     private(set) var processing = false
     
@@ -47,7 +47,7 @@ class AddressView: UIStackView {
         superView?.dismissPopupController(animated: true)
     }
 
-    func render(action: action, asset: AssetItem, addressRequest: AddressRequest?, address: Address?, dismissCallback: ((Bool) -> Void)?, superView: BottomSheetView) {
+    func render(action: action, asset: TokenItem, addressRequest: AddressRequest?, address: Address?, dismissCallback: ((Bool) -> Void)?, superView: BottomSheetView) {
         self.addressAction = action
         self.address = address
         self.addressRequest = addressRequest
@@ -83,14 +83,14 @@ class AddressView: UIStackView {
             nameLabel.text = address.label
             addressLabel.text = address.fullAddress
         }
-        assetIconView.setIcon(asset: asset)
+        assetIconView.setIcon(token: asset)
         pinField.clear()
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
     }
 
     class func instance() -> AddressView {
-        return Bundle.main.loadNibNamed("AddressView", owner: nil, options: nil)?.first as! AddressView
+        R.nib.addressView(withOwner: nil)!
     }
 }
 

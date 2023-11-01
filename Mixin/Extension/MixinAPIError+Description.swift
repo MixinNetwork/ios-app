@@ -56,6 +56,8 @@ extension MixinAPIError {
             return R.string.localizable.error_requires_captcha()
         case .requiresUpdate:
             return R.string.localizable.app_update_short_hint()
+        case .notRegisteredToSafe:
+            return R.string.localizable.error_opponent_not_registered_to_safe()
         case .invalidPhoneNumber:
             return R.string.localizable.error_phone_invalid_format()
         case .invalidPhoneVerificationCode:

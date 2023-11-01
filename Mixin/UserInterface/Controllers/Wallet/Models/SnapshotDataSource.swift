@@ -10,18 +10,17 @@ class SnapshotDataSource {
     var onReload: (() -> ())?
     
     private(set) var titles = [String]()
-    private(set) var snapshots = [[SnapshotItem]]()
+    private(set) var snapshots = [[SafeSnapshotItem]]()
     
     private let queue = OperationQueue()
     
-    private var rawItems = [SnapshotItem]()
+    private var rawItems = [SafeSnapshotItem]()
     private var indexMap = [IndexPath: Int]()
     private var numberOfFilteredItems = 0
     private var isLoading = false
     private var didLoadEarliestLocalSnapshot = false
     private var didLoadEarliestRemoteSnapshot = false
     private var sort = Snapshot.Sort.createdAt
-    private var filter = Snapshot.Filter.all
     private var remoteLoadingJobIds = Set<String>()
     
     init(category: Category) {
@@ -33,7 +32,7 @@ class SnapshotDataSource {
         } else {
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(snapshotsDidChange(_:)),
-                                                   name: SnapshotDAO.snapshotDidChangeNotification,
+                                                   name: SafeSnapshotDAO.snapshotDidChangeNotification,
                                                    object: nil)
         }
     }
@@ -50,22 +49,21 @@ class SnapshotDataSource {
         isLoading = true
         let category = self.category
         let sort = self.sort
-        let filter = self.filter
         let op = BlockOperation()
-        op.addExecutionBlock { [unowned op, weak self] in
-            let items: [SnapshotItem]
+        op.addExecutionBlock { [unowned op, weak self, limit=SnapshotDataSource.numberOfItemsPerPage] in
+            let items: [SafeSnapshotItem]
             switch category {
             case .address:
                 items = []
             case .user(let id):
-                items = SnapshotDAO.shared.getSnapshots(opponentId: id, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
+                items = SafeSnapshotDAO.shared.snapshots(opponentID: id, sort: sort, limit: limit)
             case .asset(let id):
-                items = SnapshotDAO.shared.getSnapshots(assetId: id, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
+                items = SafeSnapshotDAO.shared.snapshots(assetId: id, sort: sort, limit: limit)
             case .all:
-                items = SnapshotDAO.shared.getSnapshots(sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
+                items = SafeSnapshotDAO.shared.snapshots(sort: sort, limit: limit)
             }
-            SnapshotDataSource.refreshUserIfNeeded(items)
-            let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort, filter: filter)
+            Self.refreshUserIfNeeded(items)
+            let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort)
             let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
@@ -103,31 +101,30 @@ class SnapshotDataSource {
         }
         ConcurrentJobQueue.shared.addJob(job: job)
     }
-
+    
     func loadAddressSnapshots() {
         guard case let .address(asset, destination, tag) = category else {
             return
         }
-
-        AssetAPI.snapshots(limit: 300, assetId: asset, destination: destination, tag: tag) { [weak self](result) in
-            guard let weakSelf = self else {
-                return
-            }
-            switch result {
-            case let .success(snapshots):
-                let items = snapshots.compactMap(SnapshotItem.init)
-                let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: weakSelf.sort, filter: weakSelf.filter)
-                let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
-                weakSelf.rawItems = items
-                weakSelf.indexMap = indexMap
-                weakSelf.numberOfFilteredItems = filteredItemsCount
-                weakSelf.titles = titles
-                weakSelf.snapshots = snapshots
-                weakSelf.onReload?()
-            case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-            }
-        }
+//        AssetAPI.snapshots(limit: 300, assetId: asset, destination: destination, tag: tag) { [weak self](result) in
+//            guard let weakSelf = self else {
+//                return
+//            }
+//            switch result {
+//            case let .success(snapshots):
+//                let items = snapshots.compactMap(SnapshotItem.init)
+//                let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: weakSelf.sort, filter: weakSelf.filter)
+//                let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
+//                weakSelf.rawItems = items
+//                weakSelf.indexMap = indexMap
+//                weakSelf.numberOfFilteredItems = filteredItemsCount
+//                weakSelf.titles = titles
+//                weakSelf.snapshots = snapshots
+//                weakSelf.onReload?()
+//            case let .failure(error):
+//                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+//            }
+//        }
     }
     
     func loadMoreIfPossible() {
@@ -141,25 +138,24 @@ class SnapshotDataSource {
         isLoading = true
         let category = self.category
         let sort = self.sort
-        let filter = self.filter
         let lastSnapshot = self.rawItems.last
         let oldItems = self.rawItems
         let op = BlockOperation()
-        op.addExecutionBlock { [unowned op, weak self] in
-            let newItems: [SnapshotItem]
+        op.addExecutionBlock { [unowned op, weak self, limit=SnapshotDataSource.numberOfItemsPerPage] in
+            let newItems: [SafeSnapshotItem]
             switch category {
             case .user(let id):
-                newItems = SnapshotDAO.shared.getSnapshots(opponentId: id, below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
+                newItems = SafeSnapshotDAO.shared.snapshots(opponentID: id, below: lastSnapshot, sort: sort, limit: limit)
             case .asset(let id):
-                newItems = SnapshotDAO.shared.getSnapshots(assetId: id, below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
+                newItems = SafeSnapshotDAO.shared.snapshots(assetId: id, below: lastSnapshot, sort: sort, limit: limit)
             case .all:
-                newItems = SnapshotDAO.shared.getSnapshots(below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
+                newItems = SafeSnapshotDAO.shared.snapshots(below: lastSnapshot, sort: sort, limit: limit)
             case .address:
                 newItems = []
             }
-            SnapshotDataSource.refreshUserIfNeeded(newItems)
+            Self.refreshUserIfNeeded(newItems)
             let items = oldItems + newItems
-            let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort, filter: filter)
+            let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort)
             let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
@@ -185,10 +181,9 @@ class SnapshotDataSource {
         queue.addOperation(op)
     }
     
-    func setSort(_ sort: Snapshot.Sort, filter: Snapshot.Filter) {
-        let needsReload = sort != self.sort || self.filter != filter
+    func setSort(_ sort: Snapshot.Sort) {
+        let needsReload = sort != self.sort
         self.sort = sort
-        self.filter = filter
         if needsReload {
             reloadFromLocal()
         }
@@ -249,14 +244,12 @@ extension SnapshotDataSource {
     }
     
     // This method will apply filters, and categorize items imported
-    typealias CategorizedItems = (titles: [String], snapshots: [[SnapshotItem]])
-    private static func categorizedItems(_ items: [SnapshotItem], sort: Snapshot.Sort, filter: Snapshot.Filter) -> CategorizedItems {
-        let visibleSnapshotTypes = filter.snapshotTypes.map({ $0.rawValue })
-        let items = items.filter({ visibleSnapshotTypes.contains($0.type) })
+    typealias CategorizedItems = (titles: [String], snapshots: [[SafeSnapshotItem]])
+    private static func categorizedItems(_ items: [SafeSnapshotItem], sort: Snapshot.Sort) -> CategorizedItems {
         switch sort {
         case .createdAt:
             var titles = [String]()
-            var snapshots = [[SnapshotItem]]()
+            var snapshots = [[SafeSnapshotItem]]()
             for item in items {
                 let title = DateFormatter.dateSimple.string(from: item.createdAt.toUTCDate())
                 if title == titles.last {
@@ -284,10 +277,8 @@ extension SnapshotDataSource {
         return (result, index)
     }
     
-    private static func refreshUserIfNeeded(_ snapshots: [SnapshotItem]) {
-        var inexistedUserIds = snapshots
-            .filter({ $0.opponentUserFullName == nil })
-            .compactMap({ $0.opponentId })
+    private static func refreshUserIfNeeded(_ snapshots: [SafeSnapshotItem]) {
+        var inexistedUserIds = snapshots.compactMap(\.opponentUserID)
         inexistedUserIds = Array(Set(inexistedUserIds))
         if !inexistedUserIds.isEmpty {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: inexistedUserIds))

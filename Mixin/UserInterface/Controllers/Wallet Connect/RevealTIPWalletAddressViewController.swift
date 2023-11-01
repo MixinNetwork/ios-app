@@ -21,27 +21,27 @@ extension RevealTIPWalletAddressViewController: AuthenticationIntentViewControll
         "Reveal your TIP Wallet address"
     }
     
-    var isBiometryAuthAllowed: Bool {
-        true
+    var options: AuthenticationIntentOptions {
+        [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
     }
     
-    var inputPINOnAppear: Bool {
-        true
-    }
-    
-    func authenticationViewController(_ controller: AuthenticationViewController, didInput pin: String, completion: @escaping @MainActor (Swift.Error?) -> Void) {
+    func authenticationViewController(
+        _ controller: AuthenticationViewController,
+        didInput pin: String,
+        completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
+    ) {
         Task {
             do {
                 let priv = try await TIP.ethereumPrivateKey(pin: pin)
                 await MainActor.run {
-                    completion(nil)
+                    completion(.success)
                     self.dismiss(animated: true) {
                         self.onApprove?(priv)
                     }
                 }
             } catch {
                 await MainActor.run {
-                    completion(error)
+                    completion(.failure(error: error, allowsRetrying: true))
                 }
             }
         }

@@ -63,7 +63,7 @@ public class RefreshAssetsJob: AsynchronousJob {
                                 guard !MixinService.isStopProcessMessages else {
                                     return
                                 }
-                                ChainDAO.shared.insertOrUpdateChains(chains)
+                                ChainDAO.shared.save(chains)
                             }
                         case let .failure(error):
                             reporter.report(error: error)
@@ -101,7 +101,7 @@ public class RefreshAssetsJob: AsynchronousJob {
                                     guard !MixinService.isStopProcessMessages else {
                                         return
                                     }
-                                    ChainDAO.shared.insertOrUpdateChains([chain])
+                                    ChainDAO.shared.save([chain])
                                 }
                             case let .failure(error):
                                 reporter.report(error: error)

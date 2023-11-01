@@ -170,29 +170,37 @@ extension DepositViewController {
     
     private func updateViews(token: TokenItem, entry: DepositEntry) {
         contentStackView.isHidden = false
-        upperDepositFieldView.titleLabel.text = R.string.localizable.address()
-        upperDepositFieldView.contentLabel.text = entry.destination
-        let nameImage = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
-        upperDepositFieldView.qrCodeImageView.image = nameImage
-        upperDepositFieldView.assetIconView.setIcon(token: token)
         upperDepositFieldView.shadowView.hasLowerShadow = true
         upperDepositFieldView.delegate = self
+        lowerDepositFieldView.shadowView.hasLowerShadow = false
+        lowerDepositFieldView.delegate = self
         if let tag = entry.tag, !tag.isEmpty {
-            lowerDepositFieldView.isHidden = false
             if token.usesTag {
-                lowerDepositFieldView.titleLabel.text = R.string.localizable.tag()
+                upperDepositFieldView.titleLabel.text = R.string.localizable.tag()
             } else {
-                lowerDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
+                upperDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
             }
-            lowerDepositFieldView.contentLabel.text = entry.tag
-            let memoImage = UIImage(qrcode: tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
-            lowerDepositFieldView.qrCodeImageView.image = memoImage
+            upperDepositFieldView.contentLabel.text = entry.tag
+            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: tag, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.assetIconView.setIcon(token: token)
+            
+            lowerDepositFieldView.titleLabel.text = R.string.localizable.address()
+            lowerDepositFieldView.contentLabel.text = entry.destination
+            lowerDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
             lowerDepositFieldView.assetIconView.setIcon(token: token)
-            lowerDepositFieldView.shadowView.hasLowerShadow = false
-            lowerDepositFieldView.delegate = self
+            lowerDepositFieldView.isHidden = false
+            
             warningLabel.text = R.string.localizable.deposit_account_attention(token.symbol)
         } else {
+            upperDepositFieldView.titleLabel.text = R.string.localizable.address()
+            upperDepositFieldView.contentLabel.text = entry.destination
+            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.assetIconView.setIcon(token: token)
+            upperDepositFieldView.shadowView.hasLowerShadow = true
+            upperDepositFieldView.delegate = self
+            
             lowerDepositFieldView.isHidden = true
+            
             if token.decimalDust > 0 {
                 let dust = CurrencyFormatter.localizedString(from: token.decimalDust, format: .precision, sign: .never)
                 warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(dust, token.chain?.symbol ?? "")

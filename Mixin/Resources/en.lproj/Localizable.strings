@@ -452,6 +452,7 @@
 "incoming_voice_call" = "Incoming voice call";
 "info" = "Info";
 "initializing" = "Initializing...";
+"insufficient_balance" = "Insufficient balance";
 "insufficient_transaction_fee" = "Insufficient transaction fee";
 "interface_style" = "Interface Style";
 "invalid_candidate" = "Invalid candidate";
@@ -991,6 +992,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "User has been reported";
 "user_not_found" = "User not found";
+"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
 "validation_timed_out" = "Validation timed out";
 "value_now" = "value now %@";
 "value_then" = "value then %@";

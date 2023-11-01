@@ -452,6 +452,7 @@
 "incoming_voice_call" = "着信";
 "info" = "プロフィール";
 "initializing" = "初期化中...";
+"insufficient_balance" = "残高が不足しています";
 "insufficient_transaction_fee" = "取引手数料が不足しています";
 "interface_style" = "外観モード";
 "invalid_candidate" = "無効な候補";
@@ -991,6 +992,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "報告しました。";
 "user_not_found" = "ユーザーが見つかりませんでした";
+"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
 "validation_timed_out" = "認証時間切れ";
 "value_now" = "現在価格 %@";
 "value_then" = "当時の価格 %@";

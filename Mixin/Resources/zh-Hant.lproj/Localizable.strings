@@ -452,6 +452,7 @@
 "incoming_voice_call" = "語音通話來電";
 "info" = "資訊";
 "initializing" = "初始化...";
+"insufficient_balance" = "餘額不足";
 "insufficient_transaction_fee" = "手續費不足";
 "interface_style" = "外觀";
 "invalid_candidate" = "無效的 Candidate";
@@ -991,6 +992,7 @@
 "user_delete_hint" = "該使用者已經刪除了賬號。";
 "user_is_reported" = "已舉報";
 "user_not_found" = "找不到這個使用者";
+"utxo_count_exceeded" = "該交易使用的 UTXO 數量過多，請嘗試分批轉賬";
 "validation_timed_out" = "驗證超時";
 "value_now" = "價值 %@";
 "value_then" = "當時價值 %@";

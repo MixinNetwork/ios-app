@@ -452,6 +452,7 @@
 "incoming_voice_call" = "语音通话来电";
 "info" = "信息";
 "initializing" = "初始化...";
+"insufficient_balance" = "余额不足";
 "insufficient_transaction_fee" = "手续费不足";
 "interface_style" = "外观";
 "invalid_candidate" = "无效的 Candidate";
@@ -991,6 +992,7 @@
 "user_delete_hint" = "该用户已经删除了账号。";
 "user_is_reported" = "已举报";
 "user_not_found" = "找不到这个用户";
+"utxo_count_exceeded" = "该交易使用的 UTXO 数量过多，请尝试分批转账";
 "validation_timed_out" = "验证超时";
 "value_now" = "价值 %@";
 "value_then" = "当时价值 %@";

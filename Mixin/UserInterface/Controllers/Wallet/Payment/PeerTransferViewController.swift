@@ -4,9 +4,24 @@ import Tip
 
 final class PeerTransferViewController: UIViewController {
     
-    enum Error: Swift.Error {
-        case insufficientBalance
+    enum Error: Swift.Error, LocalizedError {
+        
+        case insufficientBalance(hasMoreOutputs: Bool)
         case nullSignature
+        
+        var errorDescription: String? {
+            switch self {
+            case .insufficientBalance(let hasMoreOutputs):
+                if hasMoreOutputs {
+                    return R.string.localizable.utxo_count_exceeded()
+                } else {
+                    return R.string.localizable.insufficient_balance()
+                }
+            case .nullSignature:
+                return "Null signature"
+            }
+        }
+        
     }
     
     @IBOutlet weak var contentStackView: UIStackView!
@@ -123,7 +138,13 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 TraceDAO.shared.saveTrace(trace: trace)
                 Logger.general.info(category: "PeerTransfer", message: "Will transfer \(amount)")
                 
-                var unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount)
+                // Select 1 more output to see if there's more outputs unspent
+                var unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
+                let hasMoreUnspentOutput = unspentOutputs.count > maxSpendingOutputsCount
+                if hasMoreUnspentOutput {
+                    unspentOutputs.removeLast()
+                }
+                
                 var spendingOutputs: [Output] = []
                 var spendingOutpusAmount: Decimal = 0
                 while spendingOutpusAmount < tokenAmount, !unspentOutputs.isEmpty {
@@ -136,7 +157,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                     }
                 }
                 guard let lastSpendingOutput = spendingOutputs.last, spendingOutpusAmount >= tokenAmount else {
-                    throw Error.insufficientBalance
+                    throw Error.insufficientBalance(hasMoreOutputs: hasMoreUnspentOutput)
                 }
                 Logger.general.info(category: "PeerTransfer", message: "Spending \(spendingOutputs.count) UTXOs")
                 

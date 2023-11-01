@@ -452,6 +452,7 @@
 "incoming_voice_call" = "Входящий голосовой вызов";
 "info" = "Информация";
 "initializing" = "Инициализация...";
+"insufficient_balance" = "Insufficient balance";
 "insufficient_transaction_fee" = "Недостаточная комиссия за транзакцию";
 "interface_style" = "Стиль интерфейса";
 "invalid_candidate" = "Недействительный кандидат";
@@ -991,6 +992,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "Сообщено о пользователе";
 "user_not_found" = "Пользователь не найден";
+"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
 "validation_timed_out" = "Время проверки истекло";
 "value_now" = "значение сейчас %@";
 "value_then" = "значение затем %@";

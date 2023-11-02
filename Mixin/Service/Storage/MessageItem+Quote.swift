@@ -27,7 +27,7 @@ extension MessageItem {
         } else if category.hasSuffix("_LOCATION") {
             return R.string.localizable.location()
         } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
-            return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
+            return (snapshotAmount ?? "0") + " " + (tokenSymbol ?? "")
         } else if category.hasSuffix("_CONTACT") {
             return sharedUserIdentityNumber ?? ""
         } else if category.hasSuffix("_TRANSCRIPT") {

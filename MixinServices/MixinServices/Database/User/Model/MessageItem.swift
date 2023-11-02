@@ -37,18 +37,20 @@ public final class MessageItem {
     
     public var appId: String?
     
+    public var tokenIcon: String?
+    public var tokenName: String?
+    public var tokenSymbol: String?
     public var snapshotAmount: String?
     public var snapshotAssetId: String?
     public var snapshotType: String?
+    public var snapshotMemo: String?
     
     public var participantFullName: String?
     public var participantUserId: String?
     
     public var assetUrl: String?
     public var assetType: String?
-    public var assetSymbol: String?
     
-    public var assetIcon: String?
     public var assetWidth: Int?
     public var assetHeight: Int?
     public var assetCategory: String?
@@ -125,7 +127,7 @@ public final class MessageItem {
         expireIn != nil
     }
     
-    public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, createdAt: String, actionName: String? = nil, userFullName: String? = nil, userIdentityNumber: String? = nil, userAvatarUrl: String? = nil, appId: String? = nil, snapshotAmount: String? = nil, snapshotAssetId: String? = nil, snapshotType: String? = nil, participantFullName: String? = nil, participantUserId: String? = nil, assetUrl: String? = nil, assetType: String? = nil, assetSymbol: String? = nil, assetIcon: String? = nil, assetWidth: Int? = nil, assetHeight: Int? = nil, assetCategory: String? = nil, sharedUserId: String? = nil, sharedUserFullName: String? = nil, sharedUserIdentityNumber: String? = nil, sharedUserAvatarUrl: String? = nil, sharedUserAppId: String? = nil, sharedUserIsVerified: Bool? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, mentionsJson: Data? = nil, hasMentionRead: Bool? = nil, expireIn: Int64? = nil) {
+    public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, createdAt: String, actionName: String? = nil, userFullName: String? = nil, userIdentityNumber: String? = nil, userAvatarUrl: String? = nil, appId: String? = nil, tokenIcon: String? = nil, tokenName: String? = nil, tokenSymbol: String? = nil, snapshotAmount: String? = nil, snapshotAssetId: String? = nil, snapshotType: String? = nil, snapshotMemo: String? = nil, participantFullName: String? = nil, participantUserId: String? = nil, assetUrl: String? = nil, assetType: String? = nil, assetWidth: Int? = nil, assetHeight: Int? = nil, assetCategory: String? = nil, sharedUserId: String? = nil, sharedUserFullName: String? = nil, sharedUserIdentityNumber: String? = nil, sharedUserAvatarUrl: String? = nil, sharedUserAppId: String? = nil, sharedUserIsVerified: Bool? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, mentionsJson: Data? = nil, hasMentionRead: Bool? = nil, isPinned: Bool? = nil, isStickerAdded: Bool? = nil, albumId: String? = nil, expireIn: Int64? = nil) {
         self.messageId = messageId
         self.conversationId = conversationId
         self.userId = userId
@@ -156,15 +158,17 @@ public final class MessageItem {
         self.userIdentityNumber = userIdentityNumber
         self.userAvatarUrl = userAvatarUrl
         self.appId = appId
+        self.tokenIcon = tokenIcon
+        self.tokenName = tokenName
+        self.tokenSymbol = tokenSymbol
         self.snapshotAmount = snapshotAmount
         self.snapshotAssetId = snapshotAssetId
         self.snapshotType = snapshotType
+        self.snapshotMemo = snapshotMemo
         self.participantFullName = participantFullName
         self.participantUserId = participantUserId
         self.assetUrl = assetUrl
         self.assetType = assetType
-        self.assetSymbol = assetSymbol
-        self.assetIcon = assetIcon
         self.assetWidth = assetWidth
         self.assetHeight = assetHeight
         self.assetCategory = assetCategory
@@ -178,6 +182,9 @@ public final class MessageItem {
         self.quoteContent = quoteContent
         self.mentionsJson = mentionsJson
         self.hasMentionRead = hasMentionRead
+        self.isPinned = isPinned
+        self.isStickerAdded = isStickerAdded
+        self.albumId = albumId
         self.expireIn = expireIn
     }
     
@@ -231,12 +238,13 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case participantFullName
         case participantUserId
         
-        case snapshotAmount
-        case snapshotAssetId
-        case snapshotType
-        
-        case assetSymbol
-        case assetIcon
+        case tokenIcon = "token_icon"
+        case tokenName = "token_name"
+        case tokenSymbol = "token_symbol"
+        case snapshotAmount = "snapshot_amount"
+        case snapshotAssetId = "snapshot_asset_id"
+        case snapshotType = "snapshot_type"
+        case snapshotMemo = "snapshot_memo"
         
         case assetWidth
         case assetHeight

@@ -24,13 +24,13 @@ class TransferMessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? TransferMessageViewModel {
-            if let icon = viewModel.message.assetIcon, let url = URL(string: icon) {
+            if let icon = viewModel.message.tokenIcon, let url = URL(string: icon) {
                 leftView.sd_setImage(with: url,
                                      placeholderImage: R.image.ic_place_holder(),
                                      context: assetIconContext)
             }
             titleLabel.text = viewModel.snapshotAmount
-            subtitleLabel.text = viewModel.message.assetSymbol
+            subtitleLabel.text = viewModel.message.tokenSymbol
         }
     }
     

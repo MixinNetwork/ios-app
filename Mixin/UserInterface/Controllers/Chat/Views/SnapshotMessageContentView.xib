@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="mixin_condensed.otf">
+            <string>MixinCondensed-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SnapshotMessageContentView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="190" height="118"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/snapshot_decoration" translatesAutoresizingMaskIntoConstraints="NO" id="7vD-VY-m0I">
+                    <rect key="frame" x="96" y="8" width="86" height="67"/>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="pJw-Ok-zVr">
+                    <rect key="frame" x="12" y="10" width="166" height="98"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="jOG-AE-CRi">
+                            <rect key="frame" x="0.0" y="0.0" width="166" height="16"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vjb-Cq-VSq">
+                                    <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="16" id="COo-Hd-R6O"/>
+                                        <constraint firstAttribute="width" constant="16" id="cWS-bx-5aZ"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g3Q-db-vgf">
+                                    <rect key="frame" x="20" y="0.0" width="146" height="16"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="oX0-eR-q6Z">
+                            <rect key="frame" x="0.0" y="31.999999999999996" width="166" height="35.666666666666657"/>
+                            <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="36"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Memo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1w-ny-8g1">
+                            <rect key="frame" x="0.0" y="83.666666666666671" width="166" height="14.333333333333329"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" name="text_desc"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="pJw-Ok-zVr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="6Dm-88-gxA"/>
+                <constraint firstAttribute="bottom" secondItem="pJw-Ok-zVr" secondAttribute="bottom" constant="10" id="D1K-Kb-97Q"/>
+                <constraint firstItem="7vD-VY-m0I" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="Ijf-Sx-nYG"/>
+                <constraint firstAttribute="trailing" secondItem="7vD-VY-m0I" secondAttribute="trailing" constant="8" id="Whs-Ot-7X2"/>
+                <constraint firstItem="pJw-Ok-zVr" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="YjD-Vq-c9u"/>
+                <constraint firstAttribute="trailing" secondItem="pJw-Ok-zVr" secondAttribute="trailing" constant="12" id="Z9C-lC-tFq"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="amountLabel" destination="oX0-eR-q6Z" id="atD-CU-Qt8"/>
+                <outlet property="contentStackView" destination="pJw-Ok-zVr" id="mK4-0d-Oby"/>
+                <outlet property="memoLabel" destination="L1w-ny-8g1" id="tpm-zJ-P8p"/>
+                <outlet property="tokenIconImageView" destination="vjb-Cq-VSq" id="Cl8-oh-rPo"/>
+                <outlet property="tokenNameLabel" destination="g3Q-db-vgf" id="EmO-mS-TPQ"/>
+            </connections>
+            <point key="canvasLocation" x="71.755725190839698" y="298.23943661971833"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Conversation/snapshot_decoration" width="86" height="67"/>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

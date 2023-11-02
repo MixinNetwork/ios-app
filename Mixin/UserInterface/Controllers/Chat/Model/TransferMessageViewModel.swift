@@ -13,7 +13,7 @@ class TransferMessageViewModel: CardMessageViewModel, TitledCardContentWidthCalc
     override func layout(width: CGFloat, style: Style) {
         updateContentWidth(title: snapshotAmount,
                            titleFont: MessageFontSet.transferAmount.scaled,
-                           subtitle: message.assetSymbol,
+                           subtitle: message.tokenSymbol,
                            subtitleFont: MessageFontSet.cardSubtitle.scaled)
         super.layout(width: width, style: style)
         if !style.contains(.received) {

@@ -31,7 +31,7 @@
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vjb-Cq-VSq">
                                     <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="16" id="COo-Hd-R6O"/>
+                                        <constraint firstAttribute="width" secondItem="vjb-Cq-VSq" secondAttribute="height" id="ISA-9H-gYf"/>
                                         <constraint firstAttribute="width" constant="16" id="cWS-bx-5aZ"/>
                                     </constraints>
                                 </imageView>
@@ -73,6 +73,7 @@
                 <outlet property="contentStackView" destination="pJw-Ok-zVr" id="mK4-0d-Oby"/>
                 <outlet property="memoLabel" destination="L1w-ny-8g1" id="tpm-zJ-P8p"/>
                 <outlet property="tokenIconImageView" destination="vjb-Cq-VSq" id="Cl8-oh-rPo"/>
+                <outlet property="tokenIconWidthConstraint" destination="cWS-bx-5aZ" id="Qfp-QD-UsG"/>
                 <outlet property="tokenNameLabel" destination="g3Q-db-vgf" id="EmO-mS-TPQ"/>
             </connections>
             <point key="canvasLocation" x="71.755725190839698" y="298.23943661971833"/>

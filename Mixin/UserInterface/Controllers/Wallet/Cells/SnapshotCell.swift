@@ -68,7 +68,7 @@ class SnapshotCell: ModernSelectedBackgroundCell {
             pendingDepositProgressView.isHidden = true
         }
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
-        symbolLabel.text = token?.symbol ?? snapshot.assetSymbol
+        symbolLabel.text = token?.symbol ?? snapshot.tokenSymbol
     }
     
 }

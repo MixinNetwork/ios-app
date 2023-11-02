@@ -7,12 +7,12 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
     public static let snapshotDidChangeNotification = NSNotification.Name("one.mixin.services.SafeSnapshotDAO.snapshotDidChange")
     
     private static let querySQL = """
-        SELECT s.*, a.symbol AS \(SafeSnapshotItem.JoinedQueryCodingKeys.assetSymbol.rawValue),
+        SELECT s.*, t.symbol AS \(SafeSnapshotItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
             u.user_id AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentUserID.rawValue),
             u.full_name AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentFullname.rawValue),
             u.avatar_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentAvatarURL.rawValue)
         FROM safe_snapshots s
-            LEFT JOIN assets a ON s.asset_id = a.asset_id
+            LEFT JOIN tokens t ON s.asset_id = t.asset_id
             LEFT JOIN users u ON s.opponent_id = u.user_id
     
     """
@@ -66,16 +66,7 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         additionalConditions: [String],
         additionalArguments: [String: String]
     ) -> [SafeSnapshotItem] {
-        var sql = """
-        SELECT s.*, a.symbol AS \(SafeSnapshotItem.JoinedQueryCodingKeys.assetSymbol.rawValue),
-            u.user_id AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentUserID.rawValue),
-            u.full_name AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentFullname.rawValue),
-            u.avatar_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentAvatarURL.rawValue)
-        FROM safe_snapshots s
-            LEFT JOIN assets a ON s.asset_id = a.asset_id
-            LEFT JOIN users u ON s.opponent_id = u.user_id
-
-        """
+        var sql = Self.querySQL
         
         var conditions = additionalConditions
         if let location = location {
@@ -109,7 +100,7 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         }
         
         let snapshots: [SafeSnapshotItem] = db.select(with: sql, arguments: StatementArguments(arguments))
-        for snapshot in snapshots where snapshot.assetSymbol == nil {
+        for snapshot in snapshots where snapshot.tokenSymbol == nil {
             let job = RefreshTokenJob(assetID: snapshot.assetID)
             ConcurrentJobQueue.shared.addJob(job: job)
         }

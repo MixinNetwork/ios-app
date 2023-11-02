@@ -157,6 +157,7 @@ class ConversationTableView: UITableView {
         register(LiveMessageCell.self, forCellReuseIdentifier: ReuseId.live.rawValue)
         register(PostMessageCell.self, forCellReuseIdentifier: ReuseId.post.rawValue)
         register(TransferMessageCell.self, forCellReuseIdentifier: ReuseId.transfer.rawValue)
+        register(SnapshotMessageCell.self, forCellReuseIdentifier: ReuseId.snapshot.rawValue)
         register(AppCardMessageCell.self, forCellReuseIdentifier: ReuseId.appCard.rawValue)
         register(ContactMessageCell.self, forCellReuseIdentifier: ReuseId.contact.rawValue)
         register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
@@ -190,6 +191,7 @@ extension ConversationTableView {
         case sticker = "StickerMessageCell"
         case data = "DataMessageCell"
         case transfer = "TransferMessageCell"
+        case snapshot = "SnapshotMessageCell"
         case system = "SystemMessageCell"
         case unknown = "UnknownMessageCell"
         case unreadHint = "UnreadHintMessageCell"
@@ -231,8 +233,10 @@ extension ConversationTableView {
                 self = .transcript
             } else if category.hasPrefix("WEBRTC_") || category == MessageCategory.MESSAGE_RECALL.rawValue {
                 self = .iconPrefixedText
-            } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
+            } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 self = .transfer
+            } else if category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
+                self = .snapshot
             } else if category == MessageCategory.EXT_UNREAD.rawValue {
                 self = .unreadHint
             } else if Self.systemMessageRepresentableMessageCategories.contains(category) {

@@ -82,7 +82,6 @@ class DepositViewController: UIViewController {
         SafeAPI.depositEntries(chainID: token.chainID) { [weak self] result in
             switch result {
             case .success(let entries):
-                DepositEntryDAO.shared.save(entries: entries)
                 if let entry = entries.first(where: \.isPrimary) {
                     if let self, token.assetID == self.token.assetID {
                         self.updateViews(token: token, entry: entry)
@@ -90,6 +89,9 @@ class DepositViewController: UIViewController {
                     }
                 } else {
                     Logger.general.error(category: "Deposit", message: "No primary entry: \(token.name)")
+                }
+                DispatchQueue.global().async {
+                    DepositEntryDAO.shared.save(entries: entries)
                 }
             case .failure(.invalidSignature):
                 break

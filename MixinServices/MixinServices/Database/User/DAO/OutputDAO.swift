@@ -44,13 +44,11 @@ public final class OutputDAO: UserDatabaseDAO {
         }
     }
     
-    public func spendOutputs(with ids: [String], raw: RawTransaction, snapshot: SafeSnapshot, message: Message) {
+    public func spendOutputs(with ids: [String], alongsideTransaction change: ((GRDB.Database) throws -> Void)) {
         db.write { db in
             let ids = ids.joined(separator: "','")
             try db.execute(sql: "UPDATE outputs SET state = 'spent' WHERE output_id IN ('\(ids)')")
-            try db.execute(sql: "DELETE FROM raw_transactions WHERE request_id = ?", arguments: [raw.requestID])
-            try snapshot.save(db)
-            try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "OutputDAO", silentNotification: false)
+            try change(db)
         }
     }
     

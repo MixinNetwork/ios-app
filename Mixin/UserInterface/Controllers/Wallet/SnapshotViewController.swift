@@ -54,7 +54,7 @@ class SnapshotViewController: UIViewController {
             }
         }
         amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
-        fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + getFormatValue(priceUsd: token.usdPrice)) + "\n "
+        fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + fiatMoneyValue(usdPrice: token.decimalUSDPrice)) + "\n "
         symbolLabel.text = token.symbol
         if ScreenHeight.current >= .extraLong {
             assetIconView.chainIconWidth = 28
@@ -149,8 +149,8 @@ extension SnapshotViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
-        cell.titleLabel.text = columns[indexPath.row].title
-        cell.subtitleLabel.text = columns[indexPath.row].subtitle
+        cell.titleLabel.text = columns[indexPath.row].key.localized
+        cell.subtitleLabel.text = columns[indexPath.row].value
         return cell
     }
     
@@ -160,7 +160,7 @@ extension SnapshotViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch columns[indexPath.row] {
+        switch columns[indexPath.row].key {
         case .fromUsername, .toUsername:
             guard let id = snapshot.opponentUserID, !id.isEmpty else {
                 return
@@ -188,7 +188,7 @@ extension SnapshotViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
-        UIPasteboard.general.string = columns[indexPath.row].subtitle
+        UIPasteboard.general.string = columns[indexPath.row].value
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
@@ -196,54 +196,50 @@ extension SnapshotViewController: UITableViewDelegate {
 
 extension SnapshotViewController {
     
-    private enum Column {
+    private struct Column {
         
-        case id(String)
-        case transactionHash(String)
-        case tokenName(String)
-        case type(String)
-        case depositProgress(completed: Int, total: Int)
-        case fromUsername(String)
-        case toUsername(String)
-        case memo(String)
-        case date(String)
-        
-        var title: String {
-            switch self {
-            case .id:
-                return R.string.localizable.transaction_id()
-            case .transactionHash:
-                return R.string.localizable.transaction_hash()
-            case .tokenName:
-                return R.string.localizable.asset_type()
-            case .type:
-                return R.string.localizable.transaction_type()
-            case .depositProgress:
-                return R.string.localizable.status()
-            case .fromUsername:
-                return R.string.localizable.from()
-            case .toUsername:
-                return R.string.localizable.to()
-            case .memo:
-                return R.string.localizable.memo()
-            case .date:
-                return R.string.localizable.date()
+        enum Key {
+            
+            case id
+            case transactionHash
+            case fromUsername
+            case toUsername
+            case depositHash
+            case withdrawalHash
+            case depositProgress
+            case createdAt
+            case memo
+            
+            var localized: String {
+                switch self {
+                case .id:
+                    return R.string.localizable.transaction_id()
+                case .transactionHash:
+                    return R.string.localizable.transaction_hash()
+                case .fromUsername:
+                    return R.string.localizable.from()
+                case .toUsername:
+                    return R.string.localizable.to()
+                case .depositHash:
+                    return "DEPOSIT HASH"
+                case .withdrawalHash:
+                    return "WITHDRAWAL HASH"
+                case .depositProgress:
+                    return R.string.localizable.status()
+                case .createdAt:
+                    return R.string.localizable.date()
+                case .memo:
+                    return R.string.localizable.memo()
+                }
             }
+            
         }
         
-        var subtitle: String {
-            switch self {
-            case let .id(value), let .transactionHash(value), let .tokenName(value),
-                let .type(value), let .fromUsername(value), let .toUsername(value),
-                let .memo(value), let .date(value):
-                return value
-            case let .depositProgress(completed, total):
-                return R.string.localizable.pending_confirmations(completed, total)
-            }
-        }
+        let key: Key
+        let value: String
         
         var allowsCopy: Bool {
-            switch self {
+            switch key {
             case .id, .transactionHash, .memo, .fromUsername, .toUsername:
                 return true
             default:
@@ -268,19 +264,19 @@ extension SnapshotViewController {
     }
     
     private func fetchThatTimePrice() {
-//        AssetAPI.ticker(asset: snapshot.assetId, offset: snapshot.createdAt) { [weak self](result) in
-//            guard let self = self else {
-//                return
-//            }
-//            switch result {
-//            case let .success(asset):
-//                let nowValue = Currency.current.symbol + self.getFormatValue(priceUsd: self.token.priceUsd)
-//                let thenValue = token.priceUsd.doubleValue > 0 ? Currency.current.symbol + self.getFormatValue(priceUsd: token.priceUsd) : R.string.localizable.na()
-//                self.fiatMoneyValueLabel.text = R.string.localizable.value_now(nowValue) + "\n" + R.string.localizable.value_then(thenValue)
-//            case .failure:
-//                break
-//            }
-//        }
+        AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self](result) in
+            guard let self = self else {
+                return
+            }
+            switch result {
+            case var .success(ticker):
+                let nowValue = Currency.current.symbol + self.fiatMoneyValue(usdPrice: self.token.decimalUSDPrice)
+                let thenValue = token.decimalUSDPrice > 0 ? Currency.current.symbol + self.fiatMoneyValue(usdPrice: ticker.decimalUSDPrice) : R.string.localizable.na()
+                self.fiatMoneyValueLabel.text = R.string.localizable.value_now(nowValue) + "\n" + R.string.localizable.value_then(thenValue)
+            case .failure:
+                break
+            }
+        }
     }
     
     private func fetchTransaction() {
@@ -331,39 +327,32 @@ extension SnapshotViewController {
 //        }
     }
     
-    private func getFormatValue(priceUsd: String) -> String {
-        let fiatMoneyValue = snapshot.amount.doubleValue * priceUsd.doubleValue * Currency.current.rate
-        return CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) ?? ""
+    private func fiatMoneyValue(usdPrice: Decimal) -> String {
+        let value = snapshot.decimalAmount * usdPrice * Decimal(Currency.current.rate)
+        return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
     }
     
     private func makeContents() {
         var columns: [Column] = [
-            .id(snapshot.id),
-            .transactionHash(snapshot.transactionHash),
-            .tokenName(token.name),
+            Column(key: .id, value: snapshot.id),
+            Column(key: .transactionHash, value: snapshot.transactionHash),
         ]
         if let name = snapshot.opponentFullname {
             if snapshot.amount.hasMinusPrefix {
-                columns.append(.toUsername(name))
+                columns.append(Column(key: .toUsername, value: name))
             } else {
-                columns.append(.fromUsername(name))
+                columns.append(Column(key: .fromUsername, value: name))
             }
         }
+        if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue, let completed = snapshot.confirmations {
+            let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
+            columns.append(Column(key: .depositProgress, value: value))
+        }
+        columns.append(Column(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         if !snapshot.memo.isEmpty {
-            columns.append(.memo(snapshot.memo))
+            columns.append(Column(key: .memo, value: snapshot.memo))
         }
-        columns.append(.date(DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         self.columns = columns
-    }
-    
-    private func formatedBalance(_ balance: String) -> String {
-        let amount: String
-        if balance == "0" {
-            amount = "0\(currentDecimalSeparator)00"
-        } else {
-            amount = CurrencyFormatter.localizedString(from: balance, format: .precision, sign: .never) ?? ""
-        }
-        return amount
     }
     
 }

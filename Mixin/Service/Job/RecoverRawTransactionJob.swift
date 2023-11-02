@@ -33,6 +33,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                     Logger.general.error(category: "RecoverRawTransaction", message: "Error: \(error)")
                 }
             }
+            Logger.general.info(category: "RecoverRawTransaction", message: "Finished")
             self.finishJob()
         }
         return true
@@ -76,7 +77,12 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                                     closingBalance: nil)
         let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: transaction.receiverID)
         let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: response.createdAt)
-        OutputDAO.shared.spendOutputs(with: outputIDs, raw: transaction, snapshot: snapshot, message: message)
+        OutputDAO.shared.spendOutputs(with: outputIDs) { db in
+            try snapshot.save(db)
+            try RawTransaction.deleteOne(db, key: transaction.requestID)
+            try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "RecoverRawTransaction", silentNotification: false)
+            try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
+        }
     }
     
 }

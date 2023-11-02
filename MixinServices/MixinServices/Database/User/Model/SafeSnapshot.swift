@@ -38,6 +38,8 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let openingBalance: String?
     public let closingBalance: String?
     
+    public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+    
     public init(
         id: String, type: String, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,

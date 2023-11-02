@@ -688,6 +688,16 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("utxo_2") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(safe_snapshots)").map(\.name)
+            if !columns.contains("deposit") {
+                try db.execute(sql: "ALTER TABLE safe_snapshots ADD COLUMN deposit TEXT")
+            }
+            if !columns.contains("withdrawal") {
+                try db.execute(sql: "ALTER TABLE safe_snapshots ADD COLUMN withdrawal TEXT")
+            }
+        }
+        
         return migrator
     }
     

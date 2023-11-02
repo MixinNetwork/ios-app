@@ -74,7 +74,9 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                                     traceID: response.requestID,
                                     confirmations: nil,
                                     openingBalance: nil,
-                                    closingBalance: nil)
+                                    closingBalance: nil,
+                                    deposit: nil,
+                                    withdrawal: nil)
         let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: transaction.receiverID)
         let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: response.createdAt)
         OutputDAO.shared.spendOutputs(with: outputIDs) { db in

@@ -62,13 +62,12 @@ class SnapshotViewController: UIViewController {
             headerContentStackView.spacing = 2
         }
         layoutTableHeaderView()
-        makeContents()
         tableView.backgroundColor = .background
         tableView.separatorStyle = .none
         tableView.register(R.nib.snapshotColumnCell)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.reloadData()
+        reloadData()
         updateTableViewContentInsetBottom()
         fetchThatTimePrice()
         fetchTransaction()
@@ -161,7 +160,7 @@ extension SnapshotViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch columns[indexPath.row].key {
-        case .fromUsername, .toUsername:
+        case .from, .to:
             guard let id = snapshot.opponentUserID, !id.isEmpty else {
                 return
             }
@@ -202,8 +201,8 @@ extension SnapshotViewController {
             
             case id
             case transactionHash
-            case fromUsername
-            case toUsername
+            case from
+            case to
             case depositHash
             case withdrawalHash
             case depositProgress
@@ -216,14 +215,14 @@ extension SnapshotViewController {
                     return R.string.localizable.transaction_id()
                 case .transactionHash:
                     return R.string.localizable.transaction_hash()
-                case .fromUsername:
+                case .from:
                     return R.string.localizable.from()
-                case .toUsername:
+                case .to:
                     return R.string.localizable.to()
                 case .depositHash:
-                    return "DEPOSIT HASH"
+                    return R.string.localizable.deposit_hash()
                 case .withdrawalHash:
-                    return "WITHDRAWAL HASH"
+                    return R.string.localizable.withdrawal_hash()
                 case .depositProgress:
                     return R.string.localizable.status()
                 case .createdAt:
@@ -240,7 +239,7 @@ extension SnapshotViewController {
         
         var allowsCopy: Bool {
             switch key {
-            case .id, .transactionHash, .memo, .fromUsername, .toUsername:
+            case .id, .transactionHash, .memo, .from, .to:
                 return true
             default:
                 return false
@@ -332,17 +331,21 @@ extension SnapshotViewController {
         return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
     }
     
-    private func makeContents() {
+    private func reloadData() {
         var columns: [Column] = [
             Column(key: .id, value: snapshot.id),
             Column(key: .transactionHash, value: snapshot.transactionHash),
         ]
         if let name = snapshot.opponentFullname {
             if snapshot.amount.hasMinusPrefix {
-                columns.append(Column(key: .toUsername, value: name))
+                columns.append(Column(key: .to, value: name))
             } else {
-                columns.append(Column(key: .fromUsername, value: name))
+                columns.append(Column(key: .from, value: name))
             }
+        } else if let deposit = snapshot.deposit {
+            columns.append(Column(key: .depositHash, value: deposit.hash))
+        } else if let withdrawal = snapshot.withdrawal {
+            columns.append(Column(key: .withdrawalHash, value: withdrawal.hash))
         }
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue, let completed = snapshot.confirmations {
             let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
@@ -353,6 +356,7 @@ extension SnapshotViewController {
             columns.append(Column(key: .memo, value: snapshot.memo))
         }
         self.columns = columns
+        tableView.reloadData()
     }
     
 }

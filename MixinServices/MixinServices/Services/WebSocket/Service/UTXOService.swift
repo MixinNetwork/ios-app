@@ -46,26 +46,25 @@ public final class UTXOService {
                         break
                     }
                     
-                    for output in outputs {
-                        let kernelAssetID = output.asset
-                        if assetIDs[kernelAssetID] == nil {
+                    var missingKernelAssetIDs: Set<String> = []
+                    for kernelAssetID in outputs.map(\.asset) {
+                        if assetIDs[kernelAssetID] == nil, !missingKernelAssetIDs.contains(kernelAssetID) {
                             if let id = TokenDAO.shared.assetID(ofAssetWith: kernelAssetID) {
                                 assetIDs[kernelAssetID] = id
                             } else {
-                                do {
-                                    let token = try await SafeAPI.assets(id: kernelAssetID)
-                                    TokenDAO.shared.save(assets: [token])
-                                    if !ChainDAO.shared.chainExists(chainId: token.chainID) {
-                                        let chain = try await NetworkAPI.chain(id: token.chainID)
-                                        ChainDAO.shared.save([chain])
-                                    }
-                                    assetIDs[kernelAssetID] = token.assetID
-                                } catch MixinAPIError.notFound {
-                                    // Tokens and chains may be absent. Ignore the output
-                                } catch {
-                                    throw error
-                                }
+                                missingKernelAssetIDs.insert(kernelAssetID)
                             }
+                        }
+                    }
+                    let tokens = try await SafeAPI.assets(ids: missingKernelAssetIDs)
+                    TokenDAO.shared.save(assets: tokens)
+                    for token in tokens {
+                        assetIDs[token.kernelAssetID] = token.assetID
+                    }
+                    for chainID in Set(tokens.map(\.chainID)) {
+                        if !ChainDAO.shared.chainExists(chainId: chainID) {
+                            let chain = try await NetworkAPI.chain(id: chainID)
+                            ChainDAO.shared.save([chain])
                         }
                     }
                     

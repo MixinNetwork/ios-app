@@ -125,9 +125,9 @@ final class PaymentValidator {
             if let id = trace.snapshotId, !id.isEmpty {
                 traceCreatedAt = trace.createdAt.toUTCDate()
             } else {
-                switch SnapshotAPI.trace(traceId: traceID) {
+                switch SafeAPI.snapshot(traceID: traceID) {
                 case let .success(snapshot):
-                    TraceDAO.shared.updateSnapshot(traceId: traceID, snapshotId: snapshot.snapshotId)
+                    TraceDAO.shared.updateSnapshot(traceId: traceID, snapshotId: snapshot.id)
                     traceCreatedAt = snapshot.createdAt.toUTCDate()
                 case .failure(.notFound):
                     DispatchQueue.main.async {

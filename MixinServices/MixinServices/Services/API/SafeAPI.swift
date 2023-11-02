@@ -18,42 +18,6 @@ public final class SafeAPI: MixinAPI {
         return try await request(method: .post, path: "/safe/users", parameters: body)
     }
     
-    public static func ghostKeys(
-        receiverID: String,
-        receiverHint: String,
-        senderID: String,
-        senderHint: String
-    ) async throws -> [GhostKey] {
-        struct Receiver: Encodable {
-            let receivers: [String]
-            let index: Int
-            let hint: String
-        }
-        let body = [
-            Receiver(receivers: [receiverID], index: 0, hint: receiverHint),
-            Receiver(receivers: [senderID], index: 1, hint: senderHint),
-        ]
-        return try await request(method: .post, path: "/safe/keys", parameters: body)
-    }
-    
-    public static func requestTransaction(id: String, raw: String, senderID: String) async throws -> [String] {
-        
-        struct TransactionRequest: Decodable {
-            public let views: [String]
-        }
-        
-        let request: TransactionRequest = try await request(method: .post,
-                                                            path: "/safe/transaction/requests",
-                                                            parameters: ["request_id": id, "raw": raw])
-        return request.views
-    }
-    
-    public static func postTransaction(requestID: String, raw: String) async throws -> TransactionResponse {
-        try await request(method: .post,
-                          path: "/safe/transactions",
-                          parameters: ["request_id": requestID, "raw": raw])
-    }
-    
     public static func outputs(
         members: String,
         threshold: Int,
@@ -70,6 +34,15 @@ public final class SafeAPI: MixinAPI {
         }
         return try await request(method: .get, path: path)
     }
+    
+    public static func snapshot(traceID: String) -> MixinAPI.Result<SafeSnapshot> {
+        request(method: .get, path: "/safe/snapshots/trace/" + traceID)
+    }
+    
+}
+
+// MARK: - Asset
+extension SafeAPI {
     
     public static func assets() async throws -> [Token] {
         try await request(method: .get, path: "/safe/assets")
@@ -139,6 +112,47 @@ public final class SafeAPI: MixinAPI {
     
     public static func transaction(id: String) async throws -> TransactionResponse {
         try await request(method: .get, path: "/safe/transactions/" + id)
+    }
+    
+}
+
+// MARK: - Transfer
+extension SafeAPI {
+    
+    public static func ghostKeys(
+        receiverID: String,
+        receiverHint: String,
+        senderID: String,
+        senderHint: String
+    ) async throws -> [GhostKey] {
+        struct Receiver: Encodable {
+            let receivers: [String]
+            let index: Int
+            let hint: String
+        }
+        let body = [
+            Receiver(receivers: [receiverID], index: 0, hint: receiverHint),
+            Receiver(receivers: [senderID], index: 1, hint: senderHint),
+        ]
+        return try await request(method: .post, path: "/safe/keys", parameters: body)
+    }
+    
+    public static func requestTransaction(id: String, raw: String, senderID: String) async throws -> [String] {
+        
+        struct TransactionRequest: Decodable {
+            public let views: [String]
+        }
+        
+        let request: TransactionRequest = try await request(method: .post,
+                                                            path: "/safe/transaction/requests",
+                                                            parameters: ["request_id": id, "raw": raw])
+        return request.views
+    }
+    
+    public static func postTransaction(requestID: String, raw: String) async throws -> TransactionResponse {
+        try await request(method: .post,
+                          path: "/safe/transactions",
+                          parameters: ["request_id": requestID, "raw": raw])
     }
     
 }

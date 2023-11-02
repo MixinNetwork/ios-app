@@ -249,7 +249,12 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                             closingBalance: nil)
                 let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
                 let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
-                OutputDAO.shared.spendOutputs(with: spendingOutputIDs, raw: rawTransaction, snapshot: snapshot, message: message)
+                OutputDAO.shared.spendOutputs(with: spendingOutputIDs) { db in
+                    try snapshot.save(db)
+                    try RawTransaction.deleteOne(db, key: rawTransaction.requestID)
+                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
+                    try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
+                }
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!

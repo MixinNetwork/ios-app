@@ -33,9 +33,9 @@ class SnapshotMessageViewModel: DetailInfoMessageViewModel {
         let contentWidth: CGFloat = 190
         let contentHeight: CGFloat
         if let memo = message.snapshotMemo, !memo.isEmpty {
-            contentHeight = 110
+            contentHeight = 114
         } else {
-            contentHeight = 96
+            contentHeight = 100
         }
         let fullnameHeight: CGFloat = style.contains(.fullname) ? fullnameFrame.height : 0
         let x: CGFloat

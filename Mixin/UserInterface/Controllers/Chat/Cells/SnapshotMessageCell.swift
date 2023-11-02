@@ -13,7 +13,7 @@ class SnapshotMessageCell: DetailInfoMessageCell {
         statusImageView.isHidden = true
         messageContentView.addSubview(snapshotContentView)
         snapshotContentView.snp.makeConstraints { make in
-            make.top.equalTo(backgroundImageView.snp.top)
+            make.top.equalTo(backgroundImageView.snp.top).offset(1)
         }
         snapshotContentLeadingConstraint = snapshotContentView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor)
         snapshotContentTrailingConstraint = snapshotContentView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor)

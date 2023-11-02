@@ -36,6 +36,7 @@ class SignalLoadingViewController: UIViewController {
         DispatchQueue.global().async {
             AppGroupKeychain.encryptedTIPPriv = nil
             AppGroupKeychain.ephemeralSeed = nil
+            AppGroupKeychain.encryptedSalt = nil
             Logger.tip.info(category: "SignalLoading", message: "TIP Secrets cleared")
             
             SignalDatabase.reloadCurrent()

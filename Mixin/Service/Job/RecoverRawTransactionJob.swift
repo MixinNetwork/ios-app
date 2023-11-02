@@ -33,6 +33,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                     Logger.general.error(category: "RecoverRawTransaction", message: "Error: \(error)")
                 }
             }
+            Logger.general.info(category: "RecoverRawTransaction", message: "Finished")
             self.finishJob()
         }
         return true

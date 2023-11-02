@@ -56,15 +56,17 @@ public final class UTXOService {
                             }
                         }
                     }
-                    let tokens = try await SafeAPI.assets(ids: missingKernelAssetIDs)
-                    TokenDAO.shared.save(assets: tokens)
-                    for token in tokens {
-                        assetIDs[token.kernelAssetID] = token.assetID
-                    }
-                    for chainID in Set(tokens.map(\.chainID)) {
-                        if !ChainDAO.shared.chainExists(chainId: chainID) {
-                            let chain = try await NetworkAPI.chain(id: chainID)
-                            ChainDAO.shared.save([chain])
+                    if !missingKernelAssetIDs.isEmpty {
+                        let tokens = try await SafeAPI.assets(ids: missingKernelAssetIDs)
+                        TokenDAO.shared.save(assets: tokens)
+                        for token in tokens {
+                            assetIDs[token.kernelAssetID] = token.assetID
+                        }
+                        for chainID in Set(tokens.map(\.chainID)) {
+                            if !ChainDAO.shared.chainExists(chainId: chainID) {
+                                let chain = try await NetworkAPI.chain(id: chainID)
+                                ChainDAO.shared.save([chain])
+                            }
                         }
                     }
                     

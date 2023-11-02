@@ -108,7 +108,7 @@ extension SafeAPI {
         tag: String?
     ) async throws -> [SafePendingDeposit] {
         var path = "/safe/deposits?asset=\(assetID)&destination=\(destination)"
-        if let tag {
+        if let tag, !tag.isEmpty {
             path.append("&tag=\(tag)")
         }
         return try await request(method: .get, path: path)

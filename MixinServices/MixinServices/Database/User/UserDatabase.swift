@@ -672,7 +672,6 @@ public final class UserDatabase: Database {
                 )
                 """,
                 
-                "CREATE INDEX IF NOT EXISTS `index_outputs_asset_state_created_at` ON `outputs` (`asset`, `state`, `created_at`)",
                 "CREATE UNIQUE INDEX IF NOT EXISTS `index_outputs_transaction_hash_output_index` ON `outputs` (`transaction_hash`, `output_index`)",
                 "CREATE INDEX IF NOT EXISTS `index_tokens_kernel_asset_id` ON `tokens` (`kernel_asset_id`)",
                 "CREATE INDEX IF NOT EXISTS `index_tokens_extra_kernel_asset_id` ON `tokens_extra` (`kernel_asset_id`)",
@@ -696,6 +695,9 @@ public final class UserDatabase: Database {
             if !columns.contains("withdrawal") {
                 try db.execute(sql: "ALTER TABLE safe_snapshots ADD COLUMN withdrawal TEXT")
             }
+            
+            try db.execute(sql: "DROP INDEX IF EXISTS `index_outputs_asset_state_created_at`")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_outputs_asset_state_sequence` ON `outputs` (`asset`, `state`, `sequence`)")
         }
         
         return migrator

@@ -32,7 +32,6 @@ public final class RefreshTokenJob: AsynchronousJob {
                                                               tag: entry.tag)
                     SafeSnapshotDAO.shared.saveSnapshots(with: assetID, pendingDeposits: deposits)
                 }
-                // Update fiats and snapshots?
             } catch {
                 reporter.report(error: error)
             }

@@ -21,7 +21,17 @@ public final class RefreshAllTokensJob: AsynchronousJob {
                 reporter.report(error: error)
                 Logger.general.error(category: "RefreshAllTokensJob", message: error.localizedDescription)
             }
-            self.finishJob()
+            AssetAPI.fiats { (result) in
+                switch result {
+                case let .success(fiatMonies):
+                    DispatchQueue.main.async {
+                        Currency.updateRate(with: fiatMonies)
+                    }
+                case let .failure(error):
+                    reporter.report(error: error)
+                }
+                self.finishJob()
+            }
         }
         return true
     }

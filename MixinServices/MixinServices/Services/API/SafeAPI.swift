@@ -60,19 +60,58 @@ extension SafeAPI {
         request(method: .get, path: "/safe/assets/\(id)")
     }
     
-    public static func depositEntries(chainID: String, completion: @escaping (MixinAPI.Result<[DepositEntry]>) -> Void) {
-        request(method: .post, path: "/safe/deposit/entries", parameters: ["chain_id": chainID]) { (result: MixinAPI.Result<[DepositEntry]>) in
-            switch result {
-            case .success(let entries):
-                if entries.allSatisfy(\.isSignatureValid) {
-                    completion(.success(entries))
-                } else {
-                    completion(.failure(.invalidSignature))
-                }
-            case .failure:
-                completion(result)
-            }
+}
+
+// MARK: - Transfer
+extension SafeAPI {
+    
+    public static func ghostKeys(
+        receiverID: String,
+        receiverHint: String,
+        senderID: String,
+        senderHint: String
+    ) async throws -> [GhostKey] {
+        struct Receiver: Encodable {
+            let receivers: [String]
+            let index: Int
+            let hint: String
         }
+        let body = [
+            Receiver(receivers: [receiverID], index: 0, hint: receiverHint),
+            Receiver(receivers: [senderID], index: 1, hint: senderHint),
+        ]
+        return try await request(method: .post, path: "/safe/keys", parameters: body)
+    }
+    
+    public static func transaction(id: String) async throws -> TransactionResponse {
+        try await request(method: .get, path: "/safe/transactions/" + id)
+    }
+    
+    public static func requestTransaction(id: String, raw: String, senderID: String) async throws -> [String] {
+        
+        struct TransactionRequest: Decodable {
+            public let views: [String]
+        }
+        
+        let request: TransactionRequest = try await request(method: .post,
+                                                            path: "/safe/transaction/requests",
+                                                            parameters: ["request_id": id, "raw": raw])
+        return request.views
+    }
+    
+    public static func postTransaction(requestID: String, raw: String) async throws -> TransactionResponse {
+        try await request(method: .post,
+                          path: "/safe/transactions",
+                          parameters: ["request_id": requestID, "raw": raw])
+    }
+    
+}
+
+// MARK: - Snapshot
+extension SafeAPI {
+    
+    public static func snapshot(with id: String, queue: DispatchQueue = .main, completion: @escaping (MixinAPI.Result<SafeSnapshot>) -> Void) {
+        request(method: .get, path: "/safe/snapshots/" + id, completion: completion)
     }
     
     public static func snapshots(
@@ -102,6 +141,26 @@ extension SafeAPI {
         return request(method: .get, path: path)
     }
     
+}
+
+// MARK: - Deposit
+extension SafeAPI {
+    
+    public static func depositEntries(chainID: String, completion: @escaping (MixinAPI.Result<[DepositEntry]>) -> Void) {
+        request(method: .post, path: "/safe/deposit/entries", parameters: ["chain_id": chainID]) { (result: MixinAPI.Result<[DepositEntry]>) in
+            switch result {
+            case .success(let entries):
+                if entries.allSatisfy(\.isSignatureValid) {
+                    completion(.success(entries))
+                } else {
+                    completion(.failure(.invalidSignature))
+                }
+            case .failure:
+                completion(result)
+            }
+        }
+    }
+    
     public static func deposits(
         assetID: String,
         destination: String,
@@ -112,51 +171,6 @@ extension SafeAPI {
             path.append("&tag=\(tag)")
         }
         return try await request(method: .get, path: path)
-    }
-    
-    public static func transaction(id: String) async throws -> TransactionResponse {
-        try await request(method: .get, path: "/safe/transactions/" + id)
-    }
-    
-}
-
-// MARK: - Transfer
-extension SafeAPI {
-    
-    public static func ghostKeys(
-        receiverID: String,
-        receiverHint: String,
-        senderID: String,
-        senderHint: String
-    ) async throws -> [GhostKey] {
-        struct Receiver: Encodable {
-            let receivers: [String]
-            let index: Int
-            let hint: String
-        }
-        let body = [
-            Receiver(receivers: [receiverID], index: 0, hint: receiverHint),
-            Receiver(receivers: [senderID], index: 1, hint: senderHint),
-        ]
-        return try await request(method: .post, path: "/safe/keys", parameters: body)
-    }
-    
-    public static func requestTransaction(id: String, raw: String, senderID: String) async throws -> [String] {
-        
-        struct TransactionRequest: Decodable {
-            public let views: [String]
-        }
-        
-        let request: TransactionRequest = try await request(method: .post,
-                                                            path: "/safe/transaction/requests",
-                                                            parameters: ["request_id": id, "raw": raw])
-        return request.views
-    }
-    
-    public static func postTransaction(requestID: String, raw: String) async throws -> TransactionResponse {
-        try await request(method: .post,
-                          path: "/safe/transactions",
-                          parameters: ["request_id": requestID, "raw": raw])
     }
     
 }

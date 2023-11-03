@@ -69,8 +69,8 @@ class SnapshotViewController: UIViewController {
         tableView.delegate = self
         reloadData()
         updateTableViewContentInsetBottom()
-        fetchThatTimePrice()
-        fetchTransaction()
+        reloadPrices()
+        reloadSnapshotIfNeeded()
         
         assetIconView.isUserInteractionEnabled = true
         assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
@@ -262,7 +262,7 @@ extension SnapshotViewController {
         tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFitting(targetSize).height
     }
     
-    private func fetchThatTimePrice() {
+    private func reloadPrices() {
         AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self](result) in
             guard let self = self else {
                 return
@@ -278,57 +278,49 @@ extension SnapshotViewController {
         }
     }
     
-    private func fetchTransaction() {
-//        var shouldRefreshSnapshot = snapshot.snapshotHash.isNilOrEmpty
-//        if snapshot.type == SnapshotType.withdrawal.rawValue && snapshot.transactionHash.isNilOrEmpty {
-//            shouldRefreshSnapshot = true
-//        } else if snapshot.type == SnapshotType.pendingDeposit.rawValue {
-//            let assetId = token.assetId
-//            let snapshotId = snapshot.snapshotId
-//            for entry in token.depositEntries {
-//                AssetAPI.pendingDeposits(assetId: assetId, destination: entry.destination, tag: entry.tag) { [weak self](result) in
-//                    switch result {
-//                    case let .success(deposits):
-//                        DispatchQueue.global().async {
-//                            guard let snapshotItem = SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits, snapshotId: snapshotId) else {
-//                                return
-//                            }
-//                            DispatchQueue.main.async {
-//                                self?.snapshot = snapshotItem
-//                                self?.makeContents()
-//                                self?.tableView.reloadData()
-//                            }
-//                        }
-//                    case .failure:
-//                        break
-//                    }
-//                }
-//            }
-//        }
-//        if shouldRefreshSnapshot {
-//            SnapshotAPI.snapshot(snapshotId: snapshot.snapshotId) { [weak self](result) in
-//                switch result {
-//                case let .success(snapshot):
-//                    DispatchQueue.global().async {
-//                        guard let snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot) else {
-//                            return
-//                        }
-//                        DispatchQueue.main.async {
-//                            self?.snapshot = snapshotItem
-//                            self?.makeContents()
-//                            self?.tableView.reloadData()
-//                        }
-//                    }
-//                case .failure:
-//                    break
-//                }
-//            }
-//        }
+    private func reloadSnapshotIfNeeded() {
+        if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
+            SafeAPI.snapshot(with: snapshot.id, queue: .global()) { [weak self] result in
+                switch result {
+                case let .success(snapshot):
+                    self?.reloadData(with: snapshot)
+                case .failure:
+                    break
+                }
+            }
+        } else if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
+            Task { [weak self, assetID=token.assetID, snapshotID=snapshot.id] in
+                guard let chainID = TokenDAO.shared.chainID(ofAssetWith: assetID) else {
+                    return
+                }
+                let entries = DepositEntryDAO.shared.entries(ofChainWith: chainID)
+                for entry in entries {
+                    let deposits = try await SafeAPI.deposits(assetID: assetID,
+                                                              destination: entry.destination,
+                                                              tag: entry.tag)
+                    SafeSnapshotDAO.shared.saveSnapshots(with: assetID, pendingDeposits: deposits)
+                    if let deposit = deposits.first(where: { $0.id == snapshotID }) {
+                        let snapshot = SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
+                        self?.reloadData(with: snapshot)
+                    }
+                }
+            }
+        }
     }
     
     private func fiatMoneyValue(usdPrice: Decimal) -> String {
         let value = snapshot.decimalAmount * usdPrice * Decimal(Currency.current.rate)
         return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
+    }
+    
+    private func reloadData(with snapshot: SafeSnapshot) {
+        guard let item = SafeSnapshotDAO.shared.saveAndFetch(snapshot: snapshot) else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.snapshot = item
+            self.reloadData()
+        }
     }
     
     private func reloadData() {

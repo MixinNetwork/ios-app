@@ -110,8 +110,12 @@ extension SafeAPI {
 // MARK: - Snapshot
 extension SafeAPI {
     
-    public static func snapshot(with id: String, queue: DispatchQueue = .main, completion: @escaping (MixinAPI.Result<SafeSnapshot>) -> Void) {
-        request(method: .get, path: "/safe/snapshots/" + id, completion: completion)
+    public static func snapshot(
+        with id: String,
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<SafeSnapshot>) -> Void
+    ) {
+        request(method: .get, path: "/safe/snapshots/" + id, queue: queue, completion: completion)
     }
     
     public static func snapshots(

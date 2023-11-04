@@ -1,9 +1,9 @@
 import Foundation
 import MixinServices
 
-extension MixinAPIError {
+extension MixinAPIError: LocalizedError {
     
-    var localizedDescription: String {
+    public var errorDescription: String? {
         switch self {
         case .invalidJSON:
             return R.string.localizable.data_parsing_error()

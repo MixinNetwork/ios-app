@@ -1,5 +1,6 @@
 import Foundation
 import CryptoKit
+import AppCenterCrashes
 import Alamofire
 import Tip
 
@@ -419,41 +420,52 @@ extension TIP {
         guard let userIDData = userID.data(using: .utf8), let userIDHash = SHA3_256.hash(data: userIDData) else {
             throw Error.invalidUserID
         }
-        let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
         
-        Logger.tip.info(category: "TIP", message: "TIP Priv ready: \(tipPriv.count)")
-        let salt = Data(withNumberOfSecuredRandomBytes: 32)!
-        let saltAESKey = try saltAESKey(pin: pinData, tipPriv: tipPriv)
-        Logger.tip.info(category: "TIP", message: "Salt AES key ready: \(salt.count), \(saltAESKey.count)")
-        let encryptedSalt = try AESCryptor.encrypt(salt, with: saltAESKey)
-        Logger.tip.info(category: "TIP", message: "Salt encrypted with AES: \(encryptedSalt.count)")
-        let pinTokenEncryptedSalt = try AESCryptor.encrypt(encryptedSalt, with: pinToken)
-        Logger.tip.info(category: "TIP", message: "Salt encrypted with pinToken: \(pinTokenEncryptedSalt.count)")
-        let base64Salt = pinTokenEncryptedSalt.base64RawURLEncodedString()
-        
-        let spendSeed = try spendPriv(salt: salt, tipPriv: tipPriv)
-        Logger.tip.info(category: "TIP", message: "spendSeed ready: \(spendSeed.count)")
-        let keyPair = try Curve25519.Signing.PrivateKey(rawRepresentation: spendSeed)
-        Logger.tip.info(category: "TIP", message: "Keypair ready")
-        let pkHex = keyPair.publicKey.rawRepresentation.hexEncodedString()
-        let registerSignature = try keyPair.signature(for: userIDHash)
-        Logger.tip.info(category: "TIP", message: "Signature ready: \(registerSignature.count)")
-        
-        let body = try TIPBody.registerSequencer(userID: myUserId, publicKey: pkHex)
-        let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
-        Logger.tip.info(category: "TIP", message: "`pin` ready: \(pin.count), will register")
-        
-#if DEBUG
-        Logger.tip.info(category: "TIP", message: "Register with plain salt: \(salt.base64RawURLEncodedString()), key: \(saltAESKey.base64RawURLEncodedString()), base64Salt: \(base64Salt), spendSeed: \(spendSeed.base64RawURLEncodedString()), pkHex: \(pkHex)")
-#endif
-        let account = try await SafeAPI.register(publicKey: pkHex,
-                                                 signature: registerSignature.base64RawURLEncodedString(),
-                                                 pin: pin,
-                                                 salt: base64Salt)
-        LoginManager.shared.setAccount(account)
-        Logger.tip.info(category: "TIP", message: "Local account is updated with registration")
-        AppGroupKeychain.encryptedSalt = encryptedSalt
-        Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+        var step1 = "PIN: \(pin.count)"
+        var step2 = ""
+        do {
+            let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
+            step1 += ", TIP Priv: \(tipPriv.count)"
+            
+            let salt = Data(withNumberOfSecuredRandomBytes: 32)!
+            let saltAESKey = try saltAESKey(pin: pinData, tipPriv: tipPriv)
+            step1 += ", salt: \(salt.count), saltAESKey: \(saltAESKey.count)"
+            
+            let encryptedSalt = try AESCryptor.encrypt(salt, with: saltAESKey)
+            step1 += ", encryptedSalt: \(encryptedSalt.count)"
+            
+            let pinTokenEncryptedSalt = try AESCryptor.encrypt(encryptedSalt, with: pinToken)
+            step1 += ", ptEncryptedSalt: \(pinTokenEncryptedSalt.count)"
+            
+            let spendSeed = try spendPriv(salt: salt, tipPriv: tipPriv)
+            step1 += ", spendSeed: \(spendSeed.count)"
+            
+            let keyPair = try Curve25519.Signing.PrivateKey(rawRepresentation: spendSeed)
+            step1 += ", KeyPair Ready"
+            
+            let pkHex = keyPair.publicKey.rawRepresentation.hexEncodedString()
+            step2 = "pkHex: \(pkHex.count)"
+            
+            let registerSignature = try keyPair.signature(for: userIDHash)
+            step2 += ", signature: \(registerSignature.count)"
+            
+            let body = try TIPBody.registerSequencer(userID: myUserId, publicKey: pkHex)
+            let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
+            step2 += ", pin ready"
+            
+            let account = try await SafeAPI.register(publicKey: pkHex,
+                                                     signature: registerSignature.base64RawURLEncodedString(),
+                                                     pin: pin,
+                                                     salt: pinTokenEncryptedSalt.base64RawURLEncodedString())
+            LoginManager.shared.setAccount(account)
+            Logger.tip.info(category: "TIP", message: "Local account is updated with registration")
+            AppGroupKeychain.encryptedSalt = encryptedSalt
+            Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+        } catch {
+            Crashes.trackError(error, properties: ["step1": step1, "step2": step2], attachments: nil)
+            reporter.report(error: error)
+            throw error
+        }
     }
     
     public static func spendPriv(pin: String) async throws -> Data {

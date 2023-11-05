@@ -82,7 +82,7 @@
 "appearance" = "外觀";
 "apply" = "應用";
 "asset_key" = "資產標識";
-"asset_migration_hint" = "您有未遷移的資產，點選開始遷移";
+"asset_migration_hint" = "您還有資產在舊的 Mixin 網路，點選檢視。";
 "asset_not_found" = "找不到該資產";
 "asset_type" = "資產型別";
 "assets" = "資產";

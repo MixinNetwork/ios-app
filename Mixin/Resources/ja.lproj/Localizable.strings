@@ -82,7 +82,7 @@
 "appearance" = "言語とテーマ";
 "apply" = "適用";
 "asset_key" = "資産のキー";
-"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
+"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "資産が存在しません";
 "asset_type" = "資産タイプ";
 "assets" = "資産";
@@ -303,6 +303,7 @@
 "deposit_attention" = "注意: 最初は必ず少額で入金テストをしてください。";
 "deposit_confirmation" = "入金した仮想通貨は、%dブロック確認後に着金します";
 "deposit_confirmation_count" = "入金した仮想通貨は、%dブロック確認後に着金します";
+"deposit_hash" = "Deposit Hash";
 "deposit_reserve" = "最初は、%@以上の金額を入金してください";
 "deposit_tip_btc" = "このアドレスはビットコインのみサポートしています";
 "deposit_tip_common" = "このアドレスは%@のみサポートしています";
@@ -1038,6 +1039,7 @@
 "withdrawal_addr_new" = "新しい%@アドレス";
 "withdrawal_addr_no_memo_or_tag" = "宛先タグ、ID番号、またはメモを入力する必要がある場合は、「%@」に設定することができます。";
 "withdrawal_address_tips" = "新しいアドレスへの最初の出金は必ず少額で行ってください。アドレスが間違っていると資産は失われます。";
+"withdrawal_hash" = "Withdrawal Hash";
 "withdrawal_label" = "ラベル (例. 取引所, ウォレットなど)";
 "withdrawal_memo" = "メモ";
 "withdrawal_minimum_amount" = "最小出金額は %1$@ %2$@です";

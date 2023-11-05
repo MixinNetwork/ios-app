@@ -82,7 +82,7 @@
 "appearance" = "Appearance";
 "apply" = "Apply";
 "asset_key" = "Asset Key";
-"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
+"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Asset not found.";
 "asset_type" = "Asset Type";
 "assets" = "ASSETS";
@@ -303,6 +303,7 @@
 "deposit_attention" = "Please try a small amount for the first deposit.";
 "deposit_confirmation" = "Deposit will arrive %d block confirmation";
 "deposit_confirmation_count" = "Deposit will arrive %d block confirmations";
+"deposit_hash" = "Deposit Hash";
 "deposit_reserve" = "Deposit at least %@ for the first time.";
 "deposit_tip_btc" = "This address only supports BTC.";
 "deposit_tip_common" = "This address only supports %@.";
@@ -1038,6 +1039,7 @@
 "withdrawal_addr_new" = "New %@ Address";
 "withdrawal_addr_no_memo_or_tag" = "If you are required to fill in Destination Tag or ID Number or notes, you can %@.";
 "withdrawal_address_tips" = "For the first withdrawal to a new address, please try small amounts! If you withdraw the assets to the wrong address, that would not be recovered!";
+"withdrawal_hash" = "Withdrawal Hash";
 "withdrawal_label" = "Label (e.g. exchanges, wallets, etc.)";
 "withdrawal_memo" = "Memo";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %1$@ %2$@";

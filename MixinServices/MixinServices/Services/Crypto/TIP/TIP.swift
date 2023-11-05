@@ -406,6 +406,7 @@ extension TIP {
     }
     
     public static func registerToSafe(pin: String) async throws {
+        Logger.tip.info(category: "TIP", message: "Begin register to safe")
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
         }
@@ -420,25 +421,33 @@ extension TIP {
         }
         let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
         
+        Logger.tip.info(category: "TIP", message: "TIP Priv ready: \(tipPriv.count)")
         let salt = Data(withNumberOfSecuredRandomBytes: 32)!
         let saltAESKey = try saltAESKey(pin: pinData, tipPriv: tipPriv)
+        Logger.tip.info(category: "TIP", message: "Salt AES key ready: \(salt.count), \(saltAESKey.count)")
         let encryptedSalt = try AESCryptor.encrypt(salt, with: saltAESKey)
+        Logger.tip.info(category: "TIP", message: "Salt encrypted with AES: \(encryptedSalt.count)")
         let pinTokenEncryptedSalt = try AESCryptor.encrypt(encryptedSalt, with: pinToken)
+        Logger.tip.info(category: "TIP", message: "Salt encrypted with pinToken: \(pinTokenEncryptedSalt.count)")
         let base64Salt = pinTokenEncryptedSalt.base64RawURLEncodedString()
         
         let spendSeed = try spendPriv(salt: salt, tipPriv: tipPriv)
+        Logger.tip.info(category: "TIP", message: "spendSeed ready: \(spendSeed.count)")
         let keyPair = try Curve25519.Signing.PrivateKey(rawRepresentation: spendSeed)
+        Logger.tip.info(category: "TIP", message: "Keypair ready")
         let pkHex = keyPair.publicKey.rawRepresentation.hexEncodedString()
-        let registerSignature = try keyPair.signature(for: userIDHash).base64RawURLEncodedString()
+        let registerSignature = try keyPair.signature(for: userIDHash)
+        Logger.tip.info(category: "TIP", message: "Signature ready: \(registerSignature.count)")
         
         let body = try TIPBody.registerSequencer(userID: myUserId, publicKey: pkHex)
         let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
+        Logger.tip.info(category: "TIP", message: "`pin` ready: \(pin.count), will register")
         
 #if DEBUG
         Logger.tip.info(category: "TIP", message: "Register with plain salt: \(salt.base64RawURLEncodedString()), key: \(saltAESKey.base64RawURLEncodedString()), base64Salt: \(base64Salt), spendSeed: \(spendSeed.base64RawURLEncodedString()), pkHex: \(pkHex)")
 #endif
         let account = try await SafeAPI.register(publicKey: pkHex,
-                                                 signature: registerSignature,
+                                                 signature: registerSignature.base64RawURLEncodedString(),
                                                  pin: pin,
                                                  salt: base64Salt)
         LoginManager.shared.setAccount(account)
@@ -509,6 +518,7 @@ extension TIP {
         if let savedTIPPriv = AppGroupKeychain.encryptedTIPPriv {
             Logger.tip.info(category: "TIP", message: "Using saved priv: \(savedTIPPriv.count)")
             let aesKey = try await getAESKey(pinData: pinData, pinToken: pinToken)
+            Logger.tip.warn(category: "TIP", message: "TIP Priv AES key ready: \(aesKey.count)")
             guard let tipPrivKey = SHA3_256.hash(data: aesKey + pinData) else {
                 throw Error.unableToHashTIPPrivKey
             }

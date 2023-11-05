@@ -62,16 +62,15 @@ class SnapshotViewController: UIViewController {
             headerContentStackView.spacing = 2
         }
         layoutTableHeaderView()
-        makeContents()
         tableView.backgroundColor = .background
         tableView.separatorStyle = .none
         tableView.register(R.nib.snapshotColumnCell)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.reloadData()
+        reloadData()
         updateTableViewContentInsetBottom()
-        fetchThatTimePrice()
-        fetchTransaction()
+        reloadPrices()
+        reloadSnapshotIfNeeded()
         
         assetIconView.isUserInteractionEnabled = true
         assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
@@ -161,7 +160,7 @@ extension SnapshotViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch columns[indexPath.row].key {
-        case .fromUsername, .toUsername:
+        case .from, .to:
             guard let id = snapshot.opponentUserID, !id.isEmpty else {
                 return
             }
@@ -202,8 +201,8 @@ extension SnapshotViewController {
             
             case id
             case transactionHash
-            case fromUsername
-            case toUsername
+            case from
+            case to
             case depositHash
             case withdrawalHash
             case depositProgress
@@ -216,14 +215,14 @@ extension SnapshotViewController {
                     return R.string.localizable.transaction_id()
                 case .transactionHash:
                     return R.string.localizable.transaction_hash()
-                case .fromUsername:
+                case .from:
                     return R.string.localizable.from()
-                case .toUsername:
+                case .to:
                     return R.string.localizable.to()
                 case .depositHash:
-                    return "DEPOSIT HASH"
+                    return R.string.localizable.deposit_hash()
                 case .withdrawalHash:
-                    return "WITHDRAWAL HASH"
+                    return R.string.localizable.withdrawal_hash()
                 case .depositProgress:
                     return R.string.localizable.status()
                 case .createdAt:
@@ -240,7 +239,7 @@ extension SnapshotViewController {
         
         var allowsCopy: Bool {
             switch key {
-            case .id, .transactionHash, .memo, .fromUsername, .toUsername:
+            case .id, .transactionHash, .memo, .from, .to:
                 return true
             default:
                 return false
@@ -263,7 +262,7 @@ extension SnapshotViewController {
         tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFitting(targetSize).height
     }
     
-    private func fetchThatTimePrice() {
+    private func reloadPrices() {
         AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self](result) in
             guard let self = self else {
                 return
@@ -279,52 +278,34 @@ extension SnapshotViewController {
         }
     }
     
-    private func fetchTransaction() {
-//        var shouldRefreshSnapshot = snapshot.snapshotHash.isNilOrEmpty
-//        if snapshot.type == SnapshotType.withdrawal.rawValue && snapshot.transactionHash.isNilOrEmpty {
-//            shouldRefreshSnapshot = true
-//        } else if snapshot.type == SnapshotType.pendingDeposit.rawValue {
-//            let assetId = token.assetId
-//            let snapshotId = snapshot.snapshotId
-//            for entry in token.depositEntries {
-//                AssetAPI.pendingDeposits(assetId: assetId, destination: entry.destination, tag: entry.tag) { [weak self](result) in
-//                    switch result {
-//                    case let .success(deposits):
-//                        DispatchQueue.global().async {
-//                            guard let snapshotItem = SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits, snapshotId: snapshotId) else {
-//                                return
-//                            }
-//                            DispatchQueue.main.async {
-//                                self?.snapshot = snapshotItem
-//                                self?.makeContents()
-//                                self?.tableView.reloadData()
-//                            }
-//                        }
-//                    case .failure:
-//                        break
-//                    }
-//                }
-//            }
-//        }
-//        if shouldRefreshSnapshot {
-//            SnapshotAPI.snapshot(snapshotId: snapshot.snapshotId) { [weak self](result) in
-//                switch result {
-//                case let .success(snapshot):
-//                    DispatchQueue.global().async {
-//                        guard let snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot) else {
-//                            return
-//                        }
-//                        DispatchQueue.main.async {
-//                            self?.snapshot = snapshotItem
-//                            self?.makeContents()
-//                            self?.tableView.reloadData()
-//                        }
-//                    }
-//                case .failure:
-//                    break
-//                }
-//            }
-//        }
+    private func reloadSnapshotIfNeeded() {
+        if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
+            SafeAPI.snapshot(with: snapshot.id, queue: .global()) { [weak self] result in
+                switch result {
+                case let .success(snapshot):
+                    self?.reloadData(with: snapshot)
+                case .failure:
+                    break
+                }
+            }
+        } else if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
+            Task { [weak self, assetID=token.assetID, snapshotID=snapshot.id] in
+                guard let chainID = TokenDAO.shared.chainID(ofAssetWith: assetID) else {
+                    return
+                }
+                let entries = DepositEntryDAO.shared.entries(ofChainWith: chainID)
+                for entry in entries {
+                    let deposits = try await SafeAPI.deposits(assetID: assetID,
+                                                              destination: entry.destination,
+                                                              tag: entry.tag)
+                    SafeSnapshotDAO.shared.saveSnapshots(with: assetID, pendingDeposits: deposits)
+                    if let deposit = deposits.first(where: { $0.id == snapshotID }) {
+                        let snapshot = SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
+                        self?.reloadData(with: snapshot)
+                    }
+                }
+            }
+        }
     }
     
     private func fiatMoneyValue(usdPrice: Decimal) -> String {
@@ -332,17 +313,31 @@ extension SnapshotViewController {
         return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
     }
     
-    private func makeContents() {
+    private func reloadData(with snapshot: SafeSnapshot) {
+        guard let item = SafeSnapshotDAO.shared.saveAndFetch(snapshot: snapshot) else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.snapshot = item
+            self.reloadData()
+        }
+    }
+    
+    private func reloadData() {
         var columns: [Column] = [
             Column(key: .id, value: snapshot.id),
             Column(key: .transactionHash, value: snapshot.transactionHash),
         ]
         if let name = snapshot.opponentFullname {
             if snapshot.amount.hasMinusPrefix {
-                columns.append(Column(key: .toUsername, value: name))
+                columns.append(Column(key: .to, value: name))
             } else {
-                columns.append(Column(key: .fromUsername, value: name))
+                columns.append(Column(key: .from, value: name))
             }
+        } else if let deposit = snapshot.deposit {
+            columns.append(Column(key: .depositHash, value: deposit.hash))
+        } else if let withdrawal = snapshot.withdrawal {
+            columns.append(Column(key: .withdrawalHash, value: withdrawal.hash))
         }
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue, let completed = snapshot.confirmations {
             let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
@@ -353,6 +348,7 @@ extension SnapshotViewController {
             columns.append(Column(key: .memo, value: snapshot.memo))
         }
         self.columns = columns
+        tableView.reloadData()
     }
     
 }

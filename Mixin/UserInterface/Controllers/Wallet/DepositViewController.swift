@@ -64,7 +64,7 @@ class DepositViewController: UIViewController {
     }
     
     private func reloadEntry(token: TokenItem) {
-        if let entry = DepositEntryDAO.shared.entry(ofChainWith: token.chainID) {
+        if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: token.chainID) {
             DispatchQueue.main.async {
                 guard token.assetID == self.token.assetID, entry.isSignatureValid else {
                     return

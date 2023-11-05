@@ -23,4 +23,8 @@ public final class TokenExtraDAO: UserDatabaseDAO {
         ])
     }
     
+    public func nullifyAllBalances() {
+        db.execute(sql: "UPDATE tokens_extra SET balance = NULL")
+    }
+    
 }

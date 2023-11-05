@@ -82,7 +82,7 @@
 "appearance" = "Вид";
 "apply" = "Подать заявление";
 "asset_key" = "Ключ актива";
-"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
+"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
 "assets" = "АКТИВЫ";
@@ -303,6 +303,7 @@
 "deposit_attention" = "Пожалуйста, попробуйте небольшую сумму для первого депозита.";
 "deposit_confirmation" = "Депозит придет %d подтверждение блокировки";
 "deposit_confirmation_count" = "Депозит получит %d подтверждения блокировки";
+"deposit_hash" = "Deposit Hash";
 "deposit_reserve" = "Внесите не менее %@ в первый раз.";
 "deposit_tip_btc" = "Этот адрес поддерживает только BTC.";
 "deposit_tip_common" = "Этот адрес поддерживает только %@.";
@@ -1038,6 +1039,7 @@
 "withdrawal_addr_new" = "Новый адрес %@";
 "withdrawal_addr_no_memo_or_tag" = "Если вам требуется заполнить тег назначения или номер ID или заметки, вы можете %@.";
 "withdrawal_address_tips" = "Для первого вывода на новый адрес попробуйте небольшие суммы! Если вы выведете активы не на тот адрес, они не будут восстановлены!";
+"withdrawal_hash" = "Withdrawal Hash";
 "withdrawal_label" = "Ярлык (например, биржи, кошельки и т.д.)";
 "withdrawal_memo" = "Памятка";
 "withdrawal_minimum_amount" = "Минимальная сумма вывода: %1$@ %2$@.";

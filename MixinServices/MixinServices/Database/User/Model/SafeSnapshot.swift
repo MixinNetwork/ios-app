@@ -22,6 +22,8 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case confirmations
         case openingBalance = "opening_balance"
         case closingBalance = "closing_balance"
+        case deposit
+        case withdrawal
     }
     
     public let id: String
@@ -37,6 +39,8 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let confirmations: Int?
     public let openingBalance: String?
     public let closingBalance: String?
+    public let deposit: Deposit?
+    public let withdrawal: Withdrawal?
     
     public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     
@@ -45,7 +49,8 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
         traceID: String?, confirmations: Int?,
-        openingBalance: String?, closingBalance: String?
+        openingBalance: String?, closingBalance: String?,
+        deposit: Deposit?, withdrawal: Withdrawal?
     ) {
         self.id = id
         self.type = type
@@ -60,6 +65,8 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.confirmations = confirmations
         self.openingBalance = openingBalance
         self.closingBalance = closingBalance
+        self.deposit = deposit
+        self.withdrawal = withdrawal
     }
     
     public init(assetID: String, pendingDeposit: SafePendingDeposit) {
@@ -76,6 +83,8 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.confirmations = pendingDeposit.confirmations
         self.openingBalance = nil
         self.closingBalance = nil
+        self.deposit = nil
+        self.withdrawal = nil
     }
     
 }
@@ -83,5 +92,29 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
 extension SafeSnapshot: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "safe_snapshots"
+    
+}
+
+extension SafeSnapshot {
+    
+    public struct Deposit: Codable {
+        
+        public enum CodingKeys: String, CodingKey {
+            case hash = "deposit_hash"
+        }
+        
+        public let hash: String
+        
+    }
+    
+    public struct Withdrawal: Codable {
+        
+        public enum CodingKeys: String, CodingKey {
+            case hash = "withdrawal_hash"
+        }
+        
+        public let hash: String
+        
+    }
     
 }

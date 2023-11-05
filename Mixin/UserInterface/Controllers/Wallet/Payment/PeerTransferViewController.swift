@@ -246,7 +246,9 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                             traceID: traceID,
                                             confirmations: nil,
                                             openingBalance: nil,
-                                            closingBalance: nil)
+                                            closingBalance: nil,
+                                            deposit: nil,
+                                            withdrawal: nil)
                 let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
                 let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
                 OutputDAO.shared.spendOutputs(with: spendingOutputIDs) { db in

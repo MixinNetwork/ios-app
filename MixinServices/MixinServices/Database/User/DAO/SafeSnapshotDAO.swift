@@ -16,13 +16,21 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
             LEFT JOIN users u ON s.opponent_id = u.user_id
     
     """
+    private static let queryWithIDSQL = querySQL + "WHERE s.snapshot_id = ?"
     
     public func snapshotItem(id: String) -> SafeSnapshotItem? {
-        db.select(with: Self.querySQL + "WHERE s.snapshot_id = ?", arguments: [id])
+        db.select(with: Self.queryWithIDSQL, arguments: [id])
     }
     
     public func save(snapshot: SafeSnapshot) {
         db.save(snapshot)
+    }
+    
+    public func saveAndFetch(snapshot: SafeSnapshot) -> SafeSnapshotItem? {
+        try? db.writeAndReturnError { db in
+            try snapshot.save(db)
+            return try SafeSnapshotItem.fetchOne(db, sql: Self.queryWithIDSQL, arguments: [snapshot.id])
+        }
     }
     
     public func snapshots(

@@ -32,7 +32,17 @@ final class RegisterToSafeViewController: UIViewController {
             case let .success(account):
                 LoginManager.shared.setAccount(account, updateUserTable: false)
                 Task {
-                    if let context = try await TIP.checkCounter(with: account) {
+                    let interruptionContext: TIP.InterruptionContext?
+                    do {
+                        interruptionContext = try await TIP.checkCounter(with: account)
+                    } catch {
+                        Logger.general.warn(category: "RegisterToSafe", message: "Failed to detect interruption: \(error)")
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            self.reloadAccount()
+                        }
+                        return
+                    }
+                    if let context = interruptionContext {
                         await MainActor.run {
                             self.authenticationViewController?.presentingViewController?.dismiss(animated: true) {
                                 let intro = TIPIntroViewController(context: context)

@@ -303,6 +303,7 @@
 "deposit_attention" = "Prueba con una pequeña cantidad para el primer depósito.";
 "deposit_confirmation" = "El depósito llegará %d confirmación de bloqueo";
 "deposit_confirmation_count" = "El depósito llegará %d bloquear confirmaciones";
+"deposit_hash" = "Deposit Hash";
 "deposit_reserve" = "Deposita al menos %@ por primera vez.";
 "deposit_tip_btc" = "Esta dirección solo admite BTC.";
 "deposit_tip_common" = "Esta dirección solo admite %@.";
@@ -1038,6 +1039,7 @@
 "withdrawal_addr_new" = "Nueva dirección de %@";
 "withdrawal_addr_no_memo_or_tag" = "Si se requiere que llenes la Etiqueta de destino o número de ID o notas, puedes %@.";
 "withdrawal_address_tips" = "Para el primer retiro a una nueva dirección, ¡prueba con cantidades pequeñas! Si retiras los activos a la dirección incorrecta, ¡no se recuperarán!";
+"withdrawal_hash" = "Withdrawal Hash";
 "withdrawal_label" = "Etiqueta (por ejemplo, intercambios, carteras, etc.)";
 "withdrawal_memo" = "Nota";
 "withdrawal_minimum_amount" = "El importe mínimo de retiro es %1$@ %2$@";

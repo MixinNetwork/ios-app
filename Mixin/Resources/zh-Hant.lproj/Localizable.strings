@@ -303,6 +303,7 @@
 "deposit_attention" = "首次充值建議小額嘗試！";
 "deposit_confirmation" = "充值到賬需要 %d 個區塊確認。";
 "deposit_confirmation_count" = "充值到賬需要 %d 個區塊確認。";
+"deposit_hash" = "充值雜湊";
 "deposit_reserve" = "首次充值至少 %@ ！";
 "deposit_tip_btc" = "該充值地址僅支援 BTC。";
 "deposit_tip_common" = "該充值地址僅支援 %@。";
@@ -1038,6 +1039,7 @@
 "withdrawal_addr_new" = "新 %@ 地址";
 "withdrawal_addr_no_memo_or_tag" = "如果你需要填寫地址標籤、數字 ID 或備註，%@。";
 "withdrawal_address_tips" = "首次提現到新地址，建議小額嘗試！如果您提現到錯誤的地址資產將無法找回！";
+"withdrawal_hash" = "提現雜湊";
 "withdrawal_label" = "地址名稱，例如 OceanOne";
 "withdrawal_memo" = "Memo（備註）";
 "withdrawal_minimum_amount" = "提現金額最小 %1$@ %2$@";

@@ -303,6 +303,7 @@
 "deposit_attention" = "首次充值建议小额尝试！";
 "deposit_confirmation" = "充值到账需要 %d 个区块确认。";
 "deposit_confirmation_count" = "充值到账需要 %d 个区块确认。";
+"deposit_hash" = "充值哈希";
 "deposit_reserve" = "首次充值至少 %@ ！";
 "deposit_tip_btc" = "该充值地址仅支持 BTC。";
 "deposit_tip_common" = "该充值地址仅支持 %@。";
@@ -1038,6 +1039,7 @@
 "withdrawal_addr_new" = "新 %@ 地址";
 "withdrawal_addr_no_memo_or_tag" = "如果你需要填写地址标签、数字 ID 或备注，%@。";
 "withdrawal_address_tips" = "首次提现到新地址，建议小额尝试！如果您提现到错误的地址资产将无法找回！";
+"withdrawal_hash" = "提现哈希";
 "withdrawal_label" = "地址名称，例如 OceanOne";
 "withdrawal_memo" = "Memo（备注）";
 "withdrawal_minimum_amount" = "提现金额最小 %1$@ %2$@";

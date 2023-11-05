@@ -82,7 +82,7 @@
 "appearance" = "言語とテーマ";
 "apply" = "適用";
 "asset_key" = "資産のキー";
-"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
+"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "資産が存在しません";
 "asset_type" = "資産タイプ";
 "assets" = "資産";

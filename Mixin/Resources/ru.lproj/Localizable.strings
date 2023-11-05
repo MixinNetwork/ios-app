@@ -82,7 +82,7 @@
 "appearance" = "Вид";
 "apply" = "Подать заявление";
 "asset_key" = "Ключ актива";
-"asset_migration_hint" = "You have unmigrated assets, click to start the migration";
+"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
 "assets" = "АКТИВЫ";

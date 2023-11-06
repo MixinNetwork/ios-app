@@ -187,6 +187,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                        senderGhostKey.keys.joined(separator: ","),
                                        senderGhostKey.mask,
                                        memo,
+                                       "",
                                        &error)
                 if let error {
                     throw error

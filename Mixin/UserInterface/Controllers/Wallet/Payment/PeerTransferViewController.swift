@@ -267,17 +267,17 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 }
             } catch {
                 Logger.general.error(category: "PeerTransfer", message: "Failed to transfer: \(error)")
-                let allowRetrying: Bool
+                let action: AuthenticationViewController.RetryAction
                 switch error {
                 case MixinAPIError.malformedPin, MixinAPIError.incorrectPin, MixinAPIError.insufficientPool, MixinAPIError.internalServerError:
-                    allowRetrying = true
+                    action = .inputPINAgain
                 case MixinAPIError.notRegisteredToSafe:
-                    allowRetrying = false
+                    action = .notAllowed
                 default:
-                    allowRetrying = false
+                    action = .notAllowed
                 }
                 await MainActor.run {
-                    completion(.failure(error: error, allowsRetrying: allowRetrying))
+                    completion(.failure(error: error, retry: action))
                 }
             }
         }

@@ -3,9 +3,15 @@ import MixinServices
 
 final class AuthenticationViewController: UIViewController {
     
+    enum RetryAction {
+        case notAllowed
+        case inputPINAgain
+        case custom(() -> Void)
+    }
+    
     enum AuthenticationResult {
         case success
-        case failure(error: Error, allowsRetrying: Bool)
+        case failure(error: Error, retry: RetryAction)
     }
     
     @IBOutlet weak var backgroundView: UIView!
@@ -29,6 +35,8 @@ final class AuthenticationViewController: UIViewController {
     
     private weak var authenticateWithBiometryButton: UIButton?
     private weak var failureView: UIView?
+    
+    private var customTryAgainAction: (() -> Void)?
     
     private var canAuthenticateWithBiometry: Bool {
         guard intentViewController.options.contains(.allowsBiometricAuthentication) else {
@@ -214,6 +222,7 @@ final class AuthenticationViewController: UIViewController {
                 imageView.imageView.sd_setImage(with: url)
             }
         }
+        UIView.performWithoutAnimation(titleStackView.layoutIfNeeded)
     }
     
     @objc private func presentationViewControllerWillDismissPresentedViewController(_ notification: Notification) {
@@ -258,35 +267,38 @@ final class AuthenticationViewController: UIViewController {
             switch result {
             case .success:
                 onSuccess?()
-            case let .failure(error, allowsRetrying):
+            case let .failure(error, retryAction):
                 if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {
                     PINVerificationFailureHandler.handle(error: error) { description in
-                        self.layoutForAuthenticationFailure(description: description,
-                                                            allowsRetrying: allowsRetrying)
+                        self.layoutForAuthenticationFailure(description: description, retryAction: retryAction)
                     }
                 } else {
-                    self.layoutForAuthenticationFailure(description: error.localizedDescription,
-                                                        allowsRetrying: allowsRetrying)
+                    self.layoutForAuthenticationFailure(description: error.localizedDescription, retryAction: retryAction)
                 }
             }
         }
     }
     
-    private func layoutForAuthenticationFailure(description: String, allowsRetrying: Bool) {
+    private func layoutForAuthenticationFailure(description: String, retryAction: RetryAction) {
         let failureView = R.nib.authenticationFailureView(withOwner: nil)!
         failureView.label.text = description
-        if allowsRetrying {
-            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
-            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
-        } else {
+        switch retryAction {
+        case .notAllowed:
             failureView.continueButton.setTitle(R.string.localizable.ok(), for: .normal)
             failureView.continueButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
+        case .inputPINAgain:
+            customTryAgainAction = nil
+            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
+        case .custom(let action):
+            customTryAgainAction = action
+            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
         }
         self.view.addSubview(failureView)
         failureView.snp.makeConstraints { make in
             make.top.equalTo(self.pinFieldWrapperView.snp.top)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
         }
         self.failureView = failureView
         self.view.layoutIfNeeded()
@@ -403,9 +415,13 @@ extension AuthenticationViewController {
         authenticateWithBiometryButton?.isHidden = false
         failureView?.removeFromSuperview()
         pinFieldWrapperHeightConstraint.priority = .almostRequired
-        UIView.animate(withDuration: 0.3) {
-            self.pinField.becomeFirstResponder()
-            self.view.layoutIfNeeded()
+        if let action = customTryAgainAction {
+            action()
+        } else {
+            UIView.animate(withDuration: 0.3) {
+                self.pinField.becomeFirstResponder()
+                self.view.layoutIfNeeded()
+            }
         }
     }
     

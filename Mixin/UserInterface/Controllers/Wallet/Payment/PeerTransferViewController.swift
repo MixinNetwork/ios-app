@@ -7,7 +7,7 @@ final class PeerTransferViewController: UIViewController {
     enum Error: Swift.Error, LocalizedError {
         
         case insufficientBalance(hasMoreOutputs: Bool)
-        case nullSignature
+        case sign(Swift.Error?)
         
         var errorDescription: String? {
             switch self {
@@ -17,8 +17,8 @@ final class PeerTransferViewController: UIViewController {
                 } else {
                     return R.string.localizable.insufficient_balance()
                 }
-            case .nullSignature:
-                return "Null signature"
+            case .sign(let error):
+                return error?.localizedDescription ?? "Null signature"
             }
         }
         
@@ -196,8 +196,8 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 let inputKeys = String(data: inputKeysData, encoding: .utf8)
                 let viewKeys = try await SafeAPI.requestTransaction(id: traceID, raw: tx, senderID: senderID).joined(separator: ",")
                 let signedTx = KernelSignTx(tx, inputKeys, viewKeys, spendKey, &error)
-                guard let signedTx else {
-                    throw error ?? Error.nullSignature
+                guard let signedTx, error == nil else {
+                    throw Error.sign(error)
                 }
                 let now = Date().toUTCString()
                 let changeOutput: Output?
@@ -268,17 +268,17 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 }
             } catch {
                 Logger.general.error(category: "PeerTransfer", message: "Failed to transfer: \(error)")
-                let allowRetrying: Bool
+                let action: AuthenticationViewController.RetryAction
                 switch error {
                 case MixinAPIError.malformedPin, MixinAPIError.incorrectPin, MixinAPIError.insufficientPool, MixinAPIError.internalServerError:
-                    allowRetrying = true
+                    action = .inputPINAgain
                 case MixinAPIError.notRegisteredToSafe:
-                    allowRetrying = false
+                    action = .notAllowed
                 default:
-                    allowRetrying = false
+                    action = .notAllowed
                 }
                 await MainActor.run {
-                    completion(.failure(error: error, allowsRetrying: allowRetrying))
+                    completion(.failure(error: error, retry: action))
                 }
             }
         }

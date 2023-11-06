@@ -3,14 +3,14 @@ import MixinServices
 
 final class RegisterToSafeViewController: UIViewController {
     
-    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let activityIndicator = ActivityIndicatorView()
     
     private var willRegisterToSafe = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.backgroundColor = .background
-        activityIndicator.tintColor = .text
+        activityIndicator.tintColor = .accessoryText
         view.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -58,7 +58,7 @@ final class RegisterToSafeViewController: UIViewController {
                                     self.authenticationViewController?.presentingViewController?.dismiss(animated: true)
                                 } else {
                                     self.willRegisterToSafe = true
-                                    self.activityIndicator.removeFromSuperview()
+                                    self.activityIndicator.stopAnimating()
                                     if let authentication = self.authenticationViewController {
                                         authentication.reloadTitleView()
                                         authentication.beginPINInputting()
@@ -124,7 +124,16 @@ extension RegisterToSafeViewController: AuthenticationIntentViewController {
                 }
             } catch {
                 await MainActor.run {
-                    completion(.failure(error: error, allowsRetrying: true))
+                    let action: AuthenticationViewController.RetryAction = .custom({
+                        self.willRegisterToSafe = false
+                        self.activityIndicator.startAnimating()
+                        if let authentication = self.authenticationViewController {
+                            authentication.reloadTitleView()
+                            authentication.endPINInputting()
+                        }
+                        self.reloadAccount()
+                    })
+                    completion(.failure(error: error, retry: action))
                 }
             }
         }

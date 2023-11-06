@@ -2,7 +2,6 @@ import Foundation
 import CryptoKit
 import AppCenterCrashes
 import Alamofire
-import Tip
 
 public enum TIP {
     
@@ -94,6 +93,7 @@ public enum TIP {
         case hashTIPPrivToPrivSeed
         case invalidUserID
         case noSalt
+        case invalidSize
         #if DEBUG
         case mock
         #endif
@@ -535,7 +535,10 @@ extension TIP {
                 throw Error.unableToHashTIPPrivKey
             }
             let decrypted = try AESCryptor.decrypt(savedTIPPriv, with: tipPrivKey)
-            if decrypted.count == 64 {
+            switch decrypted.count {
+            case 32:
+                return decrypted
+            case 64:
                 // In history versions aggSig(64 bytes) was saved in Keychain instead of TIP Priv(32 bytes)
                 // Migrate to TIP priv once found
                 guard let tipPriv = SHA3_256.hash(data: decrypted) else {
@@ -545,17 +548,22 @@ extension TIP {
                 AppGroupKeychain.encryptedTIPPriv = encrypted
                 Logger.tip.info(category: "TIP", message: "TIP Priv is migrated from: \(decrypted.count), to: \(tipPriv.count)")
                 return tipPriv
-            } else {
-                return decrypted
+            default:
+                AppGroupKeychain.encryptedTIPPriv = nil
+                let sizeInfo = [
+                    "keychain": "\(savedTIPPriv.count)",
+                    "key": "\(tipPrivKey.count)",
+                    "decrypted": "\(decrypted.count)"
+                ]
+                Crashes.trackError(Error.invalidSize, properties: sizeInfo, attachments: nil)
             }
-        } else {
-            Logger.tip.info(category: "TIP", message: "Using new created priv")
-            return try await createTIPPriv(pin: pin,
-                                           failedSigners: [],
-                                           legacyPIN: nil,
-                                           forRecover: true,
-                                           progressHandler: nil)
         }
+        Logger.tip.info(category: "TIP", message: "Using new created priv")
+        return try await createTIPPriv(pin: pin,
+                                       failedSigners: [],
+                                       legacyPIN: nil,
+                                       forRecover: true,
+                                       progressHandler: nil)
     }
     
     static func pinIterator() -> UInt64 {

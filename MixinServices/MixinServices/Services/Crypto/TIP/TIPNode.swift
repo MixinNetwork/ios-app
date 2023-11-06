@@ -1,6 +1,7 @@
 import Foundation
-import Tip
+import AppCenterCrashes
 import Alamofire
+import Tip
 
 fileprivate let ephemeralGrace = 128 * UInt64(secondsPerDay) * UInt64(NSEC_PER_SEC)
 fileprivate let maximumRetries: UInt64 = 2
@@ -24,6 +25,7 @@ public enum TIPNode {
         case notAllSignersSucceed(_ numberOfSuccess: Int)
         case notEnoughPartials
         case recoverSignature(NSError?)
+        case invalidSignatureSize(Int)
         case watchRetryLimited
         case invalidSignResponse(Int)
         case differentIdentity
@@ -189,8 +191,14 @@ public enum TIPNode {
         let commitments = TIPConfig.current.commitments.joined(separator: ",")
         
         var error: NSError?
-        guard let signature = TipRecoverSignature(hexSigs, commitments, assignor, allSigners.count, &error) else {
+        let signature = TipRecoverSignature(hexSigs, commitments, assignor, allSigners.count, &error)
+        guard let signature, error == nil else {
             throw Error.recoverSignature(error)
+        }
+        guard signature.count == 64 else {
+            let error = Error.invalidSignatureSize(signature.count)
+            Crashes.trackError(error, properties: ["size": "\(signature.count)"], attachments: nil)
+            throw error
         }
         let maxCounter = data.map(\.counter).max() ?? data[0].counter
         return (signature, maxCounter)
@@ -340,7 +348,7 @@ public enum TIPNode {
             throw response.error
         case .success(let response):
             var error: NSError?
-            guard let signerPk = TipPubKeyFromBase58(signer.identity, &error) else {
+            guard let signerPk = TipPubKeyFromBase58(signer.identity, &error), error == nil else {
                 throw Error.signTIPNode(error)
             }
             let msg = try JSONEncoder.default.encode(response.data)

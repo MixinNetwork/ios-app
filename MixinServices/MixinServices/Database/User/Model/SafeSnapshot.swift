@@ -108,9 +108,17 @@ extension SafeSnapshot {
         
         public enum CodingKeys: String, CodingKey {
             case hash = "deposit_hash"
+            case sender
         }
         
         public let hash: String
+        public let sender: String
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.hash = try container.decode(String.self, forKey: .hash)
+            self.sender = try container.decodeIfPresent(String.self, forKey: .sender) ?? ""
+        }
         
     }
     
@@ -118,9 +126,17 @@ extension SafeSnapshot {
         
         public enum CodingKeys: String, CodingKey {
             case hash = "withdrawal_hash"
+            case receiver
         }
         
         public let hash: String
+        public let receiver: String
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.hash = try container.decode(String.self, forKey: .hash)
+            self.receiver = try container.decodeIfPresent(String.self, forKey: .receiver) ?? ""
+        }
         
     }
     

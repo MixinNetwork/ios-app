@@ -13,6 +13,8 @@ class SnapshotViewController: UIViewController {
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
+    private let notApplicable = "N/A"
+    
     private var token: TokenItem
     private var snapshot: SafeSnapshotItem
     private var columns: [Column] = []
@@ -148,8 +150,14 @@ extension SnapshotViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
-        cell.titleLabel.text = columns[indexPath.row].key.localized
-        cell.subtitleLabel.text = columns[indexPath.row].value
+        let column = columns[indexPath.row]
+        cell.titleLabel.text = column.key.localized
+        cell.subtitleLabel.text = column.value
+        if column.style.contains(.unavailable) {
+            cell.subtitleLabel.textColor = R.color.text_accessory()
+        } else {
+            cell.subtitleLabel.textColor = R.color.text()
+        }
         return cell
     }
     
@@ -234,8 +242,17 @@ extension SnapshotViewController {
             
         }
         
+        struct Style: OptionSet {
+            
+            let rawValue: Int
+            
+            static let unavailable = Style(rawValue: 1 << 0)
+            
+        }
+        
         let key: Key
         let value: String
+        let style: Style
         
         var allowsCopy: Bool {
             switch key {
@@ -244,6 +261,12 @@ extension SnapshotViewController {
             default:
                 return false
             }
+        }
+        
+        init(key: Key, value: String, style: Style = []) {
+            self.key = key
+            self.value = value
+            self.style = style
         }
         
     }
@@ -328,25 +351,56 @@ extension SnapshotViewController {
             Column(key: .id, value: snapshot.id),
             Column(key: .transactionHash, value: snapshot.transactionHash),
         ]
-        if let name = snapshot.opponentFullname {
-            if snapshot.amount.hasMinusPrefix {
-                columns.append(Column(key: .to, value: name))
-            } else {
-                columns.append(Column(key: .from, value: name))
-            }
-        } else if let deposit = snapshot.deposit {
+        if let deposit = snapshot.deposit {
             columns.append(Column(key: .depositHash, value: deposit.hash))
+            
+            let style: Column.Style
+            let sender: String
+            if deposit.sender.isEmpty {
+                sender = notApplicable
+                style = .unavailable
+            } else {
+                sender = deposit.sender
+                style = []
+            }
+            columns.append(Column(key: .from, value: sender, style: style))
         } else if let withdrawal = snapshot.withdrawal {
             columns.append(Column(key: .withdrawalHash, value: withdrawal.hash))
+            
+            let style: Column.Style
+            let receiver: String
+            if withdrawal.receiver.isEmpty {
+                receiver = notApplicable
+                style = .unavailable
+            } else {
+                receiver = withdrawal.receiver
+                style = []
+            }
+            columns.append(Column(key: .to, value: receiver, style: style))
+        } else {
+            let style: Column.Style
+            let opponentName: String
+            if let name = snapshot.opponentFullname {
+                opponentName = name
+                style = []
+            } else {
+                opponentName = notApplicable
+                style = .unavailable
+            }
+            if snapshot.amount.hasMinusPrefix {
+                columns.append(Column(key: .to, value: opponentName, style: style))
+            } else {
+                columns.append(Column(key: .from, value: opponentName, style: style))
+            }
         }
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue, let completed = snapshot.confirmations {
             let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
             columns.append(Column(key: .depositProgress, value: value))
         }
-        columns.append(Column(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         if !snapshot.memo.isEmpty {
             columns.append(Column(key: .memo, value: snapshot.memo))
         }
+        columns.append(Column(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         self.columns = columns
         tableView.reloadData()
     }

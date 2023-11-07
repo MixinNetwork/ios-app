@@ -124,7 +124,7 @@ extension ConnectWalletViewController: AuthenticationIntentViewController {
                 }
             } catch {
                 await MainActor.run {
-                    completion(.failure(error: error, allowsRetrying: true))
+                    completion(.failure(error: error, retry: .inputPINAgain))
                 }
             }
         }

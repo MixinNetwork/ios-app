@@ -13,6 +13,8 @@ class SnapshotViewController: UIViewController {
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
+    private let notApplicable = "N/A"
+    
     private var token: TokenItem
     private var snapshot: SafeSnapshotItem
     private var columns: [Column] = []
@@ -351,14 +353,30 @@ extension SnapshotViewController {
         ]
         if let deposit = snapshot.deposit {
             columns.append(Column(key: .depositHash, value: deposit.hash))
-            if !deposit.sender.isEmpty {
-                columns.append(Column(key: .from, value: deposit.sender))
+            
+            let style: Column.Style
+            let sender: String
+            if deposit.sender.isEmpty {
+                sender = notApplicable
+                style = .unavailable
+            } else {
+                sender = deposit.sender
+                style = []
             }
+            columns.append(Column(key: .from, value: sender, style: style))
         } else if let withdrawal = snapshot.withdrawal {
             columns.append(Column(key: .withdrawalHash, value: withdrawal.hash))
-            if !withdrawal.receiver.isEmpty {
-                columns.append(Column(key: .to, value: withdrawal.receiver))
+            
+            let style: Column.Style
+            let receiver: String
+            if withdrawal.receiver.isEmpty {
+                receiver = notApplicable
+                style = .unavailable
+            } else {
+                receiver = withdrawal.receiver
+                style = []
             }
+            columns.append(Column(key: .to, value: receiver, style: style))
         } else {
             let style: Column.Style
             let opponentName: String
@@ -366,7 +384,7 @@ extension SnapshotViewController {
                 opponentName = name
                 style = []
             } else {
-                opponentName = "N/A"
+                opponentName = notApplicable
                 style = .unavailable
             }
             if snapshot.amount.hasMinusPrefix {

@@ -172,7 +172,8 @@ extension TokenViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-        cell.render(snapshot: snapshotDataSource.snapshots[indexPath.section][indexPath.row], token: token)
+        let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
+        cell.render(snapshot: snapshot, token: token)
         cell.delegate = self
         return cell
     }

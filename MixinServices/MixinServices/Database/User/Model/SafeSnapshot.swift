@@ -3,7 +3,7 @@ import GRDB
 
 public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
-    public enum SnapshotType: String, CaseIterable {
+    public enum SnapshotType: String {
         case snapshot
         case pending
     }
@@ -43,6 +43,13 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let withdrawal: Withdrawal?
     
     public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var compactTransactionHash: String = {
+        if transactionHash.count > 10 {
+            return transactionHash.prefix(6) + "…" + transactionHash.suffix(4)
+        } else {
+            return transactionHash
+        }
+    }()
     
     public init(
         id: String, type: String, assetID: String, amount: String,

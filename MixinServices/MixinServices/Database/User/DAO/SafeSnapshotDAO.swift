@@ -22,8 +22,11 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         db.select(with: Self.queryWithIDSQL, arguments: [id])
     }
     
-    public func save(snapshot: SafeSnapshot) {
-        db.save(snapshot)
+    public func save(snapshot: SafeSnapshot, alonsideTransaction change: ((GRDB.Database) throws -> Void)? = nil) {
+        db.write { db in
+            try snapshot.save(db)
+            try change?(db)
+        }
     }
     
     public func saveAndFetch(snapshot: SafeSnapshot) -> SafeSnapshotItem? {

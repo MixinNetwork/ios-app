@@ -352,8 +352,6 @@ extension SnapshotViewController {
             Column(key: .transactionHash, value: snapshot.transactionHash),
         ]
         if let deposit = snapshot.deposit {
-            columns.append(Column(key: .depositHash, value: deposit.hash))
-            
             let style: Column.Style
             let sender: String
             if deposit.sender.isEmpty {
@@ -364,9 +362,8 @@ extension SnapshotViewController {
                 style = []
             }
             columns.append(Column(key: .from, value: sender, style: style))
+            columns.append(Column(key: .depositHash, value: deposit.hash))
         } else if let withdrawal = snapshot.withdrawal {
-            columns.append(Column(key: .withdrawalHash, value: withdrawal.hash))
-            
             let style: Column.Style
             let receiver: String
             if withdrawal.receiver.isEmpty {
@@ -377,6 +374,7 @@ extension SnapshotViewController {
                 style = []
             }
             columns.append(Column(key: .to, value: receiver, style: style))
+            columns.append(Column(key: .withdrawalHash, value: withdrawal.hash))
         } else {
             let style: Column.Style
             let opponentName: String

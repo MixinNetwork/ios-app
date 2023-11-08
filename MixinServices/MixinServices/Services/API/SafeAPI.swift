@@ -48,6 +48,10 @@ extension SafeAPI {
         try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
     }
     
+    public static func assets(ids: [String]) async throws -> [Token] {
+        try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+    }
+    
     public static func assets() async throws -> [Token] {
         try await request(method: .get, path: "/safe/assets")
     }

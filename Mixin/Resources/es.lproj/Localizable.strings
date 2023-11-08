@@ -486,6 +486,7 @@
 "last_backup_hint" = "Última copia de seguridad en %@, tamaño total %@.";
 "later" = "Más tarde";
 "learn_more" = "Obtener más información";
+"legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Claro";
 "line_busy" = "Linea ocupada";
 "line_busy_remote" = "Linea ocupada";

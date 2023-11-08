@@ -486,6 +486,7 @@
 "last_backup_hint" = "上次備份是 %@，佔用空間 %@。";
 "later" = "稍後";
 "learn_more" = "瞭解更多";
+"legacy_network_transfer_hint" = "當前轉賬使用的是舊網路";
 "light" = "淺色";
 "line_busy" = "忙線未接聽";
 "line_busy_remote" = "對方忙";

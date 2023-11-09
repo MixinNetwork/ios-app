@@ -13,7 +13,7 @@ class HomeAppsStorage {
     
     func load(completion: @escaping (_ pinnedItems: [HomeApp], _ candidateItems: [[HomeAppItem]]) -> Void) {
         queue.async {
-            let pinned = AppGroupUserDefaults.User.homeAppIds
+            var pinned = AppGroupUserDefaults.User.homeAppIds
                 .prefix(HomeAppsMode.pinned.appsPerRow)
                 .compactMap(HomeApp.init(id:))
             let candidate: [[HomeAppItem]]
@@ -22,9 +22,21 @@ class HomeAppsStorage {
             if let json = AppGroupUserDefaults.User.homeAppsFolder, let coders = try? decoder.decode([HomeAppItemsCoder].self, from: json) {
                 var existedIds = Set(pinned.map(\.id))
                 var items = self.candidateItems(with: coders, existedIds: &existedIds)
-                let newApps = UserDAO.shared.getAppUsersAppId()
+                var newApps = UserDAO.shared.getAppUsersAppId()
                     .filter { !existedIds.contains($0) }
                     .compactMap { HomeApp(id: $0) }
+                for app in EmbeddedApp.all where !existedIds.contains(app.id) {
+                    let app: HomeApp = .embedded(app)
+                    if pinned.count < HomeAppsMode.pinned.appsPerRow {
+                        pinned.append(app)
+                        self.save(pinnedApps: pinned)
+                    } else if !items.isEmpty, items[0].count < HomeAppsMode.regular.appsPerPage {
+                        items[0].append(.app(app))
+                        self.save(candidateItems: items)
+                    } else {
+                        newApps.append(app)
+                    }
+                }
                 if !newApps.isEmpty {
                     if let lastPage = items.last, lastPage.count < HomeAppsMode.regular.appsPerPage {
                         let trailingApps: [HomeAppItem] = newApps

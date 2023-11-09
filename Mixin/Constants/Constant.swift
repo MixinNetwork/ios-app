@@ -40,3 +40,5 @@ let voipTokenRemove = "REMOVE"
 let maxTextMessageContentLength = 64 * 1024
 
 let maxNumberOfTranscriptChildren = 99
+
+let notApplicable = "N/A"

@@ -38,7 +38,7 @@ class SnapshotCell: ModernSelectedBackgroundCell {
             iconImageView.imageView.contentMode = .center
             iconImageView.image = R.image.wallet.snapshot_deposit()
             if let finished = snapshot.confirmations, let total = token?.confirmations {
-                titleLabel.text = R.string.localizable.pending_confirmations(finished, total)
+                setTitle(R.string.localizable.pending_confirmations(finished, total))
                 pendingDepositProgressView.isHidden = false
                 let multiplier = CGFloat(finished) / CGFloat(total)
                 if abs(pendingDepositProgressConstraint.multiplier - multiplier) > 0.1 {
@@ -48,31 +48,26 @@ class SnapshotCell: ModernSelectedBackgroundCell {
                 }
             } else {
                 pendingDepositProgressView.isHidden = true
-                titleLabel.text = snapshot.compactTransactionHash
+                setTitle(snapshot.deposit?.sender)
             }
-            titleLabel.textColor = R.color.text()
-            amountLabel.textColor = .walletGray
+            amountLabel.textColor = R.color.text_accessory()
         default:
-            if snapshot.deposit != nil {
+            if let deposit = snapshot.deposit {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
-                titleLabel.text = snapshot.compactTransactionHash
-                titleLabel.textColor = R.color.text()
-            } else if snapshot.withdrawal != nil {
+                setTitle(deposit.sender)
+            } else if let withdrawal = snapshot.withdrawal {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_withdrawal()
-                titleLabel.text = snapshot.compactTransactionHash
-                titleLabel.textColor = R.color.text()
+                setTitle(withdrawal.receiver)
             } else if let userID = snapshot.opponentUserID, let name = snapshot.opponentFullname, let url = snapshot.opponentAvatarURL {
                 iconImageView.imageView.contentMode = .scaleAspectFill
                 iconImageView.setImage(with: url, userId: userID, name: name)
-                titleLabel.text = snapshot.opponentFullname
-                titleLabel.textColor = R.color.text()
+                setTitle(snapshot.opponentFullname)
             } else {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_anonymous()
-                titleLabel.text = "N/A"
-                titleLabel.textColor = R.color.text_accessory()
+                setTitle(nil)
             }
             pendingDepositProgressView.isHidden = true
             if snapshot.amount.hasMinusPrefix {
@@ -83,6 +78,16 @@ class SnapshotCell: ModernSelectedBackgroundCell {
         }
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
         symbolLabel.text = token?.symbol ?? snapshot.tokenSymbol
+    }
+    
+    private func setTitle(_ title: String?) {
+        if let title, !title.isEmpty {
+            titleLabel.text = title
+            titleLabel.textColor = R.color.text()
+        } else {
+            titleLabel.text = notApplicable
+            titleLabel.textColor = R.color.text_accessory()
+        }
     }
     
 }

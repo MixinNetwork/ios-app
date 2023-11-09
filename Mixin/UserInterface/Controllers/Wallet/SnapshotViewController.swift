@@ -13,8 +13,6 @@ class SnapshotViewController: UIViewController {
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
-    private let notApplicable = "N/A"
-    
     private var token: TokenItem
     private var snapshot: SafeSnapshotItem
     private var columns: [Column] = []

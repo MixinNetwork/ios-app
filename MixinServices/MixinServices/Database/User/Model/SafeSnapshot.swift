@@ -43,13 +43,6 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let withdrawal: Withdrawal?
     
     public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
-    public private(set) lazy var compactTransactionHash: String = {
-        if transactionHash.count > 10 {
-            return transactionHash.prefix(6) + "…" + transactionHash.suffix(4)
-        } else {
-            return transactionHash
-        }
-    }()
     
     public init(
         id: String, type: String, assetID: String, amount: String,
@@ -83,14 +76,14 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.amount = pendingDeposit.amount
         self.userID = myUserId
         self.opponentID = ""
-        self.transactionHash = pendingDeposit.transactionHash
+        self.transactionHash = ""
         self.memo = ""
         self.createdAt = pendingDeposit.createdAt
         self.traceID = ""
         self.confirmations = pendingDeposit.confirmations
         self.openingBalance = nil
         self.closingBalance = nil
-        self.deposit = nil
+        self.deposit = Deposit(hash: pendingDeposit.transactionHash, sender: "")
         self.withdrawal = nil
     }
     
@@ -118,6 +111,11 @@ extension SafeSnapshot {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.hash = try container.decode(String.self, forKey: .hash)
             self.sender = try container.decodeIfPresent(String.self, forKey: .sender) ?? ""
+        }
+        
+        public init(hash: String, sender: String) {
+            self.hash = hash
+            self.sender = sender
         }
         
     }

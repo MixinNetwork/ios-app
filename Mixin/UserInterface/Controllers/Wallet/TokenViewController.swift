@@ -136,22 +136,23 @@ extension TokenViewController: ContainerViewControllerDelegate {
     }
     
     func barRightButtonTappedAction() {
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let asset = self.token!
-        let toggleAssetHiddenTitle = AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetID] == nil ? R.string.localizable.hide_asset() : R.string.localizable.show_asset()
-        alc.addAction(UIAlertAction(title: toggleAssetHiddenTitle, style: .default, handler: { [weak self](_) in
-            guard let weakSelf = self else {
-                return
+        let token = self.token!
+        let wasHidden = token.isHidden
+        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
+            DispatchQueue.global().async {
+                let extra = TokenExtra(assetID: token.assetID,
+                                       kernelAssetID: token.kernelAssetID,
+                                       isHidden: !wasHidden,
+                                       balance: token.balance,
+                                       updatedAt: Date().toUTCString())
+                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
             }
-            if AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetID] ?? false {
-                AppGroupUserDefaults.Wallet.hiddenAssetIds.removeValue(forKey: asset.assetID)
-            } else {
-                AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetID] = true
-            }
-            weakSelf.navigationController?.popViewController(animated: true)
+            self.navigationController?.popViewController(animated: true)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        self.present(alc, animated: true, completion: nil)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        self.present(sheet, animated: true, completion: nil)
     }
     
     func imageBarRightButton() -> UIImage? {

@@ -13,8 +13,6 @@ class SnapshotViewController: UIViewController {
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
-    private let notApplicable = "N/A"
-    
     private var token: TokenItem
     private var snapshot: SafeSnapshotItem
     private var columns: [Column] = []
@@ -347,10 +345,18 @@ extension SnapshotViewController {
     }
     
     private func reloadData() {
-        var columns: [Column] = [
-            Column(key: .id, value: snapshot.id),
-            Column(key: .transactionHash, value: snapshot.transactionHash),
-        ]
+        var columns: [Column] = []
+        
+        if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
+            if let completed = snapshot.confirmations {
+                let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
+                columns.append(Column(key: .depositProgress, value: value))
+            }
+        } else {
+            columns.append(Column(key: .id, value: snapshot.id))
+            columns.append(Column(key: .transactionHash, value: snapshot.transactionHash))
+        }
+        
         if let deposit = snapshot.deposit {
             let style: Column.Style
             let sender: String
@@ -390,10 +396,6 @@ extension SnapshotViewController {
             } else {
                 columns.append(Column(key: .from, value: opponentName, style: style))
             }
-        }
-        if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue, let completed = snapshot.confirmations {
-            let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
-            columns.append(Column(key: .depositProgress, value: value))
         }
         if !snapshot.memo.isEmpty {
             columns.append(Column(key: .memo, value: snapshot.memo))

@@ -114,7 +114,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 } else {
                     return nil
                 }
-                let item = TokenItem(token: token, balance: "0", chain: chain)
+                let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                 return item
             })
             

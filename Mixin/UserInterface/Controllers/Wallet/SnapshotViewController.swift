@@ -349,8 +349,14 @@ extension SnapshotViewController {
     private func reloadData() {
         var columns: [Column] = [
             Column(key: .id, value: snapshot.id),
-            Column(key: .transactionHash, value: snapshot.transactionHash),
         ]
+        if !snapshot.transactionHash.isEmpty {
+            columns.append(Column(key: .transactionHash, value: snapshot.transactionHash))
+        }
+        if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue, let completed = snapshot.confirmations {
+            let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
+            columns.append(Column(key: .depositProgress, value: value))
+        }
         if let deposit = snapshot.deposit {
             let style: Column.Style
             let sender: String
@@ -390,10 +396,6 @@ extension SnapshotViewController {
             } else {
                 columns.append(Column(key: .from, value: opponentName, style: style))
             }
-        }
-        if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue, let completed = snapshot.confirmations {
-            let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
-            columns.append(Column(key: .depositProgress, value: value))
         }
         if !snapshot.memo.isEmpty {
             columns.append(Column(key: .memo, value: snapshot.memo))

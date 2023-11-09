@@ -83,14 +83,14 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.amount = pendingDeposit.amount
         self.userID = myUserId
         self.opponentID = ""
-        self.transactionHash = pendingDeposit.transactionHash
+        self.transactionHash = ""
         self.memo = ""
         self.createdAt = pendingDeposit.createdAt
         self.traceID = ""
         self.confirmations = pendingDeposit.confirmations
         self.openingBalance = nil
         self.closingBalance = nil
-        self.deposit = nil
+        self.deposit = Deposit(hash: pendingDeposit.transactionHash, sender: "")
         self.withdrawal = nil
     }
     
@@ -118,6 +118,11 @@ extension SafeSnapshot {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.hash = try container.decode(String.self, forKey: .hash)
             self.sender = try container.decodeIfPresent(String.self, forKey: .sender) ?? ""
+        }
+        
+        public init(hash: String, sender: String) {
+            self.hash = hash
+            self.sender = sender
         }
         
     }

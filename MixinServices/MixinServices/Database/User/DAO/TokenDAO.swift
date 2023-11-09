@@ -73,11 +73,11 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func hiddenTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden, 0) IS TRUE ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
     public func notHiddenTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden, 0) IS FALSE ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
     }
     
     public func defaultTransferToken() -> TokenItem? {

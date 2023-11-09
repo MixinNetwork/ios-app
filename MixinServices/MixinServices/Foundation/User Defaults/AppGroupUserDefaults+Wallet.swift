@@ -14,7 +14,6 @@ extension AppGroupUserDefaults {
             case defaultTransferAssetId = "default_transfer_asset_id"
             case withdrawnAddressIds = "withdrawn_asset_ids"
             
-            case hiddenAssetIds = "hidden_asset_ids"
             case allTransactionsOffset = "all_transactions_offset"
             case assetTransactionsOffset = "asset_transactions_offset"
             case opponentTransactionsOffset = "opponent_transactions_offset"
@@ -39,10 +38,6 @@ extension AppGroupUserDefaults {
         @Default(namespace: .wallet, key: Key.withdrawnAddressIds, defaultValue: [:])
         public static var withdrawnAddressIds: [String: Bool]
         
-        @available(*, deprecated, message: "Use TokenExtraDAO")
-        @Default(namespace: .wallet, key: Key.hiddenAssetIds, defaultValue: [:])
-        public static var hiddenAssetIds: [String: Bool]
-        
         @Default(namespace: .wallet, key: Key.allTransactionsOffset, defaultValue: nil)
         public static var allTransactionsOffset: String?
         
@@ -63,7 +58,6 @@ extension AppGroupUserDefaults {
             biometricPaymentExpirationInterval = WalletUserDefault.shared.pinInterval
             
             defaultTransferAssetId = WalletUserDefault.shared.defalutTransferAssetId
-            hiddenAssetIds = WalletUserDefault.shared.hiddenAssets.mapValues({ _ in true })
             allTransactionsOffset = WalletUserDefault.shared.allTransactionOffset
             assetTransactionsOffset = WalletUserDefault.shared.assetTransactionOffset
             currencyCode = WalletUserDefault.shared.currencyCode

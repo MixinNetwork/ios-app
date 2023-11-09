@@ -48,6 +48,10 @@ extension SafeAPI {
         try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
     }
     
+    public static func assets(ids: [String]) async throws -> [Token] {
+        try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+    }
+    
     public static func assets() async throws -> [Token] {
         try await request(method: .get, path: "/safe/assets")
     }
@@ -87,22 +91,12 @@ extension SafeAPI {
         try await request(method: .get, path: "/safe/transactions/" + id)
     }
     
-    public static func requestTransaction(id: String, raw: String, senderID: String) async throws -> [String] {
-        
-        struct TransactionRequest: Decodable {
-            public let views: [String]
-        }
-        
-        let request: TransactionRequest = try await request(method: .post,
-                                                            path: "/safe/transaction/requests",
-                                                            parameters: ["request_id": id, "raw": raw])
-        return request.views
+    public static func requestTransaction(requests: [TransactionRequest]) async throws -> [RequestTransactionResponse] {
+        try await request(method: .post, path: "/safe/transaction/requests", parameters: requests)
     }
     
-    public static func postTransaction(requestID: String, raw: String) async throws -> TransactionResponse {
-        try await request(method: .post,
-                          path: "/safe/transactions",
-                          parameters: ["request_id": requestID, "raw": raw])
+    public static func postTransaction(requests: [TransactionRequest]) async throws -> [TransactionResponse] {
+        try await request(method: .post, path: "/safe/transactions", parameters: requests)
     }
     
 }

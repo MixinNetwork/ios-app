@@ -9,7 +9,13 @@ public final class RefreshAllTokensJob: AsynchronousJob {
     public override func execute() -> Bool {
         Task {
             do {
-                let tokens = try await SafeAPI.assets()
+                let ids = TokenDAO.shared.allAssetIDs()
+                let tokens: [Token]
+                if ids.isEmpty {
+                    tokens = try await SafeAPI.assets()
+                } else {
+                    tokens = try await SafeAPI.assets(ids: ids)
+                }
                 if !MixinService.isStopProcessMessages {
                     TokenDAO.shared.save(assets: tokens)
                 }

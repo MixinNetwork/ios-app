@@ -486,6 +486,7 @@
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "later" = "後で";
 "learn_more" = "こちら";
+"legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "ダーク";
 "line_busy" = "お話中です";
 "line_busy_remote" = "お話中です";

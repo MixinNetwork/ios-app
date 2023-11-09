@@ -64,6 +64,10 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
     }
     
+    public func allAssetIDs() -> [String] {
+        db.select(column: Token.column(of: .assetID), from: Token.self)
+    }
+    
     public func allTokens() -> [TokenItem] {
         db.select(with: "\(SQL.selector) ORDER BY \(SQL.order)")
     }

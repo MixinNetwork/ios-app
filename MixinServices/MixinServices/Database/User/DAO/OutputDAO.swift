@@ -44,14 +44,6 @@ public final class OutputDAO: UserDatabaseDAO {
         }
     }
     
-    public func spendOutputs(with ids: [String], alongsideTransaction change: ((GRDB.Database) throws -> Void)) {
-        db.write { db in
-            let ids = ids.joined(separator: "','")
-            try db.execute(sql: "UPDATE outputs SET state = 'spent' WHERE output_id IN ('\(ids)')")
-            try change(db)
-        }
-    }
-    
     public func deleteAll() {
         db.execute(sql: "DELETE FROM outputs")
     }

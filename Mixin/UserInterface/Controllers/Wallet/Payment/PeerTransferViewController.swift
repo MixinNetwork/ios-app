@@ -8,6 +8,7 @@ final class PeerTransferViewController: UIViewController {
         
         case insufficientBalance(hasMoreOutputs: Bool)
         case sign(Swift.Error?)
+        case invalidTransactionResponse
         
         var errorDescription: String? {
             switch self {
@@ -19,6 +20,8 @@ final class PeerTransferViewController: UIViewController {
                 }
             case .sign(let error):
                 return error?.localizedDescription ?? "Null signature"
+            case .invalidTransactionResponse:
+                return "INVALID TX RESP"
             }
         }
         
@@ -131,7 +134,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
         let receiverID = opponent.userId
-        Task {
+        Task { [traceID] in
             do {
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
                 let trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
@@ -194,7 +197,12 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 }
                 let inputKeysData = try JSONEncoder.default.encode(spendingOutputs.map(\.keys))
                 let inputKeys = String(data: inputKeysData, encoding: .utf8)
-                let viewKeys = try await SafeAPI.requestTransaction(id: traceID, raw: tx, senderID: senderID).joined(separator: ",")
+                let request = TransactionRequest(id: traceID, raw: tx)
+                let responses = try await SafeAPI.requestTransaction(requests: [request])
+                guard let response = responses.first(where: { $0.requestID == request.id }) else {
+                    throw Error.invalidTransactionResponse
+                }
+                let viewKeys = response.views.joined(separator: ",")
                 let signedTx = KernelSignTx(tx, inputKeys, viewKeys, spendKey, &error)
                 guard let signedTx, error == nil else {
                     throw Error.sign(error)
@@ -234,7 +242,11 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                     try rawTransaction.save(db)
                     try UTXOService.shared.updateBalance(assetID: token.assetID, kernelAssetID: kernelAssetID, db: db)
                 }
-                let transactionResponse = try await SafeAPI.postTransaction(requestID: traceID, raw: signedTx.raw)
+                let signedRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
+                let postResponses = try await SafeAPI.postTransaction(requests: [signedRequest])
+                guard let response = postResponses.first(where: { $0.requestID == signedRequest.id }) else {
+                    throw Error.invalidTransactionResponse
+                }
                 let snapshot = SafeSnapshot(id: "\(senderID):\(signedTx.hash)".uuidDigest(),
                                             type: SafeSnapshot.SnapshotType.snapshot.rawValue,
                                             assetID: token.assetID,
@@ -243,7 +255,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                             opponentID: receiverID,
                                             memo: memo,
                                             transactionHash: signedTx.hash,
-                                            createdAt: transactionResponse.createdAt,
+                                            createdAt: response.createdAt,
                                             traceID: traceID,
                                             confirmations: nil,
                                             openingBalance: nil,
@@ -252,8 +264,7 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                                             withdrawal: nil)
                 let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
                 let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
-                OutputDAO.shared.spendOutputs(with: spendingOutputIDs) { db in
-                    try snapshot.save(db)
+                SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
                     try RawTransaction.deleteOne(db, key: rawTransaction.requestID)
                     try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
                     try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])

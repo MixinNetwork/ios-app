@@ -486,6 +486,7 @@
 "last_backup_hint" = "Последняя резервная копия %@, общий размер %@.";
 "later" = "Потом";
 "learn_more" = "Узнать больше";
+"legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Светлое";
 "line_busy" = "Линия занята";
 "line_busy_remote" = "Линия занята";

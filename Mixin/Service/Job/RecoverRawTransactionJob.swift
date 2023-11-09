@@ -7,6 +7,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
     private enum Error: Swift.Error {
         case notDecodable(String)
         case noAsset(String)
+        case invalidTransactionResponse
     }
     
     override func getJobId() -> String {
@@ -23,7 +24,11 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                     Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by finding")
                 } catch MixinAPIError.notFound {
                     do {
-                        let response = try await SafeAPI.postTransaction(requestID: tx.requestID, raw: tx.rawTransaction)
+                        let request = TransactionRequest(id: tx.requestID, raw: tx.rawTransaction)
+                        let responses = try await SafeAPI.postTransaction(requests: [request])
+                        guard let response = responses.first(where: { $0.requestID == request.id }) else {
+                            throw Error.invalidTransactionResponse
+                        }
                         try updateDatabase(with: response, transaction: tx)
                         Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by posting")
                     } catch {
@@ -59,9 +64,6 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                 return ""
             }
         }()
-        let outputIDs = data.inputs.map { input in
-            "\(input.hash):\(input.index)".uuidDigest()
-        }
         let snapshot = SafeSnapshot(id: "\(response.userID):\(response.transactionHash)".uuidDigest(),
                                     type: SafeSnapshot.SnapshotType.snapshot.rawValue,
                                     assetID: assetID,
@@ -79,8 +81,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                                     withdrawal: nil)
         let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: transaction.receiverID)
         let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: response.createdAt)
-        OutputDAO.shared.spendOutputs(with: outputIDs) { db in
-            try snapshot.save(db)
+        SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
             try RawTransaction.deleteOne(db, key: transaction.requestID)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "RecoverRawTransaction", silentNotification: false)
             try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])

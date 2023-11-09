@@ -67,11 +67,11 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         tableView.delegate = self
         tableView.reloadData()
         updateTableHeaderVisualEffect()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: TokenDAO.tokensDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: ChainDAO.chainsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenDAO.tokensDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: ChainDAO.chainsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
-        fetchAssets()
+        reloadData()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
         ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
     }
@@ -272,7 +272,7 @@ extension WalletViewController {
         }
     }
     
-    @objc private func fetchAssets() {
+    @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
             let allAssets = TokenDAO.shared.allTokens()
             let hiddenAssetIds = AppGroupUserDefaults.Wallet.hiddenAssetIds

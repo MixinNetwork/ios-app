@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait" appearance="dark"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bst-np-9j8" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="309.5" width="375" height="370.5"/>
+                    <rect key="frame" x="0.0" y="263.5" width="375" height="416.5"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cRa-Yx-aWD" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -49,8 +49,37 @@
                                 <constraint firstItem="gXI-gx-wZd" firstAttribute="top" secondItem="cRa-Yx-aWD" secondAttribute="top" id="wYi-AL-ngN"/>
                             </constraints>
                         </view>
+                        <view opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GEM-qc-84q">
+                            <rect key="frame" x="0.0" y="70" width="375" height="36"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="IEG-Dd-nAI">
+                                    <rect key="frame" x="58.5" y="6" width="258" height="24"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="legacy_network_warning" translatesAutoresizingMaskIntoConstraints="NO" id="E3g-Dp-42S">
+                                            <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                                            <color key="tintColor" red="0.95686274509803915" green="0.6705882352941176" blue="0.1764705882352941" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current transfer is using legacy network " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sms-1t-A9C">
+                                            <rect key="frame" x="28" y="0.0" width="230" height="24"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="legacy_network_transfer_hint"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99607843137254903" green="0.96862745098039216" blue="0.71372549019607845" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="36" id="oA0-Lm-pWS"/>
+                                <constraint firstItem="IEG-Dd-nAI" firstAttribute="centerX" secondItem="GEM-qc-84q" secondAttribute="centerX" id="wBZ-9z-tal"/>
+                                <constraint firstItem="IEG-Dd-nAI" firstAttribute="centerY" secondItem="GEM-qc-84q" secondAttribute="centerY" id="yPB-lI-ffT"/>
+                            </constraints>
+                        </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qOs-Lg-MP3">
-                            <rect key="frame" x="40" y="70" width="295" height="287.5"/>
+                            <rect key="frame" x="40" y="116" width="295" height="287.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transfer to Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xfg-Lf-zjd">
                                     <rect key="frame" x="56.5" y="0.0" width="182" height="21.5"/>
@@ -590,8 +619,11 @@
                         <constraint firstAttribute="trailing" secondItem="qOs-Lg-MP3" secondAttribute="trailing" constant="40" id="89j-Vc-f8J"/>
                         <constraint firstItem="cRa-Yx-aWD" firstAttribute="leading" secondItem="Bst-np-9j8" secondAttribute="leading" id="8gG-9C-XGU"/>
                         <constraint firstItem="cRa-Yx-aWD" firstAttribute="top" secondItem="Bst-np-9j8" secondAttribute="top" id="D2h-hC-Wkz"/>
-                        <constraint firstItem="qOs-Lg-MP3" firstAttribute="top" secondItem="cRa-Yx-aWD" secondAttribute="bottom" id="Krx-03-9Aa"/>
+                        <constraint firstAttribute="trailing" secondItem="GEM-qc-84q" secondAttribute="trailing" id="GyW-4S-VGZ"/>
                         <constraint firstAttribute="trailing" secondItem="cRa-Yx-aWD" secondAttribute="trailing" id="VN4-A1-TRg"/>
+                        <constraint firstItem="GEM-qc-84q" firstAttribute="leading" secondItem="Bst-np-9j8" secondAttribute="leading" id="elG-Yn-NDk"/>
+                        <constraint firstItem="GEM-qc-84q" firstAttribute="top" secondItem="cRa-Yx-aWD" secondAttribute="bottom" id="erK-jx-oer"/>
+                        <constraint firstItem="qOs-Lg-MP3" firstAttribute="top" secondItem="GEM-qc-84q" secondAttribute="bottom" constant="10" id="imy-Tl-xgX"/>
                         <constraint firstItem="qOs-Lg-MP3" firstAttribute="leading" secondItem="Bst-np-9j8" secondAttribute="leading" constant="40" id="me6-tS-q0q"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
@@ -663,6 +695,7 @@
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_pay_face" width="20" height="20"/>
         <image name="ic_pay_success" width="42" height="42"/>
+        <image name="legacy_network_warning" width="24" height="24"/>
         <image name="multisig_sign" width="7" height="11"/>
         <image name="non_fungible" width="168" height="168"/>
         <namedColor name="background">
@@ -672,10 +705,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -486,6 +486,7 @@
 "last_backup_hint" = "上次备份是 %@，占用空间 %@。";
 "later" = "稍后";
 "learn_more" = "了解更多";
+"legacy_network_transfer_hint" = "当前转账使用的是旧网络";
 "light" = "浅色";
 "line_busy" = "忙线未接听";
 "line_busy_remote" = "对方忙";

@@ -123,7 +123,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
             self.navigationController?.pushViewController(AllTransactionsViewController.instance(), animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
-            self.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
+            self.navigationController?.pushViewController(HiddenTokensViewController.instance(), animated: true)
         }))
         if WalletConnectService.isAvailable {
             sheet.addAction(UIAlertAction(title: R.string.localizable.connected_dapps(), style: .default, handler: { _ in

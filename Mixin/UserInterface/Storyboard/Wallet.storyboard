@@ -511,10 +511,10 @@
             </objects>
             <point key="canvasLocation" x="-455.07246376811599" y="-2.4456521739130435"/>
         </scene>
-        <!--Hidden Asset View Controller-->
+        <!--Hidden Tokens View Controller-->
         <scene sceneID="zH6-MX-htI">
             <objects>
-                <viewController storyboardIdentifier="hidden_assets" automaticallyAdjustsScrollViewInsets="NO" id="GB1-mn-I7w" customClass="HiddenAssetViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="hidden_assets" automaticallyAdjustsScrollViewInsets="NO" id="GB1-mn-I7w" customClass="HiddenTokensViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uhb-p1-3GT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

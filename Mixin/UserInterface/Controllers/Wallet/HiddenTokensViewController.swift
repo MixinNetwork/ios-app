@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class HiddenAssetViewController: UIViewController {
+final class HiddenTokensViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -64,7 +64,7 @@ class HiddenAssetViewController: UIViewController {
     
 }
 
-extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate {
+extension HiddenTokensViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tokens.count
@@ -105,7 +105,7 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
     
 }
 
-extension HiddenAssetViewController: ContainerViewControllerDelegate {
+extension HiddenTokensViewController: ContainerViewControllerDelegate {
     
     var prefersNavigationBarSeparatorLineHidden: Bool {
         return true

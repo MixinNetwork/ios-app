@@ -79,6 +79,9 @@ class DatabaseUpgradeViewController: UIViewController {
                 AppGroupUserDefaults.Wallet.assetTransactionsOffset = [:]
                 AppGroupUserDefaults.Wallet.opponentTransactionsOffset = [:]
             }
+            if localVersion < 33 {
+                AppGroupUserDefaults.Wallet.hiddenAssetIds = [:]
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

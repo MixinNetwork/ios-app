@@ -4,6 +4,7 @@ import GRDB
 public final class TokenItem: Token, NumberStringLocalizable {
     
     public let balance: String
+    public let isHidden: Bool
     public let chain: Chain?
     
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
@@ -29,8 +30,9 @@ public final class TokenItem: Token, NumberStringLocalizable {
         return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
     }()
     
-    public init(token: Token, balance: String, chain: Chain) {
+    public init(token: Token, balance: String, isHidden: Bool, chain: Chain) {
         self.balance = balance
+        self.isHidden = isHidden
         self.chain = chain
         super.init(assetID: token.assetID,
                    kernelAssetID: token.kernelAssetID,
@@ -51,6 +53,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
         
         enum ChainCodingKeys: String, CodingKey {
             case balance
+            case hidden
             case chainID = "chain_id"
             case chainName = "chain_name"
             case chainSymbol = "chain_symbol"
@@ -61,6 +64,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
         
         let container = try decoder.container(keyedBy: ChainCodingKeys.self)
         self.balance = try container.decode(String.self, forKey: .balance)
+        self.isHidden = try container.decode(Bool.self, forKey: .hidden)
         if let id = try? container.decodeIfPresent(String.self, forKey: .chainID),
            let name = try? container.decodeIfPresent(String.self, forKey: .chainName),
            let symbol = try? container.decodeIfPresent(String.self, forKey: .chainSymbol),
@@ -104,7 +108,7 @@ extension TokenItem {
                           iconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128",
                           threshold: 0,
                           withdrawalMemoPossibility: WithdrawalMemoPossibility.negative.rawValue)
-        return TokenItem(token: token, balance: "0", chain: chain)
+        return TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
     }()
     
 }

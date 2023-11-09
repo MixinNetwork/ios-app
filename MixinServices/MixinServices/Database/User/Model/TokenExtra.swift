@@ -5,11 +5,14 @@ public struct TokenExtra {
     
     public let assetID: String
     public let kernelAssetID: String
-    public let isHidden: Bool?
+    public let isHidden: Bool
     public let balance: String?
     public let updatedAt: String
     
-    public init(assetID: String, kernelAssetID: String, isHidden: Bool?, balance: String?, updatedAt: String) {
+    public init(
+        assetID: String, kernelAssetID: String,
+        isHidden: Bool, balance: String?, updatedAt: String
+    ) {
         self.assetID = assetID
         self.kernelAssetID = kernelAssetID
         self.isHidden = isHidden

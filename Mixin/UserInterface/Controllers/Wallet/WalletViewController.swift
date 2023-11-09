@@ -14,8 +14,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     private var lastSelectedAction: TransferActionView.Action?
 
     private var isSearchViewControllerPreloaded = false
-    private var assets = [TokenItem]()
-    private var sendableAssets = [TokenItem]()
+    private var tokens = [TokenItem]()
+    private var sendableTokens = [TokenItem]()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -69,7 +69,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         updateTableHeaderVisualEffect()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenDAO.tokensDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: ChainDAO.chainsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenExtraDAO.tokenVisibilityDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         reloadData()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
@@ -159,7 +159,7 @@ extension WalletViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        assets.count
+        tokens.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -167,7 +167,7 @@ extension WalletViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let asset = assets[indexPath.row]
+        let asset = tokens[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
         cell.render(asset: asset)
         return cell
@@ -179,13 +179,27 @@ extension WalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let token = assets[indexPath.row]
+        let token = tokens[indexPath.row]
         let viewController = TokenViewController.instance(token: token)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        UISwipeActionsConfiguration(actions: [hideAssetAction(forRowAt: indexPath)])
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.hide()) { [weak self] (action, _, completionHandler) in
+            guard let self = self else {
+                return
+            }
+            let token = self.tokens[indexPath.row]
+            let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(token.symbol), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
+                self.hideToken(with: token.assetID)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            completionHandler(true)
+        }
+        action.backgroundColor = .theme
+        return UISwipeActionsConfiguration(actions: [action])
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -204,12 +218,12 @@ extension WalletViewController: TransferActionViewDelegate {
         case .send:
             controller.showEmptyHintIfNeeded = true
             controller.searchResultsFromServer = false
-            controller.tokens = assets.filter { $0.balance != "0" }
-            controller.sendableAssets = sendableAssets
+            controller.tokens = tokens.filter { $0.balance != "0" }
+            controller.sendableAssets = sendableTokens
         case .receive:
             controller.showEmptyHintIfNeeded = false
             controller.searchResultsFromServer = true
-            controller.tokens = assets
+            controller.tokens = tokens
         }
         present(controller, animated: true, completion: nil)
     }
@@ -239,30 +253,12 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
     func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController) {
         lastSelectedAction = .receive
         viewController.searchResultsFromServer = true
-        viewController.reload(tokens: assets)
+        viewController.reload(tokens: tokens)
     }
     
 }
 
 extension WalletViewController {
-    
-    private func hideAssetAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .destructive, title: R.string.localizable.hide()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
-            guard let self = self else {
-                return
-            }
-            let asset = self.assets[indexPath.row]
-            let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(asset.symbol), message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
-                self.hideAsset(of: asset.assetID)
-            }))
-            self.present(alert, animated: true, completion: nil)
-            completionHandler(true)
-        }
-        action.backgroundColor = .theme
-        return action
-    }
     
     private func updateTableViewContentInset() {
         if view.safeAreaInsets.bottom < 1 {
@@ -274,17 +270,15 @@ extension WalletViewController {
     
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
-            let allAssets = TokenDAO.shared.allTokens()
-            let hiddenAssetIds = AppGroupUserDefaults.Wallet.hiddenAssetIds
-            let assets = allAssets.filter { hiddenAssetIds[$0.assetID] == nil }
-            let sendableAssets = allAssets.filter { $0.balance != "0" }
+            let tokens = TokenDAO.shared.notHiddenTokens()
+            let sendableTokens = TokenDAO.shared.positiveBalancedTokens()
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
-                self.assets = assets
-                self.sendableAssets = sendableAssets
-                self.tableHeaderView.render(assets: assets)
+                self.tokens = tokens
+                self.sendableTokens = sendableTokens
+                self.tableHeaderView.render(tokens: tokens)
                 self.tableHeaderView.sizeToFit()
                 self.tableView.reloadData()
             }
@@ -317,13 +311,20 @@ extension WalletViewController {
         }
     }
     
-    private func hideAsset(of assetId: String) {
-        guard let index = assets.firstIndex(where: { $0.assetID == assetId }) else {
+    private func hideToken(with assetID: String) {
+        guard let index = tokens.firstIndex(where: { $0.assetID == assetID }) else {
             return
         }
-        assets.remove(at: index)
+        let token = tokens.remove(at: index)
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
-        AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = true
+        DispatchQueue.global().async {
+            let extra = TokenExtra(assetID: token.assetID,
+                                   kernelAssetID: token.kernelAssetID,
+                                   isHidden: true,
+                                   balance: token.balance,
+                                   updatedAt: Date().toUTCString())
+            TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+        }
     }
     
 }

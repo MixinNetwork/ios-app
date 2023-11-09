@@ -5,7 +5,7 @@ class HiddenAssetViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    private var assets = [TokenItem]()
+    private var tokens = [TokenItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,8 +15,8 @@ class HiddenAssetViewController: UIViewController {
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         tableView.reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
-        fetchAssets()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenExtraDAO.tokenVisibilityDidChangeNotification, object: nil)
+        reloadData()
     }
     
     deinit {
@@ -28,19 +28,16 @@ class HiddenAssetViewController: UIViewController {
         updateTableViewContentInset()
     }
     
-    @objc private func fetchAssets() {
+    @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
-            let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
-            let assets = TokenDAO.shared.allTokens().filter({ (asset) -> Bool in
-                return hiddenAssets[asset.assetID] != nil
-            })
+            let tokens = TokenDAO.shared.hiddenTokens()
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.assets = assets
+                weakSelf.tokens = tokens
                 weakSelf.tableView.reloadData()
-                weakSelf.tableView.checkEmpty(dataCount: assets.count,
+                weakSelf.tableView.checkEmpty(dataCount: tokens.count,
                                               text: R.string.localizable.no_hidden_assets(),
                                               photo: R.image.emptyIndicator.ic_hidden_assets()!)
             }
@@ -65,43 +62,45 @@ class HiddenAssetViewController: UIViewController {
         }
     }
     
-    private func showAssetAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .destructive, title: R.string.localizable.show()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
-            guard let self = self else {
-                return
-            }
-            let assetId = self.assets[indexPath.row].assetID
-            self.assets.remove(at: indexPath.row)
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
-            AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = nil
-            completionHandler(true)
-        }
-        action.backgroundColor = .theme
-        return action
-    }
-    
 }
 
 extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return assets.count
+        return tokens.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let asset = assets[indexPath.row]
+        let token = tokens[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
-        cell.render(asset: asset)
+        cell.render(asset: token)
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(TokenViewController.instance(token: assets[indexPath.row]), animated: true)
+        navigationController?.pushViewController(TokenViewController.instance(token: tokens[indexPath.row]), animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        UISwipeActionsConfiguration(actions: [showAssetAction(forRowAt: indexPath)])
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.show()) { [weak self] (action, _, completion) in
+            guard let self = self else {
+                return
+            }
+            let token = self.tokens.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            DispatchQueue.global().async {
+                let extra = TokenExtra(assetID: token.assetID,
+                                       kernelAssetID: token.kernelAssetID,
+                                       isHidden: false,
+                                       balance: token.balance,
+                                       updatedAt: Date().toUTCString())
+                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+            }
+            completion(true)
+        }
+        action.backgroundColor = .theme
+        return UISwipeActionsConfiguration(actions: [action])
     }
     
 }

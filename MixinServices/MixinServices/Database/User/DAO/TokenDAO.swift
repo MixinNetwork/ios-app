@@ -14,7 +14,7 @@ public final class TokenDAO: UserDatabaseDAO {
             t.chain_id, t.change_usd, t.change_btc, t.dust, t.confirmations, t.asset_key,
             c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
             c.threshold AS chain_threshold, c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility,
-            COALESCE(te.balance,'0') AS balance, te.hidden AS hidden
+            ifnull(te.balance,'0') AS balance, ifnull(te.hidden,FALSE) AS hidden
         FROM tokens t
             LEFT JOIN chains c ON t.chain_id = c.chain_id
             LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
@@ -70,6 +70,14 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public func allTokens() -> [TokenItem] {
         db.select(with: "\(SQL.selector) ORDER BY \(SQL.order)")
+    }
+    
+    public func hiddenTokens() -> [TokenItem] {
+        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden, 0) IS TRUE ORDER BY \(SQL.order)")
+    }
+    
+    public func notHiddenTokens() -> [TokenItem] {
+        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden, 0) IS FALSE ORDER BY \(SQL.order)")
     }
     
     public func defaultTransferToken() -> TokenItem? {

@@ -101,14 +101,14 @@ class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func render(assets: [TokenItem]) {
+    func render(tokens: [TokenItem]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
         var btcTotalBalance: Double = 0
-        let usdTotalBalance: Double = assets.map { $0.balance.doubleValue * $0.usdPrice.doubleValue }.reduce(0, +)
+        let usdTotalBalance: Double = tokens.map { $0.balance.doubleValue * $0.usdPrice.doubleValue }.reduce(0, +)
         var maxPortion = 3
 
-        for asset in assets {
+        for asset in tokens {
             let balance = asset.balance.doubleValue
             let usdBalance = balance * asset.usdPrice.doubleValue
             if usdBalance > 0 {

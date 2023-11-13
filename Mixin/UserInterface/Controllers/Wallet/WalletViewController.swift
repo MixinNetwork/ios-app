@@ -70,6 +70,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenDAO.tokensDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: ChainDAO.chainsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenExtraDAO.tokenVisibilityDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: UTXOService.balanceDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         reloadData()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))

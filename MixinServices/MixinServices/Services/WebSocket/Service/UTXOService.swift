@@ -5,6 +5,8 @@ public final class UTXOService {
     
     public static let shared = UTXOService()
     
+    public static let balanceDidUpdateNotification = Notification.Name("one.mixin.services.UTXOService.BalanceDidUpdate")
+    
     private let synchronizeOutputPageCount = 200
     private let calculateBalancePageCount = 200
     
@@ -71,11 +73,12 @@ public final class UTXOService {
                     }
                     
                     OutputDAO.shared.insertOrIgnore(outputs: outputs) { db in
-                        for output in outputs {
-                            if let assetID = assetIDs[output.asset] {
-                                try self.updateBalance(assetID: assetID, kernelAssetID: output.asset, db: db)
+                        let kernelAssetIDs = Set(outputs.map(\.asset))
+                        for kernelAssetID in kernelAssetIDs {
+                            if let assetID = assetIDs[kernelAssetID] {
+                                try self.updateBalance(assetID: assetID, kernelAssetID: kernelAssetID, db: db)
                             } else {
-                                Logger.general.error(category: "UTXO", message: "No asset ID: \(output.asset)")
+                                Logger.general.error(category: "UTXO", message: "No asset ID: \(kernelAssetID)")
                             }
                         }
                     }
@@ -119,7 +122,9 @@ public final class UTXOService {
                                isHidden: false,
                                balance: Token.amountString(from: totalAmount),
                                updatedAt: Date().toUTCString())
-        try TokenExtraDAO.shared.insertOrUpdateBalance(extra: extra, into: db)
+        try TokenExtraDAO.shared.insertOrUpdateBalance(extra: extra, into: db) {
+            NotificationCenter.default.post(onMainThread: Self.balanceDidUpdateNotification, object: self)
+        }
     }
     
 }

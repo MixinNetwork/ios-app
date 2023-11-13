@@ -7,7 +7,11 @@ public final class TokenExtraDAO: UserDatabaseDAO {
     
     public static let tokenVisibilityDidChangeNotification = Notification.Name("one.mixin.messenger.service.TokenVisibilityDidChange")
     
-    public func insertOrUpdateBalance(extra: TokenExtra, into db: GRDB.Database) throws {
+    public func insertOrUpdateBalance(
+        extra: TokenExtra,
+        into db: GRDB.Database,
+        completion: @escaping () -> Void
+    ) throws {
         let sql = """
         INSERT INTO tokens_extra(
             asset_id, kernel_asset_id, hidden, balance, updated_at
@@ -23,6 +27,9 @@ public final class TokenExtraDAO: UserDatabaseDAO {
             "balance": extra.balance,
             "updated_at": extra.updatedAt
         ])
+        db.afterNextTransaction { _ in
+            completion()
+        }
     }
     
     public func insertOrUpdateHidden(extra: TokenExtra) {

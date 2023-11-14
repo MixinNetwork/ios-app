@@ -1,23 +1,7 @@
 import Foundation
 import GRDB
 
-public struct Address {
-    
-    public let type: String
-    public let addressId: String
-    public let assetId: String
-    public let destination: String
-    public let label: String
-    public let tag: String
-    public let feeAssetId: String
-    public let fee: String
-    public let reserve: String
-    public let dust: String
-    public let updatedAt: String
-    
-}
-
-extension Address: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+public final class Address: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case type
@@ -32,6 +16,20 @@ extension Address: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
         case dust
         case updatedAt = "updated_at"
     }
+    
+    public let type: String
+    public let addressId: String
+    public let assetId: String
+    public let destination: String
+    public let label: String
+    public let tag: String
+    public let feeAssetId: String
+    public let fee: String
+    public let reserve: String
+    public let dust: String
+    public let updatedAt: String
+    
+    public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -60,6 +58,15 @@ extension Address {
     
     public var fullAddress: String {
         tag.isEmpty ? destination : "\(destination):\(tag)"
+    }
+    
+    public var compactRepresentation: String {
+        let address = self.fullAddress
+        if address.count > 10 {
+            return address.prefix(6) + "..." + address.suffix(4)
+        } else {
+            return address
+        }
     }
     
 }

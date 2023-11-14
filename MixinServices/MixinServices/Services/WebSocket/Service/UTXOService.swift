@@ -9,6 +9,7 @@ public final class UTXOService {
     
     private let synchronizeOutputPageCount = 200
     private let calculateBalancePageCount = 200
+    private let maxSpendingOutputsCount = 256
     
     public func synchronize() {
         guard LoginManager.shared.isLoggedIn else {
@@ -124,6 +125,75 @@ public final class UTXOService {
                                updatedAt: Date().toUTCString())
         try TokenExtraDAO.shared.insertOrUpdateBalance(extra: extra, into: db) {
             NotificationCenter.default.post(onMainThread: Self.balanceDidUpdateNotification, object: self)
+        }
+    }
+    
+}
+
+extension UTXOService {
+    
+    public enum CollectingError: Error {
+        case insufficientBalance
+        case maxSpendingCountExceeded
+    }
+    
+    public struct OutputCollection {
+        
+        private struct Input: Encodable {
+            let index: Int
+            let hash: String
+            let amount: String
+        }
+        
+        public let outputs: [Output]
+        public let lastOutput: Output
+        
+        init(outputs: [Output]) {
+            self.outputs = outputs
+            self.lastOutput = outputs.last!
+        }
+        
+        public func encodeAsInputData() throws -> Data {
+            let inputs = outputs.map { (utxo) in
+                Input(index: utxo.outputIndex, hash: utxo.transactionHash, amount: utxo.amount)
+            }
+            return try JSONEncoder.default.encode(inputs)
+        }
+        
+        public func encodedKeys() throws -> String? {
+            let data = try JSONEncoder.default.encode(outputs.map(\.keys))
+            return String(data: data, encoding: .utf8)
+        }
+        
+    }
+    
+    public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) throws -> OutputCollection {
+        // Select 1 more output to see if there's more outputs unspent
+        var unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
+        let hasMoreUnspentOutput = unspentOutputs.count > maxSpendingOutputsCount
+        if hasMoreUnspentOutput {
+            unspentOutputs.removeLast()
+        }
+        
+        var outputs: [Output] = []
+        var outputsAmount: Decimal = 0
+        while outputsAmount < amount, !unspentOutputs.isEmpty {
+            let spending = unspentOutputs.removeFirst()
+            outputs.append(spending)
+            if let spendingAmount = Decimal(string: spending.amount, locale: .enUSPOSIX) {
+                outputsAmount += spendingAmount
+            } else {
+                Logger.general.error(category: "UTXOService", message: "Invalid utxo.amount: \(spending.amount)")
+            }
+        }
+        if !outputs.isEmpty, outputsAmount >= amount {
+            return OutputCollection(outputs: outputs)
+        } else {
+            if hasMoreUnspentOutput {
+                throw CollectingError.maxSpendingCountExceeded
+            } else {
+                throw CollectingError.insufficientBalance
+            }
         }
     }
     

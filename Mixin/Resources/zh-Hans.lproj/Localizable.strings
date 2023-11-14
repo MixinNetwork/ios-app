@@ -226,6 +226,7 @@
 "contact_mobile" = "手机：%@";
 "contact_phone_contact_hint" = "上传你的手机通讯录，如果你的通讯录中有朋友已经注册了 Mixin，系统会帮你自动添加为好友";
 "contact_share_bots_title" = "%@分享的机器人";
+"contact_support" = "联系客服";
 "contact_title" = "联系人";
 "contacts" = "联系人";
 "content_audio" = "[语音]";
@@ -525,6 +526,7 @@
 "message_sent" = "消息已发送";
 "messages" = "消息";
 "method_not_supported" = "不支持此方法: %@";
+"minimum_withdrawal" = "最小提现数量";
 "minute" = "%d 分钟";
 "minute_count" = "%d 分钟";
 "mixin" = "Mixin";
@@ -916,8 +918,8 @@
 "track_not_found" = "Track 无效";
 "trading" = "交易";
 "transaction" = "交易详情";
-"transaction_hash" = "上链哈希";
 "transaction_failed" = "转账失败";
+"transaction_hash" = "交易哈希";
 "transaction_id" = "交易编号";
 "transaction_request" = "请求转账";
 "transaction_type" = "交易类型";
@@ -994,7 +996,7 @@
 "user_delete_hint" = "该用户已经删除了账号。";
 "user_is_reported" = "已举报";
 "user_not_found" = "找不到这个用户";
-"utxo_count_exceeded" = "该交易使用的 UTXO 数量过多，请尝试分批转账";
+"utxo_count_exceeded" = "该交易使用的 UTXO 数量过多，请尝试首先归集 UTXO 或者分批转账。";
 "validation_timed_out" = "验证超时";
 "value_now" = "价值 %@";
 "value_then" = "当时价值 %@";
@@ -1048,6 +1050,8 @@
 "withdrawal_minimum_withdrawal" = "最小提现数量：";
 "withdrawal_network_fee" = "网络手续费：";
 "withdrawal_no_memo" = "点击不使用 Memo（备注）";
+"withdrawal_suspended" = "%@ 提现暂停";
+"withdrawal_suspended_description" = "%@ 提现已暂停，可能的原因是因为节点故障、区块链网络硬分叉或者拥堵，请耐心等候并稍后重试";
 "withdrawal_to" = "提现到 %@";
 "you" = "你";
 "you_deleted_this_message" = "你撤回了一条消息";

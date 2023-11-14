@@ -700,6 +700,17 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_outputs_asset_state_sequence` ON `outputs` (`asset`, `state`, `sequence`)")
         }
         
+        migrator.registerMigration("utxo_3") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(raw_transactions)").map(\.name)
+            if !columns.contains("state") {
+                try db.execute(sql: "ALTER TABLE `raw_transactions` ADD COLUMN `state` TEXT NOT NULL DEFAULT 'unspent'")
+            }
+            if !columns.contains("type") {
+                try db.execute(sql: "ALTER TABLE `raw_transactions` ADD COLUMN `type` INTEGER NOT NULL DEFAULT 0")
+            }
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_raw_transactions_state_type` ON `raw_transactions` (`state`, `type`)")
+        }
+        
         return migrator
     }
     

@@ -226,6 +226,7 @@
 "contact_mobile" = "Мобильный: %@";
 "contact_phone_contact_hint" = "Загрузите мобильные контакты, чтобы найти других друзей Mixin.";
 "contact_share_bots_title" = "Общие боты пользователя %@";
+"contact_support" = "Contact Support";
 "contact_title" = "Контакты";
 "contacts" = "КОНТАКТЫ";
 "content_audio" = "[Аудио]";
@@ -525,6 +526,7 @@
 "message_sent" = "Сообщение отправлено";
 "messages" = "Сообщения";
 "method_not_supported" = "Method %@ is not supported";
+"minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d минута";
 "minute_count" = "%d минуты";
 "mixin" = "Mixin";
@@ -994,7 +996,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "Сообщено о пользователе";
 "user_not_found" = "Пользователь не найден";
-"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
+"utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "Время проверки истекло";
 "value_now" = "значение сейчас %@";
 "value_then" = "значение затем %@";
@@ -1048,6 +1050,8 @@
 "withdrawal_minimum_withdrawal" = "Минимальный вывод: ";
 "withdrawal_network_fee" = "Комиссия за сеть: ";
 "withdrawal_no_memo" = "Нет памятки";
+"withdrawal_suspended" = "%@ Withdrawal Suspended";
+"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, blockchain network hard fork, or congestion. Please try again later.";
 "withdrawal_to" = "Вывод на %@";
 "you" = "Вы";
 "you_deleted_this_message" = "Вы удалили это сообщение";

@@ -249,18 +249,18 @@ extension TokenViewController: SnapshotCellDelegate {
 extension TokenViewController {
     
     private func send() {
-        guard let asset = self.token else {
+        guard let token = self.token else {
             return
         }
         let alert = UIAlertController(title: R.string.localizable.send_to_title(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.contact(), style: .default, handler: { [weak self] (_) in
-            let vc = TransferReceiverViewController.instance(asset: asset)
+            let vc = TransferReceiverViewController.instance(asset: token)
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
-//        alert.addAction(UIAlertAction(title: R.string.localizable.address(), style: .default, handler: { [weak self](_) in
-//            let vc = AddressViewController.instance(asset: asset)
-//            self?.navigationController?.pushViewController(vc, animated: true)
-//        }))
+        alert.addAction(UIAlertAction(title: R.string.localizable.address(), style: .default, handler: { [weak self](_) in
+            let address = AddressViewController.instance(token: token)
+            self?.navigationController?.pushViewController(address, animated: true)
+        }))
 //        
 //        let withdrawToTIPAllowedChainIds = [
 //            ChainID.ethereum,

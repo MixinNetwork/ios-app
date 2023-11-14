@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WithdrawSuspendedViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="contentStackView" destination="spt-1n-snC" id="XCV-Ys-xFS"/>
+                <outlet property="descriptionLabel" destination="kFK-GC-UxK" id="jKK-sU-pfg"/>
+                <outlet property="realizeButton" destination="TfT-lo-8tq" id="XqE-PY-yFh"/>
+                <outlet property="titleLabel" destination="uWA-RV-lox" id="FwI-1h-MTr"/>
+                <outlet property="titleView" destination="AwM-0I-zTX" id="wZX-TD-aKn"/>
+                <outlet property="tokenIconView" destination="HbI-cG-P07" id="cYP-ry-Nah"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="433"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AwM-0I-zTX" customClass="PopupTitleView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="70"/>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="YBI-yp-fUW"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="spt-1n-snC">
+                    <rect key="frame" x="30" y="70" width="333" height="341.33333333333331"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Withdrawal Suspended" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uWA-RV-lox">
+                            <rect key="frame" x="69.333333333333329" y="0.0" width="194.33333333333337" height="21.666666666666668"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HbI-cG-P07" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="131.66666666666666" y="53.666666666666671" width="70" height="70"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="HbI-cG-P07" secondAttribute="height" id="gKn-Xo-vLh"/>
+                                <constraint firstAttribute="width" constant="70" id="xsn-cA-kDt"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                    <real key="value" value="18"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconOutlineWidth">
+                                    <real key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="提现已暂停，可能的原因是因为节点故障、区块链网络硬分叉或者拥堵，请耐心等候并稍后重试" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kFK-GC-UxK">
+                            <rect key="frame" x="2.3333333333333428" y="155.66666666666666" width="328.66666666666663" height="33.666666666666657"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TfT-lo-8tq" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="114.66666666666666" y="221.33333333333331" width="104" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="32" minY="12" maxX="32" maxY="12"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Got it">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="got_it"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="close:" destination="-1" eventType="touchUpInside" id="aiU-SH-hoY"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o0I-GC-OWw">
+                            <rect key="frame" x="104" y="297.33333333333331" width="125" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="YBw-av-jjP"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Contact Support "/>
+                            <connections>
+                                <action selector="contactSupport:" destination="-1" eventType="touchUpInside" id="ere-rw-ZOU"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="spt-1n-snC" secondAttribute="trailing" constant="30" id="7Of-YI-nig"/>
+                <constraint firstItem="AwM-0I-zTX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VCR-Hf-CwM"/>
+                <constraint firstItem="AwM-0I-zTX" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="XGT-ww-ii0"/>
+                <constraint firstItem="spt-1n-snC" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="j6M-1Z-XxR"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="AwM-0I-zTX" secondAttribute="trailing" id="jDX-Lk-1TS"/>
+                <constraint firstItem="spt-1n-snC" firstAttribute="top" secondItem="AwM-0I-zTX" secondAttribute="bottom" id="zzm-eO-r7d"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="281.67938931297709" y="226.7605633802817"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -8,6 +8,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         case address(Address)
     }
     
+    private struct Fee {
+        let amount: Decimal
+        let token: Token
+    }
+    
     @IBOutlet weak var contentScrollView: UIScrollView!
     @IBOutlet weak var opponentImageView: AvatarImageView!
     @IBOutlet weak var tokenSelectorView: AssetComboBoxView!
@@ -20,8 +25,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var memoView: CornerView!
     @IBOutlet weak var memoTextField: UITextField!
     
-    @IBOutlet weak var transcationFeeHintView: UIView!
-    @IBOutlet weak var transactionFeeHintLabel: UILabel!
+    @IBOutlet weak var withdrawFeeWrapperView: UIView!
+    @IBOutlet weak var withdrawFeeView: WithdrawFeeView!
     
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var continueButton: RoundedButton!
@@ -37,6 +42,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var token: TokenItem?
     private var opponent: Opponent
     private var amountIntent: AmountIntent = .byToken
+    private var fee: Fee?
     
     private var availableTokens = [TokenItem]()
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
@@ -65,18 +71,23 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         switch opponent {
         case .contact(let user):
             opponentImageView.setImage(with: user)
-            container?.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
-            container?.titleLabel.text = R.string.localizable.send_to_title() + " " + user.fullName
+            if let container {
+                container.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
+                container.titleLabel.text = R.string.localizable.send_to_title() + " " + user.fullName
+            }
+            memoView.isHidden = false
+            withdrawFeeWrapperView.isHidden = true
         case .address(let address):
             opponentImageView.image = R.image.wallet.ic_transaction_external_large()
-            container?.titleLabel.text = R.string.localizable.send_to_title() + " " + address.label
-            container?.setSubtitle(subtitle: address.fullAddress.toSimpleKey())
+            if let container {
+                container.titleLabel.text = R.string.localizable.send_to_title() + " " + address.label
+                container.setSubtitle(subtitle: address.compactRepresentation)
+            }
             memoView.isHidden = true
-            reloadTransactionFeeHint(addressId: address.addressId)
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(reloadAddress),
-                                                   name: AddressDAO.addressDidChangeNotification,
-                                                   object: nil)
+            withdrawFeeWrapperView.isHidden = false
+            if let token {
+                reloadWithdrawFee(with: token, address: address)
+            }
         }
         
         if let token {
@@ -109,6 +120,12 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    class func instance(token: TokenItem?, to opponent: Opponent) -> UIViewController {
+        let controller = TransferOutViewController(token: token, to: opponent)
+        let container = ContainerViewController.instance(viewController: controller, title: "")
+        return container
     }
     
     override func keyboardWillChangeFrame(_ notification: Notification) {
@@ -209,7 +226,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         switch opponent {
         case let .contact(opponent):
-            validator.transfer(to: opponent, amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount) { [weak self] result in
+            validator.transfer(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, to: opponent) { [weak self] result in
                 guard let self else {
                     return
                 }
@@ -234,7 +251,34 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
             }
         case let .address(address):
-            break
+            guard let fee else {
+                return
+            }
+            validator.withdraw(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, to: address) { [weak self] result in
+                guard let self else {
+                    return
+                }
+                self.continueButton.isBusy = false
+                switch result {
+                case .passed:
+                    let withdraw = WithdrawViewController(amountDisplay: amountIntent,
+                                                          withdrawalToken: token,
+                                                          withdrawalTokenAmount: tokenAmount,
+                                                          withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                          feeToken: fee.token,
+                                                          feeAmount: fee.amount,
+                                                          address: address,
+                                                          traceID: traceID)
+                    let authentication = AuthenticationViewController(intentViewController: withdraw)
+                    self.present(authentication, animated: true)
+                case .userCancelled:
+                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                case .failure(let message):
+                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                    self.amountTextField.becomeFirstResponder()
+                    showAutoHiddenHud(style: .error, text: message)
+                }
+            }
         }
     }
     
@@ -302,23 +346,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    @objc private func reloadAddress() {
-//        if case let .address(address) = opponent {
-//            DispatchQueue.global().async { [weak self] in
-//                guard let address = AddressDAO.shared.getAddress(addressId: address.addressId) else {
-//                    return
-//                }
-//                DispatchQueue.main.async {
-//                    guard let self = self else {
-//                        return
-//                    }
-//                    self.opponent = .address(address)
-//                    self.fillFeeHint(address: address, onFinished: nil)
-//                }
-//            }
-//        }
-    }
-    
     private func updateViews(token: TokenItem) {
         switchAmountIntentButton.isHidden = token.decimalBTCPrice <= 0
         tokenSelectorView.load(token: token)
@@ -330,39 +357,65 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    private func reloadTransactionFeeHint(addressId: String) {
-//        continueButton.isBusy = true
-//        DispatchQueue.global().async { [weak self] in
-//            if let address = AddressDAO.shared.getAddress(addressId: addressId), !address.feeAssetId.isEmpty {
-//                self?.fillFeeHint(address: address) {
-//                    self?.reloadFeeFromRemote(addressId: address.addressId)
-//                }
-//            } else {
-//                self?.reloadFeeFromRemote(addressId: addressId)
-//            }
-//        }
-    }
-    
-    private func reloadFeeFromRemote(addressId: String) {
-//        WithdrawalAPI.address(addressId: addressId) { [weak self](result) in
-//            guard let weakSelf = self else {
-//                return
-//            }
-//            switch result {
-//            case let .success(address):
-//                DispatchQueue.global().async {
-//                    AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-//                }
-//                if case .address = weakSelf.opponent {
-//                    weakSelf.opponent = .address(address)
-//                }
-//                weakSelf.fillFeeHint(address: address, onFinished: nil)
-//            case .failure:
-//                DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {
-//                    self?.reloadFeeFromRemote(addressId: addressId)
-//                })
-//            }
-//        }
+    private func reloadWithdrawFee(with token: TokenItem, address: Address) {
+        continueButton.isBusy = true
+        Task {
+            do {
+                let fees = try await SafeAPI.fees(assetID: token.assetID, destination: address.destination)
+                let fee = fees.first(where: { $0.assetID == token.chainID })
+                ?? fees.first(where: { $0.assetID == token.assetID })
+                ?? fees.first
+                guard let fee else {
+                    await MainActor.run {
+                        fatalError()
+                    }
+                    return
+                }
+                let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: fees.map(\.assetID))
+                let feeAsset: TokenItem?
+                if missingAssetIDs.isEmpty {
+                    feeAsset = TokenDAO.shared.tokenItem(with: fee.assetID)
+                } else {
+                    let tokens = try await SafeAPI.assets(ids: missingAssetIDs)
+                    feeAsset = TokenDAO.shared.save(assets: tokens, andFetchAssetWith: fee.assetID)
+                }
+                guard let feeAsset else {
+                    await MainActor.run {
+                        fatalError()
+                    }
+                    return
+                }
+                await MainActor.run {
+                    self.withdrawFeeView.networkLabel.text = token.depositNetworkName
+                    self.withdrawFeeView.minimumWithdrawalLabel.text = CurrencyFormatter.localizedString(from: address.decimalDust, format: .precision, sign: .never)
+                    if fee.decimalAmount == 0 {
+                        self.withdrawFeeView.networkFeeLabel.text = "0"
+                    } else {
+                        self.withdrawFeeView.networkFeeLabel.text = CurrencyFormatter.localizedString(from: fee.decimalAmount, format: .precision, sign: .never, symbol: .custom(feeAsset.symbol))
+                    }
+                    if fees.count > 1 {
+                        self.withdrawFeeView.switchFeeDisclosureIndicatorView.isHidden = false
+                        self.withdrawFeeView.isUserInteractionEnabled = true
+                    } else {
+                        self.withdrawFeeView.switchFeeDisclosureIndicatorView.isHidden = true
+                        self.withdrawFeeView.isUserInteractionEnabled = false
+                    }
+                    self.fee = Fee(amount: fee.decimalAmount, token: feeAsset)
+                    self.continueButton.isBusy = false
+                }
+            } catch MixinAPIError.withdrawSuspended {
+                await MainActor.run {
+                    let suspended = WithdrawSuspendedViewController(token: token)
+                    suspended.delegate = self
+                    present(suspended, animated: true)
+                }
+            } catch {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                    // Check token and address
+                    self?.reloadWithdrawFee(with: token, address: address)
+                }
+            }
+        }
     }
     
     private func showInputAccessoryView() {
@@ -382,12 +435,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         amountTextField.inputAccessoryView = nil
         amountTextField.reloadInputViews()
-    }
-    
-    class func instance(token: TokenItem?, to opponent: Opponent) -> UIViewController {
-        let controller = TransferOutViewController(token: token, to: opponent)
-        let container = ContainerViewController.instance(viewController: controller, title: "")
-        return container
     }
     
 }
@@ -466,6 +513,27 @@ extension TransferOutViewController: TokenSelectorViewControllerDelegate {
         amountTextField.text = nil
         amountEditingChanged(viewController)
         updateViews(token: token)
+    }
+    
+}
+
+extension TransferOutViewController: WithdrawSuspendedViewControllerDelegate {
+    
+    func withdrawSuspendedViewControllerDidRealize(_ controller: WithdrawSuspendedViewController) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func withdrawSuspendedViewControllerWantsContactSupport(_ controller: WithdrawSuspendedViewController) {
+        guard let navigationController, let user = UserDAO.shared.getUser(identityNumber: "7000") else {
+            return
+        }
+        let conversation = ConversationViewController.instance(ownerUser: user)
+        var viewControllers = navigationController.viewControllers
+        if let index = viewControllers.firstIndex(where: { $0 is HomeViewController }) {
+            viewControllers.removeLast(viewControllers.count - index - 1)
+        }
+        viewControllers.append(conversation)
+        navigationController.setViewControllers(viewControllers, animated: true)
     }
     
 }

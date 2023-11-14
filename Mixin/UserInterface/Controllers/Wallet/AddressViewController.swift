@@ -9,7 +9,7 @@ class AddressViewController: UIViewController {
     
     private let cellReuseId = "address"
     
-    private var asset: TokenItem!
+    private var token: TokenItem!
     private var addresses = [Address]()
     private var searchResult = [Address]()
     private var isSearching: Bool {
@@ -36,7 +36,7 @@ class AddressViewController: UIViewController {
                                                selector: #selector(reloadLocalAddresses),
                                                name: AddressDAO.addressDidChangeNotification,
                                                object: nil)
-        WithdrawalAPI.addresses(assetId: asset.assetID) { (result) in
+        WithdrawalAPI.addresses(assetId: token.assetID) { (result) in
             guard case let .success(addresses) = result else {
                 return
             }
@@ -57,13 +57,13 @@ class AddressViewController: UIViewController {
     }
     
     @IBAction func newAddressAction() {
-        let vc = NewAddressViewController.instance(asset: asset)
+        let vc = NewAddressViewController.instance(asset: token)
         UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
     
-    class func instance(asset: TokenItem) -> UIViewController {
+    class func instance(token: TokenItem) -> UIViewController {
         let vc = R.storyboard.wallet.address_list()!
-        vc.asset = asset
+        vc.token = token
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.address())
         return container
     }
@@ -91,9 +91,9 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! AddressCell
         if isSearching {
-            cell.render(address: searchResult[indexPath.row], asset: asset)
+            cell.render(address: searchResult[indexPath.row], asset: token)
         } else {
-            cell.render(address: addresses[indexPath.row], asset: asset)
+            cell.render(address: addresses[indexPath.row], asset: token)
         }
         return cell
     }
@@ -104,8 +104,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
             return
         }
         let address = isSearching ? searchResult[indexPath.row] : addresses[indexPath.row]
-        
-        let vc = TransferOutViewController.instance(token: asset, to: .address(address))
+        let vc = TransferOutViewController.instance(token: token, to: .address(address))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
             viewControllers.remove(at: index)
@@ -127,7 +126,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
 extension AddressViewController {
     
     @objc private func reloadLocalAddresses() {
-        let assetId = asset.assetID
+        let assetId = token.assetID
         DispatchQueue.global().async { [weak self] in
             let addresses = AddressDAO.shared.getAddresses(assetId: assetId)
             DispatchQueue.main.async {
@@ -151,7 +150,7 @@ extension AddressViewController {
                 self.searchBoxView.textField.resignFirstResponder()
             }
             let address = self.addresses[indexPath.row]
-            AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: self.asset, addressRequest: nil, address: address, dismissCallback: nil)
+            AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: self.token, addressRequest: nil, address: address, dismissCallback: nil)
             completionHandler(true)
         }
     }

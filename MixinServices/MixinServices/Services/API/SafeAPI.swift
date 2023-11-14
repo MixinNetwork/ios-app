@@ -69,22 +69,8 @@ extension SafeAPI {
 // MARK: - Transfer
 extension SafeAPI {
     
-    public static func ghostKeys(
-        receiverID: String,
-        receiverHint: String,
-        senderID: String,
-        senderHint: String
-    ) async throws -> [GhostKey] {
-        struct Receiver: Encodable {
-            let receivers: [String]
-            let index: Int
-            let hint: String
-        }
-        let body = [
-            Receiver(receivers: [receiverID], index: 0, hint: receiverHint),
-            Receiver(receivers: [senderID], index: 1, hint: senderHint),
-        ]
-        return try await request(method: .post, path: "/safe/keys", parameters: body)
+    public static func ghostKeys(requests: [GhostKeyRequest]) async throws -> [GhostKey] {
+        try await request(method: .post, path: "/safe/keys", parameters: requests)
     }
     
     public static func transaction(id: String) async throws -> TransactionResponse {
@@ -169,6 +155,15 @@ extension SafeAPI {
             path.append("&tag=\(tag)")
         }
         return try await request(method: .get, path: path)
+    }
+    
+}
+
+// MARK: - Withdraw
+extension SafeAPI {
+    
+    public static func fees(assetID: String, destination: String) async throws -> [WithdrawFee] {
+        try await request(method: .get, path: "/safe/assets/\(assetID)/fees?destination=\(destination)")
     }
     
 }

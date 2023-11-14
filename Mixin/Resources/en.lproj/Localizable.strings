@@ -226,6 +226,7 @@
 "contact_mobile" = "Mobile: %@";
 "contact_phone_contact_hint" = "Upload mobile contacts to find other Mixin friends.";
 "contact_share_bots_title" = "%@'s Shared Bots";
+"contact_support" = "Contact Support";
 "contact_title" = "Contacts";
 "contacts" = "CONTACTS";
 "content_audio" = "[Audio]";
@@ -525,6 +526,7 @@
 "message_sent" = "Message sent";
 "messages" = "Messages";
 "method_not_supported" = "Method %@ is not supported";
+"minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d Minute";
 "minute_count" = "%d Minutes";
 "mixin" = "Mixin";
@@ -994,7 +996,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "User has been reported";
 "user_not_found" = "User not found";
-"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
+"utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "Validation timed out";
 "value_now" = "value now %@";
 "value_then" = "value then %@";
@@ -1048,6 +1050,8 @@
 "withdrawal_minimum_withdrawal" = "Minimum withdrawal: ";
 "withdrawal_network_fee" = "Network fee: ";
 "withdrawal_no_memo" = "No Memo";
+"withdrawal_suspended" = "%@ Withdrawal Suspended";
+"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, blockchain network hard fork, or congestion. Please try again later.";
 "withdrawal_to" = "Withdraw to %@";
 "you" = "You";
 "you_deleted_this_message" = "You deleted this message";

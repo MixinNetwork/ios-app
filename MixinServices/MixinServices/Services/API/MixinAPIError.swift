@@ -57,6 +57,7 @@ public enum MixinAPIError: Error {
     case sharedAppReachLimit
     case circleConversationReachLimit
     case withdrawFeeTooSmall
+    case withdrawSuspended
     case invalidConversationChecksum
     
     case chainNotInSync
@@ -152,6 +153,8 @@ extension MixinAPIError {
             self = .circleConversationReachLimit
         case (202, 20135):
             self = .withdrawFeeTooSmall
+        case (202, 20137):
+            self = .withdrawSuspended
         case (202, 20140):
             self = .invalidConversationChecksum
             

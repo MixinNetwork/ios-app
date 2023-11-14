@@ -38,6 +38,13 @@ public final class TokenDAO: UserDatabaseDAO {
         db.recordExists(in: Token.self, where: Token.column(of: .assetID) == assetID)
     }
     
+    public func inexistAssetIDs(in assetIDs: [String]) -> [String] {
+        db.select(with: """
+          WITH q(id) AS (VALUES ('\(assetIDs.joined(separator: "','"))'))
+          SELECT q.id FROM q LEFT JOIN tokens t ON q.id = t.asset_id WHERE t.asset_id IS NULL
+        """)
+    }
+    
     public func assetID(ofAssetWith kernelAssetID: String) -> String? {
         db.select(with: "SELECT asset_id FROM tokens WHERE kernel_asset_id = ?", arguments: [kernelAssetID])
     }
@@ -111,6 +118,13 @@ public final class TokenDAO: UserDatabaseDAO {
                 center.post(onMainThread: Self.tokensDidChangeNotification,
                             object: nil)
             }
+        }
+    }
+    
+    public func save(assets: [Token], andFetchAssetWith assetID: String) -> TokenItem? {
+        try? db.writeAndReturnError { db in
+            try assets.save(db)
+            return try TokenItem.fetchOne(db, sql: SQL.selectWithAssetID, arguments: [assetID])
         }
     }
     

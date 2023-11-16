@@ -147,6 +147,9 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                 
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
                 
+                let trace = Trace(traceId: traceID, assetId: feeToken.assetID, amount: amountString, opponentId: nil, destination: address.destination, tag: address.tag)
+                TraceDAO.shared.saveTrace(trace: trace)
+                
                 let withdrawalOutputs: UTXOService.OutputCollection
                 let feeOutputs: UTXOService.OutputCollection?
                 if isFeeTokenDifferent {

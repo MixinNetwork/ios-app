@@ -783,6 +783,7 @@
 "security" = "Безопасность";
 "select" = "Выбрать";
 "select_a_country_or_region" = "Выберите страну или регион";
+"select_a_token_for_the_fee" = "Select a token for the fee";
 "select_emergency_contact" = "Выберите экстренный контакт";
 "select_more_photos" = "Выберите больше фотографий";
 "selected_count" = "%@ Выбрано";
@@ -1051,7 +1052,7 @@
 "withdrawal_network_fee" = "Комиссия за сеть: ";
 "withdrawal_no_memo" = "Нет памятки";
 "withdrawal_suspended" = "%@ Withdrawal Suspended";
-"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, blockchain network hard fork, or congestion. Please try again later.";
+"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Вывод на %@";
 "you" = "Вы";
 "you_deleted_this_message" = "Вы удалили это сообщение";

@@ -783,6 +783,7 @@
 "security" = "安全";
 "select" = "選擇";
 "select_a_country_or_region" = "選擇一個國家或地區";
+"select_a_token_for_the_fee" = "選擇支付手續費的幣種";
 "select_emergency_contact" = "選擇緊急聯絡人";
 "select_more_photos" = "選擇更多照片";
 "selected_count" = "選擇了 %@ 個訊息";

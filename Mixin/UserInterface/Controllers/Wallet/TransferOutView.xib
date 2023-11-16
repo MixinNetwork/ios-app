@@ -206,7 +206,7 @@
                         <constraint firstItem="COG-Mz-OEG" firstAttribute="width" secondItem="0bF-ak-SYm" secondAttribute="width" id="fh8-uT-ufe"/>
                     </constraints>
                 </scrollView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="stw-tF-dld">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="stw-tF-dld" customClass="TouchEventBypassView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="764" width="393" height="88"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hgq-Hy-Lec" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
@@ -256,7 +256,7 @@
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

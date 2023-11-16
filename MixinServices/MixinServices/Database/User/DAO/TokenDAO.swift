@@ -39,8 +39,9 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func inexistAssetIDs(in assetIDs: [String]) -> [String] {
-        db.select(with: """
-          WITH q(id) AS (VALUES ('\(assetIDs.joined(separator: "','"))'))
+        let values = assetIDs.map({ "('\($0)')" }).joined(separator: ",")
+        return db.select(with: """
+          WITH q(id) AS (VALUES \(values))
           SELECT q.id FROM q LEFT JOIN tokens t ON q.id = t.asset_id WHERE t.asset_id IS NULL
         """)
     }
@@ -55,6 +56,11 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public func tokenItem(with id: String) -> TokenItem? {
         db.select(with: SQL.selectWithAssetID, arguments: [id])
+    }
+    
+    public func tokenItems(with ids: [String]) -> [TokenItem] {
+        let ids = ids.joined(separator: "','")
+        return db.select(with: "\(SQL.selector) WHERE t.asset_id IN ('\(ids)')")
     }
     
     public func search(keyword: String, sortResult: Bool, limit: Int?) -> [TokenItem] {
@@ -104,7 +110,7 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
     }
     
-    public func save(assets: [Token]) {
+    public func save(assets: [Token], completion: (() -> Void)? = nil) {
         guard !assets.isEmpty else {
             return
         }
@@ -118,13 +124,7 @@ public final class TokenDAO: UserDatabaseDAO {
                 center.post(onMainThread: Self.tokensDidChangeNotification,
                             object: nil)
             }
-        }
-    }
-    
-    public func save(assets: [Token], andFetchAssetWith assetID: String) -> TokenItem? {
-        try? db.writeAndReturnError { db in
-            try assets.save(db)
-            return try TokenItem.fetchOne(db, sql: SQL.selectWithAssetID, arguments: [assetID])
+            completion?()
         }
     }
     

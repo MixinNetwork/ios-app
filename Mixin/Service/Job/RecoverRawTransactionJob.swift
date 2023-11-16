@@ -18,8 +18,13 @@ final class RecoverRawTransactionJob: AsynchronousJob {
         Task {
             while let transaction = RawTransactionDAO.shared.firstUnspentRawTransaction(types: [.transfer, .withdrawal]) {
                 Logger.general.info(category: "RecoverRawTransaction", message: "Found tx: \(transaction.requestID)")
-                let feeTraceID = UUID.uniqueObjectIDString(transaction.requestID, "FEE")
-                let feeTransaction = RawTransactionDAO.shared.rawTransaction(with: feeTraceID)
+                let feeTransaction: RawTransaction?
+                if RawTransaction.TransactionType(rawValue: transaction.type) == .withdrawal {
+                    let feeTraceID = UUID.uniqueObjectIDString(transaction.requestID, "FEE")
+                    feeTransaction = RawTransactionDAO.shared.rawTransaction(with: feeTraceID)
+                } else {
+                    feeTransaction = nil
+                }
                 do {
                     let response = try await SafeAPI.transaction(id: transaction.requestID)
                     try updateDatabase(with: response, transaction: transaction, feeTransaction: feeTransaction)

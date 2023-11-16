@@ -6,6 +6,7 @@ final class WithdrawFeeView: UIView, XibDesignable {
     @IBOutlet weak var minimumWithdrawalLabel: UILabel!
     @IBOutlet weak var networkFeeLabel: UILabel!
     @IBOutlet weak var switchFeeDisclosureIndicatorView: UIImageView!
+    @IBOutlet weak var switchFeeButton: UIButton!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

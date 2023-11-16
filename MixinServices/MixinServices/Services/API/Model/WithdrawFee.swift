@@ -1,12 +1,10 @@
 import Foundation
 
-public final class WithdrawFee {
+public struct WithdrawFee {
     
     public let amount: String
     public let assetID: String
     public let type: String
-    
-    public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     
 }
 

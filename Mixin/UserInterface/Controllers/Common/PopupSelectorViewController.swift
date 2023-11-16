@@ -25,7 +25,6 @@ class PopupSelectorViewController: UIViewController {
         view.layer.cornerRadius = 13
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.masksToBounds = true
-        titleView.titleLabel.text = R.string.localizable.network_fee("")
         titleView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
     }
     

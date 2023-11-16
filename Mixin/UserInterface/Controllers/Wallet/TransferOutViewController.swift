@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TransferOutViewController: KeyboardBasedLayoutViewController {
+final class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     enum Opponent {
         case contact(UserItem)
@@ -28,7 +28,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var withdrawFeeWrapperView: UIView!
     @IBOutlet weak var withdrawFeeView: WithdrawFeeView!
     
-    @IBOutlet weak var continueWrapperView: UIView!
+    @IBOutlet weak var continueWrapperView: TouchEventBypassView!
     @IBOutlet weak var continueButton: RoundedButton!
     
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
@@ -42,7 +42,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var token: TokenItem?
     private var opponent: Opponent
     private var amountIntent: AmountIntent = .byToken
-    private var fee: Fee?
+    
+    private var selectableFeeTokens: [FeeTokenItem]?
+    private var selectedFeeTokenIndex: Int?
     
     private var availableTokens = [TokenItem]()
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
@@ -67,6 +69,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tokenSelectorView.button.addTarget(self, action: #selector(switchToken(_:)), for: .touchUpInside)
+        withdrawFeeView.switchFeeButton.addTarget(self, action: #selector(switchFeeToken(_:)), for: .touchUpInside)
+        continueWrapperView.exception = continueButton
         amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
         switch opponent {
         case .contact(let user):
@@ -251,9 +255,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
             }
         case let .address(address):
-            guard let fee else {
+            guard let selectableFeeTokens, let selectedFeeTokenIndex else {
                 return
             }
+            let feeTokenItem = selectableFeeTokens[selectedFeeTokenIndex]
             validator.withdraw(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, to: address) { [weak self] result in
                 guard let self else {
                     return
@@ -265,8 +270,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                           withdrawalToken: token,
                                                           withdrawalTokenAmount: tokenAmount,
                                                           withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                          feeToken: fee.token,
-                                                          feeAmount: fee.amount,
+                                                          feeToken: feeTokenItem.tokenItem,
+                                                          feeAmount: feeTokenItem.decimalAmount,
                                                           address: address,
                                                           traceID: traceID)
                     let authentication = AuthenticationViewController(intentViewController: withdraw)
@@ -306,6 +311,18 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         vc.tokens = availableTokens
         vc.token = token
         present(vc, animated: true, completion: nil)
+    }
+    
+    @objc private func switchFeeToken(_ sender: Any) {
+        guard let selectableFeeTokens, let selectedFeeTokenIndex else {
+            return
+        }
+        let selector = WithdrawFeeSelectorViewController(fees: selectableFeeTokens, selectedIndex: selectedFeeTokenIndex) { index in
+            self.selectedFeeTokenIndex = index
+            let feeToken = selectableFeeTokens[index]
+            self.updateNetworkFeeLabel(feeToken: feeToken)
+        }
+        present(selector, animated: true)
     }
     
     @objc private func fillBalanceAction(_ sender: Any) {
@@ -362,45 +379,47 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         Task {
             do {
                 let fees = try await SafeAPI.fees(assetID: token.assetID, destination: address.destination)
-                let fee = fees.first(where: { $0.assetID == token.chainID })
-                ?? fees.first(where: { $0.assetID == token.assetID })
-                ?? fees.first
-                guard let fee else {
-                    await MainActor.run {
-                        fatalError()
-                    }
-                    return
+                guard let fee = fees.first else {
+                    throw MixinAPIError.withdrawSuspended
                 }
-                let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: fees.map(\.assetID))
-                let feeAsset: TokenItem?
-                if missingAssetIDs.isEmpty {
-                    feeAsset = TokenDAO.shared.tokenItem(with: fee.assetID)
-                } else {
+                let allAssetIDs = fees.map(\.assetID)
+                let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: allAssetIDs)
+                if !missingAssetIDs.isEmpty {
                     let tokens = try await SafeAPI.assets(ids: missingAssetIDs)
-                    feeAsset = TokenDAO.shared.save(assets: tokens, andFetchAssetWith: fee.assetID)
-                }
-                guard let feeAsset else {
-                    await MainActor.run {
-                        fatalError()
+                    await withCheckedContinuation { continuation in
+                        TokenDAO.shared.save(assets: tokens) {
+                            continuation.resume()
+                        }
                     }
+                }
+                let tokensMap = TokenDAO.shared.tokenItems(with: allAssetIDs)
+                    .reduce(into: [:]) { result, item in
+                        result[item.assetID] = item
+                    }
+                let feeTokens: [FeeTokenItem] = fees.compactMap { fee in
+                    if let token = tokensMap[fee.assetID] {
+                        return FeeTokenItem(amount: fee.amount, tokenItem: token)
+                    } else {
+                        return nil
+                    }
+                }
+                guard feeTokens.first?.tokenItem.assetID == fee.assetID else {
                     return
                 }
+                let feeToken = feeTokens[0]
                 await MainActor.run {
+                    self.selectedFeeTokenIndex = 0
+                    self.selectableFeeTokens = feeTokens
                     self.withdrawFeeView.networkLabel.text = token.depositNetworkName
                     self.withdrawFeeView.minimumWithdrawalLabel.text = CurrencyFormatter.localizedString(from: address.decimalDust, format: .precision, sign: .never)
-                    if fee.decimalAmount == 0 {
-                        self.withdrawFeeView.networkFeeLabel.text = "0"
-                    } else {
-                        self.withdrawFeeView.networkFeeLabel.text = CurrencyFormatter.localizedString(from: fee.decimalAmount, format: .precision, sign: .never, symbol: .custom(feeAsset.symbol))
-                    }
-                    if fees.count > 1 {
+                    self.updateNetworkFeeLabel(feeToken: feeToken)
+                    if feeTokens.count > 1 {
                         self.withdrawFeeView.switchFeeDisclosureIndicatorView.isHidden = false
                         self.withdrawFeeView.isUserInteractionEnabled = true
                     } else {
                         self.withdrawFeeView.switchFeeDisclosureIndicatorView.isHidden = true
                         self.withdrawFeeView.isUserInteractionEnabled = false
                     }
-                    self.fee = Fee(amount: fee.decimalAmount, token: feeAsset)
                     self.continueButton.isBusy = false
                 }
             } catch MixinAPIError.withdrawSuspended {
@@ -435,6 +454,14 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         amountTextField.inputAccessoryView = nil
         amountTextField.reloadInputViews()
+    }
+    
+    private func updateNetworkFeeLabel(feeToken: FeeTokenItem) {
+        if feeToken.decimalAmount == 0 {
+            withdrawFeeView.networkFeeLabel.text = "0"
+        } else {
+            withdrawFeeView.networkFeeLabel.text = CurrencyFormatter.localizedString(from: feeToken.decimalAmount, format: .precision, sign: .never, symbol: .custom(feeToken.tokenItem.symbol))
+        }
     }
     
 }

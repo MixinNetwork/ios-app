@@ -13,6 +13,7 @@
                 <outlet property="minimumWithdrawalLabel" destination="zMQ-jV-duf" id="yY9-9q-Ztx"/>
                 <outlet property="networkFeeLabel" destination="YXY-Fl-Msi" id="GZw-MS-O7K"/>
                 <outlet property="networkLabel" destination="e8e-oL-LsA" id="dl7-hm-Sa7"/>
+                <outlet property="switchFeeButton" destination="097-Lt-wrG" id="dBX-DR-Yft"/>
                 <outlet property="switchFeeDisclosureIndicatorView" destination="04B-iv-0hF" id="q1B-ag-UKa"/>
             </connections>
         </placeholder>
@@ -99,7 +100,7 @@
                                 </label>
                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_selector_down" translatesAutoresizingMaskIntoConstraints="NO" id="04B-iv-0hF">
                                     <rect key="frame" x="393" y="0.0" width="0.0" height="17"/>
-                                    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <color key="tintColor" name="text_emphasized_description"/>
                                 </imageView>
                             </subviews>
                         </stackView>

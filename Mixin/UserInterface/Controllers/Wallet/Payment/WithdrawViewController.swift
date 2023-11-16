@@ -318,8 +318,13 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                                                              db: db)
                     }
                 }
-                let response = try await SafeAPI.postTransaction(requests: rawRequests)
-                RawTransactionDAO.shared.signRawTransactions(with: rawRequests.map(\.id))
+                let postResponses = try await SafeAPI.postTransaction(requests: rawRequests)
+                RawTransactionDAO.shared.signRawTransactions(with: rawRequests.map(\.id)) { db in
+                    if let withdrawalResponse = postResponses.first(where: { $0.requestID == traceID }) {
+                        let snapshotID = UUID.uniqueObjectIDString(withdrawalResponse.userID, ":", withdrawalResponse.transactionHash)
+                        try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: snapshotID))
+                    }
+                }
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!

@@ -80,13 +80,16 @@ final class RecoverRawTransactionJob: AsynchronousJob {
             requestIDs.append(feeTransaction.requestID)
         }
         RawTransactionDAO.shared.signRawTransactions(with: requestIDs) { db in
+            let snapshotID = UUID.uniqueObjectIDString(response.userID, ":", response.transactionHash)
+            try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshotID)])
+            
             guard
                 RawTransaction.TransactionType(rawValue: transaction.type) == .transfer,
                 !transaction.receiverID.isEmpty
             else {
                 return
             }
-            let snapshot = SafeSnapshot(id: "\(response.userID):\(response.transactionHash)".uuidDigest(),
+            let snapshot = SafeSnapshot(id: snapshotID,
                                         type: SafeSnapshot.SnapshotType.snapshot.rawValue,
                                         assetID: assetID,
                                         amount: "-" + response.amount,
@@ -112,8 +115,6 @@ final class RecoverRawTransactionJob: AsynchronousJob {
             }
             let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: response.createdAt)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "RecoverRawTransaction", silentNotification: false)
-            
-            try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
         }
     }
     

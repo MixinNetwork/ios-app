@@ -41,8 +41,6 @@ public final class AssetAPI: MixinAPI {
         }
         static let top = "/network/assets/top?kind=NORMAL"
         
-        static let fiats = "/fiats"
-        
         static let chains = "/network/chains"
         static func chain(chainId: String) -> String {
             "/network/chains/" + chainId
@@ -99,10 +97,6 @@ public final class AssetAPI: MixinAPI {
     
     public static func topAssets(completion: @escaping (MixinAPI.Result<[TopAsset]>) -> Void) {
         request(method: .get, path: Path.top, completion: completion)
-    }
-    
-    public static func fiats(completion: @escaping (MixinAPI.Result<[FiatMoney]>) -> Void) {
-        request(method: .get, path: Path.fiats, completion: completion)
     }
     
     public static func ticker(asset: String, offset: String, completion: @escaping (MixinAPI.Result<TickerResponse>) -> Void) {

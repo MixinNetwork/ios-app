@@ -193,18 +193,18 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 }
                 let signedRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
                 let postResponses = try await SafeAPI.postTransaction(requests: [signedRequest])
-                guard let response = postResponses.first(where: { $0.requestID == signedRequest.id }) else {
+                guard let postResponse = postResponses.first(where: { $0.requestID == signedRequest.id }) else {
                     throw Error.invalidTransactionResponse
                 }
                 let snapshot = SafeSnapshot(id: "\(senderID):\(signedTx.hash)".uuidDigest(),
-                                            type: SafeSnapshot.SnapshotType.snapshot.rawValue,
+                                            type: .snapshot,
                                             assetID: token.assetID,
                                             amount: "-" + amount,
                                             userID: senderID,
                                             opponentID: receiverID,
                                             memo: memo,
                                             transactionHash: signedTx.hash,
-                                            createdAt: response.createdAt,
+                                            createdAt: postResponse.createdAt,
                                             traceID: traceID,
                                             confirmations: nil,
                                             openingBalance: nil,

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct TransactionResponse {
+public struct PostTransactionResponse {
     
     public let type: String
     public let requestID: String
@@ -17,13 +17,16 @@ public struct TransactionResponse {
     public let rawTransaction: String
     public let createdAt: String
     public let updatedAt: String
-    public let snapshotID: String
     public let snapshotHash: String
     public let snapshotAt: String
     
+    public var snapshotID: String {
+        "\(userID):\(transactionHash)".uuidDigest()
+    }
+    
 }
 
-extension TransactionResponse: Decodable {
+extension PostTransactionResponse: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case type
@@ -41,7 +44,6 @@ extension TransactionResponse: Decodable {
         case rawTransaction = "raw_transaction"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-        case snapshotID = "snapshot_id"
         case snapshotHash = "snapshot_hash"
         case snapshotAt = "snapshot_at"
     }

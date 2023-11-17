@@ -54,7 +54,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
         return true
     }
     
-    private func updateDatabase(with response: TransactionResponse, transaction: RawTransaction, feeTransaction: RawTransaction?) throws {
+    private func updateDatabase(with response: TransactionInfo, transaction: RawTransaction, feeTransaction: RawTransaction?) throws {
         var error: NSError?
         let decoded = KernelDecodeRawTx(transaction.rawTransaction, 0, &error)
         if let error {
@@ -80,8 +80,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
             requestIDs.append(feeTransaction.requestID)
         }
         RawTransactionDAO.shared.signRawTransactions(with: requestIDs) { db in
-            let snapshotID = UUID.uniqueObjectIDString(response.userID, ":", response.transactionHash)
-            try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshotID)])
+            try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: response.snapshotID)])
             
             guard
                 RawTransaction.TransactionType(rawValue: transaction.type) == .transfer,
@@ -89,8 +88,8 @@ final class RecoverRawTransactionJob: AsynchronousJob {
             else {
                 return
             }
-            let snapshot = SafeSnapshot(id: snapshotID,
-                                        type: SafeSnapshot.SnapshotType.snapshot.rawValue,
+            let snapshot = SafeSnapshot(id: response.snapshotID,
+                                        type: .snapshot,
                                         assetID: assetID,
                                         amount: "-" + response.amount,
                                         userID: response.userID,
@@ -147,5 +146,23 @@ extension RecoverRawTransactionJob {
         let inputs: [Input]
         
     }
+    
+}
+
+fileprivate protocol TransactionInfo {
+    
+    var requestID: String { get }
+    var snapshotID: String { get }
+    var amount: String { get }
+    var userID: String { get }
+    var createdAt: String { get }
+    
+}
+
+extension TransactionResponse: TransactionInfo {
+    
+}
+
+extension PostTransactionResponse: TransactionInfo {
     
 }

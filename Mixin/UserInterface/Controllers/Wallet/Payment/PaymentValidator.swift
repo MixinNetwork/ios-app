@@ -152,10 +152,10 @@ extension PaymentValidator {
             if let id = trace.snapshotId, !id.isEmpty {
                 traceCreatedAt = trace.createdAt.toUTCDate()
             } else {
-                switch SafeAPI.snapshot(traceID: traceID) {
-                case let .success(snapshot):
-                    TraceDAO.shared.updateSnapshot(traceId: traceID, snapshotId: snapshot.id)
-                    traceCreatedAt = snapshot.createdAt.toUTCDate()
+                switch SafeAPI.transaction(id: traceID) {
+                case let .success(response):
+                    TraceDAO.shared.updateSnapshot(traceId: traceID, snapshotId: response.snapshotID)
+                    traceCreatedAt = response.createdAt.toUTCDate()
                 case .failure(.notFound):
                     DispatchQueue.main.async {
                         completion(.passed)

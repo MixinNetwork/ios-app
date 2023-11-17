@@ -35,10 +35,6 @@ public final class SafeAPI: MixinAPI {
         return try await request(method: .get, path: path)
     }
     
-    public static func snapshot(traceID: String) -> MixinAPI.Result<SafeSnapshot> {
-        request(method: .get, path: "/safe/snapshots/trace/" + traceID)
-    }
-    
 }
 
 // MARK: - Asset
@@ -77,11 +73,15 @@ extension SafeAPI {
         try await request(method: .get, path: "/safe/transactions/" + id)
     }
     
+    public static func transaction(id: String) -> MixinAPI.Result<TransactionResponse> {
+        request(method: .get, path: "/safe/transactions/" + id)
+    }
+    
     public static func requestTransaction(requests: [TransactionRequest]) async throws -> [RequestTransactionResponse] {
         try await request(method: .post, path: "/safe/transaction/requests", parameters: requests)
     }
     
-    public static func postTransaction(requests: [TransactionRequest]) async throws -> [TransactionResponse] {
+    public static func postTransaction(requests: [TransactionRequest]) async throws -> [PostTransactionResponse] {
         try await request(method: .post, path: "/safe/transactions", parameters: requests)
     }
     

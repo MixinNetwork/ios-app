@@ -100,7 +100,7 @@
                                 </label>
                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_selector_down" translatesAutoresizingMaskIntoConstraints="NO" id="04B-iv-0hF">
                                     <rect key="frame" x="377" y="0.0" width="0.0" height="17"/>
-                                    <color key="tintColor" name="text_desc"/>
+                                    <color key="tintColor" name="text_emphasized_description"/>
                                 </imageView>
                             </subviews>
                         </stackView>
@@ -130,9 +130,6 @@
     </objects>
     <resources>
         <image name="ic_selector_down" width="16" height="16"/>
-        <namedColor name="text_desc">
-            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text_emphasized_description">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

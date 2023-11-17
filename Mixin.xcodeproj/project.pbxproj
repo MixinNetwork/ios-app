@@ -788,7 +788,7 @@
 		946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B6F2325E974B500A95C40 /* CacheableAsset.swift */; };
 		946B9FA92B03796600DB4DC1 /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FA72B03796600DB4DC1 /* WithdrawViewController.swift */; };
 		946B9FAA2B03796600DB4DC1 /* WithdrawView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FA82B03796600DB4DC1 /* WithdrawView.xib */; };
-		946B9FAF2B03968000DB4DC1 /* UTXOServiceError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FAE2B03968000DB4DC1 /* UTXOServiceError+Localization.swift */; };
+		946B9FAF2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FAE2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift */; };
 		946B9FBB2B0493E800DB4DC1 /* WithdrawSuspendedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FB92B0493E800DB4DC1 /* WithdrawSuspendedViewController.swift */; };
 		946B9FBC2B0493E800DB4DC1 /* WithdrawSuspendedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FBA2B0493E800DB4DC1 /* WithdrawSuspendedView.xib */; };
 		946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */; };
@@ -1963,7 +1963,7 @@
 		946B6F2325E974B500A95C40 /* CacheableAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAsset.swift; sourceTree = "<group>"; };
 		946B9FA72B03796600DB4DC1 /* WithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewController.swift; sourceTree = "<group>"; };
 		946B9FA82B03796600DB4DC1 /* WithdrawView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawView.xib; sourceTree = "<group>"; };
-		946B9FAE2B03968000DB4DC1 /* UTXOServiceError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UTXOServiceError+Localization.swift"; sourceTree = "<group>"; };
+		946B9FAE2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UTXOServiceCollectingError+Localization.swift"; sourceTree = "<group>"; };
 		946B9FB92B0493E800DB4DC1 /* WithdrawSuspendedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawSuspendedViewController.swift; sourceTree = "<group>"; };
 		946B9FBA2B0493E800DB4DC1 /* WithdrawSuspendedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawSuspendedView.xib; sourceTree = "<group>"; };
 		946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverRawTransactionJob.swift; sourceTree = "<group>"; };
@@ -2472,7 +2472,7 @@
 				7B07923921AF96F500316BD2 /* SnapshotDataSource.swift */,
 				7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */,
 				94647C6F28D243B100684CFA /* TIPNode+Description.swift */,
-				946B9FAE2B03968000DB4DC1 /* UTXOServiceError+Localization.swift */,
+				946B9FAE2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift */,
 				942D90F22B0606C700E81358 /* FeeTokenItem.swift */,
 			);
 			path = Models;
@@ -5614,7 +5614,7 @@
 				7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */,
 				7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */,
 				7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */,
-				946B9FAF2B03968000DB4DC1 /* UTXOServiceError+Localization.swift in Sources */,
+				946B9FAF2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				945E865229C078E7000FDA54 /* RIPEMD160.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,

@@ -21,7 +21,7 @@
                         <rect key="frame" x="16" y="4" width="288" height="64"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="OYU-j3-Kix">
-                                <rect key="frame" x="20" y="-21" width="246" height="106"/>
+                                <rect key="frame" x="20" y="-21" width="248" height="106"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gvp-sS-58d" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="37" width="32" height="32"/>
@@ -36,17 +36,17 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="500" horizontalCompressionResistancePriority="500" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="T2D-ku-tYz">
-                                        <rect key="frame" x="46" y="0.0" width="170" height="106"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="T2D-ku-tYz">
+                                        <rect key="frame" x="46" y="0.0" width="172" height="106"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bri-me-vNU">
-                                                <rect key="frame" x="0.0" y="0.0" width="170" height="50"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="172" height="50"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <color key="textColor" name="text"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ryz-Zk-ZbQ">
-                                                <rect key="frame" x="0.0" y="56" width="170" height="50"/>
+                                                <rect key="frame" x="0.0" y="56" width="172" height="50"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                 <color key="textColor" name="text_desc"/>
                                                 <nil key="highlightedColor"/>
@@ -54,7 +54,7 @@
                                         </subviews>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="43R-K0-hia">
-                                        <rect key="frame" x="230" y="45" width="16" height="16"/>
+                                        <rect key="frame" x="232" y="45" width="16" height="16"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="43R-K0-hia" secondAttribute="height" id="Qer-DG-1NQ"/>
                                             <constraint firstAttribute="width" priority="999" constant="16" id="fvP-LC-2w0"/>
@@ -67,6 +67,7 @@
                         <constraints>
                             <constraint firstItem="OYU-j3-Kix" firstAttribute="leading" secondItem="uTK-e9-75o" secondAttribute="leading" constant="20" id="LGQ-M5-2C9"/>
                             <constraint firstItem="OYU-j3-Kix" firstAttribute="centerY" secondItem="uTK-e9-75o" secondAttribute="centerY" id="NaZ-Pt-Hft"/>
+                            <constraint firstAttribute="trailing" secondItem="OYU-j3-Kix" secondAttribute="trailing" constant="20" id="O49-ca-ado"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -100,7 +101,7 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

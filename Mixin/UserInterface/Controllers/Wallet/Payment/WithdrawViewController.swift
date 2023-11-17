@@ -154,7 +154,13 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                 let feeOutputs: UTXOService.OutputCollection?
                 if isFeeTokenDifferent {
                     withdrawalOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: withdrawalToken.kernelAssetID, amount: amount)
-                    feeOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: feeToken.kernelAssetID, amount: feeAmount)
+                    do {
+                        feeOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: feeToken.kernelAssetID, amount: feeAmount)
+                    } catch UTXOService.CollectingError.insufficientBalance {
+                        throw MixinAPIError.insufficientFee
+                    } catch {
+                        throw error
+                    }
                 } else {
                     withdrawalOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: withdrawalToken.kernelAssetID, amount: amount + feeAmount)
                     feeOutputs = nil

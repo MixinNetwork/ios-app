@@ -40,7 +40,7 @@ class TokenViewController: UIViewController {
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self
         tableView.delegate = self
-        reloadAsset()
+        reloadToken()
         snapshotDataSource.onReload = { [weak self] in
             guard let weakSelf = self else {
                 return
@@ -49,6 +49,7 @@ class TokenViewController: UIViewController {
             weakSelf.updateTableHeaderFooterView()
         }
         snapshotDataSource.reloadFromLocal()
+        NotificationCenter.default.addObserver(self, selector: #selector(balanceDidUpdate(_:)), name: UTXOService.balanceDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: TokenDAO.tokensDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
         let job = RefreshTokenJob(assetID: token.assetID)
@@ -69,14 +70,24 @@ class TokenViewController: UIViewController {
         updateTableViewContentInset()
     }
     
-    @objc func assetsDidChange(_ notification: Notification) {
-        guard let id = notification.userInfo?[AssetDAO.UserInfoKey.assetId] as? String else {
+    @objc private func balanceDidUpdate(_ notification: Notification) {
+        guard let id = notification.userInfo?[UTXOService.assetIDUserInfoKey] as? String else {
             return
         }
         guard id == token.assetID else {
             return
         }
-        reloadAsset()
+        reloadToken()
+    }
+    
+    @objc private func assetsDidChange(_ notification: Notification) {
+        guard let id = notification.userInfo?[TokenDAO.UserInfoKey.assetId] as? String else {
+            return
+        }
+        guard id == token.assetID else {
+            return
+        }
+        reloadToken()
     }
     
     @objc private func chainsDidChange(_ notification: Notification) {
@@ -86,7 +97,7 @@ class TokenViewController: UIViewController {
         guard id == token.chainID else {
             return
         }
-        reloadAsset()
+        reloadToken()
     }
     
     @IBAction func presentFilterWindow(_ sender: Any) {
@@ -298,7 +309,7 @@ extension TokenViewController {
         }
     }
     
-    private func reloadAsset() {
+    private func reloadToken() {
         let assetId = token.assetID
         DispatchQueue.global().async { [weak self] in
             guard let asset = TokenDAO.shared.tokenItem(with: assetId) else {

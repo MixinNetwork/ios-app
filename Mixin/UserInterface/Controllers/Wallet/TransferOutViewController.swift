@@ -113,6 +113,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         
         amountTextField.adjustsFontForContentSizeCategory = true
+        amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
         memoTextField.delegate = self
         
@@ -122,11 +123,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             }
             self.amountTextField.becomeFirstResponder()
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        amountTextField.becomeFirstResponder()
     }
     
     deinit {
@@ -285,6 +281,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                     self.present(authentication, animated: true)
                 case .userCancelled:
                     self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                    self.amountTextField.becomeFirstResponder()
                 case .failure(let message):
                     self.adjustBottomConstraintWhenKeyboardFrameChanges = true
                     self.amountTextField.becomeFirstResponder()

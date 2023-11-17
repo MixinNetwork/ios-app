@@ -6,6 +6,7 @@ public final class UTXOService {
     public static let shared = UTXOService()
     
     public static let balanceDidUpdateNotification = Notification.Name("one.mixin.services.UTXOService.BalanceDidUpdate")
+    public static let assetIDUserInfoKey = "aid"
     
     private let synchronizeOutputPageCount = 200
     private let calculateBalancePageCount = 200
@@ -124,7 +125,11 @@ public final class UTXOService {
                                balance: Token.amountString(from: totalAmount),
                                updatedAt: Date().toUTCString())
         try TokenExtraDAO.shared.insertOrUpdateBalance(extra: extra, into: db) {
-            NotificationCenter.default.post(onMainThread: Self.balanceDidUpdateNotification, object: self)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.balanceDidUpdateNotification,
+                                                object: self,
+                                                userInfo: [Self.assetIDUserInfoKey: assetID])
+            }
         }
     }
     

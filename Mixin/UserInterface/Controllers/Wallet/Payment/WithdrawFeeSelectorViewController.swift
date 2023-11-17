@@ -24,6 +24,7 @@ final class WithdrawFeeSelectorViewController: PopupSelectorViewController {
         tableView.register(R.nib.withdrawFeeCell)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
         titleView.titleLabel.text = R.string.localizable.network_fee("")
         titleView.subtitleLabel.text = R.string.localizable.select_a_token_for_the_fee()
     }

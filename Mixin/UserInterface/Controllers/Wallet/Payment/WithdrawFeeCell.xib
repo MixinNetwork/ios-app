@@ -21,7 +21,7 @@
                         <rect key="frame" x="16" y="4" width="288" height="64"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="OYU-j3-Kix">
-                                <rect key="frame" x="20" y="-21" width="216" height="106"/>
+                                <rect key="frame" x="20" y="-21" width="246" height="106"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gvp-sS-58d" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="37" width="32" height="32"/>
@@ -36,7 +36,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="T2D-ku-tYz">
+                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="500" horizontalCompressionResistancePriority="500" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="T2D-ku-tYz">
                                         <rect key="frame" x="46" y="0.0" width="170" height="106"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bri-me-vNU">
@@ -53,23 +53,20 @@
                                             </label>
                                         </subviews>
                                     </stackView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="43R-K0-hia">
+                                        <rect key="frame" x="230" y="45" width="16" height="16"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="43R-K0-hia" secondAttribute="height" id="Qer-DG-1NQ"/>
+                                            <constraint firstAttribute="width" priority="999" constant="16" id="fvP-LC-2w0"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                             </stackView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" image="ic_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="43R-K0-hia">
-                                <rect key="frame" x="252" y="-4" width="16" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="43R-K0-hia" secondAttribute="height" id="Qer-DG-1NQ"/>
-                                    <constraint firstAttribute="width" constant="16" id="fvP-LC-2w0"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="43R-K0-hia" secondAttribute="trailing" constant="20" id="D1i-Vg-eaA"/>
-                            <constraint firstItem="43R-K0-hia" firstAttribute="centerY" secondItem="Bri-me-vNU" secondAttribute="centerY" id="IRH-YY-PGM"/>
                             <constraint firstItem="OYU-j3-Kix" firstAttribute="leading" secondItem="uTK-e9-75o" secondAttribute="leading" constant="20" id="LGQ-M5-2C9"/>
                             <constraint firstItem="OYU-j3-Kix" firstAttribute="centerY" secondItem="uTK-e9-75o" secondAttribute="centerY" id="NaZ-Pt-Hft"/>
-                            <constraint firstItem="43R-K0-hia" firstAttribute="leading" secondItem="OYU-j3-Kix" secondAttribute="trailing" constant="16" id="ZgA-X9-jrj"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">

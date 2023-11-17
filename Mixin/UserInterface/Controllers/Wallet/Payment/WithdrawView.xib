@@ -19,7 +19,7 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Qkq-Jk-aGC">
-            <rect key="frame" x="0.0" y="0.0" width="393" height="130"/>
+            <rect key="frame" x="0.0" y="0.0" width="393" height="140"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4Fb-lW-QrR">
@@ -74,7 +74,7 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="4Fb-lW-QrR" firstAttribute="top" secondItem="Qkq-Jk-aGC" secondAttribute="top" constant="16" id="4cI-A6-CSX"/>
-                <constraint firstAttribute="bottom" secondItem="4Fb-lW-QrR" secondAttribute="bottom" id="BKa-dX-uLT"/>
+                <constraint firstAttribute="bottom" secondItem="4Fb-lW-QrR" secondAttribute="bottom" constant="10" id="BKa-dX-uLT"/>
                 <constraint firstAttribute="trailing" secondItem="4Fb-lW-QrR" secondAttribute="trailing" id="f8l-Fp-EeR"/>
                 <constraint firstItem="4Fb-lW-QrR" firstAttribute="leading" secondItem="Qkq-Jk-aGC" secondAttribute="leading" id="vAZ-yb-fvn"/>
             </constraints>

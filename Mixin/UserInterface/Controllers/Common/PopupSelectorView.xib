@@ -5,13 +5,14 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopupSelectorViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="tableView" destination="K00-IR-Vv4" id="1QO-o4-xa8"/>
-                <outlet property="tableViewBottomConstraint" destination="do9-DC-UgR" id="IVg-Dy-S4m"/>
+                <outlet property="tableViewBottomConstraint" destination="Pp6-Lb-Dv1" id="9SO-1U-6jg"/>
                 <outlet property="tableViewTopConstraint" destination="t5m-AN-86z" id="8bb-B6-6aU"/>
                 <outlet property="titleHeightConstraint" destination="nEk-6J-8dK" id="OVi-y2-hgP"/>
                 <outlet property="titleView" destination="Odm-KD-qNv" id="gZu-wx-Zry"/>
@@ -31,18 +32,19 @@
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="K00-IR-Vv4">
-                    <rect key="frame" x="0.0" y="81" width="393" height="178"/>
+                    <rect key="frame" x="0.0" y="80" width="393" height="214"/>
                     <color key="backgroundColor" name="background"/>
                 </tableView>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="qOJ-Xv-Qcx"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="Odm-KD-qNv" secondAttribute="trailing" id="1gp-Ud-YNg"/>
                 <constraint firstAttribute="trailing" secondItem="K00-IR-Vv4" secondAttribute="trailing" id="3GQ-vG-6i0"/>
                 <constraint firstItem="K00-IR-Vv4" firstAttribute="leading" secondItem="wlm-gG-Fuk" secondAttribute="leading" id="4Os-9K-tsl"/>
                 <constraint firstItem="Odm-KD-qNv" firstAttribute="leading" secondItem="wlm-gG-Fuk" secondAttribute="leading" id="K1o-PZ-xq6"/>
-                <constraint firstAttribute="bottom" secondItem="K00-IR-Vv4" secondAttribute="bottom" constant="35" id="do9-DC-UgR"/>
-                <constraint firstItem="K00-IR-Vv4" firstAttribute="top" secondItem="Odm-KD-qNv" secondAttribute="bottom" constant="11" id="t5m-AN-86z"/>
+                <constraint firstAttribute="bottom" secondItem="K00-IR-Vv4" secondAttribute="bottom" id="Pp6-Lb-Dv1"/>
+                <constraint firstItem="K00-IR-Vv4" firstAttribute="top" secondItem="Odm-KD-qNv" secondAttribute="bottom" constant="10" id="t5m-AN-86z"/>
                 <constraint firstItem="Odm-KD-qNv" firstAttribute="top" secondItem="wlm-gG-Fuk" secondAttribute="top" id="wzE-gn-raq"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

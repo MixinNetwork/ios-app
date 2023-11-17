@@ -9,7 +9,6 @@ protocol WithdrawSuspendedViewControllerDelegate: AnyObject {
 final class WithdrawSuspendedViewController: UIViewController {
 
     @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tokenIconView: AssetIconView!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -39,7 +38,6 @@ final class WithdrawSuspendedViewController: UIViewController {
         view.layer.cornerRadius = 13
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.masksToBounds = true
-        titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         titleLabel.text = R.string.localizable.withdrawal_suspended(token.symbol)
         tokenIconView.setIcon(token: token)
         descriptionLabel.text = R.string.localizable.withdrawal_suspended_description(token.symbol)

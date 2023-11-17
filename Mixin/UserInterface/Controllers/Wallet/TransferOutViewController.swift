@@ -14,6 +14,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBOutlet weak var contentScrollView: UIScrollView!
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var opponentImageView: AvatarImageView!
     @IBOutlet weak var tokenSelectorView: AssetComboBoxView!
     
@@ -74,6 +75,8 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
         switch opponent {
         case .contact(let user):
+            opponentImageView.isHidden = false
+            contentStackView.setCustomSpacing(12, after: opponentImageView)
             opponentImageView.setImage(with: user)
             if let container {
                 container.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
@@ -82,7 +85,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             memoView.isHidden = false
             withdrawFeeWrapperView.isHidden = true
         case .address(let address):
-            opponentImageView.image = R.image.wallet.ic_transaction_external_large()
+            opponentImageView.isHidden = true
             if let container {
                 container.titleLabel.text = R.string.localizable.send_to_title() + " " + address.label
                 container.setSubtitle(subtitle: address.compactRepresentation)
@@ -110,7 +113,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         
         amountTextField.adjustsFontForContentSizeCategory = true
-        amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
         memoTextField.delegate = self
         
@@ -121,7 +123,12 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             self.amountTextField.becomeFirstResponder()
         }
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        amountTextField.becomeFirstResponder()
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -411,7 +418,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                     self.selectedFeeTokenIndex = 0
                     self.selectableFeeTokens = feeTokens
                     self.withdrawFeeView.networkLabel.text = token.depositNetworkName
-                    self.withdrawFeeView.minimumWithdrawalLabel.text = CurrencyFormatter.localizedString(from: address.decimalDust, format: .precision, sign: .never)
+                    self.withdrawFeeView.minimumWithdrawalLabel.text = CurrencyFormatter.localizedString(from: address.decimalDust, format: .precision, sign: .never, symbol: .custom(token.symbol))
                     self.updateNetworkFeeLabel(feeToken: feeToken)
                     if feeTokens.count > 1 {
                         self.withdrawFeeView.switchFeeDisclosureIndicatorView.isHidden = false

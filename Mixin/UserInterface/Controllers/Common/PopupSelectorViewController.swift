@@ -33,6 +33,7 @@ class PopupSelectorViewController: UIViewController {
         preferredContentSize.height = titleHeightConstraint.constant
         + tableViewTopConstraint.constant
         + tableView.contentSize.height
+        + tableView.adjustedContentInset.vertical
         + tableViewBottomConstraint.constant
     }
     

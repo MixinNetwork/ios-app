@@ -215,15 +215,19 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
                 SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
                     try RawTransaction.deleteOne(db, key: rawTransaction.requestID)
-                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
                     try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
                     
                     if try !Conversation.exists(db, key: conversationID) {
+                        let conversation = Conversation.createConversation(conversationId: conversationID,
+                                                                           category: nil,
+                                                                           recipientId: receiverID,
+                                                                           status: ConversationStatus.START.rawValue)
+                        try conversation.save(db)
                         DispatchQueue.global().async {
-                            ConversationDAO.shared.createPlaceConversation(conversationId: conversationID, ownerId: receiverID)
                             ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
                         }
                     }
+                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
                 }
                 await MainActor.run {
                     completion(.success)

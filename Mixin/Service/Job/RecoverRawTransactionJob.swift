@@ -107,8 +107,12 @@ final class RecoverRawTransactionJob: AsynchronousJob {
             
             let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: transaction.receiverID)
             if try !Conversation.exists(db, key: conversationID) {
+                let conversation = Conversation.createConversation(conversationId: conversationID,
+                                                                   category: nil,
+                                                                   recipientId: transaction.receiverID,
+                                                                   status: ConversationStatus.START.rawValue)
+                try conversation.save(db)
                 DispatchQueue.global().async {
-                    ConversationDAO.shared.createPlaceConversation(conversationId: conversationID, ownerId: transaction.receiverID)
                     ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
                 }
             }

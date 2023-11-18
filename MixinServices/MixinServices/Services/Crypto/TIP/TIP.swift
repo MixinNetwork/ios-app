@@ -530,7 +530,7 @@ extension TIP {
         if let savedTIPPriv = AppGroupKeychain.encryptedTIPPriv {
             Logger.tip.info(category: "TIP", message: "Using saved priv: \(savedTIPPriv.count)")
             let aesKey = try await getAESKey(pinData: pinData, pinToken: pinToken)
-            Logger.tip.warn(category: "TIP", message: "TIP Priv AES key ready: \(aesKey.count)")
+            Logger.tip.info(category: "TIP", message: "TIP Priv AES key ready: \(aesKey.count)")
             guard let tipPrivKey = SHA3_256.hash(data: aesKey + pinData) else {
                 throw Error.unableToHashTIPPrivKey
             }

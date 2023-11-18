@@ -2,7 +2,7 @@ import UIKit
 import MixinServices
 import Tip
 
-final class WithdrawViewController: UIViewController {
+final class WithdrawalConfirmationViewController: UIViewController {
     
     enum Error: Swift.Error, LocalizedError {
         
@@ -64,7 +64,7 @@ final class WithdrawViewController: UIViewController {
         self.feeAmount = feeAmount
         self.address = address
         self.traceID = traceID
-        let nib = R.nib.withdrawView
+        let nib = R.nib.withdrawalConfirmationView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
@@ -110,7 +110,7 @@ final class WithdrawViewController: UIViewController {
     
 }
 
-extension WithdrawViewController: AuthenticationIntentViewController {
+extension WithdrawalConfirmationViewController: AuthenticationIntentViewController {
     
     var intentTitle: String {
         R.string.localizable.withdrawal_to(address.label)

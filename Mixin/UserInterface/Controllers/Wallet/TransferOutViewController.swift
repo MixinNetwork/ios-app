@@ -240,13 +240,13 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self.continueButton.isBusy = false
                 switch result {
                 case .passed:
-                    let transfer = PeerTransferViewController(opponent: opponent,
-                                                              token: token,
-                                                              amountDisplay: amountIntent,
-                                                              tokenAmount: tokenAmount,
-                                                              fiatMoneyAmount: fiatMoneyAmount,
-                                                              memo: memo,
-                                                              traceID: traceID)
+                    let transfer = TransferConfirmationViewController(opponent: opponent,
+                                                                      token: token,
+                                                                      amountDisplay: amountIntent,
+                                                                      tokenAmount: tokenAmount,
+                                                                      fiatMoneyAmount: fiatMoneyAmount,
+                                                                      memo: memo,
+                                                                      traceID: traceID)
                     let authentication = AuthenticationViewController(intentViewController: transfer)
                     self.present(authentication, animated: true)
                 case .userCancelled:
@@ -269,14 +269,14 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self.continueButton.isBusy = false
                 switch result {
                 case .passed:
-                    let withdraw = WithdrawViewController(amountDisplay: amountIntent,
-                                                          withdrawalToken: token,
-                                                          withdrawalTokenAmount: tokenAmount,
-                                                          withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                          feeToken: feeTokenItem.tokenItem,
-                                                          feeAmount: feeTokenItem.decimalAmount,
-                                                          address: address,
-                                                          traceID: traceID)
+                    let withdraw = WithdrawalConfirmationViewController(amountDisplay: amountIntent,
+                                                                        withdrawalToken: token,
+                                                                        withdrawalTokenAmount: tokenAmount,
+                                                                        withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                                        feeToken: feeTokenItem.tokenItem,
+                                                                        feeAmount: feeTokenItem.decimalAmount,
+                                                                        address: address,
+                                                                        traceID: traceID)
                     let authentication = AuthenticationViewController(intentViewController: withdraw)
                     self.present(authentication, animated: true)
                 case .userCancelled:

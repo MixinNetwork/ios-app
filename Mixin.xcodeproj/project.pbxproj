@@ -786,8 +786,8 @@
 		946983B429D2A0DE00E73428 /* NetworkFeeOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */; };
 		946983B529D2A0DE00E73428 /* NetworkFeeOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */; };
 		946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B6F2325E974B500A95C40 /* CacheableAsset.swift */; };
-		946B9FA92B03796600DB4DC1 /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FA72B03796600DB4DC1 /* WithdrawViewController.swift */; };
-		946B9FAA2B03796600DB4DC1 /* WithdrawView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FA82B03796600DB4DC1 /* WithdrawView.xib */; };
+		946B9FA92B03796600DB4DC1 /* WithdrawalConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FA72B03796600DB4DC1 /* WithdrawalConfirmationViewController.swift */; };
+		946B9FAA2B03796600DB4DC1 /* WithdrawalConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FA82B03796600DB4DC1 /* WithdrawalConfirmationView.xib */; };
 		946B9FAF2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FAE2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift */; };
 		946B9FBB2B0493E800DB4DC1 /* WithdrawSuspendedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FB92B0493E800DB4DC1 /* WithdrawSuspendedViewController.swift */; };
 		946B9FBC2B0493E800DB4DC1 /* WithdrawSuspendedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FBA2B0493E800DB4DC1 /* WithdrawSuspendedView.xib */; };
@@ -796,8 +796,8 @@
 		94720ED129C1A9850070C7C1 /* TIP+BIP44.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94720ED029C1A9850070C7C1 /* TIP+BIP44.swift */; };
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
 		9473F8282AE51097004E5739 /* RegisterToSafeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */; };
-		9473F8332AE53C2D004E5739 /* PeerTransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9473F8312AE53C2D004E5739 /* PeerTransferViewController.swift */; };
-		9473F8342AE53C2D004E5739 /* PeerTransferView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9473F8322AE53C2D004E5739 /* PeerTransferView.xib */; };
+		9473F8332AE53C2D004E5739 /* TransferConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9473F8312AE53C2D004E5739 /* TransferConfirmationViewController.swift */; };
+		9473F8342AE53C2D004E5739 /* TransferConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9473F8322AE53C2D004E5739 /* TransferConfirmationView.xib */; };
 		947744DB26A9D2ED00B6BBDD /* ShakableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DA26A9D2ED00B6BBDD /* ShakableCell.swift */; };
 		947744DF26A9EBC800B6BBDD /* HomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DE26A9EBC800B6BBDD /* HomeAppCell.swift */; };
 		947744E126A9F2D300B6BBDD /* HomeAppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744E026A9F2D300B6BBDD /* HomeAppItem.swift */; };
@@ -1961,8 +1961,8 @@
 		946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOptionCell.swift; sourceTree = "<group>"; };
 		946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkFeeOptionCell.xib; sourceTree = "<group>"; };
 		946B6F2325E974B500A95C40 /* CacheableAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAsset.swift; sourceTree = "<group>"; };
-		946B9FA72B03796600DB4DC1 /* WithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewController.swift; sourceTree = "<group>"; };
-		946B9FA82B03796600DB4DC1 /* WithdrawView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawView.xib; sourceTree = "<group>"; };
+		946B9FA72B03796600DB4DC1 /* WithdrawalConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalConfirmationViewController.swift; sourceTree = "<group>"; };
+		946B9FA82B03796600DB4DC1 /* WithdrawalConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawalConfirmationView.xib; sourceTree = "<group>"; };
 		946B9FAE2B03968000DB4DC1 /* UTXOServiceCollectingError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UTXOServiceCollectingError+Localization.swift"; sourceTree = "<group>"; };
 		946B9FB92B0493E800DB4DC1 /* WithdrawSuspendedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawSuspendedViewController.swift; sourceTree = "<group>"; };
 		946B9FBA2B0493E800DB4DC1 /* WithdrawSuspendedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawSuspendedView.xib; sourceTree = "<group>"; };
@@ -1971,8 +1971,8 @@
 		94720ED029C1A9850070C7C1 /* TIP+BIP44.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIP+BIP44.swift"; sourceTree = "<group>"; };
 		94739A5326258F8200E8914D /* Custom-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Custom-acknowledgements.plist"; sourceTree = "<group>"; };
 		9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterToSafeViewController.swift; sourceTree = "<group>"; };
-		9473F8312AE53C2D004E5739 /* PeerTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerTransferViewController.swift; sourceTree = "<group>"; };
-		9473F8322AE53C2D004E5739 /* PeerTransferView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerTransferView.xib; sourceTree = "<group>"; };
+		9473F8312AE53C2D004E5739 /* TransferConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferConfirmationViewController.swift; sourceTree = "<group>"; };
+		9473F8322AE53C2D004E5739 /* TransferConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferConfirmationView.xib; sourceTree = "<group>"; };
 		947744DA26A9D2ED00B6BBDD /* ShakableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakableCell.swift; sourceTree = "<group>"; };
 		947744DE26A9EBC800B6BBDD /* HomeAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppCell.swift; sourceTree = "<group>"; };
 		947744E026A9F2D300B6BBDD /* HomeAppItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppItem.swift; sourceTree = "<group>"; };
@@ -3318,10 +3318,10 @@
 				94F9526B2AE6D65B0025B995 /* PaymentSuccessView.xib */,
 				94F952802AE75BA30025B995 /* PaymentSuccessView.swift */,
 				94F952612AE623B50025B995 /* TokenSelectorViewController.swift */,
-				9473F8322AE53C2D004E5739 /* PeerTransferView.xib */,
-				9473F8312AE53C2D004E5739 /* PeerTransferViewController.swift */,
-				946B9FA82B03796600DB4DC1 /* WithdrawView.xib */,
-				946B9FA72B03796600DB4DC1 /* WithdrawViewController.swift */,
+				9473F8322AE53C2D004E5739 /* TransferConfirmationView.xib */,
+				9473F8312AE53C2D004E5739 /* TransferConfirmationViewController.swift */,
+				946B9FA82B03796600DB4DC1 /* WithdrawalConfirmationView.xib */,
+				946B9FA72B03796600DB4DC1 /* WithdrawalConfirmationViewController.swift */,
 				946B9FBA2B0493E800DB4DC1 /* WithdrawSuspendedView.xib */,
 				946B9FB92B0493E800DB4DC1 /* WithdrawSuspendedViewController.swift */,
 				942D90EF2B05F8FE00E81358 /* WithdrawFeeCell.xib */,
@@ -4550,7 +4550,7 @@
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				94333CB329960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
-				9473F8342AE53C2D004E5739 /* PeerTransferView.xib in Resources */,
+				9473F8342AE53C2D004E5739 /* TransferConfirmationView.xib in Resources */,
 				9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */,
 				94F9526C2AE6D65B0025B995 /* PaymentSuccessView.xib in Resources */,
 				7C7579E029DC61890002DA0B /* TransferToPhoneQRCodeView.xib in Resources */,
@@ -4561,7 +4561,7 @@
 				7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
-				946B9FAA2B03796600DB4DC1 /* WithdrawView.xib in Resources */,
+				946B9FAA2B03796600DB4DC1 /* WithdrawalConfirmationView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				7BAB3058247E8248005D6C3F /* call.caf in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
@@ -5150,7 +5150,7 @@
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
-				946B9FA92B03796600DB4DC1 /* WithdrawViewController.swift in Sources */,
+				946B9FA92B03796600DB4DC1 /* WithdrawalConfirmationViewController.swift in Sources */,
 				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
 				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
 				7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */,
@@ -5539,7 +5539,7 @@
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
-				9473F8332AE53C2D004E5739 /* PeerTransferViewController.swift in Sources */,
+				9473F8332AE53C2D004E5739 /* TransferConfirmationViewController.swift in Sources */,
 				7CC730502745F95D002780F5 /* StickerStore.swift in Sources */,
 				9455EA0D2AFE5A8500C3FD3C /* WithdrawFeeView.swift in Sources */,
 				7B2E56B0244EA6BB0073102C /* SettingsFooterView.swift in Sources */,

@@ -77,9 +77,9 @@ class LegacyTransferOutViewController: KeyboardBasedLayoutViewController {
             memoView.isHidden = true
             if let asset = asset {
                 DispatchQueue.global().async { [weak self] in
-                    let response = ExternalSchemeAPI.checkAddress(assetId: asset.assetId,
-                                                                  destination: address,
-                                                                  tag: nil)
+                    let response = ExternalAPI.checkAddress(assetId: asset.assetId,
+                                                            destination: address,
+                                                            tag: nil)
                     guard case let .success(response) = response else {
                         return
                     }

@@ -119,7 +119,7 @@ public class RefreshAssetsJob: AsynchronousJob {
     }
 
     private func updateFiats() {
-        AssetAPI.fiats { (result) in
+        ExternalAPI.fiats { (result) in
             switch result {
             case let .success(fiatMonies):
                 DispatchQueue.main.async {

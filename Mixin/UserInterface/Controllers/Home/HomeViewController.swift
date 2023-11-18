@@ -187,8 +187,7 @@ class HomeViewController: UIViewController {
             let authentication = AuthenticationViewController(intentViewController: register)
             present(authentication, animated: true)
         } else {
-            let job = RecoverRawTransactionJob()
-            ConcurrentJobQueue.shared.addJob(job: job)
+            ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
             ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         }
     }

@@ -7,7 +7,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
     private enum Error: Swift.Error {
         case notDecodable(String)
         case noAsset(String)
-        case invalidTransactionResponse
+        case missingTransactionResponse
     }
     
     override func getJobId() -> String {
@@ -16,20 +16,30 @@ final class RecoverRawTransactionJob: AsynchronousJob {
     
     override func execute() -> Bool {
         Task {
-            while let tx = RawTransactionDAO.shared.firstRawTransaction() {
-                Logger.general.info(category: "RecoverRawTransaction", message: "Found tx: \(tx.requestID)")
+            while let transaction = RawTransactionDAO.shared.firstUnspentRawTransaction(types: [.transfer, .withdrawal]) {
+                Logger.general.info(category: "RecoverRawTransaction", message: "Found tx: \(transaction.requestID)")
+                let feeTransaction: RawTransaction?
+                if RawTransaction.TransactionType(rawValue: transaction.type) == .withdrawal {
+                    let feeTraceID = UUID.uniqueObjectIDString(transaction.requestID, "FEE")
+                    feeTransaction = RawTransactionDAO.shared.rawTransaction(with: feeTraceID)
+                } else {
+                    feeTransaction = nil
+                }
                 do {
-                    let response = try await SafeAPI.transaction(id: tx.requestID)
-                    try updateDatabase(with: response, transaction: tx)
+                    let response = try await SafeAPI.transaction(id: transaction.requestID)
+                    try updateDatabase(with: response, transaction: transaction, feeTransaction: feeTransaction)
                     Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by finding")
                 } catch MixinAPIError.notFound {
                     do {
-                        let request = TransactionRequest(id: tx.requestID, raw: tx.rawTransaction)
-                        let responses = try await SafeAPI.postTransaction(requests: [request])
-                        guard let response = responses.first(where: { $0.requestID == request.id }) else {
-                            throw Error.invalidTransactionResponse
+                        var requests = [TransactionRequest(id: transaction.requestID, raw: transaction.rawTransaction)]
+                        if let feeTransaction {
+                            requests.append(TransactionRequest(id: feeTransaction.requestID, raw: feeTransaction.rawTransaction))
                         }
-                        try updateDatabase(with: response, transaction: tx)
+                        let responses = try await SafeAPI.postTransaction(requests: requests)
+                        guard let response = responses.first(where: { $0.requestID == transaction.requestID }) else {
+                            throw Error.missingTransactionResponse
+                        }
+                        try updateDatabase(with: response, transaction: transaction, feeTransaction: feeTransaction)
                         Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by posting")
                     } catch {
                         Logger.general.error(category: "RecoverRawTransaction", message: "Error: \(error)")
@@ -44,7 +54,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
         return true
     }
     
-    private func updateDatabase(with response: TransactionResponse, transaction: RawTransaction) throws {
+    private func updateDatabase(with response: TransactionInfo, transaction: RawTransaction, feeTransaction: RawTransaction?) throws {
         var error: NSError?
         let decoded = KernelDecodeRawTx(transaction.rawTransaction, 0, &error)
         if let error {
@@ -54,9 +64,6 @@ final class RecoverRawTransactionJob: AsynchronousJob {
             throw Error.notDecodable(decoded)
         }
         let data = try JSONDecoder.default.decode(TransactionData.self, from: decodedData)
-        guard let assetID = TokenDAO.shared.assetID(ofAssetWith: data.asset) else {
-            throw Error.noAsset(data.asset)
-        }
         let memo = {
             if let encoded = data.extra, let data = Data(base64Encoded: encoded) {
                 return String(data: data, encoding: .utf8) ?? ""
@@ -64,27 +71,53 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                 return ""
             }
         }()
-        let snapshot = SafeSnapshot(id: "\(response.userID):\(response.transactionHash)".uuidDigest(),
-                                    type: SafeSnapshot.SnapshotType.snapshot.rawValue,
-                                    assetID: assetID,
-                                    amount: "-" + response.amount,
-                                    userID: response.userID,
-                                    opponentID: transaction.receiverID,
-                                    memo: memo,
-                                    transactionHash: "",
-                                    createdAt: response.createdAt,
-                                    traceID: response.requestID,
-                                    confirmations: nil,
-                                    openingBalance: nil,
-                                    closingBalance: nil,
-                                    deposit: nil,
-                                    withdrawal: nil)
-        let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: transaction.receiverID)
-        let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: response.createdAt)
-        SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
-            try RawTransaction.deleteOne(db, key: transaction.requestID)
+        guard let assetID = TokenDAO.shared.assetID(ofAssetWith: data.asset) else {
+            throw Error.noAsset(data.asset)
+        }
+        
+        var requestIDs = [transaction.requestID]
+        if let feeTransaction {
+            requestIDs.append(feeTransaction.requestID)
+        }
+        RawTransactionDAO.shared.signRawTransactions(with: requestIDs) { db in
+            try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: response.snapshotID)])
+            
+            guard
+                RawTransaction.TransactionType(rawValue: transaction.type) == .transfer,
+                !transaction.receiverID.isEmpty
+            else {
+                return
+            }
+            let snapshot = SafeSnapshot(id: response.snapshotID,
+                                        type: .snapshot,
+                                        assetID: assetID,
+                                        amount: "-" + response.amount,
+                                        userID: response.userID,
+                                        opponentID: transaction.receiverID,
+                                        memo: memo,
+                                        transactionHash: "",
+                                        createdAt: response.createdAt,
+                                        traceID: response.requestID,
+                                        confirmations: nil,
+                                        openingBalance: nil,
+                                        closingBalance: nil,
+                                        deposit: nil,
+                                        withdrawal: nil)
+            try snapshot.save(db)
+            
+            let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: transaction.receiverID)
+            if try !Conversation.exists(db, key: conversationID) {
+                let conversation = Conversation.createConversation(conversationId: conversationID,
+                                                                   category: nil,
+                                                                   recipientId: transaction.receiverID,
+                                                                   status: ConversationStatus.START.rawValue)
+                try conversation.save(db)
+                DispatchQueue.global().async {
+                    ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
+                }
+            }
+            let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: response.createdAt)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "RecoverRawTransaction", silentNotification: false)
-            try Trace.filter(key: transaction.requestID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
         }
     }
     
@@ -117,5 +150,23 @@ extension RecoverRawTransactionJob {
         let inputs: [Input]
         
     }
+    
+}
+
+fileprivate protocol TransactionInfo {
+    
+    var requestID: String { get }
+    var snapshotID: String { get }
+    var amount: String { get }
+    var userID: String { get }
+    var createdAt: String { get }
+    
+}
+
+extension TransactionResponse: TransactionInfo {
+    
+}
+
+extension PostTransactionResponse: TransactionInfo {
     
 }

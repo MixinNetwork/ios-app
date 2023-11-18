@@ -3,6 +3,7 @@ import UIKit
 class PopupPresentationController: UIPresentationController {
     
     static let willDismissPresentedViewControllerNotification = Notification.Name("one.mixin.messenger.PopupPresentationController.WillDismissPresentedViewController")
+    static let didDismissPresentedViewControllerNotification = Notification.Name("one.mixin.messenger.PopupPresentationController.DidDismissPresentedViewController")
     
     lazy var backgroundButton: UIButton = {
         let button = UIButton()
@@ -82,7 +83,9 @@ class PopupPresentationController: UIPresentationController {
     
     @objc func backgroundTapAction(sender: Any) {
         NotificationCenter.default.post(name: Self.willDismissPresentedViewControllerNotification, object: self)
-        presentingViewController.dismiss(animated: true, completion: nil)
+        presentingViewController.dismiss(animated: true) {
+            NotificationCenter.default.post(name: Self.didDismissPresentedViewControllerNotification, object: self)
+        }
     }
     
     private func updatePresentedViewFrame() {

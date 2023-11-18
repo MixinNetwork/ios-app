@@ -25,25 +25,52 @@ final class PaymentValidator {
     }
     
     func transfer(
-        to opponent: UserItem,
         amount: Decimal,
         fiatMoneyAmount: Decimal,
+        to opponent: UserItem,
+        completion: @escaping (Result) -> Void
+    ) {
+        validate(amount: amount, fiatMoneyAmount: fiatMoneyAmount, operation: .transfer(opponent), completion: completion)
+    }
+    
+    func withdraw(
+        amount: Decimal,
+        fiatMoneyAmount: Decimal,
+        to address: Address,
+        completion: @escaping (Result) -> Void
+    ) {
+        if amount < address.decimalDust {
+            let dust = CurrencyFormatter.localizedString(from: address.decimalDust, format: .precision, sign: .never)
+            completion(.failure(R.string.localizable.withdrawal_minimum_amount(dust, token.symbol)))
+        } else {
+            validate(amount: amount, fiatMoneyAmount: fiatMoneyAmount, operation: .withdraw(address), completion: completion)
+        }
+    }
+    
+    private func validate(
+        amount: Decimal,
+        fiatMoneyAmount: Decimal,
+        operation: Operation,
         completion: @escaping (Result) -> Void
     ) {
         if AppGroupUserDefaults.User.duplicateTransferConfirmation {
-            detectDuplication(token: token, tokenAmount: amount, fiatMoneyAmount: fiatMoneyAmount, operation: .transfer(opponent)) { result in
+            detectDuplication(token: token, tokenAmount: amount, fiatMoneyAmount: fiatMoneyAmount, operation: operation) { result in
                 assert(Queue.main.isCurrent)
                 switch result {
                 case .passed:
-                    self.validateAmount(operation: .transfer(opponent), amount: amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
+                    self.validateAmount(operation: operation, amount: amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
                 case .userCancelled, .failure:
                     completion(result)
                 }
             }
         } else {
-            validateAmount(operation: .transfer(opponent), amount: amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
+            validateAmount(operation: operation, amount: amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
         }
     }
+    
+}
+
+extension PaymentValidator {
     
     private func validateAmount(
         operation: Operation,
@@ -125,10 +152,10 @@ final class PaymentValidator {
             if let id = trace.snapshotId, !id.isEmpty {
                 traceCreatedAt = trace.createdAt.toUTCDate()
             } else {
-                switch SafeAPI.snapshot(traceID: traceID) {
-                case let .success(snapshot):
-                    TraceDAO.shared.updateSnapshot(traceId: traceID, snapshotId: snapshot.id)
-                    traceCreatedAt = snapshot.createdAt.toUTCDate()
+                switch SafeAPI.transaction(id: traceID) {
+                case let .success(response):
+                    TraceDAO.shared.updateSnapshot(traceId: traceID, snapshotId: response.snapshotID)
+                    traceCreatedAt = response.createdAt.toUTCDate()
                 case .failure(.notFound):
                     DispatchQueue.main.async {
                         completion(.passed)

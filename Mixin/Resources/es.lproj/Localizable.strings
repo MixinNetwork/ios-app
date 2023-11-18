@@ -226,6 +226,7 @@
 "contact_mobile" = "Móvil: %@";
 "contact_phone_contact_hint" = "Carga contactos móviles para encontrar otros amigos de Mixin.";
 "contact_share_bots_title" = "Bots compartidos de %@";
+"contact_support" = "Contact Support";
 "contact_title" = "Contactos";
 "contacts" = "CONTACTOS";
 "content_audio" = "[Audio]";
@@ -525,6 +526,7 @@
 "message_sent" = "Mensaje enviado";
 "messages" = "Mensajes";
 "method_not_supported" = "Method %@ is not supported";
+"minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d Minuto";
 "minute_count" = "%d Minutos";
 "mixin" = "Mixin";
@@ -781,6 +783,7 @@
 "security" = "Seguridad";
 "select" = "Seleccionar";
 "select_a_country_or_region" = "Seleccionar un país o región";
+"select_a_token_for_the_fee" = "Select a token for the fee";
 "select_emergency_contact" = "Seleccionar contacto de emergencia";
 "select_more_photos" = "Seleccionar más fotos";
 "selected_count" = "%@ Seleccionado";
@@ -994,7 +997,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "El usuario ha sido reportado";
 "user_not_found" = "Usuario no encontrado";
-"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
+"utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "Se ha agotado el tiempo de validación";
 "value_now" = "valor ahora %@";
 "value_then" = "valor entonces %@";
@@ -1048,6 +1051,8 @@
 "withdrawal_minimum_withdrawal" = "Retiro mínimo: ";
 "withdrawal_network_fee" = "Tarifa de red: ";
 "withdrawal_no_memo" = "Sin nota";
+"withdrawal_suspended" = "%@ Withdrawal Suspended";
+"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Retirar a %@";
 "you" = "Tú";
 "you_deleted_this_message" = "Has borrado este mensaje";

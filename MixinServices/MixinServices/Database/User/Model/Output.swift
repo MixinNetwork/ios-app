@@ -1,5 +1,6 @@
 import Foundation
 import GRDB
+import Tip
 
 public struct Output {
     
@@ -53,6 +54,27 @@ public struct Output {
         self.signedAt = signedAt
         self.spentAt = spentAt
         self.sequence = sequence
+    }
+    
+    public init(change: KernelUtxo, asset: String, mask: String, keys: [String], lastOutput: Output) {
+        self.init(id: "\(change.hash):\(change.index)".uuidDigest(),
+                  transactionHash: change.hash,
+                  outputIndex: change.index,
+                  asset: asset,
+                  amount: change.amount,
+                  mask: mask,
+                  keys: keys,
+                  receivers: lastOutput.receivers,
+                  receiversHash: lastOutput.receiversHash,
+                  receiversThreshold: 1,
+                  extra: "",
+                  state: Output.State.unspent.rawValue,
+                  createdAt: Date().toUTCString(),
+                  updatedAt: "",
+                  signedBy: "",
+                  signedAt: "",
+                  spentAt: "",
+                  sequence: 0)
     }
     
 }

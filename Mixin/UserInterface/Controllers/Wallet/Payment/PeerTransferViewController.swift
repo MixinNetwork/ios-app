@@ -6,18 +6,11 @@ final class PeerTransferViewController: UIViewController {
     
     enum Error: Swift.Error, LocalizedError {
         
-        case insufficientBalance(hasMoreOutputs: Bool)
         case sign(Swift.Error?)
         case invalidTransactionResponse
         
         var errorDescription: String? {
             switch self {
-            case .insufficientBalance(let hasMoreOutputs):
-                if hasMoreOutputs {
-                    return R.string.localizable.utxo_count_exceeded()
-                } else {
-                    return R.string.localizable.insufficient_balance()
-                }
             case .sign(let error):
                 return error?.localizedDescription ?? "Null signature"
             case .invalidTransactionResponse:
@@ -83,7 +76,7 @@ final class PeerTransferViewController: UIViewController {
         memoLabel.text = memo
     }
     
-    @objc private func close(_ sender: Any) {
+    @objc private func finish(_ sender: Any) {
         let opponent = self.opponent
         authenticationViewController?.presentingViewController?.dismiss(animated: true) {
             guard let navigation = UIApplication.homeNavigationController else {
@@ -129,7 +122,6 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
         didInput pin: String,
         completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
     ) {
-        let maxSpendingOutputsCount = 256
         let amount = Token.amountString(from: tokenAmount)
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
@@ -141,45 +133,15 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 TraceDAO.shared.saveTrace(trace: trace)
                 Logger.general.info(category: "PeerTransfer", message: "Will transfer \(amount)")
                 
-                // Select 1 more output to see if there's more outputs unspent
-                var unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
-                let hasMoreUnspentOutput = unspentOutputs.count > maxSpendingOutputsCount
-                if hasMoreUnspentOutput {
-                    unspentOutputs.removeLast()
-                }
+                let spendingOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: kernelAssetID, amount: tokenAmount)
+                Logger.general.info(category: "PeerTransfer", message: "Spending \(spendingOutputs.outputs.count) UTXOs")
                 
-                var spendingOutputs: [Output] = []
-                var spendingOutpusAmount: Decimal = 0
-                while spendingOutpusAmount < tokenAmount, !unspentOutputs.isEmpty {
-                    let spending = unspentOutputs.removeFirst()
-                    spendingOutputs.append(spending)
-                    if let spendingAmount = Decimal(string: spending.amount, locale: .enUSPOSIX) {
-                        spendingOutpusAmount += spendingAmount
-                    } else {
-                        Logger.general.error(category: "PeerTransfer", message: "Invalid utxo.amount: \(spending.amount)")
-                    }
-                }
-                guard let lastSpendingOutput = spendingOutputs.last, spendingOutpusAmount >= tokenAmount else {
-                    throw Error.insufficientBalance(hasMoreOutputs: hasMoreUnspentOutput)
-                }
-                Logger.general.info(category: "PeerTransfer", message: "Spending \(spendingOutputs.count) UTXOs")
-                
-                let ghostKeys = try await SafeAPI.ghostKeys(receiverID: receiverID,
-                                                            receiverHint: traceID,
-                                                            senderID: senderID,
-                                                            senderHint: UUID().uuidString.lowercased())
+                let ghostKeyRequests = GhostKeyRequest.transfer(receiverID: receiverID, senderID: senderID, traceID: traceID)
+                let ghostKeys = try await SafeAPI.ghostKeys(requests: ghostKeyRequests)
                 let receiverGhostKey = ghostKeys[0]
                 let senderGhostKey = ghostKeys[1]
                 
-                struct Input: Encodable {
-                    let index: Int
-                    let hash: String
-                    let amount: String
-                }
-                let inputs = spendingOutputs.map { (utxo) in
-                    Input(index: utxo.outputIndex, hash: utxo.transactionHash, amount: utxo.amount)
-                }
-                let inputsData = try JSONEncoder.default.encode(inputs)
+                let inputsData = try spendingOutputs.encodeAsInputData()
                 var error: NSError?
                 let tx = KernelBuildTx(kernelAssetID,
                                        amount,
@@ -195,47 +157,34 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 if let error {
                     throw error
                 }
-                let inputKeysData = try JSONEncoder.default.encode(spendingOutputs.map(\.keys))
-                let inputKeys = String(data: inputKeysData, encoding: .utf8)
+                let inputKeys = try spendingOutputs.encodedKeys()
                 let request = TransactionRequest(id: traceID, raw: tx)
                 let responses = try await SafeAPI.requestTransaction(requests: [request])
                 guard let response = responses.first(where: { $0.requestID == request.id }) else {
                     throw Error.invalidTransactionResponse
                 }
                 let viewKeys = response.views.joined(separator: ",")
-                let signedTx = KernelSignTx(tx, inputKeys, viewKeys, spendKey, &error)
+                let signedTx = KernelSignTx(tx, inputKeys, viewKeys, spendKey, false, &error)
                 guard let signedTx, error == nil else {
                     throw Error.sign(error)
                 }
                 let now = Date().toUTCString()
                 let changeOutput: Output?
                 if let change = signedTx.change {
-                    let outputID = "\(change.hash):\(change.index)".uuidDigest()
-                    changeOutput = Output(id: outputID,
-                                          transactionHash: change.hash,
-                                          outputIndex: change.index,
+                    changeOutput = Output(change: change,
                                           asset: kernelAssetID,
-                                          amount: change.amount,
                                           mask: senderGhostKey.mask,
                                           keys: senderGhostKey.keys,
-                                          receivers: [],
-                                          receiversHash: "",
-                                          receiversThreshold: 1,
-                                          extra: "",
-                                          state: Output.State.unspent.rawValue,
-                                          createdAt: lastSpendingOutput.createdAt,
-                                          updatedAt: now,
-                                          signedBy: "",
-                                          signedAt: "",
-                                          spentAt: "",
-                                          sequence: 0)
+                                          lastOutput: spendingOutputs.lastOutput)
                 } else {
                     changeOutput = nil
                 }
-                let spendingOutputIDs = spendingOutputs.map(\.id)
+                let spendingOutputIDs = spendingOutputs.outputs.map(\.id)
                 let rawTransaction = RawTransaction(requestID: traceID,
                                                     rawTransaction: signedTx.raw,
                                                     receiverID: receiverID,
+                                                    state: .unspent,
+                                                    type: .transfer,
                                                     createdAt: now)
                 OutputDAO.shared.signOutputs(with: spendingOutputIDs) { db in
                     try changeOutput?.save(db)
@@ -244,18 +193,18 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 }
                 let signedRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
                 let postResponses = try await SafeAPI.postTransaction(requests: [signedRequest])
-                guard let response = postResponses.first(where: { $0.requestID == signedRequest.id }) else {
+                guard let postResponse = postResponses.first(where: { $0.requestID == signedRequest.id }) else {
                     throw Error.invalidTransactionResponse
                 }
                 let snapshot = SafeSnapshot(id: "\(senderID):\(signedTx.hash)".uuidDigest(),
-                                            type: SafeSnapshot.SnapshotType.snapshot.rawValue,
+                                            type: .snapshot,
                                             assetID: token.assetID,
                                             amount: "-" + amount,
                                             userID: senderID,
                                             opponentID: receiverID,
                                             memo: memo,
                                             transactionHash: signedTx.hash,
-                                            createdAt: response.createdAt,
+                                            createdAt: postResponse.createdAt,
                                             traceID: traceID,
                                             confirmations: nil,
                                             openingBalance: nil,
@@ -266,13 +215,24 @@ extension PeerTransferViewController: AuthenticationIntentViewController {
                 let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
                 SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
                     try RawTransaction.deleteOne(db, key: rawTransaction.requestID)
-                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
                     try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
+                    
+                    if try !Conversation.exists(db, key: conversationID) {
+                        let conversation = Conversation.createConversation(conversationId: conversationID,
+                                                                           category: nil,
+                                                                           recipientId: receiverID,
+                                                                           status: ConversationStatus.START.rawValue)
+                        try conversation.save(db)
+                        DispatchQueue.global().async {
+                            ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
+                        }
+                    }
+                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
                 }
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!
-                    successView.doneButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
+                    successView.doneButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
                     contentStackView.addArrangedSubview(successView)
                     authenticationViewController?.endPINInputting()
                     UIDevice.current.playPaymentSuccess()

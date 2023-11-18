@@ -45,7 +45,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     
     public init(
-        id: String, type: String, assetID: String, amount: String,
+        id: String, type: SnapshotType, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
         traceID: String?, confirmations: Int?,
@@ -53,7 +53,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         deposit: Deposit?, withdrawal: Withdrawal?
     ) {
         self.id = id
-        self.type = type
+        self.type = type.rawValue
         self.assetID = assetID
         self.amount = amount
         self.userID = userID

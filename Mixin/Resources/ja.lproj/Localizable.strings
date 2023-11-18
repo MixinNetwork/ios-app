@@ -226,6 +226,7 @@
 "contact_mobile" = "モバイル: %@";
 "contact_phone_contact_hint" = "スマホの連絡帳と同期して友だちを自動追加";
 "contact_share_bots_title" = "%@\のシェアしたミニアプリ";
+"contact_support" = "Contact Support";
 "contact_title" = "連絡先";
 "contacts" = "連絡先";
 "content_audio" = "[音声メッセージ]";
@@ -525,6 +526,7 @@
 "message_sent" = "送信完了";
 "messages" = "メッセージ";
 "method_not_supported" = "Method %@ is not supported";
+"minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d 分";
 "minute_count" = "%d分間";
 "mixin" = "Mixin";
@@ -781,6 +783,7 @@
 "security" = "セキュリティ";
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";
+"select_a_token_for_the_fee" = "Select a token for the fee";
 "select_emergency_contact" = "緊急連絡先を選択";
 "select_more_photos" = "さらに選択";
 "selected_count" = "%@を選択しています。";
@@ -994,7 +997,7 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "報告しました。";
 "user_not_found" = "ユーザーが見つかりませんでした";
-"utxo_count_exceeded" = "Too many UTXO are used in this transaction, please try to transfer money in batches";
+"utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "認証時間切れ";
 "value_now" = "現在価格 %@";
 "value_then" = "当時の価格 %@";
@@ -1048,6 +1051,8 @@
 "withdrawal_minimum_withdrawal" = "最低出金額：";
 "withdrawal_network_fee" = "ネットワーク手数料：";
 "withdrawal_no_memo" = "メモなし";
+"withdrawal_suspended" = "%@ Withdrawal Suspended";
+"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "%@へ出金";
 "you" = "自分";
 "you_deleted_this_message" = "このメッセージを削除しました。";

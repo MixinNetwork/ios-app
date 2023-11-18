@@ -38,4 +38,28 @@ extension UUID {
         UUID(uuidString: string) != nil
     }
     
+    public static func uniqueObjectIDString(_ inputs: String...) -> String {
+        let input = inputs.joined()
+        let dash = "-".utf16.first!
+        
+        var digest = input.utf8.md5.data
+        digest[6] &= 0x0f       // clear version
+        digest[6] |= 0x30       // set to version 3
+        digest[8] &= 0x3f       // clear variant
+        digest[8] |= 0x80       // set to IETF variant
+        
+        var characters: [unichar] = []
+        characters.reserveCapacity(2 * digest.count + 4)
+        for (index, value) in digest.enumerated() {
+            let (high, low) = value.hexEncodedUnichars()
+            characters.append(high)
+            characters.append(low)
+            if index == 3 || index == 5 || index == 7 || index == 9 {
+                characters.append(dash)
+            }
+        }
+        
+        return String(utf16CodeUnits: characters, count: characters.count)
+    }
+    
 }

@@ -308,13 +308,8 @@ final class AuthenticationViewController: UIViewController {
             self.pinField.resignFirstResponder()
             self.pinFieldWrapperHeightConstraint.priority = .almostInexist
             failureView.snp.makeConstraints { make in
-                let failureViewBottomOffset: CGFloat
-                if self.view.safeAreaInsets.bottom > 0 {
-                    failureViewBottomOffset = 0
-                } else {
-                    failureViewBottomOffset = 20
-                }
-                make.bottom.equalTo(self.keyboardPlaceholderView.snp.top).offset(-failureViewBottomOffset)
+                let offset = self.view.safeAreaInsets.bottom > 20 ? 0 : 20
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-offset)
             }
             self.view.layoutIfNeeded()
         }

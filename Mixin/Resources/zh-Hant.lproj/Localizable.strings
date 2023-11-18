@@ -226,6 +226,7 @@
 "contact_mobile" = "手機：%@";
 "contact_phone_contact_hint" = "上傳你的手機通訊錄，如果你的通訊錄中有朋友已經註冊了 Mixin，系統會幫你自動新增為好友";
 "contact_share_bots_title" = "%@分享的機器人";
+"contact_support" = "聯絡客服";
 "contact_title" = "聯絡人";
 "contacts" = "聯絡人";
 "content_audio" = "[語音]";
@@ -525,6 +526,7 @@
 "message_sent" = "訊息已傳送";
 "messages" = "訊息";
 "method_not_supported" = "不支援此方法: %@";
+"minimum_withdrawal" = "最小提現數量";
 "minute" = "%d 分鐘";
 "minute_count" = "%d 分鐘";
 "mixin" = "Mixin";
@@ -781,6 +783,7 @@
 "security" = "安全";
 "select" = "選擇";
 "select_a_country_or_region" = "選擇一個國家或地區";
+"select_a_token_for_the_fee" = "選擇支付手續費的幣種";
 "select_emergency_contact" = "選擇緊急聯絡人";
 "select_more_photos" = "選擇更多照片";
 "selected_count" = "選擇了 %@ 個訊息";
@@ -916,8 +919,8 @@
 "track_not_found" = "Track 無效";
 "trading" = "交易";
 "transaction" = "交易詳情";
-"transaction_hash" = "上鏈雜湊";
 "transaction_failed" = "轉賬失敗";
+"transaction_hash" = "交易雜湊";
 "transaction_id" = "交易編號";
 "transaction_request" = "請求轉賬";
 "transaction_type" = "交易型別";
@@ -994,7 +997,7 @@
 "user_delete_hint" = "該使用者已經刪除了賬號。";
 "user_is_reported" = "已舉報";
 "user_not_found" = "找不到這個使用者";
-"utxo_count_exceeded" = "該交易使用的 UTXO 數量過多，請嘗試分批轉賬";
+"utxo_count_exceeded" = "該交易使用的 UTXO 數量過多，請嘗試首先歸集 UTXO 或者分批轉賬。";
 "validation_timed_out" = "驗證超時";
 "value_now" = "價值 %@";
 "value_then" = "當時價值 %@";
@@ -1048,6 +1051,8 @@
 "withdrawal_minimum_withdrawal" = "最小提現數量：";
 "withdrawal_network_fee" = "網路手續費：";
 "withdrawal_no_memo" = "點選不使用 Memo（備註）";
+"withdrawal_suspended" = "%@ 提現暫停";
+"withdrawal_suspended_description" = "%@ 提現已暫停，可能的原因是因為節點故障、區塊鏈網路硬分叉或者擁堵，請耐心等候並稍後重試";
 "withdrawal_to" = "提現到 %@";
 "you" = "你";
 "you_deleted_this_message" = "你撤回了一條訊息";

@@ -35,10 +35,6 @@ public final class SafeAPI: MixinAPI {
         return try await request(method: .get, path: path)
     }
     
-    public static func snapshot(traceID: String) -> MixinAPI.Result<SafeSnapshot> {
-        request(method: .get, path: "/safe/snapshots/trace/" + traceID)
-    }
-    
 }
 
 // MARK: - Asset
@@ -69,33 +65,23 @@ extension SafeAPI {
 // MARK: - Transfer
 extension SafeAPI {
     
-    public static func ghostKeys(
-        receiverID: String,
-        receiverHint: String,
-        senderID: String,
-        senderHint: String
-    ) async throws -> [GhostKey] {
-        struct Receiver: Encodable {
-            let receivers: [String]
-            let index: Int
-            let hint: String
-        }
-        let body = [
-            Receiver(receivers: [receiverID], index: 0, hint: receiverHint),
-            Receiver(receivers: [senderID], index: 1, hint: senderHint),
-        ]
-        return try await request(method: .post, path: "/safe/keys", parameters: body)
+    public static func ghostKeys(requests: [GhostKeyRequest]) async throws -> [GhostKey] {
+        try await request(method: .post, path: "/safe/keys", parameters: requests)
     }
     
     public static func transaction(id: String) async throws -> TransactionResponse {
         try await request(method: .get, path: "/safe/transactions/" + id)
     }
     
+    public static func transaction(id: String) -> MixinAPI.Result<TransactionResponse> {
+        request(method: .get, path: "/safe/transactions/" + id)
+    }
+    
     public static func requestTransaction(requests: [TransactionRequest]) async throws -> [RequestTransactionResponse] {
         try await request(method: .post, path: "/safe/transaction/requests", parameters: requests)
     }
     
-    public static func postTransaction(requests: [TransactionRequest]) async throws -> [TransactionResponse] {
+    public static func postTransaction(requests: [TransactionRequest]) async throws -> [PostTransactionResponse] {
         try await request(method: .post, path: "/safe/transactions", parameters: requests)
     }
     
@@ -169,6 +155,15 @@ extension SafeAPI {
             path.append("&tag=\(tag)")
         }
         return try await request(method: .get, path: path)
+    }
+    
+}
+
+// MARK: - Withdraw
+extension SafeAPI {
+    
+    public static func fees(assetID: String, destination: String) async throws -> [WithdrawFee] {
+        try await request(method: .get, path: "/safe/assets/\(assetID)/fees?destination=\(destination)")
     }
     
 }

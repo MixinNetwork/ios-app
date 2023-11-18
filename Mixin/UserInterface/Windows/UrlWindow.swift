@@ -546,7 +546,7 @@ class UrlWindow {
                 hud.hideInMainThread()
                 return
             }
-            switch ExternalSchemeAPI.checkAddress(assetId: assetId, destination: transfer.destination, tag: nil) {
+            switch ExternalAPI.checkAddress(assetId: assetId, destination: transfer.destination, tag: nil) {
             case .success(let response):
                 guard response.tag.isNilOrEmpty, transfer.destination.lowercased() == response.destination.lowercased() else {
                     DispatchQueue.main.async {

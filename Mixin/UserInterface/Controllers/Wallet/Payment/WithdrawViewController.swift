@@ -144,8 +144,10 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                 let amountString = Token.amountString(from: amount)
                 let feeAmountString = Token.amountString(from: feeAmount)
                 let feeTraceID = UUID.uniqueObjectIDString(traceID, "FEE")
+                Logger.general.info(category: "Withdraw", message: "Withdraw: \(amount) \(withdrawalToken.symbol), fee: \(feeAmount) \(feeToken.symbol), to \(address.fullAddress), traceID: \(traceID), feeTraceID: \(feeTraceID)")
                 
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
+                Logger.general.info(category: "Withdraw", message: "SpendKey ready")
                 
                 let trace = Trace(traceId: traceID, assetId: feeToken.assetID, amount: amountString, opponentId: nil, destination: address.destination, tag: address.tag)
                 TraceDAO.shared.saveTrace(trace: trace)
@@ -165,6 +167,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                     withdrawalOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: withdrawalToken.kernelAssetID, amount: amount + feeAmount)
                     feeOutputs = nil
                 }
+                Logger.general.info(category: "Withdraw", message: "Spending \(withdrawalOutputs.debugDescription), fee: \(feeOutputs?.debugDescription ?? "(null)")")
                 
                 let ghostKeyRequests: [GhostKeyRequest]
                 if isFeeTokenDifferent {
@@ -177,6 +180,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                 let feeOutputMask = ghostKeys[0].mask
                 let changeKeys = ghostKeys[1].keys.joined(separator: ",")
                 let changeMask = ghostKeys[1].mask
+                Logger.general.info(category: "Withdraw", message: "GhostKeys ready")
                 
                 var error: NSError?
                 
@@ -195,6 +199,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                 guard let withdrawalTx, error == nil else {
                     throw Error.buildWithdrawalTx(error)
                 }
+                Logger.general.info(category: "Withdraw", message: "Withdrawal tx built")
                 
                 var requests = [TransactionRequest(id: traceID, raw: withdrawalTx.raw)]
                 let feeTx: String?
@@ -217,10 +222,12 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                     }
                     requests.append(TransactionRequest(id: feeTraceID, raw: tx))
                     feeTx = tx
+                    Logger.general.info(category: "Withdraw", message: "Fee tx built")
                 } else {
                     feeTx = nil
                 }
                 
+                Logger.general.info(category: "Withdraw", message: "Will request: \(requests.map(\.id))")
                 let responses = try await SafeAPI.requestTransaction(requests: requests)
                 guard let withdrawalResponse = responses.first(where: { $0.requestID == traceID }) else {
                     throw Error.missingWithdrawalResponse
@@ -238,6 +245,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                 guard let signedWithdrawal, error == nil else {
                     throw Error.signWithdrawal(error)
                 }
+                Logger.general.info(category: "Withdraw", message: "Withdrawal signed")
                 let now = Date().toUTCString()
                 let rawRequests: [TransactionRequest]
                 if let feeOutputs, let feeTx {
@@ -254,6 +262,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                     guard let signedFee, error == nil else {
                         throw Error.signFee(error)
                     }
+                    Logger.general.info(category: "Withdraw", message: "Fee signed")
                     rawRequests = [
                         TransactionRequest(id: traceID, raw: signedWithdrawal.raw),
                         TransactionRequest(id: feeTraceID, raw: signedFee.raw)
@@ -273,6 +282,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                                        type: .fee,
                                        createdAt: now),
                     ]
+                    Logger.general.info(category: "Withdraw", message: "Will sign: \(spendingOutputIDs)")
                     OutputDAO.shared.signOutputs(with: spendingOutputIDs) { db in
                         if let change = signedWithdrawal.change {
                             let output = Output(change: change,
@@ -281,6 +291,9 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                                                 keys: ghostKeys[1].keys,
                                                 lastOutput: withdrawalOutputs.lastOutput)
                             try output.save(db)
+                            Logger.general.info(category: "Withdraw", message: "Saved change output: \(output.amount)")
+                        } else {
+                            Logger.general.info(category: "Withdraw", message: "No change")
                         }
                         if let change = signedFee.change {
                             let output = Output(change: change,
@@ -289,6 +302,9 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                                                 keys: ghostKeys[2].keys,
                                                 lastOutput: feeOutputs.lastOutput)
                             try output.save(db)
+                            Logger.general.info(category: "Withdraw", message: "Saved fee change output: \(output.amount)")
+                        } else {
+                            Logger.general.info(category: "Withdraw", message: "No fee change")
                         }
                         try rawTransactions.save(db)
                         try UTXOService.shared.updateBalance(assetID: withdrawalToken.assetID,
@@ -297,6 +313,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                         try UTXOService.shared.updateBalance(assetID: feeToken.assetID,
                                                              kernelAssetID: feeToken.kernelAssetID,
                                                              db: db)
+                        Logger.general.info(category: "Withdraw", message: "Outputs signed")
                     }
                 } else {
                     rawRequests = [
@@ -309,6 +326,7 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                                                         state: .unspent,
                                                         type: .withdrawal,
                                                         createdAt: now)
+                    Logger.general.info(category: "Withdraw", message: "Will sign: \(spendingOutputIDs)")
                     OutputDAO.shared.signOutputs(with: spendingOutputIDs) { db in
                         if let change = signedWithdrawal.change {
                             let output = Output(change: change,
@@ -317,19 +335,26 @@ extension WithdrawViewController: AuthenticationIntentViewController {
                                                 keys: ghostKeys[1].keys,
                                                 lastOutput: withdrawalOutputs.lastOutput)
                             try output.save(db)
+                            Logger.general.info(category: "Withdraw", message: "Saved change output: \(output.amount)")
                         }
                         try rawTransaction.save(db)
                         try UTXOService.shared.updateBalance(assetID: withdrawalToken.assetID,
                                                              kernelAssetID: withdrawalToken.kernelAssetID,
                                                              db: db)
+                        Logger.general.info(category: "Withdraw", message: "Outputs signed")
                     }
                 }
+                let rawRequestIDs = rawRequests.map(\.id)
+                Logger.general.info(category: "Withdraw", message: "Will post tx: \(rawRequestIDs)")
                 let postResponses = try await SafeAPI.postTransaction(requests: rawRequests)
-                RawTransactionDAO.shared.signRawTransactions(with: rawRequests.map(\.id)) { db in
+                Logger.general.info(category: "Withdraw", message: "Will sign raw txs")
+                RawTransactionDAO.shared.signRawTransactions(with: rawRequestIDs) { db in
                     if let withdrawalResponse = postResponses.first(where: { $0.requestID == traceID }) {
-                        let snapshotID = UUID.uniqueObjectIDString(withdrawalResponse.userID, ":", withdrawalResponse.transactionHash)
+                        let snapshotID = withdrawalResponse.snapshotID
                         try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: snapshotID))
+                        Logger.general.info(category: "Withdraw", message: "Trace updated with: \(snapshotID)")
                     }
+                    Logger.general.info(category: "Withdraw", message: "RawTx signed")
                 }
                 await MainActor.run {
                     completion(.success)

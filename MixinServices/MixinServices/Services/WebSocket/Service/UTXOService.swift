@@ -142,7 +142,7 @@ extension UTXOService {
         case maxSpendingCountExceeded
     }
     
-    public struct OutputCollection {
+    public struct OutputCollection: CustomDebugStringConvertible {
         
         private struct Input: Encodable {
             let index: Int
@@ -152,10 +152,16 @@ extension UTXOService {
         
         public let outputs: [Output]
         public let lastOutput: Output
+        public let amount: Decimal // For debugging
         
-        init(outputs: [Output]) {
+        public var debugDescription: String {
+            "<OutputCollection outputs: \(outputs.count), amount: \(amount)>"
+        }
+        
+        init(outputs: [Output], amount: Decimal) {
             self.outputs = outputs
             self.lastOutput = outputs.last!
+            self.amount = amount
         }
         
         public func encodeAsInputData() throws -> Data {
@@ -192,7 +198,7 @@ extension UTXOService {
             }
         }
         if !outputs.isEmpty, outputsAmount >= amount {
-            return OutputCollection(outputs: outputs)
+            return OutputCollection(outputs: outputs, amount: outputsAmount)
         } else {
             if hasMoreUnspentOutput {
                 throw CollectingError.maxSpendingCountExceeded

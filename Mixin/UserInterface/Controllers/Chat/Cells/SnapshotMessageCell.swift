@@ -40,8 +40,8 @@ class SnapshotMessageCell: DetailInfoMessageCell {
                 snapshotContentView.tokenNameLabel.text = viewModel.message.tokenName ?? viewModel.message.tokenSymbol
             }
             snapshotContentView.amountLabel.text = viewModel.amount
-            if let memo = viewModel.message.snapshotMemo, !memo.isEmpty {
-                snapshotContentView.memoLabel.text = viewModel.message.snapshotMemo
+            if let memo = viewModel.message.formattedSnapshotMemo, !memo.isEmpty {
+                snapshotContentView.memoLabel.text = memo
                 snapshotContentView.memoLabel.isHidden = false
             } else {
                 snapshotContentView.memoLabel.isHidden = true

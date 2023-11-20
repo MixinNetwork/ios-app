@@ -18,6 +18,8 @@
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
 		5EBD8CD1267B37D20026A248 /* ScreenLockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD8CD0267B37D20026A248 /* ScreenLockViewController.swift */; };
 		5EF90905268C92B900B934AF /* HomeAppsMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF90904268C92B900B934AF /* HomeAppsMode.swift */; };
+		6001E88C2B0B7140006A053A /* DeviceTransferToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001E88A2B0B713F006A053A /* DeviceTransferToken.swift */; };
+		6001E88D2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001E88B2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift */; };
 		6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
@@ -1195,6 +1197,8 @@
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
 		5EBD8CD0267B37D20026A248 /* ScreenLockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockViewController.swift; sourceTree = "<group>"; };
 		5EF90904268C92B900B934AF /* HomeAppsMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsMode.swift; sourceTree = "<group>"; };
+		6001E88A2B0B713F006A053A /* DeviceTransferToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferToken.swift; sourceTree = "<group>"; };
+		6001E88B2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferSafeSnapshot.swift; sourceTree = "<group>"; };
 		60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		679B81508A1C57B537AAF496 /* Pods-MixinDebug.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinDebug.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinDebug/Pods-MixinDebug.release.xcconfig"; sourceTree = "<group>"; };
@@ -3045,6 +3049,8 @@
 				7CEB736329DBCBE5006FB5B2 /* DeviceTransferSnapshot.swift */,
 				7CEB736529DBCD6A006FB5B2 /* DeviceTransferSticker.swift */,
 				7CEB736729DBCE44006FB5B2 /* DeviceTransferPinMessage.swift */,
+				6001E88B2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift */,
+				6001E88A2B0B713F006A053A /* DeviceTransferToken.swift */,
 				7CEB736929DBCF09006FB5B2 /* DeviceTransferTranscriptMessage.swift */,
 				7CEB736B29DBD1C0006FB5B2 /* DeviceTransferMessage.swift */,
 				7C9DEA5629F15FA200959D77 /* DeviceTransferApp.swift */,
@@ -5679,6 +5685,7 @@
 				7B66AC072428D72000869DBD /* PostWebViewController.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
 				7C66F1AD268ABE1F006D8462 /* HomeAppFolder.swift in Sources */,
+				6001E88C2B0B7140006A053A /* DeviceTransferToken.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
@@ -5744,6 +5751,7 @@
 				94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7BA1768E244ACE2E007D50FD /* PickerCell.swift in Sources */,
+				6001E88D2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift in Sources */,
 				7B81BF2522893F5D00266A77 /* GroupParticipantsViewController.swift in Sources */,
 				7B2C8B2D2524D26900347AC3 /* ClipSwitcherViewController.swift in Sources */,
 				7B34A19722C0B59200665F41 /* MixinNavigationAnimating.swift in Sources */,

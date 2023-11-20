@@ -143,4 +143,21 @@ public final class TokenDAO: UserDatabaseDAO {
         }
     }
     
+    public func tokens(limit: Int, after assetId: String?) -> [Token] {
+        var sql = "SELECT * FROM tokens"
+        if let assetId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM tokens WHERE asset_id = '\(assetId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
+    }
+    
+    public func tokensCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM tokens")
+        return count ?? 0
+    }
+    
+    public func save(token: Token) {
+        db.save(token)
+    }
 }

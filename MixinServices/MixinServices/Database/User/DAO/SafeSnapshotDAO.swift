@@ -144,4 +144,18 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         }
     }
     
+    public func safeSnapshots(limit: Int, after snapshotId: String?) -> [SafeSnapshot] {
+        var sql = "SELECT * FROM safe_snapshots"
+        if let snapshotId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM safe_snapshots WHERE snapshot_id = '\(snapshotId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
+    }
+    
+    public func safeSnapshotsCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM safe_snapshots")
+        return count ?? 0
+    }
+    
 }

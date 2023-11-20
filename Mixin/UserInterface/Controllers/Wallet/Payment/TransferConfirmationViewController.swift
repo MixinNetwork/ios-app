@@ -246,6 +246,10 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                     try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
                     Logger.general.info(category: "Transfer", message: "RawTx signed")
                 }
+                
+                AppGroupUserDefaults.User.hasPerformedTransfer = true
+                AppGroupUserDefaults.Wallet.defaultTransferAssetId = token.assetID
+                
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!

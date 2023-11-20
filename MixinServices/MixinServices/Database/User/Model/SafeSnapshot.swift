@@ -43,6 +43,13 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let withdrawal: Withdrawal?
     
     public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var formattedMemo = {
+        if let data = Data(hexEncodedString: memo), let utf8Decoded = String(data: data, encoding: .utf8) {
+            return utf8Decoded
+        } else {
+            return memo
+        }
+    }()
     
     public init(
         id: String, type: SnapshotType, assetID: String, amount: String,

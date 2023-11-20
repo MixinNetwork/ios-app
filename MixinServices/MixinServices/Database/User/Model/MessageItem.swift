@@ -123,6 +123,17 @@ public final class MessageItem {
         return extra.isShareable ?? true
     }()
     
+    public private(set) lazy var formattedSnapshotMemo: String? = {
+        guard let memo = snapshotMemo else {
+            return nil
+        }
+        if let data = Data(hexEncodedString: memo), let utf8Decoded = String(data: data, encoding: .utf8) {
+            return utf8Decoded
+        } else {
+            return memo
+        }
+    }()
+    
     public var isExpiredMessage: Bool {
         expireIn != nil
     }

@@ -398,7 +398,7 @@ extension SnapshotViewController {
             }
         }
         if !snapshot.memo.isEmpty {
-            columns.append(Column(key: .memo, value: snapshot.memo))
+            columns.append(Column(key: .memo, value: snapshot.formattedMemo))
         }
         columns.append(Column(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         self.columns = columns

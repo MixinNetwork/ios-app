@@ -2,7 +2,6 @@ import Foundation
 
 public struct TransactionResponse {
     
-    public let type: String
     public let requestID: String
     public let userID: String
     public let amount: String
@@ -26,7 +25,6 @@ public struct TransactionResponse {
 extension TransactionResponse: Decodable {
     
     enum CodingKeys: String, CodingKey {
-        case type
         case requestID = "request_id"
         case userID = "user_id"
         case amount

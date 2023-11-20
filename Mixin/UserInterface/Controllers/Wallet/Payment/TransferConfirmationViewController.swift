@@ -217,7 +217,7 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                                             amount: "-" + amount,
                                             userID: senderID,
                                             opponentID: receiverID,
-                                            memo: memo,
+                                            memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
                                             transactionHash: signedTx.hash,
                                             createdAt: postResponse.createdAt,
                                             traceID: traceID,

@@ -94,7 +94,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                                         amount: "-" + response.amount,
                                         userID: response.userID,
                                         opponentID: transaction.receiverID,
-                                        memo: memo,
+                                        memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
                                         transactionHash: "",
                                         createdAt: response.createdAt,
                                         traceID: response.requestID,

@@ -18,8 +18,15 @@ class UrlWindow {
         presentHintOnUnsupportedMixinSchema: Bool = true
     ) -> Bool {
         if let payment = Payment(url: url) {
-            checkPayment(payment)
-            return true
+            if payment.asset == nil && payment.amount == nil {
+                checkPayment(payment)
+                return true
+            } else if payment.asset != nil && payment.amount != nil {
+                checkPayment(payment)
+                return true
+            } else {
+                return false
+            }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
             switch mixinURL {

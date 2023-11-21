@@ -33,6 +33,34 @@ final class PaymentValidator {
         validate(amount: amount, fiatMoneyAmount: fiatMoneyAmount, operation: .transfer(opponent), completion: completion)
     }
     
+    func payment(
+        assetID: String,
+        amount: Decimal,
+        fiatMoneyAmount: Decimal,
+        to opponent: UserItem,
+        completion: @escaping (Result) -> Void
+    ) {
+        DispatchQueue.global().async { [traceID] in
+            let amountString = Token.amountString(from: amount)
+            let response = SafeAPI.transaction(id: traceID)
+            switch response {
+            case .success:
+                DispatchQueue.main.async {
+                    completion(.failure(R.string.localizable.pay_paid()))
+                }
+            case .failure(.notFound):
+                self.validate(amount: amount,
+                              fiatMoneyAmount: fiatMoneyAmount,
+                              operation: .transfer(opponent),
+                              completion: completion)
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    completion(.failure(error.localizedDescription))
+                }
+            }
+        }
+    }
+    
     func withdraw(
         amount: Decimal,
         fiatMoneyAmount: Decimal,

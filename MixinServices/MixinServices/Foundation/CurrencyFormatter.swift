@@ -72,7 +72,7 @@ public struct CurrencyFormatter {
             str = precisionFormatter.string(from: number) ?? ""
         case .pretty:
             setSignBehavior(sign, for: prettyFormatter)
-            let numberOfFractionalDigits = max(-decimal.exponent, 0)
+            let numberOfFractionalDigits = decimal.numberOfSignificantFractionalDigits
             let integralPart = number.rounding(accordingToBehavior: roundToIntegerBehavior).doubleValue
             if integralPart == 0 {
                 prettyFormatter.maximumFractionDigits = 8

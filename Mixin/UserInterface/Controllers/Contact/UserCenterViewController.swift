@@ -127,7 +127,7 @@ extension UserCenterViewController {
             return
         }
         let qrCode = QRCodeViewController(title: R.string.localizable.receive_money(),
-                                          content: "mixin://transfer/\(account.userID)",
+                                          content: "https://mixin.one/pay/\(account.userID)",
                                           foregroundColor: .black,
                                           description: R.string.localizable.transfer_qrcode_prompt(),
                                           centerView: .receiveMoney({ $0.setImage(with: account) }))

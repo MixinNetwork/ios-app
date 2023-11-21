@@ -246,7 +246,8 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                                       tokenAmount: tokenAmount,
                                                                       fiatMoneyAmount: fiatMoneyAmount,
                                                                       memo: memo,
-                                                                      traceID: traceID)
+                                                                      traceID: traceID,
+                                                                      returnToURL: nil)
                     let authentication = AuthenticationViewController(intentViewController: transfer)
                     self.present(authentication, animated: true)
                 case .userCancelled:

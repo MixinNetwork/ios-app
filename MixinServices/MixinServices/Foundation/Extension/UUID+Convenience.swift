@@ -38,6 +38,10 @@ extension UUID {
         UUID(uuidString: string) != nil
     }
     
+    public static func isValidLowercasedUUIDString(_ string: String) -> Bool {
+        UUID(uuidString: string) != nil && string.allSatisfy { !$0.isUppercase }
+    }
+    
     public static func uniqueObjectIDString(_ inputs: String...) -> String {
         let input = inputs.joined()
         let dash = "-".utf16.first!

@@ -33,6 +33,7 @@ final class TransferConfirmationViewController: UIViewController {
     private let fiatMoneyAmount: Decimal
     private let memo: String
     private let traceID: String
+    private let returnToURL: URL?
     
     init(
         opponent: UserItem,
@@ -41,7 +42,8 @@ final class TransferConfirmationViewController: UIViewController {
         tokenAmount: Decimal,
         fiatMoneyAmount: Decimal,
         memo: String,
-        traceID: String
+        traceID: String,
+        returnToURL: URL?
     ) {
         self.opponent = opponent
         self.token = token
@@ -50,6 +52,7 @@ final class TransferConfirmationViewController: UIViewController {
         self.fiatMoneyAmount = fiatMoneyAmount
         self.memo = memo
         self.traceID = traceID
+        self.returnToURL = returnToURL
         let nib = R.nib.transferConfirmationView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -97,6 +100,16 @@ final class TransferConfirmationViewController: UIViewController {
         }
     }
     
+    @objc private func gotoMerchant(_ sender: Any) {
+        guard let url = returnToURL else {
+            finish(sender)
+            return
+        }
+        authenticationViewController?.presentingViewController?.dismiss(animated: true) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
 }
 
 extension TransferConfirmationViewController: AuthenticationIntentViewController {
@@ -114,7 +127,11 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
     }
     
     var options: AuthenticationIntentOptions {
-        [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
+        var options: AuthenticationIntentOptions = [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
+        if returnToURL != nil {
+            options.insert(.neverRequestAddBiometricAuthentication)
+        }
+        return options
     }
     
     func authenticationViewController(
@@ -253,8 +270,17 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!
-                    successView.doneButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
+                    if let url = returnToURL {
+                        successView.doneButton.setTitle(R.string.localizable.back_to_merchant(), for: .normal)
+                        successView.doneButton.addTarget(self, action: #selector(gotoMerchant(_:)), for: .touchUpInside)
+                        let stayInMixinButton = successView.insertStayInMixinButtonIfNeeded()
+                        stayInMixinButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
+                    } else {
+                        successView.doneButton.setTitle(R.string.localizable.done(), for: .normal)
+                        successView.doneButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
+                    }
                     contentStackView.addArrangedSubview(successView)
+                    view.layoutIfNeeded()
                     authenticationViewController?.endPINInputting()
                     UIDevice.current.playPaymentSuccess()
                 }

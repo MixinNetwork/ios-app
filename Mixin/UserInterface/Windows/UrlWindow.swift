@@ -17,7 +17,10 @@ class UrlWindow {
         clearNavigationStack: Bool = true,
         presentHintOnUnsupportedMixinSchema: Bool = true
     ) -> Bool {
-        if let mixinURL = MixinURL(url: url) {
+        if let payment = Payment(url: url) {
+            checkPayment(payment)
+            return true
+        } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
             switch mixinURL {
             case let .codes(code):
@@ -851,6 +854,64 @@ class UrlWindow {
 
 extension UrlWindow {
 
+    private static func checkPayment(_ payment: Payment) {
+        let hud = Hud()
+        if let view = UIApplication.homeContainerViewController?.view {
+            hud.show(style: .busy, text: "", on: view)
+        }
+        DispatchQueue.global().async {
+            let user: UserItem
+            switch payment.address {
+            case let .user(id):
+                if let (item, _) = syncUser(userId: id, hud: hud) {
+                    user = item
+                } else {
+                    return
+                }
+            }
+            if let request = payment.request {
+                guard let token = TokenDAO.shared.tokenItem(with: request.asset) else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
+                DispatchQueue.main.async {
+                    let validator = PaymentValidator(traceID: payment.trace, token: token, memo: payment.memo)
+                    validator.payment(assetID: request.asset, amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user) { result in
+                        switch result {
+                        case .passed:
+                            hud.hide()
+                            let transfer = TransferConfirmationViewController(opponent: user,
+                                                                              token: token,
+                                                                              amountDisplay: .byToken,
+                                                                              tokenAmount: request.amount,
+                                                                              fiatMoneyAmount: fiatMoneyAmount,
+                                                                              memo: payment.memo,
+                                                                              traceID: payment.trace,
+                                                                              returnToURL: payment.returnTo)
+                            let authentication = AuthenticationViewController(intentViewController: transfer)
+                            UIApplication.homeContainerViewController?.present(authentication, animated: true, completion: nil)
+                        case .userCancelled:
+                            hud.hide()
+                        case .failure(let message):
+                            hud.set(style: .error, text: message)
+                            hud.scheduleAutoHidden()
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+                    UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
+                }
+            }
+        }
+    }
+    
     private static func checkCodesUrl(_ codeId: String, clearNavigationStack: Bool, webContext: MixinWebViewController.Context? = nil) -> Bool {
         guard !codeId.isEmpty, UUID(uuidString: codeId) != nil else {
             return false

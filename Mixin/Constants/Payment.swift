@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 struct Payment {
     
@@ -33,6 +34,15 @@ struct Payment {
             return nil
         }
         
+        let address: Address
+        let addressString = pathComponents[2]
+        if UUID.isValidLowercasedUUIDString(addressString) {
+            address = .user(addressString)
+        } else {
+            Logger.general.warn(category: "Payment", message: "Invalid address: \(addressString)")
+            return nil
+        }
+        
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return nil
         }
@@ -50,6 +60,7 @@ struct Payment {
             if UUID.isValidLowercasedUUIDString(id) {
                 asset = id
             } else {
+                Logger.general.warn(category: "Payment", message: "Invalid asset")
                 return nil
             }
         } else {
@@ -61,6 +72,7 @@ struct Payment {
             if let amount = Decimal(string: amount, locale: .enUSPOSIX), amount > 0, amount.numberOfSignificantFractionalDigits <= 8 {
                 decimalAmount = amount
             } else {
+                Logger.general.warn(category: "Payment", message: "Invalid amount")
                 return nil
             }
         } else {
@@ -68,12 +80,18 @@ struct Payment {
         }
         
         let request: Request?
-        if let asset, let decimalAmount {
+        switch (asset, decimalAmount) {
+        case let (.some(asset), .some(decimalAmount)):
             request = Request(asset: asset, amount: decimalAmount)
-        } else if asset == nil, decimalAmount == nil {
+        case (.none, .none):
             request = nil
-        } else {
+        case (.some, .none):
+            Logger.general.warn(category: "Payment", message: "Invalid args: amount is null")
             return nil
+        case (.none, .some):
+            Logger.general.warn(category: "Payment", message: "Invalid args: asset is null")
+            return nil
+            
         }
         
         let trace: String
@@ -81,6 +99,7 @@ struct Payment {
             if UUID.isValidLowercasedUUIDString(id) {
                 trace = id
             } else {
+                Logger.general.warn(category: "Payment", message: "Invalid trace")
                 return nil
             }
         } else {
@@ -96,13 +115,7 @@ struct Payment {
             returnToURL = nil
         }
         
-        let addressString = pathComponents[2]
-        if UUID.isValidLowercasedUUIDString(addressString) {
-            self.address = .user(addressString)
-        } else {
-            return nil
-        }
-        
+        self.address = address
         self.request = request
         self.memo = queries["memo"] ?? ""
         self.trace = trace

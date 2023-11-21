@@ -316,7 +316,7 @@ final class AuthenticationViewController: UIViewController {
     }
     
     private func addEnableBiometricAuthButtonIfNeeded() {
-        guard !canAuthenticateWithBiometry else {
+        guard !canAuthenticateWithBiometry && !intentViewController.options.contains(.neverRequestAddBiometricAuthentication) else {
             return
         }
         let image: UIImage

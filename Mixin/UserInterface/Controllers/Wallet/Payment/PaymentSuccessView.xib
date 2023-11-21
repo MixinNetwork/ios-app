@@ -14,56 +14,58 @@
         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="985-0W-3SN" customClass="PaymentSuccessView" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="393" height="207"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pay_success" translatesAutoresizingMaskIntoConstraints="NO" id="mKJ-H0-qTy">
-                    <rect key="frame" x="176.66666666666666" y="22" width="40" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="40" id="6Kg-D3-GJc"/>
-                        <constraint firstAttribute="width" constant="40" id="xHK-0a-Emc"/>
-                    </constraints>
-                </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Successful" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6tN-jM-uQF">
-                    <rect key="frame" x="161" y="74" width="71" height="17"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <color key="textColor" name="text_accessory"/>
-                    <nil key="highlightedColor"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="successful"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                    </userDefinedRuntimeAttributes>
-                </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mnW-gV-eCm" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="158" y="131" width="77" height="42"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="42" id="ukF-ka-5mf"/>
-                    </constraints>
-                    <inset key="contentEdgeInsets" minX="20" minY="12" maxX="20" maxY="12"/>
-                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                    <state key="normal" title="Done">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="done"/>
-                    </userDefinedRuntimeAttributes>
-                </button>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="yPi-iZ-T53">
+                    <rect key="frame" x="0.0" y="22" width="393" height="151"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pay_success" translatesAutoresizingMaskIntoConstraints="NO" id="mKJ-H0-qTy">
+                            <rect key="frame" x="176.66666666666666" y="0.0" width="40" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="6Kg-D3-GJc"/>
+                                <constraint firstAttribute="width" constant="40" id="xHK-0a-Emc"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Successful" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6tN-jM-uQF">
+                            <rect key="frame" x="161.33333333333334" y="52" width="70.666666666666657" height="45"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_accessory"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="successful"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mnW-gV-eCm" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="158" y="109" width="77" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="42" id="ukF-ka-5mf"/>
+                            </constraints>
+                            <inset key="contentEdgeInsets" minX="20" minY="12" maxX="20" maxY="12"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Done">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="done"/>
+                            </userDefinedRuntimeAttributes>
+                        </button>
+                    </subviews>
+                </stackView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="EdZ-fa-qsZ"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="mnW-gV-eCm" firstAttribute="centerX" secondItem="6tN-jM-uQF" secondAttribute="centerX" id="4MW-RC-fO8"/>
-                <constraint firstItem="6tN-jM-uQF" firstAttribute="centerX" secondItem="985-0W-3SN" secondAttribute="centerX" id="5NK-av-oRZ"/>
-                <constraint firstItem="EdZ-fa-qsZ" firstAttribute="bottom" secondItem="mnW-gV-eCm" secondAttribute="bottom" priority="999" id="Czm-cD-udS"/>
-                <constraint firstItem="mnW-gV-eCm" firstAttribute="top" secondItem="6tN-jM-uQF" secondAttribute="bottom" constant="40" id="DUa-DK-jam"/>
-                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mnW-gV-eCm" secondAttribute="trailing" id="Jdy-Ge-Pt9"/>
-                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mnW-gV-eCm" secondAttribute="bottom" constant="20" id="b2K-Bo-P0C"/>
-                <constraint firstItem="mKJ-H0-qTy" firstAttribute="top" secondItem="985-0W-3SN" secondAttribute="top" constant="22" id="bff-ub-EEe"/>
-                <constraint firstItem="mnW-gV-eCm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="985-0W-3SN" secondAttribute="leading" id="iJ3-yL-HR8"/>
-                <constraint firstItem="mKJ-H0-qTy" firstAttribute="centerX" secondItem="985-0W-3SN" secondAttribute="centerX" id="rRW-Pl-rZp"/>
-                <constraint firstItem="6tN-jM-uQF" firstAttribute="top" secondItem="mKJ-H0-qTy" secondAttribute="bottom" constant="12" id="uMf-c2-np6"/>
+                <constraint firstItem="EdZ-fa-qsZ" firstAttribute="trailing" secondItem="yPi-iZ-T53" secondAttribute="trailing" id="486-J5-xdA"/>
+                <constraint firstItem="EdZ-fa-qsZ" firstAttribute="bottom" secondItem="yPi-iZ-T53" secondAttribute="bottom" priority="750" id="Rov-Jh-TGj"/>
+                <constraint firstItem="yPi-iZ-T53" firstAttribute="top" secondItem="985-0W-3SN" secondAttribute="top" constant="22" id="SFk-u9-i6y"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="yPi-iZ-T53" secondAttribute="bottom" constant="20" id="SYX-gt-ReX"/>
+                <constraint firstItem="yPi-iZ-T53" firstAttribute="leading" secondItem="EdZ-fa-qsZ" secondAttribute="leading" id="qfz-UR-Ay0"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="contentStackView" destination="yPi-iZ-T53" id="CPb-Xh-AyV"/>
                 <outlet property="doneButton" destination="mnW-gV-eCm" id="UcU-1Y-bYc"/>
+                <outlet property="titleLabel" destination="6tN-jM-uQF" id="7Uy-GC-qr5"/>
             </connections>
             <point key="canvasLocation" x="-60" y="42"/>
         </view>
@@ -71,7 +73,7 @@
     <resources>
         <image name="ic_pay_success" width="42" height="42"/>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

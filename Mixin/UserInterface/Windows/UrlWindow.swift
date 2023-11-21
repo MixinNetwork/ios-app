@@ -889,7 +889,8 @@ extension UrlWindow {
                                                                               tokenAmount: amount,
                                                                               fiatMoneyAmount: fiatMoneyAmount,
                                                                               memo: payment.memo,
-                                                                              traceID: payment.trace)
+                                                                              traceID: payment.trace,
+                                                                              returnToURL: payment.returnTo)
                             let authentication = AuthenticationViewController(intentViewController: transfer)
                             UIApplication.homeContainerViewController?.present(authentication, animated: true, completion: nil)
                         case .userCancelled:

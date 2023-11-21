@@ -14,7 +14,7 @@ struct Payment {
     let amount: Decimal?
     let memo: String
     let trace: String
-    let origin: URL?
+    let returnTo: URL?
     
     init?(url: URL) {
         guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
@@ -74,11 +74,11 @@ struct Payment {
             trace = UUID().uuidString.lowercased()
         }
         
-        let origin: URL?
+        let returnToURL: URL?
         if let returnTo = queries["return_to"] {
-            origin = URL(string: returnTo)
+            returnToURL = URL(string: returnTo)
         } else {
-            origin = nil
+            returnToURL = nil
         }
         
         let addressString = pathComponents[2]
@@ -92,7 +92,7 @@ struct Payment {
         self.amount = decimalAmount
         self.memo = queries["memo"] ?? ""
         self.trace = trace
-        self.origin = origin
+        self.returnTo = returnToURL
     }
     
 }

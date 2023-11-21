@@ -70,3 +70,11 @@ public extension Int64 {
     }
 
 }
+
+public extension Decimal {
+    
+    public var numberOfSignificantFractionalDigits: Int {
+        max(-exponent, 0)
+    }
+    
+}

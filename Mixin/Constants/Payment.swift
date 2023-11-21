@@ -54,7 +54,7 @@ struct Payment {
         
         let decimalAmount: Decimal?
         if let amount = queries["amount"] {
-            if let amount = Decimal(string: amount, locale: .enUSPOSIX), amount > 0 {
+            if let amount = Decimal(string: amount, locale: .enUSPOSIX), amount > 0, amount.numberOfSignificantFractionalDigits <= 8 {
                 decimalAmount = amount
             } else {
                 return nil

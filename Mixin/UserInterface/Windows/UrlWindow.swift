@@ -859,13 +859,6 @@ extension UrlWindow {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
         DispatchQueue.global().async {
-            let token: TokenItem?
-            if let asset = payment.asset {
-                token = TokenDAO.shared.tokenItem(with: asset)
-            } else {
-                token = nil
-            }
-            
             let user: UserItem
             switch payment.address {
             case let .user(id):
@@ -875,15 +868,21 @@ extension UrlWindow {
                     return
                 }
             }
-            
-            if let token, let amount = payment.amount {
+            if let assetID = payment.asset, let amount = payment.amount {
+                guard let token = TokenDAO.shared.tokenItem(with: assetID) else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
                 let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
                 DispatchQueue.main.async {
+                    hud.hide()
                     let validator = PaymentValidator(traceID: payment.trace, token: token, memo: payment.memo)
                     validator.transfer(amount: amount, fiatMoneyAmount: fiatMoneyAmount, to: user) { result in
                         switch result {
                         case .passed:
-                            hud.hide()
                             let transfer = TransferConfirmationViewController(opponent: user,
                                                                               token: token,
                                                                               amountDisplay: .byToken,
@@ -894,17 +893,16 @@ extension UrlWindow {
                             let authentication = AuthenticationViewController(intentViewController: transfer)
                             UIApplication.homeContainerViewController?.present(authentication, animated: true, completion: nil)
                         case .userCancelled:
-                            hud.hide()
+                            break
                         case .failure(let message):
-                            hud.set(style: .error, text: message)
-                            hud.scheduleAutoHidden()
+                            showAutoHiddenHud(style: .error, text: message)
                         }
                     }
                 }
             } else {
                 DispatchQueue.main.async {
                     hud.hide()
-                    let transfer = TransferOutViewController.instance(token: token, to: .contact(user))
+                    let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
                     UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
                 }
             }

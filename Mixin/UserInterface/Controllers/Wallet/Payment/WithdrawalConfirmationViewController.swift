@@ -141,10 +141,11 @@ extension WithdrawalConfirmationViewController: AuthenticationIntentViewControll
         
         Task { [traceID] in
             do {
+                let fullAddress = address.fullAddress
                 let amountString = Token.amountString(from: amount)
                 let feeAmountString = Token.amountString(from: feeAmount)
                 let feeTraceID = UUID.uniqueObjectIDString(traceID, "FEE")
-                Logger.general.info(category: "Withdraw", message: "Withdraw: \(amount) \(withdrawalToken.symbol), fee: \(feeAmount) \(feeToken.symbol), to \(address.fullAddress), traceID: \(traceID), feeTraceID: \(feeTraceID)")
+                Logger.general.info(category: "Withdraw", message: "Withdraw: \(amount) \(withdrawalToken.symbol), fee: \(feeAmount) \(feeToken.symbol), to \(fullAddress), traceID: \(traceID), feeTraceID: \(feeTraceID)")
                 
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
                 Logger.general.info(category: "Withdraw", message: "SpendKey ready")
@@ -271,13 +272,13 @@ extension WithdrawalConfirmationViewController: AuthenticationIntentViewControll
                     let rawTransactions = [
                         RawTransaction(requestID: traceID,
                                        rawTransaction: signedWithdrawal.raw,
-                                       receiverID: receiverID,
+                                       receiverID: fullAddress,
                                        state: .unspent,
                                        type: .withdrawal,
                                        createdAt: now),
                         RawTransaction(requestID: feeTraceID,
                                        rawTransaction: signedFee.raw,
-                                       receiverID: receiverID,
+                                       receiverID: fullAddress,
                                        state: .unspent,
                                        type: .fee,
                                        createdAt: now),
@@ -322,7 +323,7 @@ extension WithdrawalConfirmationViewController: AuthenticationIntentViewControll
                     let spendingOutputIDs = withdrawalOutputs.outputs.map(\.id)
                     let rawTransaction = RawTransaction(requestID: traceID,
                                                         rawTransaction: signedWithdrawal.raw,
-                                                        receiverID: receiverID,
+                                                        receiverID: fullAddress,
                                                         state: .unspent,
                                                         type: .withdrawal,
                                                         createdAt: now)

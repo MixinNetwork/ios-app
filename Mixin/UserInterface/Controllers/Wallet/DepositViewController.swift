@@ -38,10 +38,7 @@ class DepositViewController: UIViewController {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: token.symbol)
         view.layoutIfNeeded()
-        let token = self.token!
-        DispatchQueue.global().async {
-            self.reloadEntry(token: token)
-        }
+        reloadEntryFromRemote(token: token)
 //        if let index = usdtNetworkNames.index(forKey: token.assetId) {
 //            switchableNetworks = usdtNetworkNames.values.elements
 //            let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
@@ -61,20 +58,6 @@ class DepositViewController: UIViewController {
 //            let indexPath = IndexPath(item: index, section: 0)
 //            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
 //        }
-    }
-    
-    private func reloadEntry(token: TokenItem) {
-        if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: token.chainID) {
-            DispatchQueue.main.async {
-                guard token.assetID == self.token.assetID, entry.isSignatureValid else {
-                    return
-                }
-                self.updateViews(token: token, entry: entry)
-                self.hideAddressGeneratingView()
-            }
-        } else {
-            self.reloadEntryFromRemote(token: token)
-        }
     }
     
     private func reloadEntryFromRemote(token: TokenItem) {

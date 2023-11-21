@@ -18,15 +18,8 @@ class UrlWindow {
         presentHintOnUnsupportedMixinSchema: Bool = true
     ) -> Bool {
         if let payment = Payment(url: url) {
-            if payment.asset == nil && payment.amount == nil {
-                checkPayment(payment)
-                return true
-            } else if payment.asset != nil && payment.amount != nil {
-                checkPayment(payment)
-                return true
-            } else {
-                return false
-            }
+            checkPayment(payment)
+            return true
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
             switch mixinURL {
@@ -863,8 +856,9 @@ extension UrlWindow {
 
     private static func checkPayment(_ payment: Payment) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        
+        if let view = UIApplication.homeContainerViewController?.view {
+            hud.show(style: .busy, text: "", on: view)
+        }
         DispatchQueue.global().async {
             let user: UserItem
             switch payment.address {
@@ -875,25 +869,25 @@ extension UrlWindow {
                     return
                 }
             }
-            if let assetID = payment.asset, let amount = payment.amount {
-                guard let token = TokenDAO.shared.tokenItem(with: assetID) else {
+            if let request = payment.request {
+                guard let token = TokenDAO.shared.tokenItem(with: request.asset) else {
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: R.string.localizable.asset_not_found())
                         hud.scheduleAutoHidden()
                     }
                     return
                 }
-                let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
+                let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
                 DispatchQueue.main.async {
-                    hud.hide()
                     let validator = PaymentValidator(traceID: payment.trace, token: token, memo: payment.memo)
-                    validator.transfer(amount: amount, fiatMoneyAmount: fiatMoneyAmount, to: user) { result in
+                    validator.payment(assetID: request.asset, amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user) { result in
                         switch result {
                         case .passed:
+                            hud.hide()
                             let transfer = TransferConfirmationViewController(opponent: user,
                                                                               token: token,
                                                                               amountDisplay: .byToken,
-                                                                              tokenAmount: amount,
+                                                                              tokenAmount: request.amount,
                                                                               fiatMoneyAmount: fiatMoneyAmount,
                                                                               memo: payment.memo,
                                                                               traceID: payment.trace,
@@ -901,9 +895,10 @@ extension UrlWindow {
                             let authentication = AuthenticationViewController(intentViewController: transfer)
                             UIApplication.homeContainerViewController?.present(authentication, animated: true, completion: nil)
                         case .userCancelled:
-                            break
+                            hud.hide()
                         case .failure(let message):
-                            showAutoHiddenHud(style: .error, text: message)
+                            hud.set(style: .error, text: message)
+                            hud.scheduleAutoHidden()
                         }
                     }
                 }

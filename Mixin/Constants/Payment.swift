@@ -9,9 +9,13 @@ struct Payment {
         case user(String)
     }
     
+    struct Request {
+        let asset: String
+        let amount: Decimal
+    }
+    
     let address: Address
-    let asset: String?
-    let amount: Decimal?
+    let request: Request?
     let memo: String
     let trace: String
     let returnTo: URL?
@@ -63,6 +67,15 @@ struct Payment {
             decimalAmount = nil
         }
         
+        let request: Request?
+        if let asset, let decimalAmount {
+            request = Request(asset: asset, amount: decimalAmount)
+        } else if asset == nil, decimalAmount == nil {
+            request = nil
+        } else {
+            return nil
+        }
+        
         let trace: String
         if let id = queries["trace"] {
             if UUID.isValidLowercasedUUIDString(id) {
@@ -75,8 +88,10 @@ struct Payment {
         }
         
         let returnToURL: URL?
-        if let returnTo = queries["return_to"] {
-            returnToURL = URL(string: returnTo)
+        if let returnTo = queries["return_to"], let data = returnTo.data(using: .utf8) {
+            // Resolve issues when the string contains percent symbol
+            // e.g. queries with `#` which has been converted to `%23`
+            returnToURL = URL(dataRepresentation: data, relativeTo: nil)
         } else {
             returnToURL = nil
         }
@@ -88,8 +103,7 @@ struct Payment {
             return nil
         }
         
-        self.asset = asset
-        self.amount = decimalAmount
+        self.request = request
         self.memo = queries["memo"] ?? ""
         self.trace = trace
         self.returnTo = returnToURL

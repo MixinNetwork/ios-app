@@ -8,6 +8,7 @@ struct Payment {
     
     enum Address {
         case user(String)
+        case mainnet(String)
     }
     
     struct Request {
@@ -38,6 +39,8 @@ struct Payment {
         let addressString = pathComponents[2]
         if UUID.isValidLowercasedUUIDString(addressString) {
             address = .user(addressString)
+        } else if addressString.hasPrefix("XIN") {
+            address = .mainnet(addressString)
         } else {
             Logger.general.warn(category: "Payment", message: "Invalid address: \(addressString)")
             return nil

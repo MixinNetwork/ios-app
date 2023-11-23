@@ -860,14 +860,16 @@ extension UrlWindow {
             hud.show(style: .busy, text: "", on: view)
         }
         DispatchQueue.global().async {
-            let user: UserItem
+            let opponent: TransferConfirmationViewController.Opponent
             switch payment.address {
             case let .user(id):
                 if let (item, _) = syncUser(userId: id, hud: hud) {
-                    user = item
+                    opponent = .user(item)
                 } else {
                     return
                 }
+            case let .mainnet(address):
+                opponent = .mainnet(address)
             }
             if let request = payment.request {
                 guard let token = TokenDAO.shared.tokenItem(with: request.asset) else {
@@ -880,11 +882,11 @@ extension UrlWindow {
                 let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
                 DispatchQueue.main.async {
                     let validator = PaymentValidator(traceID: payment.trace, token: token, memo: payment.memo)
-                    validator.payment(assetID: request.asset, amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user) { result in
+                    let completion: (PaymentValidator.Result) -> Void = { result in
                         switch result {
                         case .passed:
                             hud.hide()
-                            let transfer = TransferConfirmationViewController(opponent: user,
+                            let transfer = TransferConfirmationViewController(opponent: opponent,
                                                                               token: token,
                                                                               amountDisplay: .byToken,
                                                                               tokenAmount: request.amount,
@@ -901,11 +903,23 @@ extension UrlWindow {
                             hud.scheduleAutoHidden()
                         }
                     }
+                    switch opponent {
+                    case .user(let user):
+                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user, completion: completion)
+                    case .mainnet(let address):
+                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: address, completion: completion)
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
                     hud.hide()
-                    let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+                    let transfer: UIViewController
+                    switch opponent {
+                    case .user(let user):
+                        transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+                    case .mainnet(let address):
+                        transfer = TransferOutViewController.instance(token: nil, to: .mainnet(address))
+                    }
                     UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
                 }
             }

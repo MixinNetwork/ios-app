@@ -311,6 +311,8 @@
 "deposit_tip_eos" = "このアドレスはEOSベースの全てのトークンをサポートしています";
 "deposit_tip_eth" = "このアドレスはETHやXINなど全てのERC-20トークンをサポートしています";
 "deposit_tip_trx" = "このアドレスは全てのTRC-10/TRC-20トークンをサポートしています";
+"depost_address_updated" = "%@ Deposit Address Updated";
+"depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
 "desktop_on_hint" = "デスクトップにログインしています";
 "desktop_upgrade" = "デスクトップ版Mixinを最新バージョンにアップデートしてください";
 "detect_qr_tip" = "Mixin QRコードを検出しました、タップしてアクセスします";

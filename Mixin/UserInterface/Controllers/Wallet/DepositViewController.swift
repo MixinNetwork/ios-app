@@ -2,7 +2,7 @@ import UIKit
 import OrderedCollections
 import MixinServices
 
-class DepositViewController: UIViewController {
+final class DepositViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentStackView: UIStackView!
@@ -11,7 +11,7 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var hintLabel: UILabel!
     @IBOutlet weak var warningLabel: UILabel!
     
-    private let usdtNetworkNames: OrderedDictionary<String, String> = [
+    private let usdtNetworks: OrderedDictionary<String, String> = [
         AssetID.ethereumUSDT:   "ERC-20",
         AssetID.tronUSDT:       "TRON(TRC-20)",
         AssetID.eosUSDT:        "EOS",
@@ -19,69 +19,105 @@ class DepositViewController: UIViewController {
         AssetID.bep20USDT:      "BEP-20",
     ]
     
-    private var token: TokenItem!
+    // `assetID` is the SSoT of current selected token
+    // When user selects from USDT networks, `assetID` is updated immediately, while `token` is not
+    private var assetID: String
+    private var token: TokenItem
+    
+    private var displayingEntry: DepositEntry?
+    
     private var addressGeneratingView: UIView?
     private var networkSwitchViewContentSizeObserver: NSKeyValueObservation?
     private var switchableNetworks: [String] = []
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    init(token: TokenItem) {
+        self.assetID = token.assetID
+        self.token = token
+        let nib = R.nib.depositView
+        super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
-    class func instance(asset: TokenItem) -> UIViewController {
-        let vc = R.storyboard.wallet.deposit()!
-        vc.token = asset
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.deposit())
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    class func instance(token: TokenItem) -> UIViewController {
+        let deposit = DepositViewController(token: token)
+        return ContainerViewController.instance(viewController: deposit, title: R.string.localizable.deposit())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: token.symbol)
+        reloadData(token: token)
         view.layoutIfNeeded()
-        reloadEntryFromRemote(token: token)
-//        if let index = usdtNetworkNames.index(forKey: token.assetId) {
-//            switchableNetworks = usdtNetworkNames.values.elements
-//            let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
-//            contentStackView.insertArrangedSubview(switchView, at: 0)
-//            let collectionView: UICollectionView = switchView.collectionView
-//            networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
-//                guard let newValue = change.newValue, let self else {
-//                    return
-//                }
-//                switchView.collectionViewHeightConstraint.constant = newValue.height
-//                self.view.layoutIfNeeded()
-//            }
-//            collectionView.register(R.nib.compactDepositNetworkCell)
-//            collectionView.dataSource = self
-//            collectionView.delegate = self
-//            collectionView.reloadData()
-//            let indexPath = IndexPath(item: index, section: 0)
-//            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
-//        }
+        if let index = usdtNetworks.index(forKey: token.assetID) {
+            switchableNetworks = usdtNetworks.values.elements
+            let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
+            contentStackView.insertArrangedSubview(switchView, at: 0)
+            let collectionView: UICollectionView = switchView.collectionView
+            networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
+                guard let newValue = change.newValue, let self else {
+                    return
+                }
+                switchView.collectionViewHeightConstraint.constant = newValue.height
+                self.view.layoutIfNeeded()
+            }
+            collectionView.register(R.nib.compactDepositNetworkCell)
+            collectionView.dataSource = self
+            collectionView.delegate = self
+            collectionView.reloadData()
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
+        }
     }
     
-    private func reloadEntryFromRemote(token: TokenItem) {
-        Queue.main.autoAsync(execute: showAddressGeneratingView)
-        SafeAPI.depositEntries(chainID: token.chainID) { [weak self] result in
+    private func reloadData(token: TokenItem) {
+        DispatchQueue.global().async {
+            self.reloadFromLocal(token: token)
+            self.reloadFromRemote(token: token)
+        }
+    }
+    
+    private func reloadFromLocal(token: TokenItem) {
+        guard let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: token.chainID) else {
+            DispatchQueue.main.async {
+                guard self.assetID == token.assetID else {
+                    return
+                }
+                self.showAddressGeneratingView()
+            }
+            return
+        }
+        DispatchQueue.main.sync {
+            guard token.assetID == self.assetID else {
+                return
+            }
+            self.presentAddressChangedHintIfNeeded(token: token, newEntry: entry)
+            self.updateViews(token: token, entry: entry)
+            self.displayingEntry = entry
+            self.hideAddressGeneratingView()
+        }
+    }
+    
+    private func reloadFromRemote(token: TokenItem) {
+        SafeAPI.depositEntries(chainID: token.chainID, queue: .global()) { [weak self] result in
             switch result {
             case .success(let entries):
-                if let entry = entries.first(where: \.isPrimary) {
-                    if let self, token.assetID == self.token.assetID {
-                        self.updateViews(token: token, entry: entry)
-                        self.hideAddressGeneratingView()
+                DepositEntryDAO.shared.save(entries: entries) {
+                    DispatchQueue.global().async {
+                        self?.reloadFromLocal(token: token)
                     }
-                } else {
-                    Logger.general.error(category: "Deposit", message: "No primary entry: \(token.name)")
-                }
-                DispatchQueue.global().async {
-                    DepositEntryDAO.shared.save(entries: entries)
                 }
             case .failure(.invalidSignature):
                 break
             case .failure(let error):
                 Logger.general.error(category: "Deposit", message: "Failed to load: \(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    self?.reloadEntryFromRemote(token: token)
+                    guard let self, self.assetID == token.assetID else {
+                        return
+                    }
+                    self.reloadFromRemote(token: token)
                 }
             }
         }
@@ -146,7 +182,37 @@ extension DepositViewController: UICollectionViewDataSource {
 extension DepositViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let id = usdtNetworkNames.elements[indexPath.item].key
+        let id = usdtNetworks.elements[indexPath.item].key
+        self.showAddressGeneratingView()
+        self.assetID = id
+        Task {
+            func reloadData(with token: TokenItem) async {
+                await MainActor.run {
+                    // No need to check `assetID` because generating view is blocking UI interactions
+                    self.token = token
+                    self.container?.setSubtitle(subtitle: token.symbol)
+                    self.reloadData(token: token)
+                }
+            }
+            
+            if let token = TokenDAO.shared.tokenItem(with: id) {
+                await reloadData(with: token)
+            } else {
+                let token = try await SafeAPI.assets(id: id)
+                TokenDAO.shared.save(assets: [token])
+                
+                let chain: Chain
+                if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
+                    chain = localChain
+                } else {
+                    chain = try await NetworkAPI.chain(id: token.chainID)
+                    ChainDAO.shared.save([chain])
+                }
+                
+                let tokenItem = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                await reloadData(with: tokenItem)
+            }
+        }
     }
     
 }
@@ -213,6 +279,41 @@ extension DepositViewController {
     private func hideAddressGeneratingView() {
         addressGeneratingView?.removeFromSuperview()
         addressGeneratingView = nil
+    }
+    
+    private func presentAddressChangedHintIfNeeded(token: TokenItem, newEntry: DepositEntry) {
+        guard let oldEntry = displayingEntry, oldEntry.chainID == newEntry.chainID else {
+            return
+        }
+        guard oldEntry.destination != newEntry.destination || oldEntry.tag != newEntry.tag else {
+            return
+        }
+        let hint = WalletHintViewController(token: token)
+        hint.setTitle(R.string.localizable.depost_address_updated(token.symbol),
+                      description: R.string.localizable.depost_address_updated_description(token.symbol))
+        hint.delegate = self
+        present(hint, animated: true)
+    }
+    
+}
+
+extension DepositViewController: WalletHintViewControllerDelegate {
+    
+    func walletHintViewControllerDidRealize(_ controller: WalletHintViewController) {
+        
+    }
+    
+    func walletHintViewControllerWantsContactSupport(_ controller: WalletHintViewController) {
+        guard let navigationController, let user = UserDAO.shared.getUser(identityNumber: "7000") else {
+            return
+        }
+        let conversation = ConversationViewController.instance(ownerUser: user)
+        var viewControllers = navigationController.viewControllers
+        if let index = viewControllers.firstIndex(where: { $0 is HomeViewController }) {
+            viewControllers.removeLast(viewControllers.count - index - 1)
+        }
+        viewControllers.append(conversation)
+        navigationController.setViewControllers(viewControllers, animated: true)
     }
     
 }

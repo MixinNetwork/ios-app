@@ -603,7 +603,7 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
                                                             <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
@@ -613,7 +613,7 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
@@ -1037,114 +1037,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T5f-yL-bnC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1844.9275362318842" y="1414.4021739130435"/>
-        </scene>
-        <!--Deposit View Controller-->
-        <scene sceneID="oWt-lb-ba4">
-            <objects>
-                <viewController storyboardIdentifier="deposit" id="wbL-K3-HcL" customClass="DepositViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ujt-Yu-JL5">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QBi-Sl-cc1">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <subviews>
-                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3jx-1E-qdc">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="628.66666666666663"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tB5-S1-fay" customClass="DepositFieldView" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="248"/>
-                                                <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="248" placeholder="YES" id="N6J-BW-tfb"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="za9-iG-3NZ" customClass="DepositFieldView" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="248" width="414" height="248"/>
-                                                <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="248" placeholder="YES" id="ZKx-rE-ImG"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iWR-ea-wTp">
-                                                <rect key="frame" x="0.0" y="496.00000000000006" width="414" height="132.66666666666669"/>
-                                                <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="r9y-CN-8yf">
-                                                        <rect key="frame" x="30" y="15.000000000000007" width="354" height="102.66666666666669"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aFl-kr-gDX">
-                                                                <rect key="frame" x="0.0" y="0.0" width="354" height="46.333333333333336"/>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <string key="text">This address supports all base on EOS tokens, such as EOS, IQ, BLACK, KARMA, etc.Deposit will arrive after at least 126 block confirmations. </string>
-                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                <color key="textColor" name="text_accessory"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEy-2R-8To">
-                                                                <rect key="frame" x="0.0" y="56.333333333333371" width="354" height="46.333333333333343"/>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <string key="text">Notice: Both an Account Memo and an AccountName are required to successfully deposit your EOS to Mixin, deposit will arrive after at least 126 block confirmations.</string>
-                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                <color key="textColor" name="red"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                    </stackView>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="r9y-CN-8yf" secondAttribute="bottom" constant="15" id="2Cd-nU-H4z"/>
-                                                    <constraint firstAttribute="trailing" secondItem="r9y-CN-8yf" secondAttribute="trailing" constant="30" id="T0c-nX-NqM"/>
-                                                    <constraint firstItem="r9y-CN-8yf" firstAttribute="top" secondItem="iWR-ea-wTp" secondAttribute="top" constant="15" id="YFM-nq-xp8"/>
-                                                    <constraint firstItem="r9y-CN-8yf" firstAttribute="leading" secondItem="iWR-ea-wTp" secondAttribute="leading" constant="30" id="xwv-dK-6hA"/>
-                                                </constraints>
-                                            </view>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" name="background_secondary"/>
-                                <constraints>
-                                    <constraint firstItem="3jx-1E-qdc" firstAttribute="leading" secondItem="QBi-Sl-cc1" secondAttribute="leading" id="3Fz-re-Idc"/>
-                                    <constraint firstItem="3jx-1E-qdc" firstAttribute="top" secondItem="QBi-Sl-cc1" secondAttribute="top" id="47J-yM-sZD"/>
-                                    <constraint firstItem="3jx-1E-qdc" firstAttribute="width" secondItem="QBi-Sl-cc1" secondAttribute="width" id="Le9-mj-7cg"/>
-                                    <constraint firstAttribute="trailing" secondItem="3jx-1E-qdc" secondAttribute="trailing" id="aZP-ch-nK5"/>
-                                    <constraint firstAttribute="bottom" secondItem="3jx-1E-qdc" secondAttribute="bottom" id="zEC-bX-Lox"/>
-                                </constraints>
-                            </scrollView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="C6u-Ug-gQE"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="C6u-Ug-gQE" firstAttribute="trailing" secondItem="QBi-Sl-cc1" secondAttribute="trailing" id="Fnt-DP-K41"/>
-                            <constraint firstAttribute="bottom" secondItem="QBi-Sl-cc1" secondAttribute="bottom" id="WNM-Ev-5WR"/>
-                            <constraint firstItem="QBi-Sl-cc1" firstAttribute="top" secondItem="ujt-Yu-JL5" secondAttribute="top" id="d1d-DE-5NL"/>
-                            <constraint firstItem="QBi-Sl-cc1" firstAttribute="leading" secondItem="C6u-Ug-gQE" secondAttribute="leading" id="kmL-TP-NXl"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="contentStackView" destination="3jx-1E-qdc" id="0ro-9v-wLG"/>
-                        <outlet property="hintLabel" destination="aFl-kr-gDX" id="glf-tW-dmO"/>
-                        <outlet property="lowerDepositFieldView" destination="za9-iG-3NZ" id="N0l-9T-KMR"/>
-                        <outlet property="notSupportedHintLabelLeadingConstraint" destination="6IQ-G5-dox" id="g76-XG-6HE"/>
-                        <outlet property="notSupportedHintLabelTrailingConstraint" destination="42q-v4-ro6" id="dsj-9k-B41"/>
-                        <outlet property="scrollView" destination="QBi-Sl-cc1" id="1x6-kd-RUM"/>
-                        <outlet property="upperDepositFieldView" destination="tB5-S1-fay" id="s4i-CM-PVg"/>
-                        <outlet property="warningLabel" destination="zEy-2R-8To" id="cNw-sJ-9qw"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6TB-tL-GxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="grN-o5-fMe">
-                    <connections>
-                        <action selector="copyAccountNameAction:" destination="wbL-K3-HcL" id="Mbj-Uc-XHA"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="esT-p3-EaI">
-                    <connections>
-                        <action selector="copyAccountMemoAction:" destination="wbL-K3-HcL" id="gsC-7Q-SNb"/>
-                    </connections>
-                </tapGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="302.89855072463769" y="702.71739130434787"/>
         </scene>
         <!--Deposit Not Supported View Controller-->
         <scene sceneID="hyM-jR-CZa">
@@ -2025,14 +1917,11 @@
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="red">
-            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

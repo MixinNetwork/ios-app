@@ -20,8 +20,16 @@ final class WithdrawalConfirmationViewController: UIViewController {
                 return error?.localizedDescription ?? "Null withdrawal tx"
             case .buildFeeTx(let error):
                 return error.localizedDescription
-            default:
-                return localizedDescription
+            case .missingWithdrawalResponse:
+                return "No withdrawal resp"
+            case .missingFeeResponse:
+                return "No fee resp"
+            case .alreadyPaid:
+                return "Already paid"
+            case .signWithdrawal(let error):
+                return error?.localizedDescription ?? "Sign withdrawal"
+            case .signFee(let error):
+                return error?.localizedDescription ?? "Sign fee"
             }
         }
         

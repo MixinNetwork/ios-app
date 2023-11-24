@@ -10,9 +10,7 @@ public final class Address: Codable, DatabaseColumnConvertible, MixinFetchableRe
         case destination
         case label
         case tag
-        case feeAssetId = "fee_asset_id"
         case fee
-        case reserve
         case dust
         case updatedAt = "updated_at"
     }
@@ -23,9 +21,7 @@ public final class Address: Codable, DatabaseColumnConvertible, MixinFetchableRe
     public let destination: String
     public let label: String
     public let tag: String
-    public let feeAssetId: String
     public let fee: String
-    public let reserve: String
     public let dust: String
     public let updatedAt: String
     
@@ -39,9 +35,7 @@ public final class Address: Codable, DatabaseColumnConvertible, MixinFetchableRe
         destination = try container.decodeIfPresent(String.self, forKey: .destination) ?? ""
         label = try container.decodeIfPresent(String.self, forKey: .label) ?? ""
         tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
-        feeAssetId = try container.decodeIfPresent(String.self, forKey: .feeAssetId) ?? ""
         fee = try container.decodeIfPresent(String.self, forKey: .fee) ?? ""
-        reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
         dust = try container.decodeIfPresent(String.self, forKey: .dust) ?? ""
         updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
     }

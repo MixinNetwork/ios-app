@@ -946,30 +946,6 @@ extension UrlWindow {
         }
         return true
     }
-
-    private static func syncAddress(addressId: String, hud: Hud) -> Address? {
-        let address: Address
-        switch WithdrawalAPI.address(addressId: addressId) {
-        case let .success(remoteAddress):
-            AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
-            address = remoteAddress
-        case let .failure(error):
-            DispatchQueue.main.async {
-                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.address_not_found())
-                hud.set(style: .error, text: text)
-                hud.scheduleAutoHidden()
-            }
-            return nil
-        }
-        if address.feeAssetId.isEmpty {
-            DispatchQueue.main.async {
-                hud.set(style: .error, text: R.string.localizable.address_not_found())
-                hud.scheduleAutoHidden()
-            }
-            reporter.report(error: SyncError.invalidAddress)
-        }
-        return address
-    }
     
     private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
         var asset = AssetDAO.shared.getAsset(assetId: assetId)

@@ -106,6 +106,21 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "\(SQL.selector) WHERE te.balance > 0 ORDER BY \(SQL.order)")
     }
     
+    public func appTokens(ids: [String]) -> [AppToken] {
+        var query: GRDB.SQL = """
+            SELECT t.asset_id, ifnull(te.balance,'0') AS balance, t.chain_id, t.symbol, t.name, t.icon_url
+            FROM tokens t
+                LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
+        """
+        if !ids.isEmpty {
+            query.append(literal: "\nWHERE t.asset_id IN \(ids)")
+        }
+        return try! db.read { (db: GRDB.Database) -> [AppToken] in
+            let (sql, arguments) = try query.build(db)
+            return try AppToken.fetchAll(db, sql: sql, arguments: arguments)
+        }
+    }
+    
     public func usdBalanceSum() -> Int {
         db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
     }

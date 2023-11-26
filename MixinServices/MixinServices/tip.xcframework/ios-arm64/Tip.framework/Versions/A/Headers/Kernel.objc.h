@@ -11,8 +11,22 @@
 #include "Universe.objc.h"
 
 
+@class KernelAddress;
 @class KernelTx;
 @class KernelUtxo;
+
+@interface KernelAddress : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+- (NSData* _Nullable)publicSpendKey;
+- (NSData* _Nullable)publicViewkey;
+- (void)setPublicSpendKey:(NSData* _Nullable)k;
+- (void)setPublicViewKey:(NSData* _Nullable)k;
+- (NSString* _Nonnull)string;
+@end
 
 @interface KernelTx : NSObject <goSeqRefInterface> {
 }
@@ -43,6 +57,8 @@ FOUNDATION_EXPORT NSString* _Nonnull KernelBuildTxToKernelAddress(NSString* _Nul
 FOUNDATION_EXPORT KernelTx* _Nullable KernelBuildWithdrawalTx(NSString* _Nullable asset, NSString* _Nullable amount, NSString* _Nullable address, NSString* _Nullable tag, NSString* _Nullable feeAmount, NSString* _Nullable feeKeys, NSString* _Nullable feeMask, NSData* _Nullable inputs, NSString* _Nullable changeKeys, NSString* _Nullable changeMask, NSString* _Nullable extra, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull KernelDecodeRawTx(NSString* _Nullable raw, long p1, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT KernelAddress* _Nullable KernelNewMainAddressFromString(NSString* _Nullable s, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT KernelTx* _Nullable KernelSignTx(NSString* _Nullable raw, NSString* _Nullable inputKeys, NSString* _Nullable viewKeys, NSString* _Nullable spendKey, BOOL withoutFee, NSError* _Nullable* _Nullable error);
 

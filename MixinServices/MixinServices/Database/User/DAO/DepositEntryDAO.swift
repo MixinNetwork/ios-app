@@ -13,9 +13,17 @@ public final class DepositEntryDAO: UserDatabaseDAO {
         db.select(where: DepositEntry.column(of: .chainID) == chainID)
     }
     
-    public func save(entries: [DepositEntry], completion: @escaping () -> Void) {
-        db.save(entries) { _ in
-            completion()
+    public func replace(
+        entries: [DepositEntry],
+        forChainWith chainID: String,
+        completion: @escaping () -> Void
+    ) {
+        db.write { db in
+            try db.execute(sql: "DELETE FROM deposit_entries WHERE chain_id = ?", arguments: [chainID])
+            try entries.save(db)
+            db.afterNextTransaction { _ in
+                completion()
+            }
         }
     }
     

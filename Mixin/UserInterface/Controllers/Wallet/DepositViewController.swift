@@ -104,7 +104,7 @@ final class DepositViewController: UIViewController {
         SafeAPI.depositEntries(chainID: token.chainID, queue: .global()) { [weak self] result in
             switch result {
             case .success(let entries):
-                DepositEntryDAO.shared.save(entries: entries) {
+                DepositEntryDAO.shared.replace(entries: entries, forChainWith: token.chainID) {
                     DispatchQueue.global().async {
                         self?.reloadFromLocal(token: token)
                     }

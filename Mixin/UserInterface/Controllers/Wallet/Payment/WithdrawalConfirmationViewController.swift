@@ -176,7 +176,10 @@ extension WithdrawalConfirmationViewController: AuthenticationIntentViewControll
                     withdrawalOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: withdrawalToken.kernelAssetID, amount: amount + feeAmount)
                     feeOutputs = nil
                 }
-                Logger.general.info(category: "Withdraw", message: "Spending \(withdrawalOutputs.debugDescription), fee: \(feeOutputs?.debugDescription ?? "(null)")")
+                Logger.general.info(category: "Withdraw", message: "Withdraw \(withdrawalOutputs.debugDescription), id: \(withdrawalOutputs.outputs.map(\.id))")
+                if let feeOutputs {
+                    Logger.general.info(category: "Withdraw", message: "Fee \(feeOutputs.debugDescription), id: \(feeOutputs.outputs.map(\.id))")
+                }
                 
                 let ghostKeyRequests: [GhostKeyRequest]
                 if isFeeTokenDifferent {

@@ -154,7 +154,8 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 TraceDAO.shared.saveTrace(trace: trace)
                 
                 let spendingOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: kernelAssetID, amount: tokenAmount)
-                Logger.general.info(category: "Transfer", message: "Spending \(spendingOutputs.debugDescription)")
+                let spendingOutputIDs = spendingOutputs.outputs.map(\.id)
+                Logger.general.info(category: "Transfer", message: "Spending \(spendingOutputs.debugDescription), id: \(spendingOutputIDs)")
                 
                 let ghostKeyRequests = GhostKeyRequest.transfer(receiverID: receiverID, senderID: senderID, traceID: traceID)
                 let ghostKeys = try await SafeAPI.ghostKeys(requests: ghostKeyRequests)
@@ -208,7 +209,6 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                     Logger.general.info(category: "Transfer", message: "No change")
                 }
                 
-                let spendingOutputIDs = spendingOutputs.outputs.map(\.id)
                 Logger.general.info(category: "Transfer", message: "Will sign: \(spendingOutputIDs)")
                 let rawTransaction = RawTransaction(requestID: traceID,
                                                     rawTransaction: signedTx.raw,

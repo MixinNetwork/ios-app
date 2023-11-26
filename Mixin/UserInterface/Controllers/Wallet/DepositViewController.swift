@@ -185,9 +185,12 @@ extension DepositViewController: UICollectionViewDelegate {
         let id = usdtNetworks.elements[indexPath.item].key
         self.showAddressGeneratingView()
         self.assetID = id
-        Task {
+        Task { [weak self] in
             func reloadData(with token: TokenItem) async {
                 await MainActor.run {
+                    guard let self else {
+                        return
+                    }
                     // No need to check `assetID` because generating view is blocking UI interactions
                     self.token = token
                     self.container?.setSubtitle(subtitle: token.symbol)

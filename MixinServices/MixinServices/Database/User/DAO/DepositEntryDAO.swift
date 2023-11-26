@@ -13,8 +13,10 @@ public final class DepositEntryDAO: UserDatabaseDAO {
         db.select(where: DepositEntry.column(of: .chainID) == chainID)
     }
     
-    public func save(entries: [DepositEntry]) {
-        db.save(entries)
+    public func save(entries: [DepositEntry], completion: @escaping () -> Void) {
+        db.save(entries) { _ in
+            completion()
+        }
     }
     
 }

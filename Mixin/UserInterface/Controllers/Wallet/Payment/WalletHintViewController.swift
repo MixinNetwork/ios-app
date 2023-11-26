@@ -1,30 +1,31 @@
 import UIKit
 import MixinServices
 
-protocol WithdrawSuspendedViewControllerDelegate: AnyObject {
-    func withdrawSuspendedViewControllerDidRealize(_ controller: WithdrawSuspendedViewController)
-    func withdrawSuspendedViewControllerWantsContactSupport(_ controller: WithdrawSuspendedViewController)
+protocol WalletHintViewControllerDelegate: AnyObject {
+    func walletHintViewControllerDidRealize(_ controller: WalletHintViewController)
+    func walletHintViewControllerWantsContactSupport(_ controller: WalletHintViewController)
 }
 
-final class WithdrawSuspendedViewController: UIViewController {
-
+final class WalletHintViewController: UIViewController {
+    
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tokenIconView: AssetIconView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var realizeButton: RoundedButton!
     
-    weak var delegate: WithdrawSuspendedViewControllerDelegate?
+    @IBOutlet weak var contentStackTopConstraint: NSLayoutConstraint!
+    
+    weak var delegate: WalletHintViewControllerDelegate?
     
     private let token: TokenItem
     
     init(token: TokenItem) {
         self.token = token
-        let nib = R.nib.withdrawSuspendedView
+        let nib = R.nib.walletHintView
         super.init(nibName: nib.name, bundle: nib.bundle)
         transitioningDelegate = PopupPresentationManager.shared
         modalPresentationStyle = .custom
-        preferredContentSize.height = 433
     }
     
     required init?(coder: NSCoder) {
@@ -38,18 +39,26 @@ final class WithdrawSuspendedViewController: UIViewController {
         view.layer.cornerRadius = 13
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.masksToBounds = true
-        titleLabel.text = R.string.localizable.withdrawal_suspended(token.symbol)
         tokenIconView.setIcon(token: token)
-        descriptionLabel.text = R.string.localizable.withdrawal_suspended_description(token.symbol)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(presentationViewControllerDidDismissPresentedViewController(_:)),
                                                name: PopupPresentationController.didDismissPresentedViewControllerNotification,
                                                object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updatePreferredContentSizeHeight()
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updatePreferredContentSizeHeight()
+    }
+    
     @IBAction func close(_ sender: Any) {
         presentingViewController?.dismiss(animated: true) {
-            self.delegate?.withdrawSuspendedViewControllerDidRealize(self)
+            self.delegate?.walletHintViewControllerDidRealize(self)
         }
     }
     
@@ -58,8 +67,14 @@ final class WithdrawSuspendedViewController: UIViewController {
             return
         }
         presentingViewController.dismiss(animated: true, completion: {
-            self.delegate?.withdrawSuspendedViewControllerWantsContactSupport(self)
+            self.delegate?.walletHintViewControllerWantsContactSupport(self)
         })
+    }
+    
+    func setTitle(_ title: String, description: String) {
+        loadViewIfNeeded()
+        titleLabel.text = title
+        descriptionLabel.text = description
     }
     
     @objc private func presentationViewControllerDidDismissPresentedViewController(_ notification: Notification) {
@@ -69,7 +84,17 @@ final class WithdrawSuspendedViewController: UIViewController {
         guard controller.presentedViewController == self else {
             return
         }
-        self.delegate?.withdrawSuspendedViewControllerDidRealize(self)
+        self.delegate?.walletHintViewControllerDidRealize(self)
+    }
+    
+    private func updatePreferredContentSizeHeight() {
+        view.layoutIfNeeded()
+        let sizeToFit = CGSize(width: contentStackView.frame.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        preferredContentSize.height = contentStackTopConstraint.constant
+            + contentStackView.systemLayoutSizeFitting(sizeToFit).height
+            + 17
+            + view.safeAreaInsets.bottom
     }
     
 }

@@ -311,6 +311,8 @@
 "deposit_tip_eos" = "支援所有基於 EOS 發行的代幣。";
 "deposit_tip_eth" = "支援所有符合 ERC-20 標準的代幣，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支援 TRX 和所有符合 TRC-10、TRC-20 標準的代幣。";
+"depost_address_updated" = "%@ 充值地址已更新";
+"depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址將隨著系統或網路升級而自動更新，舊的地址仍可充值並會自動入賬，但是不推薦使用。";
 "desktop_on_hint" = "桌面版已登入。";
 "desktop_upgrade" = "請升級 Mixin Messenger 桌面端至最新版！";
 "detect_qr_tip" = "檢測到一個 Mixin 二維碼，點選識別";

@@ -243,7 +243,7 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
             controller = TokenViewController.instance(token: token, performSendOnAppear: true)
         case .receive:
             if token.isDepositSupported {
-                controller = DepositViewController.instance(asset: token)
+                controller = DepositViewController.instance(token: token)
             } else {
                 controller = DepositNotSupportedViewController.instance(asset: token)
             }

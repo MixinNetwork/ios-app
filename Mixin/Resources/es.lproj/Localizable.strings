@@ -311,6 +311,8 @@
 "deposit_tip_eos" = "Esta dirección es compatible con todos los tokens basados en EOS.";
 "deposit_tip_eth" = "Esta dirección admite todos los tokens ERC-20, como ETH, XIN, etc.";
 "deposit_tip_trx" = "Esta dirección admite todos los tokens TRC-10 y TRC-20.";
+"depost_address_updated" = "%@ Deposit Address Updated";
+"depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
 "desktop_on_hint" = "Tienes tu escritorio conectado";
 "desktop_upgrade" = "Actualiza Mixin Messenger Desktop a la última versión.";
 "detect_qr_tip" = "Se ha detectado un código QR de Mixin, toca para reconocer";

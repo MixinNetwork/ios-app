@@ -429,7 +429,9 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
             } catch MixinAPIError.withdrawSuspended {
                 await MainActor.run {
-                    let suspended = WithdrawSuspendedViewController(token: token)
+                    let suspended = WalletHintViewController(token: token)
+                    suspended.setTitle(R.string.localizable.withdrawal_suspended(token.symbol),
+                                       description: R.string.localizable.withdrawal_suspended_description(token.symbol))
                     suspended.delegate = self
                     present(suspended, animated: true)
                 }
@@ -549,13 +551,13 @@ extension TransferOutViewController: TokenSelectorViewControllerDelegate {
     
 }
 
-extension TransferOutViewController: WithdrawSuspendedViewControllerDelegate {
+extension TransferOutViewController: WalletHintViewControllerDelegate {
     
-    func withdrawSuspendedViewControllerDidRealize(_ controller: WithdrawSuspendedViewController) {
+    func walletHintViewControllerDidRealize(_ controller: WalletHintViewController) {
         navigationController?.popViewController(animated: true)
     }
     
-    func withdrawSuspendedViewControllerWantsContactSupport(_ controller: WithdrawSuspendedViewController) {
+    func walletHintViewControllerWantsContactSupport(_ controller: WalletHintViewController) {
         guard let navigationController, let user = UserDAO.shared.getUser(identityNumber: "7000") else {
             return
         }

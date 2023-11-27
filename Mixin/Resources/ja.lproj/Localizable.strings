@@ -300,12 +300,11 @@
 "deleted" = "削除しました";
 "deposit" = "入金";
 "deposit_account_attention" = "注意： 最初の入金は少額でお試しください。Mixinに %@ を入金するためには、メモとアドレスの両方の記入が必要です。";
-"deposit_at_least" = "最初の入金は%@ %@ 以上に指定してください";
 "deposit_attention" = "注意: 最初は必ず少額で入金テストをしてください。";
 "deposit_confirmation" = "入金した仮想通貨は、%dブロック確認後に着金します";
 "deposit_confirmation_count" = "入金した仮想通貨は、%dブロック確認後に着金します";
+"deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
-"deposit_reserve" = "最初は、%@以上の金額を入金してください";
 "deposit_tip_btc" = "このアドレスはビットコインのみサポートしています";
 "deposit_tip_common" = "このアドレスは%@のみサポートしています";
 "deposit_tip_eos" = "このアドレスはEOSベースの全てのトークンをサポートしています";

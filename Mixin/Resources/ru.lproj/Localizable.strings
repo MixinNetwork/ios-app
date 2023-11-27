@@ -300,12 +300,11 @@
 "deleted" = "Удалено";
 "deposit" = "Депозит";
 "deposit_account_attention" = "Внимание: Пожалуйста, попробуйте небольшую сумму для первого депозита. Для успешного внесения %@ в Mixin Messenger необходимы как памятка, так и адрес.";
-"deposit_at_least" = "Внесите не менее %@ %@ в первый раз.";
 "deposit_attention" = "Пожалуйста, попробуйте небольшую сумму для первого депозита.";
 "deposit_confirmation" = "Депозит придет %d подтверждение блокировки";
 "deposit_confirmation_count" = "Депозит получит %d подтверждения блокировки";
+"deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
-"deposit_reserve" = "Внесите не менее %@ в первый раз.";
 "deposit_tip_btc" = "Этот адрес поддерживает только BTC.";
 "deposit_tip_common" = "Этот адрес поддерживает только %@.";
 "deposit_tip_eos" = "Этот адрес поддерживает всю базу токенов EOS.";

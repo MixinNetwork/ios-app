@@ -265,7 +265,7 @@ extension DepositViewController {
             
             if token.decimalDust > 0 {
                 let dust = CurrencyFormatter.localizedString(from: token.decimalDust, format: .precision, sign: .never)
-                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(dust, token.chain?.symbol ?? "")
+                warningLabel.text = R.string.localizable.deposit_attention() + "\n" + R.string.localizable.deposit_dust(dust, token.symbol)
             } else {
                 warningLabel.text = R.string.localizable.deposit_attention()
             }

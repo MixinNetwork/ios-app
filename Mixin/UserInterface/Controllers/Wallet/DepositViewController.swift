@@ -243,12 +243,12 @@ extension DepositViewController {
                 upperDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
             }
             upperDepositFieldView.contentLabel.text = entry.tag
-            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: tag, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.setQRCode(with: tag)
             upperDepositFieldView.assetIconView.setIcon(token: token)
             
             lowerDepositFieldView.titleLabel.text = R.string.localizable.address()
             lowerDepositFieldView.contentLabel.text = entry.destination
-            lowerDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
+            lowerDepositFieldView.setQRCode(with: entry.destination)
             lowerDepositFieldView.assetIconView.setIcon(token: token)
             lowerDepositFieldView.isHidden = false
             
@@ -256,7 +256,7 @@ extension DepositViewController {
         } else {
             upperDepositFieldView.titleLabel.text = R.string.localizable.address()
             upperDepositFieldView.contentLabel.text = entry.destination
-            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.setQRCode(with: entry.destination)
             upperDepositFieldView.assetIconView.setIcon(token: token)
             upperDepositFieldView.shadowView.hasLowerShadow = true
             upperDepositFieldView.delegate = self

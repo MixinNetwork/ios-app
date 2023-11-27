@@ -75,7 +75,7 @@ final class DepositViewController: UIViewController {
     private func reloadData(token: TokenItem) {
         DispatchQueue.global().async {
             self.reloadFromLocal(token: token)
-            self.reloadFromRemote(token: token)
+            self.reloadFromRemote(token: token, showHUDOnFailure: true)
         }
     }
     
@@ -100,7 +100,7 @@ final class DepositViewController: UIViewController {
         }
     }
     
-    private func reloadFromRemote(token: TokenItem) {
+    private func reloadFromRemote(token: TokenItem, showHUDOnFailure: Bool) {
         SafeAPI.depositEntries(chainID: token.chainID, queue: .global()) { [weak self] result in
             switch result {
             case .success(let entries):
@@ -109,15 +109,23 @@ final class DepositViewController: UIViewController {
                         self?.reloadFromLocal(token: token)
                     }
                 }
-            case .failure(.invalidSignature):
-                break
             case .failure(let error):
                 Logger.general.error(category: "Deposit", message: "Failed to load: \(error)")
+                if showHUDOnFailure {
+                    DispatchQueue.main.async {
+                        guard let self, self.assetID == token.assetID else {
+                            return
+                        }
+                        if let entry = self.displayingEntry, entry.chainID == token.chainID {
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        }
+                    }
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     guard let self, self.assetID == token.assetID else {
                         return
                     }
-                    self.reloadFromRemote(token: token)
+                    self.reloadFromRemote(token: token, showHUDOnFailure: false)
                 }
             }
         }

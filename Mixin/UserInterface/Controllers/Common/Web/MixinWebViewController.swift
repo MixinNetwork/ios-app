@@ -433,6 +433,10 @@ extension MixinWebViewController: WKScriptMessageHandler {
                let assetIDs = body[0] as? [String],
                let callback = body[1] as? String
             {
+                guard assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
+                    webView.evaluateJavaScript("\(callback)('[]');")
+                    return
+                }
                 switch context.style {
                 case let .app(app, _):
                     AuthorizeAPI.authorizations(appId: app.appId) { [weak webView] result in

@@ -433,17 +433,22 @@ extension MixinWebViewController: WKScriptMessageHandler {
                let assetIDs = body[0] as? [String],
                let callback = body[1] as? String
             {
+                let failureCallback = "\(callback)('[]');"
                 guard assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
-                    webView.evaluateJavaScript("\(callback)('[]');")
+                    webView.evaluateJavaScript(failureCallback)
                     return
                 }
                 switch context.style {
                 case let .app(app, _):
+                    guard let appHomeURL = URL(string: app.homeUri), let currentURL = webView.url, appHomeURL.host == currentURL.host else {
+                        webView.evaluateJavaScript(failureCallback)
+                        return
+                    }
                     AuthorizeAPI.authorizations(appId: app.appId) { [weak webView] result in
                         switch result {
                         case let .success(response):
                             guard let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") else {
-                                webView?.evaluateJavaScript("\(callback)('[]');")
+                                webView?.evaluateJavaScript(failureCallback)
                                 return
                             }
                             DispatchQueue.global().async {
@@ -454,16 +459,16 @@ extension MixinWebViewController: WKScriptMessageHandler {
                                     }
                                 } else {
                                     DispatchQueue.main.async {
-                                        webView?.evaluateJavaScript("\(callback)('[]');")
+                                        webView?.evaluateJavaScript(failureCallback)
                                     }
                                 }
                             }
                         case .failure:
-                            webView?.evaluateJavaScript("\(callback)('[]');")
+                            webView?.evaluateJavaScript(failureCallback)
                         }
                     }
                 case .webPage:
-                    webView.evaluateJavaScript("\(callback)('[]');")
+                    webView.evaluateJavaScript(failureCallback)
                 }
             }
         }

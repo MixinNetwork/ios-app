@@ -407,6 +407,11 @@ extension TIP {
     }
     
     public static func registerToSafe(pin: String) async throws {
+        let account = try await AccountAPI.me()
+        guard !account.hasSafe else {
+            Logger.tip.warn(category: "TIP", message: "Already had safe")
+            return
+        }
         Logger.tip.info(category: "TIP", message: "Begin register to safe")
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN

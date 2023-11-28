@@ -33,6 +33,7 @@ class MixinWebViewController: WebViewController {
         case close = "close"
         case getTIPAddress = "getTipAddress"
         case tipSign = "tipSign"
+        case getAssets = "getAssets"
     }
     
     private enum FradulentWarningBehavior {
@@ -425,6 +426,50 @@ extension MixinWebViewController: WKScriptMessageHandler {
                 }
                 let authentication = AuthenticationViewController(intentViewController: signRequest)
                 WalletConnectService.shared.presentRequest(viewController: authentication)
+            }
+        case .getAssets:
+            if let body = message.body as? [Any],
+               body.count == 2,
+               let assetIDs = body[0] as? [String],
+               let callback = body[1] as? String
+            {
+                let failureCallback = "\(callback)('[]');"
+                guard assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
+                    webView.evaluateJavaScript(failureCallback)
+                    return
+                }
+                switch context.style {
+                case let .app(app, _):
+                    guard let appHomeURL = URL(string: app.homeUri), let currentURL = webView.url, appHomeURL.host == currentURL.host else {
+                        webView.evaluateJavaScript(failureCallback)
+                        return
+                    }
+                    AuthorizeAPI.authorizations(appId: app.appId) { [weak webView] result in
+                        switch result {
+                        case let .success(response):
+                            guard let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") else {
+                                webView?.evaluateJavaScript(failureCallback)
+                                return
+                            }
+                            DispatchQueue.global().async {
+                                let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
+                                if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
+                                    DispatchQueue.main.async {
+                                        webView?.evaluateJavaScript("\(callback)('\(string)');")
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        webView?.evaluateJavaScript(failureCallback)
+                                    }
+                                }
+                            }
+                        case .failure:
+                            webView?.evaluateJavaScript(failureCallback)
+                        }
+                    }
+                case .webPage:
+                    webView.evaluateJavaScript(failureCallback)
+                }
             }
         }
     }

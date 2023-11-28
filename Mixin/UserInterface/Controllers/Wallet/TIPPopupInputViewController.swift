@@ -171,6 +171,8 @@ class TIPPopupInputViewController: PinValidationViewController {
                                                 legacyPIN: old,
                                                 forRecover: false,
                                                 progressHandler: nil)
+                    try await TIP.registerToSafe(pin: new)
+                    Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
                 } else {
                     let isCounterBalanced: Bool
                     switch action {
@@ -191,8 +193,6 @@ class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
-                try await TIP.registerToSafe(pin: new)
-                Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {
                 reporter.report(error: error)

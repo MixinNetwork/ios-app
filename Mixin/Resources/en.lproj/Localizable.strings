@@ -300,12 +300,11 @@
 "deleted" = "Deleted";
 "deposit" = "Deposit";
 "deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger.";
-"deposit_at_least" = "Deposit at least %@ %@ for the first time.";
 "deposit_attention" = "Please try a small amount for the first deposit.";
 "deposit_confirmation" = "Deposit will arrive %d block confirmation";
 "deposit_confirmation_count" = "Deposit will arrive %d block confirmations";
+"deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
-"deposit_reserve" = "Deposit at least %@ for the first time.";
 "deposit_tip_btc" = "This address only supports BTC.";
 "deposit_tip_common" = "This address only supports %@.";
 "deposit_tip_eos" = "This address supports all base on EOS tokens.";

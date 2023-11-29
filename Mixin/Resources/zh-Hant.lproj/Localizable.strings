@@ -300,12 +300,11 @@
 "deleted" = "已刪除";
 "deposit" = "充值";
 "deposit_account_attention" = "注意：首次充值建議小額嘗試！地址和 Memo（備註）同時使用才能充值 %@ 到 Mixin Messenger。";
-"deposit_at_least" = "首次充值至少 %@ %@！";
 "deposit_attention" = "首次充值建議小額嘗試！";
 "deposit_confirmation" = "充值到賬需要 %d 個區塊確認。";
 "deposit_confirmation_count" = "充值到賬需要 %d 個區塊確認。";
+"deposit_dust" = "最小充值數：%1$@ %2$@";
 "deposit_hash" = "充值雜湊";
-"deposit_reserve" = "首次充值至少 %@ ！";
 "deposit_tip_btc" = "該充值地址僅支援 BTC。";
 "deposit_tip_common" = "該充值地址僅支援 %@。";
 "deposit_tip_eos" = "支援所有基於 EOS 發行的代幣。";

@@ -75,7 +75,7 @@ final class DepositViewController: UIViewController {
     private func reloadData(token: TokenItem) {
         DispatchQueue.global().async {
             self.reloadFromLocal(token: token)
-            self.reloadFromRemote(token: token)
+            self.reloadFromRemote(token: token, showHUDOnFailure: true)
         }
     }
     
@@ -100,7 +100,7 @@ final class DepositViewController: UIViewController {
         }
     }
     
-    private func reloadFromRemote(token: TokenItem) {
+    private func reloadFromRemote(token: TokenItem, showHUDOnFailure: Bool) {
         SafeAPI.depositEntries(chainID: token.chainID, queue: .global()) { [weak self] result in
             switch result {
             case .success(let entries):
@@ -109,15 +109,23 @@ final class DepositViewController: UIViewController {
                         self?.reloadFromLocal(token: token)
                     }
                 }
-            case .failure(.invalidSignature):
-                break
             case .failure(let error):
                 Logger.general.error(category: "Deposit", message: "Failed to load: \(error)")
+                if showHUDOnFailure {
+                    DispatchQueue.main.async {
+                        guard let self, self.assetID == token.assetID else {
+                            return
+                        }
+                        if let entry = self.displayingEntry, entry.chainID == token.chainID {
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        }
+                    }
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     guard let self, self.assetID == token.assetID else {
                         return
                     }
-                    self.reloadFromRemote(token: token)
+                    self.reloadFromRemote(token: token, showHUDOnFailure: false)
                 }
             }
         }
@@ -155,7 +163,7 @@ extension DepositViewController: DepositFieldViewDelegate {
                                           content: content,
                                           foregroundColor: .black,
                                           description: content,
-                                          centerView: .asset(token))
+                                          centerContent: .asset(token))
         present(qrCode, animated: true)
     }
     
@@ -235,12 +243,12 @@ extension DepositViewController {
                 upperDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
             }
             upperDepositFieldView.contentLabel.text = entry.tag
-            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: tag, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.setQRCode(with: tag)
             upperDepositFieldView.assetIconView.setIcon(token: token)
             
             lowerDepositFieldView.titleLabel.text = R.string.localizable.address()
             lowerDepositFieldView.contentLabel.text = entry.destination
-            lowerDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
+            lowerDepositFieldView.setQRCode(with: entry.destination)
             lowerDepositFieldView.assetIconView.setIcon(token: token)
             lowerDepositFieldView.isHidden = false
             
@@ -248,7 +256,7 @@ extension DepositViewController {
         } else {
             upperDepositFieldView.titleLabel.text = R.string.localizable.address()
             upperDepositFieldView.contentLabel.text = entry.destination
-            upperDepositFieldView.qrCodeImageView.image = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.setQRCode(with: entry.destination)
             upperDepositFieldView.assetIconView.setIcon(token: token)
             upperDepositFieldView.shadowView.hasLowerShadow = true
             upperDepositFieldView.delegate = self
@@ -257,7 +265,7 @@ extension DepositViewController {
             
             if token.decimalDust > 0 {
                 let dust = CurrencyFormatter.localizedString(from: token.decimalDust, format: .precision, sign: .never)
-                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(dust, token.chain?.symbol ?? "")
+                warningLabel.text = R.string.localizable.deposit_attention() + "\n" + R.string.localizable.deposit_dust(dust, token.symbol)
             } else {
                 warningLabel.text = R.string.localizable.deposit_attention()
             }

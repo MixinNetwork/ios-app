@@ -130,7 +130,7 @@ extension UserCenterViewController {
                                           content: "https://mixin.one/pay/\(account.userID)",
                                           foregroundColor: .black,
                                           description: R.string.localizable.transfer_qrcode_prompt(),
-                                          centerView: .receiveMoney({ $0.setImage(with: account) }))
+                                          centerContent: .receiveMoney({ $0.setImage(with: account) }))
         present(qrCode, animated: true)
     }
     

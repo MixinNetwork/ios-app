@@ -17,7 +17,7 @@ class DepositFieldView: UIView, XibDesignable {
     
     weak var delegate: DepositFieldViewDelegate?
     
-    private var qrCodeContent: String?
+    private lazy var qrCodeGenerator = QRCodeGenerator_External()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -39,38 +39,25 @@ class DepositFieldView: UIView, XibDesignable {
     }
     
     func setQRCode(with content: String) {
-        guard content != qrCodeContent else {
-            return
-        }
-        qrCodeContent = content
-        qrCodeImageView.image = nil
-        
         let foregroundColor = UIColor.black.cgColor
         let backgroundColor = UIColor.white.cgColor
         let qrCodePixelSize = CGSize(width: qrCodeImageView.bounds.width * AppDelegate.current.mainWindow.screen.scale,
                                      height: qrCodeImageView.bounds.height * AppDelegate.current.mainWindow.screen.scale)
-        DispatchQueue.global().async { [weak self, content] in
-            let generator = QRCodeGenerator_External()
-            let document = QRCode.Document(utf8String: content, errorCorrection: .quantize, generator: generator)
-            document.design = {
-                let design = QRCode.Design(foregroundColor: foregroundColor, backgroundColor: backgroundColor)
-                design.shape = {
-                    let shape = QRCode.Shape()
-                    shape.eye = QRCode.EyeShape.Squircle()
-                    shape.onPixels = QRCode.PixelShape.Circle()
-                    return shape
-                }()
-                return design
+        let document = QRCode.Document(utf8String: content, errorCorrection: .quantize, generator: qrCodeGenerator)
+        document.design = {
+            let design = QRCode.Design(foregroundColor: foregroundColor, backgroundColor: backgroundColor)
+            design.shape = {
+                let shape = QRCode.Shape()
+                shape.eye = QRCode.EyeShape.Squircle()
+                shape.onPixels = QRCode.PixelShape.Circle()
+                return shape
             }()
-            guard let cgImage = document.cgImage(qrCodePixelSize) else {
-                return
-            }
-            DispatchQueue.main.async {
-                guard let self, self.qrCodeContent == content else {
-                    return
-                }
-                self.qrCodeImageView.image = UIImage(cgImage: cgImage)
-            }
+            return design
+        }()
+        if let cgImage = document.cgImage(qrCodePixelSize) {
+            qrCodeImageView.image = UIImage(cgImage: cgImage)
+        } else {
+            qrCodeImageView.image = nil
         }
     }
     

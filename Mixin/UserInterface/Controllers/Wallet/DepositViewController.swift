@@ -163,7 +163,7 @@ extension DepositViewController: DepositFieldViewDelegate {
                                           content: content,
                                           foregroundColor: .black,
                                           description: content,
-                                          centerView: .asset(token))
+                                          centerContent: .asset(token))
         present(qrCode, animated: true)
     }
     

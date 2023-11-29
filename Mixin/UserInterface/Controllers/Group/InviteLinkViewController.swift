@@ -48,7 +48,7 @@ class InviteLinkViewController: UIViewController {
                                           content: code,
                                           foregroundColor: .black,
                                           description: R.string.localizable.group_qr_code_prompt(),
-                                          centerView: .avatar({ $0.setGroupImage(conversation: conversation) }))
+                                          centerContent: .avatar({ $0.setGroupImage(conversation: conversation) }))
         present(qrCode, animated: true)
     }
     

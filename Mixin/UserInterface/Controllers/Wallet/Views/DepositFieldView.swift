@@ -10,10 +10,12 @@ class DepositFieldView: UIView, XibDesignable {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
-    @IBOutlet weak var qrCodeWrapperView: UIView!
-    @IBOutlet weak var qrCodeImageView: UIImageView!
+    @IBOutlet weak var qrCodeView: ModernQRCodeView!
+    @IBOutlet weak var centerWrapperView: UIView!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var shadowView: SeparatorShadowView!
+    
+    @IBOutlet weak var qrCodeWidthConstraint: NSLayoutConstraint!
     
     weak var delegate: DepositFieldViewDelegate?
     
@@ -39,33 +41,17 @@ class DepositFieldView: UIView, XibDesignable {
     }
     
     func setQRCode(with content: String) {
-        let foregroundColor = UIColor.black.cgColor
-        let backgroundColor = UIColor.white.cgColor
-        let qrCodePixelSize = CGSize(width: qrCodeImageView.bounds.width * AppDelegate.current.mainWindow.screen.scale,
-                                     height: qrCodeImageView.bounds.height * AppDelegate.current.mainWindow.screen.scale)
-        let document = QRCode.Document(utf8String: content, errorCorrection: .quantize, generator: qrCodeGenerator)
-        document.design = {
-            let design = QRCode.Design(foregroundColor: foregroundColor, backgroundColor: backgroundColor)
-            design.shape = {
-                let shape = QRCode.Shape()
-                shape.eye = QRCode.EyeShape.Squircle()
-                shape.onPixels = QRCode.PixelShape.Circle()
-                return shape
-            }()
-            return design
-        }()
-        if let cgImage = document.cgImage(qrCodePixelSize) {
-            qrCodeImageView.image = UIImage(cgImage: cgImage)
-        } else {
-            qrCodeImageView.image = nil
+        let size = CGSize(width: qrCodeWidthConstraint.constant,
+                          height: qrCodeWidthConstraint.constant)
+        centerWrapperView.isHidden = true
+        qrCodeView.setContent(content, size: size) {
+            self.centerWrapperView.isHidden = false
         }
     }
     
     private func loadSubviews() {
         loadXib()
-        qrCodeWrapperView.layer.cornerCurve = .continuous
-        qrCodeWrapperView.layer.cornerRadius = 14
-        qrCodeWrapperView.layer.masksToBounds = true
+        qrCodeView.setDefaultCornerCurve()
     }
     
 }

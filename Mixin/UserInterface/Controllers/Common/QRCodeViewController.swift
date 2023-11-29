@@ -5,7 +5,7 @@ import MixinServices
 
 class QRCodeViewController: UIViewController {
     
-    enum CenterView {
+    enum CenterContent {
         case avatar((AvatarImageView) -> Void)
         case receiveMoney((AvatarImageView) -> Void)
         case asset(TokenItem)
@@ -13,7 +13,8 @@ class QRCodeViewController: UIViewController {
     
     @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var codeImageView: UIImageView!
+    @IBOutlet weak var qrCodeView: ModernQRCodeView!
+    @IBOutlet weak var centerContentWrapperView: UIView!
     @IBOutlet weak var descriptionLabel: UILabel!
     
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
@@ -22,7 +23,7 @@ class QRCodeViewController: UIViewController {
     
     private let codeContent: String
     private let foregroundColor: UIColor
-    private let centerView: CenterView
+    private let centerContent: CenterContent
     private let codeDescription: String
     private let centerViewDimension: CGFloat = 40
     
@@ -31,12 +32,12 @@ class QRCodeViewController: UIViewController {
         content: String,
         foregroundColor: UIColor,
         description: String,
-        centerView: CenterView,
+        centerContent: CenterContent,
         isShowingAccount: Bool = false
     ) {
         self.codeContent = content
         self.foregroundColor = foregroundColor
-        self.centerView = centerView
+        self.centerContent = centerContent
         self.codeDescription = description
         self.isShowingAccount = isShowingAccount
         let nib = R.nib.qrCodeView
@@ -56,7 +57,7 @@ class QRCodeViewController: UIViewController {
                   content: account.codeURL,
                   foregroundColor: UIColor.theme.resolvedColor(with: light),
                   description: R.string.localizable.scan_code_add_me(),
-                  centerView: .avatar({ $0.setImage(with: account) }),
+                  centerContent: .avatar({ $0.setImage(with: account) }),
                   isShowingAccount: true)
     }
     
@@ -68,22 +69,22 @@ class QRCodeViewController: UIViewController {
         titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         descriptionLabel.text = codeDescription
         
-        switch centerView {
+        switch centerContent {
         case .avatar(let avatarSetter):
             let avatarImageView = AvatarImageView()
             avatarImageView.overrideUserInterfaceStyle = .light
-            contentView.addSubview(avatarImageView)
+            centerContentWrapperView.addSubview(avatarImageView)
             avatarImageView.snp.makeConstraints { make in
-                make.center.equalTo(codeImageView.snp.center)
+                make.center.equalToSuperview()
                 make.width.height.equalTo(centerViewDimension)
             }
             avatarSetter(avatarImageView)
         case .receiveMoney(let avatarSetter):
             let avatarImageView = AvatarImageView()
             avatarImageView.overrideUserInterfaceStyle = .light
-            contentView.addSubview(avatarImageView)
+            centerContentWrapperView.addSubview(avatarImageView)
             avatarImageView.snp.makeConstraints { make in
-                make.center.equalTo(codeImageView.snp.center)
+                make.center.equalToSuperview()
                 make.width.height.equalTo(centerViewDimension)
             }
             avatarSetter(avatarImageView)
@@ -91,47 +92,29 @@ class QRCodeViewController: UIViewController {
             let iconView = UIImageView(image: R.image.ic_receive_money())
             iconView.backgroundColor = .clear
             iconView.overrideUserInterfaceStyle = .light
-            contentView.addSubview(iconView)
+            centerContentWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
                 make.trailing.bottom.equalTo(avatarImageView)
             }
         case .asset(let asset):
             let iconView = AssetIconView()
             iconView.overrideUserInterfaceStyle = .light
-            contentView.addSubview(iconView)
+            centerContentWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
-                make.center.equalTo(codeImageView.snp.center)
+                make.center.equalToSuperview()
                 make.width.height.equalTo(centerViewDimension)
             }
             iconView.setIcon(token: asset)
         }
         
-        codeImageView.layer.cornerCurve = .continuous
-        codeImageView.layer.cornerRadius = 14
+        qrCodeView.setDefaultCornerCurve()
+        qrCodeView.tintColor = self.foregroundColor
         
-        let foregroundColor = self.foregroundColor.cgColor
-        let backgroundColor = UIColor.white.cgColor
-        let qrCodePixelDimension = imageViewWidthConstraint.constant * AppDelegate.current.mainWindow.screen.scale
-        let qrCodePixelSize = CGSize(width: qrCodePixelDimension, height: qrCodePixelDimension)
-        DispatchQueue.global().async { [weak self, codeContent] in
-            let generator = QRCodeGenerator_External()
-            let document = QRCode.Document(utf8String: codeContent, errorCorrection: .quantize, generator: generator)
-            document.design = {
-                let design = QRCode.Design(foregroundColor: foregroundColor, backgroundColor: backgroundColor)
-                design.shape = {
-                    let shape = QRCode.Shape()
-                    shape.eye = QRCode.EyeShape.Squircle()
-                    shape.onPixels = QRCode.PixelShape.Circle()
-                    return shape
-                }()
-                return design
-            }()
-            guard let cgImage = document.cgImage(qrCodePixelSize) else {
-                return
-            }
-            DispatchQueue.main.async {
-                self?.codeImageView.image = UIImage(cgImage: cgImage)
-            }
+        let size = CGSize(width: imageViewWidthConstraint.constant,
+                          height: imageViewWidthConstraint.constant)
+        centerContentWrapperView.isHidden = true
+        qrCodeView.setContent(codeContent, size: size) {
+            self.centerContentWrapperView.isHidden = false
         }
     }
     

@@ -144,7 +144,7 @@ extension WithdrawalConfirmationViewController: AuthenticationIntentViewControll
         let isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
         let amount = withdrawalTokenAmount
         let senderID = myUserId
-        let threshold = 1
+        let threshold: Int32 = 1
         let memo = ""
         
         Task { [traceID] in

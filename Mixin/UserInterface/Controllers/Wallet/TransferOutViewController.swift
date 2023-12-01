@@ -252,7 +252,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self.continueButton.isBusy = false
                 switch result {
                 case .passed:
-                    let transfer = TransferConfirmationViewController(opponent: .user(opponent),
+                    let transfer = TransferConfirmationViewController(opponent: .user([opponent]),
                                                                       token: token,
                                                                       amountDisplay: amountIntent,
                                                                       tokenAmount: tokenAmount,
@@ -302,7 +302,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
             }
         case let .mainnet(address):
-            validator.payment(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, to: address) { [weak self] result in
+            validator.payment(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount) { [weak self] result in
                 guard let self else {
                     return
                 }

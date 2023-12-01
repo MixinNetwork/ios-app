@@ -10,12 +10,12 @@ public struct GhostKeyRequest: Encodable {
 
 extension GhostKeyRequest {
     
-    public static func contactTransfer(receiverID: String, senderID: String, traceID: String) -> [GhostKeyRequest] {
+    public static func contactTransfer(receiverIDs: [String], senderIDs: [String], traceID: String) -> [GhostKeyRequest] {
         let output = UUID.uniqueObjectIDString(traceID, "OUTPUT", "0")
         let change = UUID.uniqueObjectIDString(traceID, "OUTPUT", "1")
         return [
-            GhostKeyRequest(receivers: [receiverID], index: 0, hint: output),
-            GhostKeyRequest(receivers: [senderID], index: 1, hint: change),
+            GhostKeyRequest(receivers: receiverIDs, index: 0, hint: output),
+            GhostKeyRequest(receivers: senderIDs, index: 1, hint: change),
         ]
     }
     

@@ -2,6 +2,8 @@ import Foundation
 
 extension UUID {
     
+    public static let dataCount = 16
+    
     public var data: Data {
         Data([
             uuid.0,  uuid.1,  uuid.2,  uuid.3,
@@ -12,7 +14,7 @@ extension UUID {
     }
     
     public init(data: Data) {
-        assert(data.count == 16)
+        assert(data.count == Self.dataCount)
         let uuid: uuid_t = (
             data[data.startIndex],
             data[data.startIndex.advanced(by: 1)],

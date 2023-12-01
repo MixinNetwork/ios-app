@@ -71,7 +71,6 @@ final class PaymentValidator {
     func payment(
         amount: Decimal,
         fiatMoneyAmount: Decimal,
-        to address: String,
         completion: @escaping (Result) -> Void
     ) {
         SafeAPI.transaction(id: traceID) { result in

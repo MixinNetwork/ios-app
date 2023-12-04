@@ -194,7 +194,7 @@ extension Payment {
                     let uuid = UUID(data: data)
                     return uuid.uuidString.lowercased()
                 }
-                self.address = .user(userIDs)
+                self.address = .user(userIDs.sorted(by: <))
             case 64 * membersCount:
                 let addresses = (0..<membersCount).map { i in
                     let spendKeyCount = 32

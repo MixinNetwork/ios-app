@@ -741,6 +741,9 @@
 		942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */ = {isa = PBXBuildFile; fileRef = 942F829725DD56E3004F913B /* opusenc_set_bitrate.c */; };
 		9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */; };
 		9431379229AD2F8F00C2484B /* web3.swift in Frameworks */ = {isa = PBXBuildFile; productRef = 9431379129AD2F8F00C2484B /* web3.swift */; };
+		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
+		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
+		94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94317D062AFBE57200FDC9C9 /* MemoCell.xib */; };
 		94333CB329960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */; };
 		94333CB52996127500EFF0A8 /* ConnectedDappTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */; };
 		94333CB7299612F200EFF0A8 /* ConnectedDappViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */; };
@@ -1919,6 +1922,9 @@
 		942F829625DD56E3004F913B /* opusenc_set_bitrate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opusenc_set_bitrate.h; sourceTree = "<group>"; };
 		942F829725DD56E3004F913B /* opusenc_set_bitrate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = opusenc_set_bitrate.c; sourceTree = "<group>"; };
 		9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+PlaylistItem.swift"; sourceTree = "<group>"; };
+		94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
+		94317D052AFBE57200FDC9C9 /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
+		94317D062AFBE57200FDC9C9 /* MemoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MemoCell.xib; sourceTree = "<group>"; };
 		94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectedDappTableHeaderView.xib; sourceTree = "<group>"; };
 		94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappTableHeaderView.swift; sourceTree = "<group>"; };
 		94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappViewController.swift; sourceTree = "<group>"; };
@@ -4001,6 +4007,9 @@
 				DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
 				94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */,
+				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
+				94317D052AFBE57200FDC9C9 /* MemoCell.swift */,
+				94317D062AFBE57200FDC9C9 /* MemoCell.xib */,
 				DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenTokensViewController.swift */,
 				94B2CD772B0F88D300D268E1 /* DepositView.xib */,
@@ -4511,6 +4520,7 @@
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
 				946983B529D2A0DE00E73428 /* NetworkFeeOptionCell.xib in Resources */,
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
+				94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */,
 				94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */,
 				94CDA7FF2A5DBC3400F1CDEE /* ComboBoxView.xib in Resources */,
 				7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */,
@@ -5307,6 +5317,7 @@
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,
+				94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */,
 				941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
@@ -5320,6 +5331,7 @@
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
 				7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
+				94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */,
 				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
 				7CFC1C8A29E78DBE00A290D5 /* RestoreFromCloudViewController.swift in Sources */,
 				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,

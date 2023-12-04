@@ -149,13 +149,14 @@ extension SnapshotViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
         let column = columns[indexPath.row]
-        cell.titleLabel.text = column.key.localized
+        cell.titleLabel.text = column.key.localized.localizedUppercase
         cell.subtitleLabel.text = column.value
         if column.style.contains(.unavailable) {
             cell.subtitleLabel.textColor = R.color.text_accessory()
         } else {
             cell.subtitleLabel.textColor = R.color.text()
         }
+        cell.disclosureIndicatorImageView.isHidden = !column.style.contains(.disclosureIndicator)
         return cell
     }
     
@@ -179,6 +180,12 @@ extension SnapshotViewController: UITableViewDelegate {
                     self?.present(profile, animated: true, completion: nil)
                 }
             }
+        case .memo:
+            guard !snapshot.memo.isEmpty, let utf8DecodedMemo = snapshot.utf8DecodedMemo else {
+                return
+            }
+            let memo = MemoViewController(rawMemo: snapshot.memo, utf8DecodedMemo: utf8DecodedMemo)
+            present(memo, animated: true, completion: nil)
         default:
             break
         }
@@ -245,6 +252,7 @@ extension SnapshotViewController {
             let rawValue: Int
             
             static let unavailable = Style(rawValue: 1 << 0)
+            static let disclosureIndicator = Style(rawValue: 1 << 1)
             
         }
         
@@ -398,7 +406,16 @@ extension SnapshotViewController {
             }
         }
         if !snapshot.memo.isEmpty {
-            columns.append(Column(key: .memo, value: snapshot.formattedMemo))
+            let style: Column.Style
+            let value: String
+            if let utf8DecodedMemo = snapshot.utf8DecodedMemo {
+                style = .disclosureIndicator
+                value = utf8DecodedMemo
+            } else {
+                style = []
+                value = snapshot.memo
+            }
+            columns.append(Column(key: .memo, value: value, style: style))
         }
         columns.append(Column(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         self.columns = columns

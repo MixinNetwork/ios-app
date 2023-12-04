@@ -101,7 +101,6 @@ struct Payment {
         case (.none, .some):
             Logger.general.warn(category: "Payment", message: "Invalid args: asset is null")
             return nil
-            
         }
         
         let trace: String

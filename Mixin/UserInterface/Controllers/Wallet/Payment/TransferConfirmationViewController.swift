@@ -201,7 +201,8 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 let ghostKeyRequests: [GhostKeyRequest]
                 switch opponent {
                 case let .user(opponents):
-                    ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: opponents.map(\.userId), senderIDs: [senderID], traceID: traceID)
+                    let receiverIDs = opponents.map(\.userId).sorted(by: <)
+                    ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: receiverIDs, senderIDs: [senderID], traceID: traceID)
                 case .mainnet:
                     ghostKeyRequests = GhostKeyRequest.mainnetAddressTransfer(senderID: senderID, traceID: traceID)
                 }

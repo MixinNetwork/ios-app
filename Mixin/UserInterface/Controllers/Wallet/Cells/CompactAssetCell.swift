@@ -21,6 +21,36 @@ class CompactAssetCell: UITableViewCell {
         assetIconView.prepareForReuse()
     }
     
+    func render(asset: AssetItem) {
+        assetIconView.setIcon(asset: asset)
+        nameLabel.text = asset.symbol
+        descriptionLabel.text = asset.name
+        if let tag = asset.chainTag {
+            chainTagLabel.text = tag
+            chainTagLabel.isHidden = false
+        } else {
+            chainTagLabel.isHidden = true
+        }
+        if asset.priceUsd.doubleValue > 0 {
+            changeLabel.text = " \(asset.localizedUsdChange)%"
+            if asset.changeUsd.doubleValue > 0 {
+                changeLabel.textColor = .walletGreen
+            } else {
+                changeLabel.textColor = .walletRed
+            }
+            priceLabel.text = Currency.current.symbol + asset.localizedFiatMoneyPrice
+            changeLabel.isHidden = false
+            priceLabel.isHidden = false
+            noValueIndicator.isHidden = true
+        } else {
+            changeLabel.text = R.string.localizable.na() // Just for layout guidance
+            priceLabel.text = nil
+            changeLabel.isHidden = true
+            priceLabel.isHidden = true
+            noValueIndicator.isHidden = false
+        }
+    }
+    
     func render(asset: TokenItem) {
         assetIconView.setIcon(token: asset)
         nameLabel.text = asset.symbol

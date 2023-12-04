@@ -5,8 +5,7 @@ import Foundation
 // See https://github.com/bitcoin/bitcoin/blob/306ccd4927a2efe325c8d84be1bdb79edeb29b04/src/base58.cpp
 // Permanent https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp
 
-fileprivate let base58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-fileprivate let mapBase58: [Int8] = [
+fileprivate let mapBase58: [Int] = [
     -1,-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,
@@ -48,7 +47,7 @@ extension Data {
             guard let characterASCIIValue = string[index].asciiValue else {
                 return nil
             }
-            var carry = Int(mapBase58[Int(characterASCIIValue)])
+            var carry = mapBase58[Int(characterASCIIValue)]
             if carry == -1 {
                 return nil
             }

@@ -17,7 +17,7 @@ class UrlWindow {
         clearNavigationStack: Bool = true,
         presentHintOnUnsupportedMixinSchema: Bool = true
     ) -> Bool {
-        if let payment = Payment(url: url) {
+        if let payment = URLPayment(url: url) {
             checkPayment(payment)
             return true
         } else if let mixinURL = MixinURL(url: url) {
@@ -854,7 +854,7 @@ class UrlWindow {
 
 extension UrlWindow {
 
-    private static func checkPayment(_ payment: Payment) {
+    private static func checkPayment(_ payment: URLPayment) {
         let hud = Hud()
         if let view = UIApplication.homeContainerViewController?.view {
             hud.show(style: .busy, text: "", on: view)

@@ -2,7 +2,7 @@ import Foundation
 import MixinServices
 import Tip
 
-struct Payment {
+struct URLPayment {
     
     private static let schemes = ["mixin", "https"]
     private static let host = "mixin.one"
@@ -36,7 +36,7 @@ struct Payment {
             return nil
         }
         
-        Logger.general.debug(category: "Payment", message: "URL: \(url.absoluteString)")
+        Logger.general.debug(category: "URLPayment", message: "URL: \(url.absoluteString)")
         let address: Address
         let addressString = pathComponents[2]
         if UUID.isValidLowercasedUUIDString(addressString) {
@@ -49,7 +49,7 @@ struct Payment {
             }
             address = mixAddress.address
         } else {
-            Logger.general.warn(category: "Payment", message: "Invalid address: \(addressString)")
+            Logger.general.warn(category: "URLPayment", message: "Invalid address: \(addressString)")
             return nil
         }
         
@@ -70,7 +70,7 @@ struct Payment {
             if UUID.isValidLowercasedUUIDString(id) {
                 asset = id
             } else {
-                Logger.general.warn(category: "Payment", message: "Invalid asset")
+                Logger.general.warn(category: "URLPayment", message: "Invalid asset")
                 return nil
             }
         } else {
@@ -82,7 +82,7 @@ struct Payment {
             if let amount = Decimal(string: amount, locale: .enUSPOSIX), amount > 0, amount.numberOfSignificantFractionalDigits <= 8 {
                 decimalAmount = amount
             } else {
-                Logger.general.warn(category: "Payment", message: "Invalid amount")
+                Logger.general.warn(category: "URLPayment", message: "Invalid amount")
                 return nil
             }
         } else {
@@ -96,10 +96,10 @@ struct Payment {
         case (.none, .none):
             request = nil
         case (.some, .none):
-            Logger.general.warn(category: "Payment", message: "Invalid args: amount is null")
+            Logger.general.warn(category: "URLPayment", message: "Invalid args: amount is null")
             return nil
         case (.none, .some):
-            Logger.general.warn(category: "Payment", message: "Invalid args: asset is null")
+            Logger.general.warn(category: "URLPayment", message: "Invalid args: asset is null")
             return nil
         }
         
@@ -108,7 +108,7 @@ struct Payment {
             if UUID.isValidLowercasedUUIDString(id) {
                 trace = id
             } else {
-                Logger.general.warn(category: "Payment", message: "Invalid trace")
+                Logger.general.warn(category: "URLPayment", message: "Invalid trace")
                 return nil
             }
         } else {
@@ -133,7 +133,7 @@ struct Payment {
     
 }
 
-extension Payment {
+extension URLPayment {
     
     private struct MIXAddress {
         

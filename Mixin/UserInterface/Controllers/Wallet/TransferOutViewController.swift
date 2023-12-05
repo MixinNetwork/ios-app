@@ -252,7 +252,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self.continueButton.isBusy = false
                 switch result {
                 case .passed:
-                    let transfer = TransferConfirmationViewController(opponent: .user([opponent]),
+                    let transfer = TransferConfirmationViewController(destination: .user(opponent),
                                                                       token: token,
                                                                       amountDisplay: amountIntent,
                                                                       tokenAmount: tokenAmount,
@@ -309,7 +309,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self.continueButton.isBusy = false
                 switch result {
                 case .passed:
-                    let transfer = TransferConfirmationViewController(opponent: .mainnet(address),
+                    let transfer = TransferConfirmationViewController(destination: .mainnet(address),
                                                                       token: token,
                                                                       amountDisplay: amountIntent,
                                                                       tokenAmount: tokenAmount,

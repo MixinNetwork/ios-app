@@ -4,17 +4,20 @@ import Tip
 
 final class TransferConfirmationViewController: UIViewController {
     
-    enum Opponent: CustomDebugStringConvertible {
+    enum Destination: CustomDebugStringConvertible {
         
-        case user([UserItem])
+        case user(UserItem)
+        case multisig([UserItem])
         case mainnet(String)
         
         var debugDescription: String {
             switch self {
-            case let .user(opponents):
-                return "<Opponent.users \(opponents.map(\.userId))>"
+            case let .user(item):
+                return "<Destination.user \(item.userId)>"
+            case let .multisig(receivers):
+                return "<Destination.multisig \(receivers.map(\.userId))>"
             case let .mainnet(address):
-                return "<Opponent.mainnet \(address)>"
+                return "<Destination.mainnet \(address)>"
             }
         }
         
@@ -42,7 +45,7 @@ final class TransferConfirmationViewController: UIViewController {
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
     
-    private let opponent: Opponent
+    private let destination: Destination
     private let token: TokenItem
     private let amountDisplay: AmountIntent
     private let tokenAmount: Decimal
@@ -52,7 +55,7 @@ final class TransferConfirmationViewController: UIViewController {
     private let returnToURL: URL?
     
     init(
-        opponent: Opponent,
+        destination: Destination,
         token: TokenItem,
         amountDisplay: AmountIntent,
         tokenAmount: Decimal,
@@ -61,7 +64,7 @@ final class TransferConfirmationViewController: UIViewController {
         traceID: String,
         returnToURL: URL?
     ) {
-        self.opponent = opponent
+        self.destination = destination
         self.token = token
         self.amountDisplay = amountDisplay
         self.tokenAmount = tokenAmount
@@ -82,6 +85,27 @@ final class TransferConfirmationViewController: UIViewController {
         contentStackView.spacing = 10
         contentStackView.setCustomSpacing(4, after: amountLabel)
         contentStackView.setCustomSpacing(4, after: amountExchangeLabel)
+        switch destination {
+        case .multisig(let receivers):
+            guard let account = LoginManager.shared.account else {
+                break
+            }
+            let patternView = R.nib.multisigPatternView(withOwner: nil)!
+            contentStackView.insertArrangedSubview(patternView, at: 0)
+            switch ScreenHeight.current {
+            case .short:
+                contentStackView.setCustomSpacing(6, after: patternView)
+            case .medium:
+                contentStackView.setCustomSpacing(8, after: patternView)
+            case .long, .extraLong:
+                contentStackView.setCustomSpacing(16, after: patternView)
+            }
+            patternView.showSendersButton.addTarget(self, action: #selector(showSenders(_:)), for: .touchUpInside)
+            patternView.showReceiversButton.addTarget(self, action: #selector(showReceivers(_:)), for: .touchUpInside)
+            patternView.reloadData(senders: [UserItem.createUser(from: account)], receivers: receivers)
+        case .user, .mainnet:
+            break
+        }
         assetIconView.setIcon(token: token)
         switch amountDisplay {
         case .byToken:
@@ -96,14 +120,13 @@ final class TransferConfirmationViewController: UIViewController {
     }
     
     @objc private func finish(_ sender: Any) {
-        authenticationViewController?.presentingViewController?.dismiss(animated: true) { [opponent] in
+        authenticationViewController?.presentingViewController?.dismiss(animated: true) { [destination] in
             guard let navigation = UIApplication.homeNavigationController else {
                 return
             }
             var viewControllers = navigation.viewControllers
-            switch opponent {
-            case let .user(opponents) where opponents.count == 1:
-                let opponent = opponents[0]
+            switch destination {
+            case let .user(opponent):
                 if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
                     while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
                         viewControllers.removeLast()
@@ -115,7 +138,7 @@ final class TransferConfirmationViewController: UIViewController {
                     viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
                 }
                 navigation.setViewControllers(viewControllers, animated: true)
-            case .user, .mainnet:
+            case .multisig, .mainnet:
                 if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
                     viewControllers.removeLast()
                 }
@@ -134,18 +157,39 @@ final class TransferConfirmationViewController: UIViewController {
         }
     }
     
+    @objc private func showSenders(_ sender: Any) {
+        switch destination {
+        case .multisig:
+            guard let account = LoginManager.shared.account else {
+                break
+            }
+            let senders = MultisigUsersViewController(title: .senders, users: [UserItem.createUser(from: account)])
+            present(senders, animated: true)
+        default:
+            break
+        }
+    }
+    
+    @objc private func showReceivers(_ sender: Any) {
+        switch destination {
+        case .multisig(let receivers):
+            let receivers = MultisigUsersViewController(title: .receivers, users: receivers)
+            present(receivers, animated: true)
+        default:
+            break
+        }
+    }
+    
 }
 
 extension TransferConfirmationViewController: AuthenticationIntentViewController {
     
     var intentTitle: String {
-        switch opponent {
-        case let .user(opponents):
-            if opponents.count == 1 {
-                return R.string.localizable.transfer_to(opponents[0].fullName)
-            } else {
-                fallthrough
-            }
+        switch destination {
+        case let .user(opponent):
+            return R.string.localizable.transfer_to(opponent.fullName)
+        case .multisig:
+            return R.string.localizable.multisig_transaction()
         case .mainnet:
             return R.string.localizable.transfer()
         }
@@ -156,13 +200,11 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
     }
     
     var intentSubtitle: String {
-        switch opponent {
-        case let .user(opponents):
-            return opponents
-                .map { opponent in
-                    opponent.isCreatedByMessenger ? opponent.identityNumber : opponent.userId
-                }
-                .joined(separator: ", ")
+        switch destination {
+        case let .user(opponent):
+            return opponent.isCreatedByMessenger ? opponent.identityNumber : opponent.userId
+        case .multisig:
+            return ""
         case let .mainnet(address):
             return address
         }
@@ -183,10 +225,10 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
     ) {
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
-        Task { [traceID, opponent] in
+        Task { [traceID, destination] in
             do {
                 let amount = Token.amountString(from: tokenAmount)
-                Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(opponent.debugDescription), traceID: \(traceID)")
+                Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID)")
                 
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
                 Logger.general.info(category: "Transfer", message: "SpendKey ready")
@@ -199,9 +241,11 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 let outputKeys = try spendingOutputs.encodedKeys()
                 
                 let ghostKeyRequests: [GhostKeyRequest]
-                switch opponent {
-                case let .user(opponents):
-                    ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: opponents.map(\.userId), senderIDs: [senderID], traceID: traceID)
+                switch destination {
+                case let .user(opponent):
+                    ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: [opponent.userId], senderIDs: [senderID], traceID: traceID)
+                case let .multisig(receivers):
+                    ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: receivers.map(\.userId), senderIDs: [senderID], traceID: traceID)
                 case .mainnet:
                     ghostKeyRequests = GhostKeyRequest.mainnetAddressTransfer(senderID: senderID, traceID: traceID)
                 }
@@ -211,8 +255,8 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 
                 var error: NSError?
                 let tx: String
-                switch opponent {
-                case .user:
+                switch destination {
+                case .user, .multisig:
                     let receiverGhostKey = ghostKeys[0]
                     tx = KernelBuildTx(kernelAssetID,
                                        amount,
@@ -272,18 +316,15 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 let trace: Trace?
                 let rawTransactionReceiverID: String
                 let snapshotOpponentID: String
-                switch opponent {
-                case let .user(opponents):
-                    if opponents.count == 1 {
-                        let opponent = opponents[0]
-                        trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
-                        rawTransactionReceiverID = opponent.userId
-                        snapshotOpponentID = opponent.userId
-                    } else {
-                        trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: "", destination: nil, tag: nil)
-                        rawTransactionReceiverID = opponents.map(\.userId).joined(separator: ",")
-                        snapshotOpponentID = ""
-                    }
+                switch destination {
+                case let .user(opponent):
+                    trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
+                    rawTransactionReceiverID = opponent.userId
+                    snapshotOpponentID = opponent.userId
+                case let .multisig(receivers):
+                    trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: "", destination: nil, tag: nil)
+                    rawTransactionReceiverID = receivers.map(\.userId).joined(separator: ",")
+                    snapshotOpponentID = ""
                 case .mainnet:
                     trace = nil
                     rawTransactionReceiverID = ""
@@ -328,27 +369,25 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID]) { db in
                     try snapshot.save(db)
                     
-                    switch opponent {
-                    case .user(let opponents):
-                        if opponents.count == 1 {
-                            let receiverID = opponents[0].userId
-                            try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
-                            let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
-                            let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
-                            if try !Conversation.exists(db, key: conversationID) {
-                                let conversation = Conversation.createConversation(conversationId: conversationID,
-                                                                                   category: nil,
-                                                                                   recipientId: receiverID,
-                                                                                   status: ConversationStatus.START.rawValue)
-                                try conversation.save(db)
-                                DispatchQueue.global().async {
-                                    ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
-                                }
+                    switch destination {
+                    case .user(let opponent):
+                        let receiverID = opponent.userId
+                        try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
+                        let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
+                        let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
+                        if try !Conversation.exists(db, key: conversationID) {
+                            let conversation = Conversation.createConversation(conversationId: conversationID,
+                                                                               category: nil,
+                                                                               recipientId: receiverID,
+                                                                               status: ConversationStatus.START.rawValue)
+                            try conversation.save(db)
+                            DispatchQueue.global().async {
+                                ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
                             }
-                            try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
-                        } else {
-                            try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
                         }
+                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
+                    case .multisig:
+                        try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
                     case .mainnet:
                         break
                     }

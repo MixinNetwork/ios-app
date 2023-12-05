@@ -860,7 +860,7 @@ extension UrlWindow {
             hud.show(style: .busy, text: "", on: view)
         }
         DispatchQueue.global().async {
-            let opponent: TransferConfirmationViewController.Opponent
+            let opponent: TransferConfirmationViewController.Destination
             switch payment.address {
             case let .user(ids):
                 guard let syncedItems = syncUsers(userIds: ids, hud: hud) else {
@@ -876,7 +876,11 @@ extension UrlWindow {
                     }
                     return
                 }
-                opponent = .user(items)
+                if items.count == 1 {
+                    opponent = .user(items[0])
+                } else {
+                    opponent = .multisig(items)
+                }
             case let .mainnet(address):
                 opponent = .mainnet(address)
             }
@@ -895,7 +899,7 @@ extension UrlWindow {
                         switch result {
                         case .passed:
                             hud.hide()
-                            let transfer = TransferConfirmationViewController(opponent: opponent,
+                            let transfer = TransferConfirmationViewController(destination: opponent,
                                                                               token: token,
                                                                               amountDisplay: .byToken,
                                                                               tokenAmount: request.amount,
@@ -913,12 +917,10 @@ extension UrlWindow {
                         }
                     }
                     switch opponent {
-                    case .user(let users):
-                        if users.count == 1 {
-                            validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: users[0], completion: completion)
-                        } else {
-                            validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
-                        }
+                    case .user(let user):
+                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user, completion: completion)
+                    case .multisig:
+                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
                     case .mainnet:
                         validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
                     }
@@ -927,14 +929,12 @@ extension UrlWindow {
                 DispatchQueue.main.async {
                     let transfer: UIViewController
                     switch opponent {
-                    case .user(let users):
-                        if users.count == 1 {
-                            transfer = TransferOutViewController.instance(token: nil, to: .contact(users[0]))
-                        } else {
-                            hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
-                            hud.scheduleAutoHidden()
-                            return
-                        }
+                    case .user(let user):
+                        transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+                    case .multisig:
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                        return
                     case .mainnet(let address):
                         transfer = TransferOutViewController.instance(token: nil, to: .mainnet(address))
                     }

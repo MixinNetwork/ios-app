@@ -757,6 +757,7 @@
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
+		9448409D2B1F6CA700E40075 /* MultisigUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448409C2B1F6CA700E40075 /* MultisigUsersViewController.swift */; };
 		944B1BEE2A4CB0AA00C36B61 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 944B1BED2A4CB0AA00C36B61 /* CryptoSwift */; };
 		944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */; };
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
@@ -774,6 +775,8 @@
 		945E865029C078BB000FDA54 /* ExtendedKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E864F29C078BB000FDA54 /* ExtendedKey.swift */; };
 		945E865229C078E7000FDA54 /* RIPEMD160.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E865129C078E7000FDA54 /* RIPEMD160.swift */; };
 		945E871B29C1929D000FDA54 /* P2PKH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E871A29C1929D000FDA54 /* P2PKH.swift */; };
+		9461F9532B1F03DA0038F9E2 /* MultisigPatternView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9461F9522B1F03DA0038F9E2 /* MultisigPatternView.xib */; };
+		9461F9582B1F05C10038F9E2 /* MultisigPatternView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9461F9572B1F05C10038F9E2 /* MultisigPatternView.swift */; };
 		9463783625CD961D0071BCDD /* AudioSessionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9463783525CD961D0071BCDD /* AudioSessionClient.swift */; };
 		9463AFC627972AC70093BB08 /* LocalNetworkAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9463AFC527972AC70093BB08 /* LocalNetworkAuthorization.swift */; };
 		94647C7028D243B100684CFA /* TIPNode+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94647C6F28D243B100684CFA /* TIPNode+Description.swift */; };
@@ -1935,6 +1938,7 @@
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
 		94463C52298D690F00E63547 /* AuthenticationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureView.swift; sourceTree = "<group>"; };
+		9448409C2B1F6CA700E40075 /* MultisigUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigUsersViewController.swift; sourceTree = "<group>"; };
 		944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusWriter.swift; sourceTree = "<group>"; };
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
 		944ED8D12646535B00C97215 /* WebContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebContentView.xib; sourceTree = "<group>"; };
@@ -1951,6 +1955,8 @@
 		945E864F29C078BB000FDA54 /* ExtendedKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedKey.swift; sourceTree = "<group>"; };
 		945E865129C078E7000FDA54 /* RIPEMD160.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RIPEMD160.swift; sourceTree = "<group>"; };
 		945E871A29C1929D000FDA54 /* P2PKH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = P2PKH.swift; sourceTree = "<group>"; };
+		9461F9522B1F03DA0038F9E2 /* MultisigPatternView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultisigPatternView.xib; sourceTree = "<group>"; };
+		9461F9572B1F05C10038F9E2 /* MultisigPatternView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigPatternView.swift; sourceTree = "<group>"; };
 		9463783525CD961D0071BCDD /* AudioSessionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionClient.swift; sourceTree = "<group>"; };
 		9463AFC527972AC70093BB08 /* LocalNetworkAuthorization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetworkAuthorization.swift; sourceTree = "<group>"; };
 		94647C6F28D243B100684CFA /* TIPNode+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIPNode+Description.swift"; sourceTree = "<group>"; };
@@ -3324,6 +3330,9 @@
 				94F9526B2AE6D65B0025B995 /* PaymentSuccessView.xib */,
 				94F952802AE75BA30025B995 /* PaymentSuccessView.swift */,
 				94F952612AE623B50025B995 /* TokenSelectorViewController.swift */,
+				9461F9522B1F03DA0038F9E2 /* MultisigPatternView.xib */,
+				9461F9572B1F05C10038F9E2 /* MultisigPatternView.swift */,
+				9448409C2B1F6CA700E40075 /* MultisigUsersViewController.swift */,
 				9473F8322AE53C2D004E5739 /* TransferConfirmationView.xib */,
 				9473F8312AE53C2D004E5739 /* TransferConfirmationViewController.swift */,
 				946B9FA82B03796600DB4DC1 /* WithdrawalConfirmationView.xib */,
@@ -4637,6 +4646,7 @@
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				7B9A18162428932A00187693 /* PageControlView.xib in Resources */,
+				9461F9532B1F03DA0038F9E2 /* MultisigPatternView.xib in Resources */,
 				DF2A0D952295721200CA0280 /* LegacyAddressView.xib in Resources */,
 				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
 				7C2DEFF32824FF0600758208 /* ic_time_animation@3x.gif in Resources */,
@@ -5180,6 +5190,7 @@
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
+				9461F9582B1F05C10038F9E2 /* MultisigPatternView.swift in Sources */,
 				7C651D8F29F68277003331A4 /* MixinBot.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
 				5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */,
@@ -5193,6 +5204,7 @@
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
+				9448409D2B1F6CA700E40075 /* MultisigUsersViewController.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
 				5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */,

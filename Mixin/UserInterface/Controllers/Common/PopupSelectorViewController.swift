@@ -30,15 +30,19 @@ class PopupSelectorViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        updatePreferredContentHeight()
+    }
+    
+    @objc func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
+    }
+    
+    open func updatePreferredContentHeight() {
         preferredContentSize.height = titleHeightConstraint.constant
         + tableViewTopConstraint.constant
         + tableView.contentSize.height
         + tableView.adjustedContentInset.vertical
         + tableViewBottomConstraint.constant
-    }
-    
-    @objc func close(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
     }
     
 }

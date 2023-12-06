@@ -253,12 +253,11 @@ extension SnapshotViewController {
         let style: Style
         
         var allowsCopy: Bool {
-            switch key {
-            case .id, .transactionHash, .memo, .from, .to:
-                return true
-            default:
-                return false
-            }
+            let copyAllowedKeys: Set<Key> = [
+                .id, .transactionHash, .memo, .from,
+                .to, .depositHash, .withdrawalHash
+            ]
+            return copyAllowedKeys.contains(key)
         }
         
         init(key: Key, value: String, style: Style = []) {

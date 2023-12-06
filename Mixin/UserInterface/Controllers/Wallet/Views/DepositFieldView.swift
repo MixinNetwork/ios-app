@@ -6,7 +6,7 @@ protocol DepositFieldViewDelegate: AnyObject {
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView)
 }
 
-class DepositFieldView: UIView, XibDesignable {
+final class DepositFieldView: UIView, XibDesignable {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
@@ -52,6 +52,7 @@ class DepositFieldView: UIView, XibDesignable {
     private func loadSubviews() {
         loadXib()
         qrCodeView.setDefaultCornerCurve()
+        centerWrapperView.overrideUserInterfaceStyle = .light
     }
     
 }

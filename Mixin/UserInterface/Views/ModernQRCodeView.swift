@@ -43,14 +43,14 @@ final class ModernQRCodeView: UIView {
         let tintColor = self.tintColor.cgColor
         DispatchQueue.global().async { [qrCodeGenerator] in
             let document = QRCode.Document(utf8String: content,
-                                           errorCorrection: .quantize,
+                                           errorCorrection: .medium,
                                            generator: qrCodeGenerator)
             document.design = {
                 let design = QRCode.Design(foregroundColor: tintColor)
                 design.shape = {
                     let shape = QRCode.Shape()
                     shape.eye = QRCode.EyeShape.Squircle()
-                    shape.onPixels = QRCode.PixelShape.Circle()
+                    shape.onPixels = QRCode.PixelShape.Circle(insetFraction: 0.25)
                     return shape
                 }()
                 return design

@@ -17,8 +17,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="414" height="67"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7W-bB-67d">
-                        <rect key="frame" x="20" y="16" width="374" height="43"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="RoP-ke-BJT">
+                        <rect key="frame" x="20" y="8" width="374" height="43"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JUL-5V-Ezo">
                                 <rect key="frame" x="0.0" y="0.0" width="374" height="17"/>
@@ -30,52 +30,54 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="904dd316-1e82-4c87-9d4a-934ead578d2a" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Uw-6j-67C">
-                                <rect key="frame" x="0.0" y="24" width="374" height="19"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="l5T-Rl-MUG"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" name="text"/>
-                                <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                </userDefinedRuntimeAttributes>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="w57-yQ-hC9">
+                                <rect key="frame" x="0.0" y="22" width="374" height="21"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="904dd316-1e82-4c87-9d4a-934ead578d2a" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Uw-6j-67C">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="17"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="text"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_arrow_down" translatesAutoresizingMaskIntoConstraints="NO" id="bp0-qk-yC1">
+                                        <rect key="frame" x="374" y="0.0" width="0.0" height="0.0"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="bp0-qk-yC1" secondAttribute="height" multiplier="1:1" id="Uym-gK-Yta"/>
+                                            <constraint firstAttribute="width" priority="999" constant="16" id="dPL-Eb-hty"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
                         </subviews>
-                        <constraints>
-                            <constraint firstItem="9Uw-6j-67C" firstAttribute="leading" secondItem="M7W-bB-67d" secondAttribute="leading" id="8O6-Ct-N89"/>
-                            <constraint firstItem="9Uw-6j-67C" firstAttribute="top" secondItem="JUL-5V-Ezo" secondAttribute="bottom" constant="7" id="9fg-YQ-CaI"/>
-                            <constraint firstItem="JUL-5V-Ezo" firstAttribute="top" secondItem="M7W-bB-67d" secondAttribute="top" id="OXa-FU-TwW"/>
-                            <constraint firstAttribute="trailing" secondItem="9Uw-6j-67C" secondAttribute="trailing" id="P0d-Mo-zTj"/>
-                            <constraint firstAttribute="trailing" secondItem="JUL-5V-Ezo" secondAttribute="trailing" id="Qmv-Ix-ZHc"/>
-                            <constraint firstItem="JUL-5V-Ezo" firstAttribute="leading" secondItem="M7W-bB-67d" secondAttribute="leading" id="Wp5-qF-SIA"/>
-                            <constraint firstAttribute="bottom" secondItem="9Uw-6j-67C" secondAttribute="bottom" id="YaI-jj-xky"/>
-                        </constraints>
-                    </view>
+                    </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="M7W-bB-67d" firstAttribute="leading" secondItem="A2K-IV-Toc" secondAttribute="leading" constant="20" id="3hF-a3-vmR"/>
-                    <constraint firstAttribute="bottom" secondItem="M7W-bB-67d" secondAttribute="bottom" constant="8" id="AIy-52-BRW"/>
-                    <constraint firstItem="M7W-bB-67d" firstAttribute="top" secondItem="A2K-IV-Toc" secondAttribute="top" constant="16" id="Woh-Bc-7XU"/>
-                    <constraint firstAttribute="trailing" secondItem="M7W-bB-67d" secondAttribute="trailing" constant="20" id="ZPo-eB-L0z"/>
+                    <constraint firstAttribute="bottom" secondItem="RoP-ke-BJT" secondAttribute="bottom" constant="16" id="19m-od-xkS"/>
+                    <constraint firstAttribute="trailing" secondItem="RoP-ke-BJT" secondAttribute="trailing" constant="20" id="BEg-8E-60f"/>
+                    <constraint firstItem="RoP-ke-BJT" firstAttribute="leading" secondItem="A2K-IV-Toc" secondAttribute="leading" constant="20" id="oa5-DF-dMx"/>
+                    <constraint firstItem="RoP-ke-BJT" firstAttribute="top" secondItem="A2K-IV-Toc" secondAttribute="top" constant="8" id="rPH-8X-1NB"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
+                <outlet property="disclosureIndicatorImageView" destination="bp0-qk-yC1" id="LK6-B1-ReC"/>
                 <outlet property="subtitleLabel" destination="9Uw-6j-67C" id="WdH-Gp-z68"/>
                 <outlet property="titleLabel" destination="JUL-5V-Ezo" id="SKk-VN-TqQ"/>
             </connections>
-            <point key="canvasLocation" x="-23" y="42"/>
+            <point key="canvasLocation" x="-24.427480916030532" y="41.901408450704224"/>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="ic_arrow_down" width="30" height="30"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

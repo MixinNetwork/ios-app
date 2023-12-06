@@ -4,7 +4,7 @@ class RoundedButton: UIButton {
     
     override var isEnabled: Bool {
         didSet {
-            updateAppearanceWithIsEnabled()
+            updateAppearance(resolvingColorUsing: traitCollection)
         }
     }
     
@@ -58,8 +58,8 @@ class RoundedButton: UIButton {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
-            updateAppearanceWithIsEnabled()
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateAppearance(resolvingColorUsing: traitCollection)
         }
     }
     
@@ -67,7 +67,7 @@ class RoundedButton: UIButton {
         setTitleColor(.white, for: .normal)
         setTitleColor(textDisableColor, for: .disabled)
         updatePaths()
-        updateAppearanceWithIsEnabled()
+        updateAppearance(resolvingColorUsing: traitCollection)
         shadowLayer.shadowColor = UIColor.theme.cgColor
         shadowLayer.shadowOpacity = 0.15
         shadowLayer.shadowRadius = 5
@@ -82,9 +82,9 @@ class RoundedButton: UIButton {
         shadowLayer.shadowPath = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
     }
     
-    private func updateAppearanceWithIsEnabled() {
+    private func updateAppearance(resolvingColorUsing traitCollection: UITraitCollection) {
         let color: UIColor = isEnabled ? backgroundEnableColor : backgroundDisableColor
-        backgroundLayer.fillColor = color.cgColor
+        backgroundLayer.fillColor = color.resolvedColor(with: traitCollection).cgColor
         shadowLayer.isHidden = !isEnabled
     }
     

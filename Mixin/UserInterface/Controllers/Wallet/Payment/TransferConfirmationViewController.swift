@@ -215,6 +215,12 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
         if returnToURL != nil {
             options.insert(.neverRequestAddBiometricAuthentication)
         }
+        switch destination {
+        case .mainnet:
+            options.insert(.multipleLineSubtitle)
+        default:
+            break
+        }
         return options
     }
     

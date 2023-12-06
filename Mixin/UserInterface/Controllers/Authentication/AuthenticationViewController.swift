@@ -204,6 +204,7 @@ final class AuthenticationViewController: UIViewController {
     
     func reloadTitleView() {
         titleLabel.text = intentViewController.intentTitle
+        subtitleLabel.numberOfLines = intentViewController.options.contains(.multipleLineSubtitle) ? 0 : 1
         subtitleLabel.text = intentViewController.intentSubtitle
         if let icon = intentViewController.intentSubtitleIconURL {
             let imageView = AvatarImageView()

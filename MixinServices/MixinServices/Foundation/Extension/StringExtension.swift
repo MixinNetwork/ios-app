@@ -193,15 +193,6 @@ public extension String {
         }
         return nil
     }
-
-    func toSimpleKey() -> String {
-        guard self.count > 10 else {
-            return self
-        }
-        let startString = self[..<self.index(self.startIndex, offsetBy: 6)]
-        let endString = self[self.index(self.endIndex, offsetBy: -4)...]
-        return "\(startString)...\(endString)"
-    }
     
 }
 

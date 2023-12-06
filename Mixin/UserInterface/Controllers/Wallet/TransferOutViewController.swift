@@ -100,7 +100,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             opponentImageView.isHidden = true
             if let container {
                 container.titleLabel.text = R.string.localizable.send()
-                container.setSubtitle(subtitle: address)
+                container.setSubtitle(subtitle: Address.compactRepresentation(of: address))
             }
             memoView.isHidden = true
             withdrawFeeWrapperView.isHidden = false

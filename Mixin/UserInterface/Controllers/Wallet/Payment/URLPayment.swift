@@ -4,7 +4,7 @@ import Tip
 
 struct URLPayment {
     
-    private static let schemes = ["mixin", "https"]
+    private static let scheme = "https"
     private static let host = "mixin.one"
     
     enum Address {
@@ -24,10 +24,7 @@ struct URLPayment {
     let returnTo: URL?
     
     init?(url: URL) {
-        guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
-            return nil
-        }
-        guard url.host == Self.host else {
+        guard url.scheme == Self.scheme && url.host == Self.host else {
             return nil
         }
         
@@ -43,10 +40,7 @@ struct URLPayment {
             address = .user([addressString])
         } else if addressString.hasPrefix("XIN") {
             address = .mainnet(addressString)
-        } else if addressString.hasPrefix(MIXAddress.header) {
-            guard let mixAddress = MIXAddress(string: addressString) else {
-                return nil
-            }
+        } else if let mixAddress = MIXAddress(string: addressString) {
             address = mixAddress.address
         } else {
             Logger.general.warn(category: "URLPayment", message: "Invalid address: \(addressString)")
@@ -144,6 +138,9 @@ extension URLPayment {
         let address: Address
         
         init?(string: String) {
+            guard string.hasPrefix(Self.header) else {
+                return nil
+            }
             guard string.count > Self.header.count else {
                 Logger.general.debug(category: "MIXAddress", message: "Invalid count: \(string.count)")
                 return nil

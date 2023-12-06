@@ -3326,6 +3326,7 @@
 			isa = PBXGroup;
 			children = (
 				94F952662AE66A700025B995 /* AmountIntent.swift */,
+				940DC5912B075E03009A15D1 /* URLPayment.swift */,
 				94F952522AE60D070025B995 /* PaymentValidator.swift */,
 				94F9526B2AE6D65B0025B995 /* PaymentSuccessView.xib */,
 				94F952802AE75BA30025B995 /* PaymentSuccessView.swift */,
@@ -3620,7 +3621,6 @@
 			children = (
 				DF5D9F1B1F9C62990036D5FD /* Constant.swift */,
 				7B3936CE20C15BA00075A97A /* MixinKeys.swift */,
-				940DC5912B075E03009A15D1 /* URLPayment.swift */,
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
 				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,

@@ -45,6 +45,8 @@ final class TransferConfirmationViewController: UIViewController {
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
     
+    var manipulateNavigationStackOnFinished = true
+    
     private let destination: Destination
     private let token: TokenItem
     private let amountDisplay: AmountIntent
@@ -120,6 +122,10 @@ final class TransferConfirmationViewController: UIViewController {
     }
     
     @objc private func finish(_ sender: Any) {
+        guard manipulateNavigationStackOnFinished else {
+            authenticationViewController?.presentingViewController?.dismiss(animated: true)
+            return
+        }
         authenticationViewController?.presentingViewController?.dismiss(animated: true) { [destination] in
             guard let navigation = UIApplication.homeNavigationController else {
                 return

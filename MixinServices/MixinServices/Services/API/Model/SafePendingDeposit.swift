@@ -6,7 +6,6 @@ public struct SafePendingDeposit {
     public let transactionHash: String
     public let amount: String
     public let confirmations: Int
-    public let threshold: Int
     public let createdAt: String
     
 }
@@ -18,7 +17,6 @@ extension SafePendingDeposit: Decodable {
         case transactionHash = "transaction_hash"
         case amount
         case confirmations
-        case threshold
         case createdAt = "created_at"
     }
     

@@ -15,7 +15,7 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
             tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(traceCreatedAt.toUTCDate().simpleTimeAgo(), user.fullName, amountLabel.text ?? "")
         case let .withdraw(_, address, _, _):
             titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
-            tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(traceCreatedAt.toUTCDate().simpleTimeAgo(), address.fullAddress.toSimpleKey(), amountLabel.text ?? "")
+            tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(traceCreatedAt.toUTCDate().simpleTimeAgo(), address.compactRepresentation, amountLabel.text ?? "")
         default:
             break
         }
@@ -38,7 +38,7 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
             tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(traceCreatedAt.simpleTimeAgo(), opponent.fullName, amountLabel.text ?? "")
         case let .withdraw(address):
             titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
-            tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(traceCreatedAt.simpleTimeAgo(), address.fullAddress.toSimpleKey(), amountLabel.text ?? "")
+            tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(traceCreatedAt.simpleTimeAgo(), address.compactRepresentation, amountLabel.text ?? "")
         }
         return self
     }

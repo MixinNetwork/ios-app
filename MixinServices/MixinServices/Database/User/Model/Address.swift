@@ -55,11 +55,16 @@ extension Address {
     }
     
     public var compactRepresentation: String {
-        let address = self.fullAddress
-        if address.count > 10 {
-            return address.prefix(6) + "..." + address.suffix(4)
+        Self.compactRepresentation(of: fullAddress)
+    }
+    
+    public static func compactRepresentation(of string: String) -> String {
+        let prefixCount = 8
+        let suffixCount = 6
+        if string.count > prefixCount + suffixCount {
+            return string.prefix(prefixCount) + "..." + string.suffix(suffixCount)
         } else {
-            return address
+            return string
         }
     }
     

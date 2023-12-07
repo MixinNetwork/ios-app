@@ -77,6 +77,10 @@ extension SafeAPI {
         request(method: .get, path: "/safe/transactions/" + id)
     }
     
+    public static func transaction(id: String, completion: @escaping (MixinAPI.Result<TransactionResponse>) -> Void) {
+        request(method: .get, path: "/safe/transactions/" + id, completion: completion)
+    }
+    
     public static func requestTransaction(requests: [TransactionRequest]) async throws -> [RequestTransactionResponse] {
         try await request(method: .post, path: "/safe/transaction/requests", parameters: requests)
     }

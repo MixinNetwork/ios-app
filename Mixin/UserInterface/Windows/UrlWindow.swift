@@ -17,7 +17,7 @@ class UrlWindow {
         clearNavigationStack: Bool = true,
         presentHintOnUnsupportedMixinSchema: Bool = true
     ) -> Bool {
-        if let payment = Payment(url: url) {
+        if let payment = URLPayment(url: url) {
             checkPayment(payment)
             return true
         } else if let mixinURL = MixinURL(url: url) {
@@ -854,20 +854,35 @@ class UrlWindow {
 
 extension UrlWindow {
 
-    private static func checkPayment(_ payment: Payment) {
+    private static func checkPayment(_ payment: URLPayment) {
         let hud = Hud()
         if let view = UIApplication.homeContainerViewController?.view {
             hud.show(style: .busy, text: "", on: view)
         }
         DispatchQueue.global().async {
-            let user: UserItem
+            let opponent: TransferConfirmationViewController.Destination
             switch payment.address {
-            case let .user(id):
-                if let (item, _) = syncUser(userId: id, hud: hud) {
-                    user = item
-                } else {
+            case let .user(ids):
+                guard let syncedItems = syncUsers(userIds: ids, hud: hud) else {
                     return
                 }
+                let items = ids.compactMap { id in
+                    syncedItems.first(where: { $0.userId == id })
+                }
+                guard items.count == ids.count else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.user_not_found())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                if items.count == 1 {
+                    opponent = .user(items[0])
+                } else {
+                    opponent = .multisig(items)
+                }
+            case let .mainnet(address):
+                opponent = .mainnet(address)
             }
             if let request = payment.request {
                 guard let token = TokenDAO.shared.tokenItem(with: request.asset) else {
@@ -880,11 +895,11 @@ extension UrlWindow {
                 let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
                 DispatchQueue.main.async {
                     let validator = PaymentValidator(traceID: payment.trace, token: token, memo: payment.memo)
-                    validator.payment(assetID: request.asset, amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user) { result in
+                    let completion: (PaymentValidator.Result) -> Void = { result in
                         switch result {
                         case .passed:
                             hud.hide()
-                            let transfer = TransferConfirmationViewController(opponent: user,
+                            let transfer = TransferConfirmationViewController(destination: opponent,
                                                                               token: token,
                                                                               amountDisplay: .byToken,
                                                                               tokenAmount: request.amount,
@@ -901,11 +916,29 @@ extension UrlWindow {
                             hud.scheduleAutoHidden()
                         }
                     }
+                    switch opponent {
+                    case .user(let user):
+                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user, completion: completion)
+                    case .multisig:
+                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
+                    case .mainnet:
+                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
+                    let transfer: UIViewController
+                    switch opponent {
+                    case .user(let user):
+                        transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+                    case .multisig:
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                        return
+                    case .mainnet(let address):
+                        transfer = TransferOutViewController.instance(token: nil, to: .mainnet(address))
+                    }
                     hud.hide()
-                    let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
                     UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
                 }
             }

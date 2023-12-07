@@ -4,6 +4,25 @@ import Tip
 
 final class TransferConfirmationViewController: UIViewController {
     
+    enum Destination: CustomDebugStringConvertible {
+        
+        case user(UserItem)
+        case multisig([UserItem])
+        case mainnet(String)
+        
+        var debugDescription: String {
+            switch self {
+            case let .user(item):
+                return "<Destination.user \(item.userId)>"
+            case let .multisig(receivers):
+                return "<Destination.multisig \(receivers.map(\.userId))>"
+            case let .mainnet(address):
+                return "<Destination.mainnet \(address)>"
+            }
+        }
+        
+    }
+    
     enum Error: Swift.Error, LocalizedError {
         
         case sign(Swift.Error?)
@@ -26,7 +45,7 @@ final class TransferConfirmationViewController: UIViewController {
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
     
-    private let opponent: UserItem
+    private let destination: Destination
     private let token: TokenItem
     private let amountDisplay: AmountIntent
     private let tokenAmount: Decimal
@@ -36,7 +55,7 @@ final class TransferConfirmationViewController: UIViewController {
     private let returnToURL: URL?
     
     init(
-        opponent: UserItem,
+        destination: Destination,
         token: TokenItem,
         amountDisplay: AmountIntent,
         tokenAmount: Decimal,
@@ -45,7 +64,7 @@ final class TransferConfirmationViewController: UIViewController {
         traceID: String,
         returnToURL: URL?
     ) {
-        self.opponent = opponent
+        self.destination = destination
         self.token = token
         self.amountDisplay = amountDisplay
         self.tokenAmount = tokenAmount
@@ -66,6 +85,27 @@ final class TransferConfirmationViewController: UIViewController {
         contentStackView.spacing = 10
         contentStackView.setCustomSpacing(4, after: amountLabel)
         contentStackView.setCustomSpacing(4, after: amountExchangeLabel)
+        switch destination {
+        case .multisig(let receivers):
+            guard let account = LoginManager.shared.account else {
+                break
+            }
+            let patternView = R.nib.multisigPatternView(withOwner: nil)!
+            contentStackView.insertArrangedSubview(patternView, at: 0)
+            switch ScreenHeight.current {
+            case .short:
+                contentStackView.setCustomSpacing(6, after: patternView)
+            case .medium:
+                contentStackView.setCustomSpacing(8, after: patternView)
+            case .long, .extraLong:
+                contentStackView.setCustomSpacing(16, after: patternView)
+            }
+            patternView.showSendersButton.addTarget(self, action: #selector(showSenders(_:)), for: .touchUpInside)
+            patternView.showReceiversButton.addTarget(self, action: #selector(showReceivers(_:)), for: .touchUpInside)
+            patternView.reloadData(senders: [UserItem.createUser(from: account)], receivers: receivers)
+        case .user, .mainnet:
+            break
+        }
         assetIconView.setIcon(token: token)
         switch amountDisplay {
         case .byToken:
@@ -80,23 +120,30 @@ final class TransferConfirmationViewController: UIViewController {
     }
     
     @objc private func finish(_ sender: Any) {
-        let opponent = self.opponent
-        authenticationViewController?.presentingViewController?.dismiss(animated: true) {
+        authenticationViewController?.presentingViewController?.dismiss(animated: true) { [destination] in
             guard let navigation = UIApplication.homeNavigationController else {
                 return
             }
             var viewControllers = navigation.viewControllers
-            if (viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController)?.dataSource.ownerUser?.userId == opponent.userId {
-                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+            switch destination {
+            case let .user(opponent):
+                if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
+                    while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+                        viewControllers.removeLast()
+                    }
+                } else {
+                    while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
+                        viewControllers.removeLast()
+                    }
+                    viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+                }
+                navigation.setViewControllers(viewControllers, animated: true)
+            case .multisig, .mainnet:
+                if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
                     viewControllers.removeLast()
                 }
-            } else {
-                while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
-                    viewControllers.removeLast()
-                }
-                viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+                navigation.setViewControllers(viewControllers, animated: true)
             }
-            navigation.setViewControllers(viewControllers, animated: true)
         }
     }
     
@@ -110,12 +157,42 @@ final class TransferConfirmationViewController: UIViewController {
         }
     }
     
+    @objc private func showSenders(_ sender: Any) {
+        switch destination {
+        case .multisig:
+            guard let account = LoginManager.shared.account else {
+                break
+            }
+            let senders = MultisigUsersViewController(title: .senders, users: [UserItem.createUser(from: account)])
+            present(senders, animated: true)
+        default:
+            break
+        }
+    }
+    
+    @objc private func showReceivers(_ sender: Any) {
+        switch destination {
+        case .multisig(let receivers):
+            let receivers = MultisigUsersViewController(title: .receivers, users: receivers)
+            present(receivers, animated: true)
+        default:
+            break
+        }
+    }
+    
 }
 
 extension TransferConfirmationViewController: AuthenticationIntentViewController {
     
     var intentTitle: String {
-        R.string.localizable.transfer_to(opponent.fullName)
+        switch destination {
+        case let .user(opponent):
+            return R.string.localizable.transfer_to(opponent.fullName)
+        case .multisig:
+            return R.string.localizable.multisig_transaction()
+        case .mainnet:
+            return R.string.localizable.transfer()
+        }
     }
     
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
@@ -123,13 +200,26 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
     }
     
     var intentSubtitle: String {
-        opponent.isCreatedByMessenger ? opponent.identityNumber : opponent.userId
+        switch destination {
+        case let .user(opponent):
+            return opponent.isCreatedByMessenger ? opponent.identityNumber : opponent.userId
+        case .multisig:
+            return ""
+        case let .mainnet(address):
+            return address
+        }
     }
     
     var options: AuthenticationIntentOptions {
         var options: AuthenticationIntentOptions = [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
         if returnToURL != nil {
             options.insert(.neverRequestAddBiometricAuthentication)
+        }
+        switch destination {
+        case .mainnet:
+            options.insert(.multipleLineSubtitle)
+        default:
+            break
         }
         return options
     }
@@ -139,48 +229,67 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
         didInput pin: String,
         completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
     ) {
-        let amount = Token.amountString(from: tokenAmount)
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
-        let receiverID = opponent.userId
-        Task { [traceID] in
+        Task { [traceID, destination] in
             do {
-                Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(opponent.userId), traceID: \(traceID)")
+                let amount = Token.amountString(from: tokenAmount)
+                Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID)")
                 
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
                 Logger.general.info(category: "Transfer", message: "SpendKey ready")
-                
-                let trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
-                TraceDAO.shared.saveTrace(trace: trace)
                 
                 let spendingOutputs = try UTXOService.shared.collectUnspentOutputs(kernelAssetID: kernelAssetID, amount: tokenAmount)
                 let spendingOutputIDs = spendingOutputs.outputs.map(\.id)
                 Logger.general.info(category: "Transfer", message: "Spending \(spendingOutputs.debugDescription), id: \(spendingOutputIDs)")
                 
-                let ghostKeyRequests = GhostKeyRequest.transfer(receiverID: receiverID, senderID: senderID, traceID: traceID)
+                let inputsData = try spendingOutputs.encodeAsInputData()
+                let outputKeys = try spendingOutputs.encodedKeys()
+                
+                let ghostKeyRequests: [GhostKeyRequest]
+                switch destination {
+                case let .user(opponent):
+                    ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: [opponent.userId], senderIDs: [senderID], traceID: traceID)
+                case let .multisig(receivers):
+                    ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: receivers.map(\.userId), senderIDs: [senderID], traceID: traceID)
+                case .mainnet:
+                    ghostKeyRequests = GhostKeyRequest.mainnetAddressTransfer(senderID: senderID, traceID: traceID)
+                }
                 let ghostKeys = try await SafeAPI.ghostKeys(requests: ghostKeyRequests)
-                let receiverGhostKey = ghostKeys[0]
-                let senderGhostKey = ghostKeys[1]
+                let changeGhostKey = ghostKeys.last!
                 Logger.general.info(category: "Transfer", message: "GhostKeys ready")
                 
-                let inputsData = try spendingOutputs.encodeAsInputData()
                 var error: NSError?
-                let tx = KernelBuildTx(kernelAssetID,
+                let tx: String
+                switch destination {
+                case .user, .multisig:
+                    let receiverGhostKey = ghostKeys[0]
+                    tx = KernelBuildTx(kernelAssetID,
                                        amount,
                                        1,
                                        receiverGhostKey.keys.joined(separator: ","),
                                        receiverGhostKey.mask,
                                        inputsData,
-                                       senderGhostKey.keys.joined(separator: ","),
-                                       senderGhostKey.mask,
+                                       changeGhostKey.keys.joined(separator: ","),
+                                       changeGhostKey.mask,
                                        memo,
                                        "",
                                        &error)
+                case .mainnet(let address):
+                    tx = KernelBuildTxToKernelAddress(kernelAssetID,
+                                                      amount,
+                                                      address,
+                                                      inputsData,
+                                                      changeGhostKey.keys.joined(separator: ","),
+                                                      changeGhostKey.mask,
+                                                      memo,
+                                                      &error)
+                }
                 if let error {
                     throw error
                 }
                 Logger.general.info(category: "Transfer", message: "Tx built")
-                let inputKeys = try spendingOutputs.encodedKeys()
+                
                 let request = TransactionRequest(id: traceID, raw: tx)
                 Logger.general.info(category: "Transfer", message: "Will request: \(request.id)")
                 let responses = try await SafeAPI.requestTransaction(requests: [request])
@@ -188,7 +297,7 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                     throw Error.invalidTransactionResponse
                 }
                 let viewKeys = response.views.joined(separator: ",")
-                let signedTx = KernelSignTx(tx, inputKeys, viewKeys, spendKey, false, &error)
+                let signedTx = KernelSignTx(tx, outputKeys, viewKeys, spendKey, false, &error)
                 guard let signedTx, error == nil else {
                     throw Error.sign(error)
                 }
@@ -199,8 +308,8 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 if let change = signedTx.change {
                     let output = Output(change: change,
                                         asset: kernelAssetID,
-                                        mask: senderGhostKey.mask,
-                                        keys: senderGhostKey.keys,
+                                        mask: changeGhostKey.mask,
+                                        keys: changeGhostKey.keys,
                                         lastOutput: spendingOutputs.lastOutput)
                     Logger.general.info(category: "Transfer", message: "Created change output: \(output.amount)")
                     changeOutput = output
@@ -209,19 +318,38 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                     Logger.general.info(category: "Transfer", message: "No change")
                 }
                 
-                Logger.general.info(category: "Transfer", message: "Will sign: \(spendingOutputIDs)")
+                Logger.general.info(category: "Transfer", message: "Will sign outputs")
+                let trace: Trace?
+                let rawTransactionReceiverID: String
+                let snapshotOpponentID: String
+                switch destination {
+                case let .user(opponent):
+                    trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
+                    rawTransactionReceiverID = opponent.userId
+                    snapshotOpponentID = opponent.userId
+                case let .multisig(receivers):
+                    trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: "", destination: nil, tag: nil)
+                    rawTransactionReceiverID = receivers.map(\.userId).joined(separator: ",")
+                    snapshotOpponentID = ""
+                case .mainnet:
+                    trace = nil
+                    rawTransactionReceiverID = ""
+                    snapshotOpponentID = ""
+                }
                 let rawTransaction = RawTransaction(requestID: traceID,
                                                     rawTransaction: signedTx.raw,
-                                                    receiverID: receiverID,
+                                                    receiverID: rawTransactionReceiverID,
                                                     state: .unspent,
                                                     type: .transfer,
                                                     createdAt: now)
                 OutputDAO.shared.signOutputs(with: spendingOutputIDs) { db in
                     try changeOutput?.save(db)
                     try rawTransaction.save(db)
+                    try trace?.save(db)
                     try UTXOService.shared.updateBalance(assetID: token.assetID, kernelAssetID: kernelAssetID, db: db)
                     Logger.general.info(category: "Transfer", message: "Outputs signed")
                 }
+                
                 let signedRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
                 Logger.general.info(category: "Transfer", message: "Will post tx: \(signedRequest.id)")
                 let postResponses = try await SafeAPI.postTransaction(requests: [signedRequest])
@@ -233,7 +361,7 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                                             assetID: token.assetID,
                                             amount: "-" + amount,
                                             userID: senderID,
-                                            opponentID: receiverID,
+                                            opponentID: snapshotOpponentID,
                                             memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
                                             transactionHash: signedTx.hash,
                                             createdAt: postResponse.createdAt,
@@ -243,24 +371,33 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                                             closingBalance: nil,
                                             deposit: nil,
                                             withdrawal: nil)
-                let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
-                let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
                 Logger.general.info(category: "Transfer", message: "Will sign raw txs")
                 RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID]) { db in
                     try snapshot.save(db)
-                    try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
                     
-                    if try !Conversation.exists(db, key: conversationID) {
-                        let conversation = Conversation.createConversation(conversationId: conversationID,
-                                                                           category: nil,
-                                                                           recipientId: receiverID,
-                                                                           status: ConversationStatus.START.rawValue)
-                        try conversation.save(db)
-                        DispatchQueue.global().async {
-                            ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
+                    switch destination {
+                    case .user(let opponent):
+                        let receiverID = opponent.userId
+                        try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
+                        let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
+                        let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
+                        if try !Conversation.exists(db, key: conversationID) {
+                            let conversation = Conversation.createConversation(conversationId: conversationID,
+                                                                               category: nil,
+                                                                               recipientId: receiverID,
+                                                                               status: ConversationStatus.START.rawValue)
+                            try conversation.save(db)
+                            DispatchQueue.global().async {
+                                ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
+                            }
                         }
+                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
+                    case .multisig:
+                        try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
+                    case .mainnet:
+                        break
                     }
-                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
+                    
                     Logger.general.info(category: "Transfer", message: "RawTx signed")
                 }
                 
@@ -270,14 +407,14 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!
-                    if let url = returnToURL {
+                    if returnToURL == nil {
+                        successView.doneButton.setTitle(R.string.localizable.done(), for: .normal)
+                        successView.doneButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
+                    } else {
                         successView.doneButton.setTitle(R.string.localizable.back_to_merchant(), for: .normal)
                         successView.doneButton.addTarget(self, action: #selector(gotoMerchant(_:)), for: .touchUpInside)
                         let stayInMixinButton = successView.insertStayInMixinButtonIfNeeded()
                         stayInMixinButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
-                    } else {
-                        successView.doneButton.setTitle(R.string.localizable.done(), for: .normal)
-                        successView.doneButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
                     }
                     contentStackView.addArrangedSubview(successView)
                     view.layoutIfNeeded()

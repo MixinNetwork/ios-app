@@ -15,6 +15,7 @@ struct AuthenticationIntentOptions: OptionSet {
     static let unskippable = AuthenticationIntentOptions(rawValue: 1 << 2)
     static let blurBackground = AuthenticationIntentOptions(rawValue: 1 << 3)
     static let neverRequestAddBiometricAuthentication = AuthenticationIntentOptions(rawValue: 1 << 4)
+    static let multipleLineSubtitle = AuthenticationIntentOptions(rawValue: 1 << 5)
     
 }
 

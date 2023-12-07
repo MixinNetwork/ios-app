@@ -33,34 +33,6 @@ final class PaymentValidator {
         validate(amount: amount, fiatMoneyAmount: fiatMoneyAmount, operation: .transfer(opponent), completion: completion)
     }
     
-    func payment(
-        assetID: String,
-        amount: Decimal,
-        fiatMoneyAmount: Decimal,
-        to opponent: UserItem,
-        completion: @escaping (Result) -> Void
-    ) {
-        DispatchQueue.global().async { [traceID] in
-            let amountString = Token.amountString(from: amount)
-            let response = SafeAPI.transaction(id: traceID)
-            switch response {
-            case .success:
-                DispatchQueue.main.async {
-                    completion(.failure(R.string.localizable.pay_paid()))
-                }
-            case .failure(.notFound):
-                self.validate(amount: amount,
-                              fiatMoneyAmount: fiatMoneyAmount,
-                              operation: .transfer(opponent),
-                              completion: completion)
-            case let .failure(error):
-                DispatchQueue.main.async {
-                    completion(.failure(error.localizedDescription))
-                }
-            }
-        }
-    }
-    
     func withdraw(
         amount: Decimal,
         fiatMoneyAmount: Decimal,
@@ -72,6 +44,44 @@ final class PaymentValidator {
             completion(.failure(R.string.localizable.withdrawal_minimum_amount(dust, token.symbol)))
         } else {
             validate(amount: amount, fiatMoneyAmount: fiatMoneyAmount, operation: .withdraw(address), completion: completion)
+        }
+    }
+    
+    func payment(
+        amount: Decimal,
+        fiatMoneyAmount: Decimal,
+        to opponent: UserItem,
+        completion: @escaping (Result) -> Void
+    ) {
+        SafeAPI.transaction(id: traceID) { result in
+            switch result {
+            case .success:
+                completion(.failure(R.string.localizable.pay_paid()))
+            case .failure(.notFound):
+                self.validate(amount: amount,
+                              fiatMoneyAmount: fiatMoneyAmount,
+                              operation: .transfer(opponent),
+                              completion: completion)
+            case let .failure(error):
+                completion(.failure(error.localizedDescription))
+            }
+        }
+    }
+    
+    func payment(
+        amount: Decimal,
+        fiatMoneyAmount: Decimal,
+        completion: @escaping (Result) -> Void
+    ) {
+        SafeAPI.transaction(id: traceID) { result in
+            switch result {
+            case .success:
+                completion(.failure(R.string.localizable.pay_paid()))
+            case .failure(.notFound):
+                completion(.passed)
+            case let .failure(error):
+                completion(.failure(error.localizedDescription))
+            }
         }
     }
     

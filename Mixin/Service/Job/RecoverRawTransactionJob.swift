@@ -92,7 +92,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                                         type: .snapshot,
                                         assetID: assetID,
                                         amount: "-" + response.amount,
-                                        userID: response.userID,
+                                        userID: myUserId,
                                         opponentID: transaction.receiverID,
                                         memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
                                         transactionHash: "",
@@ -158,7 +158,6 @@ fileprivate protocol TransactionInfo {
     var requestID: String { get }
     var snapshotID: String { get }
     var amount: String { get }
-    var userID: String { get }
     var createdAt: String { get }
     
 }

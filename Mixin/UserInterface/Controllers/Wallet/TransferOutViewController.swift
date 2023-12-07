@@ -6,6 +6,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
     enum Opponent {
         case contact(UserItem)
         case address(Address)
+        case mainnet(String)
     }
     
     private struct Fee {
@@ -95,6 +96,17 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             if let token {
                 reloadWithdrawFee(with: token, address: address)
             }
+        case .mainnet(let address):
+            opponentImageView.isHidden = true
+            if let container {
+                container.titleLabel.text = R.string.localizable.send()
+                container.setSubtitle(subtitle: Address.compactRepresentation(of: address))
+            }
+            memoView.isHidden = true
+            withdrawFeeWrapperView.isHidden = false
+            withdrawFeeView.networkFeeLabel.text = "0"
+            withdrawFeeView.switchFeeDisclosureIndicatorView.isHidden = true
+            withdrawFeeView.isUserInteractionEnabled = false
         }
         
         if let token {
@@ -211,7 +223,9 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         else {
             return
         }
+        
         continueButton.isBusy = true
+        adjustBottomConstraintWhenKeyboardFrameChanges = false
         
         let tokenAmount: Decimal
         let fiatMoneyAmount: Decimal
@@ -229,8 +243,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         let traceID = self.traceID
         let validator = PaymentValidator(traceID: traceID, token: token, memo: memo)
         
-        adjustBottomConstraintWhenKeyboardFrameChanges = false
-        
         switch opponent {
         case let .contact(opponent):
             validator.transfer(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, to: opponent) { [weak self] result in
@@ -240,7 +252,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self.continueButton.isBusy = false
                 switch result {
                 case .passed:
-                    let transfer = TransferConfirmationViewController(opponent: opponent,
+                    let transfer = TransferConfirmationViewController(destination: .user(opponent),
                                                                       token: token,
                                                                       amountDisplay: amountIntent,
                                                                       tokenAmount: tokenAmount,
@@ -283,6 +295,32 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 case .userCancelled:
                     self.adjustBottomConstraintWhenKeyboardFrameChanges = true
                     self.amountTextField.becomeFirstResponder()
+                case .failure(let message):
+                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                    self.amountTextField.becomeFirstResponder()
+                    showAutoHiddenHud(style: .error, text: message)
+                }
+            }
+        case let .mainnet(address):
+            validator.payment(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount) { [weak self] result in
+                guard let self else {
+                    return
+                }
+                self.continueButton.isBusy = false
+                switch result {
+                case .passed:
+                    let transfer = TransferConfirmationViewController(destination: .mainnet(address),
+                                                                      token: token,
+                                                                      amountDisplay: amountIntent,
+                                                                      tokenAmount: tokenAmount,
+                                                                      fiatMoneyAmount: fiatMoneyAmount,
+                                                                      memo: memo,
+                                                                      traceID: traceID,
+                                                                      returnToURL: nil)
+                    let authentication = AuthenticationViewController(intentViewController: transfer)
+                    self.present(authentication, animated: true)
+                case .userCancelled:
+                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
                 case .failure(let message):
                     self.adjustBottomConstraintWhenKeyboardFrameChanges = true
                     self.amountTextField.becomeFirstResponder()
@@ -376,6 +414,13 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             amountSymbolLabel.text = token.symbol
         case .byFiatMoney:
             amountSymbolLabel.text = Currency.current.code
+        }
+        switch opponent {
+        case .mainnet:
+            withdrawFeeView.networkLabel.text = token.depositNetworkName
+            withdrawFeeView.minimumWithdrawalLabel.text = CurrencyFormatter.localizedString(from: minimumTransferAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
+        default:
+            break
         }
     }
     
@@ -487,13 +532,17 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
         case let .address(address):
             let vc = AddressTransactionsViewController.instance(asset: address.assetId, destination: address.destination, tag: address.tag)
             navigationController?.pushViewController(vc, animated: true)
+        case .mainnet:
+            break
         }
     }
 
     func imageBarRightButton() -> UIImage? {
         switch opponent {
-        default:
+        case .contact, .address:
             return R.image.ic_title_transaction()
+        default:
+            return nil
         }
     }
 

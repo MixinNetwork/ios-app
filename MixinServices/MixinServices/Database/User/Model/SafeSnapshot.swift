@@ -104,7 +104,7 @@ extension SafeSnapshot: TableRecord, PersistableRecord {
 
 extension SafeSnapshot {
     
-    public struct Deposit: Codable {
+    public final class Deposit: Codable {
         
         public enum CodingKeys: String, CodingKey {
             case hash = "deposit_hash"
@@ -113,6 +113,8 @@ extension SafeSnapshot {
         
         public let hash: String
         public let sender: String
+        
+        public private(set) lazy var compactSender = Address.compactRepresentation(of: sender)
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -127,7 +129,7 @@ extension SafeSnapshot {
         
     }
     
-    public struct Withdrawal: Codable {
+    public final class Withdrawal: Codable {
         
         public enum CodingKeys: String, CodingKey {
             case hash = "withdrawal_hash"
@@ -136,6 +138,8 @@ extension SafeSnapshot {
         
         public let hash: String
         public let receiver: String
+        
+        public private(set) lazy var compactReceiver = Address.compactRepresentation(of: receiver)
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)

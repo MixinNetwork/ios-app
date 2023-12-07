@@ -55,11 +55,11 @@ class SnapshotCell: ModernSelectedBackgroundCell {
             if let deposit = snapshot.deposit {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
-                setTitle(deposit.sender)
+                setTitle(deposit.compactSender)
             } else if let withdrawal = snapshot.withdrawal {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_withdrawal()
-                setTitle(withdrawal.receiver)
+                setTitle(withdrawal.compactReceiver)
             } else if let userID = snapshot.opponentUserID, let name = snapshot.opponentFullname, let url = snapshot.opponentAvatarURL {
                 iconImageView.imageView.contentMode = .scaleAspectFill
                 iconImageView.setImage(with: url, userId: userID, name: name)

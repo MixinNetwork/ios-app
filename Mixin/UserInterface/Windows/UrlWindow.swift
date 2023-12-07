@@ -907,6 +907,7 @@ extension UrlWindow {
                                                                               memo: payment.memo,
                                                                               traceID: payment.trace,
                                                                               returnToURL: payment.returnTo)
+                            transfer.manipulateNavigationStackOnFinished = false
                             let authentication = AuthenticationViewController(intentViewController: transfer)
                             UIApplication.homeContainerViewController?.present(authentication, animated: true, completion: nil)
                         case .userCancelled:

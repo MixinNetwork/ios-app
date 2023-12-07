@@ -80,10 +80,6 @@ public final class AssetAPI: MixinAPI {
         request(method: .get, path: Path.snapshots(limit: limit, offset: nil, assetId: assetId, opponentId: nil), completion: completion)
     }
     
-    public static func fee(assetId: String, completion: @escaping (MixinAPI.Result<Fee>) -> Void) {
-        request(method: .get, path: Path.fee(assetId: assetId), completion: completion)
-    }
-    
     public static func pendingDeposits(assetId: String, destination: String, tag: String, completion: @escaping (MixinAPI.Result<[PendingDeposit]>) -> Void) {
         request(method: .get, path: Path.pendingDeposits(assetId: assetId, destination: destination, tag: tag), completion: completion)
     }

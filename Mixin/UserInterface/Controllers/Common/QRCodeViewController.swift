@@ -68,11 +68,11 @@ class QRCodeViewController: UIViewController {
         titleView.titleLabel.text = title
         titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         descriptionLabel.text = codeDescription
+        centerContentWrapperView.overrideUserInterfaceStyle = .light
         
         switch centerContent {
         case .avatar(let avatarSetter):
             let avatarImageView = AvatarImageView()
-            avatarImageView.overrideUserInterfaceStyle = .light
             centerContentWrapperView.addSubview(avatarImageView)
             avatarImageView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
@@ -81,7 +81,6 @@ class QRCodeViewController: UIViewController {
             avatarSetter(avatarImageView)
         case .receiveMoney(let avatarSetter):
             let avatarImageView = AvatarImageView()
-            avatarImageView.overrideUserInterfaceStyle = .light
             centerContentWrapperView.addSubview(avatarImageView)
             avatarImageView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
@@ -91,14 +90,12 @@ class QRCodeViewController: UIViewController {
             
             let iconView = UIImageView(image: R.image.ic_receive_money())
             iconView.backgroundColor = .clear
-            iconView.overrideUserInterfaceStyle = .light
             centerContentWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
                 make.trailing.bottom.equalTo(avatarImageView)
             }
         case .asset(let asset):
             let iconView = AssetIconView()
-            iconView.overrideUserInterfaceStyle = .light
             centerContentWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
                 make.center.equalToSuperview()

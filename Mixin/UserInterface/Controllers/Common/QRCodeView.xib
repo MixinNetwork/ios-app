@@ -43,18 +43,29 @@
                                 <constraint firstAttribute="width" secondItem="h9P-mT-Qpv" secondAttribute="height" multiplier="1:1" id="b4n-TC-UMg"/>
                             </constraints>
                         </view>
-                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dZf-Yw-zrU">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dZf-Yw-zrU">
                             <rect key="frame" x="145.5" y="128" width="44" height="44"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QlK-rX-Tc0">
+                                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="22"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="dZf-Yw-zrU" secondAttribute="height" id="36a-za-jeo"/>
+                                <constraint firstAttribute="bottom" secondItem="QlK-rX-Tc0" secondAttribute="bottom" id="icW-WI-EPX"/>
+                                <constraint firstItem="QlK-rX-Tc0" firstAttribute="top" secondItem="dZf-Yw-zrU" secondAttribute="top" id="ikf-Xg-gAy"/>
                                 <constraint firstAttribute="width" constant="44" id="qrs-Ak-ZkH"/>
+                                <constraint firstAttribute="trailing" secondItem="QlK-rX-Tc0" secondAttribute="trailing" id="uLO-c8-Vre"/>
+                                <constraint firstItem="QlK-rX-Tc0" firstAttribute="leading" secondItem="dZf-Yw-zrU" secondAttribute="leading" id="ulr-iF-ZMz"/>
                             </constraints>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="22"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Fh-0d-4n2" userLabel="Description Label">
                             <rect key="frame" x="0.0" y="268" width="335" height="51"/>

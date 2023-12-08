@@ -38,8 +38,21 @@ struct DeviceTransferSafeSnapshot {
     }
     
     func toSafeSnapshot() -> SafeSnapshot {
-        SafeSnapshot(id: id, type: SafeSnapshot.SnapshotType(rawValue: type) ?? SafeSnapshot.SnapshotType.snapshot, assetID: assetID, amount: amount, userID: userID, opponentID: opponentID, memo: memo, transactionHash: transactionHash, createdAt: createdAt, traceID: traceID, confirmations: confirmations, openingBalance: openingBalance, closingBalance: closingBalance, deposit: deposit, withdrawal: withdrawal
-                )
+        SafeSnapshot(id: id,
+                     type: type,
+                     assetID: assetID,
+                     amount: amount,
+                     userID: userID,
+                     opponentID: opponentID,
+                     memo: memo,
+                     transactionHash: transactionHash,
+                     createdAt: createdAt,
+                     traceID: traceID,
+                     confirmations: confirmations,
+                     openingBalance: openingBalance,
+                     closingBalance: closingBalance,
+                     deposit: deposit,
+                     withdrawal: withdrawal)
     }
     
 }

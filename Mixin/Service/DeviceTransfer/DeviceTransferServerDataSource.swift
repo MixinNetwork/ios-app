@@ -238,9 +238,9 @@ extension DeviceTransferServerDataSource {
             nextPrimaryID = tokens.last?.assetID
             nextSecondaryID = nil
             transferItems = tokens.compactMap { token in
-                let deviceTransferAsset = DeviceTransferToken(token: token)
+                let deviceTransferToken = DeviceTransferToken(token: token)
                 do {
-                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferAsset, key: key)
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferToken, key: key)
                     return TransferItem(rawItem: token, outputData: outputData, attachment: nil)
                 } catch {
                     Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
@@ -268,9 +268,9 @@ extension DeviceTransferServerDataSource {
             nextPrimaryID = safeSnapshot.last?.id
             nextSecondaryID = nil
             transferItems = safeSnapshot.compactMap { safeSnapshot in
-                let deviceTransferSnapshot = DeviceTransferSafeSnapshot(safeSnapshot: safeSnapshot)
+                let deviceTransferSafeSnapshot = DeviceTransferSafeSnapshot(safeSnapshot: safeSnapshot)
                 do {
-                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSnapshot, key: key)
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSafeSnapshot, key: key)
                     return TransferItem(rawItem: safeSnapshot, outputData: outputData, attachment: nil)
                 } catch {
                     Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")

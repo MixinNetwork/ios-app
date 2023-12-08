@@ -76,6 +76,31 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.withdrawal = withdrawal
     }
     
+    public init(
+        id: String, type: String, assetID: String, amount: String,
+        userID: String, opponentID: String, memo: String,
+        transactionHash: String, createdAt: String,
+        traceID: String?, confirmations: Int?,
+        openingBalance: String?, closingBalance: String?,
+        deposit: Deposit?, withdrawal: Withdrawal?
+    ) {
+        self.id = id
+        self.type = type
+        self.assetID = assetID
+        self.amount = amount
+        self.userID = userID
+        self.opponentID = opponentID
+        self.memo = memo
+        self.transactionHash = transactionHash
+        self.createdAt = createdAt
+        self.traceID = traceID
+        self.confirmations = confirmations
+        self.openingBalance = openingBalance
+        self.closingBalance = closingBalance
+        self.deposit = deposit
+        self.withdrawal = withdrawal
+    }
+    
     public init(assetID: String, pendingDeposit: SafePendingDeposit) {
         self.id = pendingDeposit.id
         self.type = SnapshotType.pending.rawValue

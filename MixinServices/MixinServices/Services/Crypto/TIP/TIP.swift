@@ -467,7 +467,7 @@ extension TIP {
             AppGroupKeychain.encryptedSalt = encryptedSalt
             Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
         } catch {
-            Crashes.trackError(error, properties: ["step1": step1, "step2": step2], attachments: nil)
+            Crashes.trackError(error, properties: ["error": "\(error)", "step1": step1, "step2": step2], attachments: nil)
             reporter.report(error: error)
             throw error
         }

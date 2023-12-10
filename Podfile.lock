@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.8.0)
+  - Alamofire (5.8.1)
   - AppCenter (5.0.4):
     - AppCenter/Analytics (= 5.0.4)
     - AppCenter/Crashes (= 5.0.4)
@@ -13,9 +13,9 @@ PODS:
   - GCDWebServer/Core (3.5.4)
   - GCDWebServer/WebDAV (3.5.4):
     - GCDWebServer/Core
-  - GRDB.swift (6.19.0):
-    - GRDB.swift/standard (= 6.19.0)
-  - GRDB.swift/standard (6.19.0)
+  - GRDB.swift (6.23.0):
+    - GRDB.swift/standard (= 6.23.0)
+  - GRDB.swift/standard (6.23.0)
   - librlottie (0.2.1)
   - libsignal-protocol-c (2.3.2)
   - libwebp (1.3.2):
@@ -48,15 +48,15 @@ PODS:
     - SocketRocket
     - Sodium
     - Zip
-  - PhoneNumberKit (3.7.4):
-    - PhoneNumberKit/PhoneNumberKitCore (= 3.7.4)
-    - PhoneNumberKit/UIKit (= 3.7.4)
-  - PhoneNumberKit/PhoneNumberKitCore (3.7.4)
-  - PhoneNumberKit/UIKit (3.7.4):
+  - PhoneNumberKit (3.7.6):
+    - PhoneNumberKit/PhoneNumberKitCore (= 3.7.6)
+    - PhoneNumberKit/UIKit (= 3.7.6)
+  - PhoneNumberKit/PhoneNumberKitCore (3.7.6)
+  - PhoneNumberKit/UIKit (3.7.6):
     - PhoneNumberKit/PhoneNumberKitCore
-  - SDWebImage (5.18.2):
-    - SDWebImage/Core (= 5.18.2)
-  - SDWebImage/Core (5.18.2)
+  - SDWebImage (5.18.6):
+    - SDWebImage/Core (= 5.18.6)
+  - SDWebImage/Core (5.18.6)
   - SDWebImageLottieCoder (0.2.0):
     - librlottie (~> 0.2)
     - SDWebImage (~> 5.10)
@@ -104,20 +104,20 @@ CHECKOUT OPTIONS:
     :commit: 53e446e27b55283f026e14606e21b112349e4c75
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   PhoneNumberKit:
-    :commit: b456f2f9be10c1d183158220b831afd22697dd68
+    :commit: d2886b0735a47e47fb227504666756efb2e2ac26
     :git: https://github.com/marmelroy/PhoneNumberKit
 
 SPEC CHECKSUMS:
-  Alamofire: 0e92e751b3e9e66d7982db43919d01f313b8eb91
+  Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
   AppCenter: 85c92db0759d2792a65eb61d6842d2e86611a49a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
-  GRDB.swift: c08bdefb31fdae93e1009a087a912b71529a1084
+  GRDB.swift: e819934eb2df28a6907f28d746eb3cf9c7c53b75
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   MixinServices: 8149b4436bfdbb44025d673ddc9b24f7e859d9ea
-  PhoneNumberKit: e3c4dc9f65bc2036639898095c2ab1ef89348f64
-  SDWebImage: c0de394d7cf7f9838aed1fd6bb6037654a4572e4
+  PhoneNumberKit: 3c68a822bad955ffcefc72a52df72b6596498555
+  SDWebImage: 3d8caa2430f3d674dbb3e515df4a100a2105af5f
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
@@ -126,4 +126,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f990e0e248735304298c3ea9ff5ca97105732b29
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.3

@@ -3,11 +3,11 @@ import MixinServices
 
 final class WithdrawFeeSelectorViewController: PopupSelectorViewController {
     
-    private let fees: [FeeTokenItem]
+    private let fees: [WithdrawFeeItem]
     private let selectedIndex: Int
     private let onSelected: (Int) -> Void
 
-    init(fees: [FeeTokenItem], selectedIndex: Int, onSelected: @escaping (Int) -> Void) {
+    init(fees: [WithdrawFeeItem], selectedIndex: Int, onSelected: @escaping (Int) -> Void) {
         self.fees = fees
         self.selectedIndex = selectedIndex
         self.onSelected = onSelected
@@ -42,7 +42,7 @@ extension WithdrawFeeSelectorViewController: UITableViewDataSource {
         let fee = fees[indexPath.row]
         cell.tokenIconView.setIcon(token: fee.tokenItem)
         cell.titleLabel.text = fee.tokenItem.name + "(" + fee.tokenItem.symbol + ")"
-        cell.subtitleLabel.text = CurrencyFormatter.localizedString(from: fee.decimalAmount, format: .precision, sign: .never, symbol: .custom(fee.tokenItem.symbol))
+        cell.subtitleLabel.text = CurrencyFormatter.localizedString(from: fee.amount, format: .precision, sign: .never, symbol: .custom(fee.tokenItem.symbol))
         cell.checkmarkImageView.isHidden = indexPath.row != selectedIndex
         return cell
     }

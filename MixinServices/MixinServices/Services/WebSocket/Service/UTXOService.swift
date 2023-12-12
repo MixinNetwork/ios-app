@@ -137,11 +137,6 @@ public final class UTXOService {
 
 extension UTXOService {
     
-    public enum CollectingError: Error {
-        case insufficientBalance
-        case maxSpendingCountExceeded
-    }
-    
     public struct OutputCollection: CustomDebugStringConvertible {
         
         private struct Input: Encodable {
@@ -152,7 +147,7 @@ extension UTXOService {
         
         public let outputs: [Output]
         public let lastOutput: Output
-        public let amount: Decimal // For debugging
+        public let amount: Decimal
         
         public var debugDescription: String {
             "<OutputCollection outputs: \(outputs.count), amount: \(amount)>"
@@ -178,7 +173,13 @@ extension UTXOService {
         
     }
     
-    public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) throws -> OutputCollection {
+    public enum CollectingResult {
+        case success(OutputCollection)
+        case insufficientBalance
+        case maxSpendingCountExceeded
+    }
+    
+    public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
         // Select 1 more output to see if there's more outputs unspent
         var unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
         let hasMoreUnspentOutput = unspentOutputs.count > maxSpendingOutputsCount
@@ -188,6 +189,7 @@ extension UTXOService {
         
         var outputs: [Output] = []
         var outputsAmount: Decimal = 0
+        outputs.reserveCapacity(unspentOutputs.count)
         while outputsAmount < amount, !unspentOutputs.isEmpty {
             let spending = unspentOutputs.removeFirst()
             outputs.append(spending)
@@ -198,14 +200,32 @@ extension UTXOService {
             }
         }
         if !outputs.isEmpty, outputsAmount >= amount {
-            return OutputCollection(outputs: outputs, amount: outputsAmount)
+            let collection = OutputCollection(outputs: outputs, amount: outputsAmount)
+            return .success(collection)
         } else {
             if hasMoreUnspentOutput {
-                throw CollectingError.maxSpendingCountExceeded
+                return .maxSpendingCountExceeded
             } else {
-                throw CollectingError.insufficientBalance
+                return .insufficientBalance
             }
         }
+    }
+    
+    public func collectConsolidationOutputs(kernelAssetID: String) -> OutputCollection {
+        let unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount)
+        
+        var amount: Decimal = 0
+        let outputs = unspentOutputs.compactMap { output in
+            if let outputAmount = Decimal(string: output.amount, locale: .enUSPOSIX) {
+                amount += outputAmount
+                return output
+            } else {
+                Logger.general.error(category: "UTXOService", message: "Invalid utxo.amount: \(output.amount)")
+                return nil
+            }
+        }
+        
+        return OutputCollection(outputs: outputs, amount: amount)
     }
     
 }

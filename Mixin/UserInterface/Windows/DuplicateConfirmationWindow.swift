@@ -3,6 +3,11 @@ import MixinServices
 
 class DuplicateConfirmationWindow: AssetConfirmationWindow {
     
+    enum Operation {
+        case transfer(UserItem)
+        case withdraw(Address)
+    }
+    
     static func instance() -> DuplicateConfirmationWindow {
         return Bundle.main.loadNibNamed("DuplicateConfirmationWindow", owner: nil, options: nil)?.first as! DuplicateConfirmationWindow
     }
@@ -24,7 +29,7 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
     
     func render(
         token: TokenItem,
-        operation: PaymentValidator.Operation,
+        operation: Operation,
         amount: Decimal,
         fiatMoneyAmount: Decimal,
         memo: String,

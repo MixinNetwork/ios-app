@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConsolidateOutputsViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="contentStackView" destination="bGT-j2-Sj3" id="AKK-XJ-JDK"/>
+                <outlet property="iconImageView" destination="ydk-7o-ebM" id="MAQ-B4-IcE"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="204"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="bGT-j2-Sj3">
+                    <rect key="frame" x="36" y="0.0" width="321" height="194"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="utxo_consolidation" translatesAutoresizingMaskIntoConstraints="NO" id="ydk-7o-ebM">
+                            <rect key="frame" x="121.66666666666666" y="0.0" width="78" height="76"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="Consolidation UTXO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obn-1T-3R7">
+                            <rect key="frame" x="75.666666666666671" y="92" width="169.66666666666663" height="21.666666666666671"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="consolidation_utxo"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Your number of UTXOs exceeds 256. For sending experience, please enter the PIN to consolidating UTXOs before operating." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J7s-eA-uTN">
+                            <rect key="frame" x="0.0" y="129.66666666666666" width="321" height="64.333333333333343"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="consolidation_utxo_description"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="bGT-j2-Sj3" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="36" id="HkT-DO-OAl"/>
+                <constraint firstAttribute="bottom" secondItem="bGT-j2-Sj3" secondAttribute="bottom" constant="10" id="Kd0-1s-2Lm"/>
+                <constraint firstItem="bGT-j2-Sj3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="vUn-eP-dAp"/>
+                <constraint firstAttribute="trailing" secondItem="bGT-j2-Sj3" secondAttribute="trailing" constant="36" id="zLd-96-9ni"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="84.732824427480907" y="291.54929577464787"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="utxo_consolidation" width="78" height="76"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

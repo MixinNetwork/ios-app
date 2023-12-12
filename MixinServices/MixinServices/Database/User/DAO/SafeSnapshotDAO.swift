@@ -36,10 +36,19 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func save(snapshot: SafeSnapshot, alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil) {
+    public func save(
+        snapshot: SafeSnapshot,
+        postChangeNotification: Bool,
+        alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil
+    ) {
         db.write { db in
             try snapshot.save(db)
             try change?(db)
+            if postChangeNotification {
+                db.afterNextTransaction { _ in
+                    NotificationCenter.default.post(onMainThread: Self.snapshotDidChangeNotification, object: self)
+                }
+            }
         }
     }
     
@@ -138,24 +147,24 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         }
     }
     
-    public func saveSnapshots(with assetID: String, pendingDeposits: [SafePendingDeposit]) {
-        guard !pendingDeposits.isEmpty else {
-            return
-        }
-        let ids = pendingDeposits.map(\.id).joined(separator: "','")
+    public func replacePendingSnapshots(assetID: String, pendingDeposits: [SafePendingDeposit]) {
         db.write { (db) in
-            let finishedDepositIDs: [String] = try String.fetchAll(db, sql: """
-                SELECT snapshot_id FROM safe_snapshots WHERE asset_id = ? AND type != ? AND id IN ('\(ids)')
-            """, arguments: [assetID, SafeSnapshot.SnapshotType.pending.rawValue])
-            let snapshots: [SafeSnapshot] = pendingDeposits.compactMap { deposit in
-                if finishedDepositIDs.contains(deposit.id) {
-                    return nil
-                } else {
-                    return SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
-                }
+            try db.execute(sql: "DELETE FROM safe_snapshots WHERE asset_id = ? AND type = ?",
+                           arguments: [assetID, SafeSnapshot.SnapshotType.pending.rawValue])
+            let snapshots = pendingDeposits.map { deposit in
+                SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
             }
             try snapshots.save(db)
+            
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.post(onMainThread: SafeSnapshotDAO.snapshotDidChangeNotification, object: self)
+            }
         }
+    }
+    
+    public func deletePendingSnapshots(depositHash: String, db: GRDB.Database) throws {
+        let sql = "DELETE FROM safe_snapshots WHERE type = 'pending' AND deposit LIKE ?"
+        try db.execute(sql: sql, arguments: ["%\(depositHash)%"])
     }
     
 }

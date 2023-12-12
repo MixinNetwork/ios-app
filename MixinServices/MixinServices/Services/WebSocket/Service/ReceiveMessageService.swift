@@ -1249,7 +1249,19 @@ extension ReceiveMessageService {
         if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = NetworkAPI.chain(id: chainId) {
             ChainDAO.shared.save([chain])
         }
-        SafeSnapshotDAO.shared.save(snapshot: snapshot)
+        
+        let depositHash: String?
+        if let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
+            depositHash = json["deposit_hash"] as? String
+        } else {
+            depositHash = nil
+        }
+        
+        SafeSnapshotDAO.shared.save(snapshot: snapshot, postChangeNotification: true) { db in
+            if let hash = depositHash {
+                try SafeSnapshotDAO.shared.deletePendingSnapshots(depositHash: hash, db: db)
+            }
+        }
         let message = Message.createMessage(snapshot: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         UTXOService.shared.synchronize()

@@ -321,14 +321,19 @@ extension SnapshotViewController {
                 guard let chainID = TokenDAO.shared.chainID(ofAssetWith: assetID) else {
                     return
                 }
+                var pendingDeposits: [SafePendingDeposit] = []
                 let entries = DepositEntryDAO.shared.entries(ofChainWith: chainID)
                 for entry in entries {
                     let deposits = try await SafeAPI.deposits(assetID: assetID,
                                                               destination: entry.destination,
                                                               tag: entry.tag)
-                    SafeSnapshotDAO.shared.saveSnapshots(with: assetID, pendingDeposits: deposits)
-                    if let deposit = deposits.first(where: { $0.id == snapshotID }) {
-                        let snapshot = SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
+                    pendingDeposits.append(contentsOf: deposits)
+                }
+                SafeSnapshotDAO.shared.replacePendingSnapshots(assetID: assetID, pendingDeposits: pendingDeposits)
+                
+                if let deposit = pendingDeposits.first(where: { $0.id == snapshotID }) {
+                    let snapshot = SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
+                    await MainActor.run {
                         self?.reloadData(with: snapshot)
                     }
                 }

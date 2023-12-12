@@ -1052,6 +1052,7 @@
 "withdrawal_minimum_withdrawal" = "最小提現數量：";
 "withdrawal_network_fee" = "網路手續費：";
 "withdrawal_no_memo" = "點選不使用 Memo（備註）";
+"withdrawal_pending" = "充值中";
 "withdrawal_suspended" = "%@ 提現暫停";
 "withdrawal_suspended_description" = "%@ 提現已暫停，可能的原因是因為節點故障、區塊鏈網路硬分叉或者擁堵，請耐心等候並稍後重試";
 "withdrawal_to" = "提現到 %@";

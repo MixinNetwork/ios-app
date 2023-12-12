@@ -1052,6 +1052,7 @@
 "withdrawal_minimum_withdrawal" = "Минимальный вывод: ";
 "withdrawal_network_fee" = "Комиссия за сеть: ";
 "withdrawal_no_memo" = "Нет памятки";
+"withdrawal_pending" = "Pending";
 "withdrawal_suspended" = "%@ Withdrawal Suspended";
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Вывод на %@";

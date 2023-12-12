@@ -321,14 +321,19 @@ extension SnapshotViewController {
                 guard let chainID = TokenDAO.shared.chainID(ofAssetWith: assetID) else {
                     return
                 }
+                var pendingDeposits: [SafePendingDeposit] = []
                 let entries = DepositEntryDAO.shared.entries(ofChainWith: chainID)
                 for entry in entries {
                     let deposits = try await SafeAPI.deposits(assetID: assetID,
                                                               destination: entry.destination,
                                                               tag: entry.tag)
-                    SafeSnapshotDAO.shared.saveSnapshots(with: assetID, pendingDeposits: deposits)
-                    if let deposit = deposits.first(where: { $0.id == snapshotID }) {
-                        let snapshot = SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
+                    pendingDeposits.append(contentsOf: deposits)
+                }
+                SafeSnapshotDAO.shared.replacePendingSnapshots(assetID: assetID, pendingDeposits: pendingDeposits)
+                
+                if let deposit = pendingDeposits.first(where: { $0.id == snapshotID }) {
+                    let snapshot = SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
+                    await MainActor.run {
                         self?.reloadData(with: snapshot)
                     }
                 }
@@ -377,17 +382,27 @@ extension SnapshotViewController {
             columns.append(Column(key: .from, value: sender, style: style))
             columns.append(Column(key: .depositHash, value: deposit.hash))
         } else if let withdrawal = snapshot.withdrawal {
-            let style: Column.Style
             let receiver: String
+            let receiverStyle: Column.Style
             if withdrawal.receiver.isEmpty {
                 receiver = notApplicable
-                style = .unavailable
+                receiverStyle = .unavailable
             } else {
                 receiver = withdrawal.receiver
-                style = []
+                receiverStyle = []
             }
-            columns.append(Column(key: .to, value: receiver, style: style))
-            columns.append(Column(key: .withdrawalHash, value: withdrawal.hash))
+            columns.append(Column(key: .to, value: receiver, style: receiverStyle))
+            
+            let withdrawalHash: String
+            let withdrawalStyle: Column.Style
+            if withdrawal.hash.isEmpty {
+                withdrawalHash = R.string.localizable.withdrawal_pending()
+                withdrawalStyle = .unavailable
+            } else {
+                withdrawalHash = withdrawal.hash
+                withdrawalStyle = []
+            }
+            columns.append(Column(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
         } else {
             let style: Column.Style
             let opponentName: String

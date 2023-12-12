@@ -1052,6 +1052,7 @@
 "withdrawal_minimum_withdrawal" = "最低出金額：";
 "withdrawal_network_fee" = "ネットワーク手数料：";
 "withdrawal_no_memo" = "メモなし";
+"withdrawal_pending" = "Pending";
 "withdrawal_suspended" = "%@ Withdrawal Suspended";
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "%@へ出金";

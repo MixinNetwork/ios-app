@@ -1052,6 +1052,7 @@
 "withdrawal_minimum_withdrawal" = "Retiro mínimo: ";
 "withdrawal_network_fee" = "Tarifa de red: ";
 "withdrawal_no_memo" = "Sin nota";
+"withdrawal_pending" = "Pending";
 "withdrawal_suspended" = "%@ Withdrawal Suspended";
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Retirar a %@";

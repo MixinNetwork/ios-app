@@ -276,9 +276,15 @@ extension DeviceTransferClient {
             case .asset:
                 let asset = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferAsset>.self, from: decryptedData).data
                 AssetDAO.shared.save(asset: asset.toAsset())
+            case .token:
+                let token = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferToken>.self, from: decryptedData).data
+                TokenDAO.shared.save(token: token.toToken())
             case .snapshot:
                 let snapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSnapshot>.self, from: decryptedData).data
                 SnapshotDAO.shared.save(snapshot: snapshot.toSnapshot())
+            case .safe_snapshot:
+                let safeSnapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSafeSnapshot>.self, from: decryptedData).data
+                SafeSnapshotDAO.shared.save(snapshot: safeSnapshot.toSafeSnapshot())
             case .sticker:
                 let sticker = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSticker>.self, from: decryptedData).data
                 StickerDAO.shared.save(sticker: sticker.toSticker())

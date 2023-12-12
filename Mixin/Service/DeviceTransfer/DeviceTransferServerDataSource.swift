@@ -34,7 +34,9 @@ extension DeviceTransferServerDataSource {
             + UserDAO.shared.usersCount()
             + AppDAO.shared.appsCount()
             + AssetDAO.shared.assetsCount()
+            + TokenDAO.shared.tokensCount()
             + SnapshotDAO.shared.snapshotsCount()
+            + SafeSnapshotDAO.shared.safeSnapshotsCount()
             + StickerDAO.shared.stickersCount()
             + PinMessageDAO.shared.pinMessagesCount()
             + TranscriptMessageDAO.shared.transcriptMessagesCount()
@@ -230,6 +232,21 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
+        case .token:
+            let tokens = TokenDAO.shared.tokens(limit: limit, after: location.primaryID)
+            databaseItemCount = tokens.count
+            nextPrimaryID = tokens.last?.assetID
+            nextSecondaryID = nil
+            transferItems = tokens.compactMap { token in
+                let deviceTransferToken = DeviceTransferToken(token: token)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferToken, key: key)
+                    return TransferItem(rawItem: token, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
+            }
         case .snapshot:
             let snapshots = SnapshotDAO.shared.snapshots(limit: limit, after: location.primaryID)
             databaseItemCount = snapshots.count
@@ -240,6 +257,21 @@ extension DeviceTransferServerDataSource {
                 do {
                     let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSnapshot, key: key)
                     return TransferItem(rawItem: snapshot, outputData: outputData, attachment: nil)
+                } catch {
+                    Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
+                    return nil
+                }
+            }
+        case .safe_snapshot:
+            let safeSnapshot = SafeSnapshotDAO.shared.safeSnapshots(limit: limit, after: location.primaryID)
+            databaseItemCount = safeSnapshot.count
+            nextPrimaryID = safeSnapshot.last?.id
+            nextSecondaryID = nil
+            transferItems = safeSnapshot.compactMap { safeSnapshot in
+                let deviceTransferSafeSnapshot = DeviceTransferSafeSnapshot(safeSnapshot: safeSnapshot)
+                do {
+                    let outputData = try DeviceTransferProtocol.output(type: location.type, data: deviceTransferSafeSnapshot, key: key)
+                    return TransferItem(rawItem: safeSnapshot, outputData: outputData, attachment: nil)
                 } catch {
                     Logger.general.error(category: "DeviceTransferServerDataSource", message: "Failed to output: \(error)")
                     return nil

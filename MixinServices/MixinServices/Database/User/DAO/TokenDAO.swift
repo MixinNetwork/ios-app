@@ -63,6 +63,20 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: "\(SQL.selector) WHERE t.asset_id IN ('\(ids)')")
     }
     
+    public func tokens(limit: Int, after assetId: String?) -> [Token] {
+        var sql = "SELECT * FROM tokens"
+        if let assetId {
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM tokens WHERE asset_id = '\(assetId)'), 0)"
+        }
+        sql += " ORDER BY ROWID LIMIT ?"
+        return db.select(with: sql, arguments: [limit])
+    }
+    
+    public func tokensCount() -> Int {
+        let count: Int? = db.select(with: "SELECT COUNT(*) FROM tokens")
+        return count ?? 0
+    }
+    
     public func search(keyword: String, sortResult: Bool, limit: Int?) -> [TokenItem] {
         var sql = """
         \(SQL.selector)
@@ -143,4 +157,7 @@ public final class TokenDAO: UserDatabaseDAO {
         }
     }
     
+    public func save(token: Token) {
+        db.save(token)
+    }
 }

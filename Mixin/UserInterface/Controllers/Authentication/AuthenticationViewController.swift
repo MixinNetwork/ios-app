@@ -226,6 +226,42 @@ final class AuthenticationViewController: UIViewController {
         UIView.performWithoutAnimation(titleStackView.layoutIfNeeded)
     }
     
+    func layoutForAuthenticationFailure(description: String, retryAction: RetryAction) {
+        let failureView = R.nib.authenticationFailureView(withOwner: nil)!
+        failureView.label.text = description
+        switch retryAction {
+        case .notAllowed:
+            failureView.continueButton.setTitle(R.string.localizable.ok(), for: .normal)
+            failureView.continueButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
+        case .inputPINAgain:
+            customTryAgainAction = nil
+            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
+        case .custom(let action):
+            customTryAgainAction = action
+            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
+        }
+        self.view.addSubview(failureView)
+        failureView.snp.makeConstraints { make in
+            make.top.equalTo(self.pinFieldWrapperView.snp.top)
+            make.leading.trailing.equalToSuperview()
+        }
+        self.failureView = failureView
+        self.view.layoutIfNeeded()
+        self.validatingIndicator.stopAnimating()
+        
+        UIView.animate(withDuration: 0.3) {
+            self.pinField.resignFirstResponder()
+            self.pinFieldWrapperHeightConstraint.priority = .almostInexist
+            failureView.snp.makeConstraints { make in
+                let offset = self.view.safeAreaInsets.bottom > 20 ? 0 : 20
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-offset)
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     @objc private func presentationViewControllerWillDismissPresentedViewController(_ notification: Notification) {
         guard let controller = notification.object as? PopupPresentationController else {
             return
@@ -277,42 +313,6 @@ final class AuthenticationViewController: UIViewController {
                     self.layoutForAuthenticationFailure(description: error.localizedDescription, retryAction: retryAction)
                 }
             }
-        }
-    }
-    
-    private func layoutForAuthenticationFailure(description: String, retryAction: RetryAction) {
-        let failureView = R.nib.authenticationFailureView(withOwner: nil)!
-        failureView.label.text = description
-        switch retryAction {
-        case .notAllowed:
-            failureView.continueButton.setTitle(R.string.localizable.ok(), for: .normal)
-            failureView.continueButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
-        case .inputPINAgain:
-            customTryAgainAction = nil
-            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
-            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
-        case .custom(let action):
-            customTryAgainAction = action
-            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
-            failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
-        }
-        self.view.addSubview(failureView)
-        failureView.snp.makeConstraints { make in
-            make.top.equalTo(self.pinFieldWrapperView.snp.top)
-            make.leading.trailing.equalToSuperview()
-        }
-        self.failureView = failureView
-        self.view.layoutIfNeeded()
-        self.validatingIndicator.stopAnimating()
-        
-        UIView.animate(withDuration: 0.3) {
-            self.pinField.resignFirstResponder()
-            self.pinFieldWrapperHeightConstraint.priority = .almostInexist
-            failureView.snp.makeConstraints { make in
-                let offset = self.view.safeAreaInsets.bottom > 20 ? 0 : 20
-                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-offset)
-            }
-            self.view.layoutIfNeeded()
         }
     }
     

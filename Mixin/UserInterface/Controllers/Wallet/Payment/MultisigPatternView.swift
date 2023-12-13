@@ -10,6 +10,8 @@ final class MultisigPatternView: UIView {
     @IBOutlet weak var moreSenderView: CornerView!
     @IBOutlet weak var moreSenderCountLabel: UILabel!
     
+    @IBOutlet weak var actionImageView: UIImageView!
+    
     @IBOutlet weak var firstReceiverAvatarView: BorderedAvatarImageView!
     @IBOutlet weak var secondReceiverAvatarView: BorderedAvatarImageView!
     @IBOutlet weak var moreReceiverView: CornerView!
@@ -18,7 +20,7 @@ final class MultisigPatternView: UIView {
     @IBOutlet weak var showSendersButton: UIButton!
     @IBOutlet weak var showReceiversButton: UIButton!
     
-    func reloadData(senders: [UserItem], receivers: [UserItem]) {
+    func reloadData(senders: [UserItem], receivers: [UserItem], action: MultisigAction) {
         if senders.count > 0 {
             firstSenderAvatarView.setImage(with: senders[0])
         }
@@ -49,6 +51,13 @@ final class MultisigPatternView: UIView {
             moreReceiverView.isHidden = false
         } else {
             moreReceiverView.isHidden = true
+        }
+        
+        switch action {
+        case .sign:
+            actionImageView.image = R.image.multisig_sign()
+        case .unlock:
+            actionImageView.image = R.image.multisig_revoke()
         }
     }
     

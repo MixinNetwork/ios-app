@@ -60,6 +60,8 @@ FOUNDATION_EXPORT NSString* _Nonnull KernelDecodeRawTx(NSString* _Nullable raw, 
 
 FOUNDATION_EXPORT KernelAddress* _Nullable KernelNewMainAddressFromString(NSString* _Nullable s, NSError* _Nullable* _Nullable error);
 
+FOUNDATION_EXPORT KernelTx* _Nullable KernelSignTransaction(NSString* _Nullable raw, NSString* _Nullable viewKeys, NSString* _Nullable spendKey, long index, BOOL withoutFee, NSError* _Nullable* _Nullable error);
+
 FOUNDATION_EXPORT KernelTx* _Nullable KernelSignTx(NSString* _Nullable raw, NSString* _Nullable inputKeys, NSString* _Nullable viewKeys, NSString* _Nullable spendKey, BOOL withoutFee, NSError* _Nullable* _Nullable error);
 
 #endif

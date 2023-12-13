@@ -20,6 +20,9 @@ class UrlWindow {
         if let payment = URLPayment(url: url) {
             checkPayment(payment)
             return true
+        } else if let multisig = MultisigURL(url: url) {
+            checkMultisig(multisig)
+            return true
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
             switch mixinURL {
@@ -869,29 +872,19 @@ extension UrlWindow {
                 }
                 destination = .user(items[0])
             case let .multisig(threshold, ids):
-                guard let syncedItems = syncUsers(userIds: ids, hud: hud) else {
+                guard let users = syncUsersInOrder(userIDs: ids, hud: hud) else {
                     return
                 }
-                let items = ids.compactMap { id in
-                    syncedItems.first(where: { $0.userId == id })
+                if users.count == 1 {
+                    destination = .user(users[0])
+                } else {
+                    destination = .multisig(threshold: threshold, users: users)
                 }
-                guard items.count == ids.count else {
-                    DispatchQueue.main.async {
-                        hud.set(style: .error, text: R.string.localizable.user_not_found())
-                        hud.scheduleAutoHidden()
-                    }
-                    return
-                }
-                destination = .multisig(threshold: threshold, users: items)
             case let .mainnet(address):
                 destination = .mainnet(address)
             }
             if let request = urlPayment.request {
-                guard let token = TokenDAO.shared.tokenItem(with: request.asset) else {
-                    DispatchQueue.main.async {
-                        hud.set(style: .error, text: R.string.localizable.asset_not_found())
-                        hud.scheduleAutoHidden()
-                    }
+                guard let token = syncToken(assetID: request.asset, hud: hud) else {
                     return
                 }
                 let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
@@ -941,6 +934,71 @@ extension UrlWindow {
         }
     }
     
+    private static func checkMultisig(_ multisig: MultisigURL) {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        SafeAPI.multisigs(id: multisig.id, queue: .global()) { result in
+            switch result {
+            case .success(let response):
+                let receiverIDs = Array(Set(response.receivers.flatMap(\.members)))
+                guard let token = syncToken(assetID: response.assetID, hud: hud) else {
+                    return
+                }
+                guard let senders = syncUsersInOrder(userIDs: response.senders, hud: hud) else {
+                    return
+                }
+                guard let receivers = syncUsers(userIds: receiverIDs, hud: hud) else {
+                    return
+                }
+                guard
+                    let amount = Decimal(string: response.amount, locale: .enUSPOSIX),
+                    let index = response.senders.firstIndex(of: myUserId)
+                else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                let state: MultisigConfirmationViewController.State
+                if response.signers.count >= response.sendersThreshold {
+                    state = .paid
+                } else if response.signers.contains(myUserId) && multisig.action == .sign {
+                    state = .signed
+                } else if !response.signers.contains(myUserId) && multisig.action == .unlock {
+                    state = .unlocked
+                } else {
+                    state = .pending
+                }
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let multisig = MultisigConfirmationViewController(requestID: response.requestID,
+                                                                      token: token,
+                                                                      amount: amount,
+                                                                      sendersThreshold: response.sendersThreshold,
+                                                                      senders: senders,
+                                                                      receiversThreshold: response.receivers.map(\.threshold).reduce(0, +),
+                                                                      receivers: receivers,
+                                                                      rawTransaction: response.rawTransaction,
+                                                                      viewKeys: response.views.joined(separator: ","),
+                                                                      action: multisig.action,
+                                                                      index: index,
+                                                                      state: state)
+                    let authentication = AuthenticationViewController(intentViewController: multisig)
+                    homeContainer.present(authentication, animated: true)
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
+    }
+    
     private static func checkCodesUrl(_ codeId: String, clearNavigationStack: Bool, webContext: MixinWebViewController.Context? = nil) -> Bool {
         guard !codeId.isEmpty, UUID(uuidString: codeId) != nil else {
             return false
@@ -974,6 +1032,44 @@ extension UrlWindow {
             }
         }
         return true
+    }
+    
+    private static func syncToken(assetID: String, hud: Hud) -> TokenItem? {
+        var token: TokenItem
+        if let localToken = TokenDAO.shared.tokenItem(with: assetID) {
+            token = localToken
+        } else {
+            switch SafeAPI.assets(id: assetID) {
+            case let .success(remoteToken):
+                TokenDAO.shared.save(token: remoteToken)
+                token = TokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
+            case let .failure(error):
+                Logger.general.error(category: "UrlWindow", message: "No token: \(assetID) from remote, error: \(error)")
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: text)
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        }
+        if token.chain == nil {
+            switch NetworkAPI.chain(id: token.chainID) {
+            case .success(let chain):
+                ChainDAO.shared.save([chain])
+                return TokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
+            case .failure(let error):
+                Logger.general.error(category: "UrlWindow", message: "No chain: \(token.chainID) from remote, error: \(error)")
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: text)
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        } else {
+            return token
+        }
     }
     
     private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
@@ -1066,6 +1162,24 @@ extension UrlWindow {
         }
         
         return users
+    }
+    
+    private static func syncUsersInOrder(userIDs ids: [String], hud: Hud) -> [UserItem]? {
+        guard let syncedItems = syncUsers(userIds: ids, hud: hud) else {
+            return nil
+        }
+        let items = ids.compactMap { id in
+            syncedItems.first(where: { $0.userId == id })
+        }
+        if items.count == ids.count {
+            return items
+        } else {
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: R.string.localizable.user_not_found())
+                hud.scheduleAutoHidden()
+            }
+            return nil
+        }
     }
     
     private static func collectibleToken(tokenId: String, hud: Hud) -> CollectibleToken? {

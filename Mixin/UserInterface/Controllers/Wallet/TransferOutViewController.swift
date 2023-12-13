@@ -45,8 +45,15 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var opponent: Opponent
     private var amountIntent: AmountIntent = .byToken
     
-    private var selectableFeeTokens: [FeeTokenItem]?
-    private var selectedFeeTokenIndex: Int?
+    private var selectableFeeItems: [WithdrawFeeItem]?
+    private var selectedFeeItemIndex: Int?
+    private var selectedFeeItem: WithdrawFeeItem? {
+        if let selectableFeeItems, let selectedFeeItemIndex {
+            return selectableFeeItems[selectedFeeItemIndex]
+        } else {
+            return nil
+        }
+    }
     
     private var availableTokens = [TokenItem]()
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
@@ -241,91 +248,60 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         let memo = memoTextField.text?.trim() ?? ""
         let traceID = self.traceID
-        let validator = PaymentValidator(traceID: traceID, token: token, memo: memo)
+        let amountIntent = self.amountIntent
+        
+        let payment = Payment(traceID: traceID,
+                              token: token,
+                              tokenAmount: tokenAmount,
+                              fiatMoneyAmount: fiatMoneyAmount,
+                              memo: memo)
+        let onPreconditonFailure = { (reason: PaymentPreconditionFailureReason) in
+            self.continueButton.isBusy = false
+            switch reason {
+            case .userCancelled:
+                self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+            case .description(let message):
+                self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                self.amountTextField.becomeFirstResponder()
+                showAutoHiddenHud(style: .error, text: message)
+            }
+        }
         
         switch opponent {
-        case let .contact(opponent):
-            validator.transfer(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, to: opponent) { [weak self] result in
-                guard let self else {
-                    return
-                }
+        case .contact(let opponent):
+            payment.checkPreconditions(transferTo: .user(opponent), on: self, onFailure: onPreconditonFailure) { operation in
                 self.continueButton.isBusy = false
-                switch result {
-                case .passed:
-                    let transfer = TransferConfirmationViewController(destination: .user(opponent),
-                                                                      token: token,
-                                                                      amountDisplay: amountIntent,
-                                                                      tokenAmount: tokenAmount,
-                                                                      fiatMoneyAmount: fiatMoneyAmount,
-                                                                      memo: memo,
-                                                                      traceID: traceID,
-                                                                      returnToURL: nil)
-                    let authentication = AuthenticationViewController(intentViewController: transfer)
-                    self.present(authentication, animated: true)
-                case .userCancelled:
-                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
-                case .failure(let message):
-                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
-                    self.amountTextField.becomeFirstResponder()
-                    showAutoHiddenHud(style: .error, text: message)
-                }
+                let transfer = TransferConfirmationViewController(operation: operation,
+                                                                  amountDisplay: amountIntent,
+                                                                  tokenAmount: tokenAmount,
+                                                                  fiatMoneyAmount: fiatMoneyAmount,
+                                                                  returnToURL: nil)
+                let authentication = AuthenticationViewController(intentViewController: transfer)
+                self.present(authentication, animated: true)
             }
-        case let .address(address):
-            guard let selectableFeeTokens, let selectedFeeTokenIndex else {
+        case .address(let address):
+            guard let feeItem = selectedFeeItem else {
                 return
             }
-            let feeTokenItem = selectableFeeTokens[selectedFeeTokenIndex]
-            validator.withdraw(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, to: address) { [weak self] result in
-                guard let self else {
-                    return
-                }
+            payment.checkPreconditions(withdrawTo: address, fee: feeItem, on: self, onFailure: onPreconditonFailure) { operation in
                 self.continueButton.isBusy = false
-                switch result {
-                case .passed:
-                    let withdraw = WithdrawalConfirmationViewController(amountDisplay: amountIntent,
-                                                                        withdrawalToken: token,
-                                                                        withdrawalTokenAmount: tokenAmount,
-                                                                        withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                                        feeToken: feeTokenItem.tokenItem,
-                                                                        feeAmount: feeTokenItem.decimalAmount,
-                                                                        address: address,
-                                                                        traceID: traceID)
-                    let authentication = AuthenticationViewController(intentViewController: withdraw)
-                    self.present(authentication, animated: true)
-                case .userCancelled:
-                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
-                    self.amountTextField.becomeFirstResponder()
-                case .failure(let message):
-                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
-                    self.amountTextField.becomeFirstResponder()
-                    showAutoHiddenHud(style: .error, text: message)
-                }
+                let withdraw = WithdrawalConfirmationViewController(operation: operation,
+                                                                    amountDisplay: amountIntent,
+                                                                    withdrawalTokenAmount: tokenAmount,
+                                                                    withdrawalFiatMoneyAmount: fiatMoneyAmount)
+                let authentication = AuthenticationViewController(intentViewController: withdraw)
+                self.present(authentication, animated: true)
             }
-        case let .mainnet(address):
-            validator.payment(amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount) { [weak self] result in
-                guard let self else {
-                    return
-                }
+        case .mainnet(let address):
+            payment.checkPreconditions(transferTo: .mainnet(address), on: self, onFailure: onPreconditonFailure) { operation in
                 self.continueButton.isBusy = false
-                switch result {
-                case .passed:
-                    let transfer = TransferConfirmationViewController(destination: .mainnet(address),
-                                                                      token: token,
-                                                                      amountDisplay: amountIntent,
-                                                                      tokenAmount: tokenAmount,
-                                                                      fiatMoneyAmount: fiatMoneyAmount,
-                                                                      memo: memo,
-                                                                      traceID: traceID,
-                                                                      returnToURL: nil)
-                    let authentication = AuthenticationViewController(intentViewController: transfer)
-                    self.present(authentication, animated: true)
-                case .userCancelled:
-                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
-                case .failure(let message):
-                    self.adjustBottomConstraintWhenKeyboardFrameChanges = true
-                    self.amountTextField.becomeFirstResponder()
-                    showAutoHiddenHud(style: .error, text: message)
-                }
+                let transfer = TransferConfirmationViewController(operation: operation,
+                                                                  amountDisplay: amountIntent,
+                                                                  tokenAmount: tokenAmount,
+                                                                  fiatMoneyAmount: fiatMoneyAmount,
+                                                                  returnToURL: nil)
+                let authentication = AuthenticationViewController(intentViewController: transfer)
+                self.present(authentication, animated: true)
             }
         }
     }
@@ -357,12 +333,12 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     @objc private func switchFeeToken(_ sender: Any) {
-        guard let selectableFeeTokens, let selectedFeeTokenIndex else {
+        guard let selectableFeeItems, let selectedFeeItemIndex else {
             return
         }
-        let selector = WithdrawFeeSelectorViewController(fees: selectableFeeTokens, selectedIndex: selectedFeeTokenIndex) { index in
-            self.selectedFeeTokenIndex = index
-            let feeToken = selectableFeeTokens[index]
+        let selector = WithdrawFeeSelectorViewController(fees: selectableFeeItems, selectedIndex: selectedFeeItemIndex) { index in
+            self.selectedFeeItemIndex = index
+            let feeToken = selectableFeeItems[index]
             self.updateNetworkFeeLabel(feeToken: feeToken)
         }
         present(selector, animated: true)
@@ -446,9 +422,9 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                     .reduce(into: [:]) { result, item in
                         result[item.assetID] = item
                     }
-                let feeTokens: [FeeTokenItem] = fees.compactMap { fee in
+                let feeTokens: [WithdrawFeeItem] = fees.compactMap { fee in
                     if let token = tokensMap[fee.assetID] {
-                        return FeeTokenItem(amount: fee.amount, tokenItem: token)
+                        return WithdrawFeeItem(amountString: fee.amount, tokenItem: token)
                     } else {
                         return nil
                     }
@@ -458,8 +434,8 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
                 let feeToken = feeTokens[0]
                 await MainActor.run {
-                    self.selectedFeeTokenIndex = 0
-                    self.selectableFeeTokens = feeTokens
+                    self.selectedFeeItemIndex = 0
+                    self.selectableFeeItems = feeTokens
                     self.withdrawFeeView.networkLabel.text = token.depositNetworkName
                     self.withdrawFeeView.minimumWithdrawalLabel.text = CurrencyFormatter.localizedString(from: address.decimalDust, format: .precision, sign: .never, symbol: .custom(token.symbol))
                     self.updateNetworkFeeLabel(feeToken: feeToken)
@@ -508,11 +484,11 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountTextField.reloadInputViews()
     }
     
-    private func updateNetworkFeeLabel(feeToken: FeeTokenItem) {
-        if feeToken.decimalAmount == 0 {
+    private func updateNetworkFeeLabel(feeToken: WithdrawFeeItem) {
+        if feeToken.amount == 0 {
             withdrawFeeView.networkFeeLabel.text = "0"
         } else {
-            withdrawFeeView.networkFeeLabel.text = CurrencyFormatter.localizedString(from: feeToken.decimalAmount, format: .precision, sign: .never, symbol: .custom(feeToken.tokenItem.symbol))
+            withdrawFeeView.networkFeeLabel.text = CurrencyFormatter.localizedString(from: feeToken.amount, format: .precision, sign: .never, symbol: .custom(feeToken.tokenItem.symbol))
         }
     }
     

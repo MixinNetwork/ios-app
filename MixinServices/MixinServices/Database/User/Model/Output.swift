@@ -77,6 +77,30 @@ public struct Output {
                   sequence: 0)
     }
     
+    public static func consolidation(
+        hash: String, asset: String, amount: String, mask: String, keys: [String],
+        createdAt: String, lastOutput: Output
+    ) -> Output {
+        Output(id: "\(hash):0".uuidDigest(),
+               transactionHash: hash,
+               outputIndex: 0,
+               asset: asset,
+               amount: amount,
+               mask: mask,
+               keys: keys,
+               receivers: lastOutput.receivers,
+               receiversHash: lastOutput.receiversHash,
+               receiversThreshold: 1,
+               extra: "",
+               state: Output.State.unspent.rawValue,
+               createdAt: createdAt,
+               updatedAt: "",
+               signedBy: "",
+               signedAt: "",
+               spentAt: "",
+               sequence: 0)
+    }
+    
 }
 
 extension Output: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

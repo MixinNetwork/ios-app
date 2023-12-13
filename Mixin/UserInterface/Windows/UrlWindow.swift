@@ -854,14 +854,15 @@ class UrlWindow {
 
 extension UrlWindow {
 
-    private static func checkPayment(_ payment: URLPayment) {
-        let hud = Hud()
-        if let view = UIApplication.homeContainerViewController?.view {
-            hud.show(style: .busy, text: "", on: view)
+    private static func checkPayment(_ urlPayment: URLPayment) {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
+            return
         }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: homeContainer.view)
         DispatchQueue.global().async {
-            let opponent: TransferConfirmationViewController.Destination
-            switch payment.address {
+            let destination: Payment.TransferDestination
+            switch urlPayment.address {
             case let .user(ids):
                 guard let syncedItems = syncUsers(userIds: ids, hud: hud) else {
                     return
@@ -877,14 +878,14 @@ extension UrlWindow {
                     return
                 }
                 if items.count == 1 {
-                    opponent = .user(items[0])
+                    destination = .user(items[0])
                 } else {
-                    opponent = .multisig(items)
+                    destination = .multisig(items)
                 }
             case let .mainnet(address):
-                opponent = .mainnet(address)
+                destination = .mainnet(address)
             }
-            if let request = payment.request {
+            if let request = urlPayment.request {
                 guard let token = TokenDAO.shared.tokenItem(with: request.asset) else {
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: R.string.localizable.asset_not_found())
@@ -894,42 +895,35 @@ extension UrlWindow {
                 }
                 let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
                 DispatchQueue.main.async {
-                    let validator = PaymentValidator(traceID: payment.trace, token: token, memo: payment.memo)
-                    let completion: (PaymentValidator.Result) -> Void = { result in
-                        switch result {
-                        case .passed:
-                            hud.hide()
-                            let transfer = TransferConfirmationViewController(destination: opponent,
-                                                                              token: token,
-                                                                              amountDisplay: .byToken,
-                                                                              tokenAmount: request.amount,
-                                                                              fiatMoneyAmount: fiatMoneyAmount,
-                                                                              memo: payment.memo,
-                                                                              traceID: payment.trace,
-                                                                              returnToURL: payment.returnTo)
-                            transfer.manipulateNavigationStackOnFinished = false
-                            let authentication = AuthenticationViewController(intentViewController: transfer)
-                            UIApplication.homeContainerViewController?.present(authentication, animated: true, completion: nil)
+                    let payment = Payment(traceID: urlPayment.trace,
+                                          token: token,
+                                          tokenAmount: request.amount,
+                                          fiatMoneyAmount: fiatMoneyAmount,
+                                          memo: urlPayment.memo)
+                    payment.checkPreconditions(transferTo: destination, on: homeContainer) { reason in
+                        switch reason {
                         case .userCancelled:
                             hud.hide()
-                        case .failure(let message):
+                        case .description(let message):
                             hud.set(style: .error, text: message)
                             hud.scheduleAutoHidden()
                         }
-                    }
-                    switch opponent {
-                    case .user(let user):
-                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, to: user, completion: completion)
-                    case .multisig:
-                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
-                    case .mainnet:
-                        validator.payment(amount: request.amount, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
+                    } onSuccess: { operation in
+                        hud.hide()
+                        let transfer = TransferConfirmationViewController(operation: operation,
+                                                                          amountDisplay: .byToken,
+                                                                          tokenAmount: request.amount,
+                                                                          fiatMoneyAmount: fiatMoneyAmount,
+                                                                          returnToURL: urlPayment.returnTo)
+                        transfer.manipulateNavigationStackOnFinished = false
+                        let authentication = AuthenticationViewController(intentViewController: transfer)
+                        homeContainer.present(authentication, animated: true)
                     }
                 }
             } else {
                 DispatchQueue.main.async {
                     let transfer: UIViewController
-                    switch opponent {
+                    switch destination {
                     case .user(let user):
                         transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
                     case .multisig:

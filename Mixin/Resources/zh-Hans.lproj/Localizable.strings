@@ -216,6 +216,8 @@
 "connection_failed" = "连接失败";
 "connection_unstable" = "当前通话网络不佳";
 "connection_establishment_failed" = "连接建立失败";
+"consolidation_utxo" = "合并 UTXO";
+"consolidation_utxo_description" = "您的 UTXOs 数量超过了256，为了发送体验，请输入 PIN 整合 UTXOs 后再操作";
 "contact" = "联系人";
 "contact_category" = "联系人";
 "contact_count" = "%d位联系人";

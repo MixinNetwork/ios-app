@@ -150,6 +150,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="actionImageView" destination="T6Z-7X-CaR" id="adD-1i-vIa"/>
                 <outlet property="contentStackView" destination="dex-Vs-kct" id="Jkg-nK-yP4"/>
                 <outlet property="firstReceiverAvatarView" destination="Uu6-Wp-ZE4" id="sN9-VM-tCT"/>
                 <outlet property="firstSenderAvatarView" destination="Rtc-bJ-EHz" id="xhS-B4-KLO"/>

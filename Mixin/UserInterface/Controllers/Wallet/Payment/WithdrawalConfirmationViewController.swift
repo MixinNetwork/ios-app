@@ -2,7 +2,7 @@ import UIKit
 import MixinServices
 import Tip
 
-final class WithdrawalConfirmationViewController: UIViewController {
+final class WithdrawalConfirmationViewController: PaymentConfirmationViewController {
     
     enum Error: Swift.Error, LocalizedError {
         
@@ -41,11 +41,6 @@ final class WithdrawalConfirmationViewController: UIViewController {
         
     }
     
-    @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var assetIconView: AssetIconView!
-    @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var valueLabel: UILabel!
-    
     private let operation: WithdrawPaymentOperation
     
     private let amountDisplay: AmountIntent
@@ -66,8 +61,7 @@ final class WithdrawalConfirmationViewController: UIViewController {
         self.amountDisplay = amountDisplay
         self.withdrawalTokenAmount = withdrawalTokenAmount
         self.withdrawalFiatMoneyAmount = withdrawalFiatMoneyAmount
-        let nib = R.nib.withdrawalConfirmationView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init()
     }
     
     required init?(coder: NSCoder) {
@@ -76,9 +70,6 @@ final class WithdrawalConfirmationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        contentStackView.spacing = 10
-        contentStackView.setCustomSpacing(4, after: amountLabel)
         
         let withdrawalToken = operation.withdrawalToken
         let feeAmount = operation.feeAmount

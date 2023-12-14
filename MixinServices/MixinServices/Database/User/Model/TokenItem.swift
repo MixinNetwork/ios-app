@@ -30,7 +30,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
         return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
     }()
     
-    public init(token: Token, balance: String, isHidden: Bool, chain: Chain) {
+    public init(token: Token, balance: String, isHidden: Bool, chain: Chain?) {
         self.balance = balance
         self.isHidden = isHidden
         self.chain = chain

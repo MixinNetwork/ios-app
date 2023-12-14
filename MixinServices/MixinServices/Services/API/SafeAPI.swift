@@ -175,3 +175,24 @@ extension SafeAPI {
     }
     
 }
+
+// MARK: - Multisig
+extension SafeAPI {
+    
+    public static func multisigs(
+        id: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<SafeMultisigResponse>) -> Void
+    ) {
+        request(method: .get, path: "/safe/multisigs/" + id, queue: queue, completion: completion)
+    }
+    
+    public static func signMultisigs(id: String, request: TransactionRequest) async throws -> Empty {
+        try await Self.request(method: .post, path: "/safe/multisigs/\(id)/sign", parameters: request)
+    }
+    
+    public static func unlockMultisigs(id: String) async throws -> Empty {
+        try await request(method: .post, path: "/safe/multisigs/\(id)/unlock")
+    }
+    
+}

@@ -2,13 +2,7 @@ import UIKit
 import MixinServices
 import Tip
 
-final class TransferConfirmationViewController: UIViewController {
-    
-    @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var assetIconView: AssetIconView!
-    @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var amountExchangeLabel: UILabel!
-    @IBOutlet weak var memoLabel: UILabel!
+final class TransferConfirmationViewController: PaymentConfirmationViewController {
     
     var manipulateNavigationStackOnFinished = true
     
@@ -34,8 +28,7 @@ final class TransferConfirmationViewController: UIViewController {
         self.tokenAmount = tokenAmount
         self.fiatMoneyAmount = fiatMoneyAmount
         self.returnToURL = returnToURL
-        let nib = R.nib.transferConfirmationView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init()
     }
     
     required init?(coder: NSCoder) {
@@ -45,28 +38,16 @@ final class TransferConfirmationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        contentStackView.spacing = 10
-        contentStackView.setCustomSpacing(4, after: amountLabel)
-        contentStackView.setCustomSpacing(4, after: amountExchangeLabel)
-        
         switch destination {
         case let .multisig(_, receivers):
             guard let account = LoginManager.shared.account else {
                 break
             }
-            let patternView = R.nib.multisigPatternView(withOwner: nil)!
-            contentStackView.insertArrangedSubview(patternView, at: 0)
-            switch ScreenHeight.current {
-            case .short:
-                contentStackView.setCustomSpacing(6, after: patternView)
-            case .medium:
-                contentStackView.setCustomSpacing(8, after: patternView)
-            case .long, .extraLong:
-                contentStackView.setCustomSpacing(16, after: patternView)
+            insertMultisigPatternView { patternView in
+                patternView.showSendersButton.addTarget(self, action: #selector(showSenders(_:)), for: .touchUpInside)
+                patternView.showReceiversButton.addTarget(self, action: #selector(showReceivers(_:)), for: .touchUpInside)
+                patternView.reloadData(senders: [UserItem.createUser(from: account)], receivers: receivers, action: .sign)
             }
-            patternView.showSendersButton.addTarget(self, action: #selector(showSenders(_:)), for: .touchUpInside)
-            patternView.showReceiversButton.addTarget(self, action: #selector(showReceivers(_:)), for: .touchUpInside)
-            patternView.reloadData(senders: [UserItem.createUser(from: account)], receivers: receivers)
         case .user, .mainnet:
             break
         }
@@ -76,15 +57,21 @@ final class TransferConfirmationViewController: UIViewController {
         switch amountDisplay {
         case .byToken:
             amountLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .whenNegative, symbol: .custom(token.symbol))
-            amountExchangeLabel.text = CurrencyFormatter.estimatedFiatMoneyValue(amount: fiatMoneyAmount)
+            valueLabel.text = CurrencyFormatter.estimatedFiatMoneyValue(amount: fiatMoneyAmount)
         case .byFiatMoney:
             amountLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .whenNegative) + " " + Currency.current.code
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .whenNegative, symbol: .custom(token.symbol))
+            valueLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .whenNegative, symbol: .custom(token.symbol))
         }
         
         let memo = operation.memo
-        memoLabel.isHidden = memo.isEmpty
-        memoLabel.text = memo
+        if !memo.isEmpty {
+            let memoLabel = UILabel()
+            memoLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+            memoLabel.textColor = .text
+            memoLabel.numberOfLines = 0
+            memoLabel.text = memo
+            contentStackView.addArrangedSubview(memoLabel)
+        }
     }
     
     @objc private func finish(_ sender: Any) {

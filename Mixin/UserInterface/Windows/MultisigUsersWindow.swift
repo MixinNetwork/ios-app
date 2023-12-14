@@ -38,7 +38,7 @@ class MultisigUsersWindow: BottomSheetView {
 extension MultisigUsersWindow: UITableViewDelegate, UITableViewDataSource {
 
     private func prepareTableView() {
-        tableView.register(UINib(nibName: "MultisigUserCell", bundle: nil), forCellReuseIdentifier: MultisigUserCell.cellIdentifier)
+        tableView.register(R.nib.multisigUserCell)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -49,7 +49,7 @@ extension MultisigUsersWindow: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MultisigUserCell.cellIdentifier) as! MultisigUserCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multisig_user, for: indexPath)!
         cell.render(user: users[indexPath.row])
         return cell
     }

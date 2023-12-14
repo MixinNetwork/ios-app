@@ -6,15 +6,15 @@ struct Payment {
     enum TransferDestination {
         
         case user(UserItem)
-        case multisig([UserItem])
+        case multisig(threshold: Int32, users: [UserItem])
         case mainnet(String)
         
         var debugDescription: String {
             switch self {
             case let .user(item):
                 return "<TransferDestination.user \(item.userId)>"
-            case let .multisig(receivers):
-                return "<TransferDestination.multisig \(receivers.map(\.userId))>"
+            case let .multisig(threshold, receivers):
+                return "<TransferDestination.multisig \(threshold):\(receivers.map(\.userId))>"
             case let .mainnet(address):
                 return "<TransferDestination.mainnet \(address)>"
             }

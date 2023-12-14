@@ -8,7 +8,8 @@ struct URLPayment {
     private static let host = "mixin.one"
     
     enum Address {
-        case user([String])
+        case user(String)
+        case multisig(threshold: Int32, userIDs: [String])
         case mainnet(String)
     }
     
@@ -37,7 +38,7 @@ struct URLPayment {
         let address: Address
         let addressString = pathComponents[2]
         if UUID.isValidLowercasedUUIDString(addressString) {
-            address = .user([addressString])
+            address = .user(addressString)
         } else if addressString.hasPrefix("XIN") {
             address = .mainnet(addressString)
         } else if let mixAddress = MIXAddress(string: addressString) {
@@ -191,7 +192,11 @@ extension URLPayment {
                     let uuid = UUID(data: data)
                     return uuid.uuidString.lowercased()
                 }
-                self.address = .user(userIDs.sorted(by: <))
+                if userIDs.count == 1 {
+                    self.address = .user(userIDs[0])
+                } else {
+                    self.address = .multisig(threshold: Int32(threshold), userIDs: userIDs.sorted(by: <))
+                }
             case 64 * membersCount:
                 let addresses = (0..<membersCount).map { i in
                     let spendKeyCount = 32

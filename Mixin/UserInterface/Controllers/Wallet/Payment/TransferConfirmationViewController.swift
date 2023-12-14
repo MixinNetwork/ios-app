@@ -50,7 +50,7 @@ final class TransferConfirmationViewController: UIViewController {
         contentStackView.setCustomSpacing(4, after: amountExchangeLabel)
         
         switch destination {
-        case .multisig(let receivers):
+        case let .multisig(_, receivers):
             guard let account = LoginManager.shared.account else {
                 break
             }
@@ -144,7 +144,7 @@ final class TransferConfirmationViewController: UIViewController {
     
     @objc private func showReceivers(_ sender: Any) {
         switch destination {
-        case .multisig(let receivers):
+        case let .multisig(_, receivers):
             let receivers = MultisigUsersViewController(title: .receivers, users: receivers)
             present(receivers, animated: true)
         default:

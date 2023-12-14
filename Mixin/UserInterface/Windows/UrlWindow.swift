@@ -863,7 +863,12 @@ extension UrlWindow {
         DispatchQueue.global().async {
             let destination: Payment.TransferDestination
             switch urlPayment.address {
-            case let .user(ids):
+            case let .user(id):
+                guard let items = syncUsers(userIds: [id], hud: hud) else {
+                    return
+                }
+                destination = .user(items[0])
+            case let .multisig(threshold, ids):
                 guard let syncedItems = syncUsers(userIds: ids, hud: hud) else {
                     return
                 }
@@ -877,11 +882,7 @@ extension UrlWindow {
                     }
                     return
                 }
-                if items.count == 1 {
-                    destination = .user(items[0])
-                } else {
-                    destination = .multisig(items)
-                }
+                destination = .multisig(threshold: threshold, users: items)
             case let .mainnet(address):
                 destination = .mainnet(address)
             }

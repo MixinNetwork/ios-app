@@ -262,7 +262,7 @@ extension DeviceTransferServerDataSource {
                     return nil
                 }
             }
-        case .safe_snapshot:
+        case .safeSnapshot:
             let safeSnapshot = SafeSnapshotDAO.shared.safeSnapshots(limit: limit, after: location.primaryID)
             databaseItemCount = safeSnapshot.count
             nextPrimaryID = safeSnapshot.last?.id

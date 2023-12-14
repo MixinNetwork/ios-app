@@ -282,7 +282,7 @@ extension DeviceTransferClient {
             case .snapshot:
                 let snapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSnapshot>.self, from: decryptedData).data
                 SnapshotDAO.shared.save(snapshot: snapshot.toSnapshot())
-            case .safe_snapshot:
+            case .safeSnapshot:
                 let safeSnapshot = try decoder.decode(DeviceTransferTypedRecord<DeviceTransferSafeSnapshot>.self, from: decryptedData).data
                 SafeSnapshotDAO.shared.save(snapshot: safeSnapshot.toSafeSnapshot(), postChangeNotification: false)
             case .sticker:

@@ -3,16 +3,18 @@ import MixinServices
 
 final class MultisigUsersViewController: PopupSelectorViewController {
     
-    enum Title {
+    enum Content {
         case senders
         case receivers
     }
     
-    private let titleContent: Title
+    private let content: Content
+    private let threshold: Int
     private let users: [UserItem]
     
-    init(title: Title, users: [UserItem]) {
-        self.titleContent = title
+    init(content: Content, threshold: Int, users: [UserItem]) {
+        self.content = content
+        self.threshold = threshold
         self.users = users
         super.init()
     }
@@ -23,17 +25,24 @@ final class MultisigUsersViewController: PopupSelectorViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .background
+        
         tableView.rowHeight = 80
         tableView.register(R.nib.multisigUserCell)
         tableView.dataSource = self
         tableView.delegate = self
-        switch titleContent {
+        tableView.isScrollEnabled = true
+        tableView.contentInset.bottom = 20
+        
+        let thresholdRepresentation = "\(threshold)/\(users.count)"
+        switch content {
         case .senders:
-            titleView.titleLabel.text = R.string.localizable.senders()
+            titleView.titleLabel.text = R.string.localizable.multisig_senders_threshold(thresholdRepresentation)
         case.receivers:
-            titleView.titleLabel.text = R.string.localizable.receivers()
+            titleView.titleLabel.text = R.string.localizable.multisig_receivers_threshold(thresholdRepresentation)
         }
+        
         preferredContentSize.height = 490
     }
     

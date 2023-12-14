@@ -50,7 +50,7 @@ struct TransferPaymentOperation {
         case let .user(opponent):
             ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: [opponent.userId], senderIDs: [senderID], traceID: traceID)
             isConsolidation = opponent.userId == myUserId
-        case let .multisig(receivers):
+        case let .multisig(_, receivers):
             ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: receivers.map(\.userId), senderIDs: [senderID], traceID: traceID)
             isConsolidation = false
         case .mainnet:
@@ -72,11 +72,22 @@ struct TransferPaymentOperation {
         var error: NSError?
         let tx: String
         switch destination {
-        case .user, .multisig:
-            let receiverGhostKey = ghostKeys[0]
+        case .user:
             tx = KernelBuildTx(kernelAssetID,
                                amount,
                                1,
+                               receiverKeys,
+                               receiverMask,
+                               inputsData,
+                               changeKeys,
+                               changeMask,
+                               memo,
+                               "",
+                               &error)
+        case let .multisig(threshold, _):
+            tx = KernelBuildTx(kernelAssetID,
+                               amount,
+                               threshold,
                                receiverKeys,
                                receiverMask,
                                inputsData,
@@ -137,7 +148,7 @@ struct TransferPaymentOperation {
             trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
             rawTransactionReceiverID = opponent.userId
             snapshotOpponentID = opponent.userId
-        case let .multisig(receivers):
+        case let .multisig(_, receivers):
             trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: "", destination: nil, tag: nil)
             rawTransactionReceiverID = receivers.map(\.userId).joined(separator: ",")
             snapshotOpponentID = ""

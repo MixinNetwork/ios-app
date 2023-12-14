@@ -541,6 +541,8 @@
 "monthly" = "Monthly";
 "more" = "More";
 "move_and_scale" = "Move and Scale";
+"multisig_receivers_threshold" = "Receivers (%@)";
+"multisig_senders_threshold" = "Senders (%@)";
 "multisig_state_signed" = "This multisig link has already been signed by yourself, you can not make a duplicate operation.";
 "multisig_state_unlocked" = "This multisig link has already been unlocked by someone, you can not make a duplicate operation.";
 "multisig_transaction" = "Multisig Transaction";

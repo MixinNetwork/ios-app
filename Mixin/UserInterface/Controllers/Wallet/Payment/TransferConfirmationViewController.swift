@@ -135,7 +135,7 @@ final class TransferConfirmationViewController: UIViewController {
             guard let account = LoginManager.shared.account else {
                 break
             }
-            let senders = MultisigUsersViewController(title: .senders, users: [UserItem.createUser(from: account)])
+            let senders = MultisigUsersViewController(content: .senders, threshold: 1, users: [UserItem.createUser(from: account)])
             present(senders, animated: true)
         default:
             break
@@ -144,8 +144,8 @@ final class TransferConfirmationViewController: UIViewController {
     
     @objc private func showReceivers(_ sender: Any) {
         switch destination {
-        case let .multisig(_, receivers):
-            let receivers = MultisigUsersViewController(title: .receivers, users: receivers)
+        case let .multisig(threshold, receivers):
+            let receivers = MultisigUsersViewController(content: .receivers, threshold: Int(threshold), users: receivers)
             present(receivers, animated: true)
         default:
             break

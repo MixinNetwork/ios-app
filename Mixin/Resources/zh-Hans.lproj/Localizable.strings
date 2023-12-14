@@ -541,6 +541,8 @@
 "monthly" = "每月";
 "more" = "更多";
 "move_and_scale" = "移动和缩放";
+"multisig_receivers_threshold" = "交易接收人（%@）";
+"multisig_senders_threshold" = "交易发起人（%@）";
 "multisig_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 "multisig_transaction" = "多重签名交易";

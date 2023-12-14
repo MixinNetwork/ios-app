@@ -541,6 +541,8 @@
 "monthly" = "Ежемесячно";
 "more" = "Больше";
 "move_and_scale" = "Cдвиг и масштаб";
+"multisig_receivers_threshold" = "Получатели (%@)";
+"multisig_senders_threshold" = "Senders (%@)";
 "multisig_state_signed" = "Эта мультиподписная ссылка уже подписана вами, вы не можете сделать дублирующую операцию.";
 "multisig_state_unlocked" = "Эта мультиподписная ссылка уже кем-то разблокирована, дублировать операцию нельзя.";
 "multisig_transaction" = "Мультиподписная транзакция";

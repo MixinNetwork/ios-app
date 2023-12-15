@@ -1054,19 +1054,25 @@ extension UrlWindow {
             }
         }
         if token.chain == nil {
-            switch NetworkAPI.chain(id: token.chainID) {
-            case .success(let chain):
-                ChainDAO.shared.save([chain])
-                return TokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
-            case .failure(let error):
-                Logger.general.error(category: "UrlWindow", message: "No chain: \(token.chainID) from remote, error: \(error)")
-                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: text)
-                    hud.scheduleAutoHidden()
+            let chain: Chain
+            if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
+                chain = localChain
+            } else {
+                switch NetworkAPI.chain(id: token.chainID) {
+                case .success(let remoteChain):
+                    ChainDAO.shared.save([remoteChain])
+                    chain = remoteChain
+                case .failure(let error):
+                    Logger.general.error(category: "UrlWindow", message: "No chain: \(token.chainID) from remote, error: \(error)")
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: text)
+                        hud.scheduleAutoHidden()
+                    }
+                    return nil
                 }
-                return nil
             }
+            return TokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
         } else {
             return token
         }

@@ -13,11 +13,11 @@ class UrlWindow {
     
     class func checkUrl(
         url: URL,
-        webContext: MixinWebViewController.Context? = nil,
+        caller: MixinWebViewController? = nil,
         clearNavigationStack: Bool = true,
         presentHintOnUnsupportedMixinSchema: Bool = true
     ) -> Bool {
-        if let payment = URLPayment(url: url) {
+        if let payment = URLPayment(url: url, from: caller) {
             checkPayment(payment)
             return true
         } else if let multisig = MultisigURL(url: url) {
@@ -27,7 +27,7 @@ class UrlWindow {
             let result: Bool
             switch mixinURL {
             case let .codes(code):
-                result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
+                result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: caller?.context)
             case .pay:
                 if let transfer = try? InternalTransfer(string: url.absoluteString) {
                     performInternalTransfer(transfer)
@@ -48,7 +48,7 @@ class UrlWindow {
             case let .transfer(id):
                 result = checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case let .send(context):
-                result = checkSendUrl(sharingContext: context, webContext: webContext)
+                result = checkSendUrl(sharingContext: context, webContext: caller?.context)
             case let .device(id, publicKey):
                 checkDevice(id: id, publicKey: publicKey)
                 result = true
@@ -908,7 +908,7 @@ extension UrlWindow {
                                                                           amountDisplay: .byToken,
                                                                           tokenAmount: request.amount,
                                                                           fiatMoneyAmount: fiatMoneyAmount,
-                                                                          returnToURL: urlPayment.returnTo)
+                                                                          merchant: urlPayment.merchant)
                         transfer.manipulateNavigationStackOnFinished = false
                         let authentication = AuthenticationViewController(intentViewController: transfer)
                         homeContainer.present(authentication, animated: true)

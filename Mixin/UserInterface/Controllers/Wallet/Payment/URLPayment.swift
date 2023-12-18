@@ -18,13 +18,18 @@ struct URLPayment {
         let amount: Decimal
     }
     
+    struct Merchant {
+        let url: URL
+        private(set) weak var viewController: MixinWebViewController?
+    }
+    
     let address: Address
     let request: Request?
     let memo: String
     let trace: String
-    let returnTo: URL?
+    let merchant: Merchant?
     
-    init?(url: URL) {
+    init?(url: URL, from viewController: MixinWebViewController? = nil) {
         guard url.scheme == Self.scheme && url.host == Self.host else {
             return nil
         }
@@ -110,20 +115,23 @@ struct URLPayment {
             trace = UUID().uuidString.lowercased()
         }
         
-        let returnToURL: URL?
-        if let returnTo = queries["return_to"], let data = returnTo.data(using: .utf8) {
+        let merchant: Merchant?
+        if let returnTo = queries["return_to"],
+           let data = returnTo.data(using: .utf8),
+           let url = URL(dataRepresentation: data, relativeTo: nil)
+        {
             // Resolve issues when the string contains percent symbol
             // e.g. queries with `#` which has been converted to `%23`
-            returnToURL = URL(dataRepresentation: data, relativeTo: nil)
+            merchant = Merchant(url: url, viewController: viewController)
         } else {
-            returnToURL = nil
+            merchant = nil
         }
         
         self.address = address
         self.request = request
         self.memo = queries["memo"] ?? ""
         self.trace = trace
-        self.returnTo = returnToURL
+        self.merchant = merchant
     }
     
 }

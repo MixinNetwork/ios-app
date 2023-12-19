@@ -275,7 +275,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                                   amountDisplay: amountIntent,
                                                                   tokenAmount: tokenAmount,
                                                                   fiatMoneyAmount: fiatMoneyAmount,
-                                                                  merchant: nil)
+                                                                  redirection: nil)
                 let authentication = AuthenticationViewController(intentViewController: transfer)
                 self.present(authentication, animated: true)
             }
@@ -299,7 +299,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                                   amountDisplay: amountIntent,
                                                                   tokenAmount: tokenAmount,
                                                                   fiatMoneyAmount: fiatMoneyAmount,
-                                                                  merchant: nil)
+                                                                  redirection: nil)
                 let authentication = AuthenticationViewController(intentViewController: transfer)
                 self.present(authentication, animated: true)
             }

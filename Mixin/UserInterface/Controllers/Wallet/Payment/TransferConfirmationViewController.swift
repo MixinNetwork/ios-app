@@ -10,7 +10,7 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
     private let amountDisplay: AmountIntent
     private let tokenAmount: Decimal
     private let fiatMoneyAmount: Decimal
-    private let merchant: URLPayment.Merchant?
+    private let redirection: URL?
     
     private var destination: Payment.TransferDestination {
         operation.destination
@@ -21,13 +21,13 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
         amountDisplay: AmountIntent,
         tokenAmount: Decimal,
         fiatMoneyAmount: Decimal,
-        merchant: URLPayment.Merchant?
+        redirection: URL?
     ) {
         self.operation = operation
         self.amountDisplay = amountDisplay
         self.tokenAmount = tokenAmount
         self.fiatMoneyAmount = fiatMoneyAmount
-        self.merchant = merchant
+        self.redirection = redirection
         super.init()
     }
     
@@ -107,17 +107,12 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
     }
     
     @objc private func gotoMerchant(_ sender: Any) {
-        guard let merchant = merchant else {
+        guard let redirection = redirection else {
             finish(sender)
             return
         }
         authenticationViewController?.presentingViewController?.dismiss(animated: true) {
-            if let viewController = merchant.viewController, viewController.view.window != nil {
-                let request = URLRequest(url: merchant.url)
-                viewController.webView.load(request)
-            } else {
-                UIApplication.shared.open(merchant.url)
-            }
+            UIApplication.shared.open(redirection)
         }
     }
     
@@ -176,7 +171,7 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
     
     var options: AuthenticationIntentOptions {
         var options: AuthenticationIntentOptions = [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
-        if merchant != nil {
+        if redirection != nil {
             options.insert(.neverRequestAddBiometricAuthentication)
         }
         switch destination {
@@ -199,7 +194,7 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!
-                    if merchant == nil {
+                    if redirection == nil {
                         successView.doneButton.setTitle(R.string.localizable.done(), for: .normal)
                         successView.doneButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
                     } else {

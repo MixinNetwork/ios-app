@@ -7,18 +7,40 @@ import MixinServices
 
 class UrlWindow {
     
-    enum SyncError: Error {
-        case invalidAddress
+    enum Source {
+        
+        case openURL
+        case userActivity
+        case webView(MixinWebViewController.Context)
+        case other
+        
+        var webContext: MixinWebViewController.Context? {
+            switch self {
+            case .webView(let context):
+                return context
+            default:
+                return nil
+            }
+        }
+        
+        var isExternal: Bool {
+            switch self {
+            case .openURL, .userActivity:
+                return true
+            case .webView, .other:
+                return false
+            }
+        }
+        
     }
     
     class func checkUrl(
         url: URL,
-        caller: MixinWebViewController? = nil,
-        clearNavigationStack: Bool = true,
-        presentHintOnUnsupportedMixinSchema: Bool = true
+        from source: Source = .other,
+        clearNavigationStack: Bool = true
     ) -> Bool {
-        if let payment = URLPayment(url: url, from: caller) {
-            checkPayment(payment)
+        if let payment = SafePaymentURL(url: url) {
+            checkSafePaymentURL(payment, from: source)
             return true
         } else if let multisig = MultisigURL(url: url) {
             checkMultisig(multisig)
@@ -27,7 +49,7 @@ class UrlWindow {
             let result: Bool
             switch mixinURL {
             case let .codes(code):
-                result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: caller?.context)
+                result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: source.webContext)
             case .pay:
                 if let transfer = try? InternalTransfer(string: url.absoluteString) {
                     performInternalTransfer(transfer)
@@ -48,7 +70,7 @@ class UrlWindow {
             case let .transfer(id):
                 result = checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case let .send(context):
-                result = checkSendUrl(sharingContext: context, webContext: caller?.context)
+                result = checkSendUrl(sharingContext: context, webContext: source.webContext)
             case let .device(id, publicKey):
                 checkDevice(id: id, publicKey: publicKey)
                 result = true
@@ -58,14 +80,14 @@ class UrlWindow {
             case let .deviceTransfer(command):
                 result = checkDeviceTransfer(command: command)
             case .unknown:
-                if presentHintOnUnsupportedMixinSchema && url.scheme == MixinURL.scheme {
+                if source.isExternal && url.scheme == MixinURL.scheme {
                     UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
                     result = true
                 } else {
                     result = false
                 }
             }
-            if !result && presentHintOnUnsupportedMixinSchema && url.scheme == MixinURL.scheme {
+            if !result && source.isExternal && url.scheme == MixinURL.scheme {
                 UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
                 return true
             } else {
@@ -807,18 +829,18 @@ class UrlWindow {
         return false
     }
     
-    class func checkDeepLinking(url: URL) -> Bool {
+    class func checkURLNowOrAfterScreenUnlocked(url: URL, from source: Source) -> Bool {
         guard LoginManager.shared.isLoggedIn else {
             return false
         }
         if ScreenLockManager.shared.isLocked {
             ScreenLockManager.shared.screenLockViewDidHide = {
-                _ = checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
+                _ = checkUrl(url: url, from: source)
                 ScreenLockManager.shared.screenLockViewDidHide = nil
             }
             return true
         } else {
-            return checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
+            return checkUrl(url: url, from: source)
         }
     }
     
@@ -857,7 +879,7 @@ class UrlWindow {
 
 extension UrlWindow {
 
-    private static func checkPayment(_ urlPayment: URLPayment) {
+    private static func checkSafePaymentURL(_ paymentURL: SafePaymentURL, from source: Source) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
@@ -865,7 +887,7 @@ extension UrlWindow {
         hud.show(style: .busy, text: "", on: homeContainer.view)
         DispatchQueue.global().async {
             let destination: Payment.TransferDestination
-            switch urlPayment.address {
+            switch paymentURL.address {
             case let .user(id):
                 guard let items = syncUsers(userIds: [id], hud: hud) else {
                     return
@@ -883,17 +905,17 @@ extension UrlWindow {
             case let .mainnet(address):
                 destination = .mainnet(address)
             }
-            if let request = urlPayment.request {
+            if let request = paymentURL.request {
                 guard let token = syncToken(assetID: request.asset, hud: hud) else {
                     return
                 }
                 let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
                 DispatchQueue.main.async {
-                    let payment = Payment(traceID: urlPayment.trace,
+                    let payment = Payment(traceID: paymentURL.trace,
                                           token: token,
                                           tokenAmount: request.amount,
                                           fiatMoneyAmount: fiatMoneyAmount,
-                                          memo: urlPayment.memo)
+                                          memo: paymentURL.memo)
                     payment.checkPreconditions(transferTo: destination, on: homeContainer) { reason in
                         switch reason {
                         case .userCancelled:
@@ -904,11 +926,12 @@ extension UrlWindow {
                         }
                     } onSuccess: { operation in
                         hud.hide()
+                        let redirection = source.isExternal ? paymentURL.redirection : nil
                         let transfer = TransferConfirmationViewController(operation: operation,
                                                                           amountDisplay: .byToken,
                                                                           tokenAmount: request.amount,
                                                                           fiatMoneyAmount: fiatMoneyAmount,
-                                                                          merchant: urlPayment.merchant)
+                                                                          redirection: redirection)
                         transfer.manipulateNavigationStackOnFinished = false
                         let authentication = AuthenticationViewController(intentViewController: transfer)
                         homeContainer.present(authentication, animated: true)

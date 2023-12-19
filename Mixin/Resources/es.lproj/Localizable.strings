@@ -423,6 +423,7 @@
 "follow_us_on_twitter" = "Síguenos en Twitter";
 "forward" = "Adelante";
 "fourth_pin_confirm_hint" = "Sí, hay una cuarta confirmación de PIN y le prometo que es la última para asegurarse de que has recordado tu PIN. El PIN es irrecuperable si se pierde.";
+"free" = "FREE";
 "from" = "De";
 "games" = "Juegos";
 "generating" = "Generando...";
@@ -809,6 +810,10 @@
 "send_signed_message_confirmation" = "The message has been signed successfully, click the button below to send or discard the signed message";
 "send_this_location" = "Enviar esta ubicación";
 "send_to" = "Enviar a %@";
+"send_to_address" = "Send to Address";
+"send_to_address_description" = "Send crypto to a wallet or exchange";
+"send_to_contact" = "Send to Contact";
+"send_to_contact_description" = "Send crypto to Mixin contact";
 "send_to_developer" = "Enviar al Desarrollador";
 "send_to_title" = "Enviar a";
 "send_verification_code_frequent" = "Envíe el código de verificación con demasiada frecuencia, vuelve a intentarlo más tarde.";

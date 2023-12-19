@@ -423,6 +423,7 @@
 "follow_us_on_twitter" = "关注我们的 Twitter";
 "forward" = "转发";
 "fourth_pin_confirm_hint" = "这是最后一次确认 PIN，记住：PIN 丢失将永远无法找回！";
+"free" = "免手续费";
 "from" = "来自";
 "games" = "游戏";
 "generating" = "正在生成...";
@@ -809,6 +810,10 @@
 "send_signed_message_confirmation" = "此消息已被签名，点击下方按钮以发送或丢弃";
 "send_this_location" = "发送这个位置";
 "send_to" = "发送给 %@";
+"send_to_address" = "转出到地址";
+"send_to_address_description" = "转出加密货币到钱包或交易所";
+"send_to_contact" = "转出到联系人";
+"send_to_contact_description" = "转出加密货币到 Mixin 联系人";
 "send_to_developer" = "把日志发给开发者";
 "send_to_title" = "转给";
 "send_verification_code_frequent" = "发送验证码太频繁，请稍后再试";

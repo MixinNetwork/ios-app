@@ -927,6 +927,9 @@
 		94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */; };
 		94FCB5FF264673C400CCC8FD /* TranscriptPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */; };
 		94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */; };
+		94FE0C492B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */; };
+		94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */; };
+		94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */; };
 		94FFD9A429C199FD0054DCA7 /* BIP32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FFD9A329C199FD0054DCA7 /* BIP32Tests.swift */; };
 		99F232BF0A2DDDA98D021A03 /* Pods_MixinDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E49F74E7017E780C23E3311F /* Pods_MixinDebug.framework */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
@@ -2111,6 +2114,9 @@
 		94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageComposer.swift; sourceTree = "<group>"; };
 		94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptPreviewViewController.swift; sourceTree = "<group>"; };
 		94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAttachmentUploadJob.swift; sourceTree = "<group>"; };
+		94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationSelectorViewController.swift; sourceTree = "<group>"; };
+		94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationCell.swift; sourceTree = "<group>"; };
+		94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendingDestinationCell.xib; sourceTree = "<group>"; };
 		94FFD9A329C199FD0054DCA7 /* BIP32Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP32Tests.swift; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
@@ -3870,6 +3876,8 @@
 				7BDFAE932559165800296F8B /* CompactAssetCell.xib */,
 				7B0BE45F21A5630500B91A1E /* CompactAssetCell.swift */,
 				DFB19005233220290021CAF3 /* PINLogCell.swift */,
+				94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */,
+				94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4038,6 +4046,7 @@
 				7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */,
 				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */,
+				94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
 				94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */,
 				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
@@ -4696,6 +4705,7 @@
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
+				94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */,
 				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
 				7C53049728FE6F4400567CF6 /* AuthorizationScopePreviewView.xib in Resources */,
 				7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */,
@@ -5366,6 +5376,7 @@
 				946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */,
 				7C5DFE34284F3EA3008733FC /* UserCenterTableHeaderView.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
+				94FE0C492B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift in Sources */,
 				7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */,
@@ -5713,6 +5724,7 @@
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
+				94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */,
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,
 				94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */,
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,

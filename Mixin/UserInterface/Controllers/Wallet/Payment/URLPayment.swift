@@ -4,7 +4,7 @@ import Tip
 
 struct URLPayment {
     
-    private static let scheme = "https"
+    private static let schemes = ["mixin", "https"]
     private static let host = "mixin.one"
     
     enum Address {
@@ -30,7 +30,10 @@ struct URLPayment {
     let merchant: Merchant?
     
     init?(url: URL, from viewController: MixinWebViewController? = nil) {
-        guard url.scheme == Self.scheme && url.host == Self.host else {
+        guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
+            return nil
+        }
+        guard url.host == Self.host else {
             return nil
         }
         

@@ -1,4 +1,5 @@
 import UIKit
+import AppCenterCrashes
 import MixinServices
 
 class TIPPopupInputViewController: PinValidationViewController {
@@ -136,6 +137,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
                 await MainActor.run(body: onSuccess)
             } catch {
+                Crashes.trackError(error, properties: ["error": "\(error)", "location": "PI.ContinueCreate"], attachments: nil)
                 reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to create: \(error)")
                 await MainActor.run {
@@ -195,6 +197,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {
+                Crashes.trackError(error, properties: ["error": "\(error)", "location": "PI.ContinueChange.Node"], attachments: nil)
                 reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
@@ -208,6 +211,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     oldPIN = nil
                 }
             } catch {
+                Crashes.trackError(error, properties: ["error": "\(error)", "location": "PI.ContinueChange"], attachments: nil)
                 reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {

@@ -148,6 +148,7 @@ class DeviceTransferProgressViewController: UIViewController {
             AppGroupUserDefaults.User.needsRebuildDatabase = true
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
+            OutputDAO.shared.deleteAll()
             AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
         }
     }

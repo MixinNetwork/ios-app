@@ -101,8 +101,8 @@
 "auto_download_hint" = "Измените настройки автоматической загрузки для медиафайлов. Голосовые сообщения всегда загружаются автоматически.";
 "auto_lock" = "Автоматическая блокировка";
 "automatic" = "Автоматический";
-"back_to_merchant" = "Back to Merchant";
 "back_to_chat" = "Вернуться к чату";
+"back_to_merchant" = "Back to Merchant";
 "back_up_now" = "Резервное копирование сейчас";
 "background_preview" = "Фоновый просмотр";
 "backing_up" = "Резервное копирование...";
@@ -213,9 +213,9 @@
 "connected" = "Соединено";
 "connected_dapps" = "Connected Dapps";
 "connecting" = "Подключение";
+"connection_establishment_failed" = "Connection establishment failed";
 "connection_failed" = "Connection Failed";
 "connection_unstable" = "Нестабильное соединение";
-"connection_establishment_failed" = "Connection establishment failed";
 "consolidation_utxo" = "Consolidation UTXO";
 "consolidation_utxo_description" = "Your number of UTXOs exceeds 256. For sending experience, please enter the PIN to consolidating UTXOs before operating.";
 "contact" = "Контакт";
@@ -893,7 +893,7 @@
 "stop_syncing_hint" = "Do you want to stop syncing chat history?";
 "storage_usage" = "Использование хранилища";
 "stranger_hint" = "Этого отправителя нет в ваших контактах";
-"successful" = "Successful";
+"successful" = "Успешный";
 "suspicious_link" = "Подозрительная ссылка";
 "symbol" = "Символ";
 "symbol_withdrawal" = "%@ Снятие средств";
@@ -956,9 +956,9 @@
 "try_again" = "Попробуйте еще раз";
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
-"unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
-"unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "turn_on_notifications" = "Включить уведомления";
+"unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
+"unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
 "unable_to_save_photo" = "Не удалось сохранить фото.";
 "unable_to_save_video" = "Не удалось сохранить видео.";

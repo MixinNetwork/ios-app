@@ -14,7 +14,7 @@
 "add_contact" = "Añadir contacto";
 "add_conversations" = "Añadir conversaciones";
 "add_emergency_contact" = "Añadir contacto de emergencia";
-"add_memo" = "Añadir memorando";
+"add_memo" = "Añadir nota";
 "add_participants" = "Añadir participantes";
 "add_sticker" = "Añadir pegatina";
 "add_stickers" = "Añadir pegatinas";
@@ -202,7 +202,7 @@
 "cleared" = "Borrado";
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
-"closing_balance" = "Saldo de cierre";
+"closing_balance" = "Closing Balance";
 "collectible_token_id" = "#%@";
 "combine_and_forward" = "Combinar y avanzar";
 "compress_database" = "Comprimir base de datos";
@@ -213,9 +213,9 @@
 "connected" = "Conectado";
 "connected_dapps" = "Connected Dapps";
 "connecting" = "Conectando";
+"connection_establishment_failed" = "Connection establishment failed";
 "connection_failed" = "Connection Failed";
 "connection_unstable" = "Conexión inestable";
-"connection_establishment_failed" = "Connection establishment failed";
 "consolidation_utxo" = "Consolidation UTXO";
 "consolidation_utxo_description" = "Your number of UTXOs exceeds 256. For sending experience, please enter the PIN to consolidating UTXOs before operating.";
 "contact" = "Contacto";
@@ -620,7 +620,7 @@
 "open_in_maps" = "Abrir en Mapas";
 "open_link" = "Abrir enlace: %@";
 "open_url" = "Abrir URL";
-"opening_balance" = "Saldo inicial";
+"opening_balance" = "Opening Balance";
 "operation_failed" = "La operación ha fallado, intenta nuevamente más tarde";
 "optimize_database" = "Optimizar base de datos";
 "optimized" = "Optimizado";
@@ -873,8 +873,8 @@
 "signature_request_warning" = "We cannot verify this signature request. Make sure you trust this app before signing this request.";
 "skip" = "Saltar";
 "slide_to_cancel" = "Deslizar para cancelar";
-"snapshot_hash" = "Hash de Instantánea";
 "slow" = "Slow";
+"snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Instantánea no encontrada.";
 "social" = "Social";
 "sort_by" = "Ordenar por";
@@ -936,10 +936,10 @@
 "transfer" = "Transferir";
 "transfer_amount_count_down" = "Importe de la transferencia(%@)";
 "transfer_error_pin_incorrect_with_times" = "ERROR 20119: PIN incorrecto. Todavía tienes %@ oportunidades.";
-"transfer_memo" = "Memorando (opcional)";
 "transfer_failed" = "Transfer failed";
 "transfer_from_phone_hint" = "Transfer your chat history from your another phone.";
 "transfer_hint" = "Sync your chat history to a new device, please make sure both devices are connected to the same Wi-Fi or hotspot.";
+"transfer_memo" = "Nota (opcional)";
 "transfer_notifications" = "Transferir notificaciones";
 "transfer_now" = "Transfer Now";
 "transfer_qrcode_prompt" = "Escanea el código QR para transferirme en Mixin";

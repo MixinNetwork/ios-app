@@ -101,8 +101,8 @@
 "auto_download_hint" = "媒體自動下載設定，所有語音訊息將自動下載。";
 "auto_lock" = "自動鎖定";
 "automatic" = "自動";
-"back_to_merchant" = "返回商家";
 "back_to_chat" = "返回聊天";
+"back_to_merchant" = "返回商家";
 "back_up_now" = "立即備份";
 "background_preview" = "背景預覽";
 "backing_up" = "正在備份...";
@@ -213,9 +213,9 @@
 "connected" = "已連線";
 "connected_dapps" = "已連線的 Dapp";
 "connecting" = "正在連線";
+"connection_establishment_failed" = "連線建立失敗";
 "connection_failed" = "連線失敗";
 "connection_unstable" = "當前通話網路不佳";
-"connection_establishment_failed" = "連線建立失敗";
 "consolidation_utxo" = "合併 UTXO";
 "consolidation_utxo_description" = "您的 UTXOs 數量超過了256，為了傳送體驗，請輸入 PIN 整合 UTXOs 後再操作";
 "contact" = "聯絡人";
@@ -321,9 +321,9 @@
 "devices_on_same_network" = "請確保兩臺裝置接入同一個 Wi-Fi 或熱點";
 "diagnose" = "診斷";
 "diagnose_warning_hint" = "⚠️請在 Mixin 團隊指導下使用";
-"disable" = "禁用";
+"disable" = "停用";
 "disable_biometric_pay_confirmation" = "確定暫停使用%@支付？";
-"disable_disappearing_message" = "%@禁用了限時訊息";
+"disable_disappearing_message" = "%@停用了限時訊息";
 "disappearing_message" = "限時訊息";
 "disappearing_message_hint" = "啟用後，在此聊天中傳送和接收的新資訊在被看到後會消失，閱讀檔案以瞭解更多。";
 "disappearing_option_1" = "30 秒";
@@ -1056,7 +1056,7 @@
 "withdrawal_minimum_withdrawal" = "最小提現數量：";
 "withdrawal_network_fee" = "網路手續費：";
 "withdrawal_no_memo" = "點選不使用 Memo（備註）";
-"withdrawal_pending" = "充值中";
+"withdrawal_pending" = "提現中";
 "withdrawal_suspended" = "%@ 提現暫停";
 "withdrawal_suspended_description" = "%@ 提現已暫停，可能的原因是因為節點故障、區塊鏈網路硬分叉或者擁堵，請耐心等候並稍後重試";
 "withdrawal_to" = "提現到 %@";

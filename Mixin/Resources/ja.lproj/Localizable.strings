@@ -101,8 +101,8 @@
 "auto_download_hint" = "メディアを自動ダウンロードする設定に変更する：音声メッセージは常に自動ダウンロードされます";
 "auto_lock" = "自動ロック";
 "automatic" = "自動";
-"back_to_merchant" = "Back to Merchant";
 "back_to_chat" = "チャットに戻る";
+"back_to_merchant" = "Back to Merchant";
 "back_up_now" = "今すぐバックアップ";
 "background_preview" = "背景のプレビュー";
 "backing_up" = "バックアップしています...";
@@ -213,9 +213,9 @@
 "connected" = "接続済";
 "connected_dapps" = "Connected Dapps";
 "connecting" = "接続中";
+"connection_establishment_failed" = "Connection establishment failed";
 "connection_failed" = "Connection Failed";
 "connection_unstable" = "接続が不安定です";
-"connection_establishment_failed" = "Connection establishment failed";
 "consolidation_utxo" = "Consolidation UTXO";
 "consolidation_utxo_description" = "Your number of UTXOs exceeds 256. For sending experience, please enter the PIN to consolidating UTXOs before operating.";
 "contact" = "連絡先";
@@ -893,7 +893,7 @@
 "stop_syncing_hint" = "Do you want to stop syncing chat history?";
 "storage_usage" = "ストレージ使用率";
 "stranger_hint" = "連絡先にない相手からのメッセージです";
-"successful" = "Successful";
+"successful" = "成功";
 "suspicious_link" = "不審なリンクです";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";

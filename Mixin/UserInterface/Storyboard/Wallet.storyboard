@@ -797,7 +797,7 @@
                                             </subviews>
                                         </stackView>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ifZ-2C-T8l">
-                                            <rect key="frame" x="0.0" y="8" width="414" height="97"/>
+                                            <rect key="frame" x="87" y="8" width="327" height="97"/>
                                             <connections>
                                                 <action selector="infoAction:" destination="kef-KV-TZS" eventType="touchUpInside" id="VDo-nC-O8M"/>
                                             </connections>
@@ -852,6 +852,7 @@
                                     </subviews>
                                     <color key="backgroundColor" name="background"/>
                                     <constraints>
+                                        <constraint firstItem="ifZ-2C-T8l" firstAttribute="leading" secondItem="OIb-Ux-chy" secondAttribute="trailing" id="2H4-Ln-PzR"/>
                                         <constraint firstItem="CsL-pa-tlx" firstAttribute="leading" secondItem="t9N-Yl-Ul3" secondAttribute="leading" id="4sd-AN-Vai"/>
                                         <constraint firstItem="GD6-mT-59f" firstAttribute="leading" secondItem="t9N-Yl-Ul3" secondAttribute="leading" id="78R-yz-u4U"/>
                                         <constraint firstItem="GD6-mT-59f" firstAttribute="top" secondItem="CsL-pa-tlx" secondAttribute="bottom" constant="10" id="Fv9-XU-hau"/>
@@ -859,7 +860,6 @@
                                         <constraint firstItem="ifZ-2C-T8l" firstAttribute="top" secondItem="t9N-Yl-Ul3" secondAttribute="topMargin" id="MOa-c6-5l3"/>
                                         <constraint firstAttribute="trailing" secondItem="e1d-0V-Vdz" secondAttribute="trailing" constant="20" id="TwH-Pp-dWu"/>
                                         <constraint firstAttribute="bottom" secondItem="GD6-mT-59f" secondAttribute="bottom" id="VwW-Aq-L8S"/>
-                                        <constraint firstItem="ifZ-2C-T8l" firstAttribute="leading" secondItem="t9N-Yl-Ul3" secondAttribute="leading" id="ach-dz-Dae"/>
                                         <constraint firstAttribute="trailing" secondItem="FZF-Lv-pQL" secondAttribute="trailing" constant="17" id="bWE-T6-5jd"/>
                                         <constraint firstAttribute="trailing" secondItem="ifZ-2C-T8l" secondAttribute="trailing" id="bn6-V7-lBB"/>
                                         <constraint firstItem="FZF-Lv-pQL" firstAttribute="top" secondItem="t9N-Yl-Ul3" secondAttribute="top" constant="26" id="hPj-01-uaq"/>
@@ -1918,7 +1918,7 @@
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

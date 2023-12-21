@@ -5,13 +5,6 @@ public final class OutputDAO: UserDatabaseDAO {
     
     public static let shared = OutputDAO()
     
-    public func insertOrIgnore(outputs: [Output], alongsideTransaction work: ((GRDB.Database) throws -> Void)?) {
-        db.write { db in
-            try outputs.insert(db, onConflict: .ignore)
-            try work?(db)
-        }
-    }
-    
     public func latestOutputSequence() -> Int? {
         db.select(with: "SELECT sequence FROM outputs ORDER BY sequence DESC LIMIT 1")
     }
@@ -35,6 +28,34 @@ public final class OutputDAO: UserDatabaseDAO {
         return try Output.fetchAll(db, sql: sql, arguments: StatementArguments(arguments))
     }
     
+    public func outputs(asset: String?, before outputID: String?, limit: Int) -> [Output] {
+        var sql = "SELECT * FROM outputs"
+        
+        var conditions: [String] = []
+        var arguments: [String: any DatabaseValueConvertible] = ["limit": limit]
+        if let asset {
+            conditions.append("asset = :asset")
+            arguments["asset"] = asset
+        }
+        if let outputID {
+            conditions.append("rowid < SELECT rowid FROM outputs WHERE output_id = :id")
+            arguments["id"] = outputID
+        }
+        if !conditions.isEmpty {
+            sql += " WHERE \(conditions.joined(separator: " AND "))"
+        }
+        
+        sql += " ORDER BY rowid DESC LIMIT :limit"
+        return db.select(with: sql, arguments: StatementArguments(arguments))
+    }
+    
+    public func insertOrIgnore(outputs: [Output], alongsideTransaction work: ((GRDB.Database) throws -> Void)?) {
+        db.write { db in
+            try outputs.insert(db, onConflict: .ignore)
+            try work?(db)
+        }
+    }
+    
     public func signOutputs(with ids: [String], alongsideTransaction change: ((GRDB.Database) throws -> Void)) {
         db.write { db in
             let ids = ids.joined(separator: "','")
@@ -44,8 +65,13 @@ public final class OutputDAO: UserDatabaseDAO {
         }
     }
     
-    public func deleteAll() {
-        db.execute(sql: "DELETE FROM outputs")
+    public func deleteAll(completion: (() -> Void)? = nil) {
+        db.write { db in
+            try db.execute(sql: "DELETE FROM outputs")
+            try db.afterNextTransaction(onCommit: { _ in
+                completion?()
+            })
+        }
     }
     
 }

@@ -790,6 +790,11 @@
 		94656C1C2795395D006C3F1D /* FunctionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94656C1B2795395D006C3F1D /* FunctionsView.swift */; };
 		94656C1E2795395E006C3F1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94656C1D2795395E006C3F1D /* Assets.xcassets */; };
 		94656C212795395E006C3F1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94656C202795395E006C3F1D /* Preview Assets.xcassets */; };
+		94658CA02B347E4100F5EB21 /* UTXODiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658C9F2B347E4100F5EB21 /* UTXODiagnosticViewController.swift */; };
+		94658CA22B34824E00F5EB21 /* OutputsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CA12B34824E00F5EB21 /* OutputsViewController.swift */; };
+		94658CA82B34829B00F5EB21 /* OutputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CA62B34829B00F5EB21 /* OutputCell.swift */; };
+		94658CA92B34829B00F5EB21 /* OutputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94658CA72B34829B00F5EB21 /* OutputCell.xib */; };
+		94658CAB2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */; };
 		94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94659DA925C13793003403E5 /* DevicePerformance.swift */; };
 		946983AD29D18E1F00E73428 /* TransactionPreviewUnavailableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946983AC29D18E1F00E73428 /* TransactionPreviewUnavailableView.xib */; };
 		946983B029D1A36400E73428 /* NetworkFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */; };
@@ -1982,6 +1987,11 @@
 		94656C1B2795395D006C3F1D /* FunctionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionsView.swift; sourceTree = "<group>"; };
 		94656C1D2795395E006C3F1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94656C202795395E006C3F1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		94658C9F2B347E4100F5EB21 /* UTXODiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTXODiagnosticViewController.swift; sourceTree = "<group>"; };
+		94658CA12B34824E00F5EB21 /* OutputsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputsViewController.swift; sourceTree = "<group>"; };
+		94658CA62B34829B00F5EB21 /* OutputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputCell.swift; sourceTree = "<group>"; };
+		94658CA72B34829B00F5EB21 /* OutputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OutputCell.xib; sourceTree = "<group>"; };
+		94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealPublicSpendKeyViewController.swift; sourceTree = "<group>"; };
 		94659DA925C13793003403E5 /* DevicePerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePerformance.swift; sourceTree = "<group>"; };
 		946983AC29D18E1F00E73428 /* TransactionPreviewUnavailableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionPreviewUnavailableView.xib; sourceTree = "<group>"; };
 		946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeSelectorViewController.swift; sourceTree = "<group>"; };
@@ -3260,6 +3270,11 @@
 				94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */,
 				94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */,
 				94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */,
+				94658C9F2B347E4100F5EB21 /* UTXODiagnosticViewController.swift */,
+				94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */,
+				94658CA62B34829B00F5EB21 /* OutputCell.swift */,
+				94658CA72B34829B00F5EB21 /* OutputCell.xib */,
+				94658CA12B34824E00F5EB21 /* OutputsViewController.swift */,
 			);
 			path = Diagnose;
 			sourceTree = "<group>";
@@ -4593,6 +4608,7 @@
 				94062C592AE8C61700ADAE87 /* SnapshotTableHeaderView.xib in Resources */,
 				7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
+				94658CA92B34829B00F5EB21 /* OutputCell.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				7BF19C20241D40FA00B192D5 /* LocationSearchView.xib in Resources */,
@@ -5520,6 +5536,7 @@
 				7BB0F9512434DDD400BEDA97 /* CircleMemberSearchResult.swift in Sources */,
 				7B81D91423E93ECA0031E945 /* QuotedMessageView.swift in Sources */,
 				94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */,
+				94658CA82B34829B00F5EB21 /* OutputCell.swift in Sources */,
 				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7CEB736829DBCE44006FB5B2 /* DeviceTransferPinMessage.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
@@ -5617,6 +5634,7 @@
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DFC2647424E9339C00BF954D /* BigAmountConfirmationWindow.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
+				94658CAB2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift in Sources */,
 				E07E38A123A772CC0005A538 /* CallError.swift in Sources */,
 				E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
@@ -5771,6 +5789,7 @@
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				7CEB736029DBC639006FB5B2 /* DeviceTransferUser.swift in Sources */,
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
+				94658CA02B347E4100F5EB21 /* UTXODiagnosticViewController.swift in Sources */,
 				DFAD89A1241B6D6400836EDD /* JobService.swift in Sources */,
 				94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */,
 				94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */,
@@ -5817,6 +5836,7 @@
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,
+				94658CA22B34824E00F5EB21 /* OutputsViewController.swift in Sources */,
 				7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				7C7579D729DC573F0002DA0B /* DeviceTransferProgressViewController.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,

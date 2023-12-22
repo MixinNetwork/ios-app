@@ -26,6 +26,7 @@ final class SendingDestinationSelectorViewController: PopupSelectorViewControlle
         tableView.register(R.nib.sendingDestinationCell)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.contentInsetAdjustmentBehavior = .always
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 35, right: 0)
         titleView.titleLabel.text = R.string.localizable.send()
     }

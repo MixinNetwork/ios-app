@@ -423,6 +423,7 @@
 "follow_us_on_twitter" = "Следите за нами на Twitter";
 "forward" = "Перенаправить";
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
+"free" = "FREE";
 "from" = "От";
 "games" = "Игры";
 "generating" = "Generating...";
@@ -809,6 +810,10 @@
 "send_signed_message_confirmation" = "The message has been signed successfully, click the button below to send or discard the signed message";
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
+"send_to_address" = "Send to Address";
+"send_to_address_description" = "Send crypto to a wallet or exchange";
+"send_to_contact" = "Send to Contact";
+"send_to_contact_description" = "Send crypto to Mixin contact";
 "send_to_developer" = "Отправить разработчику";
 "send_to_title" = "Отправить в";
 "send_verification_code_frequent" = "Код подтверждения отправляется слишком часто. Повторите попытку позже.";

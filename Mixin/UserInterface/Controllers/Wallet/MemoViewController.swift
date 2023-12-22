@@ -23,19 +23,11 @@ final class MemoViewController: PopupSelectorViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateTableViewBottomInset()
         tableView.register(R.nib.memoCell)
         tableView.dataSource = self
+        tableView.contentInsetAdjustmentBehavior = .always
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 22, right: 0)
         titleView.titleLabel.text = R.string.localizable.memo()
-    }
-    
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updateTableViewBottomInset()
-    }
-    
-    private func updateTableViewBottomInset() {
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 22 + view.safeAreaInsets.bottom, right: 0)
     }
     
 }

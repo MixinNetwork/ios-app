@@ -423,6 +423,7 @@
 "follow_us_on_twitter" = "TwitterでMixinをフォロー";
 "forward" = "転送";
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
+"free" = "FREE";
 "from" = "より";
 "games" = "ゲーム";
 "generating" = "Generating...";
@@ -809,6 +810,10 @@
 "send_signed_message_confirmation" = "The message has been signed successfully, click the button below to send or discard the signed message";
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
+"send_to_address" = "Send to Address";
+"send_to_address_description" = "Send crypto to a wallet or exchange";
+"send_to_contact" = "Send to Contact";
+"send_to_contact_description" = "Send crypto to Mixin contact";
 "send_to_developer" = "開発者へ送信";
 "send_to_title" = "振替先";
 "send_verification_code_frequent" = "しばらく経ってから再度送信してください";

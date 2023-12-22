@@ -271,29 +271,17 @@ extension TokenViewController {
         guard let token = self.token else {
             return
         }
-        let alert = UIAlertController(title: R.string.localizable.send_to_title(), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: R.string.localizable.contact(), style: .default, handler: { [weak self] (_) in
-            let vc = TransferReceiverViewController.instance(asset: token)
-            self?.navigationController?.pushViewController(vc, animated: true)
-        }))
-        alert.addAction(UIAlertAction(title: R.string.localizable.address(), style: .default, handler: { [weak self](_) in
-            let address = AddressViewController.instance(token: token)
-            self?.navigationController?.pushViewController(address, animated: true)
-        }))
-//        
-//        let withdrawToTIPAllowedChainIds = [
-//            ChainID.ethereum,
-//            ChainID.polygon,
-//            ChainID.bnbSmartChain,
-//        ]
-//        if WalletConnectService.isAvailable, withdrawToTIPAllowedChainIds.contains(asset.chainId) {
-//            alert.addAction(UIAlertAction(title: "Bridge", style: .default, handler: { _ in
-//                self.sendToMyTIPWallet()
-//            }))
-//        }
-        
-        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
+        let selector = SendingDestinationSelectorViewController(destinations: [.address, .contact]) { destination in
+            switch destination {
+            case .address:
+                let address = AddressViewController.instance(token: token)
+                self.navigationController?.pushViewController(address, animated: true)
+            case .contact:
+                let receiver = TransferReceiverViewController.instance(asset: token)
+                self.navigationController?.pushViewController(receiver, animated: true)
+            }
+        }
+        present(selector, animated: true, completion: nil)
     }
     
     private func sendToMyTIPWallet() {

@@ -11,6 +11,9 @@ class DiagnoseViewController: SettingsTableViewController {
             SettingsRow(title: "Enable WebRTC Log", accessory: .switch(isOn: CallService.shared.isWebRTCLogEnabled)),
         ]),
         SettingsSection(rows: [
+            SettingsRow(title: "Inspect WebView", accessory: .switch(isOn: MixinWebViewController.isInspectable)),
+        ]),
+        SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.clear_unused_cache(), accessory: .disclosure),
         ]),
         SettingsSection(rows: [
@@ -38,6 +41,10 @@ class DiagnoseViewController: SettingsTableViewController {
                                                selector: #selector(rtcLogEnabledDidSwitch(_:)),
                                                name: SettingsRow.accessoryDidChangeNotification,
                                                object: dataSource.sections[1].rows[0])
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(webViewInspectableDidSwitch(_:)),
+                                               name: SettingsRow.accessoryDidChangeNotification,
+                                               object: dataSource.sections[2].rows[0])
     }
     
     @objc func rtcLogEnabledDidSwitch(_ notification: Notification) {
@@ -50,6 +57,16 @@ class DiagnoseViewController: SettingsTableViewController {
         CallService.shared.isWebRTCLogEnabled = isOn
     }
     
+    @objc func webViewInspectableDidSwitch(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard case let .switch(isOn, _) = row.accessory else {
+            return
+        }
+        MixinWebViewController.isInspectable = isOn
+    }
+    
 }
 
 extension DiagnoseViewController: UITableViewDelegate {
@@ -60,29 +77,29 @@ extension DiagnoseViewController: UITableViewDelegate {
             let container = ContainerViewController.instance(viewController: DatabaseDiagnosticViewController(),
                                                              title: R.string.localizable.database_access())
             navigationController?.pushViewController(container, animated: true)
-        case (2, 0):
+        case (3, 0):
             let container = ContainerViewController.instance(viewController: AttachmentDiagnosticViewController(),
                                                              title: R.string.localizable.clear_unused_cache())
             navigationController?.pushViewController(container, animated: true)
-        case (3, 0):
+        case (4, 0):
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ExpiredMessageManager.shared.isQueueAvailable { isAvailable in
                 hud.set(style: isAvailable ? .notification : .error, text: "")
                 hud.scheduleAutoHidden()
             }
-        case (4, 0):
+        case (5, 0):
             if SpotlightManager.isAvailable {
                 SpotlightManager.shared.deleteAllIndexedItems()
                 showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
             } else {
                 showAutoHiddenHud(style: .error, text: "Not Available")
             }
-        case (5, 0):
+        case (6, 0):
             let container = ContainerViewController.instance(viewController: UTXODiagnosticViewController(), title: "UTXO")
             navigationController?.pushViewController(container, animated: true)
 #if DEBUG
-        case (6, 0):
+        case (7, 0):
             let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
             navigationController?.pushViewController(container, animated: true)
 #endif

@@ -6,6 +6,8 @@ import MixinServices
 
 class MixinWebViewController: WebViewController {
     
+    static var isInspectable = false
+    
     // Only top 2 levels of the domain are matched
     // Be careful when adding country specific SLDs into this list
     // e.g. "anything.co.uk" will be matched if "something.co.uk" is added
@@ -105,6 +107,9 @@ class MixinWebViewController: WebViewController {
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        if #available(iOS 16.4, *) {
+            webView.isInspectable = Self.isInspectable
+        }
         loadWebView()
     }
     

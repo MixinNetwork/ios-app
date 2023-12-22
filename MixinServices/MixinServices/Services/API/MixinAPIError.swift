@@ -29,7 +29,7 @@ public enum MixinAPIError: Error {
     case blazeServerError
     case blazeOperationTimedOut
     
-    case invalidRequestData(field: String?)
+    case invalidRequestData(field: String?, reason: String?)
     case failedToDeliverSMS
     case invalidCaptchaToken
     case requiresCaptcha
@@ -98,7 +98,7 @@ extension MixinAPIError {
             self = .blazeOperationTimedOut
             
         case (202, 10002):
-            self = .invalidRequestData(field: extra?.field)
+            self = .invalidRequestData(field: extra?.field, reason: extra?.reason)
         case (202, 10003):
             self = .failedToDeliverSMS
         case (202, 10004):

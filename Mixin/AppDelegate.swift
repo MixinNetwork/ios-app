@@ -142,7 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        UrlWindow.checkDeepLinking(url: url)
+        UrlWindow.checkURLNowOrAfterScreenUnlocked(url: url, from: .openURL)
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
@@ -183,7 +183,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SpotlightManager.shared.contiune(activity: userActivity)
             return true
         } else if userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL {
-            _ = UrlWindow.checkDeepLinking(url: url)
+            _ = UrlWindow.checkURLNowOrAfterScreenUnlocked(url: url, from: .userActivity)
             return true
         } else {
             return false

@@ -10,7 +10,7 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
     private let amountDisplay: AmountIntent
     private let tokenAmount: Decimal
     private let fiatMoneyAmount: Decimal
-    private let returnToURL: URL?
+    private let redirection: URL?
     
     private var destination: Payment.TransferDestination {
         operation.destination
@@ -21,13 +21,13 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
         amountDisplay: AmountIntent,
         tokenAmount: Decimal,
         fiatMoneyAmount: Decimal,
-        returnToURL: URL?
+        redirection: URL?
     ) {
         self.operation = operation
         self.amountDisplay = amountDisplay
         self.tokenAmount = tokenAmount
         self.fiatMoneyAmount = fiatMoneyAmount
-        self.returnToURL = returnToURL
+        self.redirection = redirection
         super.init()
     }
     
@@ -107,12 +107,12 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
     }
     
     @objc private func gotoMerchant(_ sender: Any) {
-        guard let url = returnToURL else {
+        guard let redirection = redirection else {
             finish(sender)
             return
         }
         authenticationViewController?.presentingViewController?.dismiss(animated: true) {
-            UIApplication.shared.open(url)
+            UIApplication.shared.open(redirection)
         }
     }
     
@@ -171,7 +171,7 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
     
     var options: AuthenticationIntentOptions {
         var options: AuthenticationIntentOptions = [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
-        if returnToURL != nil {
+        if redirection != nil {
             options.insert(.neverRequestAddBiometricAuthentication)
         }
         switch destination {
@@ -194,7 +194,7 @@ extension TransferConfirmationViewController: AuthenticationIntentViewController
                 await MainActor.run {
                     completion(.success)
                     let successView = R.nib.paymentSuccessView(withOwner: nil)!
-                    if returnToURL == nil {
+                    if redirection == nil {
                         successView.doneButton.setTitle(R.string.localizable.done(), for: .normal)
                         successView.doneButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
                     } else {

@@ -2,9 +2,9 @@ import Foundation
 import MixinServices
 import Tip
 
-struct URLPayment {
+struct SafePaymentURL {
     
-    private static let scheme = "https"
+    private static let schemes = ["mixin", "https"]
     private static let host = "mixin.one"
     
     enum Address {
@@ -22,10 +22,13 @@ struct URLPayment {
     let request: Request?
     let memo: String
     let trace: String
-    let returnTo: URL?
+    let redirection: URL?
     
     init?(url: URL) {
-        guard url.scheme == Self.scheme && url.host == Self.host else {
+        guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
+            return nil
+        }
+        guard url.host == Self.host else {
             return nil
         }
         
@@ -34,7 +37,7 @@ struct URLPayment {
             return nil
         }
         
-        Logger.general.debug(category: "URLPayment", message: "URL: \(url.absoluteString)")
+        Logger.general.debug(category: "SafePayment", message: "URL: \(url.absoluteString)")
         let address: Address
         let addressString = pathComponents[2]
         if UUID.isValidLowercasedUUIDString(addressString) {
@@ -44,7 +47,7 @@ struct URLPayment {
         } else if let mixAddress = MIXAddress(string: addressString) {
             address = mixAddress.address
         } else {
-            Logger.general.warn(category: "URLPayment", message: "Invalid address: \(addressString)")
+            Logger.general.warn(category: "SafePayment", message: "Invalid address: \(addressString)")
             return nil
         }
         
@@ -65,7 +68,7 @@ struct URLPayment {
             if UUID.isValidLowercasedUUIDString(id) {
                 asset = id
             } else {
-                Logger.general.warn(category: "URLPayment", message: "Invalid asset")
+                Logger.general.warn(category: "SafePayment", message: "Invalid asset")
                 return nil
             }
         } else {
@@ -77,7 +80,7 @@ struct URLPayment {
             if let amount = Decimal(string: amount, locale: .enUSPOSIX), amount > 0, amount.numberOfSignificantFractionalDigits <= 8 {
                 decimalAmount = amount
             } else {
-                Logger.general.warn(category: "URLPayment", message: "Invalid amount")
+                Logger.general.warn(category: "SafePayment", message: "Invalid amount")
                 return nil
             }
         } else {
@@ -91,10 +94,10 @@ struct URLPayment {
         case (.none, .none):
             request = nil
         case (.some, .none):
-            Logger.general.warn(category: "URLPayment", message: "Invalid args: amount is null")
+            Logger.general.warn(category: "SafePayment", message: "Invalid args: amount is null")
             return nil
         case (.none, .some):
-            Logger.general.warn(category: "URLPayment", message: "Invalid args: asset is null")
+            Logger.general.warn(category: "SafePayment", message: "Invalid args: asset is null")
             return nil
         }
         
@@ -103,32 +106,32 @@ struct URLPayment {
             if UUID.isValidLowercasedUUIDString(id) {
                 trace = id
             } else {
-                Logger.general.warn(category: "URLPayment", message: "Invalid trace")
+                Logger.general.warn(category: "SafePayment", message: "Invalid trace")
                 return nil
             }
         } else {
             trace = UUID().uuidString.lowercased()
         }
         
-        let returnToURL: URL?
+        let redirection: URL?
         if let returnTo = queries["return_to"], let data = returnTo.data(using: .utf8) {
             // Resolve issues when the string contains percent symbol
             // e.g. queries with `#` which has been converted to `%23`
-            returnToURL = URL(dataRepresentation: data, relativeTo: nil)
+            redirection = URL(dataRepresentation: data, relativeTo: nil)
         } else {
-            returnToURL = nil
+            redirection = nil
         }
         
         self.address = address
         self.request = request
         self.memo = queries["memo"] ?? ""
         self.trace = trace
-        self.returnTo = returnToURL
+        self.redirection = redirection
     }
     
 }
 
-extension URLPayment {
+extension SafePaymentURL {
     
     private struct MIXAddress {
         

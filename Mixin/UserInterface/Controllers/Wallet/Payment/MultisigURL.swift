@@ -3,14 +3,17 @@ import MixinServices
 
 struct MultisigURL {
     
-    private static let scheme = "https"
+    private static let schemes = ["mixin", "https"]
     private static let host = "mixin.one"
     
     let id: String
     let action: MultisigAction
     
     init?(url: URL) {
-        guard url.scheme == Self.scheme && url.host == Self.host else {
+        guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
+            return nil
+        }
+        guard url.host == Self.host else {
             return nil
         }
         

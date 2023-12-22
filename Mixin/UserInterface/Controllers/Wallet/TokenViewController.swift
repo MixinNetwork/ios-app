@@ -28,6 +28,15 @@ class TokenViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    class func instance(token: TokenItem, performSendOnAppear: Bool = false) -> UIViewController {
+        let vc = R.storyboard.wallet.asset()!
+        vc.token = token
+        vc.performSendOnAppear = performSendOnAppear
+        vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: token.assetID))
+        let container = ContainerViewController.instance(viewController: vc, title: token.name)
+        return container
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layoutIfNeeded()
@@ -36,6 +45,9 @@ class TokenViewController: UIViewController {
         tableHeaderView.render(asset: token)
         tableHeaderView.sizeToFit()
         tableHeaderView.transferActionView.delegate = self
+        let revealOutputsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
+        revealOutputsGestureRecognizer.numberOfTapsRequired = 5
+        tableHeaderView.assetIconView.addGestureRecognizer(revealOutputsGestureRecognizer)
         tableView.register(R.nib.snapshotCell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self
@@ -70,6 +82,15 @@ class TokenViewController: UIViewController {
         updateTableViewContentInset()
     }
     
+    @IBAction func presentFilterWindow(_ sender: Any) {
+        filterController.delegate = self
+        present(filterController, animated: true, completion: nil)
+    }
+    
+    @IBAction func infoAction(_ sender: Any) {
+        AssetInfoWindow.instance().presentWindow(asset: token)
+    }
+    
     @objc private func balanceDidUpdate(_ notification: Notification) {
         guard let id = notification.userInfo?[UTXOService.assetIDUserInfoKey] as? String else {
             return
@@ -100,23 +121,10 @@ class TokenViewController: UIViewController {
         reloadToken()
     }
     
-    @IBAction func presentFilterWindow(_ sender: Any) {
-        filterController.delegate = self
-        present(filterController, animated: true, completion: nil)
-    }
-
-    
-    @IBAction func infoAction(_ sender: Any) {
-        AssetInfoWindow.instance().presentWindow(asset: token)
-    }
-    
-    class func instance(token: TokenItem, performSendOnAppear: Bool = false) -> UIViewController {
-        let vc = R.storyboard.wallet.asset()!
-        vc.token = token
-        vc.performSendOnAppear = performSendOnAppear
-        vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: token.assetID))
-        let container = ContainerViewController.instance(viewController: vc, title: token.name)
-        return container
+    @objc private func revealOutputs(_ sender: Any) {
+        let outputs = OutputsViewController(kernelAssetID: token.kernelAssetID)
+        let container = ContainerViewController.instance(viewController: outputs, title: "Outputs")
+        navigationController?.pushViewController(container, animated: true)
     }
     
 }

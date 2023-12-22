@@ -19,6 +19,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Delete Spotlight Index", accessory: .none),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "UTXO", accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -75,8 +78,11 @@ extension DiagnoseViewController: UITableViewDelegate {
             } else {
                 showAutoHiddenHud(style: .error, text: "Not Available")
             }
-#if DEBUG
         case (5, 0):
+            let container = ContainerViewController.instance(viewController: UTXODiagnosticViewController(), title: "UTXO")
+            navigationController?.pushViewController(container, animated: true)
+#if DEBUG
+        case (6, 0):
             let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
             navigationController?.pushViewController(container, animated: true)
 #endif

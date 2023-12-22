@@ -101,8 +101,8 @@
 "auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
 "auto_lock" = "自动锁定";
 "automatic" = "自动";
-"back_to_merchant" = "返回商家";
 "back_to_chat" = "返回聊天";
+"back_to_merchant" = "返回商家";
 "back_up_now" = "立即备份";
 "background_preview" = "背景预览";
 "backing_up" = "正在备份...";
@@ -213,9 +213,9 @@
 "connected" = "已连接";
 "connected_dapps" = "已连接的 Dapp";
 "connecting" = "正在连接";
+"connection_establishment_failed" = "连接建立失败";
 "connection_failed" = "连接失败";
 "connection_unstable" = "当前通话网络不佳";
-"connection_establishment_failed" = "连接建立失败";
 "consolidation_utxo" = "合并 UTXO";
 "consolidation_utxo_description" = "您的 UTXOs 数量超过了256，为了发送体验，请输入 PIN 整合 UTXOs 后再操作";
 "contact" = "联系人";
@@ -1061,7 +1061,7 @@
 "withdrawal_minimum_withdrawal" = "最小提现数量：";
 "withdrawal_network_fee" = "网络手续费：";
 "withdrawal_no_memo" = "点击不使用 Memo（备注）";
-"withdrawal_pending" = "充值中";
+"withdrawal_pending" = "提现中";
 "withdrawal_suspended" = "%@ 提现暂停";
 "withdrawal_suspended_description" = "%@ 提现已暂停，可能的原因是因为节点故障、区块链网络硬分叉或者拥堵，请耐心等候并稍后重试";
 "withdrawal_to" = "提现到 %@";

@@ -101,8 +101,8 @@
 "auto_download_hint" = "Change auto-download settings for medias. Voice messages are always automatically downloaded.";
 "auto_lock" = "Auto-Lock";
 "automatic" = "Automatic";
-"back_to_merchant" = "Back to Merchant";
 "back_to_chat" = "Back To Chat";
+"back_to_merchant" = "Back to Merchant";
 "back_up_now" = "Back Up Now";
 "background_preview" = "Background Preview";
 "backing_up" = "Backing Up...";
@@ -213,9 +213,9 @@
 "connected" = "Connected";
 "connected_dapps" = "Connected Dapps";
 "connecting" = "Connecting";
+"connection_establishment_failed" = "Connection establishment failed";
 "connection_failed" = "Connection Failed";
 "connection_unstable" = "Connection unstable";
-"connection_establishment_failed" = "Connection establishment failed";
 "consolidation_utxo" = "Consolidation UTXO";
 "consolidation_utxo_description" = "Your number of UTXOs exceeds 256. For sending experience, please enter the PIN to consolidating UTXOs before operating.";
 "contact" = "Contact";
@@ -439,13 +439,13 @@
 "group_participant_add_full" = "You can’t add this participant because this group is full.";
 "group_participant_add_limit" = "You can’t add this participant because only add up to 50 at a time.";
 "group_qr_code_prompt" = "Scan the QR Code to join this group";
-"groups_in_common" = "Groups In Common";
+"groups_in_common" = "Groups in Common";
 "help" = "Help";
 "help_center" = "Help center";
 "hidden_assets" = "Hidden Assets";
 "hide" = "Hide";
 "hide_asset" = "Hide asset";
-"hold_to_record_audio" = "Hold to record, release to send";
+"hold_to_record_audio" = "Hold to record, release to send.";
 "hour" = "%d Hour";
 "hour_count" = "%d Hours";
 "how_are_you" = "Hi, how are you?";
@@ -522,7 +522,7 @@
 "manage_your_circles" = "Manage your circles";
 "media" = "Media";
 "memo" = "Memo";
-"message_e2ee" = "Messages to this conversation are encrypted end-to-end, tap for more info.";
+"message_e2ee" = "Messages to this conversation are end-to-end encrypted, tap for more info.";
 "message_encryption_hint" = "Messages between users are protected with an end-to-end encryption";
 "message_not_found" = "Message not found";
 "message_not_support" = "This type of message is not supported, please upgrade Mixin to the latest version.";

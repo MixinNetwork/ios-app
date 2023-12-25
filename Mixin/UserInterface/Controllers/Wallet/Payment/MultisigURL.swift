@@ -18,23 +18,27 @@ struct MultisigURL {
         }
         
         let pathComponents = url.pathComponents
-        guard pathComponents.count == 4, pathComponents[1] == "safe", pathComponents[2] == "multisigs" else {
+        guard pathComponents.count == 3, pathComponents[1] == "multisigs" else {
             return nil
         }
         
-        let id = pathComponents[3]
+        let id = pathComponents[2]
         guard UUID.isValidLowercasedUUIDString(id) else {
             return nil
         }
         
+        let action: MultisigAction
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return nil
         }
-        guard let actionValue = components.queryItems?.first(where: { $0.name == "action" })?.value else {
-            return nil
-        }
-        guard let action = MultisigAction(rawValue: actionValue) else {
-            return nil
+        if let actionValue = components.queryItems?.first(where: { $0.name == "action" })?.value {
+            if let multisigAction = MultisigAction(rawValue: actionValue) {
+                action = multisigAction
+            } else {
+                return nil
+            }
+        } else {
+            action = .sign
         }
         
         self.id = id

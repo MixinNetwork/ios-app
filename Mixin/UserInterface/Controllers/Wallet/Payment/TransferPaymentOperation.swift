@@ -132,7 +132,7 @@ struct TransferPaymentOperation {
                                 mask: changeMask,
                                 keys: changeGhostKey.keys,
                                 lastOutput: spendingOutputs.lastOutput)
-            Logger.general.info(category: "Transfer", message: "Created change output: \(output.amount)")
+            Logger.general.info(category: "Transfer", message: "Created change output: \(output.id), amount: \(change.amount)")
             changeOutput = output
         } else {
             changeOutput = nil

@@ -259,7 +259,7 @@ struct WithdrawPaymentOperation {
                                         keys: ghostKeys[1].keys,
                                         lastOutput: withdrawalOutputs.lastOutput)
                     try output.save(db)
-                    Logger.general.info(category: "Withdraw", message: "Saved change output: \(output.amount)")
+                    Logger.general.info(category: "Withdraw", message: "Saved change output: \(output.id), amount: \(change.amount)")
                 }
                 try rawTransaction.save(db)
                 try UTXOService.shared.updateBalance(assetID: withdrawalToken.assetID,

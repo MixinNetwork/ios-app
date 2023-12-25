@@ -4,43 +4,6 @@ import Tip
 
 final class WithdrawalConfirmationViewController: PaymentConfirmationViewController {
     
-    enum Error: Swift.Error, LocalizedError {
-        
-        case buildWithdrawalTx(Swift.Error?)
-        case buildFeeTx(Swift.Error)
-        case missingWithdrawalResponse
-        case missingFeeResponse
-        case alreadyPaid
-        case signWithdrawal(Swift.Error?)
-        case signFee(Swift.Error?)
-        case insufficientBalance
-        case maxSpendingCountExceeded
-        
-        var errorDescription: String? {
-            switch self {
-            case .buildWithdrawalTx(let error):
-                return error?.localizedDescription ?? "Null withdrawal tx"
-            case .buildFeeTx(let error):
-                return error.localizedDescription
-            case .missingWithdrawalResponse:
-                return "No withdrawal resp"
-            case .missingFeeResponse:
-                return "No fee resp"
-            case .alreadyPaid:
-                return "Already paid"
-            case .signWithdrawal(let error):
-                return error?.localizedDescription ?? "Sign withdrawal"
-            case .signFee(let error):
-                return error?.localizedDescription ?? "Sign fee"
-            case .insufficientBalance:
-                return R.string.localizable.insufficient_balance()
-            case .maxSpendingCountExceeded:
-                return R.string.localizable.utxo_count_exceeded()
-            }
-        }
-        
-    }
-    
     private let operation: WithdrawPaymentOperation
     
     private let amountDisplay: AmountIntent

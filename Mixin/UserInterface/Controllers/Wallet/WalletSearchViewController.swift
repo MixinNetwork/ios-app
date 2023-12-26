@@ -69,8 +69,7 @@ class WalletSearchViewController: UIViewController {
         guard let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        let windowHeight = AppDelegate.current.mainWindow.bounds.height
-        keyboardPlaceholderHeightConstraint.constant = windowHeight - endFrame.origin.y
+        keyboardPlaceholderHeightConstraint.constant = view.bounds.height - endFrame.origin.y
         view.layoutIfNeeded()
     }
     

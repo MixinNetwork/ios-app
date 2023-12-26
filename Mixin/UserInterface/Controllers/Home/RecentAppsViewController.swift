@@ -49,8 +49,9 @@ class RecentAppsViewController: UIViewController {
     }
     
     @IBAction func hideSearchAction() {
-        let top = UIApplication.homeNavigationController?.topViewController
-        (top as? HomeViewController)?.hideSearch()
+        let tabBar = UIApplication.homeNavigationController?.topViewController as? HomeTabBarController
+        let home = tabBar?.selectedViewController as? HomeViewController
+        home?.hideSearch()
     }
     
     @objc func didChangeRecentlyUsedAppIds() {

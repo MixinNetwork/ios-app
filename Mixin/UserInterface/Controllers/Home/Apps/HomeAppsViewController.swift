@@ -12,7 +12,6 @@ final class HomeAppsViewController: UIViewController {
     
     @IBOutlet weak var titleBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pinnedWrapperHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var candidateCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pageControlTopConstraint: NSLayoutConstraint!
     @IBOutlet var pinnedPlaceholderViewLeadingConstraints: [NSLayoutConstraint]!
     
@@ -29,23 +28,13 @@ final class HomeAppsViewController: UIViewController {
         candidateEmptyHintLabelIfLoaded = label
         return label
     }()
-    private lazy var backgroundButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.black.withAlphaComponent(0)
-        button.addTarget(self, action: #selector(backgroundTappingAction), for: .touchUpInside)
-        return button
-    }()
+    
     private var candidateEmptyHintLabelIfLoaded: UILabel?
     
     private var appsManager: HomeAppsManager!
     
-    class func instance() -> HomeAppsViewController {
-        R.storyboard.home.apps()!
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.layer.cornerRadius = 13
         appsManager = HomeAppsManager(viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
         appsManager.delegate = self
         storage.load { pinnedItems, candidateItems in
@@ -57,28 +46,17 @@ final class HomeAppsViewController: UIViewController {
         pageControl.currentPage = 0
         updateHomeTitleLabel(isEditing: false)
         pinnedPlaceholderViewLeadingConstraints.forEach({ $0.constant = HomeAppsMode.pinned.minimumInteritemSpacing })
-        candidateCollectionViewHeightConstraint.constant = HomeAppsMode.regular.itemSize.height * CGFloat(HomeAppsMode.regular.rowsPerPage)
-        updatePreferredContentSizeHeight()
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.updatePreferredContentSizeHeight()
-        }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        appsManager.leaveEditingMode()
     }
     
     @IBAction func pageControlValueChanged(_ sender: UIPageControl) {
         let x = CGFloat(pageControl.currentPage) * candidateCollectionView.frame.width
         let offset = CGPoint(x: x, y: 0)
         candidateCollectionView.setContentOffset(offset, animated: true)
-    }
-    
-    @IBAction func dismissAction(_ sender: Any) {
-        dismiss()
     }
     
 }
@@ -93,79 +71,6 @@ extension HomeAppsViewController: UIScrollViewDelegate {
 }
 
 extension HomeAppsViewController {
-    
-    func dismissAsChild(completion: (() -> Void)?) {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0)
-        }) { (finished) in
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-            self.backgroundButton.removeFromSuperview()
-            completion?()
-        }
-    }
-    
-    func presentAsChild(of parent: UIViewController) {
-        loadViewIfNeeded()
-        backgroundButton.frame = parent.view.bounds
-        backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        parent.addChild(self)
-        parent.view.addSubview(backgroundButton)
-        didMove(toParent: parent)
-        
-        view.frame = CGRect(x: 0,
-                            y: backgroundButton.bounds.height,
-                            width: backgroundButton.bounds.width,
-                            height: backgroundButton.bounds.height)
-        view.autoresizingMask = .flexibleTopMargin
-        backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.3) {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        } completion: { _ in
-            self.showPinTipsIfNeeded()
-        }
-        
-    }
-    
-    @objc private func backgroundTappingAction() {
-        dismiss()
-    }
-    
-    private func dismiss() {
-        if appsManager.isEditing {
-            appsManager.leaveEditingMode()
-        } else {
-            dismissAsChild(completion: nil)
-        }
-    }
-    
-    private func updatePreferredContentSizeHeight() {
-        guard !isBeingDismissed else {
-            return
-        }
-        let height = preferredContentHeight()
-        preferredContentSize.height = height
-        view.frame.origin.y = backgroundButton.bounds.height - height
-    }
-    
-    private func preferredContentHeight() -> CGFloat {
-        view.layoutIfNeeded()
-        let height = titleBarHeightConstraint.constant
-            + pinnedWrapperHeightConstraint.constant
-            + candidateCollectionViewHeightConstraint.constant
-            + pageControlTopConstraint.constant
-            + ceil(pageControl.bounds.height)
-            + AppDelegate.current.mainWindow.safeAreaInsets.bottom
-        if ScreenHeight.current <= .short {
-            return height + 36
-        } else {
-            return height + 22
-        }
-    }
     
     private func setCandidateEmptyHintHidden(_ hidden: Bool) {
         if hidden {
@@ -220,7 +125,7 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
     func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: HomeApp) {
         switch app {
         case let .embedded(app):
-            dismissAsChild(completion: app.action)
+            app.action()
         case let .external(user):
             let item = UserItem.createUser(from: user)
             let vc = UserProfileViewController(user: item)

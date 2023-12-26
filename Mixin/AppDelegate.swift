@@ -116,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             case .scanQrCode:
                 pushCameraViewController()
             case .wallet:
-                pushWalletViewController()
+                showWalletViewController()
             case .myQrCode:
                 showMyQrCode()
             }
@@ -355,14 +355,11 @@ extension AppDelegate {
         }
     }
     
-    private func pushWalletViewController() {
-        guard let navigationController = UIApplication.homeNavigationController else {
+    private func showWalletViewController() {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
-        if let lastVC = (navigationController.viewControllers.last as? ContainerViewController)?.viewController, lastVC is WalletViewController {
-            return
-        }
-        WalletViewController.presentWallet()
+        homeContainer.homeTabBarController.showWallet()
     }
     
     private func showMyQrCode() {

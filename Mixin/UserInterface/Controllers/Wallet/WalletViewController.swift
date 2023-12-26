@@ -21,37 +21,6 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.removeObserver(self)
     }
     
-    class func presentWallet() {
-        guard let navigationController = UIApplication.homeNavigationController else {
-            return
-        }
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            let shouldValidatePin: Bool
-            if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
-                shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
-            } else {
-                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-                shouldValidatePin = true
-            }
-            
-            let wallet = R.storyboard.wallet.wallet()!
-            if shouldValidatePin {
-                let validator = PinValidationViewController(onSuccess: { (_) in
-                    navigationController.pushViewController(withBackRoot: wallet)
-                })
-                UIApplication.homeViewController?.present(validator, animated: true, completion: nil)
-            } else {
-                navigationController.pushViewController(withBackRoot: wallet)
-            }
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: .wallet)
-            navigationController.present(tip, animated: true)
-        case .unknown:
-            break
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         if AssetDAO.shared.hasPositiveBalancedAssets() {
@@ -89,10 +58,6 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
-    }
-    
-    @IBAction func backAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func searchAction(_ sender: Any) {
@@ -302,8 +267,8 @@ extension WalletViewController {
             case let .success(response):
                 hud.hide()
                 UserDAO.shared.updateUsers(users: [response])
-                if let app = response.app {
-                    MixinWebViewController.presentInstance(with: .init(conversationId: conversationID, app: app), asChildOf: self)
+                if let app = response.app, let container = UIApplication.homeContainerViewController {
+                    MixinWebViewController.presentInstance(with: .init(conversationId: conversationID, app: app), asChildOf: container)
                 }
             case .failure:
                 hud.set(style: .error, text: R.string.localizable.network_connection_lost())

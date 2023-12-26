@@ -12,10 +12,6 @@ extension UIApplication {
         return homeContainerViewController?.homeNavigationController
     }
     
-    static var homeViewController: HomeViewController? {
-        return homeNavigationController?.viewControllers.first as? HomeViewController
-    }
-    
     static func currentActivity() -> UIViewController? {
         return homeNavigationController?.visibleViewController
     }

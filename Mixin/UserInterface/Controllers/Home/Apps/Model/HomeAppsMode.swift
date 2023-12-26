@@ -14,14 +14,7 @@ enum HomeAppsMode {
         case .regular:
             return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         case .pinned:
-            let rightInset: CGFloat = {
-                let totalWidth = AppDelegate.current.mainWindow.bounds.width
-                let cellsWidth = itemSize.width * 4
-                let leftInset: CGFloat = 20
-                let totalSpacing = totalWidth - margin * 2 - leftInset * 2 - cellsWidth
-                return totalSpacing / CGFloat(appsPerRow) + Self.imageContainerSize.width + margin
-            }()
-            return UIEdgeInsets(top: 14, left: 20, bottom: 14, right: rightInset)
+            return UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
         case .folder:
             return UIEdgeInsets(top: 32, left: 22, bottom: 32, right: 22)
         case .nestedFolder:
@@ -90,7 +83,7 @@ enum HomeAppsMode {
         case .regular:
             return 4
         case .pinned:
-            return 3
+            return 4
         case .folder:
             return 3
         case .nestedFolder:

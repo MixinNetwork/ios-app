@@ -39,6 +39,7 @@ struct Payment {
             switch destination {
             case let .user(opponent):
                 preconditions = [
+                    NoPendingTransactionPrecondition(token: token),
                     DuplicationPrecondition(operation: .transfer(opponent),
                                             token: token,
                                             tokenAmount: tokenAmount,
@@ -52,6 +53,7 @@ struct Payment {
                 ]
             case .multisig, .mainnet:
                 preconditions = [
+                    NoPendingTransactionPrecondition(token: token),
                     AlreadyPaidPrecondition(traceID: traceID)
                 ]
             }
@@ -94,6 +96,7 @@ struct Payment {
     ) {
         Task {
             let preconditions: [PaymentPrecondition] = [
+                NoPendingTransactionPrecondition(token: token),
                 AddressDustPrecondition(token: token,
                                         amount: tokenAmount,
                                         address: address),

@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WalletHintViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="contactSupportButton" destination="o0I-GC-OWw" id="9hM-SN-AIe"/>
                 <outlet property="contentStackTopConstraint" destination="oSB-2K-5PL" id="EAi-6a-Kem"/>
                 <outlet property="contentStackView" destination="spt-1n-snC" id="XCV-Ys-xFS"/>
                 <outlet property="descriptionLabel" destination="kFK-GC-UxK" id="jKK-sU-pfg"/>
@@ -105,7 +106,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

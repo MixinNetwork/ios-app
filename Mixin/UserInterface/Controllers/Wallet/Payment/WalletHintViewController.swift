@@ -13,6 +13,7 @@ final class WalletHintViewController: UIViewController {
     @IBOutlet weak var tokenIconView: AssetIconView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var realizeButton: RoundedButton!
+    @IBOutlet weak var contactSupportButton: UIButton!
     
     @IBOutlet weak var contentStackTopConstraint: NSLayoutConstraint!
     

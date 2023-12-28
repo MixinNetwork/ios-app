@@ -20,12 +20,11 @@ public final class RawTransactionDAO: UserDatabaseDAO {
         db.select(with: "SELECT * FROM raw_transactions WHERE request_id = ?", arguments: [requestID])
     }
     
-    public func signRawTransactions(with requestIDs: [String], alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil) {
+    public func signRawTransactions(with requestIDs: [String]) {
         db.write { db in
             let ids = requestIDs.joined(separator: "','")
             try db.execute(sql: "UPDATE raw_transactions SET state = ? WHERE request_id IN ('\(ids)')",
                            arguments: [RawTransaction.State.signed.rawValue])
-            try change?(db)
         }
     }
     

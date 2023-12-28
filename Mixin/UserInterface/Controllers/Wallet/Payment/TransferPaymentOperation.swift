@@ -111,13 +111,13 @@ struct TransferPaymentOperation {
         }
         Logger.general.info(category: "Transfer", message: "Tx built")
         
-        let request = TransactionRequest(id: traceID, raw: tx)
-        Logger.general.info(category: "Transfer", message: "Will request: \(request.id)")
-        let responses = try await SafeAPI.requestTransaction(requests: [request])
-        guard let response = responses.first(where: { $0.requestID == request.id }) else {
+        let verifyRequest = TransactionRequest(id: traceID, raw: tx)
+        Logger.general.info(category: "Transfer", message: "Will verify: \(verifyRequest.id)")
+        let verifyResponses = try await SafeAPI.requestTransaction(requests: [verifyRequest])
+        guard let verifyResponse = verifyResponses.first(where: { $0.requestID == verifyRequest.id }) else {
             throw Error.invalidTransactionResponse
         }
-        let viewKeys = response.views.joined(separator: ",")
+        let viewKeys = verifyResponse.views.joined(separator: ",")
         let signedTx = KernelSignTx(tx, outputKeys, viewKeys, spendKey, false, &error)
         guard let signedTx, error == nil else {
             throw Error.sign(error)
@@ -140,20 +140,16 @@ struct TransferPaymentOperation {
         }
         
         Logger.general.info(category: "Transfer", message: "Will sign outputs")
-        let trace: Trace?
         let rawTransactionReceiverID: String
         let snapshotOpponentID: String
         switch destination {
         case let .user(opponent):
-            trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: opponent.userId, destination: nil, tag: nil)
             rawTransactionReceiverID = opponent.userId
             snapshotOpponentID = opponent.userId
         case let .multisig(_, receivers):
-            trace = Trace(traceId: traceID, assetId: token.assetID, amount: amount, opponentId: "", destination: nil, tag: nil)
             rawTransactionReceiverID = receivers.map(\.userId).joined(separator: ",")
             snapshotOpponentID = ""
         case .mainnet:
-            trace = nil
             rawTransactionReceiverID = ""
             snapshotOpponentID = ""
         }
@@ -163,57 +159,45 @@ struct TransferPaymentOperation {
                                             state: .unspent,
                                             type: .transfer,
                                             createdAt: now)
-        OutputDAO.shared.signOutputs(with: spendingOutputIDs) { db in
-            try changeOutput?.save(db)
-            if isConsolidation {
-                let output = Output.consolidation(hash: signedTx.hash,
-                                                  asset: kernelAssetID,
-                                                  amount: amount,
-                                                  mask: receiverMask,
-                                                  keys: receiverGhostKey.keys,
-                                                  createdAt: now,
-                                                  lastOutput: spendingOutputs.lastOutput)
-                try output.save(db)
-            }
-            
-            try rawTransaction.save(db)
-            try trace?.save(db)
-            try UTXOService.shared.updateBalance(assetID: token.assetID, kernelAssetID: kernelAssetID, db: db)
-            Logger.general.info(category: "Transfer", message: "Outputs signed")
-        }
-        
-        let signedRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
-        Logger.general.info(category: "Transfer", message: "Will post tx: \(signedRequest.id)")
-        let postResponses = try await SafeAPI.postTransaction(requests: [signedRequest])
-        guard let postResponse = postResponses.first(where: { $0.requestID == signedRequest.id }) else {
-            throw Error.invalidTransactionResponse
-        }
-        let snapshot = SafeSnapshot(id: postResponse.snapshotID,
-                                    type: .snapshot,
+        let snapshot = SafeSnapshot(type: .snapshot,
                                     assetID: token.assetID,
                                     amount: "-" + amount,
                                     userID: senderID,
                                     opponentID: snapshotOpponentID,
                                     memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
                                     transactionHash: signedTx.hash,
-                                    createdAt: postResponse.createdAt,
-                                    traceID: traceID,
-                                    confirmations: nil,
-                                    openingBalance: nil,
-                                    closingBalance: nil,
-                                    deposit: nil,
-                                    withdrawal: nil)
-        Logger.general.info(category: "Transfer", message: "Will sign raw txs")
-        RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID]) { db in
-            if !isConsolidation {
-                try snapshot.save(db)
-            }
-            
+                                    createdAt: now,
+                                    traceID: traceID)
+        let trace: Trace?
+        switch destination {
+        case .user, .multisig:
+            trace = Trace(traceId: traceID,
+                          assetId: token.assetID,
+                          amount: amount,
+                          opponentId: snapshotOpponentID,
+                          destination: nil,
+                          tag: nil,
+                          snapshotId: snapshot.id)
+        case .mainnet:
+            trace = nil
+        }
+        OutputDAO.shared.signOutputs(with: spendingOutputIDs) { db in
+            try changeOutput?.save(db)
             switch destination {
             case .user(let opponent):
-                if !isConsolidation {
+                if isConsolidation {
+                    let output = Output.consolidation(hash: signedTx.hash,
+                                                      asset: kernelAssetID,
+                                                      amount: amount,
+                                                      mask: receiverMask,
+                                                      keys: receiverGhostKey.keys,
+                                                      createdAt: now,
+                                                      lastOutput: spendingOutputs.lastOutput)
+                    try output.save(db)
+                } else {
+                    try snapshot.save(db)
+                    try trace?.save(db)
                     let receiverID = opponent.userId
-                    try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
                     let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
                     let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
                     if try !Conversation.exists(db, key: conversationID) {
@@ -226,16 +210,23 @@ struct TransferPaymentOperation {
                             ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
                         }
                     }
-                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "PeerTransfer", silentNotification: false)
+                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
                 }
-            case .multisig:
-                try Trace.filter(key: traceID).updateAll(db, [Trace.column(of: .snapshotId).set(to: snapshot.id)])
-            case .mainnet:
-                break
+            case .multisig, .mainnet:
+                try snapshot.save(db)
+                try trace?.save(db)
             }
-            
-            Logger.general.info(category: "Transfer", message: "RawTx signed")
+            try rawTransaction.save(db)
+            try UTXOService.shared.updateBalance(assetID: token.assetID, kernelAssetID: kernelAssetID, db: db)
+            Logger.general.info(category: "Transfer", message: "Outputs signed")
         }
+        
+        let broadcastRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
+        Logger.general.info(category: "Transfer", message: "Will broadcast tx: \(broadcastRequest.id)")
+        try await SafeAPI.postTransaction(requests: [broadcastRequest])
+        Logger.general.info(category: "Transfer", message: "Will sign raw txs")
+        RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID])
+        Logger.general.info(category: "Transfer", message: "RawTx signed")
         
         if !isConsolidation {
             AppGroupUserDefaults.User.hasPerformedTransfer = true

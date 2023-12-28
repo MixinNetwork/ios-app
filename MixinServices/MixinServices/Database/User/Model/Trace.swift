@@ -12,14 +12,14 @@ public struct Trace {
     public let snapshotId: String?
     public let createdAt: String
     
-    public init(traceId: String, assetId: String, amount: String, opponentId: String?, destination: String?, tag: String?, createdAt: String = Date().toUTCString()) {
+    public init(traceId: String, assetId: String, amount: String, opponentId: String?, destination: String?, tag: String?, snapshotId: String? = nil, createdAt: String = Date().toUTCString()) {
         self.traceId = traceId
         self.assetId = assetId
         self.amount = amount
         self.opponentId = opponentId
         self.destination = destination
         self.tag = tag
-        self.snapshotId = nil
+        self.snapshotId = snapshotId
         self.createdAt = createdAt
     }
     

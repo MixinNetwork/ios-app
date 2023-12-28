@@ -6,6 +6,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public enum SnapshotType: String {
         case snapshot
         case pending
+        case withdrawal
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -52,6 +53,31 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     }()
     
     public init(
+        id: String, type: String, assetID: String, amount: String,
+        userID: String, opponentID: String, memo: String,
+        transactionHash: String, createdAt: String,
+        traceID: String?, confirmations: Int?,
+        openingBalance: String?, closingBalance: String?,
+        deposit: Deposit?, withdrawal: Withdrawal?
+    ) {
+        self.id = id
+        self.type = type
+        self.assetID = assetID
+        self.amount = amount
+        self.userID = userID
+        self.opponentID = opponentID
+        self.memo = memo
+        self.transactionHash = transactionHash
+        self.createdAt = createdAt
+        self.traceID = traceID
+        self.confirmations = confirmations
+        self.openingBalance = openingBalance
+        self.closingBalance = closingBalance
+        self.deposit = deposit
+        self.withdrawal = withdrawal
+    }
+    
+    public init(
         id: String, type: SnapshotType, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
@@ -77,15 +103,13 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     }
     
     public init(
-        id: String, type: String, assetID: String, amount: String,
+        type: SnapshotType, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
-        traceID: String?, confirmations: Int?,
-        openingBalance: String?, closingBalance: String?,
-        deposit: Deposit?, withdrawal: Withdrawal?
+        traceID: String
     ) {
-        self.id = id
-        self.type = type
+        self.id = "\(userID):\(transactionHash)".uuidDigest()
+        self.type = type.rawValue
         self.assetID = assetID
         self.amount = amount
         self.userID = userID
@@ -94,11 +118,11 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.transactionHash = transactionHash
         self.createdAt = createdAt
         self.traceID = traceID
-        self.confirmations = confirmations
-        self.openingBalance = openingBalance
-        self.closingBalance = closingBalance
-        self.deposit = deposit
-        self.withdrawal = withdrawal
+        self.confirmations = nil
+        self.openingBalance = nil
+        self.closingBalance = nil
+        self.deposit = nil
+        self.withdrawal = nil
     }
     
     public init(assetID: String, pendingDeposit: SafePendingDeposit) {

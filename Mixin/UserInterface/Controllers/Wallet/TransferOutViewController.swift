@@ -260,6 +260,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             switch reason {
             case .userCancelled:
                 self.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                self.amountTextField.becomeFirstResponder()
             case .description(let message):
                 self.adjustBottomConstraintWhenKeyboardFrameChanges = true
                 self.amountTextField.becomeFirstResponder()

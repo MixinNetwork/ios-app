@@ -128,7 +128,9 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
             try change?(db)
             if postChangeNotification {
                 db.afterNextTransaction { _ in
-                    NotificationCenter.default.post(onMainThread: Self.snapshotDidChangeNotification, object: self)
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Self.snapshotDidChangeNotification, object: self)
+                    }
                 }
             }
         }
@@ -137,6 +139,11 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
     public func saveAndFetch(snapshot: SafeSnapshot) -> SafeSnapshotItem? {
         try? db.writeAndReturnError { db in
             try snapshot.save(db)
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Self.snapshotDidChangeNotification, object: self)
+                }
+            }
             return try SafeSnapshotItem.fetchOne(db, sql: Self.queryWithIDSQL, arguments: [snapshot.id])
         }
     }

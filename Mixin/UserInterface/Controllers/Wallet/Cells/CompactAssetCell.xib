@@ -107,6 +107,9 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="na"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="Setting/ic_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="t8n-MJ-dOa">
+                                <rect key="frame" x="374" y="7" width="0.0" height="30"/>
+                            </imageView>
                         </subviews>
                     </stackView>
                 </subviews>
@@ -121,6 +124,7 @@
                 <outlet property="assetIconView" destination="H1b-lm-ev9" id="5tm-3u-PHV"/>
                 <outlet property="chainTagLabel" destination="pEy-bb-k8v" id="UR0-mr-m1E"/>
                 <outlet property="changeLabel" destination="DSZ-yk-GKK" id="i3Z-8G-QIS"/>
+                <outlet property="checkmarkImageView" destination="t8n-MJ-dOa" id="bbh-6i-RCl"/>
                 <outlet property="descriptionLabel" destination="lIs-aF-EnQ" id="DgM-u5-rKK"/>
                 <outlet property="nameLabel" destination="JsW-9o-NGh" id="xhf-u0-Fa3"/>
                 <outlet property="noValueIndicator" destination="nzf-VT-2UZ" id="IZc-u9-XTJ"/>
@@ -130,11 +134,12 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="Setting/ic_checkmark" width="30" height="30"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="green">
             <color red="0.36470588235294116" green="0.73725490196078436" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

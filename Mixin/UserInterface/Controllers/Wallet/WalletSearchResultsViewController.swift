@@ -156,7 +156,7 @@ extension WalletSearchResultsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.compact_asset, for: indexPath)!
         let item = searchResults[indexPath.row]
-        cell.render(asset: item)
+        cell.render(token: item)
         return cell
     }
     

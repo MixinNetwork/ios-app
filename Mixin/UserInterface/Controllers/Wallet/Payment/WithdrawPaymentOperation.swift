@@ -58,20 +58,20 @@ struct WithdrawPaymentOperation {
     
     func start(pin: String) async throws {
         let isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
-        let amount = withdrawalTokenAmount
         let senderID = myUserId
         let threshold: Int32 = 1
         let emptyMemo = ""
         let fullAddress = address.fullAddress
-        let amountString = Token.amountString(from: amount)
+        let withdrawalAmount = withdrawalTokenAmount
+        let withdrawalAmountString = Token.amountString(from: withdrawalAmount)
         let feeAmountString = Token.amountString(from: feeAmount)
         let feeTraceID = UUID.uniqueObjectIDString(traceID, "FEE")
-        Logger.general.info(category: "Withdraw", message: "Withdraw: \(amount) \(withdrawalToken.symbol), fee: \(feeAmount) \(feeToken.symbol), to \(fullAddress), traceID: \(traceID), feeTraceID: \(feeTraceID)")
+        Logger.general.info(category: "Withdraw", message: "Withdraw: \(withdrawalAmount) \(withdrawalToken.symbol), fee: \(feeAmount) \(feeToken.symbol), to \(fullAddress), traceID: \(traceID), feeTraceID: \(feeTraceID)")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
         Logger.general.info(category: "Withdraw", message: "SpendKey ready")
         
-        let trace = Trace(traceId: traceID, assetId: feeToken.assetID, amount: amountString, opponentId: nil, destination: address.destination, tag: address.tag)
+        let trace = Trace(traceId: traceID, assetId: feeToken.assetID, amount: withdrawalAmountString, opponentId: nil, destination: address.destination, tag: address.tag)
         TraceDAO.shared.saveTrace(trace: trace)
         
         let feeOutputs: UTXOService.OutputCollection?
@@ -109,7 +109,7 @@ struct WithdrawPaymentOperation {
         var error: NSError?
         
         let withdrawalTx = KernelBuildWithdrawalTx(withdrawalToken.kernelAssetID,
-                                                   amountString,
+                                                   withdrawalAmountString,
                                                    address.destination,
                                                    address.tag,
                                                    isFeeTokenDifferent ? "" : feeAmountString,
@@ -172,15 +172,16 @@ struct WithdrawPaymentOperation {
         Logger.general.info(category: "Withdraw", message: "Withdrawal signed")
         let now = Date().toUTCString()
         let broadcastRequests: [TransactionRequest]
-        let snapshot = SafeSnapshot(type: .withdrawal,
-                                    assetID: withdrawalToken.assetID,
-                                    amount: "-" + amountString,
-                                    userID: senderID,
-                                    opponentID: "",
-                                    memo: emptyMemo,
-                                    transactionHash: signedWithdrawal.hash,
-                                    createdAt: now,
-                                    traceID: traceID)
+        let withdrawalSnapshotAmount = isFeeTokenDifferent ? withdrawalAmount : withdrawalAmount + feeAmount
+        let withdrawalSnapshot = SafeSnapshot(type: .withdrawal,
+                                              assetID: withdrawalToken.assetID,
+                                              amount: "-" + Token.amountString(from: withdrawalSnapshotAmount),
+                                              userID: senderID,
+                                              opponentID: "",
+                                              memo: emptyMemo,
+                                              transactionHash: signedWithdrawal.hash,
+                                              createdAt: now,
+                                              traceID: traceID)
         if let feeOutputs, let feeTx {
             guard let feeResponse = verifyResponses.first(where: { $0.requestID == feeTraceID }) else {
                 throw Error.missingFeeResponse
@@ -255,8 +256,8 @@ struct WithdrawPaymentOperation {
                 try UTXOService.shared.updateBalance(assetID: feeToken.assetID,
                                                      kernelAssetID: feeToken.kernelAssetID,
                                                      db: db)
-                try SafeSnapshotDAO.shared.save(snapshots: [snapshot, feeSnapshot], db: db)
-                try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: snapshot.id))
+                try SafeSnapshotDAO.shared.save(snapshots: [withdrawalSnapshot, feeSnapshot], db: db)
+                try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: withdrawalSnapshot.id))
                 db.afterNextTransaction { _ in
                     Logger.general.info(category: "Withdraw", message: "Outputs signed")
                 }
@@ -287,8 +288,8 @@ struct WithdrawPaymentOperation {
                 try UTXOService.shared.updateBalance(assetID: withdrawalToken.assetID,
                                                      kernelAssetID: withdrawalToken.kernelAssetID,
                                                      db: db)
-                try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)
-                try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: snapshot.id))
+                try SafeSnapshotDAO.shared.save(snapshots: [withdrawalSnapshot], db: db)
+                try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: withdrawalSnapshot.id))
                 db.afterNextTransaction { _ in
                     Logger.general.info(category: "Withdraw", message: "Outputs signed")
                 }

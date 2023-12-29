@@ -195,7 +195,7 @@ struct TransferPaymentOperation {
                                                       lastOutput: spendingOutputs.lastOutput)
                     try output.save(db)
                 } else {
-                    try snapshot.save(db)
+                    try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)
                     try trace?.save(db)
                     let receiverID = opponent.userId
                     let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
@@ -213,7 +213,7 @@ struct TransferPaymentOperation {
                     try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
                 }
             case .multisig, .mainnet:
-                try snapshot.save(db)
+                try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)
                 try trace?.save(db)
             }
             try rawTransaction.save(db)

@@ -54,7 +54,7 @@ struct WithdrawPaymentOperation {
     
     let address: Address
     
-    private let receiverID = "674d6776-d600-4346-af46-58e77d8df185"
+    private let cashierID = "674d6776-d600-4346-af46-58e77d8df185"
     
     func start(pin: String) async throws {
         let isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
@@ -95,9 +95,9 @@ struct WithdrawPaymentOperation {
         
         let ghostKeyRequests: [GhostKeyRequest]
         if isFeeTokenDifferent {
-            ghostKeyRequests = GhostKeyRequest.withdrawFee(receiverID: receiverID, senderID: senderID, traceID: traceID)
+            ghostKeyRequests = GhostKeyRequest.withdrawFee(receiverID: cashierID, senderID: senderID, traceID: traceID)
         } else {
-            ghostKeyRequests = GhostKeyRequest.withdrawSubmit(receiverID: receiverID, senderID: senderID, traceID: traceID)
+            ghostKeyRequests = GhostKeyRequest.withdrawSubmit(receiverID: cashierID, senderID: senderID, traceID: traceID)
         }
         let ghostKeys = try await SafeAPI.ghostKeys(requests: ghostKeyRequests)
         let feeOutputKeys = ghostKeys[0].keys.joined(separator: ",")
@@ -196,6 +196,15 @@ struct WithdrawPaymentOperation {
                 throw Error.signFee(error)
             }
             Logger.general.info(category: "Withdraw", message: "Fee signed")
+            let feeSnapshot = SafeSnapshot(type: .snapshot,
+                                           assetID: feeToken.assetID,
+                                           amount: "-" + feeAmountString,
+                                           userID: senderID,
+                                           opponentID: cashierID,
+                                           memo: emptyMemo,
+                                           transactionHash: signedFee.hash,
+                                           createdAt: now,
+                                           traceID: feeTraceID)
             broadcastRequests = [
                 TransactionRequest(id: traceID, raw: signedWithdrawal.raw),
                 TransactionRequest(id: feeTraceID, raw: signedFee.raw)
@@ -246,9 +255,11 @@ struct WithdrawPaymentOperation {
                 try UTXOService.shared.updateBalance(assetID: feeToken.assetID,
                                                      kernelAssetID: feeToken.kernelAssetID,
                                                      db: db)
-                try snapshot.save(db)
+                try SafeSnapshotDAO.shared.save(snapshots: [snapshot, feeSnapshot], db: db)
                 try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: snapshot.id))
-                Logger.general.info(category: "Withdraw", message: "Outputs signed")
+                db.afterNextTransaction { _ in
+                    Logger.general.info(category: "Withdraw", message: "Outputs signed")
+                }
             }
         } else {
             broadcastRequests = [
@@ -276,9 +287,11 @@ struct WithdrawPaymentOperation {
                 try UTXOService.shared.updateBalance(assetID: withdrawalToken.assetID,
                                                      kernelAssetID: withdrawalToken.kernelAssetID,
                                                      db: db)
-                try snapshot.save(db)
+                try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)
                 try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: snapshot.id))
-                Logger.general.info(category: "Withdraw", message: "Outputs signed")
+                db.afterNextTransaction { _ in
+                    Logger.general.info(category: "Withdraw", message: "Outputs signed")
+                }
             }
         }
         let broadcastRequestIDs = broadcastRequests.map(\.id)

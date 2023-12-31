@@ -307,7 +307,18 @@ extension SnapshotViewController {
     }
     
     private func reloadSnapshotIfNeeded() {
-        if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
+        let type = SafeSnapshot.SnapshotType(rawValue: snapshot.type)
+        let needsReloadWithdrawalInfo: Bool
+        if type == .withdrawal {
+            // All snapshots come from remote are in type of `snapshot`
+            // A `withdrawal` typed snapshot indicates that one is made locally
+            needsReloadWithdrawalInfo = true
+        } else if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
+            needsReloadWithdrawalInfo = true
+        } else {
+            needsReloadWithdrawalInfo = false
+        }
+        if needsReloadWithdrawalInfo {
             SafeAPI.snapshot(with: snapshot.id, queue: .global()) { [weak self] result in
                 switch result {
                 case let .success(snapshot):
@@ -316,7 +327,7 @@ extension SnapshotViewController {
                     break
                 }
             }
-        } else if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
+        } else if type == .pending {
             Task { [weak self, assetID=token.assetID, snapshotID=snapshot.id] in
                 guard let chainID = TokenDAO.shared.chainID(ofAssetWith: assetID) else {
                     return

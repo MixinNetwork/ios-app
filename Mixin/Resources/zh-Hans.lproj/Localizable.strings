@@ -1025,6 +1025,8 @@
 "waiting_for_other_device" = "等待其他设备...";
 "waiting_for_other_device_login" = "在新设备上登录当前账户并选择从其他手机恢复";
 "waiting_for_other_device_scan" = "新设备扫上面的二维码建立连接";
+"waiting_transaction" = "正在等待交易";
+"waiting_transaction_description" = "您有一笔转账或提现未完成，请稍后再试";
 "wallet" = "钱包";
 "wallet_enable_biometric_pay" = "开启后，转账时可验证%@快速完成付款。";
 "wallet_hide_asset_confirmation" = "您确定要隐藏%@吗？";

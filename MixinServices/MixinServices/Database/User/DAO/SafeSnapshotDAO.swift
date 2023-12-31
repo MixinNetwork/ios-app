@@ -36,29 +36,6 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func save(
-        snapshot: SafeSnapshot,
-        postChangeNotification: Bool,
-        alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil
-    ) {
-        db.write { db in
-            try snapshot.save(db)
-            try change?(db)
-            if postChangeNotification {
-                db.afterNextTransaction { _ in
-                    NotificationCenter.default.post(onMainThread: Self.snapshotDidChangeNotification, object: self)
-                }
-            }
-        }
-    }
-    
-    public func saveAndFetch(snapshot: SafeSnapshot) -> SafeSnapshotItem? {
-        try? db.writeAndReturnError { db in
-            try snapshot.save(db)
-            return try SafeSnapshotItem.fetchOne(db, sql: Self.queryWithIDSQL, arguments: [snapshot.id])
-        }
-    }
-    
     public func snapshots(
         assetId: String? = nil,
         below location: SafeSnapshot? = nil,
@@ -141,9 +118,48 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         return snapshots
     }
     
+    public func save(
+        snapshot: SafeSnapshot,
+        postChangeNotification: Bool,
+        alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil
+    ) {
+        db.write { db in
+            try snapshot.save(db)
+            try change?(db)
+            if postChangeNotification {
+                db.afterNextTransaction { _ in
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Self.snapshotDidChangeNotification, object: self)
+                    }
+                }
+            }
+        }
+    }
+    
+    public func saveAndFetch(snapshot: SafeSnapshot) -> SafeSnapshotItem? {
+        try? db.writeAndReturnError { db in
+            try snapshot.save(db)
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Self.snapshotDidChangeNotification, object: self)
+                }
+            }
+            return try SafeSnapshotItem.fetchOne(db, sql: Self.queryWithIDSQL, arguments: [snapshot.id])
+        }
+    }
+    
+    public func save(snapshots: [SafeSnapshot], userInfo: [AnyHashable: Any]? = nil, db: GRDB.Database) throws {
+        try snapshots.save(db)
+        db.afterNextTransaction { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.snapshotDidChangeNotification, object: self, userInfo: userInfo)
+            }
+        }
+    }
+    
     public func save(snapshots: [SafeSnapshot], userInfo: [AnyHashable: Any]? = nil) {
-        db.save(snapshots) { (db) in
-            NotificationCenter.default.post(onMainThread: SafeSnapshotDAO.snapshotDidChangeNotification, object: self, userInfo: userInfo)
+        db.write { db in
+            try save(snapshots: snapshots, userInfo: userInfo, db: db)
         }
     }
     

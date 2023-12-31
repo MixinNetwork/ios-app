@@ -184,3 +184,26 @@ struct FirstWithdrawPrecondition: PaymentPrecondition {
     }
     
 }
+
+struct NoPendingTransactionPrecondition: PaymentPrecondition {
+    
+    let token: TokenItem
+    
+    func check() async -> PaymentPreconditionCheckingResult {
+        let count = RawTransactionDAO.shared.unspentRawTransactionCount(types: [.transfer, .withdrawal])
+        if count > 0 {
+            await MainActor.run {
+                let hint = WalletHintViewController(token: token)
+                hint.setTitle(R.string.localizable.waiting_transaction(),
+                              description: R.string.localizable.waiting_transaction_description())
+                hint.contactSupportButton.alpha = 0
+                UIApplication.homeContainerViewController?.present(hint, animated: true)
+                ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
+            }
+            return .failed(.userCancelled)
+        } else {
+            return .passed
+        }
+    }
+    
+}

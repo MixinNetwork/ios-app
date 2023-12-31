@@ -64,6 +64,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         addressTextView.delegate = self
         addressTextView.textContainerInset = .zero
         addressTextView.textContainer.lineFragmentPadding = 0
+        addressTextView.textContainer.lineBreakMode = .byCharWrapping
         memoTextView.delegate = self
         memoTextView.textContainerInset = .zero
         memoTextView.textContainer.lineFragmentPadding = 0

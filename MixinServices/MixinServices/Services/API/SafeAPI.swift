@@ -85,7 +85,8 @@ extension SafeAPI {
         try await request(method: .post, path: "/safe/transaction/requests", parameters: requests)
     }
     
-    public static func postTransaction(requests: [TransactionRequest]) async throws -> [PostTransactionResponse] {
+    @discardableResult
+    public static func postTransaction(requests: [TransactionRequest]) async throws -> [TransactionResponse] {
         try await request(method: .post, path: "/safe/transactions", parameters: requests)
     }
     

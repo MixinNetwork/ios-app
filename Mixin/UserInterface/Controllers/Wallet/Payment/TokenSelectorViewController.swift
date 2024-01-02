@@ -5,7 +5,7 @@ protocol TokenSelectorViewControllerDelegate: AnyObject {
     func tokenSelectorViewController(_ viewController: TokenSelectorViewController, didSelectToken token: TokenItem)
 }
 
-class TokenSelectorViewController: PopupSearchableTableViewController {
+final class TokenSelectorViewController: PopupSearchableTableViewController {
     
     weak var delegate: TokenSelectorViewControllerDelegate?
     
@@ -29,7 +29,7 @@ class TokenSelectorViewController: PopupSearchableTableViewController {
             reordered.insert(selected, at: 0)
             self.tokens = reordered
         }
-        tableView.register(R.nib.transferTypeCell)
+        tableView.register(R.nib.compactAssetCell)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.reloadData()
@@ -51,10 +51,10 @@ extension TokenSelectorViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.transfer_type, for: indexPath)!
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.compact_asset, for: indexPath)!
         let token = isSearching ? searchResults[indexPath.row] : tokens[indexPath.row]
-        cell.checkmarkView.isHidden = !(token.assetID == self.token?.assetID)
-        cell.render(token: token)
+        let isSelected = token.assetID == self.token?.assetID
+        cell.render(token: token, isSelected: isSelected)
         return cell
     }
     

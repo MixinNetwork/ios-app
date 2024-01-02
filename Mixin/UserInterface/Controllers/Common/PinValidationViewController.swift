@@ -52,6 +52,11 @@ class PinValidationViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func showLogs(_ sender: Any) {
+        let logs = LogViewController.instance(category: .all)
+        present(logs, animated: true)
+    }
+    
     func validate(pin: String) {
         AccountAPI.verify(pin: pin) { (result) in
             switch result {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -29,9 +29,10 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BaG-Ng-fDo" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="299" width="375" height="368"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your Wallet PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BeR-hQ-9OV">
+                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your Wallet PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BeR-hQ-9OV">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <gestureRecognizers/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="70" id="oI2-HX-M4T"/>
                             </constraints>
@@ -42,6 +43,9 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="enter_your_pin"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="evb-Ro-wUY" appends="YES" id="2Pa-f6-yIg"/>
+                            </connections>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tgg-8p-q44">
                             <rect key="frame" x="0.0" y="70" width="375" height="170"/>
@@ -97,7 +101,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="170"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You have tried more than 5 times, please wait at least 24 hours to try again." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xKG-nW-kNh" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="30" y="26" width="315" height="34"/>
+                                            <rect key="frame" x="30" y="26" width="315" height="40.5"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                             <color key="textColor" name="red"/>
                                             <nil key="highlightedColor"/>
@@ -109,7 +113,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOR-gR-Mjb">
-                                            <rect key="frame" x="150.5" y="88" width="74" height="42"/>
+                                            <rect key="frame" x="147.5" y="84" width="80" height="46"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                             <inset key="contentEdgeInsets" minX="20" minY="13" maxX="20" maxY="13"/>
                                             <state key="normal" title="Got It"/>
@@ -185,6 +189,11 @@
             </constraints>
             <point key="canvasLocation" x="138" y="155"/>
         </view>
+        <tapGestureRecognizer numberOfTapsRequired="10" id="evb-Ro-wUY">
+            <connections>
+                <action selector="showLogs:" destination="-1" id="HvY-qu-uZG"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <namedColor name="background">
@@ -194,7 +203,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

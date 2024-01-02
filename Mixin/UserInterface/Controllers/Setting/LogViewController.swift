@@ -30,6 +30,15 @@ class LogViewController: UIViewController {
         fetchLogs()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if navigationController != nil {
+            container?.leftButton.setImage(R.image.ic_title_back(), for: .normal)
+        } else if presentingViewController != nil {
+            container?.leftButton.setImage(R.image.ic_title_close(), for: .normal)
+        }
+    }
+    
     private func fetchLogs(offset: String? = nil) {
         guard !isLoading else {
             return
@@ -148,6 +157,18 @@ extension LogViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+}
+
+extension LogViewController: ContainerViewControllerDelegate {
+    
+    func barLeftButtonTappedAction() {
+        if let navigationController {
+            navigationController.popViewController(animated: true)
+        } else if let presentingViewController {
+            presentingViewController.dismiss(animated: true)
+        }
     }
     
 }

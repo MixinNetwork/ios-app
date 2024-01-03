@@ -181,7 +181,8 @@ struct WithdrawPaymentOperation {
                                               memo: emptyMemo,
                                               transactionHash: signedWithdrawal.hash,
                                               createdAt: now,
-                                              traceID: traceID)
+                                              traceID: traceID,
+                                              withdrawal: .init(hash: "", receiver: address.destination))
         if let feeOutputs, let feeTx {
             guard let feeResponse = verifyResponses.first(where: { $0.requestID == feeTraceID }) else {
                 throw Error.missingFeeResponse

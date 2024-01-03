@@ -106,7 +106,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         type: SnapshotType, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
-        traceID: String
+        traceID: String, withdrawal: Withdrawal? = nil
     ) {
         self.id = "\(userID):\(transactionHash)".uuidDigest()
         self.type = type.rawValue
@@ -122,7 +122,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.openingBalance = nil
         self.closingBalance = nil
         self.deposit = nil
-        self.withdrawal = nil
+        self.withdrawal = withdrawal
     }
     
     public init(assetID: String, pendingDeposit: SafePendingDeposit) {
@@ -189,6 +189,11 @@ extension SafeSnapshot {
         public let receiver: String
         
         public private(set) lazy var compactReceiver = Address.compactRepresentation(of: receiver)
+        
+        public init(hash: String, receiver: String) {
+            self.hash = hash
+            self.receiver = receiver
+        }
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)

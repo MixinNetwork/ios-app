@@ -3,6 +3,33 @@ import Alamofire
 
 public final class SafeAPI: MixinAPI {
     
+    @discardableResult
+    public static func withRetryingOnServerError<Response>(
+        maxNumberOfTries: Int,
+        execute fn: () async throws -> Response
+    ) async throws -> Response {
+        var numberOfTries = 0
+        repeat {
+            do {
+                return try await fn()
+            } catch {
+                numberOfTries += 1
+                switch error {
+                case MixinAPIError.internalServerError, MixinAPIError.httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode)):
+                    if numberOfTries == maxNumberOfTries {
+                        throw error
+                    } else {
+                        try await Task.sleep(nanoseconds: 200 * NSEC_PER_MSEC)
+                        continue
+                    }
+                default:
+                    throw error
+                }
+            }
+        } while LoginManager.shared.isLoggedIn
+        throw MixinAPIError.foundNilResult
+    }
+    
     static func register(
         publicKey: String,
         signature: String,

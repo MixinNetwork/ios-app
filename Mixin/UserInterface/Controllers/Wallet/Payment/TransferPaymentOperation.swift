@@ -222,8 +222,10 @@ struct TransferPaymentOperation {
         }
         
         let broadcastRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
-        Logger.general.info(category: "Transfer", message: "Will broadcast tx: \(broadcastRequest.id)")
-        try await SafeAPI.postTransaction(requests: [broadcastRequest])
+        try await SafeAPI.withRetryingOnServerError(maxNumberOfTries: 20) {
+            Logger.general.info(category: "Transfer", message: "Will broadcast tx: \(broadcastRequest.id)")
+            try await SafeAPI.postTransaction(requests: [broadcastRequest])
+        }
         Logger.general.info(category: "Transfer", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID])
         Logger.general.info(category: "Transfer", message: "RawTx signed")

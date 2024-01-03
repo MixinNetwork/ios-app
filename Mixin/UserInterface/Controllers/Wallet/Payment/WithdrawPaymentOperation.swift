@@ -297,8 +297,10 @@ struct WithdrawPaymentOperation {
             }
         }
         let broadcastRequestIDs = broadcastRequests.map(\.id)
-        Logger.general.info(category: "Withdraw", message: "Will broadcast tx: \(broadcastRequestIDs)")
-        try await SafeAPI.postTransaction(requests: broadcastRequests)
+        try await SafeAPI.withRetryingOnServerError(maxNumberOfTries: 20) {
+            Logger.general.info(category: "Withdraw", message: "Will broadcast tx: \(broadcastRequestIDs)")
+            try await SafeAPI.postTransaction(requests: broadcastRequests)
+        }
         Logger.general.info(category: "Withdraw", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: broadcastRequestIDs)
         Logger.general.info(category: "Withdraw", message: "RawTx signed")

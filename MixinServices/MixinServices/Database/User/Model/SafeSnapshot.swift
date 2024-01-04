@@ -125,24 +125,6 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.withdrawal = withdrawal
     }
     
-    public init(assetID: String, pendingDeposit: SafePendingDeposit) {
-        self.id = pendingDeposit.id
-        self.type = SnapshotType.pending.rawValue
-        self.assetID = assetID
-        self.amount = pendingDeposit.amount
-        self.userID = myUserId
-        self.opponentID = ""
-        self.transactionHash = ""
-        self.memo = ""
-        self.createdAt = pendingDeposit.createdAt
-        self.traceID = ""
-        self.confirmations = pendingDeposit.confirmations
-        self.openingBalance = nil
-        self.closingBalance = nil
-        self.deposit = Deposit(hash: pendingDeposit.transactionHash, sender: "")
-        self.withdrawal = nil
-    }
-    
 }
 
 extension SafeSnapshot: TableRecord, PersistableRecord {

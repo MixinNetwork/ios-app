@@ -343,7 +343,7 @@ extension SnapshotViewController {
                 SafeSnapshotDAO.shared.replacePendingSnapshots(assetID: assetID, pendingDeposits: pendingDeposits)
                 
                 if let deposit = pendingDeposits.first(where: { $0.id == snapshotID }) {
-                    let snapshot = SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
+                    let snapshot = SafeSnapshot(pendingDeposit: deposit)
                     await MainActor.run {
                         self?.reloadData(with: snapshot)
                     }

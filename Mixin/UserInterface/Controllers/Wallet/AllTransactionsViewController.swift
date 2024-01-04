@@ -17,6 +17,13 @@ class AllTransactionsViewController: UITableViewController {
     
     private lazy var filterController = AssetFilterViewController.instance()
     
+    class func instance() -> UIViewController {
+        let vc = R.storyboard.wallet.snapshot()!
+        vc.dataSource = SnapshotDataSource(category: .all)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.all_transactions())
+        return container
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(R.nib.snapshotCell)
@@ -34,18 +41,32 @@ class AllTransactionsViewController: UITableViewController {
         dataSource.reloadFromLocal()
         dataSource.reloadFromRemote()
         updateTableViewContentInset()
+        SafeAPI.allDeposits(queue: .global()) { result in
+            guard case .success(let deposits) = result else {
+                return
+            }
+            let entries = DepositEntryDAO.shared.compactEntries()
+            let myDeposits = deposits.filter { deposit in
+                entries.contains(where: { (entry) in
+                    let isDestinationMatch = entry.destination == deposit.destination
+                    let isTagMatch: Bool
+                    if entry.tag == deposit.tag {
+                        isTagMatch = true
+                    } else if entry.tag.isNilOrEmpty && deposit.tag.isNilOrEmpty {
+                        isTagMatch = true
+                    } else {
+                        isTagMatch = false
+                    }
+                    return isDestinationMatch && isTagMatch
+                })
+            }
+            SafeSnapshotDAO.shared.replaceAllPendingSnapshots(with: myDeposits)
+        }
     }
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
-    }
-    
-    class func instance() -> UIViewController {
-        let vc = R.storyboard.wallet.snapshot()!
-        vc.dataSource = SnapshotDataSource(category: .all)
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.all_transactions())
-        return container
     }
     
 }

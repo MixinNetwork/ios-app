@@ -181,6 +181,13 @@ extension SafeAPI {
         }
     }
     
+    public static func allDeposits(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[SafePendingDeposit]>) -> Void
+    ) {
+        request(method: .get, path: "/safe/deposits", queue: queue, completion: completion)
+    }
+    
     public static func deposits(
         assetID: String,
         destination: String,

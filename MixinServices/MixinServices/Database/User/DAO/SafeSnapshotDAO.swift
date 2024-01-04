@@ -163,13 +163,31 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
         }
     }
     
+    public func replaceAllPendingSnapshots(with pendingDeposits: [SafePendingDeposit]) {
+        db.write { db in
+            var changesCount = 0
+            
+            try db.execute(sql: "DELETE FROM safe_snapshots WHERE type = ?",
+                           arguments: [SafeSnapshot.SnapshotType.pending.rawValue])
+            changesCount += db.changesCount
+
+            let snapshots = pendingDeposits.map(SafeSnapshot.init(pendingDeposit:))
+            try snapshots.save(db)
+            changesCount += db.changesCount
+            
+            if changesCount > 0 {
+                db.afterNextTransaction { _ in
+                    NotificationCenter.default.post(onMainThread: SafeSnapshotDAO.snapshotDidChangeNotification, object: self)
+                }
+            }
+        }
+    }
+    
     public func replacePendingSnapshots(assetID: String, pendingDeposits: [SafePendingDeposit]) {
         db.write { (db) in
             try db.execute(sql: "DELETE FROM safe_snapshots WHERE asset_id = ? AND type = ?",
                            arguments: [assetID, SafeSnapshot.SnapshotType.pending.rawValue])
-            let snapshots = pendingDeposits.map { deposit in
-                SafeSnapshot(assetID: assetID, pendingDeposit: deposit)
-            }
+            let snapshots = pendingDeposits.map(SafeSnapshot.init(pendingDeposit:))
             try snapshots.save(db)
             
             db.afterNextTransaction { _ in

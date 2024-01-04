@@ -1,4 +1,5 @@
 import UIKit
+import AVFoundation
 import DeviceCheck
 import MixinServices
 
@@ -44,6 +45,28 @@ class HomeNavigationController: UINavigationController {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
                 ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             }
+        }
+    }
+    
+    func pushCameraViewController(asQRCodeScanner: Bool) {
+        let camera = CameraViewController.instance()
+        camera.asQrCodeScanner = asQRCodeScanner
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            pushViewController(camera, animated: true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] (granted) in
+                guard granted else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self?.pushViewController(camera, animated: true)
+                }
+            })
+        case .denied, .restricted:
+            alertSettings(R.string.localizable.permission_denied_camera_hint())
+        @unknown default:
+            alertSettings(R.string.localizable.permission_denied_camera_hint())
         }
     }
     

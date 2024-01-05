@@ -5,7 +5,7 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
     
     enum Operation {
         case transfer(UserItem)
-        case withdraw(Address)
+        case withdraw(WithdrawableAddress)
     }
     
     static func instance() -> DuplicateConfirmationWindow {

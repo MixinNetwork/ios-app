@@ -4,26 +4,27 @@ import Tip
 
 final class WithdrawalConfirmationViewController: PaymentConfirmationViewController {
     
+    var manipulateNavigationStackOnFinished = true
+    
     private let operation: WithdrawPaymentOperation
     
     private let amountDisplay: AmountIntent
     private let withdrawalTokenAmount: Decimal
     private let withdrawalFiatMoneyAmount: Decimal
-    
-    private var address: Address {
-        operation.address
-    }
+    private let addressLabel: String?
     
     init(
         operation: WithdrawPaymentOperation,
         amountDisplay: AmountIntent,
         withdrawalTokenAmount: Decimal,
-        withdrawalFiatMoneyAmount: Decimal
+        withdrawalFiatMoneyAmount: Decimal,
+        addressLabel: String?
     ) {
         self.operation = operation
         self.amountDisplay = amountDisplay
         self.withdrawalTokenAmount = withdrawalTokenAmount
         self.withdrawalFiatMoneyAmount = withdrawalFiatMoneyAmount
+        self.addressLabel = addressLabel
         super.init()
     }
     
@@ -54,6 +55,10 @@ final class WithdrawalConfirmationViewController: PaymentConfirmationViewControl
     }
     
     @objc private func finish(_ sender: Any) {
+        guard manipulateNavigationStackOnFinished else {
+            authenticationViewController?.presentingViewController?.dismiss(animated: true)
+            return
+        }
         authenticationViewController?.presentingViewController?.dismiss(animated: true) {
             guard let navigation = UIApplication.homeNavigationController else {
                 return
@@ -74,7 +79,11 @@ final class WithdrawalConfirmationViewController: PaymentConfirmationViewControl
 extension WithdrawalConfirmationViewController: AuthenticationIntentViewController {
     
     var intentTitle: String {
-        R.string.localizable.withdrawal_to(address.label)
+        if let addressLabel {
+            return R.string.localizable.withdrawal_to(addressLabel)
+        } else {
+            return R.string.localizable.withdrawal()
+        }
     }
     
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
@@ -82,7 +91,7 @@ extension WithdrawalConfirmationViewController: AuthenticationIntentViewControll
     }
     
     var intentSubtitle: String {
-        address.fullAddress
+        operation.address.fullRepresentation
     }
     
     var options: AuthenticationIntentOptions {

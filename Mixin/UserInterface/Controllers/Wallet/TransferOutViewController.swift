@@ -284,12 +284,13 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             guard let feeItem = selectedFeeItem else {
                 return
             }
-            payment.checkPreconditions(withdrawTo: address, fee: feeItem, on: self, onFailure: onPreconditonFailure) { operation in
+            payment.checkPreconditions(withdrawTo: .address(address), fee: feeItem, on: self, onFailure: onPreconditonFailure) { operation in
                 self.continueButton.isBusy = false
                 let withdraw = WithdrawalConfirmationViewController(operation: operation,
                                                                     amountDisplay: amountIntent,
                                                                     withdrawalTokenAmount: tokenAmount,
-                                                                    withdrawalFiatMoneyAmount: fiatMoneyAmount)
+                                                                    withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                                    addressLabel: address.label)
                 let authentication = AuthenticationViewController(intentViewController: withdraw)
                 self.present(authentication, animated: true)
             }

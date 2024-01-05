@@ -52,16 +52,33 @@ struct WithdrawPaymentOperation {
     let feeToken: Token
     let feeAmount: Decimal
     
-    let address: Address
+    let address: WithdrawableAddress
+    let addressID: String?
     
     private let cashierID = "674d6776-d600-4346-af46-58e77d8df185"
+    
+    init(
+        traceID: String, withdrawalToken: TokenItem, withdrawalTokenAmount: Decimal,
+        withdrawalFiatMoneyAmount: Decimal, withdrawalOutputs: UTXOService.OutputCollection,
+        feeToken: Token, feeAmount: Decimal, address: WithdrawableAddress, addressID: String? = nil
+    ) {
+        self.traceID = traceID
+        self.withdrawalToken = withdrawalToken
+        self.withdrawalTokenAmount = withdrawalTokenAmount
+        self.withdrawalFiatMoneyAmount = withdrawalFiatMoneyAmount
+        self.withdrawalOutputs = withdrawalOutputs
+        self.feeToken = feeToken
+        self.feeAmount = feeAmount
+        self.address = address
+        self.addressID = addressID
+    }
     
     func start(pin: String) async throws {
         let isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
         let senderID = myUserId
         let threshold: Int32 = 1
         let emptyMemo = ""
-        let fullAddress = address.fullAddress
+        let fullAddress = address.fullRepresentation
         let withdrawalAmount = withdrawalTokenAmount
         let withdrawalAmountString = Token.amountString(from: withdrawalAmount)
         let feeAmountString = Token.amountString(from: feeAmount)
@@ -304,7 +321,9 @@ struct WithdrawPaymentOperation {
         Logger.general.info(category: "Withdraw", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: broadcastRequestIDs)
         Logger.general.info(category: "Withdraw", message: "RawTx signed")
-        AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
+        if let addressID {
+            AppGroupUserDefaults.Wallet.withdrawnAddressIds[addressID] = true
+        }
     }
     
 }

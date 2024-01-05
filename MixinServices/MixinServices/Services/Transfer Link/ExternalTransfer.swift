@@ -27,10 +27,10 @@ public struct ExternalTransfer {
     
     // Decimal amount resolved with decimal value of atomic unit.
     // Will be nil for ERC-20 tokens due to lack of the atomic value.
-    public let resolvedAmount: String?
+    public let resolvedAmount: Decimal?
     
     // Some non-standard ethereum URLs specify an amount in decimal.
-    public let arbitraryAmount: String?
+    public let arbitraryAmount: Decimal?
     
     public let memo: String?
     
@@ -90,7 +90,7 @@ public struct ExternalTransfer {
                     self.resolvedAmount = nil
                 } else if let arbitraryAmount {
                     self.amount = arbitraryAmount
-                    self.resolvedAmount = arbitraryAmount.description
+                    self.resolvedAmount = arbitraryAmount
                 } else {
                     throw TransferLinkError.invalidFormat
                 }
@@ -110,7 +110,7 @@ public struct ExternalTransfer {
                     self.resolvedAmount = nil
                 } else if let arbitraryAmount {
                     self.amount = arbitraryAmount
-                    self.resolvedAmount = arbitraryAmount.description
+                    self.resolvedAmount = arbitraryAmount
                 } else {
                     throw TransferLinkError.invalidFormat
                 }
@@ -126,7 +126,7 @@ public struct ExternalTransfer {
                     self.resolvedAmount = Self.resolve(atomicAmount: decimalAmount, with: 18)
                 } else if let arbitraryAmount {
                     self.amount = arbitraryAmount
-                    self.resolvedAmount = arbitraryAmount.description
+                    self.resolvedAmount = arbitraryAmount
                 } else {
                     throw TransferLinkError.invalidFormat
                 }
@@ -135,7 +135,7 @@ public struct ExternalTransfer {
             }
             
             self.raw = raw
-            self.arbitraryAmount = arbitraryAmount?.description
+            self.arbitraryAmount = arbitraryAmount
             self.memo = nil
         } else {
             guard let assetID = Self.supportedAssetIds[scheme] else {
@@ -154,7 +154,7 @@ public struct ExternalTransfer {
             self.assetID = assetID
             self.destination = components.path
             self.amount = decimalAmount
-            self.resolvedAmount = decimalAmount.description
+            self.resolvedAmount = decimalAmount
             self.arbitraryAmount = nil
             self.memo = {
                 let memo = queries["memo"]
@@ -167,9 +167,9 @@ public struct ExternalTransfer {
         }
     }
     
-    public static func resolve(atomicAmount: Decimal, with exponent: Int) -> String {
+    public static func resolve(atomicAmount: Decimal, with exponent: Int) -> Decimal {
         let divisor: Decimal = pow(10, exponent)
-        return (atomicAmount / divisor).description
+        return atomicAmount / divisor
     }
     
 }

@@ -447,7 +447,7 @@ class UrlWindow {
     }
     
     class func checkQrCodeDetection(string: String, clearNavigationStack: Bool = true) {
-        if checkPayment(string: string) {
+        if checkWithdrawal(string: string) {
             return
         }
         if checkExternalScheme(url: string) {
@@ -472,7 +472,7 @@ class UrlWindow {
         RecognizeWindow.instance().presentWindow(text: string)
     }
     
-    class func checkPayment(string: String) -> Bool {
+    class func checkWithdrawal(string: String) -> Bool {
         do {
             let transfer = try ExternalTransfer(string: string)
             performExternalTransfer(transfer)
@@ -532,6 +532,10 @@ class UrlWindow {
     }
     
     class func performExternalTransfer(_ transfer: ExternalTransfer) {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
+            return
+        }
+        
         switch TIP.status {
         case .ready, .needsMigrate:
             break
@@ -542,72 +546,83 @@ class UrlWindow {
         case .unknown:
             return
         }
+        
+        enum Error: Swift.Error, LocalizedError {
+            
+            case invalidPaymentLink
+            case syncTokenFailed
+            
+            var errorDescription: String? {
+                switch self {
+                case .invalidPaymentLink:
+                    return R.string.localizable.invalid_payment_link()
+                case .syncTokenFailed:
+                    return R.string.localizable.error_connection_timeout()
+                }
+            }
+            
+        }
+        
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        DispatchQueue.global().async {
-            let resolvedAmount: String
-            if let amount = transfer.resolvedAmount {
-                resolvedAmount = amount
-            } else {
-                switch AssetAPI.assetPrecision(assetId: transfer.assetID) {
-                case let .success(response):
-                    resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: response.precision)
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        hud.set(style: .error, text: error.localizedDescription)
-                        hud.scheduleAutoHidden()
-                    }
-                    return
+        Task {
+            do {
+                let resolvedAmount: Decimal
+                if let amount = transfer.resolvedAmount {
+                    resolvedAmount = amount
+                } else {
+                    let precision = try await AssetAPI.assetPrecision(assetID: transfer.assetID).precision
+                    resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: precision)
                 }
-            }
-            if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
-                    hud.scheduleAutoHidden()
+                if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
+                    throw Error.invalidPaymentLink
                 }
-                return
-            }
-            let assetId = transfer.assetID
-            let memo = transfer.memo ?? ""
-            guard let asset = syncAsset(assetId: assetId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(transfer.raw)")
-                hud.hideInMainThread()
-                return
-            }
-            switch ExternalAPI.checkAddress(assetId: assetId, destination: transfer.destination, tag: nil) {
-            case .success(let response):
+                
+                let assetID = transfer.assetID
+                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                    throw Error.syncTokenFailed
+                }
+                
+                let response = try await ExternalAPI.checkAddress(assetID: assetID, destination: transfer.destination, tag: nil)
                 guard response.tag.isNilOrEmpty, transfer.destination.lowercased() == response.destination.lowercased() else {
-                    DispatchQueue.main.async {
-                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                    throw Error.invalidPaymentLink
+                }
+                let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
+                
+                guard let feeToken = syncToken(assetID: response.feeAssetId, hud: hud) else {
+                    throw Error.syncTokenFailed
+                }
+                guard let fee = try await SafeAPI.fees(assetID: assetID, destination: address.destination).first else {
+                    throw MixinAPIError.withdrawSuspended
+                }
+                guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
+                    throw Error.invalidPaymentLink
+                }
+                
+                let traceID = UUID().uuidString.lowercased()
+                let fiatMoneyAmount = resolvedAmount * token.decimalUSDPrice * Decimal(Currency.current.rate)
+                let payment = Payment(traceID: traceID, token: token, tokenAmount: resolvedAmount, fiatMoneyAmount: fiatMoneyAmount, memo: transfer.memo ?? "")
+                payment.checkPreconditions(withdrawTo: .temporary(address), fee: feeItem, on: homeContainer) { reason in
+                    switch reason {
+                    case .userCancelled:
+                        hud.hide()
+                    case .description(let message):
+                        hud.set(style: .error, text: message)
                         hud.scheduleAutoHidden()
                     }
-                    return
+                } onSuccess: { operation in
+                    hud.hide()
+                    let withdrawal = WithdrawalConfirmationViewController(operation: operation,
+                                                                          amountDisplay: .byToken,
+                                                                          withdrawalTokenAmount: resolvedAmount,
+                                                                          withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                                          addressLabel: nil)
+                    withdrawal.manipulateNavigationStackOnFinished = false
+                    let authentication = AuthenticationViewController(intentViewController: withdrawal)
+                    homeContainer.present(authentication, animated: true)
                 }
-                guard let feeAsset = syncAsset(assetId: response.feeAssetId, hud: hud) else {
-                    Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(transfer.raw)")
-                    hud.hideInMainThread()
-                    return
-                }
-                let destination = response.destination
-                let traceId = UUID().uuidString.lowercased()
-                let addressId = (myUserId + assetId + destination).uuidDigest()
-                let action: PayWindow.PinAction = .externalTransfer(destination: destination, fee: response.fee, feeAsset: feeAsset, addressId: addressId, traceId: traceId)
-                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: destination, tag: nil, addressId: nil, amount: resolvedAmount, memo: memo, fromWeb: true) { (canPay, errorMsg) in
-                    DispatchQueue.main.async {
-                        if canPay {
-                            hud.hide()
-                            PayWindow.instance().render(asset: asset, action: action, amount: resolvedAmount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
-                        } else if let error = errorMsg {
-                            Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(transfer.raw)")
-                            hud.set(style: .error, text: error)
-                            hud.scheduleAutoHidden()
-                        } else {
-                            hud.hide()
-                        }
-                    }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
+            } catch {
+                await MainActor.run {
                     hud.set(style: .error, text: error.localizedDescription)
                     hud.scheduleAutoHidden()
                 }

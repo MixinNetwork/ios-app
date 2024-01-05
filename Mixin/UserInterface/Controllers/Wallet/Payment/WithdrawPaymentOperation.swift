@@ -304,6 +304,7 @@ struct WithdrawPaymentOperation {
         Logger.general.info(category: "Withdraw", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: broadcastRequestIDs)
         Logger.general.info(category: "Withdraw", message: "RawTx signed")
+        AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
     }
     
 }

@@ -39,6 +39,7 @@ final class TabBar: UIView {
     
     private let stackView = UIStackView()
     private let contentHeight: CGFloat = 48
+    private let horizontalMargin: CGFloat = 20
     
     private var buttons: [UIButton] = []
     
@@ -64,12 +65,13 @@ final class TabBar: UIView {
     }
     
     private func loadSubviews() {
-        stackView.spacing = 50
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 0
         addSubview(stackView)
         stackView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.leading.greaterThanOrEqualToSuperview().offset(6)
-            make.trailing.lessThanOrEqualToSuperview().offset(-6)
+            make.leading.equalToSuperview().offset(horizontalMargin)
+            make.trailing.equalToSuperview().offset(-horizontalMargin)
             make.top.equalToSuperview()
             make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
             make.height.equalTo(contentHeight)
@@ -82,14 +84,20 @@ final class TabBar: UIView {
             for _ in 0..<numberOfButtonsToBeAdded {
                 let button = UIButton(type: .custom)
                 button.addTarget(self, action: #selector(switchTab(_:)), for: .touchUpInside)
-                stackView.addArrangedSubview(button)
+                let wrapper = UIView()
+                wrapper.backgroundColor = .clear
+                wrapper.addSubview(button)
+                stackView.addArrangedSubview(wrapper)
                 buttons.append(button)
                 button.snp.makeConstraints { make in
                     make.width.equalTo(60)
+                    make.top.bottom.centerX.equalToSuperview()
                 }
             }
-        } else {
-            buttons.suffix(-numberOfButtonsToBeAdded).forEach(stackView.removeArrangedSubview(_:))
+        } else if numberOfButtonsToBeAdded < 0 {
+            stackView.arrangedSubviews
+                .suffix(-numberOfButtonsToBeAdded)
+                .forEach(stackView.removeArrangedSubview(_:))
             buttons.removeLast(-numberOfButtonsToBeAdded)
         }
         

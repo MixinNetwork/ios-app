@@ -10,6 +10,11 @@ final class SendingDestinationCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         freeLabel.contentInset = UIEdgeInsets(top: 2, left: 6, bottom: 2, right: 6)
+        selectedBackgroundView = {
+            let view = UIView()
+            view.backgroundColor = .clear
+            return view
+        }()
     }
     
 }

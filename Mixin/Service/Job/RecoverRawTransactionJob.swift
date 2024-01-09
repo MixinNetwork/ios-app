@@ -49,6 +49,8 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                     Logger.general.error(category: "RecoverRawTransaction", message: "Error: \(error)")
                     try await Task.sleep(nanoseconds: 3 * NSEC_PER_SEC)
                 }
+                
+                // FIXME: Update AppGroupUserDefaults.Wallet.withdrawnAddressIds
             }
             Logger.general.info(category: "RecoverRawTransaction", message: "Finished")
             self.finishJob()

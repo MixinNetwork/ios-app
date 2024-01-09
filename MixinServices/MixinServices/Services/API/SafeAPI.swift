@@ -19,7 +19,7 @@ public final class SafeAPI: MixinAPI {
                     if numberOfTries == maxNumberOfTries {
                         throw error
                     } else {
-                        try await Task.sleep(nanoseconds: 200 * NSEC_PER_MSEC)
+                        try await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
                         continue
                     }
                 default:

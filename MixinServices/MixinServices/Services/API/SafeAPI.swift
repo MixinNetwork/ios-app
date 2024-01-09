@@ -62,6 +62,13 @@ public final class SafeAPI: MixinAPI {
         return try await request(method: .get, path: path)
     }
     
+    public static func scheme(
+        uuid: String,
+        completion: @escaping (MixinAPI.Result<SafeScheme>) -> Void
+    ) {
+        request(method: .get, path: "/schemes/" + uuid, completion: completion)
+    }
+    
 }
 
 // MARK: - Asset

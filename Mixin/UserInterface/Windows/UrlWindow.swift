@@ -45,6 +45,9 @@ class UrlWindow {
         } else if let multisig = MultisigURL(url: url) {
             checkMultisig(multisig)
             return true
+        } else if let scheme = SchemeURL(url: url) {
+            checkScheme(scheme, from: source, clearNavigationStack: clearNavigationStack)
+            return true
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
             switch mixinURL {
@@ -1033,6 +1036,24 @@ extension UrlWindow {
                     hud.set(style: .error, text: error.localizedDescription)
                     hud.scheduleAutoHidden()
                 }
+            }
+        }
+    }
+    
+    private static func checkScheme(_ scheme: SchemeURL, from source: Source, clearNavigationStack: Bool) {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        SafeAPI.scheme(uuid: scheme.uuid) { result in
+            switch result {
+            case .success(let scheme):
+                hud.hide()
+                _ = UrlWindow.checkUrl(url: scheme.target, from: source, clearNavigationStack: clearNavigationStack)
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
             }
         }
     }

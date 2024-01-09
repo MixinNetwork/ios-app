@@ -15,3 +15,21 @@ extension CompactDepositEntry: Decodable, DatabaseColumnConvertible, MixinFetcha
     }
     
 }
+
+extension CompactDepositEntry: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        let tagDescription: String
+        if let tag {
+            if tag.isEmpty {
+                tagDescription = "(empty)"
+            } else {
+                tagDescription = tag
+            }
+        } else {
+            tagDescription = "(null)"
+        }
+        return "<CompactDepositEntry dest: \(destination), tag: \(tagDescription)>"
+    }
+    
+}

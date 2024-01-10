@@ -6,12 +6,16 @@ public final class ExternalAPI: MixinAPI {
         request(method: .get, path: "/external/schemes", completion: completion)
     }
     
-    public static func checkAddress(assetId: String, destination: String, tag: String?) -> MixinAPI.Result<AddressFeeResponse> {
-        var path = "/external/addresses/check?asset=\(assetId)&destination=\(destination)"
+    public static func checkAddress(
+        assetID: String,
+        destination: String,
+        tag: String?
+    ) async throws -> AddressResponse {
+        var path = "/external/addresses/check?asset=\(assetID)&destination=\(destination)"
         if let tag, !tag.isEmpty {
             path += "&tag=\(tag)"
         }
-        return request(method: .get, path: path)
+        return try await request(method: .get, path: path)
     }
     
     public static func fiats(completion: @escaping (MixinAPI.Result<[FiatMoney]>) -> Void) {

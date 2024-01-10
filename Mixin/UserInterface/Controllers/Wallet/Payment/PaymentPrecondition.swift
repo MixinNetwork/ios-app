@@ -53,7 +53,7 @@ struct DuplicationPrecondition: PaymentPrecondition {
     
     enum Operation {
         case transfer(UserItem)
-        case withdraw(Address, WithdrawFeeItem)
+        case withdraw(WithdrawableAddress)
     }
     
     let operation: Operation
@@ -79,7 +79,7 @@ struct DuplicationPrecondition: PaymentPrecondition {
                                              tag: nil,
                                              createdAt: createdAt)
             operation = .transfer(opponent)
-        case let .withdraw(address, _):
+        case let .withdraw(address):
             trace = TraceDAO.shared.getTrace(assetId: token.assetID,
                                              amount: Token.amountString(from: tokenAmount),
                                              opponentId: nil,

@@ -1,13 +1,8 @@
 import Foundation
 
-public struct InternalTransfer {
+public struct LegacyInternalTransfer {
     
-    private static let supportedSchemes: Set<String> = [
-        "https", "mixin",
-        "bitcoin", "bitcoincash", "bitcoinsv", "ethereum", "litecoin",
-        "dash", "ripple", "zcash", "horizen", "monero", "binancecoin",
-        "stellar", "dogecoin", "mobilecoin"
-    ]
+    private static let supportedSchemes: Set<String> = ["https", "mixin"]
     
     // All `ID`s are guranteed to be a valid UUID string, though one may refers to
     // an invalid object. The validation of the referred object could be done by

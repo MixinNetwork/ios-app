@@ -50,12 +50,8 @@ extension Address: TableRecord, PersistableRecord {
 
 extension Address {
     
-    public var fullAddress: String {
+    public static func fullRepresentation(destination: String, tag: String) -> String {
         tag.isEmpty ? destination : "\(destination):\(tag)"
-    }
-    
-    public var compactRepresentation: String {
-        Self.compactRepresentation(of: fullAddress)
     }
     
     public static func compactRepresentation(of string: String) -> String {

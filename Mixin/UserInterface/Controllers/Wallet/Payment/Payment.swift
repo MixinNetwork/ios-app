@@ -3,6 +3,16 @@ import MixinServices
 
 struct Payment {
     
+    let traceID: String
+    let token: TokenItem
+    let tokenAmount: Decimal
+    let fiatMoneyAmount: Decimal
+    let memo: String
+    
+}
+
+extension Payment {
+    
     enum TransferDestination {
         
         case user(UserItem)
@@ -21,12 +31,6 @@ struct Payment {
         }
         
     }
-    
-    let traceID: String
-    let token: TokenItem
-    let tokenAmount: Decimal
-    let fiatMoneyAmount: Decimal
-    let memo: String
     
     func checkPreconditions(
         transferTo destination: TransferDestination,
@@ -87,28 +91,71 @@ struct Payment {
         }
     }
     
+}
+
+extension Payment {
+    
+    enum WithdrawalDestination {
+        
+        case address(Address)
+        case temporary(TemporaryAddress)
+        
+        var withdrawable: WithdrawableAddress {
+            switch self {
+            case .address(let address):
+                return address
+            case .temporary(let address):
+                return address
+            }
+        }
+        
+        var debugDescription: String {
+            switch self {
+            case let .address(address):
+                return "<WithdrawalDestination.address \(address.addressId)>"
+            case let .temporary(address):
+                return "<WithdrawalDestination.temporary \(address.destination)>"
+            }
+        }
+        
+    }
+    
     func checkPreconditions(
-        withdrawTo address: Address,
+        withdrawTo destination: WithdrawalDestination,
         fee: WithdrawFeeItem,
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
         onSuccess: @MainActor @escaping (WithdrawPaymentOperation) -> Void
     ) {
         Task {
-            let preconditions: [PaymentPrecondition] = [
-                NoPendingTransactionPrecondition(token: token),
-                AddressDustPrecondition(token: token,
-                                        amount: tokenAmount,
-                                        address: address),
-                DuplicationPrecondition(operation: .withdraw(address, fee),
-                                        token: token,
-                                        tokenAmount: tokenAmount,
-                                        fiatMoneyAmount: fiatMoneyAmount,
-                                        memo: memo),
-                FirstWithdrawPrecondition(addressID: address.addressId,
-                                          token: token,
-                                          fiatMoneyAmount: fiatMoneyAmount)
-            ]
+            let preconditions: [PaymentPrecondition]
+            switch destination {
+            case let .address(address):
+                preconditions = [
+                    NoPendingTransactionPrecondition(token: token),
+                    AddressDustPrecondition(token: token,
+                                            amount: tokenAmount,
+                                            address: address),
+                    DuplicationPrecondition(operation: .withdraw(address),
+                                            token: token,
+                                            tokenAmount: tokenAmount,
+                                            fiatMoneyAmount: fiatMoneyAmount,
+                                            memo: memo),
+                    FirstWithdrawPrecondition(addressID: address.addressId,
+                                              token: token,
+                                              fiatMoneyAmount: fiatMoneyAmount)
+                ]
+            case let .temporary(address):
+                preconditions = [
+                    NoPendingTransactionPrecondition(token: token),
+                    DuplicationPrecondition(operation: .withdraw(address),
+                                            token: token,
+                                            tokenAmount: tokenAmount,
+                                            fiatMoneyAmount: fiatMoneyAmount,
+                                            memo: memo)
+                ]
+            }
+            
             switch await check(preconditions: preconditions) {
             case .passed:
                 break
@@ -128,6 +175,13 @@ struct Payment {
             let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: amount, on: parent)
             switch result {
             case .success(let collection):
+                let addressID: String?
+                switch destination {
+                case let .address(address):
+                    addressID = address.addressId
+                case .temporary:
+                    addressID = nil
+                }
                 let operation = WithdrawPaymentOperation(traceID: traceID,
                                                          withdrawalToken: token,
                                                          withdrawalTokenAmount: tokenAmount,
@@ -135,7 +189,8 @@ struct Payment {
                                                          withdrawalOutputs: collection,
                                                          feeToken: fee.tokenItem,
                                                          feeAmount: fee.amount,
-                                                         address: address)
+                                                         address: destination.withdrawable,
+                                                         addressID: addressID)
                 await MainActor.run {
                     onSuccess(operation)
                 }

@@ -13,7 +13,6 @@ class PayWindow: BottomSheetView {
         case withdraw(trackId: String, address: Address, feeAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
         case collectible(collectible: CollectibleResponse, senders: [UserItem], receivers: [UserItem])
-        case externalTransfer(destination: String, fee: String, feeAsset: AssetItem, addressId: String, traceId: String)
     }
 
     enum ErrorContinueAction {
@@ -160,7 +159,7 @@ class PayWindow: BottomSheetView {
             case let .withdraw(_, address, feeAsset, _):
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.withdrawal_to(address.label)
-                mixinIDLabel.text = address.fullAddress
+                mixinIDLabel.text = address.fullRepresentation
                 withdrawlFee = updateAmountExchangeForWithdraw(fee: address.fee, feeAsset: feeAsset)
             case let .payment(payment, receivers):
                 guard let account = LoginManager.shared.account else {
@@ -185,11 +184,6 @@ class PayWindow: BottomSheetView {
                 }
                 mixinIDLabel.text = multisig.memo
                 renderMultisigInfo(senders: senders, receivers: receivers)
-            case let .externalTransfer(destination, fee, feeAsset, _, _):
-                multisigView.isHidden = true
-                nameLabel.text = R.string.localizable.withdrawal()
-                mixinIDLabel.text = destination
-                withdrawlFee = updateAmountExchangeForWithdraw(fee: fee, feeAsset: feeAsset)
             case .collectible:
                 break
             }
@@ -788,11 +782,6 @@ extension PayWindow: PinFieldDelegate {
             default:
                 break
             }
-        case let .externalTransfer(destination, fee, _, addressId, traceId):
-            trace = Trace(traceId: traceId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: destination, tag: nil)
-            TraceDAO.shared.saveTrace(trace: trace)
-            let request = WithdrawalRequest(addressId: "", amount: generalizedAmount, traceId: traceId, pin: pin, memo: memo, fee: fee, assetId: assetId, destination: destination, tag: nil)
-            WithdrawalAPI.externalWithdrawal(addressId: addressId, withdrawal: request, completion: completion)
         }
     }
 

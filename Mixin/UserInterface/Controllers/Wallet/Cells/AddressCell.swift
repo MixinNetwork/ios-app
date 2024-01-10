@@ -9,13 +9,13 @@ class AddressCell: ModernSelectedBackgroundCell {
     
     func render(address: Address, asset: AssetItem) {
         nameLabel.text = address.label
-        addressLabel.text = address.fullAddress
+        addressLabel.text = address.fullRepresentation
         dateLabel.text = address.updatedAt.toUTCDate().timeAgo()
     }
     
     func render(address: Address, asset: TokenItem) {
         nameLabel.text = address.label
-        addressLabel.text = address.fullAddress
+        addressLabel.text = address.fullRepresentation
         dateLabel.text = address.updatedAt.toUTCDate().timeAgo()
     }
     

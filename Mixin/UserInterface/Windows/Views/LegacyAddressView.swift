@@ -81,7 +81,7 @@ class LegacyAddressView: UIStackView {
             addressLabel.text = address.fullAddress
         } else if let address = address {
             nameLabel.text = address.label
-            addressLabel.text = address.fullAddress
+            addressLabel.text = address.fullRepresentation
         }
         assetIconView.setIcon(asset: asset)
         pinField.clear()

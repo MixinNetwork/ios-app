@@ -54,7 +54,7 @@ class UrlWindow {
             case let .codes(code):
                 result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: source.webContext)
             case .pay:
-                if let transfer = try? InternalTransfer(string: url.absoluteString) {
+                if let transfer = try? LegacyInternalTransfer(string: url.absoluteString) {
                     performInternalTransfer(transfer)
                     result = true
                 } else {
@@ -493,7 +493,7 @@ class UrlWindow {
         }
     }
     
-    class func performInternalTransfer(_ transfer: InternalTransfer) {
+    class func performInternalTransfer(_ transfer: LegacyInternalTransfer) {
         switch TIP.status {
         case .ready, .needsMigrate:
             break

@@ -45,8 +45,8 @@ class UrlWindow {
         } else if let multisig = MultisigURL(url: url) {
             checkMultisig(multisig)
             return true
-        } else if let scheme = SchemeURL(url: url) {
-            checkScheme(scheme, from: source, clearNavigationStack: clearNavigationStack)
+        } else if let code = CodeURL(url: url) {
+            checkCode(code, from: source, clearNavigationStack: clearNavigationStack)
             return true
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
@@ -1040,13 +1040,13 @@ extension UrlWindow {
         }
     }
     
-    private static func checkScheme(_ scheme: SchemeURL, from source: Source, clearNavigationStack: Bool) {
+    private static func checkCode(_ code: CodeURL, from source: Source, clearNavigationStack: Bool) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        SafeAPI.scheme(uuid: scheme.uuid) { result in
+        SafeAPI.scheme(uuid: code.uuid) { result in
             switch result {
             case .success(let scheme):
                 hud.hide()

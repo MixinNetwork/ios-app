@@ -925,7 +925,7 @@
 		94ED3EF72990DBBB003BC236 /* WalletConnectRequestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94ED3EF52990DBBB003BC236 /* WalletConnectRequestView.xib */; };
 		94EE1AB92B48518D00BE9AD1 /* TemporaryAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */; };
 		94EE1ABE2B4851E600BE9AD1 /* WithdrawableAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */; };
-		94EE1C012B4C647500BE9AD1 /* SchemeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1C002B4C647500BE9AD1 /* SchemeURL.swift */; };
+		94EE1C012B4C647500BE9AD1 /* CodeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1C002B4C647500BE9AD1 /* CodeURL.swift */; };
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
 		94F8BFAC29A5FFFE003E3229 /* SendTransactionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F8BFAB29A5FFFE003E3229 /* SendTransactionView.xib */; };
 		94F8BFAE29A60215003E3229 /* SendTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F8BFAD29A60215003E3229 /* SendTransactionView.swift */; };
@@ -2123,7 +2123,7 @@
 		94ED3EF52990DBBB003BC236 /* WalletConnectRequestView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletConnectRequestView.xib; sourceTree = "<group>"; };
 		94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryAddress.swift; sourceTree = "<group>"; };
 		94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawableAddress.swift; sourceTree = "<group>"; };
-		94EE1C002B4C647500BE9AD1 /* SchemeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemeURL.swift; sourceTree = "<group>"; };
+		94EE1C002B4C647500BE9AD1 /* CodeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeURL.swift; sourceTree = "<group>"; };
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
 		94F8BFAB29A5FFFE003E3229 /* SendTransactionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendTransactionView.xib; sourceTree = "<group>"; };
 		94F8BFAD29A60215003E3229 /* SendTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTransactionView.swift; sourceTree = "<group>"; };
@@ -3388,7 +3388,7 @@
 				94F952662AE66A700025B995 /* AmountIntent.swift */,
 				940DC5912B075E03009A15D1 /* SafePaymentURL.swift */,
 				94BD7E762B2983CA0004576D /* MultisigURL.swift */,
-				94EE1C002B4C647500BE9AD1 /* SchemeURL.swift */,
+				94EE1C002B4C647500BE9AD1 /* CodeURL.swift */,
 				94C5A8922B2157CE00201CDA /* Payment.swift */,
 				94C6987A2B23257B002377EA /* PaymentPrecondition.swift */,
 				94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */,
@@ -5233,7 +5233,7 @@
 				947744DB26A9D2ED00B6BBDD /* ShakableCell.swift in Sources */,
 				7B015F49241F60BC0004A563 /* LocationTableView.swift in Sources */,
 				7B54F95422B23A5600908A9D /* EmergencyContactSelectorViewController.swift in Sources */,
-				94EE1C012B4C647500BE9AD1 /* SchemeURL.swift in Sources */,
+				94EE1C012B4C647500BE9AD1 /* CodeURL.swift in Sources */,
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
 				7CC2226C29D917D00027FAAB /* DeviceTransferRecordType.swift in Sources */,
 				7BBCEC382523A2B400F270DF /* MinimizedClipSwitcherViewController.swift in Sources */,

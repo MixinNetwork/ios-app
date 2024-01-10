@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-struct SchemeURL {
+struct CodeURL {
     
     private static let schemes = ["mixin", "https"]
     private static let host = "mixin.one"

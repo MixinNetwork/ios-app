@@ -192,18 +192,38 @@ struct NoPendingTransactionPrecondition: PaymentPrecondition {
     func check() async -> PaymentPreconditionCheckingResult {
         let count = RawTransactionDAO.shared.unspentRawTransactionCount(types: [.transfer, .withdrawal])
         if count > 0 {
-            await MainActor.run {
-                let hint = WalletHintViewController(token: token)
-                hint.setTitle(R.string.localizable.waiting_transaction(),
-                              description: R.string.localizable.waiting_transaction_description())
-                hint.contactSupportButton.alpha = 0
-                UIApplication.homeContainerViewController?.present(hint, animated: true)
-                ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
+            let delegation = UserRealizedDelegation()
+            return await withCheckedContinuation { continuation in
+                DispatchQueue.main.async {
+                    delegation.completion = {
+                        continuation.resume(with: .success(.failed(.userCancelled)))
+                    }
+                    let hint = WalletHintViewController(token: token)
+                    hint.setTitle(R.string.localizable.waiting_transaction(),
+                                  description: R.string.localizable.waiting_transaction_description())
+                    hint.contactSupportButton.alpha = 0
+                    hint.delegate = delegation
+                    UIApplication.homeContainerViewController?.present(hint, animated: true)
+                    ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
+                }
             }
-            return .failed(.userCancelled)
         } else {
             return .passed
         }
+    }
+    
+    private class UserRealizedDelegation: WalletHintViewControllerDelegate {
+        
+        var completion: (() -> Void)?
+        
+        func walletHintViewControllerDidRealize(_ controller: WalletHintViewController) {
+            completion?()
+        }
+        
+        func walletHintViewControllerWantsContactSupport(_ controller: WalletHintViewController) {
+            
+        }
+        
     }
     
 }

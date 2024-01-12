@@ -1,6 +1,7 @@
 import UIKit
-import Alamofire
 import CoreTelephony
+import SafariServices
+import Alamofire
 import MixinServices
 
 final class LoginMobileNumberViewController: MobileNumberViewController {
@@ -46,6 +47,16 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         introTextView.isSelectable = true
         introTextView.backgroundColor = .clear
         contentStackView.addArrangedSubview(introTextView)
+        let customerServiceButton = UIButton(type: .system)
+        customerServiceButton.tintColor = R.color.text()
+        customerServiceButton.setImage(R.image.customer_service(), for: .normal)
+        customerServiceButton.addTarget(self, action: #selector(requestCustomerService(_:)), for: .touchUpInside)
+        view.addSubview(customerServiceButton)
+        customerServiceButton.snp.makeConstraints { make in
+            make.width.height.equalTo(44)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.trailing.equalToSuperview().offset(-8)
+        }
     }
     
     override func continueAction(_ sender: Any) {
@@ -65,6 +76,11 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         } else {
             titleLabel.text = R.string.localizable.enter_your_phone_number()
         }
+    }
+    
+    @objc private func requestCustomerService(_ sender: Any) {
+        let customerService = SFSafariViewController(url: .customerService)
+        present(customerService, animated: true)
     }
     
     private func requestVerificationCode(captchaToken token: CaptchaToken?) {

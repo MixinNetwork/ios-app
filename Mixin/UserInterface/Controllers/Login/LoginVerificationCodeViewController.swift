@@ -1,4 +1,5 @@
 import UIKit
+import SafariServices
 import MixinServices
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
@@ -13,6 +14,16 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         super.viewDidLoad()
         let displayNumber = "+\(context.callingCode) \(context.mobileNumber)"
         titleLabel.text = R.string.localizable.landing_validation_title(displayNumber)
+        let customerServiceButton = UIButton(type: .system)
+        customerServiceButton.tintColor = R.color.text()
+        customerServiceButton.setImage(R.image.customer_service(), for: .normal)
+        customerServiceButton.addTarget(self, action: #selector(requestCustomerService(_:)), for: .touchUpInside)
+        view.addSubview(customerServiceButton)
+        customerServiceButton.snp.makeConstraints { make in
+            make.width.height.equalTo(44)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.trailing.equalToSuperview().offset(-8)
+        }
     }
     
     override func verificationCodeFieldEditingChanged(_ sender: Any) {
@@ -132,6 +143,11 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 self.handleVerificationCodeError(error)
             }
         }
+    }
+    
+    @objc private func requestCustomerService(_ sender: Any) {
+        let customerService = SFSafariViewController(url: .customerService)
+        present(customerService, animated: true)
     }
     
     private func logBackup() {

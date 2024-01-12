@@ -15,7 +15,8 @@ extension URL {
     static let expiredMessage = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/5127869180564")!
     static let deposit = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")!
     static let notSupportedDeposit = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/9954148870676")!
-
+    static let customerService = URL(string: "https://go.crisp.chat/chat/embed/?website_id=52662bba-be49-4b06-9edc-7baa9a78f714")!
+    
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]
     }

@@ -54,7 +54,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     }
     
     var trailingInfoColor: UIColor {
-        .accessoryText
+        R.color.text_quaternary()!
     }
     
     private var _style: Style = []

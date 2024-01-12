@@ -14,7 +14,7 @@ class ExpiredMessageTableHeaderView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         textLabel.delegate = self
-        textLabel.textColor = .accessoryText
+        textLabel.textColor = R.color.text_tertiary()!
         textLabel.lineSpacing = 10
         textLabel.linkColor = .theme
         textLabel.detectLinks = false

@@ -28,7 +28,7 @@ class WebViewController: FullscreenPopupViewController {
         return WKWebViewConfiguration()
     }
     
-    private let textDarkColor = UIColor(displayP3RgbValue: 0x333333)
+    private let textDarkColor = R.color.text()!.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
     
     private var statusBarStyle = UIStatusBarStyle.default
     private var imageRequest: DataRequest?

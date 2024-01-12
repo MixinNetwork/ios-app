@@ -83,6 +83,8 @@ final class HomeTabBarController: UIViewController {
             newChild = homeViewController
         case .wallet:
             newChild = walletViewController
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
+            ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
         case .bot:
             newChild = botsViewController
         }

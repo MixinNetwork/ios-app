@@ -202,12 +202,13 @@ struct TransferPaymentOperation {
                     let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
                     if try !Conversation.exists(db, key: conversationID) {
                         let conversation = Conversation.createConversation(conversationId: conversationID,
-                                                                           category: nil,
+                                                                           category: ConversationCategory.CONTACT.rawValue,
                                                                            recipientId: receiverID,
                                                                            status: ConversationStatus.START.rawValue)
                         try conversation.save(db)
-                        DispatchQueue.global().async {
-                            ConcurrentJobQueue.shared.addJob(job: CreateConversationJob(conversationId: conversationID))
+                        db.afterNextTransaction { _ in
+                            let createConversation = CreateConversationJob(conversationId: conversationID)
+                            ConcurrentJobQueue.shared.addJob(job: createConversation)
                         }
                     }
                     try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)

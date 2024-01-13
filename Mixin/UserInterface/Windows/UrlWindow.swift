@@ -1007,9 +1007,9 @@ extension UrlWindow {
                 let state: MultisigConfirmationViewController.State
                 if response.signers.count >= response.sendersThreshold {
                     state = .paid
-                } else if response.signers.contains(myUserId) && multisig.action == .sign {
+                } else if multisig.action == .sign && response.signers.contains(myUserId) {
                     state = .signed
-                } else if !response.signers.contains(myUserId) && multisig.action == .unlock {
+                } else if multisig.action == .unlock && response.signers.isEmpty {
                     state = .unlocked
                 } else {
                     state = .pending

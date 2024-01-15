@@ -984,14 +984,23 @@ extension UrlWindow {
         SafeAPI.multisigs(id: multisig.id, queue: .global()) { result in
             switch result {
             case .success(let response):
-                let receiverIDs = Array(Set(response.receivers.flatMap(\.members)))
+                let sendersHash = response.sendersHash
+                let receiver = response.receivers.first(where: { $0.membersHash != sendersHash })
+                ?? response.receivers.first(where: { $0.membersHash == sendersHash })
+                guard let receiver, !receiver.members.isEmpty else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
                 guard let token = syncToken(assetID: response.assetID, hud: hud) else {
                     return
                 }
                 guard let senders = syncUsersInOrder(userIDs: response.senders, hud: hud) else {
                     return
                 }
-                guard let receivers = syncUsers(userIds: receiverIDs, hud: hud) else {
+                guard let receiverMembers = syncUsers(userIds: receiver.members, hud: hud) else {
                     return
                 }
                 guard
@@ -1021,8 +1030,8 @@ extension UrlWindow {
                                                                       amount: amount,
                                                                       sendersThreshold: response.sendersThreshold,
                                                                       senders: senders,
-                                                                      receiversThreshold: response.receivers.map(\.threshold).reduce(0, +),
-                                                                      receivers: receivers,
+                                                                      receiversThreshold: receiver.threshold,
+                                                                      receivers: receiverMembers,
                                                                       rawTransaction: response.rawTransaction,
                                                                       viewKeys: response.views.joined(separator: ","),
                                                                       action: multisig.action,

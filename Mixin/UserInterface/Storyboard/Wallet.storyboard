@@ -105,16 +105,42 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VKb-32-SsU">
                                 <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Yr-yj-uN7">
-                                        <rect key="frame" x="20" y="0.0" width="276" height="44"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <color key="textColor" name="title"/>
-                                        <nil key="highlightedColor"/>
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zVg-Qz-uCF">
+                                        <rect key="frame" x="10" y="0.0" width="44" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="rzh-qn-LL7"/>
+                                            <constraint firstAttribute="width" constant="44" id="yBS-Db-2M1"/>
+                                        </constraints>
+                                        <color key="tintColor" name="icon_tint"/>
+                                        <state key="normal" image="ic_title_close"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                         </userDefinedRuntimeAttributes>
-                                    </label>
+                                        <connections>
+                                            <action selector="backAction:" destination="7b5-hR-M5c" eventType="touchUpInside" id="COu-5y-uVB"/>
+                                        </connections>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3eq-wN-K3L">
+                                        <rect key="frame" x="54" y="11.33333333333333" width="306" height="21.666666666666671"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Yr-yj-uN7">
+                                                <rect key="frame" x="126.99999999999999" y="0.0" width="52.333333333333329" height="21.666666666666668"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                <color key="textColor" name="title"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoQ-12-Gth">
+                                                <rect key="frame" x="132" y="0.0" width="42.333333333333343" height="0.0"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" name="text_accessory"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FqI-YN-sPY">
                                         <rect key="frame" x="316" y="0.0" width="88" height="44"/>
                                         <subviews>
@@ -152,13 +178,14 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="FqI-YN-sPY" secondAttribute="bottom" id="7dr-xk-0af"/>
-                                    <constraint firstItem="FqI-YN-sPY" firstAttribute="leading" secondItem="0Yr-yj-uN7" secondAttribute="trailing" constant="20" id="9Ep-1y-bb3"/>
                                     <constraint firstItem="FqI-YN-sPY" firstAttribute="top" secondItem="VKb-32-SsU" secondAttribute="top" id="DFu-kc-L24"/>
+                                    <constraint firstAttribute="trailing" secondItem="3eq-wN-K3L" secondAttribute="trailing" constant="54" id="SGZ-Hi-HoY"/>
                                     <constraint firstAttribute="height" constant="44" id="W6t-EK-iza"/>
-                                    <constraint firstAttribute="bottom" secondItem="0Yr-yj-uN7" secondAttribute="bottom" id="e5e-ZV-PLR"/>
+                                    <constraint firstItem="3eq-wN-K3L" firstAttribute="leading" secondItem="zVg-Qz-uCF" secondAttribute="trailing" id="Xyu-tT-i2H"/>
+                                    <constraint firstItem="zVg-Qz-uCF" firstAttribute="centerY" secondItem="VKb-32-SsU" secondAttribute="centerY" id="jng-bb-utP"/>
                                     <constraint firstAttribute="trailing" secondItem="FqI-YN-sPY" secondAttribute="trailing" constant="10" id="kkb-jA-IC6"/>
-                                    <constraint firstItem="0Yr-yj-uN7" firstAttribute="leading" secondItem="VKb-32-SsU" secondAttribute="leading" constant="20" id="oSQ-b1-bu2"/>
-                                    <constraint firstItem="0Yr-yj-uN7" firstAttribute="top" secondItem="VKb-32-SsU" secondAttribute="top" id="u9A-3O-Q16"/>
+                                    <constraint firstItem="3eq-wN-K3L" firstAttribute="centerY" secondItem="VKb-32-SsU" secondAttribute="centerY" id="w7e-Do-SKD"/>
+                                    <constraint firstItem="zVg-Qz-uCF" firstAttribute="leading" secondItem="VKb-32-SsU" secondAttribute="leading" constant="10" id="wVS-MH-5I2"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
@@ -576,7 +603,7 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
                                                             <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
@@ -586,7 +613,7 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
@@ -1874,6 +1901,7 @@
         <image name="ic_deposit_warning" width="70" height="72"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_scan_address" width="18" height="18"/>
+        <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_title_more" width="24.333333969116211" height="24"/>
         <image name="ic_title_search" width="28" height="28"/>
         <image name="ic_transfer_exchange" width="14" height="13"/>
@@ -1881,7 +1909,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

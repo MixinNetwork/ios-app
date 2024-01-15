@@ -48,6 +48,7 @@ final class UserProfileViewController: ProfileViewController {
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
+    private var dismissHomeAppsWindow = true
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
     private var conversationExpireIn: Int64?
     
@@ -67,6 +68,9 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     deinit {
+        if dismissHomeAppsWindow {
+            UIApplication.homeViewController?.dismissAppsWindow()
+        }
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -91,6 +95,11 @@ final class UserProfileViewController: ProfileViewController {
         } else {
             resizeRecognizer.isEnabled = false
         }
+    }
+
+    override func dismissAction(_ sender: Any) {
+        dismissHomeAppsWindow = false
+        super.dismissAction(sender)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

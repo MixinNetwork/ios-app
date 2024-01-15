@@ -91,7 +91,7 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
                         viewControllers.removeLast()
                     }
                 } else {
-                    while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                    while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
                         viewControllers.removeLast()
                     }
                     viewControllers.append(ConversationViewController.instance(ownerUser: opponent))

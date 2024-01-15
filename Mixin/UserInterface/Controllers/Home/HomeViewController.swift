@@ -1,4 +1,5 @@
 import UIKit
+import AVFoundation
 import StoreKit
 import MixinServices
 
@@ -23,16 +24,20 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleButton: HomeTitleButton!
     @IBOutlet weak var bulletinWrapperView: UIView!
+    @IBOutlet weak var bottomBarView: UIView!
+    @IBOutlet weak var appStackView: UIStackView!
     @IBOutlet weak var myAvatarImageView: AvatarImageView!
     @IBOutlet weak var desktopButton: UIButton!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomNavigationBottomConstraint: NSLayoutConstraint!
     
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
     private let feedback = UISelectionFeedbackGenerator()
     private let messageCountPerPage = 30
+    private let numberOfHomeApps = 3
     private let bulletinContentTopMargin: CGFloat = 10
     private let emergencyContactAlertingUSDBalance = 100
     private let insufficientBalanceForEmergencyContactBulletinReconfirmInterval = secondsPerHour
@@ -44,6 +49,8 @@ class HomeViewController: UIViewController {
     private var searchViewController: SearchViewController!
     private var searchContainerBeginTopConstant: CGFloat!
     private var loadMoreMessageThreshold = 10
+    private var appButtons = [UIButton]()
+    private var appActions: [(() -> Void)?] = []
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
     
@@ -100,11 +107,25 @@ class HomeViewController: UIViewController {
         dragDownIndicator.bounds.size = CGSize(width: 40, height: 40)
         dragDownIndicator.center = CGPoint(x: tableView.frame.width / 2, y: -40)
         tableView.addSubview(dragDownIndicator)
+        for index in 0..<numberOfHomeApps {
+            let button = UIButton()
+            button.tintColor = R.color.icon_tint()
+            button.tag = index
+            button.addTarget(self, action: #selector(homeAppAction(_:)), for: .touchUpInside)
+            appButtons.append(button)
+            appStackView.insertArrangedSubview(button, at: appStackView.arrangedSubviews.count - 1)
+            button.snp.makeConstraints { (make) in
+                make.width.equalTo(button.snp.height)
+            }
+            appActions.append(nil)
+        }
+        updateHomeApps()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(usersDidChange(_:)), name: UserDAO.usersDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: UserDAO.correspondingAppDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
@@ -112,6 +133,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDesktopButtonHidden), name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateBulletinView), name: TIP.didUpdateNotification, object: nil)
         
@@ -176,11 +198,22 @@ class HomeViewController: UIViewController {
         layoutBulletinView()
     }
     
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        let bottom = bottomBarView.frame.height - view.safeAreaInsets.bottom
+        tableView.contentInset.bottom = bottom
+        if view.safeAreaInsets.bottom < 1 {
+            bottomNavigationBottomConstraint.constant = 24
+            bottomBarView.layoutIfNeeded()
+        }
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         DispatchQueue.main.async(execute: layoutBulletinView)
     }
     
+
     @IBAction func showDesktopAction() {
         navigationController?.pushViewController(DesktopViewController.instance(), animated: true)
     }
@@ -219,7 +252,7 @@ class HomeViewController: UIViewController {
             let vc = EmergencyContactViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
         case .initializePIN:
-            UIApplication.homeContainerViewController?.homeTabBarController.showWallet()
+            WalletViewController.presentWallet()
         case .migrateToTIP:
             let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
             present(tip, animated: true)
@@ -266,6 +299,11 @@ class HomeViewController: UIViewController {
         }
     }
     
+    @IBAction func showAppsAction(_ sender: Any) {
+        let vc = HomeAppsViewController.instance()
+        vc.presentAsChild(of: self)
+    }
+    
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
         updateBulletinView()
         fetchConversations()
@@ -302,6 +340,16 @@ class HomeViewController: UIViewController {
                 self.bulletinContent = nil
             }
         }
+    }
+
+    @objc private func appDidChange(_ notification: Notification) {
+        guard let app = notification.userInfo?[UserDAO.UserInfoKey.app] as? App else {
+            return
+        }
+        guard AppGroupUserDefaults.User.homeAppIds.contains(app.appId) else {
+            return
+        }
+        updateHomeApps()
     }
     
     @objc private func circleConversationDidChange(_ notification: Notification) {
@@ -367,13 +415,93 @@ class HomeViewController: UIViewController {
         titleButton.setTitle(topLeftTitle, for: .normal)
     }
     
+    @objc private func homeAppAction(_ button: UIButton) {
+        appActions[button.tag]?()
+    }
+    
+    @objc private func updateHomeApps() {
+        func action(for app: HomeApp) -> (() -> Void) {
+            switch app {
+            case .embedded(let app):
+                return app.action
+            case .external(let user):
+                return {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [user.userId]))
+                    if let app = user.app {
+                        let userInfo = ["source": "Home", "identityNumber": app.appNumber]
+                        reporter.report(event: .openApp, userInfo: userInfo)
+                        MixinWebViewController.presentInstance(with: .init(conversationId: "", app: app), asChildOf: self)
+                    } else {
+                        reporter.report(error: MixinError.missingApp)
+                    }
+                }
+            }
+        }
+        
+        DispatchQueue.global().async {
+            let apps = AppGroupUserDefaults.User.homeAppIds
+                .compactMap(HomeApp.init)
+                .prefix(self.numberOfHomeApps)
+            DispatchQueue.main.async {
+                for index in 0..<self.numberOfHomeApps {
+                    if index < apps.count {
+                        let button = self.appButtons[index]
+                        let app = apps[index]
+                        button.setImage(app.categoryIcon, for: .normal)
+                        button.isHidden = false
+                        self.appActions[index] = action(for: app)
+                    } else {
+                        self.appButtons[index].isHidden = true
+                        self.appActions[index] = nil
+                    }
+                }
+                if apps.count <= 2 {
+                    self.appStackView.spacing = 8
+                } else {
+                    self.appStackView.spacing = 0
+                }
+                UIView.animate(withDuration: 0.15) {
+                    self.appStackView.alpha = 1
+                }
+            }
+        }
+    }
+    
     @objc private func updateDesktopButtonHidden() {
         desktopButton.isHidden = !AppGroupUserDefaults.Account.isDesktopLoggedIn
+    }
+    
+    func dismissAppsWindow() {
+        if let homeApps = children.compactMap({ $0 as? HomeAppsViewController }).first {
+            homeApps.dismissAsChild(completion: nil)
+        }
     }
     
     func setNeedsRefresh() {
         needRefresh = true
         fetchConversations()
+    }
+    
+    func showCamera(asQrCodeScanner: Bool) {
+        let vc = CameraViewController.instance()
+        vc.asQrCodeScanner = asQrCodeScanner
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            navigationController?.pushViewController(vc, animated: true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self](granted) in
+                guard granted else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
+            })
+        case .denied, .restricted:
+            alertSettings(R.string.localizable.permission_denied_camera_hint())
+        @unknown default:
+            alertSettings(R.string.localizable.permission_denied_camera_hint())
+        }
     }
     
 }

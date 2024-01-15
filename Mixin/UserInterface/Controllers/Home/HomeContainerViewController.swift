@@ -1,14 +1,16 @@
 import UIKit
 
-final class HomeContainerViewController: UIViewController {
-    
-    let homeTabBarController: HomeTabBarController
-    let homeNavigationController: HomeNavigationController
+class HomeContainerViewController: UIViewController {
     
     let clipSwitcher = ClipSwitcher()
     let overlaysCoordinator = HomeOverlaysCoordinator()
     
     var pipController: GalleryVideoItemViewController?
+    
+    let homeNavigationController: HomeNavigationController = {
+        let home = R.storyboard.home.home()!
+        return HomeNavigationController(rootViewController: home)
+    }()
     
     lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController()
@@ -57,17 +59,6 @@ final class HomeContainerViewController: UIViewController {
     
     var galleryIsOnTopMost: Bool {
         isShowingGallery && galleryViewController.parent != nil
-    }
-    
-    init() {
-        let homeTabBarController = HomeTabBarController()
-        self.homeTabBarController = homeTabBarController
-        self.homeNavigationController = HomeNavigationController(rootViewController: homeTabBarController)
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("Storyboard is not supported")
     }
     
     deinit {

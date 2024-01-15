@@ -64,7 +64,7 @@ final class WithdrawalConfirmationViewController: PaymentConfirmationViewControl
                 return
             }
             var viewControllers = navigation.viewControllers
-            while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+            while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
                 if let _ = (viewControllers.last as? ContainerViewController)?.viewController as? TokenViewController {
                     break
                 }

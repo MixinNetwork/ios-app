@@ -320,7 +320,7 @@ extension DepositViewController: WalletHintViewControllerDelegate {
         }
         let conversation = ConversationViewController.instance(ownerUser: user)
         var viewControllers = navigationController.viewControllers
-        if let index = viewControllers.firstIndex(where: { $0 is HomeTabBarController }) {
+        if let index = viewControllers.firstIndex(where: { $0 is HomeViewController }) {
             viewControllers.removeLast(viewControllers.count - index - 1)
         }
         viewControllers.append(conversation)

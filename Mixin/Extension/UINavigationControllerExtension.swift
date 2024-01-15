@@ -1,39 +1,39 @@
 import UIKit
 
 extension UINavigationController {
-    
+
     func pushViewController(withBackRoot viewController: UIViewController) {
-        var viewControllers = self.viewControllers
-        while viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController) {
+        var viewControllers: [UIViewController] = self.viewControllers
+        while viewControllers.count > 0 && !(viewControllers.last is HomeViewController) {
             viewControllers.removeLast()
         }
         viewControllers.append(viewController)
         setViewControllers(viewControllers, animated: true)
     }
-    
+
     func pushViewController(withBackChat viewController: UIViewController) {
-        var viewControllers = self.viewControllers
-        while viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController) && !(viewControllers.last is ConversationViewController) {
+        var viewControllers: [UIViewController] = self.viewControllers
+        while viewControllers.count > 0 && !(viewControllers.last is HomeViewController) && !(viewControllers.last is ConversationViewController) {
             viewControllers.removeLast()
         }
         viewControllers.append(viewController)
         setViewControllers(viewControllers, animated: true)
     }
-    
+
     func backToHome() {
-        var viewControllers = self.viewControllers
-        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+        var viewControllers: [UIViewController] = self.viewControllers
+        while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
             viewControllers.removeLast()
         }
         setViewControllers(viewControllers, animated: true)
     }
-    
+
     func backToChat() {
-        var viewControllers = self.viewControllers
+        var viewControllers: [UIViewController] = self.viewControllers
         while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
             viewControllers.removeLast()
         }
         setViewControllers(viewControllers, animated: true)
     }
-    
 }
+

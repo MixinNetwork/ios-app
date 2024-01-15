@@ -131,7 +131,7 @@ class QRCodeViewController: UIViewController {
     
     @IBAction func scan(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
-        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+        UIApplication.homeViewController?.showCamera(asQrCodeScanner: true)
     }
     
     @IBAction func shareImage(_ sender: Any) {

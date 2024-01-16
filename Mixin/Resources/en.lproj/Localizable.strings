@@ -403,6 +403,7 @@
 "exit_group" = "Exit Group";
 "exit_group_and_report_inviter" = "Exit group and report inviter";
 "expired" = "Expired";
+"explore" = "Explore";
 "export" = "Export";
 "export_failed" = "Export failed";
 "face_id" = "Face ID";

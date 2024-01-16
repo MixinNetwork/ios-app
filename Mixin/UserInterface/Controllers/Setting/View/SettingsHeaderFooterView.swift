@@ -7,11 +7,11 @@ class SettingsHeaderFooterView: UITableViewHeaderFooterView {
     }
     
     class var textColor: UIColor {
-        .text
+        R.color.text_quaternary()!
     }
     
     class var textStyle: UIFont.TextStyle {
-        .caption1
+        .footnote
     }
     
     class var attributes: [NSAttributedString.Key: Any] {

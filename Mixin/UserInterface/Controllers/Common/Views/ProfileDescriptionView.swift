@@ -16,7 +16,7 @@ final class ProfileDescriptionView: UIView {
     
     private func prepare() {
         label.maxLineCount = 8
-        label.textColor = .text
+        label.textColor = R.color.text_secondary()!
         label.backgroundColor = .clear
         addSubview(label)
         let inset = UIEdgeInsets(top: 6, left: 28, bottom: 6, right: 28)

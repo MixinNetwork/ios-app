@@ -17,7 +17,7 @@ class LocationMessageViewModel: ImageMessageViewModel {
     }
     
     override var trailingInfoColor: UIColor {
-        hasAddress ? .accessoryText : .white
+        hasAddress ? R.color.text_quaternary()! : .white
     }
     
     var cachedSnapshot: [UserInterfaceStyle: Snapshot] = [:]

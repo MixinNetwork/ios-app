@@ -124,7 +124,7 @@ extension HomeAppsViewController {
             homeTitleLabel.text = R.string.localizable.done()
         } else {
             homeTitleLabel.textColor = .title
-            homeTitleLabel.text = R.string.localizable.bots_title()
+            homeTitleLabel.text = R.string.localizable.explore()
         }
     }
     

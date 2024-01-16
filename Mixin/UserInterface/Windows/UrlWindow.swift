@@ -678,8 +678,8 @@ class UrlWindow {
                 DispatchQueue.main.async {
                     if let address {
                         hud.hide()
-                        let update = UpdateAddressViewController(token: token, delete: address)
-                        let authentication = AuthenticationViewController(intentViewController: update)
+                        let updateAddress = UpdateAddressViewController(token: token, delete: address)
+                        let authentication = AuthenticationViewController(intentViewController: updateAddress)
                         UIApplication.homeContainerViewController?.present(authentication, animated: true)
                     } else {
                         hud.set(style: .error, text: R.string.localizable.address_not_found())
@@ -691,12 +691,12 @@ class UrlWindow {
                 let address = AddressDAO.shared.getAddress(assetId: assetID, destination: destination, tag: tag)
                 DispatchQueue.main.async {
                     hud.hide()
-                    let update = UpdateAddressViewController(token: token,
-                                                             label: label,
-                                                             destination: destination,
-                                                             tag: tag,
-                                                             action: address == nil ? .add : .update)
-                    let authentication = AuthenticationViewController(intentViewController: update)
+                    let updateAddress = UpdateAddressViewController(token: token,
+                                                                    label: label,
+                                                                    destination: destination,
+                                                                    tag: tag,
+                                                                    action: address == nil ? .add : .update)
+                    let authentication = AuthenticationViewController(intentViewController: updateAddress)
                     UIApplication.homeContainerViewController?.present(authentication, animated: true)
                 }
             } else {

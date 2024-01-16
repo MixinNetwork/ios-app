@@ -33,13 +33,13 @@ final class UpdateAddressViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     
+    var onSuccess: (() -> Void)?
+    
     private let token: TokenItem
     private let label: String
     private let destination: String
     private let tag: String
     private let action: Action
-    
-    var onSuccess: (() -> Void)?
     
     init(token: TokenItem, delete address: Address) {
         self.token = token

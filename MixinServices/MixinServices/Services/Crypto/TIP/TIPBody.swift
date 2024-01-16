@@ -16,7 +16,7 @@ enum TIPBody {
         }
     }
     
-    static func addAddres(assetID: String, publicKey: String?, keyTag: String?, name: String?) throws -> Data {
+    static func addAddress(assetID: String, publicKey: String?, keyTag: String?, name: String?) throws -> Data {
         try hashData("TIP:ADDRESS:ADD:", assetID, publicKey, keyTag, name)
     }
     

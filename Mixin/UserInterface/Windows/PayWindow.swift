@@ -10,7 +10,6 @@ class PayWindow: BottomSheetView {
     enum PinAction {
         case payment(payment: PaymentCodeResponse, receivers: [UserItem])
         case transfer(trackId: String, user: UserItem, fromWeb: Bool, returnTo: URL?)
-        case withdraw(trackId: String, address: Address, feeAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
         case collectible(collectible: CollectibleResponse, senders: [UserItem], receivers: [UserItem])
     }
@@ -80,7 +79,6 @@ class PayWindow: BottomSheetView {
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
     private var processing = false
-    private var withdrawlFee: String?
     private var isKeyboardAppear = false
     private var isMultisigUsersAppear = false
     private var isAllowBiometricPay: Bool {
@@ -156,11 +154,6 @@ class PayWindow: BottomSheetView {
                 mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
                 mixinIDLabel.textColor = .accessoryText
                 pinView.isHidden = false
-            case let .withdraw(_, address, feeAsset, _):
-                multisigView.isHidden = true
-                nameLabel.text = R.string.localizable.withdrawal_to(address.label)
-                mixinIDLabel.text = address.fullRepresentation
-                withdrawlFee = updateAmountExchangeForWithdraw(fee: address.fee, feeAsset: feeAsset)
             case let .payment(payment, receivers):
                 guard let account = LoginManager.shared.account else {
                     break
@@ -559,31 +552,8 @@ extension PayWindow: PinFieldDelegate {
                 self.errorContinueAction = .retryPin
                 self.failedHandler(errorMsg: message)
             case .insufficientFee:
-                if let fee = self.withdrawlFee {
-                    message = R.string.localizable.error_insufficient_transaction_fee_with_amount(fee)
-                }
                 self.errorContinueAction = .close
                 self.failedHandler(errorMsg: message)
-            case .withdrawFeeTooSmall:
-                if let oldFee = self.withdrawlFee, case let .withdraw(trackId, address, feeAsset, fromWeb) = self.pinAction {
-                    WithdrawalAPI.address(addressId: address.addressId) { result in
-                        if case let .success(address) = result {
-                            AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-                            let newFee = self.updateAmountExchangeForWithdraw(fee: address.fee, feeAsset: feeAsset)
-                            message = R.string.localizable.wallet_withdrawal_changed(oldFee, newFee)
-                            self.pinAction = .withdraw(trackId: trackId, address: address, feeAsset: feeAsset, fromWeb: fromWeb)
-                            self.withdrawlFee = newFee
-                            self.errorContinueAction = .retryPin
-                            self.failedHandler(errorMsg: message)
-                        } else {
-                            self.errorContinueAction = .close
-                            self.failedHandler(errorMsg: message)
-                        }
-                    }
-                } else {
-                    self.errorContinueAction = .close
-                    self.failedHandler(errorMsg: message)
-                }
             default:
                 self.errorContinueAction = .close
                 self.failedHandler(errorMsg: message)
@@ -689,10 +659,6 @@ extension PayWindow: PinFieldDelegate {
                 case .transfer, .payment:
                     AppGroupUserDefaults.User.hasPerformedTransfer = true
                     AppGroupUserDefaults.Wallet.defaultTransferAssetId = assetId
-                case let .withdraw(_,address,_,_):
-                    AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
-                    let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
-                    ConcurrentJobQueue.shared.addJob(job: job)
                 default:
                     break
                 }
@@ -737,11 +703,6 @@ extension PayWindow: PinFieldDelegate {
         case let .payment(payment, _):
             let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
             PaymentAPI.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
-        case let .withdraw(trackId, address, _, _):
-            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
-            TraceDAO.shared.saveTrace(trace: trace)
-            let request = WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo, fee: address.fee, assetId: nil, destination: nil, tag: nil)
-            WithdrawalAPI.withdrawal(withdrawal: request, completion: completion)
         case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {
@@ -840,24 +801,6 @@ extension PayWindow {
                 if threshold != 0 && fiatMoneyValue >= threshold {
                     DispatchQueue.main.async {
                         BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, completion: completion).presentPopupControllerAnimated()
-                    }
-                    return
-                }
-            case let .withdraw(_, address, _, _):
-                let decimalAmount: Decimal?
-                if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != ".", amount.contains(decimalSeparator) {
-                    decimalAmount = Decimal(string: amount, locale: .current)
-                } else {
-                    decimalAmount = Decimal(string: amount, locale: .us)
-                }
-                if let amount = decimalAmount, let dust = Decimal(string: address.dust, locale: .us), amount < dust {
-                    completion(false, R.string.localizable.withdrawal_minimum_amount(address.dust, asset.symbol))
-                    return
-                }
-
-                if AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] == nil && amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate > 10 {
-                    DispatchQueue.main.async {
-                        WithdrawalTipWindow.instance().render(asset: asset, completion: completion).presentPopupControllerAnimated()
                     }
                     return
                 }

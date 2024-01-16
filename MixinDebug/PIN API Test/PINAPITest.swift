@@ -94,7 +94,7 @@ class PINAPITest: ObservableObject {
             }),
             
             Case(name: "Save Address", work: { onFinished in
-                let request = AddressRequest(assetId: uuid, destination: uuid, tag: "", label: "", pin: self.pin)
+                let request = AddressRequest(assetID: uuid, destination: uuid, tag: "", label: "", pin: self.pin)
                 WithdrawalAPI.save(address: request) { result in
                     self.validate(result: result, onFinished: onFinished)
                 }

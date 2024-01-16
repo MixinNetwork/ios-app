@@ -644,53 +644,25 @@ class UrlWindow {
         case .unknown:
             return true
         }
-        let query = url.getKeyVals()
-        guard let assetId = query["asset"], !assetId.isEmpty, UUID(uuidString: assetId) != nil else {
+        let queries = url.getKeyVals()
+        guard let assetID = queries["asset"], UUID.isValidLowercasedUUIDString(assetID) else {
             return false
         }
 
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            guard var asset = syncAsset(assetId: assetId, hud: hud) else {
+            guard let token = syncToken(assetID: assetID, hud: hud) else {
                 return
             }
-
-            while asset.depositEntries.isEmpty {
-                switch AssetAPI.asset(assetId: asset.assetId) {
-                case let .success(remoteAsset):
-                    guard !remoteAsset.depositEntries.isEmpty else {
-                        Thread.sleep(forTimeInterval: 2)
-                        continue
-                    }
-                    guard let localAsset = AssetDAO.shared.saveAsset(asset: remoteAsset) else {
-                        hud.hideInMainThread()
-                        return
-                    }
-                    asset = localAsset
-                case let .failure(error):
-                    DispatchQueue.main.async {
-                        hud.set(style: .error, text: error.localizedDescription)
-                        hud.scheduleAutoHidden()
-                    }
-                    return
-                }
-            }
-
-            var addressRequest: AddressRequest?
-            var address: Address?
-
-            let addressAction: LegacyAddressView.action
-            if let action = query["action"]?.lowercased(), "delete" == action {
-                guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
+            if queries["action"]?.lowercased() == "delete" {
+                guard let addressID = queries["address"], UUID.isValidLowercasedUUIDString(addressID) else {
                     hud.hideInMainThread()
                     return
                 }
-
-                addressAction = .delete
-                address = AddressDAO.shared.getAddress(addressId: addressId)
+                var address = AddressDAO.shared.getAddress(addressId: addressID)
                 if address == nil {
-                    switch WithdrawalAPI.address(addressId: addressId) {
+                    switch AddressAPI.address(addressID: addressID) {
                     case let .success(remoteAddress):
                         AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
                         address = remoteAddress
@@ -703,22 +675,32 @@ class UrlWindow {
                         return
                     }
                 }
-            } else {
-                guard let label = query["label"], let destination = query["destination"], !label.isEmpty, !destination.isEmpty else {
-                    hud.hideInMainThread()
-                    return
+                DispatchQueue.main.async {
+                    if let address {
+                        hud.hide()
+                        let update = UpdateAddressViewController(token: token, delete: address)
+                        let authentication = AuthenticationViewController(intentViewController: update)
+                        UIApplication.homeContainerViewController?.present(authentication, animated: true)
+                    } else {
+                        hud.set(style: .error, text: R.string.localizable.address_not_found())
+                        hud.scheduleAutoHidden()
+                    }
                 }
-
-                let tag = query["tag"] ?? ""
-
-                addressRequest = AddressRequest(assetId: assetId, destination: destination, tag: tag, label: label, pin: "")
-                address = AddressDAO.shared.getAddress(assetId: assetId, destination: destination, tag: tag)
-                addressAction = address == nil ? .add : .update
-            }
-
-            DispatchQueue.main.async {
-                hud.hide()
-                LegacyAddressWindow.instance().presentPopupControllerAnimated(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil)
+            } else if let label = queries["label"], let destination = queries["destination"], !label.isEmpty, !destination.isEmpty {
+                let tag = queries["tag"] ?? ""
+                let address = AddressDAO.shared.getAddress(assetId: assetID, destination: destination, tag: tag)
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let update = UpdateAddressViewController(token: token,
+                                                             label: label,
+                                                             destination: destination,
+                                                             tag: tag,
+                                                             action: address == nil ? .add : .update)
+                    let authentication = AuthenticationViewController(intentViewController: update)
+                    UIApplication.homeContainerViewController?.present(authentication, animated: true)
+                }
+            } else {
+                hud.hideInMainThread()
             }
         }
         return true

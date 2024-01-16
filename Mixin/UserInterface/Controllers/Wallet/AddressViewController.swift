@@ -36,7 +36,7 @@ class AddressViewController: UIViewController {
                                                selector: #selector(reloadLocalAddresses),
                                                name: AddressDAO.addressDidChangeNotification,
                                                object: nil)
-        WithdrawalAPI.addresses(assetId: token.assetID) { (result) in
+        AddressAPI.addresses(assetID: token.assetID) { (result) in
             guard case let .success(addresses) = result else {
                 return
             }
@@ -150,7 +150,9 @@ extension AddressViewController {
                 self.searchBoxView.textField.resignFirstResponder()
             }
             let address = self.addresses[indexPath.row]
-            AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: self.token, addressRequest: nil, address: address, dismissCallback: nil)
+            let updateAddress = UpdateAddressViewController(token: self.token, delete: address)
+            let authentication = AuthenticationViewController(intentViewController: updateAddress)
+            self.present(authentication, animated: true)
             completionHandler(true)
         }
     }

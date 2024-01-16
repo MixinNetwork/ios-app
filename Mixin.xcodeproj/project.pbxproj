@@ -749,6 +749,7 @@
 		94333CB329960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */; };
 		94333CB52996127500EFF0A8 /* ConnectedDappTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */; };
 		94333CB7299612F200EFF0A8 /* ConnectedDappViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */; };
+		943362052B5664180023EC75 /* UpdateAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943362042B5664180023EC75 /* UpdateAddressViewController.swift */; };
 		94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF52862F302009C9147 /* libopusfile.xcframework */; };
 		94341BFA2862F302009C9147 /* libopus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF62862F302009C9147 /* libopus.xcframework */; };
 		94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF72862F302009C9147 /* libopusenc.xcframework */; };
@@ -905,10 +906,7 @@
 		94DCDAA0262DAF5B0064D1F3 /* DisplayAwakener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */; };
 		94DF7D5928DC0F17006E415B /* Acknowledgement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF7D5828DC0F17006E415B /* Acknowledgement.swift */; };
 		94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF7E0D28DC1697006E415B /* AcknowledgementViewController.swift */; };
-		94DFE7BB2AEA9B8C0042D507 /* AddressWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DFE7BA2AEA9B8C0042D507 /* AddressWindow.swift */; };
-		94DFE7C02AEA9BA10042D507 /* AddressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DFE7BF2AEA9BA10042D507 /* AddressWindow.xib */; };
-		94DFE7C52AEA9BF20042D507 /* AddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DFE7C42AEA9BF20042D507 /* AddressView.swift */; };
-		94DFE7C72AEA9C350042D507 /* AddressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DFE7C62AEA9C350042D507 /* AddressView.xib */; };
+		94DFE7C72AEA9C350042D507 /* UpdateAddressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DFE7C62AEA9C350042D507 /* UpdateAddressView.xib */; };
 		94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E1D44029E906AB00511267 /* DeviceTransferHeader.swift */; };
 		94E1D44E29E9393C00511267 /* DeviceTransferServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E1D44D29E9393C00511267 /* DeviceTransferServer.swift */; };
 		94E206702AF37F2600CCF6D8 /* SnapshotMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2066F2AF37F2600CCF6D8 /* SnapshotMessageCell.swift */; };
@@ -982,8 +980,6 @@
 		DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */; };
 		DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF2081B12005FF3500B87DB0 /* Camera.storyboard */; };
 		DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2819742014669E001EE5FA /* RefreshAccountJob.swift */; };
-		DF2A0D952295721200CA0280 /* LegacyAddressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF2A0D942295721200CA0280 /* LegacyAddressView.xib */; };
-		DF2A0D972295734C00CA0280 /* LegacyAddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A0D962295734C00CA0280 /* LegacyAddressView.swift */; };
 		DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2A24471FC7CF87003A8C1E /* LocalAuthentication.framework */; };
 		DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */; };
 		DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */; };
@@ -1012,8 +1008,6 @@
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
 		DF68CD72244EC1970059A678 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF68CD71244EC1970059A678 /* Mixin-Keys.plist */; };
-		DF6ABB142295019C00A012B2 /* LegacyAddressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF6ABB132295019C00A012B2 /* LegacyAddressWindow.xib */; };
-		DF6ABB162295049E00A012B2 /* LegacyAddressWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6ABB152295049E00A012B2 /* LegacyAddressWindow.swift */; };
 		DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */; };
 		DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768562200647CC0055F3FF /* BouncingButton.swift */; };
 		DF768569200687010055F3FF /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768568200687010055F3FF /* PreviewView.swift */; };
@@ -1955,6 +1949,7 @@
 		94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectedDappTableHeaderView.xib; sourceTree = "<group>"; };
 		94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappTableHeaderView.swift; sourceTree = "<group>"; };
 		94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappViewController.swift; sourceTree = "<group>"; };
+		943362042B5664180023EC75 /* UpdateAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateAddressViewController.swift; sourceTree = "<group>"; };
 		94341BF52862F302009C9147 /* libopusfile.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusfile.xcframework; sourceTree = "<group>"; };
 		94341BF62862F302009C9147 /* libopus.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopus.xcframework; sourceTree = "<group>"; };
 		94341BF72862F302009C9147 /* libopusenc.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusenc.xcframework; sourceTree = "<group>"; };
@@ -2103,10 +2098,7 @@
 		94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayAwakener.swift; sourceTree = "<group>"; };
 		94DF7D5828DC0F17006E415B /* Acknowledgement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Acknowledgement.swift; sourceTree = "<group>"; };
 		94DF7E0D28DC1697006E415B /* AcknowledgementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementViewController.swift; sourceTree = "<group>"; };
-		94DFE7BA2AEA9B8C0042D507 /* AddressWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressWindow.swift; sourceTree = "<group>"; };
-		94DFE7BF2AEA9BA10042D507 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
-		94DFE7C42AEA9BF20042D507 /* AddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
-		94DFE7C62AEA9C350042D507 /* AddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressView.xib; sourceTree = "<group>"; };
+		94DFE7C62AEA9C350042D507 /* UpdateAddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpdateAddressView.xib; sourceTree = "<group>"; };
 		94E1D44029E906AB00511267 /* DeviceTransferHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferHeader.swift; sourceTree = "<group>"; };
 		94E1D44D29E9393C00511267 /* DeviceTransferServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServer.swift; sourceTree = "<group>"; };
 		94E2066F2AF37F2600CCF6D8 /* SnapshotMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageCell.swift; sourceTree = "<group>"; };
@@ -2182,8 +2174,6 @@
 		DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupJobQueue.swift; sourceTree = "<group>"; };
 		DF2081B12005FF3500B87DB0 /* Camera.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		DF2819742014669E001EE5FA /* RefreshAccountJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAccountJob.swift; sourceTree = "<group>"; };
-		DF2A0D942295721200CA0280 /* LegacyAddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LegacyAddressView.xib; sourceTree = "<group>"; };
-		DF2A0D962295734C00CA0280 /* LegacyAddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyAddressView.swift; sourceTree = "<group>"; };
 		DF2A24471FC7CF87003A8C1E /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMessageCell.swift; sourceTree = "<group>"; };
 		DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtension.swift; sourceTree = "<group>"; };
@@ -2215,8 +2205,6 @@
 		DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetSendViewController.swift; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
 		DF68CD71244EC1970059A678 /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Mixin-Keys.plist"; path = "Mixin/Supporting Files/Mixin-Keys.plist"; sourceTree = SOURCE_ROOT; };
-		DF6ABB132295019C00A012B2 /* LegacyAddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LegacyAddressWindow.xib; sourceTree = "<group>"; };
-		DF6ABB152295049E00A012B2 /* LegacyAddressWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyAddressWindow.swift; sourceTree = "<group>"; };
 		DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 		DF768562200647CC0055F3FF /* BouncingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BouncingButton.swift; sourceTree = "<group>"; };
 		DF768568200687010055F3FF /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
@@ -3539,10 +3527,6 @@
 				DFC2646D24E585CE00BF954D /* DuplicateConfirmationWindow.xib */,
 				DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */,
 				DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */,
-				94DFE7BA2AEA9B8C0042D507 /* AddressWindow.swift */,
-				94DFE7BF2AEA9BA10042D507 /* AddressWindow.xib */,
-				DF6ABB152295049E00A012B2 /* LegacyAddressWindow.swift */,
-				DF6ABB132295019C00A012B2 /* LegacyAddressWindow.xib */,
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
 				DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */,
 				DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */,
@@ -3618,10 +3602,8 @@
 				7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */,
 				7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */,
 				7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */,
-				94DFE7C42AEA9BF20042D507 /* AddressView.swift */,
-				94DFE7C62AEA9C350042D507 /* AddressView.xib */,
-				DF2A0D962295734C00CA0280 /* LegacyAddressView.swift */,
-				DF2A0D942295721200CA0280 /* LegacyAddressView.xib */,
+				94DFE7C62AEA9C350042D507 /* UpdateAddressView.xib */,
+				943362042B5664180023EC75 /* UpdateAddressViewController.swift */,
 				7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */,
 				7B833E9822C4904F0063929D /* AppLoadingIndicatorView.swift */,
 				7CB227842907CE060034F9FD /* DepositNetworkCell.swift */,
@@ -4608,7 +4590,7 @@
 				7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
-				94DFE7C72AEA9C350042D507 /* AddressView.xib in Resources */,
+				94DFE7C72AEA9C350042D507 /* UpdateAddressView.xib in Resources */,
 				948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
 				7C0FAAC927E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib in Resources */,
@@ -4683,7 +4665,6 @@
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
-				94DFE7C02AEA9BA10042D507 /* AddressWindow.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
 				94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */,
 				7C7579D829DC573F0002DA0B /* DeviceTransferProgressView.xib in Resources */,
@@ -4723,7 +4704,6 @@
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				7B9A18162428932A00187693 /* PageControlView.xib in Resources */,
 				9461F9532B1F03DA0038F9E2 /* MultisigPatternView.xib in Resources */,
-				DF2A0D952295721200CA0280 /* LegacyAddressView.xib in Resources */,
 				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
 				7C2DEFF32824FF0600758208 /* ic_time_animation@3x.gif in Resources */,
 				7CB227872907CE060034F9FD /* DepositNetworkCell.xib in Resources */,
@@ -4756,7 +4736,6 @@
 				94E34124261D829200E2F9D3 /* highlight.js in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
 				7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */,
-				DF6ABB142295019C00A012B2 /* LegacyAddressWindow.xib in Resources */,
 				E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */,
@@ -5021,6 +5000,7 @@
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
 				7BEED0DB244DC1F300F3A2B9 /* SettingsTableViewController.swift in Sources */,
+				943362052B5664180023EC75 /* UpdateAddressViewController.swift in Sources */,
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				7B3936D120C1722C0075A97A /* CaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
@@ -5080,7 +5060,6 @@
 				7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */,
 				7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */,
 				5EBD8CD1267B37D20026A248 /* ScreenLockViewController.swift in Sources */,
-				DF2A0D972295734C00CA0280 /* LegacyAddressView.swift in Sources */,
 				7BDBDE5F22327698006220DF /* LegacyTransferTypeViewController.swift in Sources */,
 				7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */,
 				DF1A9A801FF25DB600A95188 /* RequestInAppNotificationJob.swift in Sources */,
@@ -5515,7 +5494,6 @@
 				947744E126A9F2D300B6BBDD /* HomeAppItem.swift in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				94ED3EF62990DBBB003BC236 /* WalletConnectRequestViewController.swift in Sources */,
-				94DFE7BB2AEA9B8C0042D507 /* AddressWindow.swift in Sources */,
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockedUsersViewController.swift in Sources */,
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,
@@ -5579,7 +5557,6 @@
 				94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */,
-				DF6ABB162295049E00A012B2 /* LegacyAddressWindow.swift in Sources */,
 				94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				7B57186E24D9375300682D86 /* MixinAPIError+Description.swift in Sources */,
@@ -5688,7 +5665,6 @@
 				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
 				E09C5EC123703FEE0095F729 /* ProfileShortcutView.swift in Sources */,
-				94DFE7C52AEA9BF20042D507 /* AddressView.swift in Sources */,
 				7B2AFEE220FE022C00C747BB /* MXMFastURLDetector.m in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */,

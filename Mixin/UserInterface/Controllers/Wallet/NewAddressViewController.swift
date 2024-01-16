@@ -142,7 +142,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         guard areInputsValid else {
             return
         }
-        let assetId = asset.assetID
         var destination = addressValue
         if asset.isBitcoinChain {
             if destination.lowercased().hasPrefix("bitcoin:"), let address = URLComponents(string: destination)?.path {
@@ -150,19 +149,12 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             }
         }
         let tag = memoView.isHidden ? "" : memoValue
-        let requestAddress = AddressRequest(assetId: assetId, destination: destination, tag: tag, label: labelValue, pin: "")
-        shouldLayoutWithKeyboard = false
-        AddressWindow.instance().presentPopupControllerAnimated(action: .add, asset: asset, addressRequest: requestAddress, address: nil, dismissCallback: { [weak self] (success) in
-            guard let weakSelf = self else {
-                return
-            }
-            if success {
-                weakSelf.navigationController?.popViewController(animated: true)
-            } else {
-                weakSelf.shouldLayoutWithKeyboard = true
-                weakSelf.labelTextField.becomeFirstResponder()
-            }
-        })
+        let updateAddress = UpdateAddressViewController(token: asset, label: labelValue, destination: destination, tag: tag, action: .add)
+        updateAddress.onSuccess = { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        let authentication = AuthenticationViewController(intentViewController: updateAddress)
+        present(authentication, animated: true)
     }
     
     @IBAction func memoHintTapAction(_ recognizer: UITapGestureRecognizer) {

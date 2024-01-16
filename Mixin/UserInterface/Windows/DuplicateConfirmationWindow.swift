@@ -18,9 +18,6 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
         case let .transfer(_, user, _, _):
             titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
             tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(traceCreatedAt.toUTCDate().simpleTimeAgo(), user.fullName, amountLabel.text ?? "")
-        case let .withdraw(_, address, _, _):
-            titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
-            tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(traceCreatedAt.toUTCDate().simpleTimeAgo(), address.compactRepresentation, amountLabel.text ?? "")
         default:
             break
         }

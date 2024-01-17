@@ -197,21 +197,23 @@ struct TransferPaymentOperation {
                 } else {
                     try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)
                     try trace?.save(db)
-                    let receiverID = opponent.userId
-                    let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
-                    let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
-                    if try !Conversation.exists(db, key: conversationID) {
-                        let conversation = Conversation.createConversation(conversationId: conversationID,
-                                                                           category: ConversationCategory.CONTACT.rawValue,
-                                                                           recipientId: receiverID,
-                                                                           status: ConversationStatus.START.rawValue)
-                        try conversation.save(db)
-                        db.afterNextTransaction { _ in
-                            let createConversation = CreateConversationJob(conversationId: conversationID)
-                            ConcurrentJobQueue.shared.addJob(job: createConversation)
+                    if opponent.isCreatedByMessenger {
+                        let receiverID = opponent.userId
+                        let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
+                        let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
+                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
+                        if try !Conversation.exists(db, key: conversationID) {
+                            let conversation = Conversation.createConversation(conversationId: conversationID,
+                                                                               category: ConversationCategory.CONTACT.rawValue,
+                                                                               recipientId: receiverID,
+                                                                               status: ConversationStatus.START.rawValue)
+                            try conversation.save(db)
+                            db.afterNextTransaction { _ in
+                                let createConversation = CreateConversationJob(conversationId: conversationID)
+                                ConcurrentJobQueue.shared.addJob(job: createConversation)
+                            }
                         }
                     }
-                    try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
                 }
             case .multisig, .mainnet:
                 try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)

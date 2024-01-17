@@ -31,8 +31,8 @@ final class HomeTabBarController: UIViewController {
                         image: R.image.home_tab_wallet()!,
                         selectedImage: R.image.home_tab_wallet_selected()!),
             TabBar.Item(id: ChildID.bot.rawValue,
-                        image: R.image.home_tab_bot()!,
-                        selectedImage: R.image.home_tab_bot_selected()!),
+                        image: R.image.home_tab_explore()!,
+                        selectedImage: R.image.home_tab_explore_selected()!),
         ]
         tabBar.selectedIndex = 0
         tabBar.delegate = self

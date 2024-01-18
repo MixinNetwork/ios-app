@@ -50,7 +50,7 @@ class SnapshotCell: ModernSelectedBackgroundCell {
                 pendingDepositProgressView.isHidden = true
                 setTitle(snapshot.deposit?.sender)
             }
-            amountLabel.textColor = R.color.text_accessory()
+            amountLabel.textColor = R.color.text_tertiary()!
         default:
             if let deposit = snapshot.deposit {
                 iconImageView.imageView.contentMode = .center
@@ -86,7 +86,7 @@ class SnapshotCell: ModernSelectedBackgroundCell {
             titleLabel.textColor = R.color.text()
         } else {
             titleLabel.text = notApplicable
-            titleLabel.textColor = R.color.text_accessory()
+            titleLabel.textColor = R.color.text_tertiary()!
         }
     }
     

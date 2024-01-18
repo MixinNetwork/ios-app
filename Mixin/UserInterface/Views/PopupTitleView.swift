@@ -19,7 +19,7 @@ final class PopupTitleView: UIView {
     
     lazy var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = R.color.text_accessory()
+        label.textColor = R.color.text_tertiary()!
         label.font = .scaledFont(ofSize: 12, weight: .regular)
         label.adjustsFontForContentSizeCategory = true
         titleStackView.addArrangedSubview(label)

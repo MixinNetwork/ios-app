@@ -188,7 +188,7 @@ extension TIPIntroViewController {
             style.headIndent = 13
             
             let noticeAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: R.color.text_accessory()!,
+                .foregroundColor: R.color.text_tertiary()!,
                 .font: UIFont.preferredFont(forTextStyle: .footnote),
                 .paragraphStyle: style,
             ]
@@ -240,7 +240,7 @@ extension TIPIntroViewController {
             setNextButtonTitleByIntent()
             nextButton.isBusy = true
             actionDescriptionLabel.text = R.string.localizable.trying_connect_tip_network()
-            actionDescriptionLabel.textColor = R.color.text_desc()
+            actionDescriptionLabel.textColor = R.color.text_tertiary()
         case .counterCheckingFails:
             nextButton.setTitle(R.string.localizable.retry(), for: .normal)
             nextButton.isBusy = false

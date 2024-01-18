@@ -8,7 +8,7 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
     lazy var label: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
-        label.textColor = .accessoryText
+        label.textColor = R.color.text_tertiary()!
         label.numberOfLines = 0
         label.font = .preferredFont(forTextStyle: .caption1)
         label.adjustsFontForContentSizeCategory = true

@@ -39,7 +39,7 @@ final class ViewEmergencyContactViewController: UIViewController {
         let text = R.string.localizable.setting_emergency_desc()
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.preferredFont(forTextStyle: .caption1),
-            .foregroundColor: UIColor.accessoryText
+            .foregroundColor: R.color.text_tertiary()!
         ]
         let str = NSMutableAttributedString(string: text, attributes: attrs)
         let linkRange = (text as NSString)

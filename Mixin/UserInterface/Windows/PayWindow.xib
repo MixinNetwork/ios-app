@@ -100,7 +100,7 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="7000100102" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xua-9X-dAo">
                                     <rect key="frame" x="107" y="29.5" width="81" height="17"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" name="text_accessory"/>
+                                    <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
@@ -373,7 +373,7 @@
                                     <rect key="frame" x="124" y="168" width="47.5" height="14.5"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                    <color key="textColor" name="text_accessory"/>
+                                    <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5f3-GA-Aig">
@@ -397,7 +397,7 @@
                                     <rect key="frame" x="147.5" y="203.5" width="0.0" height="0.0"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                    <color key="textColor" name="text_accessory"/>
+                                    <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oXe-5X-NEr" userLabel="PINView">
@@ -405,7 +405,7 @@
                                     <subviews>
                                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhP-FQ-P0s" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="34" y="30" width="172" height="10"/>
-                                            <color key="tintColor" name="text_accessory"/>
+                                            <color key="tintColor" name="text_tertiary"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="10" id="Cws-Zl-Dib"/>
                                                 <constraint firstAttribute="width" constant="172" id="yB0-YC-Ffd"/>
@@ -414,7 +414,7 @@
                                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MtN-so-wKF" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="104" y="19" width="32" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <color key="tintColor" name="text_accessory"/>
+                                            <color key="tintColor" name="text_tertiary"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="32" id="Fg2-Pa-2Pn"/>
                                                 <constraint firstAttribute="width" constant="32" id="fZa-sd-Nyf"/>
@@ -518,7 +518,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Successful" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eJ3-kB-QvU">
                                             <rect key="frame" x="102" y="74" width="71" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" name="text_accessory"/>
+                                            <color key="textColor" name="text_tertiary"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="successful"/>
@@ -705,10 +705,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

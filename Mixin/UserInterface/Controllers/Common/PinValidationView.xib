@@ -55,7 +55,7 @@
                                     <subviews>
                                         <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zM2-CK-lez" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="101.5" y="50" width="172" height="10"/>
-                                            <color key="tintColor" name="text_accessory"/>
+                                            <color key="tintColor" name="text_tertiary"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="172" id="1jk-JP-MuJ"/>
                                                 <constraint firstAttribute="height" constant="10" id="aoE-W2-lhp"/>
@@ -75,7 +75,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You'll be asked for it periodically to help you remember it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKk-YI-evv" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="30" y="90" width="315" height="33.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" name="text_accessory"/>
+                                            <color key="textColor" name="text_tertiary"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pin_check_tip"/>
@@ -202,8 +202,8 @@
         <namedColor name="red">
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

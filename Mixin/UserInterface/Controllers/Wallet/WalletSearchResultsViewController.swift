@@ -16,7 +16,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        activityIndicator.tintColor = .accessoryText
+        activityIndicator.tintColor = R.color.text_tertiary()!
         activityIndicator.hidesWhenStopped = true
         view.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { (make) in

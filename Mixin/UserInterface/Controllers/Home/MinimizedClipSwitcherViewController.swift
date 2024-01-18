@@ -266,7 +266,7 @@ extension MinimizedClipSwitcherViewController {
             view = R.nib.minimizedClipIconView(withOwner: nil)!
             iconViews.append(view)
         }
-        view.avatarImageView.imageView.tintColor = R.color.text_accessory()
+        view.avatarImageView.imageView.tintColor = R.color.text_tertiary()!
         view.alpha = 1
         return view
     }

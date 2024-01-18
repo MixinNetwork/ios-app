@@ -38,7 +38,7 @@ extension SearchResult {
     
     static var normalDescriptionAttributes: Attributes {
         return [.font: UIFont.preferredFont(forTextStyle: .caption1),
-                .foregroundColor: UIColor.accessoryText]
+                .foregroundColor: R.color.text_tertiary()!]
     }
     static var highlightedNormalDescriptionAttributes: Attributes {
         return [.font: UIFont.preferredFont(forTextStyle: .caption1),
@@ -47,7 +47,7 @@ extension SearchResult {
     
     static var largerDescriptionAttributes: Attributes {
         return [.font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
-                .foregroundColor: UIColor.accessoryText]
+                .foregroundColor: R.color.text_tertiary()!]
     }
     static var highlightedLargerDescriptionAttributes: Attributes {
         return [.font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),

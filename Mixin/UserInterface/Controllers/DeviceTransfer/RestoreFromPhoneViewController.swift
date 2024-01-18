@@ -64,12 +64,12 @@ extension RestoreFromPhoneViewController {
         paragraphStyle.headIndent = indentation
         let textAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.scaledFont(ofSize: 14, weight: .regular),
-            .foregroundColor: UIColor.title,
+            .foregroundColor: R.color.text()!,
             .paragraphStyle: paragraphStyle
         ]
         let bulletAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.scaledFont(ofSize: 14, weight: .regular),
-            .foregroundColor: UIColor.textAccessory
+            .foregroundColor: R.color.text_tertiary()!
         ]
         let bullet = "• "
         let strings = [

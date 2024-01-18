@@ -192,8 +192,8 @@ class ConversationCell: ModernSelectedBackgroundCell {
         }
         if hasUnreadMessage {
             if item.isMuted {
-                unreadLabel.textColor = .chatUnreadMute
-                unreadLabel.backgroundColor = .textAccessory
+                unreadLabel.textColor = R.color.chat_unread_mute()!
+                unreadLabel.backgroundColor = R.color.text_quaternary()!
             } else {
                 unreadLabel.textColor = .white
                 unreadLabel.backgroundColor = .theme

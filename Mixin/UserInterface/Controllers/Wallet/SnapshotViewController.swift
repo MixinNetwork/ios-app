@@ -152,7 +152,7 @@ extension SnapshotViewController: UITableViewDataSource {
         cell.titleLabel.text = column.key.localized.localizedUppercase
         cell.subtitleLabel.text = column.value
         if column.style.contains(.unavailable) {
-            cell.subtitleLabel.textColor = R.color.text_accessory()
+            cell.subtitleLabel.textColor = R.color.text_tertiary()!
         } else {
             cell.subtitleLabel.textColor = R.color.text()
         }

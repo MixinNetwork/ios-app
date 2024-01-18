@@ -39,7 +39,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
     
     private(set) lazy var accessoryBusyIndicator: ActivityIndicatorView = {
         let indicator = ActivityIndicatorView()
-        indicator.tintColor = .accessoryText
+        indicator.tintColor = R.color.text_tertiary()!
         indicator.setContentHuggingPriority(.required, for: .horizontal)
         indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
         accessoryBusyIndicatorIfLoaded = indicator

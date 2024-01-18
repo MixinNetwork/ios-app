@@ -42,7 +42,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         tableView.register(PeerHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.sectionIndexColor = R.color.text_accessory()
+        tableView.sectionIndexColor = R.color.text_tertiary()!
         if Self.showSelectionsOnTop {
             collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
             collectionViewLayout.minimumInteritemSpacing = 0

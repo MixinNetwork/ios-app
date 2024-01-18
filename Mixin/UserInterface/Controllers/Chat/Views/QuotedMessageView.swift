@@ -31,7 +31,7 @@ class QuotedMessageView: UIView {
         iconImageView.contentMode = .center
         addSubview(iconImageView)
         
-        subtitleLabel.textColor = .accessoryText
+        subtitleLabel.textColor = R.color.text_tertiary()!
         subtitleLabel.numberOfLines = QuotedMessageViewModel.subtitleNumberOfLines
         addSubview(subtitleLabel)
         

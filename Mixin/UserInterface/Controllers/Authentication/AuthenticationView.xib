@@ -92,7 +92,7 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="subtitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gJP-Xt-OuI">
                                     <rect key="frame" x="0.0" y="0.0" width="48.333333333333336" height="17"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" name="text_accessory"/>
+                                    <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
@@ -108,7 +108,7 @@
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UqX-l8-uvW" userLabel="PIN Field" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="110.66666666666669" y="20" width="172" height="10"/>
-                            <color key="tintColor" name="text_accessory"/>
+                            <color key="tintColor" name="text_tertiary"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="10" id="AfC-Fb-Zhw"/>
                                 <constraint firstAttribute="width" constant="172" id="sDR-OY-hPa"/>
@@ -120,7 +120,7 @@
                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="52f-uG-VXh" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="180.66666666666666" y="9" width="32" height="32"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <color key="tintColor" name="text_accessory"/>
+                            <color key="tintColor" name="text_tertiary"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="32" id="Amu-Ad-ipf"/>
                                 <constraint firstAttribute="height" constant="32" id="xHv-RD-b0a"/>
@@ -179,8 +179,8 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

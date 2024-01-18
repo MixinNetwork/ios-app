@@ -37,10 +37,10 @@ final class HomeTabBarController: UIViewController {
         tabBar.selectedIndex = 0
         tabBar.delegate = self
         updateTabBarShadow(resolveColorUsing: traitCollection)
-        tabBar.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.06).cgColor
+        tabBar.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).cgColor
         tabBar.layer.shadowOpacity = 1
-        tabBar.layer.shadowRadius = 16
-        tabBar.layer.shadowOffset = CGSize(width: 0, height: 0)
+        tabBar.layer.shadowRadius = 4
+        tabBar.layer.shadowOffset = CGSize(width: 0, height: -1)
         view.addSubview(tabBar)
         tabBar.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()

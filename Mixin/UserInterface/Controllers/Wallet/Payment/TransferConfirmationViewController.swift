@@ -91,10 +91,14 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
                         viewControllers.removeLast()
                     }
                 } else {
-                    while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                    if opponent.isCreatedByMessenger {
+                        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                            viewControllers.removeLast()
+                        }
+                        viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+                    } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
                         viewControllers.removeLast()
                     }
-                    viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
                 }
                 navigation.setViewControllers(viewControllers, animated: true)
             case .multisig, .mainnet:

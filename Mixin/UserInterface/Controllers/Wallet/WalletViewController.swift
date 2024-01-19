@@ -265,7 +265,7 @@ extension WalletViewController {
             case let .success(response):
                 hud.hide()
                 UserDAO.shared.updateUsers(users: [response])
-                if let app = response.app, let container = UIApplication.homeContainerViewController {
+                if let app = response.app, let container = UIApplication.homeContainerViewController?.homeTabBarController {
                     MixinWebViewController.presentInstance(with: .init(conversationId: conversationID, app: app), asChildOf: container)
                 }
             case .failure:

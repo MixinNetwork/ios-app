@@ -44,7 +44,7 @@ account</string>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eay-oT-LmK" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="121" y="166" width="172" height="24"/>
-                            <color key="tintColor" name="title"/>
+                            <color key="tintColor" name="text"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="24" id="15B-kQ-Enm"/>
                                 <constraint firstAttribute="width" constant="172" id="hMp-Th-QyY"/>
@@ -143,8 +143,8 @@ account</string>
         <namedColor name="red">
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="title">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

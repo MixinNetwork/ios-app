@@ -462,7 +462,7 @@
                                                         <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="yTS-4P-BRs" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="331" y="22.5" width="20" height="20"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <color key="tintColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <color key="tintColor" name="text_tertiary"/>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" name="background"/>

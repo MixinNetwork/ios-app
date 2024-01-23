@@ -208,7 +208,7 @@ extension AppDelegate {
         }
 
         if ReachabilityManger.shared.isReachableOnEthernetOrWiFi {
-            if AppGroupUserDefaults.User.autoBackup != .off || AppGroupUserDefaults.Account.hasUnfinishedBackup {
+            if AppGroupUserDefaults.User.autoBackup != .off {
                 BackupJobQueue.shared.addJob(job: BackupJob())
             }
             if AppGroupUserDefaults.Account.canRestoreMedia {

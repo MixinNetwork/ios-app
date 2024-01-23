@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class EditSharedAppsViewController: UIViewController {
+final class EditFavoriteAppsViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var noAppIndicator: UIView!
@@ -9,16 +9,16 @@ class EditSharedAppsViewController: UIViewController {
     var favorites = [User]()
     var candidates = [User]()
     
-    private let footerReuseId = "footer"
+    private let headerReuseID = "header"
     
     class func instance() -> UIViewController {
-        let vc = R.storyboard.contact.edit_shared_apps()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_shared_bots())
+        let vc = R.storyboard.contact.edit_favorite_apps()!
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_favorite_bots())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(EditSharedAppsFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
+        tableView.register(EditFavoriteAppsHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseID)
         tableView.dataSource = self
         tableView.delegate = self
         DispatchQueue.global().async {
@@ -37,29 +37,24 @@ class EditSharedAppsViewController: UIViewController {
     }
     
     private func toggleSection(forCellAt indexPath: IndexPath) {
-        let newIndexPath: IndexPath
-        let favoritesWereEmpty = favorites.isEmpty
-        let candidatesWereEmpty = candidates.isEmpty
         if indexPath.section == 0 {
             let user = favorites.remove(at: indexPath.row)
             candidates.insert(user, at: 0)
-            newIndexPath = IndexPath(row: 0, section: 1)
         } else {
             let user = candidates.remove(at: indexPath.row)
             favorites.append(user)
-            newIndexPath = IndexPath(row: favorites.count - 1, section: 0)
         }
-        if favoritesWereEmpty != favorites.isEmpty || candidatesWereEmpty != candidates.isEmpty {
-            tableView.reloadData()
+        tableView.reloadData()
+        if favorites.isEmpty {
+            tableView.contentInset.top = 20
         } else {
-            tableView.moveRow(at: indexPath, to: newIndexPath)
-            tableView.reloadRows(at: [newIndexPath], with: .automatic)
+            tableView.contentInset.top = 10
         }
     }
     
 }
 
-extension EditSharedAppsViewController: UITableViewDataSource {
+extension EditFavoriteAppsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? favorites.count : candidates.count
@@ -84,57 +79,40 @@ extension EditSharedAppsViewController: UITableViewDataSource {
     
 }
 
-extension EditSharedAppsViewController: UITableViewDelegate {
+extension EditFavoriteAppsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+        if section == 1 {
+            return UITableView.automaticDimension
+        } else {
+            return .leastNormalMagnitude
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 {
-            if favorites.isEmpty {
-                return .leastNormalMagnitude
-            } else {
-                return 40
-            }
-        } else {
-            if AppDelegate.current.mainWindow.safeAreaInsets.bottom >= 20 {
-                return 41
-            } else {
-                return 61
-            }
+        .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section == 1 else {
+            return nil
         }
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseID) as! EditFavoriteAppsHeaderView
+        if favorites.isEmpty {
+            view.descriptionWrapperViewTopConstraint.constant = 0
+        } else {
+            view.descriptionWrapperViewTopConstraint.constant = 20
+        }
+        return view
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! EditSharedAppsFooterView
-        if section == 0 {
-            if favorites.isEmpty {
-                return nil
-            } else {
-                if candidates.isEmpty {
-                    view.text = R.string.localizable.profile_share_bot_hint()
-                    view.style = .candidate
-                } else {
-                    view.text = nil
-                    view.style = .favorite
-                }
-                return view
-            }
-        } else {
-            view.text = R.string.localizable.profile_share_bot_hint()
-            view.style = .candidate
-            if candidates.isEmpty {
-                return nil
-            } else {
-                return view
-            }
-        }
+        nil
     }
     
 }
 
-extension EditSharedAppsViewController: FavoriteAppCellDelegate {
+extension EditFavoriteAppsViewController: FavoriteAppCellDelegate {
     
     func favoriteAppCellDidSelectAccessoryButton(_ cell: FavoriteAppCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {

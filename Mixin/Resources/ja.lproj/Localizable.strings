@@ -15,6 +15,7 @@
 "add_conversations" = "チャットルームを追加";
 "add_emergency_contact" = "緊急連絡先を追加";
 "add_memo" = "メモを追加";
+"add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "メンバーを追加";
 "add_sticker" = "スタンプを追加する";
 "add_stickers" = "スタンプを追加";
@@ -223,11 +224,11 @@
 "contact_count" = "%dの連絡先";
 "contact_count_count" = "%dの連絡先";
 "contact_developer" = "開発者情報";
+"contact_favorite_bots_title" = "%@'s Favorite Bots";
 "contact_invite_content" = "Mixinを使いませんか？ ここからダウンロードしてください: https://mixin.one/messenger";
 "contact_mixin_id" = "Mixin ID: %@";
 "contact_mobile" = "モバイル: %@";
 "contact_phone_contact_hint" = "スマホの連絡帳と同期して友だちを自動追加";
-"contact_share_bots_title" = "%@\のシェアしたミニアプリ";
 "contact_support" = "Contact Support";
 "contact_title" = "連絡先";
 "contacts" = "連絡先";
@@ -412,6 +413,7 @@
 "failed_to_send_photo" = "画像を送信できませんでした";
 "failed_to_send_video" = "動画を送信できませんでした";
 "fast" = "高速";
+"favorite" = "Favorite";
 "fee" = "手数料";
 "feedback" = "フィードバック";
 "file" = "ファイル";
@@ -492,10 +494,13 @@
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "later" = "後で";
 "learn_more" = "こちら";
+"leave_message_to_team_mixin" = "Leave a message to Team Mixin";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "ダーク";
 "line_busy" = "お話中です";
 "line_busy_remote" = "お話中です";
+"link_desktop" = "Link Desktop";
+"link_desktop_description" = "Link Mixin Messenger Desktop by QR code";
 "link_recognition_failure" = "リンクの認識に失敗しました";
 "link_shareable_false" = "このリンクを共有することはできません";
 "live" = "配信";
@@ -521,6 +526,7 @@
 "manage" = "管理";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
+"max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "メディア";
 "memo" = "メモ";
 "message_e2ee" = "チャットルームでのメッセージはE2Eで暗号化されています。詳細はタップしてください。";
@@ -554,9 +560,9 @@
 "muted" = "ミュートされました";
 "muted_until" = "%@までミュートする";
 "my_contacts" = "連絡先";
+"my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "マイMixin ID:%@";
 "my_qr_code" = "マイQRコード";
-"my_shared_bots" = "プロフィールに追加ずみのミニアプリ";
 "my_stickers" = "マイスタンプ";
 "na" = "なし";
 "name" = "名前";
@@ -909,6 +915,7 @@
 "system" = "System";
 "system_time_is_unusual" = "システム時刻に問題があります";
 "tag" = "タグ";
+"take_a_photo" = "Take a photo";
 "tap_to_join" = "タップして参加";
 "terms_of_service" = "利用規約";
 "text" = "メッセージ通知の内容表示";

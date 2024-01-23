@@ -15,6 +15,7 @@
 "add_conversations" = "Añadir conversaciones";
 "add_emergency_contact" = "Añadir contacto de emergencia";
 "add_memo" = "Añadir nota";
+"add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Añadir participantes";
 "add_sticker" = "Añadir pegatina";
 "add_stickers" = "Añadir pegatinas";
@@ -223,11 +224,11 @@
 "contact_count" = "%d contacto";
 "contact_count_count" = "%d contactos";
 "contact_developer" = "Contactar al desarrollador";
+"contact_favorite_bots_title" = "%@'s Favorite Bots";
 "contact_invite_content" = "Oye, estoy usando Mixin Messenger para chatear. Descárgalo aquí: https://mixin.one/messenger";
 "contact_mixin_id" = "ID de Mixin: %@";
 "contact_mobile" = "Móvil: %@";
 "contact_phone_contact_hint" = "Carga contactos móviles para encontrar otros amigos de Mixin.";
-"contact_share_bots_title" = "Bots compartidos de %@";
 "contact_support" = "Contact Support";
 "contact_title" = "Contactos";
 "contacts" = "CONTACTOS";
@@ -412,6 +413,7 @@
 "failed_to_send_photo" = "No se ha podido enviar la foto";
 "failed_to_send_video" = "No se ha podido enviar el video";
 "fast" = "Fast";
+"favorite" = "Favorite";
 "fee" = "Tarifa";
 "feedback" = "Comentario";
 "file" = "Archivo";
@@ -492,10 +494,13 @@
 "last_backup_hint" = "Última copia de seguridad en %@, tamaño total %@.";
 "later" = "Más tarde";
 "learn_more" = "Obtener más información";
+"leave_message_to_team_mixin" = "Leave a message to Team Mixin";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Claro";
 "line_busy" = "Linea ocupada";
 "line_busy_remote" = "Linea ocupada";
+"link_desktop" = "Link Desktop";
+"link_desktop_description" = "Link Mixin Messenger Desktop by QR code";
 "link_recognition_failure" = "Error de reconocimiento de enlace";
 "link_shareable_false" = "El enlace se ha configurado para no permitir compartir";
 "live" = "En vivo";
@@ -521,6 +526,7 @@
 "manage" = "Administrar";
 "manage_your_apps" = "Administra tus bots";
 "manage_your_circles" = "Administra tus círculos";
+"max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Medios de comunicación";
 "memo" = "Memorándum";
 "message_e2ee" = "Los mensajes de esta conversación están encriptados de extremo a extremo, toca para obtener más información.";
@@ -554,9 +560,9 @@
 "muted" = "Silenciado";
 "muted_until" = "Silenciado hasta %@";
 "my_contacts" = "Mis contactos";
+"my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "Mi ID de Mixin: %@";
 "my_qr_code" = "Mi código QR";
-"my_shared_bots" = "Mis bots compartidos";
 "my_stickers" = "Mis pegatinas";
 "na" = "N/D";
 "name" = "Nombre";
@@ -909,6 +915,7 @@
 "system" = "Sistema";
 "system_time_is_unusual" = "La hora del sistema es inusual";
 "tag" = "Etiqueta";
+"take_a_photo" = "Take a photo";
 "tap_to_join" = "Toca para unirte";
 "terms_of_service" = "Términos de servicio";
 "text" = "texto";

@@ -34,7 +34,7 @@ extension SharedAppsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.shared_app, for: indexPath)!
         let user = users[indexPath.row]
-        cell.infoView.render(user: user, userBiographyAsSubtitle: true)
+        cell.infoView.render(user: user, description: .biography)
         return cell
     }
     

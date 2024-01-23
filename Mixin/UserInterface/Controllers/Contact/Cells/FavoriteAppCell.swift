@@ -20,7 +20,7 @@ class FavoriteAppCell: UITableViewCell {
     weak var delegate: FavoriteAppCellDelegate?
     
     func render(user: User) {
-        infoView.render(user: user, userBiographyAsSubtitle: false)
+        infoView.render(user: user, description: .identityNumber)
     }
     
     @IBAction func accessoryAction(_ sender: Any) {

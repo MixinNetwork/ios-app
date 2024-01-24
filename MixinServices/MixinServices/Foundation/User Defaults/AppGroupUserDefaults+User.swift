@@ -51,9 +51,6 @@ extension AppGroupUserDefaults {
             case lockScreenWithBiometricAuthentication = "lock_screen_with_biometric_authentication"
             case lastLockScreenBiometricVerifiedDate = "last_lock_screen_biometric_verified_date"
             
-            case homeAppsFolder = "home_apps_folder"
-            case homeAppsPinTips = "home_apps_pin_tips"
-            
             case userInterfaceStyle = "ui_style"
 
             case pinMessageBanners = "pin_message_banners"
@@ -207,12 +204,6 @@ extension AppGroupUserDefaults {
            
         @Default(namespace: .user, key: Key.lastLockScreenBiometricVerifiedDate, defaultValue: nil)
         public static var lastLockScreenBiometricVerifiedDate: Date?
-        
-        @Default(namespace: .user, key: Key.homeAppsFolder, defaultValue: nil)
-        public static var homeAppsFolder: Data?
-        
-        @Default(namespace: .user, key: Key.homeAppsPinTips, defaultValue: false)
-        public static var homeAppsPinTips: Bool
         
         @RawRepresentableDefault(namespace: .user, key: Key.userInterfaceStyle, defaultValue: .unspecified)
         public static var userInterfaceStyle: UIUserInterfaceStyle {

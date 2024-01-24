@@ -115,13 +115,9 @@
 "block_tip" = "Blocked users can't send you messages or add you to groups.";
 "blocked" = "Blocked";
 "blocked_users" = "Blocked Users";
-"books" = "Books";
-"bot_empty_tip" = "Please add your favorite bot first.";
 "bot_not_found" = "Bot not found";
-"bot_pin_hint" = "You can long press and drag the frequently used bots here to display them on the home";
 "bots" = "BOTS";
 "bots_title" = "Bots";
-"business" = "Business";
 "calculating" = "Calculating...";
 "call" = "Call";
 "call_declined" = "Call declined";
@@ -349,7 +345,6 @@
 "edit_group_description" = "Edit Group Description";
 "edit_group_name" = "Edit Group Name";
 "edit_name" = "Edit Name";
-"education" = "Education";
 "emergency_contact" = "Emergency Contact";
 "enable_emergency_contact" = "Enable Emergency Contact";
 "enable_face_pay_hint" = "Confirm PIN to enable Face Pay";
@@ -428,7 +423,6 @@
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "free" = "FREE";
 "from" = "From";
-"games" = "Games";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Get a new wallet";
@@ -554,7 +548,6 @@
 "multisig_state_signed" = "This multisig link has already been signed by yourself, you can not make a duplicate operation.";
 "multisig_state_unlocked" = "This multisig link has already been unlocked by someone, you can not make a duplicate operation.";
 "multisig_transaction" = "Multisig Transaction";
-"music" = "Music";
 "mute" = "Mute";
 "mute_until" = "Until %@";
 "muted" = "Muted";
@@ -578,7 +571,6 @@
 "new_group_chat" = "New Group Chat";
 "new_name" = "new name";
 "new_wallet_hint" = "Create your first digital wallet, all your digital assets in one wallet, easy send and receive cryptocurrency.";
-"news" = "News";
 "next" = "Next";
 "no_audio" = "NO AUDIO";
 "no_authorizations" = "NO AUTHORIZATIONS";
@@ -873,7 +865,6 @@
 "share_message_description_empty" = "Are you sure you want to send the %@?";
 "share_to" = "Share To";
 "shared_media" = "Shared Media";
-"shopping" = "Shopping";
 "show" = "Show";
 "show_asset" = "Show asset";
 "show_in_chat" = "Show in chat";
@@ -888,7 +879,6 @@
 "slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
-"social" = "Social";
 "sort_by" = "Sort by";
 "start" = "Start";
 "start_messaging" = "Start Messaging";
@@ -932,10 +922,8 @@
 "title_participants_count" = "%d Participants";
 "to" = "To";
 "today" = "Today";
-"tools" = "Tools";
 "touch_id" = "Touch ID";
 "track_not_found" = "Track not found";
-"trading" = "Trading";
 "transaction" = "Transaction";
 "transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Transaction Hash";

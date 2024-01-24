@@ -115,13 +115,9 @@
 "block_tip" = "Los usuarios bloqueados no pueden enviarte mensajes ni añadirte a grupos.";
 "blocked" = "Bloqueado";
 "blocked_users" = "Usuarios bloqueados";
-"books" = "Libros";
-"bot_empty_tip" = "Por favor añade tu bot favorito primero.";
 "bot_not_found" = "Bot no encontrado";
-"bot_pin_hint" = "Puedes pulsar prolongadamente y arrastrar los bots de uso frecuente aquí para mostrarlos en el inicio";
 "bots" = "BOTS";
 "bots_title" = "Bots";
-"business" = "Negocio";
 "calculating" = "Calculating...";
 "call" = "Llamar";
 "call_declined" = "Llamada rechazada";
@@ -349,7 +345,6 @@
 "edit_group_description" = "Editar descripción del grupo";
 "edit_group_name" = "Editar nombre de grupo";
 "edit_name" = "Editar nombre";
-"education" = "Educación";
 "emergency_contact" = "Contacto de emergencia";
 "enable_emergency_contact" = "Habilitar contacto de emergencia";
 "enable_face_pay_hint" = "Confirme el PIN para habilitar Face Pay";
@@ -428,7 +423,6 @@
 "fourth_pin_confirm_hint" = "Sí, hay una cuarta confirmación de PIN y le prometo que es la última para asegurarse de que has recordado tu PIN. El PIN es irrecuperable si se pierde.";
 "free" = "FREE";
 "from" = "De";
-"games" = "Juegos";
 "generating" = "Generando...";
 "generating_keys" = "Generando claves...";
 "get_a_new_wallet" = "Obtener una nueva cartera";
@@ -554,7 +548,6 @@
 "multisig_state_signed" = "Este enlace multisig ya ha sido firmado por ti mismo, no puedes realizar una operación duplicada.";
 "multisig_state_unlocked" = "Este enlace multisig ya fue desbloqueado por alguien, no se puede hacer una operación duplicada.";
 "multisig_transaction" = "Transacción multigrado";
-"music" = "Música";
 "mute" = "Silenciar";
 "mute_until" = "Hasta el %@";
 "muted" = "Silenciado";
@@ -578,7 +571,6 @@
 "new_group_chat" = "Nuevo chat grupal";
 "new_name" = "nuevo nombre";
 "new_wallet_hint" = "Crea tu primera cartera digital, todos tus activos digitales en una cartera, envía y recibe fácilmente criptomonedas.";
-"news" = "Noticias";
 "next" = "Próximo";
 "no_audio" = "SIN AUDIO";
 "no_authorizations" = "SIN AUTORIZACIONES";
@@ -873,7 +865,6 @@
 "share_message_description_empty" = "¿Estás seguro de que quieres enviar el %@?";
 "share_to" = "Compartir a";
 "shared_media" = "Medios compartidos";
-"shopping" = "Compras";
 "show" = "Espectáculo";
 "show_asset" = "Mostrar activo";
 "show_in_chat" = "Mostrar en el chat";
@@ -888,7 +879,6 @@
 "slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Instantánea no encontrada.";
-"social" = "Social";
 "sort_by" = "Ordenar por";
 "start" = "Comenzar";
 "start_messaging" = "Empezar a enviar mensajes";
@@ -932,10 +922,8 @@
 "title_participants_count" = "%d Participantes";
 "to" = "A";
 "today" = "Hoy";
-"tools" = "Herramientas";
 "touch_id" = "identifición de toque";
 "track_not_found" = "Pista no encontrada";
-"trading" = "Comercio";
 "transaction" = "Transacción";
 "transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Hash de transacción";

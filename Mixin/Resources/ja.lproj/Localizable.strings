@@ -115,13 +115,9 @@
 "block_tip" = "ブロックされたユーザーはあなたのグループへ追加やメッセージ送信ができません";
 "blocked" = "ブロック中";
 "blocked_users" = "ブロック中のユーザー";
-"books" = "書物";
-"bot_empty_tip" = "最初にお気に入りのミニアプリを追加してください";
 "bot_not_found" = "ミニアプリが見つかりません";
-"bot_pin_hint" = "お気に入りのミニアプリを長押ししてドラッグし、ここに表示できます。";
 "bots" = "ミニアプリ";
 "bots_title" = "Myミニアプリ一覧";
-"business" = "ビジネス";
 "calculating" = "Calculating...";
 "call" = "電話";
 "call_declined" = "応答拒否";
@@ -349,7 +345,6 @@
 "edit_group_description" = "グループアナウンスを編集";
 "edit_group_name" = "グループ名を編集";
 "edit_name" = "名前を変更";
-"education" = "教育";
 "emergency_contact" = "緊急連絡先";
 "enable_emergency_contact" = "緊急連絡先を有効にする";
 "enable_face_pay_hint" = "PINコードを確認して顔認証を利用可能にしてください";
@@ -428,7 +423,6 @@
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "free" = "FREE";
 "from" = "より";
-"games" = "ゲーム";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
@@ -554,7 +548,6 @@
 "multisig_state_signed" = "このマルチシグリンクはすでにあなたが署名しているため、重複した操作を行うことはできません";
 "multisig_state_unlocked" = "このマルチシグリンクは既に他のユーザーによってロック解除されています。重複した操作を行うことはできません。";
 "multisig_transaction" = "マルチシグトランザクション";
-"music" = "音楽";
 "mute" = "ミュート";
 "mute_until" = "%@まで";
 "muted" = "ミュートされました";
@@ -578,7 +571,6 @@
 "new_group_chat" = "新しいグループチャットを作成";
 "new_name" = "新しい名前";
 "new_wallet_hint" = "簡単に仮想通貨をやり取りできるウォレットを作成しよう！";
-"news" = "ニュース";
 "next" = "次へ";
 "no_audio" = "音声メッセージがありません";
 "no_authorizations" = "権限がありません";
@@ -873,7 +865,6 @@
 "share_message_description_empty" = "%@を送信しますか？";
 "share_to" = "共有する";
 "shared_media" = "共有されたメディア";
-"shopping" = "買い物";
 "show" = "表示";
 "show_asset" = "資産を表示する";
 "show_in_chat" = "チャット内で表示";
@@ -888,7 +879,6 @@
 "slow" = "低速";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "スナップショットは見つかりません";
-"social" = "ソーシャル";
 "sort_by" = "並びかえ項目";
 "start" = "Start";
 "start_messaging" = "メッセージを開始";
@@ -932,10 +922,8 @@
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";
 "today" = "今日";
-"tools" = "ツール";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
-"trading" = "トレード";
 "transaction" = "トランザクション";
 "transaction_failed" = "Transaction Failed";
 "transaction_hash" = "トランザクションハッシュ";

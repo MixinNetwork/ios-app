@@ -136,8 +136,8 @@ extension RecentAppsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.recent_app, for: indexPath)!
-        cell.imageView?.setImage(with: users[indexPath.row])
-        cell.label?.text = users[indexPath.row].fullName
+        cell.imageView.setImage(with: users[indexPath.row])
+        cell.label.text = users[indexPath.row].fullName
         return cell
     }
     

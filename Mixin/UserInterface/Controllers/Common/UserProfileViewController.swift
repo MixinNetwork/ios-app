@@ -624,7 +624,7 @@ extension UserProfileViewController {
             let frame = CGRect(x: 0, y: 0, width: 414, height: 46)
             self.init(frame: frame)
             backgroundColor = .clear
-            textColor = .accessoryText
+            textColor = R.color.text_tertiary()!
             font = .preferredFont(forTextStyle: .footnote)
             adjustsFontForContentSizeCategory = true
             numberOfLines = 0

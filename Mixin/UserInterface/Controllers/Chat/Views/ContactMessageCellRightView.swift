@@ -38,7 +38,7 @@ class ContactMessageCellRightView: UIStackView {
         [fullnameLabel, badgeImageView].forEach(fullnameStackView.addArrangedSubview(_:))
         
         idLabel.font = MessageFontSet.cardSubtitle.scaled
-        idLabel.textColor = .accessoryText
+        idLabel.textColor = R.color.text_tertiary()!
         idLabel.adjustsFontForContentSizeCategory = true
         [fullnameStackView, idLabel].forEach(addArrangedSubview(_:))
     }

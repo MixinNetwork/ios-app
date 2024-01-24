@@ -13,7 +13,7 @@ class LocationMessageViewModel: ImageMessageViewModel {
     let hasAddress: Bool
     
     override var statusNormalTintColor: UIColor {
-        hasAddress ? .accessoryText : .white
+        hasAddress ? R.color.text_tertiary()! : .white
     }
     
     override var trailingInfoColor: UIColor {

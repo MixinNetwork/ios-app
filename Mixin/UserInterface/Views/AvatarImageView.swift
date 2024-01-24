@@ -121,7 +121,7 @@ class AvatarImageView: UIView {
     func setImage(name: String) {
         imageView.image = nil
         imageView.backgroundColorIgnoringSystemSettings = R.color.background_secondary()!
-        titleLabel.textColor = R.color.text_desc()
+        titleLabel.textColor = R.color.text_tertiary()
         if let firstLetter = name.first {
             titleLabel.text = String([firstLetter]).uppercased()
         } else {

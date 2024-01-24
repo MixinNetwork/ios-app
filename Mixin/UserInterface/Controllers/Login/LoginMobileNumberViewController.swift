@@ -23,7 +23,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14),
             .paragraphStyle: paragraphSytle,
-            .foregroundColor: UIColor.accessoryText
+            .foregroundColor: R.color.text_tertiary()!
         ]
         attributedText.setAttributes(attrs, range: fullRange)
         attributedText.addAttributes([NSAttributedString.Key.link: URL.terms], range: termsRange)

@@ -20,7 +20,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     var statusImage: StatusImage?
-    var statusTintColor: UIColor = .accessoryText
+    var statusTintColor: UIColor = R.color.text_tertiary()!
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     var fullnameColor = UIColor.text
     var forwarderFrame = CGRect.zero
@@ -32,7 +32,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var expiredIconFrame = CGRect(x: 0, y: 0, width: 16, height: 16)
     
     var statusNormalTintColor: UIColor {
-        return .accessoryText
+        return R.color.text_tertiary()!
     }
     
     var maxContentWidth: CGFloat {

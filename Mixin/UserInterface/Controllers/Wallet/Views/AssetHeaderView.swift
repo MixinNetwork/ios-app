@@ -20,7 +20,7 @@ class AssetHeaderView: UITableViewHeaderFooterView {
         clipsToBounds = true
         label.font = .preferredFont(forTextStyle: .caption1)
         label.adjustsFontForContentSizeCategory = true
-        label.textColor = .accessoryText
+        label.textColor = R.color.text_tertiary()!
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         label.snp.makeConstraints { (make) in

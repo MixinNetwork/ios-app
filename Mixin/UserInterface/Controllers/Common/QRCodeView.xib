@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -72,7 +72,7 @@
                             <string key="text">0xA5B85583c2CbDf873D802A8
 29845904696E7BD97</string>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                            <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" name="text_tertiary"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
@@ -96,7 +96,7 @@
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="ulO-jn-dVe" secondAttribute="height" id="BdP-T9-I9h"/>
                             </constraints>
-                            <color key="tintColor" name="title"/>
+                            <color key="tintColor" name="text"/>
                             <state key="normal" image="ic_app_category_scan"/>
                             <connections>
                                 <action selector="scan:" destination="-1" eventType="touchUpInside" id="TXf-9f-rXb"/>
@@ -107,7 +107,7 @@
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="eSp-Dk-yhj" secondAttribute="height" id="fl3-8i-SZY"/>
                             </constraints>
-                            <color key="tintColor" name="title"/>
+                            <color key="tintColor" name="text"/>
                             <state key="normal" image="Web/ic_action_share"/>
                             <connections>
                                 <action selector="shareImage:" destination="-1" eventType="touchUpInside" id="s6J-X1-6Bo"/>
@@ -143,8 +143,11 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="title">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -15,7 +15,7 @@ class AudioMessageProgressView: UIStackView {
         alignment = .leading
         spacing = 4
         
-        lengthLabel.textColor = .accessoryText
+        lengthLabel.textColor = R.color.text_tertiary()!
         lengthLabel.font = MessageFontSet.cardSubtitle.scaled
         lengthLabel.adjustsFontForContentSizeCategory = true
         

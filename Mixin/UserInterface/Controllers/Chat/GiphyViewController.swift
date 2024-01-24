@@ -38,7 +38,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
                                 withReuseIdentifier: footerReuseId)
         (collectionView.collectionViewLayout as? TilingCollectionViewFlowLayout)?.contentRatio = 4 / 3
         loadingIndicator.usesLargerStyle = true
-        loadingIndicator.tintColor = .accessoryText
+        loadingIndicator.tintColor = R.color.text_tertiary()!
         loadingIndicator.backgroundColor = .background
         loadingIndicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         loadingIndicator.frame = view.bounds

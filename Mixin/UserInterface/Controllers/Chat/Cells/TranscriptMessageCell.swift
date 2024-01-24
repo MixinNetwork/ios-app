@@ -39,7 +39,7 @@ class TranscriptMessageCell: TextMessageCell {
                 for _ in 0..<diff {
                     let label = UILabel()
                     label.font = MessageFontSet.transcriptDigest.scaled
-                    label.textColor = R.color.text_accessory()
+                    label.textColor = R.color.text_tertiary()!
                     label.numberOfLines = 1
                     label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
                     digestLabels.append(label)

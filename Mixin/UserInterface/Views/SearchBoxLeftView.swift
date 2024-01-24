@@ -30,7 +30,7 @@ class SearchBoxLeftView: UIView {
     private func prepare() {
         addSubview(magnifyingGlassImageView)
         activityIndicator.alpha = 0
-        activityIndicator.tintColor = .accessoryText
+        activityIndicator.tintColor = R.color.text_tertiary()!
         addSubview(activityIndicator)
     }
     

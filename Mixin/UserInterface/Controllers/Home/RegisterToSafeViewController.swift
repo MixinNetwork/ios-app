@@ -10,7 +10,7 @@ final class RegisterToSafeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.backgroundColor = .background
-        activityIndicator.tintColor = .accessoryText
+        activityIndicator.tintColor = R.color.text_tertiary()!
         view.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { make in
             make.top.equalToSuperview()

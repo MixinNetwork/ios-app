@@ -173,7 +173,7 @@ class LocationPickerViewController: LocationViewController {
         
         locationManager.delegate = self
         
-        nearbyLocationSearchingIndicator.tintColor = R.color.text_desc()
+        nearbyLocationSearchingIndicator.tintColor = R.color.text_tertiary()
         nearbyLocationSearchingIndicator.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 240)
         
         let center = NotificationCenter.default

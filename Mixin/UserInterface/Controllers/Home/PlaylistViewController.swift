@@ -493,7 +493,7 @@ extension PlaylistViewController {
         switch manager.playbackRate {
         case .normal:
             playbackRateButton.setImage(R.image.playlist.ic_rate_normal(), for: .normal)
-            playbackRateButton.tintColor = R.color.text_accessory()
+            playbackRateButton.tintColor = R.color.text_tertiary()!
         case .faster:
             playbackRateButton.setImage(R.image.playlist.ic_rate_faster(), for: .normal)
             playbackRateButton.tintColor = R.color.theme()

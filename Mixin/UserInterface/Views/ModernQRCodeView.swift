@@ -80,7 +80,7 @@ final class ModernQRCodeView: UIView {
         activityIndicatorView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
-        activityIndicatorView.tintColor = .accessoryText
+        activityIndicatorView.tintColor = R.color.text_tertiary()!
     }
     
 }

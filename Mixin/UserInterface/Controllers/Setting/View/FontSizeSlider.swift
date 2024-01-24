@@ -15,7 +15,7 @@ class FontSizeSlider: UIControl {
     private let thumbRadius = 12.0
     private let thumbTintColor = UIColor.white
     private let maximumTrackTintColor = UIColor.theme
-    private let minimumTrackTintColor = R.color.text_accessory()!
+    private let minimumTrackTintColor = R.color.text_tertiary()!
     private let disableTrackTintColor = R.color.line()!
     private let transactionDuration = CATransaction.animationDuration()
     

@@ -211,7 +211,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14),
             .paragraphStyle: paragraphSytle,
-            .foregroundColor: UIColor.accessoryText
+            .foregroundColor: R.color.text_tertiary()!
         ]
         attributedText.setAttributes(attrs, range: fullRange)
         let actionRange = nsHint.range(of: action)

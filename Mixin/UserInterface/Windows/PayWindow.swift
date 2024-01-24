@@ -152,7 +152,7 @@ class PayWindow: BottomSheetView {
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.transfer_to(user.fullName)
                 mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
-                mixinIDLabel.textColor = .accessoryText
+                mixinIDLabel.textColor = R.color.text_tertiary()!
                 pinView.isHidden = false
             case let .payment(payment, receivers):
                 guard let account = LoginManager.shared.account else {

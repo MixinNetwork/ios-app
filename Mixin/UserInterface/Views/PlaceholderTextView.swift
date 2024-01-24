@@ -67,7 +67,7 @@ class PlaceholderTextView: UITextView {
         insertSubview(placeholderLabel, at: 0)
         placeholderLabel.frame = bounds.inset(by: placeholderPadding)
         placeholderLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        placeholderLabel.textColor = R.color.text_placeholder()
+        placeholderLabel.textColor = R.color.text_quaternary()
         placeholderLabel.textAlignment = textAlignment
         placeholderLabel.font = font
         placeholderLabel.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory

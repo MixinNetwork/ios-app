@@ -20,7 +20,7 @@ final class HomeAppsViewController: UIViewController {
         let label = UILabel()
         label.text = R.string.localizable.bot_empty_tip()
         label.backgroundColor = .background
-        label.textColor = .accessoryText
+        label.textColor = R.color.text_tertiary()!
         label.numberOfLines = 0
         label.textAlignment = .center
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
@@ -123,7 +123,7 @@ extension HomeAppsViewController {
             homeTitleLabel.textColor = .theme
             homeTitleLabel.text = R.string.localizable.done()
         } else {
-            homeTitleLabel.textColor = .title
+            homeTitleLabel.textColor = R.color.text()!
             homeTitleLabel.text = R.string.localizable.explore()
         }
     }

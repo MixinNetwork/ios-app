@@ -87,7 +87,7 @@ extension TransferSearchViewController {
     private func loadEmptyHintView() {
         let emptyHintView = UIView()
         let label = UILabel()
-        label.textColor = R.color.text_accessory()
+        label.textColor = R.color.text_tertiary()!
         label.font = .systemFont(ofSize: 14)
         label.text = R.string.localizable.dont_have_assets()
         emptyHintView.addSubview(label)

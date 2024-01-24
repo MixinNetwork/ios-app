@@ -9,7 +9,7 @@ class AppCardMessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
         titleLabel.textColor = .text
         titleLabel.font = MessageFontSet.cardTitle.scaled
         titleLabel.adjustsFontForContentSizeCategory = true
-        subtitleLabel.textColor = .accessoryText
+        subtitleLabel.textColor = R.color.text_tertiary()!
         subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
         subtitleLabel.adjustsFontForContentSizeCategory = true
     }

@@ -302,7 +302,7 @@ extension ExternalSharingConfirmationViewController {
         contentView.titleLabel.textColor = .text
         contentView.titleLabel.font = MessageFontSet.cardTitle.scaled
         contentView.titleLabel.adjustsFontForContentSizeCategory = true
-        contentView.subtitleLabel.textColor = .accessoryText
+        contentView.subtitleLabel.textColor = R.color.text_tertiary()!
         contentView.subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
         contentView.subtitleLabel.adjustsFontForContentSizeCategory = true
         imageView.addSubview(contentView)

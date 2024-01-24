@@ -45,7 +45,7 @@
                 </label>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f5n-Dp-KKY" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="121" y="278" width="172" height="24"/>
-                    <color key="tintColor" name="text_accessory"/>
+                    <color key="tintColor" name="text_tertiary"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="GP0-j0-5h3"/>
                         <constraint firstAttribute="width" constant="172" id="SeL-Zu-kMk"/>
@@ -88,10 +88,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

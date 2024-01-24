@@ -26,7 +26,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         
         textLabel.font = .systemFont(ofSize: 16)
         textLabel.lineSpacing = 4
-        textLabel.textColor = .title
+        textLabel.textColor = R.color.text()!
         textLabel.detectLinks = false
         
         let thirtyDaysLater = Date().addingTimeInterval(30 * .day)

@@ -105,6 +105,7 @@ final class TabBar: UIView {
             let button = buttons[index]
             button.setImage(item.image, for: .normal)
             button.setImage(item.selectedImage, for: .selected)
+            button.setImage(item.selectedImage, for: [.highlighted, .selected])
             button.tag = index
             button.isSelected = false
         }

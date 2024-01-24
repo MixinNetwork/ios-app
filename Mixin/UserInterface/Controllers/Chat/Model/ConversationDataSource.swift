@@ -10,9 +10,11 @@ class ConversationDataSource {
     enum UserInfoKey {
         static let unreadMessageCount = "unread_count"
         static let mentionedMessageIds = "mention_ids"
+        static let conversationID = "cid"
     }
     
     static let newMessageOutOfVisibleBoundsNotification = Notification.Name("one.mixin.messenger.ConversationDataSource.MessageOutOfBounds")
+    static let didSendFirstMessageNotification = Notification.Name("one.mixin.messenger.ConversationDataSource.DidSendMessage")
     
     let queue = DispatchQueue(label: "one.mixin.ios.conversation.datasource")
     
@@ -47,6 +49,7 @@ class ConversationDataSource {
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
     private var pendingPinningUpdateMessageId: String?
+    private var didPostSendFirstMessageNotification = false
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
@@ -572,6 +575,17 @@ extension ConversationDataSource {
                     return
                 }
                 self.addMessageAndDisplay(message: message)
+            }
+        }
+        if messageIsSentByMe {
+            Queue.main.autoAsync {
+                guard !self.didPostSendFirstMessageNotification else {
+                    return
+                }
+                NotificationCenter.default.post(name: Self.didSendFirstMessageNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.conversationID: conversationId])
+                self.didPostSendFirstMessageNotification = true
             }
         }
     }

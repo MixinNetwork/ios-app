@@ -44,7 +44,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
                     return
                 }
                 self.searchingKeyword = keyword
-                self.searchResults = searchResult
+                self.searchResults = [searchResult]
                 self.tableView.reloadData()
                 self.reloadTableViewSelections()
             }
@@ -55,7 +55,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
     override func configure(cell: PeerCell, at indexPath: IndexPath) {
         super.configure(cell: cell, at: indexPath)
         if isSearching {
-            cell.render(result: searchResults[indexPath.row])
+            cell.render(result: searchResults[indexPath.section][indexPath.row])
         } else {
             let user = models[indexPath.section][indexPath.row]
             cell.render(user: user)
@@ -63,7 +63,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        isSearching ? searchResults.count : models[section].count
+        isSearching ? searchResults[section].count : models[section].count
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -74,7 +74,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
         tableView.deselectRow(at: indexPath, animated: true)
         let user: UserItem
         if isSearching {
-            user = searchResults[indexPath.row].user
+            user = searchResults[indexPath.section][indexPath.row].user
         } else {
             user = models[indexPath.section][indexPath.row]
         }
@@ -89,7 +89,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
     @objc private func usersDidChange() {
         if isSearching {
             queue.cancelAllOperations()
-            searchResults = []
+            searchResults = [[]]
             tableView.reloadData()
         }
         reloadContacts(operation: BlockOperation())

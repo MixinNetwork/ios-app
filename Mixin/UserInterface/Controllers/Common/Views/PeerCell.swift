@@ -14,7 +14,7 @@ class PeerCell: UITableViewCell {
     }
     
     @IBOutlet weak var peerInfoView: PeerInfoView!
-    @IBOutlet weak var peerInfoViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var peerInfoViewLeadingConstraint: NSLayoutConstraint?
     
     override func awakeFromNib() {
         super.awakeFromNib()

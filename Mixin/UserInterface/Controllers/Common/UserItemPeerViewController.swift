@@ -17,7 +17,7 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
     
     override func configure(cell: CellType, at indexPath: IndexPath) {
         if isSearching {
-            cell.render(result: searchResults[indexPath.row])
+            cell.render(result: searchResults[indexPath.section][indexPath.row])
         } else {
             cell.render(user: models[indexPath.row])
         }
@@ -33,7 +33,7 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
     
     func user(at indexPath: IndexPath) -> UserItem {
         if isSearching {
-            return searchResults[indexPath.row].user
+            return searchResults[indexPath.section][indexPath.row].user
         } else {
             return models[indexPath.row]
         }
@@ -64,7 +64,7 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
                     return
                 }
                 viewController.searchingKeyword = keyword
-                viewController.searchResults = searchResult
+                viewController.searchResults = [searchResult]
                 viewController.tableView.reloadData()
                 viewController.reloadTableViewSelections()
             }

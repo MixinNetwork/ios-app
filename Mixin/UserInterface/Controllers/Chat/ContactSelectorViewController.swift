@@ -20,18 +20,20 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
     
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
-        var rows = [Int]()
+        var indexPaths: [IndexPath] = []
         if isSearching {
-            for (row, result) in searchResults.enumerated() where selections.contains(result.user.userId) {
-                rows.append(row)
+            enumerateSearchResults { result, indexPath, _ in
+                if selections.contains(result.user.userId) {
+                    indexPaths.append(indexPath)
+                }
             }
         } else {
             for (row, user) in models.enumerated() where selections.contains(user.userId) {
-                rows.append(row)
+                let indexPath = IndexPath(row: row, section: 0)
+                indexPaths.append(indexPath)
             }
         }
-        for row in rows {
-            let indexPath = IndexPath(row: row, section: 0)
+        for indexPath in indexPaths {
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
     }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="favorite_app" rowHeight="80" id="ZuH-Ua-A8L" customClass="FavoriteAppCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZuH-Ua-A8L" id="HeK-GL-RwZ">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jen-pd-ykg">
+                        <rect key="frame" x="8" y="18" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="S2S-IB-isS"/>
+                            <constraint firstAttribute="height" constant="44" id="WsO-9k-W1T"/>
+                        </constraints>
+                        <connections>
+                            <action selector="accessoryAction:" destination="ZuH-Ua-A8L" eventType="touchUpInside" id="zsQ-2c-5US"/>
+                        </connections>
+                    </button>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jta-Dv-iSa" customClass="PeerInfoView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="60" y="15" width="295" height="50"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="8vE-SH-kOq"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="Jta-Dv-iSa" secondAttribute="trailing" constant="20" id="C1u-t9-VjQ"/>
+                    <constraint firstItem="Jta-Dv-iSa" firstAttribute="leading" secondItem="jen-pd-ykg" secondAttribute="trailing" constant="8" id="EEQ-yl-QVI"/>
+                    <constraint firstItem="Jta-Dv-iSa" firstAttribute="centerY" secondItem="HeK-GL-RwZ" secondAttribute="centerY" id="QVs-iL-cUQ"/>
+                    <constraint firstItem="jen-pd-ykg" firstAttribute="centerY" secondItem="HeK-GL-RwZ" secondAttribute="centerY" id="ZLr-Tx-nTY"/>
+                    <constraint firstItem="jen-pd-ykg" firstAttribute="leading" secondItem="HeK-GL-RwZ" secondAttribute="leading" constant="8" id="lMh-bo-yUm"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" name="background"/>
+            <connections>
+                <outlet property="accessoryButton" destination="jen-pd-ykg" id="3O4-aF-hhm"/>
+                <outlet property="peerInfoView" destination="Jta-Dv-iSa" id="5Vq-ok-teV"/>
+            </connections>
+            <point key="canvasLocation" x="21" y="42"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

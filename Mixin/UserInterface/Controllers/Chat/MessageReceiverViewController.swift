@@ -66,7 +66,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
                     return
                 }
                 weakSelf.searchingKeyword = keyword
-                weakSelf.searchResults = searchResults
+                weakSelf.searchResults = [searchResults]
                 weakSelf.tableView.reloadData()
                 weakSelf.reloadTableViewSelections()
             }
@@ -76,7 +76,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
         if isSearching {
-            cell.render(result: searchResults[indexPath.row])
+            cell.render(result: searchResults[indexPath.section][indexPath.row])
         } else {
             cell.render(receiver: models[indexPath.section][indexPath.row])
         }
@@ -85,11 +85,10 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
         if isSearching {
-            for (index, result) in searchResults.enumerated() {
+            enumerateSearchResults { result, indexPath, _ in
                 guard selections.contains(result.receiver) else {
-                    continue
+                    return
                 }
-                let indexPath = IndexPath(row: index, section: 0)
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             }
         } else {
@@ -103,11 +102,11 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     
     // MARK: - UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return isSearching ? 1 : models.count
+        return isSearching ? searchResults.count : models.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResults.count : models[section].count
+        return isSearching ? searchResults[section].count : models[section].count
     }
     
     // MARK: - UITableViewDelegate
@@ -213,8 +212,14 @@ extension MessageReceiverViewController: SelectedPeerCellDelegate {
         }
         let deselected = selections[indexPath.row]
         if isSearching {
-            if let item = searchResults.map({ $0.receiver }).firstIndex(of: deselected) {
-                let indexPath = IndexPath(item: item, section: 0)
+            var deselectedIndexPath: IndexPath?
+            enumerateSearchResults { result, indexPath, stop in
+                if result.receiver == deselected {
+                    deselectedIndexPath = indexPath
+                    stop = true
+                }
+            }
+            if let indexPath = deselectedIndexPath {
                 tableView.deselectRow(at: indexPath, animated: true)
                 tableView(tableView, didDeselectRowAt: indexPath)
             } else {
@@ -239,7 +244,7 @@ extension MessageReceiverViewController {
     
     private func messageReceiver(at indexPath: IndexPath) -> MessageReceiver {
         if isSearching {
-            return searchResults[indexPath.row].receiver
+            return searchResults[indexPath.section][indexPath.row].receiver
         } else {
             return models[indexPath.section][indexPath.row]
         }

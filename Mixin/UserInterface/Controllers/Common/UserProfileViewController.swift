@@ -271,13 +271,13 @@ extension UserProfileViewController {
         vc.transitioningDelegate = PopupPresentationManager.shared
         vc.modalPresentationStyle = .custom
         vc.loadViewIfNeeded()
-        vc.titleLabel.text = R.string.localizable.contact_share_bots_title(user.fullName)
+        vc.titleLabel.text = R.string.localizable.contact_favorite_bots_title(user.fullName)
         vc.users = users
         dismissAndPresent(vc)
     }
     
     @objc func editFavoriteApps() {
-        let vc = EditSharedAppsViewController.instance()
+        let vc = EditFavoriteAppsViewController.instance()
         if parent != nil {
             navigationController?.pushViewController(vc, animated: true)
         } else {

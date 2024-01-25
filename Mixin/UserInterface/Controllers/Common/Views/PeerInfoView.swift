@@ -3,6 +3,11 @@ import MixinServices
 
 class PeerInfoView: UIView, XibDesignable {
     
+    enum Description {
+        case identityNumber
+        case biography
+    }
+    
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
@@ -73,6 +78,9 @@ class PeerInfoView: UIView, XibDesignable {
             }
         case let result as PhoneContactSearchResult:
             avatarImageView.setImage(name: result.contact.fullName)
+        case let result as AppUserSearchResult:
+            let user = result.user
+            avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
         default:
             break
         }
@@ -110,7 +118,7 @@ class PeerInfoView: UIView, XibDesignable {
         descriptionLabel.text = user.identityNumber
     }
     
-    func render(user: User, userBiographyAsSubtitle: Bool) {
+    func render(user: User, description: Description) {
         avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
         titleLabel.text = user.fullName
         badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
@@ -118,10 +126,11 @@ class PeerInfoView: UIView, XibDesignable {
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
         descriptionLabel.isHidden = false
-        if userBiographyAsSubtitle {
-            descriptionLabel.text = user.biography
-        } else {
+        switch description {
+        case .identityNumber:
             descriptionLabel.text = user.identityNumber
+        case .biography:
+            descriptionLabel.text = user.biography
         }
     }
     

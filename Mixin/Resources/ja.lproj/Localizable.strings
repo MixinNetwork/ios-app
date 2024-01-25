@@ -15,6 +15,7 @@
 "add_conversations" = "チャットルームを追加";
 "add_emergency_contact" = "緊急連絡先を追加";
 "add_memo" = "メモを追加";
+"add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "メンバーを追加";
 "add_sticker" = "スタンプを追加する";
 "add_stickers" = "スタンプを追加";
@@ -114,13 +115,9 @@
 "block_tip" = "ブロックされたユーザーはあなたのグループへ追加やメッセージ送信ができません";
 "blocked" = "ブロック中";
 "blocked_users" = "ブロック中のユーザー";
-"books" = "書物";
-"bot_empty_tip" = "最初にお気に入りのミニアプリを追加してください";
 "bot_not_found" = "ミニアプリが見つかりません";
-"bot_pin_hint" = "お気に入りのミニアプリを長押ししてドラッグし、ここに表示できます。";
 "bots" = "ミニアプリ";
 "bots_title" = "Myミニアプリ一覧";
-"business" = "ビジネス";
 "calculating" = "Calculating...";
 "call" = "電話";
 "call_declined" = "応答拒否";
@@ -223,11 +220,11 @@
 "contact_count" = "%dの連絡先";
 "contact_count_count" = "%dの連絡先";
 "contact_developer" = "開発者情報";
+"contact_favorite_bots_title" = "%@'s Favorite Bots";
 "contact_invite_content" = "Mixinを使いませんか？ ここからダウンロードしてください: https://mixin.one/messenger";
 "contact_mixin_id" = "Mixin ID: %@";
 "contact_mobile" = "モバイル: %@";
 "contact_phone_contact_hint" = "スマホの連絡帳と同期して友だちを自動追加";
-"contact_share_bots_title" = "%@\のシェアしたミニアプリ";
 "contact_support" = "Contact Support";
 "contact_title" = "連絡先";
 "contacts" = "連絡先";
@@ -348,7 +345,6 @@
 "edit_group_description" = "グループアナウンスを編集";
 "edit_group_name" = "グループ名を編集";
 "edit_name" = "名前を変更";
-"education" = "教育";
 "emergency_contact" = "緊急連絡先";
 "enable_emergency_contact" = "緊急連絡先を有効にする";
 "enable_face_pay_hint" = "PINコードを確認して顔認証を利用可能にしてください";
@@ -412,6 +408,7 @@
 "failed_to_send_photo" = "画像を送信できませんでした";
 "failed_to_send_video" = "動画を送信できませんでした";
 "fast" = "高速";
+"favorite" = "Favorite";
 "fee" = "手数料";
 "feedback" = "フィードバック";
 "file" = "ファイル";
@@ -426,7 +423,6 @@
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "free" = "FREE";
 "from" = "より";
-"games" = "ゲーム";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
@@ -492,10 +488,13 @@
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "later" = "後で";
 "learn_more" = "こちら";
+"leave_message_to_team_mixin" = "Leave a message to Team Mixin";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "ダーク";
 "line_busy" = "お話中です";
 "line_busy_remote" = "お話中です";
+"link_desktop" = "Link Desktop";
+"link_desktop_description" = "Link Mixin Messenger Desktop by QR code";
 "link_recognition_failure" = "リンクの認識に失敗しました";
 "link_shareable_false" = "このリンクを共有することはできません";
 "live" = "配信";
@@ -521,6 +520,7 @@
 "manage" = "管理";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
+"max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "メディア";
 "memo" = "メモ";
 "message_e2ee" = "チャットルームでのメッセージはE2Eで暗号化されています。詳細はタップしてください。";
@@ -548,15 +548,14 @@
 "multisig_state_signed" = "このマルチシグリンクはすでにあなたが署名しているため、重複した操作を行うことはできません";
 "multisig_state_unlocked" = "このマルチシグリンクは既に他のユーザーによってロック解除されています。重複した操作を行うことはできません。";
 "multisig_transaction" = "マルチシグトランザクション";
-"music" = "音楽";
 "mute" = "ミュート";
 "mute_until" = "%@まで";
 "muted" = "ミュートされました";
 "muted_until" = "%@までミュートする";
 "my_contacts" = "連絡先";
+"my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "マイMixin ID:%@";
 "my_qr_code" = "マイQRコード";
-"my_shared_bots" = "プロフィールに追加ずみのミニアプリ";
 "my_stickers" = "マイスタンプ";
 "na" = "なし";
 "name" = "名前";
@@ -572,7 +571,6 @@
 "new_group_chat" = "新しいグループチャットを作成";
 "new_name" = "新しい名前";
 "new_wallet_hint" = "簡単に仮想通貨をやり取りできるウォレットを作成しよう！";
-"news" = "ニュース";
 "next" = "次へ";
 "no_audio" = "音声メッセージがありません";
 "no_authorizations" = "権限がありません";
@@ -867,7 +865,6 @@
 "share_message_description_empty" = "%@を送信しますか？";
 "share_to" = "共有する";
 "shared_media" = "共有されたメディア";
-"shopping" = "買い物";
 "show" = "表示";
 "show_asset" = "資産を表示する";
 "show_in_chat" = "チャット内で表示";
@@ -882,7 +879,6 @@
 "slow" = "低速";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "スナップショットは見つかりません";
-"social" = "ソーシャル";
 "sort_by" = "並びかえ項目";
 "start" = "Start";
 "start_messaging" = "メッセージを開始";
@@ -909,6 +905,7 @@
 "system" = "System";
 "system_time_is_unusual" = "システム時刻に問題があります";
 "tag" = "タグ";
+"take_a_photo" = "Take a photo";
 "tap_to_join" = "タップして参加";
 "terms_of_service" = "利用規約";
 "text" = "メッセージ通知の内容表示";
@@ -925,10 +922,8 @@
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";
 "today" = "今日";
-"tools" = "ツール";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
-"trading" = "トレード";
 "transaction" = "トランザクション";
 "transaction_failed" = "Transaction Failed";
 "transaction_hash" = "トランザクションハッシュ";

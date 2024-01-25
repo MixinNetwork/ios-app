@@ -15,6 +15,7 @@
 "add_conversations" = "Añadir conversaciones";
 "add_emergency_contact" = "Añadir contacto de emergencia";
 "add_memo" = "Añadir nota";
+"add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Añadir participantes";
 "add_sticker" = "Añadir pegatina";
 "add_stickers" = "Añadir pegatinas";
@@ -114,13 +115,9 @@
 "block_tip" = "Los usuarios bloqueados no pueden enviarte mensajes ni añadirte a grupos.";
 "blocked" = "Bloqueado";
 "blocked_users" = "Usuarios bloqueados";
-"books" = "Libros";
-"bot_empty_tip" = "Por favor añade tu bot favorito primero.";
 "bot_not_found" = "Bot no encontrado";
-"bot_pin_hint" = "Puedes pulsar prolongadamente y arrastrar los bots de uso frecuente aquí para mostrarlos en el inicio";
 "bots" = "BOTS";
 "bots_title" = "Bots";
-"business" = "Negocio";
 "calculating" = "Calculating...";
 "call" = "Llamar";
 "call_declined" = "Llamada rechazada";
@@ -223,11 +220,11 @@
 "contact_count" = "%d contacto";
 "contact_count_count" = "%d contactos";
 "contact_developer" = "Contactar al desarrollador";
+"contact_favorite_bots_title" = "%@'s Favorite Bots";
 "contact_invite_content" = "Oye, estoy usando Mixin Messenger para chatear. Descárgalo aquí: https://mixin.one/messenger";
 "contact_mixin_id" = "ID de Mixin: %@";
 "contact_mobile" = "Móvil: %@";
 "contact_phone_contact_hint" = "Carga contactos móviles para encontrar otros amigos de Mixin.";
-"contact_share_bots_title" = "Bots compartidos de %@";
 "contact_support" = "Contact Support";
 "contact_title" = "Contactos";
 "contacts" = "CONTACTOS";
@@ -348,7 +345,6 @@
 "edit_group_description" = "Editar descripción del grupo";
 "edit_group_name" = "Editar nombre de grupo";
 "edit_name" = "Editar nombre";
-"education" = "Educación";
 "emergency_contact" = "Contacto de emergencia";
 "enable_emergency_contact" = "Habilitar contacto de emergencia";
 "enable_face_pay_hint" = "Confirme el PIN para habilitar Face Pay";
@@ -412,6 +408,7 @@
 "failed_to_send_photo" = "No se ha podido enviar la foto";
 "failed_to_send_video" = "No se ha podido enviar el video";
 "fast" = "Fast";
+"favorite" = "Favorite";
 "fee" = "Tarifa";
 "feedback" = "Comentario";
 "file" = "Archivo";
@@ -426,7 +423,6 @@
 "fourth_pin_confirm_hint" = "Sí, hay una cuarta confirmación de PIN y le prometo que es la última para asegurarse de que has recordado tu PIN. El PIN es irrecuperable si se pierde.";
 "free" = "FREE";
 "from" = "De";
-"games" = "Juegos";
 "generating" = "Generando...";
 "generating_keys" = "Generando claves...";
 "get_a_new_wallet" = "Obtener una nueva cartera";
@@ -492,10 +488,13 @@
 "last_backup_hint" = "Última copia de seguridad en %@, tamaño total %@.";
 "later" = "Más tarde";
 "learn_more" = "Obtener más información";
+"leave_message_to_team_mixin" = "Leave a message to Team Mixin";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Claro";
 "line_busy" = "Linea ocupada";
 "line_busy_remote" = "Linea ocupada";
+"link_desktop" = "Link Desktop";
+"link_desktop_description" = "Link Mixin Messenger Desktop by QR code";
 "link_recognition_failure" = "Error de reconocimiento de enlace";
 "link_shareable_false" = "El enlace se ha configurado para no permitir compartir";
 "live" = "En vivo";
@@ -521,6 +520,7 @@
 "manage" = "Administrar";
 "manage_your_apps" = "Administra tus bots";
 "manage_your_circles" = "Administra tus círculos";
+"max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Medios de comunicación";
 "memo" = "Memorándum";
 "message_e2ee" = "Los mensajes de esta conversación están encriptados de extremo a extremo, toca para obtener más información.";
@@ -548,15 +548,14 @@
 "multisig_state_signed" = "Este enlace multisig ya ha sido firmado por ti mismo, no puedes realizar una operación duplicada.";
 "multisig_state_unlocked" = "Este enlace multisig ya fue desbloqueado por alguien, no se puede hacer una operación duplicada.";
 "multisig_transaction" = "Transacción multigrado";
-"music" = "Música";
 "mute" = "Silenciar";
 "mute_until" = "Hasta el %@";
 "muted" = "Silenciado";
 "muted_until" = "Silenciado hasta %@";
 "my_contacts" = "Mis contactos";
+"my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "Mi ID de Mixin: %@";
 "my_qr_code" = "Mi código QR";
-"my_shared_bots" = "Mis bots compartidos";
 "my_stickers" = "Mis pegatinas";
 "na" = "N/D";
 "name" = "Nombre";
@@ -572,7 +571,6 @@
 "new_group_chat" = "Nuevo chat grupal";
 "new_name" = "nuevo nombre";
 "new_wallet_hint" = "Crea tu primera cartera digital, todos tus activos digitales en una cartera, envía y recibe fácilmente criptomonedas.";
-"news" = "Noticias";
 "next" = "Próximo";
 "no_audio" = "SIN AUDIO";
 "no_authorizations" = "SIN AUTORIZACIONES";
@@ -867,7 +865,6 @@
 "share_message_description_empty" = "¿Estás seguro de que quieres enviar el %@?";
 "share_to" = "Compartir a";
 "shared_media" = "Medios compartidos";
-"shopping" = "Compras";
 "show" = "Espectáculo";
 "show_asset" = "Mostrar activo";
 "show_in_chat" = "Mostrar en el chat";
@@ -882,7 +879,6 @@
 "slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Instantánea no encontrada.";
-"social" = "Social";
 "sort_by" = "Ordenar por";
 "start" = "Comenzar";
 "start_messaging" = "Empezar a enviar mensajes";
@@ -909,6 +905,7 @@
 "system" = "Sistema";
 "system_time_is_unusual" = "La hora del sistema es inusual";
 "tag" = "Etiqueta";
+"take_a_photo" = "Take a photo";
 "tap_to_join" = "Toca para unirte";
 "terms_of_service" = "Términos de servicio";
 "text" = "texto";
@@ -925,10 +922,8 @@
 "title_participants_count" = "%d Participantes";
 "to" = "A";
 "today" = "Hoy";
-"tools" = "Herramientas";
 "touch_id" = "identifición de toque";
 "track_not_found" = "Pista no encontrada";
-"trading" = "Comercio";
 "transaction" = "Transacción";
 "transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Hash de transacción";

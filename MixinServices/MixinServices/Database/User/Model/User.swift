@@ -89,6 +89,16 @@ public struct User {
              app: nil)
     }
     
+    public func matches(lowercasedKeyword keyword: String) -> Bool {
+        let fullnameMatches: Bool
+        if let fullName {
+            fullnameMatches = fullName.lowercased().contains(keyword)
+        } else {
+            fullnameMatches = false
+        }
+        return fullnameMatches || identityNumber.contains(keyword)
+    }
+    
 }
 
 extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

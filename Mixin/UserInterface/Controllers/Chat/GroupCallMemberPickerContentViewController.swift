@@ -106,11 +106,10 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
         if isSearching {
-            for (index, result) in searchResults.enumerated() {
+            enumerateSearchResults { result, indexPath, _ in
                 guard selections.contains(where: { $0.userId == result.user.userId }) else {
-                    continue
+                    return
                 }
-                let indexPath = IndexPath(row: index, section: 0)
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             }
         } else {
@@ -193,7 +192,7 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     
     private func userItem(at indexPath: IndexPath) -> UserItem {
         if isSearching {
-            return searchResults[indexPath.row].user
+            return searchResults[indexPath.section][indexPath.row].user
         } else {
             return models[indexPath.row]
         }
@@ -233,8 +232,7 @@ extension GroupCallMemberPickerContentViewController: SelectedPeerCellDelegate {
         }
         let deselected = selections[indexPath.item - fixedSelections.count]
         if isSearching {
-            if let item = searchResults.firstIndex(where: { $0.user.userId == deselected.userId }) {
-                let indexPath = IndexPath(row: item, section: 0)
+            enumerateSearchResults { result, indexPath, _ in
                 tableView.deselectRow(at: indexPath, animated: true)
                 tableView(tableView, didDeselectRowAt: indexPath)
             }

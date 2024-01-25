@@ -6,7 +6,7 @@ final class HomeTabBarController: UIViewController {
     private enum ChildID: Int {
         case chat = 0
         case wallet = 1
-        case bot = 2
+        case explore = 2
     }
     
     private(set) weak var selectedViewController: UIViewController?
@@ -16,7 +16,7 @@ final class HomeTabBarController: UIViewController {
     private let homeViewController = R.storyboard.home.home()!
     
     private lazy var walletViewController = R.storyboard.wallet.wallet()!
-    private lazy var botsViewController = R.storyboard.home.apps()!
+    private lazy var exploreViewController = ExploreViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ final class HomeTabBarController: UIViewController {
             TabBar.Item(id: ChildID.wallet.rawValue,
                         image: R.image.home_tab_wallet()!,
                         selectedImage: R.image.home_tab_wallet_selected()!),
-            TabBar.Item(id: ChildID.bot.rawValue,
+            TabBar.Item(id: ChildID.explore.rawValue,
                         image: R.image.home_tab_explore()!,
                         selectedImage: R.image.home_tab_explore_selected()!),
         ]
@@ -85,8 +85,8 @@ final class HomeTabBarController: UIViewController {
             newChild = walletViewController
             ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
             ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
-        case .bot:
-            newChild = botsViewController
+        case .explore:
+            newChild = exploreViewController
         }
         
         if let currentChild = selectedViewController {
@@ -111,7 +111,7 @@ final class HomeTabBarController: UIViewController {
     
     private func switchToChildAfterValidated(with id: ChildID) {
         switch id {
-        case .chat, .bot:
+        case .chat, .explore:
             switchToChild(with: id)
         case .wallet:
             switch TIP.status {

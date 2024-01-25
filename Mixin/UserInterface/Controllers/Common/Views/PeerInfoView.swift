@@ -80,7 +80,7 @@ class PeerInfoView: UIView, XibDesignable {
             avatarImageView.setImage(name: result.contact.fullName)
         case let result as AppUserSearchResult:
             let user = result.user
-            avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
+            avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
         default:
             break
         }

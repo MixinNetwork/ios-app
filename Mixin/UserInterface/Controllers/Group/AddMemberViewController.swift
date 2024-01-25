@@ -92,7 +92,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
                     return
                 }
                 weakSelf.searchingKeyword = keyword
-                weakSelf.searchResults = searchResult
+                weakSelf.searchResults = [searchResult]
                 weakSelf.tableView.reloadData()
                 weakSelf.reloadTableViewSelections()
             }
@@ -103,9 +103,10 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
         if isSearching {
-            for (row, searchResult) in searchResults.enumerated() where selectedUserIds.contains(searchResult.user.userId) {
-                let indexPath = IndexPath(row: row, section: 0)
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            enumerateSearchResults { result, indexPath, _ in
+                if selectedUserIds.contains(result.user.userId) {
+                    tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                }
             }
         } else {
             for (section, users) in models.enumerated() {
@@ -120,7 +121,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
         let user: UserItem
         if isSearching {
-            let searchResult = searchResults[indexPath.row]
+            let searchResult = searchResults[indexPath.section][indexPath.row]
             cell.render(result: searchResult)
             user = searchResult.user
         } else {
@@ -133,7 +134,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResults.count : models[section].count
+        return isSearching ? searchResults[section].count : models[section].count
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -188,7 +189,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     
     private func user(at indexPath: IndexPath) -> UserItem {
         if isSearching {
-            return searchResults[indexPath.row].user
+            return searchResults[indexPath.section][indexPath.row].user
         } else {
             return models[indexPath.section][indexPath.row]
         }

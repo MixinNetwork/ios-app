@@ -7,15 +7,20 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         false
     }
     
+    class var tableViewStyle: UITableView.Style {
+        .plain
+    }
+    
     @IBOutlet weak var searchBoxView: SearchBoxView!
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var centerWrapperView: UIView!
     
     @IBOutlet weak var searchBoxTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var centerWrapperViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var centerWrapperViewBottomConstraint: NSLayoutConstraint!
+    
+    weak var centerWrapperViewBottomConstraint: NSLayoutConstraint!
     
     let queue = OperationQueue()
+    let tableView: UITableView
     let initDataOperation = BlockOperation()
     let headerReuseId = "header"
     
@@ -25,19 +30,40 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     var sectionTitles = [String]()
     var models = [ModelType]()
     
-    var searchResults = [SearchResultType]()
+    var searchResults = [[SearchResultType]]()
     var searchingKeyword: String?
     
     var isSearching: Bool {
         return searchingKeyword != nil
     }
     
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        tableView = UITableView(frame: .zero, style: Self.tableViewStyle)
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        tableView = UITableView(frame: .zero, style: Self.tableViewStyle)
+        super.init(coder: coder)
+    }
+    
     convenience init() {
-        self.init(nib: R.nib.peerView)
+        let nib = R.nib.peerView
+        self.init(nibName: nib.name, bundle: nib.bundle)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        centerWrapperViewBottomConstraint = tableView.topAnchor.constraint(equalTo: centerWrapperView.bottomAnchor)
+        centerWrapperViewBottomConstraint.isActive = true
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        tableView.keyboardDismissMode = .onDrag
+        tableView.rowHeight = 70
         tableView.register(CellType.nib, forCellReuseIdentifier: CellType.reuseIdentifier)
         tableView.register(PeerHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.dataSource = self
@@ -69,7 +95,9 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
             return
         }
-        searchResults.forEach { $0.updateTitleAndDescription() }
+        enumerateSearchResults { result, _, _ in
+            result.updateTitleAndDescription()
+        }
         if isSearching {
             tableView.reloadData()
         }
@@ -139,6 +167,19 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         }
     }
     
+    func enumerateSearchResults(_ block: (SearchResultType, IndexPath, inout Bool) -> Void) {
+        for (section, searchResult) in searchResults.enumerated() {
+            for (row, result) in searchResult.enumerated() {
+                let indexPath = IndexPath(row: row, section: section)
+                var stop = false
+                block(result, indexPath, &stop)
+                if stop {
+                    return
+                }
+            }
+        }
+    }
+    
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 0
@@ -163,6 +204,20 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if isSearching {
+            return .leastNormalMagnitude
+        } else if !sectionTitles.isEmpty {
+            return sectionIsEmpty(section) ? .leastNormalMagnitude : 36
+        } else {
+            return .leastNormalMagnitude
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .leastNormalMagnitude
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard !isSearching, !sectionTitles.isEmpty, !sectionIsEmpty(section) else {
             return nil
@@ -172,14 +227,8 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         return header
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if isSearching {
-            return .leastNormalMagnitude
-        } else if !sectionTitles.isEmpty {
-            return sectionIsEmpty(section) ? .leastNormalMagnitude : 36
-        } else {
-            return .leastNormalMagnitude
-        }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        nil
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

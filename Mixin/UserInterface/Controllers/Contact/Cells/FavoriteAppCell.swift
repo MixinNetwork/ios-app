@@ -5,10 +5,17 @@ protocol FavoriteAppCellDelegate: AnyObject {
     func favoriteAppCellDidSelectAccessoryButton(_ cell: FavoriteAppCell)
 }
 
-class FavoriteAppCell: UITableViewCell {
+final class FavoriteAppCell: PeerCell {
+    
+    override class var nib: UINib {
+        UINib(resource: R.nib.favoriteAppCell)
+    }
+    
+    override class var reuseIdentifier: String {
+        R.reuseIdentifier.favorite_app.identifier
+    }
     
     @IBOutlet weak var accessoryButton: UIButton!
-    @IBOutlet weak var infoView: PeerInfoView!
     
     var isFavorite = false {
         didSet {
@@ -20,7 +27,7 @@ class FavoriteAppCell: UITableViewCell {
     weak var delegate: FavoriteAppCellDelegate?
     
     func render(user: User) {
-        infoView.render(user: user, description: .identityNumber)
+        peerInfoView.render(user: user, description: .identityNumber)
     }
     
     @IBAction func accessoryAction(_ sender: Any) {

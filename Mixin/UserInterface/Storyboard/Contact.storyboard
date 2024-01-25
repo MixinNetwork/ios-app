@@ -79,122 +79,6 @@
             </objects>
             <point key="canvasLocation" x="733.60000000000002" y="-136.28185907046478"/>
         </scene>
-        <!--Edit Favorite Apps View Controller-->
-        <scene sceneID="Sfw-mW-s4F">
-            <objects>
-                <viewController storyboardIdentifier="edit_favorite_apps" id="HPN-nh-aZ8" customClass="EditFavoriteAppsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="BPV-De-UXl">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="70" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="62" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Wiy-Rg-LoV">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" name="background"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="favorite_app" rowHeight="80" id="X6i-e6-Knu" customClass="FavoriteAppCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="80"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X6i-e6-Knu" id="2b8-dc-Pnn">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SwR-ht-bhW">
-                                                    <rect key="frame" x="8" y="18" width="44" height="44"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="44" id="Z6d-0f-k3D"/>
-                                                        <constraint firstAttribute="height" constant="44" id="jRq-Vd-sAc"/>
-                                                    </constraints>
-                                                    <connections>
-                                                        <action selector="accessoryAction:" destination="X6i-e6-Knu" eventType="touchUpInside" id="dRg-VZ-M3d"/>
-                                                    </connections>
-                                                </button>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G5h-fM-NoV" customClass="PeerInfoView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="60" y="15" width="295" height="50"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="50" id="eEE-b7-9rx"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="G5h-fM-NoV" secondAttribute="trailing" constant="20" id="1ch-c0-b7L"/>
-                                                <constraint firstItem="G5h-fM-NoV" firstAttribute="centerY" secondItem="2b8-dc-Pnn" secondAttribute="centerY" id="EgM-eW-Zo1"/>
-                                                <constraint firstItem="SwR-ht-bhW" firstAttribute="leading" secondItem="2b8-dc-Pnn" secondAttribute="leading" constant="8" id="QeA-is-7du"/>
-                                                <constraint firstItem="G5h-fM-NoV" firstAttribute="leading" secondItem="SwR-ht-bhW" secondAttribute="trailing" constant="8" id="SMC-Hv-u9N"/>
-                                                <constraint firstItem="SwR-ht-bhW" firstAttribute="centerY" secondItem="2b8-dc-Pnn" secondAttribute="centerY" id="V3x-t0-zH6"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="background"/>
-                                        <connections>
-                                            <outlet property="accessoryButton" destination="SwR-ht-bhW" id="7bm-fR-lPT"/>
-                                            <outlet property="infoView" destination="G5h-fM-NoV" id="Yvj-1K-CYV"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mUx-un-Jbj">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="7Iu-zz-qHZ">
-                                        <rect key="frame" x="75" y="119.5" width="225" height="149.5"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Empty Indicator/ic_data" translatesAutoresizingMaskIntoConstraints="NO" id="0aA-w6-n76">
-                                                <rect key="frame" x="0.0" y="0.0" width="225" height="78"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO APPS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHs-Ey-I67">
-                                                <rect key="frame" x="0.0" y="90" width="225" height="17"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" name="text_tertiary"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="no_bots"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you want to share an app, add it to your contacts first" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7b9-3x-9ia">
-                                                <rect key="frame" x="0.0" y="119" width="225" height="30.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" name="text_tertiary"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_share_bot_hint"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="225" id="N7P-jq-jR7"/>
-                                        </constraints>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstItem="7Iu-zz-qHZ" firstAttribute="centerX" secondItem="mUx-un-Jbj" secondAttribute="centerX" id="AUa-Ob-8wt"/>
-                                    <constraint firstItem="7Iu-zz-qHZ" firstAttribute="centerY" secondItem="mUx-un-Jbj" secondAttribute="centerY" multiplier="0.6" id="Gih-wP-QkQ"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="cvB-9b-lOU"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstItem="Wiy-Rg-LoV" firstAttribute="leading" secondItem="BPV-De-UXl" secondAttribute="leading" id="Alq-bR-d1v"/>
-                            <constraint firstItem="cvB-9b-lOU" firstAttribute="trailing" secondItem="mUx-un-Jbj" secondAttribute="trailing" id="Lci-LI-bYM"/>
-                            <constraint firstItem="cvB-9b-lOU" firstAttribute="bottom" secondItem="mUx-un-Jbj" secondAttribute="bottom" id="MB2-xe-HrV"/>
-                            <constraint firstItem="mUx-un-Jbj" firstAttribute="leading" secondItem="cvB-9b-lOU" secondAttribute="leading" id="TBS-Tb-xto"/>
-                            <constraint firstItem="Wiy-Rg-LoV" firstAttribute="top" secondItem="BPV-De-UXl" secondAttribute="top" id="TnB-Un-iOH"/>
-                            <constraint firstAttribute="trailing" secondItem="Wiy-Rg-LoV" secondAttribute="trailing" id="U7C-X9-1kb"/>
-                            <constraint firstItem="mUx-un-Jbj" firstAttribute="top" secondItem="cvB-9b-lOU" secondAttribute="top" id="Zjb-y6-DgM"/>
-                            <constraint firstAttribute="bottom" secondItem="Wiy-Rg-LoV" secondAttribute="bottom" id="mK8-zQ-rOM"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="noAppIndicator" destination="mUx-un-Jbj" id="XCu-W2-68R"/>
-                        <outlet property="tableView" destination="Wiy-Rg-LoV" id="ARM-5T-C6U"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="yu7-Ow-aZ3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1416.8" y="-136.28185907046478"/>
-        </scene>
         <!--Shared Apps View Controller-->
         <scene sceneID="a9j-7F-y0x">
             <objects>
@@ -284,7 +168,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Empty Indicator/ic_data" width="72" height="78"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

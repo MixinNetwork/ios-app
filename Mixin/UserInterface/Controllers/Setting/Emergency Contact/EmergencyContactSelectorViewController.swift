@@ -19,7 +19,7 @@ class EmergencyContactSelectorViewController: UserItemPeerViewController<PeerCel
     
     override func configure(cell: PeerCell, at indexPath: IndexPath) {
         super.configure(cell: cell, at: indexPath)
-        cell.peerInfoViewLeadingConstraint.constant = 36
+        cell.peerInfoViewLeadingConstraint?.constant = 36
         if !isSearching {
             cell.peerInfoView.descriptionLabel.text = user(at: indexPath).identityNumber
             cell.peerInfoView.descriptionLabel.isHidden = false

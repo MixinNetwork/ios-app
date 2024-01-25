@@ -102,7 +102,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
                     return
                 }
                 weakSelf.searchingKeyword = keyword
-                weakSelf.searchResults = searchResults
+                weakSelf.searchResults = [searchResults]
                 weakSelf.tableView.reloadData()
                 weakSelf.reloadTableViewSelections()
             }
@@ -112,7 +112,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
         if isSearching {
-            cell.render(result: searchResults[indexPath.row])
+            cell.render(result: searchResults[indexPath.section][indexPath.row])
         } else {
             cell.render(member: models[indexPath.section][indexPath.row])
         }
@@ -121,12 +121,10 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
         if isSearching {
-            for (index, result) in searchResults.enumerated() {
-                guard selections.contains(result.member) else {
-                    continue
+            enumerateSearchResults { result, indexPath, _ in
+                if selections.contains(result.member) {
+                    tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
                 }
-                let indexPath = IndexPath(row: index, section: 0)
-                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             }
         } else {
             for section in 0..<models.count {
@@ -143,7 +141,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResults.count : models[section].count
+        return isSearching ? searchResults[section].count : models[section].count
     }
     
     // MARK: - UITableViewDelegate
@@ -232,11 +230,14 @@ extension CircleEditorViewController: SelectedPeerCellDelegate {
         let member = selections[indexPath.row]
         let tableViewIndexPath: IndexPath? = {
             if isSearching {
-                if let row = searchResults.firstIndex(where: { $0.member == member }) {
-                    return IndexPath(row: row, section: 0)
-                } else {
-                    return nil
+                var memberIndexPath: IndexPath?
+                enumerateSearchResults { result, indexPath, stop in
+                    if result.member == member {
+                        memberIndexPath = indexPath
+                        stop = true
+                    }
                 }
+                return memberIndexPath
             } else {
                 for section in 0..<models.count {
                     let members = models[section]
@@ -268,7 +269,7 @@ extension CircleEditorViewController {
     
     private func circleMember(at indexPath: IndexPath) -> CircleMember {
         if isSearching {
-            return searchResults[indexPath.row].member
+            return searchResults[indexPath.section][indexPath.row].member
         } else {
             return models[indexPath.section][indexPath.row]
         }

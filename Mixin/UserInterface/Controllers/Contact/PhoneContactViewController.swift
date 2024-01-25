@@ -51,7 +51,7 @@ class PhoneContactViewController: PeerViewController<[PhoneContact], PhoneContac
                     return
                 }
                 self.searchingKeyword = keyword
-                self.searchResults = searchResult
+                self.searchResults = [searchResult]
                 self.tableView.reloadData()
                 self.reloadTableViewSelections()
             }
@@ -63,7 +63,8 @@ class PhoneContactViewController: PeerViewController<[PhoneContact], PhoneContac
         super.configure(cell: cell, at: indexPath)
         cell.delegate = self
         if isSearching {
-            cell.render(result: searchResults[indexPath.row])
+            let result = searchResults[indexPath.section][indexPath.row]
+            cell.render(result: result)
         } else {
             let contact = models[indexPath.section][indexPath.row]
             cell.render(phoneContact: contact)
@@ -71,7 +72,7 @@ class PhoneContactViewController: PeerViewController<[PhoneContact], PhoneContac
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        isSearching ? searchResults.count : models[section].count
+        isSearching ? searchResults[section].count : models[section].count
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -98,7 +99,7 @@ extension PhoneContactViewController: PhoneContactCellDelegate {
             }
             let phoneContact: PhoneContact
             if isSearching {
-                phoneContact = searchResults[indexPath.row].contact
+                phoneContact = searchResults[indexPath.section][indexPath.row].contact
             } else {
                 phoneContact = models[indexPath.section][indexPath.row]
             }

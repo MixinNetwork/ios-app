@@ -743,6 +743,7 @@
 		943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */; };
 		943B5EAB2B600D77001C1F6E /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943B5EAA2B600D77001C1F6E /* AppCell.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
+		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
 		9448409D2B1F6CA700E40075 /* MultisigUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9448409C2B1F6CA700E40075 /* MultisigUsersViewController.swift */; };
@@ -1932,6 +1933,7 @@
 		943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPPopupInputViewController.swift; sourceTree = "<group>"; };
 		943B5EAA2B600D77001C1F6E /* AppCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
+		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
 		94463C52298D690F00E63547 /* AuthenticationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureView.swift; sourceTree = "<group>"; };
 		9448409C2B1F6CA700E40075 /* MultisigUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigUsersViewController.swift; sourceTree = "<group>"; };
@@ -4084,6 +4086,7 @@
 			children = (
 				DFF44179223BC63100DDD5F8 /* ContactCell.swift */,
 				7BF071BF2244E6A1007240AD /* UploadContactCell.swift */,
+				9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */,
 				E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */,
 				E08F4DDB2395345500C0D021 /* SharedAppCell.swift */,
 				7C4C03A628532D2F003DE0C0 /* PhoneContactCell.swift */,
@@ -4595,6 +4598,7 @@
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
+				9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */,
 				94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */,
 				7C7579D829DC573F0002DA0B /* DeviceTransferProgressView.xib in Resources */,
 				7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */,

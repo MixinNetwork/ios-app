@@ -181,7 +181,8 @@ extension ExploreSearchViewController: UITableViewDelegate {
         case .recentApps:
             item = recentAppUsers[indexPath.row]
         case .searchResult:
-            item = searchResults[indexPath.row].user
+            let user = searchResults[indexPath.row].user
+            item = UserItem.createUser(from: user)
         }
         let profile = UserProfileViewController(user: item)
         present(profile, animated: true)

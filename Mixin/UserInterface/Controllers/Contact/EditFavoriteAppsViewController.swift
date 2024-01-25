@@ -1,104 +1,134 @@
 import UIKit
 import MixinServices
 
-final class EditFavoriteAppsViewController: UIViewController {
+final class EditFavoriteAppsViewController: PeerViewController<[User], FavoriteAppCell, AppUserSearchResult> {
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var noAppIndicator: UIView!
+    private enum Section: Int, CaseIterable {
+        case favorite = 0
+        case candidate = 1
+    }
     
-    var favorites = [User]()
-    var candidates = [User]()
+    override class var tableViewStyle: UITableView.Style {
+        .grouped
+    }
     
     private let headerReuseID = "header"
     
+    private var hasData: Bool {
+        if isSearching {
+            !searchResults[Section.favorite.rawValue].isEmpty || !searchResults[Section.candidate.rawValue].isEmpty
+        } else {
+            !models[Section.favorite.rawValue].isEmpty || !models[Section.candidate.rawValue].isEmpty
+        }
+    }
+    
     class func instance() -> UIViewController {
-        let vc = R.storyboard.contact.edit_favorite_apps()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_favorite_bots())
+        let editor = EditFavoriteAppsViewController()
+        return ContainerViewController.instance(viewController: editor, title: R.string.localizable.my_favorite_bots())
     }
     
     override func viewDidLoad() {
+        models = [[User]](repeating: [], count: Section.allCases.count)
+        searchResults = [[AppUserSearchResult]](repeating: [], count: Section.allCases.count)
         super.viewDidLoad()
+        tableView.rowHeight = 70
+        tableView.estimatedSectionHeaderHeight = 94
         tableView.register(EditFavoriteAppsHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseID)
-        tableView.dataSource = self
-        tableView.delegate = self
-        DispatchQueue.global().async {
+        tableView.allowsSelection = false
+        searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
+    }
+    
+    override func initData() {
+        initDataOperation.addExecutionBlock { [weak self] in
             let favorites = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: myUserId)
-            let candidates = UserDAO.shared.appFriends(notIn: favorites.compactMap({ $0.userId }))
-            DispatchQueue.main.async {
-                if favorites.isEmpty && candidates.isEmpty {
-                    self.noAppIndicator.isHidden = false
-                } else {
-                    self.favorites = favorites
-                    self.candidates = candidates
-                    self.tableView.reloadData()
+            let candidates = UserDAO.shared.appFriends(notIn: favorites.map(\.userId))
+            DispatchQueue.main.sync {
+                guard let self else {
+                    return
                 }
+                self.models = [favorites, candidates]
+                self.tableView.reloadData()
+                self.tableView.checkEmpty(dataCount: favorites.count + candidates.count,
+                                          text: R.string.localizable.no_bots() + "\n" + R.string.localizable.profile_share_bot_hint(),
+                                          photo: R.image.emptyIndicator.ic_data()!)
             }
         }
+        queue.addOperation(initDataOperation)
     }
     
-    private func toggleSection(forCellAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            let user = favorites.remove(at: indexPath.row)
-            candidates.insert(user, at: 0)
-        } else {
-            let user = candidates.remove(at: indexPath.row)
-            favorites.append(user)
+    override func search(keyword: String) {
+        queue.operations
+            .filter({ $0 != initDataOperation })
+            .forEach({ $0.cancel() })
+        let op = BlockOperation()
+        let models = self.models
+        op.addExecutionBlock { [unowned op, weak self] in
+            guard self != nil, !op.isCancelled else {
+                return
+            }
+            var allResultsCount: Int = 0
+            let searchResults = models.map { users in
+                users.compactMap { user in
+                    if user.matches(lowercasedKeyword: keyword) {
+                        allResultsCount += 1
+                        return AppUserSearchResult(user: user, keyword: keyword)
+                    } else {
+                        return nil
+                    }
+                }
+            }
+            DispatchQueue.main.sync {
+                guard let self, !op.isCancelled else {
+                    return
+                }
+                self.searchingKeyword = keyword
+                self.searchResults = searchResults
+                self.tableView.reloadData()
+                self.tableView.checkEmpty(dataCount: allResultsCount,
+                                          text: R.string.localizable.no_results(),
+                                          photo: R.image.emptyIndicator.ic_search_result()!)
+            }
         }
-        tableView.reloadData()
-        if favorites.isEmpty {
-            tableView.contentInset.top = 20
-        } else {
-            tableView.contentInset.top = 10
-        }
+        queue.addOperation(op)
     }
     
-}
-
-extension EditFavoriteAppsViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? favorites.count : candidates.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.favorite_app, for: indexPath)!
-        if indexPath.section == 0 {
-            cell.render(user: favorites[indexPath.row])
-            cell.isFavorite = true
+    override func configure(cell: FavoriteAppCell, at indexPath: IndexPath) {
+        if isSearching {
+            cell.render(result: searchResults[indexPath.section][indexPath.row])
         } else {
-            cell.render(user: candidates[indexPath.row])
-            cell.isFavorite = false
+            cell.render(user: models[indexPath.section][indexPath.row])
         }
+        cell.isFavorite = Section(rawValue: indexPath.section) == .favorite
         cell.delegate = self
-        return cell
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        isSearching ? searchResults[section].count : models[section].count
     }
     
-}
-
-extension EditFavoriteAppsViewController: UITableViewDelegate {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        Section.allCases.count
+    }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 1 {
-            return UITableView.automaticDimension
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if Section(rawValue: section) == .candidate && hasData {
+            UITableView.automaticDimension
         } else {
-            return .leastNormalMagnitude
+            .leastNormalMagnitude
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        .leastNormalMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard section == 1 else {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard Section(rawValue: section) == .candidate && hasData else {
             return nil
         }
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseID) as! EditFavoriteAppsHeaderView
-        if favorites.isEmpty {
+        let numberOfFavorites = if isSearching {
+            searchResults[Section.favorite.rawValue].count
+        } else {
+            models[Section.favorite.rawValue].count
+        }
+        if numberOfFavorites == 0 {
             view.descriptionWrapperViewTopConstraint.constant = 0
         } else {
             view.descriptionWrapperViewTopConstraint.constant = 20
@@ -106,8 +136,34 @@ extension EditFavoriteAppsViewController: UITableViewDelegate {
         return view
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        nil
+    private func toggleSection(forCellAt indexPath: IndexPath) {
+        
+        func toggleSection<Model>(forModelAt indexPath: IndexPath, models: inout [[Model]]) {
+            if Section(rawValue: indexPath.section) == .favorite {
+                let user = models[Section.favorite.rawValue].remove(at: indexPath.row)
+                models[Section.candidate.rawValue].insert(user, at: 0)
+            } else {
+                let user = models[Section.candidate.rawValue].remove(at: indexPath.row)
+                models[Section.favorite.rawValue].append(user)
+            }
+        }
+        
+        if isSearching {
+            let userID = searchResults[indexPath.section][indexPath.row].user.userId
+            toggleSection(forModelAt: indexPath, models: &searchResults)
+            if let row = models[indexPath.section].firstIndex(where: { $0.userId == userID }) {
+                let modelIndexPath = IndexPath(row: row, section: indexPath.section)
+                toggleSection(forModelAt: modelIndexPath, models: &models)
+            }
+        } else {
+            toggleSection(forModelAt: indexPath, models: &models)
+        }
+        tableView.reloadData()
+        if models[Section.favorite.rawValue].isEmpty {
+            tableView.contentInset.top = 20
+        } else {
+            tableView.contentInset.top = 10
+        }
     }
     
 }
@@ -119,8 +175,13 @@ extension EditFavoriteAppsViewController: FavoriteAppCellDelegate {
             return
         }
         let hud = Hud()
-        if indexPath.section == 0 {
-            let user = favorites[indexPath.row]
+        let user = if isSearching {
+            searchResults[indexPath.section][indexPath.row].user
+        } else {
+            models[indexPath.section][indexPath.row]
+        }
+        switch Section(rawValue: indexPath.section)! {
+        case .favorite:
             if let id = user.appId {
                 hud.show(style: .busy, text: "", on: view)
                 UserAPI.unfavoriteApp(id: id) { [weak self] (result) in
@@ -137,8 +198,7 @@ extension EditFavoriteAppsViewController: FavoriteAppCellDelegate {
                     }
                 }
             }
-        } else {
-            let user = candidates[indexPath.row]
+        case .candidate:
             if let id = user.appId {
                 hud.show(style: .busy, text: "", on: view)
                 UserAPI.setFavoriteApp(id: id) { [weak self] (result) in

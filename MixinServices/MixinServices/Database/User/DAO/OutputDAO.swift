@@ -38,7 +38,7 @@ public final class OutputDAO: UserDatabaseDAO {
             arguments["asset"] = asset
         }
         if let outputID {
-            conditions.append("rowid < SELECT rowid FROM outputs WHERE output_id = :id")
+            conditions.append("rowid < (SELECT rowid FROM outputs WHERE output_id = :id)")
             arguments["id"] = outputID
         }
         if !conditions.isEmpty {

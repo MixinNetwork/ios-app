@@ -24,7 +24,7 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResults.count : models.count
+        return isSearching ? searchResults[section].count : models.count
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

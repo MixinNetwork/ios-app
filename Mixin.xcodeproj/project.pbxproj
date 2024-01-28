@@ -3704,7 +3704,6 @@
 				277FF6FD1F909A1200DBB2EB /* Resources */,
 				F5646909209AA0566E934C2C /* [CP] Embed Pods Frameworks */,
 				273E29431FCBED580043A6F9 /* Embed Frameworks */,
-				DF1BD0B42292AF2900EBDC22 /* Crashlytics */,
 				E090B9FF23B3957E0088355B /* Embed App Extensions */,
 				DF21616C24ECD0FE0087D7B0 /* Check Bundle */,
 			);
@@ -4157,25 +4156,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		DF1BD0B42292AF2900EBDC22 /* Crashlytics */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = Crashlytics;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		DF21616C24ECD0FE0087D7B0 /* Check Bundle */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5315,7 +5295,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 524;
+				CURRENT_PROJECT_VERSION = 628;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
@@ -5370,7 +5350,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.36.8;
+				MARKETING_VERSION = 1.4.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-iquote",
@@ -5416,7 +5396,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 524;
+				CURRENT_PROJECT_VERSION = 628;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
@@ -5471,7 +5451,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.36.8;
+				MARKETING_VERSION = 1.4.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-iquote",
@@ -5589,7 +5569,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 524;
+				CURRENT_PROJECT_VERSION = 628;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinShare/Info.plist;
@@ -5599,7 +5579,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.36.8;
+				MARKETING_VERSION = 1.4.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.share;
@@ -5617,7 +5597,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 524;
+				CURRENT_PROJECT_VERSION = 628;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinShare/Info.plist;
@@ -5627,7 +5607,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.36.8;
+				MARKETING_VERSION = 1.4.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.messenger.share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5644,7 +5624,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinNotificationService/MixinNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 524;
+				CURRENT_PROJECT_VERSION = 628;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
@@ -5654,7 +5634,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.36.8;
+				MARKETING_VERSION = 1.4.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "one.mixin.messenger.notification-service";
@@ -5672,7 +5652,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinNotificationService/MixinNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 524;
+				CURRENT_PROJECT_VERSION = 628;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
@@ -5682,7 +5662,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.36.8;
+				MARKETING_VERSION = 1.4.1;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "one.mixin.messenger.notification-service";
 				PRODUCT_NAME = "$(TARGET_NAME)";

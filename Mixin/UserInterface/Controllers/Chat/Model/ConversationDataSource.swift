@@ -579,7 +579,7 @@ extension ConversationDataSource {
         }
         if messageIsSentByMe,
            let source = notification.userInfo?[MessageDAO.UserInfoKey.messsageSource] as? String,
-           source == MessageDAO.LocalMessageSource.sendMessage
+           source == MessageDAO.LocalMessageSource.sendMessage || source == MessageDAO.LocalMessageSource.transfer
         {
             Queue.main.autoAsync {
                 guard !self.didPostSendFirstMessageNotification else {

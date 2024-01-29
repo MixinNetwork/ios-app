@@ -3,6 +3,8 @@ import MixinServices
 
 enum HomeSearchNotification {
     static let didPushConversationNotification = Notification.Name("one.mixin.messenger.DidPushConversation")
+    static let didPushTokenNotification = Notification.Name("one.mixin.messenger.DidPushToken")
+    static let assetIDUserInfoKey = "aid"
     static let conversationIDUserInfoKey = "cid"
 }
 
@@ -77,9 +79,12 @@ extension HomeSearchViewController where Self: UIViewController {
         }
     }
     
-    func pushAssetViewController(asset: TokenItem) {
-        let viewController = TokenViewController.instance(token: asset)
+    func pushTokenViewController(token: TokenItem) {
+        let viewController = TokenViewController.instance(token: token)
         homeNavigationController?.pushViewController(viewController, animated: true)
+        NotificationCenter.default.post(name: HomeSearchNotification.didPushTokenNotification,
+                                        object: self,
+                                        userInfo: [HomeSearchNotification.assetIDUserInfoKey: token.assetID])
     }
     
 }

@@ -230,7 +230,7 @@ struct TransferPaymentOperation {
             try await SafeAPI.postTransaction(requests: [broadcastRequest])
         }
         Logger.general.info(category: "Transfer", message: "Will sign raw txs")
-        RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID])
+        RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID], postNotificationWith: token.assetID)
         Logger.general.info(category: "Transfer", message: "RawTx signed")
         
         if !isConsolidation {

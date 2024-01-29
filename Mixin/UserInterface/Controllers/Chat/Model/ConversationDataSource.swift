@@ -577,7 +577,10 @@ extension ConversationDataSource {
                 self.addMessageAndDisplay(message: message)
             }
         }
-        if messageIsSentByMe {
+        if messageIsSentByMe,
+           let source = notification.userInfo?[MessageDAO.UserInfoKey.messsageSource] as? String,
+           source == MessageDAO.LocalMessageSource.sendMessage
+        {
             Queue.main.autoAsync {
                 guard !self.didPostSendFirstMessageNotification else {
                     return

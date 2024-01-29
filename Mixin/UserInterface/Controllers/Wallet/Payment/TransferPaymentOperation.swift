@@ -201,7 +201,7 @@ struct TransferPaymentOperation {
                         let receiverID = opponent.userId
                         let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
                         let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
-                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
+                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: MessageDAO.LocalMessageSource.transfer, silentNotification: false)
                         if try !Conversation.exists(db, key: conversationID) {
                             let conversation = Conversation.createConversation(conversationId: conversationID,
                                                                                category: ConversationCategory.CONTACT.rawValue,

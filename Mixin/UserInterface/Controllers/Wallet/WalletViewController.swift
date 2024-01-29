@@ -23,11 +23,6 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if AssetDAO.shared.hasPositiveBalancedAssets() {
-            tableHeaderView.insertMigrationButtonIfNeeded { button in
-                button.addTarget(self, action: #selector(performAssetMigration(_:)), for: .touchUpInside)
-            }
-        }
         tableHeaderView.transferActionView.delegate = self
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
@@ -42,6 +37,24 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: UTXOService.balanceDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        DispatchQueue.global().async {
+            let canMigrateAssets = AssetDAO.shared.hasPositiveBalancedAssets()
+            DispatchQueue.main.async {
+                if canMigrateAssets {
+                    self.tableHeaderView.insertMigrationButtonIfNeeded { button in
+                        button.addTarget(self, action: #selector(self.performAssetMigration(_:)), for: .touchUpInside)
+                    }
+                } else {
+                    self.tableHeaderView.removeMigrationButton()
+                }
+                self.tableHeaderView.sizeToFit()
+                self.tableView.tableHeaderView = self.tableHeaderView // Update tableView's layout after resizing
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

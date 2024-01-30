@@ -231,14 +231,15 @@ extension DepositViewController {
             let localEntry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chain.chainId)
             try Task.checkCancellation()
             
-            await withCheckedContinuation { [weak self] (continuation) in
+            try await withCheckedThrowingContinuation { [weak self] (continuation: CheckedContinuation<Void, Error>) in
                 DispatchQueue.main.async { [weak self] in
                     guard let self, self.view.window != nil, let container = UIApplication.homeContainerViewController else {
+                        continuation.resume(with: .failure(CancellationError()))
                         return
                     }
                     let selector = DepositNetworkSelectorViewController(token: token, chain: chain)
                     selector.onDismiss = {
-                        continuation.resume()
+                        continuation.resume(with: .success(()))
                     }
                     container.present(selector, animated: true)
                 }

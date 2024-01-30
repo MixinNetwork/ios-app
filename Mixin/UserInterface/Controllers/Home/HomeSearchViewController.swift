@@ -1,13 +1,6 @@
 import UIKit
 import MixinServices
 
-enum HomeSearchNotification {
-    static let didPushConversationNotification = Notification.Name("one.mixin.messenger.DidPushConversation")
-    static let didPushTokenNotification = Notification.Name("one.mixin.messenger.DidPushToken")
-    static let assetIDUserInfoKey = "aid"
-    static let conversationIDUserInfoKey = "cid"
-}
-
 protocol HomeSearchViewController {
     var searchTextField: UITextField! { get }
     var wantsNavigationSearchBox: Bool { get }
@@ -60,15 +53,9 @@ extension HomeSearchViewController where Self: UIViewController {
         case let result as UserSearchResult where result.user.isCreatedByMessenger:
             let vc = ConversationViewController.instance(ownerUser: result.user)
             homeNavigationController?.pushViewController(vc, animated: true)
-            NotificationCenter.default.post(name: HomeSearchNotification.didPushConversationNotification,
-                                            object: self,
-                                            userInfo: [HomeSearchNotification.conversationIDUserInfoKey: vc.conversationId])
         case let result as ConversationSearchResult:
             let vc = ConversationViewController.instance(conversation: result.conversation)
             homeNavigationController?.pushViewController(vc, animated: true)
-            NotificationCenter.default.post(name: HomeSearchNotification.didPushConversationNotification,
-                                            object: self,
-                                            userInfo: [HomeSearchNotification.conversationIDUserInfoKey: vc.conversationId])
         case let result as MessagesWithinConversationSearchResult:
             let vc = SearchConversationViewController()
             vc.load(searchResult: result)
@@ -82,9 +69,6 @@ extension HomeSearchViewController where Self: UIViewController {
     func pushTokenViewController(token: TokenItem) {
         let viewController = TokenViewController.instance(token: token)
         homeNavigationController?.pushViewController(viewController, animated: true)
-        NotificationCenter.default.post(name: HomeSearchNotification.didPushTokenNotification,
-                                        object: self,
-                                        userInfo: [HomeSearchNotification.assetIDUserInfoKey: token.assetID])
     }
     
 }

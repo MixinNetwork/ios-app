@@ -47,8 +47,6 @@ class HomeViewController: UIViewController {
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
     private var isShowingSearch = false
-    private var lastConversationIDPushedByHomeSearch: String?
-    private var lastAssetIDPushedByHomeSearch: String?
     
     private var bulletinContent: BulletinContent? = nil {
         didSet {
@@ -117,10 +115,8 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDesktopButtonHidden), name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateBulletinView), name: TIP.didUpdateNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(homeSearchViewControllerDidPushConversation(_:)), name: HomeSearchNotification.didPushConversationNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(homeSearchViewControllerDidPushToken(_:)), name: HomeSearchNotification.didPushTokenNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDataSourceSendFirstMessage(_:)), name: ConversationDataSource.didSendFirstMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(rawTransactionDidSign(_:)), name: RawTransactionDAO.didSignNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: ConversationDataSource.didSendFirstMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: RawTransactionDAO.didSignNotification, object: nil)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
@@ -362,6 +358,12 @@ class HomeViewController: UIViewController {
     
     @objc func cancelSearching(_ sender: Any) {
         hideSearch(endEditing: true, animate: true)
+    }
+    
+    @objc private func cancelSearchingSilently(_ notification: Notification) {
+        if isShowingSearch {
+            hideSearch(endEditing: false, animate: false)
+        }
     }
     
     @objc private func circleNameDidChange() {
@@ -848,44 +850,6 @@ extension HomeViewController {
         }
         action.backgroundColor = .theme
         return action
-    }
-    
-}
-
-extension HomeViewController {
-    
-    @objc private func homeSearchViewControllerDidPushConversation(_ notification: Notification) {
-        guard let conversationID = notification.userInfo?[HomeSearchNotification.conversationIDUserInfoKey] as? String else {
-            return
-        }
-        lastConversationIDPushedByHomeSearch = conversationID
-    }
-    
-    @objc private func homeSearchViewControllerDidPushToken(_ notification: Notification) {
-        guard let assetID = notification.userInfo?[HomeSearchNotification.assetIDUserInfoKey] as? String else {
-            return
-        }
-        lastAssetIDPushedByHomeSearch = assetID
-    }
-    
-    @objc private func conversationDataSourceSendFirstMessage(_ notification: Notification) {
-        guard let conversationID = notification.userInfo?[ConversationDataSource.UserInfoKey.conversationID] as? String else {
-            return
-        }
-        if conversationID == lastConversationIDPushedByHomeSearch && isShowingSearch {
-            hideSearch(endEditing: false, animate: false)
-        }
-        lastConversationIDPushedByHomeSearch = nil
-    }
-    
-    @objc private func rawTransactionDidSign(_ notification: Notification) {
-        guard let assetID = notification.userInfo?[RawTransactionDAO.assetIDUserInfoKey] as? String else {
-            return
-        }
-        if assetID == lastAssetIDPushedByHomeSearch && isShowingSearch {
-            hideSearch(endEditing: false, animate: false)
-        }
-        lastAssetIDPushedByHomeSearch = nil
     }
     
 }

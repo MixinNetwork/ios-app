@@ -555,7 +555,7 @@
 		7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */; };
 		7C225E8927C4C5FE00154143 /* GroupInCommonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */; };
 		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
-		7C2AC42928F2B384005F369A /* DepositSuspendedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2AC42828F2B384005F369A /* DepositSuspendedViewController.swift */; };
+		7C2AC42928F2B384005F369A /* DepositSuspendedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2AC42828F2B384005F369A /* DepositSuspendedView.swift */; };
 		7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */; };
 		7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2DE55828DD94D200C00818 /* LiveTextImageView.swift */; };
 		7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */; };
@@ -1746,7 +1746,7 @@
 		7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInCommonCell.swift; sourceTree = "<group>"; };
 		7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupInCommonCell.xib; sourceTree = "<group>"; };
 		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
-		7C2AC42828F2B384005F369A /* DepositSuspendedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSuspendedViewController.swift; sourceTree = "<group>"; };
+		7C2AC42828F2B384005F369A /* DepositSuspendedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSuspendedView.swift; sourceTree = "<group>"; };
 		7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7C2DE55828DD94D200C00818 /* LiveTextImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTextImageView.swift; sourceTree = "<group>"; };
 		7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation_dark@3x.gif"; sourceTree = "<group>"; };
@@ -4003,7 +4003,7 @@
 				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
 				94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */,
 				94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */,
-				7C2AC42828F2B384005F369A /* DepositSuspendedViewController.swift */,
+				7C2AC42828F2B384005F369A /* DepositSuspendedView.swift */,
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
 				DF06D91E222FAE1300FE7FBC /* LegacyTransferOutViewController.swift */,
 				9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */,
@@ -5230,7 +5230,7 @@
 				94B577822B5E79B800AE576E /* ExploreAllAppsViewController.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
-				7C2AC42928F2B384005F369A /* DepositSuspendedViewController.swift in Sources */,
+				7C2AC42928F2B384005F369A /* DepositSuspendedView.swift in Sources */,
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7C4C03A128532575003DE0C0 /* AddContactViewController.swift in Sources */,

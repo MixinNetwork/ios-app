@@ -22,7 +22,7 @@ final class DepositViewController: UIViewController {
     private let initialToken: TokenItem
     
     private var addressGeneratingView: UIView?
-    private var depositSuspendedViewControllerIfAdded: DepositSuspendedViewController?
+    private var depositSuspendedView: DepositSuspendedView?
     
     private var networkSwitchViewContentSizeObserver: NSKeyValueObservation?
     private var switchableNetworks: [String] = []
@@ -236,6 +236,7 @@ extension DepositViewController {
             self.displayingToken = token
             self.updateViews(token: token, entry: localEntry)
             self.removeAddressGeneratingView()
+            self.removeDepositSuspendedView()
         }
         
         do {
@@ -252,6 +253,7 @@ extension DepositViewController {
                     self.displayingToken = token
                     self.updateViews(token: token, entry: remoteEntry)
                     self.removeAddressGeneratingView()
+                    self.removeDepositSuspendedView()
                     
                     let isAddressChanged: Bool = if let localEntry {
                         localEntry.destination != remoteEntry.destination || localEntry.tag != remoteEntry.tag
@@ -358,23 +360,26 @@ extension DepositViewController {
     }
     
     private func addDepositSuspendedView(token: TokenItem) {
-        removeDepositSuspendedView()
-        let suspended = DepositSuspendedViewController(token: token)
-        addChild(suspended)
-        view.addSubview(suspended.view)
-        suspended.view.snp.makeEdgesEqualToSuperview()
-        suspended.didMove(toParent: self)
-        suspended.contactSupportButton.addTarget(self, action: #selector(contactSupport(_:)), for: .touchUpInside)
-        depositSuspendedViewControllerIfAdded = suspended
+        let suspended: DepositSuspendedView
+        if let depositSuspendedView {
+            suspended = depositSuspendedView
+        } else {
+            suspended = R.nib.depositSuspendedView(withOwner: nil)!
+            suspended.contactSupportButton.addTarget(self, action: #selector(contactSupport(_:)), for: .touchUpInside)
+            view.addSubview(suspended)
+            suspended.snp.makeEdgesEqualToSuperview()
+        }
+        suspended.symbol = if token.assetID == AssetID.omniUSDT {
+            "OMNI - USDT"
+        } else {
+            token.symbol
+        }
+        suspended.isHidden = false
+        depositSuspendedView = suspended
     }
     
     private func removeDepositSuspendedView() {
-        guard let suspended = depositSuspendedViewControllerIfAdded else {
-            return
-        }
-        suspended.willMove(toParent: nil)
-        suspended.view.removeFromSuperview()
-        suspended.removeFromParent()
+        depositSuspendedView?.isHidden = true
     }
     
 }

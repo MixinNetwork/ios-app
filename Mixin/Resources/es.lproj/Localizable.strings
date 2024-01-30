@@ -597,7 +597,6 @@
 "not_enough_partials" = "No hay suficientes nodos que devuelvan fragmento de clave";
 "not_found" = "Extraviado";
 "not_playing" = "No se está reproduciendo";
-"not_supported_deposit" = "Mixin ceases support for deposit service on the %1$@. You can continue to withdraw and transfer %2$@ in the wallet balance. Read the document to learn more.";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "notification_and_confirmation" = "Notificación y Confirmación";
 "notification_content" = "No te pierdas los mensajes de tus amigos.";
@@ -896,6 +895,7 @@
 "storage_usage" = "Uso de almacenamiento";
 "stranger_hint" = "Este remitente no está en tus contactos";
 "successful" = "Exitoso";
+"suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Enlace sospechoso";
 "symbol" = "Símbolo";
 "symbol_withdrawal" = "Retiro de %@";

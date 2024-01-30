@@ -597,7 +597,6 @@
 "not_enough_partials" = "沒有足夠的節點返回金鑰分片";
 "not_found" = "沒有找到相應的訊息";
 "not_playing" = "未在播放";
-"not_supported_deposit" = "Mixin 已停止支援 %1$@ 的充值服務。您可以繼續提現和轉賬錢包餘額中的 %2$@。瞭解更多請閱讀檔案。";
 "not_turn_off_screen_hint" = "同步時請不要關閉螢幕並保持 Mixin 在前臺執行。";
 "notification_and_confirmation" = "通知和確認";
 "notification_content" = "不再遺漏好友的訊息。";
@@ -896,6 +895,7 @@
 "storage_usage" = "儲存空間";
 "stranger_hint" = "對方不是你的聯絡人";
 "successful" = "成功";
+"suspended_deposit" = "%1$@ 充值已暫停，可能的原因是因為使用率太低、節點故障、區塊鏈網路硬分叉或者擁堵，注意已轉入的 %2$@ 資產可以繼續轉賬。";
 "suspicious_link" = "可疑連結";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";

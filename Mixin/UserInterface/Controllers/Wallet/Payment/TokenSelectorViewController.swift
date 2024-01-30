@@ -16,7 +16,7 @@ final class TokenSelectorViewController: PopupSearchableTableViewController {
     
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         modalPresentationStyle = .custom
     }
     

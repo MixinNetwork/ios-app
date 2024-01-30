@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class DepositNotSupportedViewController: UIViewController {
+final class DepositSuspendedViewController: UIViewController {
     
     @IBOutlet weak var label: TextLabel!
     
@@ -10,19 +10,29 @@ class DepositNotSupportedViewController: UIViewController {
     @IBOutlet weak var labelLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contactSupportButton: RoundedButton!
     
-    private var asset: TokenItem!
+    private let token: TokenItem
+    
+    init(token: TokenItem) {
+        self.token = token
+        let nib = R.nib.depositSuspendedView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.setSubtitle(subtitle: asset.symbol)
+        container?.setSubtitle(subtitle: token.symbol)
         view.layoutIfNeeded()
         
-        let symbol: String
-        if asset.assetID == AssetID.omniUSDT {
-            symbol = "OMNI - USDT"
+        let symbol = if token.assetID == AssetID.omniUSDT {
+            "OMNI - USDT"
         } else {
-            symbol = asset.symbol
+            token.symbol
         }
         let text = R.string.localizable.not_supported_deposit(symbol, symbol)
         let nsText = text as NSString
@@ -71,33 +81,12 @@ class DepositNotSupportedViewController: UIViewController {
         let sizeToFitLabel = CGSize(width: labelWidth, height: UIView.layoutFittingExpandedSize.height)
         let textLabelHeight = label.sizeThatFits(sizeToFitLabel).height
         labelHeightConstraint.constant = textLabelHeight
-    }
-    
-    class func instance(asset: TokenItem) -> UIViewController {
-        let vc = R.storyboard.wallet.deposit_not_supported()!
-        vc.asset = asset
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.deposit())
+        view.layoutIfNeeded()
     }
     
 }
 
-extension DepositNotSupportedViewController: ContainerViewControllerDelegate {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        true
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.ic_titlebar_help()
-    }
-    
-    func barRightButtonTappedAction() {
-        UIApplication.shared.openURL(url: .deposit)
-    }
-    
-}
-
-extension DepositNotSupportedViewController: CoreTextLabelDelegate {
+extension DepositSuspendedViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)

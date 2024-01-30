@@ -44,7 +44,7 @@ class QRCodeViewController: UIViewController {
         super.init(nibName: nib.name, bundle: nib.bundle)
         self.title = title
         self.modalPresentationStyle = .custom
-        self.transitioningDelegate = PopupPresentationManager.shared
+        self.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
     }
     
     required init?(coder: NSCoder) {

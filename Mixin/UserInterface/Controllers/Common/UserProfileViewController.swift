@@ -54,7 +54,7 @@ final class UserProfileViewController: ProfileViewController {
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
         modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         defer {
             // Defer closure escapes from subclass init
             // Make sure user's didSet is called
@@ -268,7 +268,7 @@ extension UserProfileViewController {
             return
         }
         let vc = R.storyboard.contact.shared_apps()!
-        vc.transitioningDelegate = PopupPresentationManager.shared
+        vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         vc.modalPresentationStyle = .custom
         vc.loadViewIfNeeded()
         vc.titleLabel.text = R.string.localizable.contact_favorite_bots_title(user.fullName)

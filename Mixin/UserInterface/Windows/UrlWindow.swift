@@ -716,7 +716,7 @@ class UrlWindow {
             func present(action: ExternalSharingConfirmationViewController.Action) {
                 let vc = R.storyboard.chat.external_sharing_confirmation()!
                 vc.modalPresentationStyle = .custom
-                vc.transitioningDelegate = PopupPresentationManager.shared
+                vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
                 UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 vc.load(sharingContext: sharingContext, message: message, webContext: webContext, action: action)
             }

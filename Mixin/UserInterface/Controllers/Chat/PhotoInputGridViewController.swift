@@ -129,7 +129,7 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
             let vc = R.storyboard.chat.media_preview()!
             vc.load(asset: asset)
             vc.conversationInputViewController = conversationInputViewController
-            vc.transitioningDelegate = PopupPresentationManager.shared
+            vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
             vc.modalPresentationStyle = .custom
             present(vc, animated: true, completion: nil)
         }

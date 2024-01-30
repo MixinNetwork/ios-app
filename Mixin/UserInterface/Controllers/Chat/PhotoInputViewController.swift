@@ -212,7 +212,7 @@ extension PhotoInputViewController: PHPickerViewControllerDelegate {
             }
             vc.load(itemProvider: provider)
             vc.conversationInputViewController = self.conversationInputViewController
-            vc.transitioningDelegate = PopupPresentationManager.shared
+            vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
             vc.modalPresentationStyle = .custom
             self.present(vc, animated: true, completion: nil)
         }

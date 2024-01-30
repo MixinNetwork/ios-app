@@ -25,7 +25,7 @@ final class WalletHintViewController: UIViewController {
         self.token = token
         let nib = R.nib.walletHintView
         super.init(nibName: nib.name, bundle: nib.bundle)
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         modalPresentationStyle = .custom
     }
     
@@ -43,7 +43,7 @@ final class WalletHintViewController: UIViewController {
         tokenIconView.setIcon(token: token)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(presentationViewControllerDidDismissPresentedViewController(_:)),
-                                               name: PopupPresentationController.didDismissPresentedViewControllerNotification,
+                                               name: BackgroundDismissablePopupPresentationController.didDismissPresentedViewControllerNotification,
                                                object: nil)
     }
     
@@ -79,7 +79,7 @@ final class WalletHintViewController: UIViewController {
     }
     
     @objc private func presentationViewControllerDidDismissPresentedViewController(_ notification: Notification) {
-        guard let controller = notification.object as? PopupPresentationController else {
+        guard let controller = notification.object as? BackgroundDismissablePopupPresentationController else {
             return
         }
         guard controller.presentedViewController == self else {

@@ -42,7 +42,7 @@ class GroupCallMemberPickerViewController: ResizablePopupViewController {
         self.contentViewController = GroupCallMemberPickerContentViewController(conversation: conversation)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         loadViewIfNeeded()
     }
     

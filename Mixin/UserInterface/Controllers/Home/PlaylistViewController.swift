@@ -45,7 +45,7 @@ class PlaylistViewController: ResizablePopupViewController {
         super.viewDidLoad()
         
         modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
         view.addGestureRecognizer(resizeRecognizer)

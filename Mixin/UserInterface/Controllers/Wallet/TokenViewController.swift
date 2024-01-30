@@ -136,13 +136,8 @@ extension TokenViewController: TransferActionViewDelegate {
         case .send:
             send()
         case .receive:
-            let controller: UIViewController
-            if token.isDepositSupported {
-                controller = DepositViewController.instance(token: token)
-            } else {
-                controller = DepositNotSupportedViewController.instance(asset: token)
-            }
-            navigationController?.pushViewController(controller, animated: true)
+            let deposit = DepositViewController.instance(token: token)
+            navigationController?.pushViewController(deposit, animated: true)
         }
     }
     

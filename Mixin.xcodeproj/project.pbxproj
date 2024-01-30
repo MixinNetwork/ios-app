@@ -320,9 +320,9 @@
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
 		7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */; };
 		7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C720A985E70095A51B /* VideoMessageCell.swift */; };
-		7B9F810C222EA3690012BFDD /* PopupPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810B222EA3690012BFDD /* PopupPresentationManager.swift */; };
+		7B9F810C222EA3690012BFDD /* BackgroundDismissablePopupPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810B222EA3690012BFDD /* BackgroundDismissablePopupPresentationManager.swift */; };
 		7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810D222EA3EC0012BFDD /* PopupPresentationAnimator.swift */; };
-		7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */; };
+		7B9F8110222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810F222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift */; };
 		7BA1768E244ACE2E007D50FD /* PickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1768D244ACE2E007D50FD /* PickerCell.swift */; };
 		7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8AA221ED35200DBFCE2 /* Hud.swift */; };
 		7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */; };
@@ -555,7 +555,7 @@
 		7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */; };
 		7C225E8927C4C5FE00154143 /* GroupInCommonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */; };
 		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
-		7C2AC42928F2B384005F369A /* DepositNotSupportedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */; };
+		7C2AC42928F2B384005F369A /* DepositSuspendedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2AC42828F2B384005F369A /* DepositSuspendedViewController.swift */; };
 		7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */; };
 		7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2DE55828DD94D200C00818 /* LiveTextImageView.swift */; };
 		7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */; };
@@ -835,6 +835,7 @@
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
 		94A40C472B2781AF0028BC02 /* TransferPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */; };
+		94A709D62B67B0A5007CADAB /* DepositSuspendedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */; };
 		94B13FC22B5ED5F9001333BE /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */; };
 		94B13FC32B5ED5F9001333BE /* ExploreSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */; };
 		94B2CD782B0F88D300D268E1 /* DepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B2CD772B0F88D300D268E1 /* DepositView.xib */; };
@@ -861,6 +862,9 @@
 		94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BD7E762B2983CA0004576D /* MultisigURL.swift */; };
 		94BD7E802B299CED0004576D /* MultisigConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BD7E7E2B299CED0004576D /* MultisigConfirmationViewController.swift */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
+		94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED02E2B692F11004381FA /* PopupPresentationManager.swift */; };
+		94BED0342B692F73004381FA /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED0332B692F73004381FA /* PopupPresentationController.swift */; };
+		94BF6D5B2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */; };
 		94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */; };
 		94C199732A1CA9430098EDB3 /* DeviceTransferError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */; };
 		94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */; };
@@ -1061,8 +1065,6 @@
 		DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */; };
 		DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFD294481FA7145F00FADAAD /* Contact.storyboard */; };
 		DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */; };
-		DFDD89E922C4B8E600128991 /* DepositChooseNetworkWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFDD89E822C4B8E600128991 /* DepositChooseNetworkWindow.xib */; };
-		DFDD89EB22C4D5F900128991 /* DepositChooseNetworkWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDD89EA22C4D5F900128991 /* DepositChooseNetworkWindow.swift */; };
 		DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9801FAB40A800537D43 /* CornerButton.swift */; };
 		DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE1F9821FAB51DA00537D43 /* Common.storyboard */; };
 		DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */; };
@@ -1504,9 +1506,9 @@
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageViewModel.swift; sourceTree = "<group>"; };
 		7B9F06C720A985E70095A51B /* VideoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageCell.swift; sourceTree = "<group>"; };
-		7B9F810B222EA3690012BFDD /* PopupPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationManager.swift; sourceTree = "<group>"; };
+		7B9F810B222EA3690012BFDD /* BackgroundDismissablePopupPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundDismissablePopupPresentationManager.swift; sourceTree = "<group>"; };
 		7B9F810D222EA3EC0012BFDD /* PopupPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationAnimator.swift; sourceTree = "<group>"; };
-		7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationController.swift; sourceTree = "<group>"; };
+		7B9F810F222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundDismissablePopupPresentationController.swift; sourceTree = "<group>"; };
 		7BA1768D244ACE2E007D50FD /* PickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerCell.swift; sourceTree = "<group>"; };
 		7BA1F8AA221ED35200DBFCE2 /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
 		7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
@@ -1744,7 +1746,7 @@
 		7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInCommonCell.swift; sourceTree = "<group>"; };
 		7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupInCommonCell.xib; sourceTree = "<group>"; };
 		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
-		7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNotSupportedViewController.swift; sourceTree = "<group>"; };
+		7C2AC42828F2B384005F369A /* DepositSuspendedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSuspendedViewController.swift; sourceTree = "<group>"; };
 		7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7C2DE55828DD94D200C00818 /* LiveTextImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTextImageView.swift; sourceTree = "<group>"; };
 		7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation_dark@3x.gif"; sourceTree = "<group>"; };
@@ -2021,6 +2023,7 @@
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
 		94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPaymentOperation.swift; sourceTree = "<group>"; };
+		94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositSuspendedView.xib; sourceTree = "<group>"; };
 		94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
 		94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreSearchView.xib; sourceTree = "<group>"; };
 		94B2CD772B0F88D300D268E1 /* DepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositView.xib; sourceTree = "<group>"; };
@@ -2047,6 +2050,9 @@
 		94BD7E762B2983CA0004576D /* MultisigURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigURL.swift; sourceTree = "<group>"; };
 		94BD7E7E2B299CED0004576D /* MultisigConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigConfirmationViewController.swift; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
+		94BED02E2B692F11004381FA /* PopupPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationManager.swift; sourceTree = "<group>"; };
+		94BED0332B692F73004381FA /* PopupPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationController.swift; sourceTree = "<group>"; };
+		94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNetworkSelectorViewController.swift; sourceTree = "<group>"; };
 		94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InPlaceKeyStorage.swift; sourceTree = "<group>"; };
 		94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferError.swift; sourceTree = "<group>"; };
 		94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPFullscreenInputViewController.swift; sourceTree = "<group>"; };
@@ -2249,8 +2255,6 @@
 		DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUpgradeViewController.swift; sourceTree = "<group>"; };
 		DFD294481FA7145F00FADAAD /* Contact.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Contact.storyboard; sourceTree = "<group>"; };
 		DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
-		DFDD89E822C4B8E600128991 /* DepositChooseNetworkWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositChooseNetworkWindow.xib; sourceTree = "<group>"; };
-		DFDD89EA22C4D5F900128991 /* DepositChooseNetworkWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositChooseNetworkWindow.swift; sourceTree = "<group>"; };
 		DFE1F9801FAB40A800537D43 /* CornerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerButton.swift; sourceTree = "<group>"; };
 		DFE1F9821FAB51DA00537D43 /* Common.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Common.storyboard; sourceTree = "<group>"; };
 		DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -2787,9 +2791,11 @@
 		7B9F810A222EA30A0012BFDD /* Popup Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				7B9F810B222EA3690012BFDD /* PopupPresentationManager.swift */,
 				7B9F810D222EA3EC0012BFDD /* PopupPresentationAnimator.swift */,
-				7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */,
+				94BED0332B692F73004381FA /* PopupPresentationController.swift */,
+				94BED02E2B692F11004381FA /* PopupPresentationManager.swift */,
+				7B9F810F222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift */,
+				7B9F810B222EA3690012BFDD /* BackgroundDismissablePopupPresentationManager.swift */,
 			);
 			path = "Popup Presentation";
 			sourceTree = "<group>";
@@ -3453,8 +3459,6 @@
 				DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */,
 				DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */,
 				DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */,
-				DFDD89EA22C4D5F900128991 /* DepositChooseNetworkWindow.swift */,
-				DFDD89E822C4B8E600128991 /* DepositChooseNetworkWindow.xib */,
 				DF846CD823694A2E00AA1197 /* MultisigUsersWindow.swift */,
 				DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */,
 				7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */,
@@ -3997,7 +4001,9 @@
 				DF9E66E4205B9AF300F1A0B9 /* HiddenTokensViewController.swift */,
 				94B2CD772B0F88D300D268E1 /* DepositView.xib */,
 				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
-				7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */,
+				94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */,
+				94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */,
+				7C2AC42828F2B384005F369A /* DepositSuspendedViewController.swift */,
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
 				DF06D91E222FAE1300FE7FBC /* LegacyTransferOutViewController.swift */,
 				9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */,
@@ -4645,7 +4651,6 @@
 				7B36920A233B3650007321A7 /* MediaTypeOverlayView.xib in Resources */,
 				944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
-				DFDD89E922C4B8E600128991 /* DepositChooseNetworkWindow.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
 				94F8BFAC29A5FFFE003E3229 /* SendTransactionView.xib in Resources */,
 				DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */,
@@ -4667,6 +4672,7 @@
 				7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */,
 				94E34124261D829200E2F9D3 /* highlight.js in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
+				94A709D62B67B0A5007CADAB /* DepositSuspendedView.xib in Resources */,
 				7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */,
 				94ED08B72B5FB1C300493312 /* ExploreActionCell.xib in Resources */,
 				E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */,
@@ -5002,6 +5008,7 @@
 				7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */,
 				7CDF316E29891B1200421808 /* PresentationFontSize.swift in Sources */,
 				7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */,
+				94BED0342B692F73004381FA /* PopupPresentationController.swift in Sources */,
 				7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */,
 				940764C329B2633C00B779A6 /* WalletConnectMessage.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
@@ -5039,6 +5046,7 @@
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
 				94720ED129C1A9850070C7C1 /* TIP+BIP44.swift in Sources */,
+				94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
 				943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */,
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
@@ -5222,7 +5230,7 @@
 				94B577822B5E79B800AE576E /* ExploreAllAppsViewController.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
-				7C2AC42928F2B384005F369A /* DepositNotSupportedViewController.swift in Sources */,
+				7C2AC42928F2B384005F369A /* DepositSuspendedViewController.swift in Sources */,
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7C4C03A128532575003DE0C0 /* AddContactViewController.swift in Sources */,
@@ -5668,8 +5676,8 @@
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,
 				E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
-				DFDD89EB22C4D5F900128991 /* DepositChooseNetworkWindow.swift in Sources */,
 				94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */,
+				94BF6D5B2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* VerifyPinViewController.swift in Sources */,
 				7BA24D7325342575004906AD /* HomeOverlaysCoordinator.swift in Sources */,
 				7B81BF2822893F8B00266A77 /* GroupParticipantCell.swift in Sources */,
@@ -5760,7 +5768,7 @@
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
 				94647C7028D243B100684CFA /* TIPNode+Description.swift in Sources */,
 				7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */,
-				7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */,
+				7B9F8110222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */,
@@ -5788,7 +5796,7 @@
 				7BF42E3922DCB132005066E6 /* GalleryItemModelController.swift in Sources */,
 				7BA8CC3A24A9C4D300455902 /* GroupCallConfirmationViewController.swift in Sources */,
 				7B8BB58A234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift in Sources */,
-				7B9F810C222EA3690012BFDD /* PopupPresentationManager.swift in Sources */,
+				7B9F810C222EA3690012BFDD /* BackgroundDismissablePopupPresentationManager.swift in Sources */,
 				7B07923A21AF96F500316BD2 /* SnapshotDataSource.swift in Sources */,
 				7C7579D429DC55BF0002DA0B /* TransferToDesktopViewController.swift in Sources */,
 			);

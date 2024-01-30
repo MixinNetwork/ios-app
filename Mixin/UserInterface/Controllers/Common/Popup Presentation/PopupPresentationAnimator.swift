@@ -1,6 +1,6 @@
 import UIKit
 
-class PopupPresentationAnimator: NSObject {
+final class PopupPresentationAnimator: NSObject {
     
     let isPresenting: Bool
     

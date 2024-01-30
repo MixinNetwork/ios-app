@@ -10,7 +10,6 @@ class ConversationDataSource {
     enum UserInfoKey {
         static let unreadMessageCount = "unread_count"
         static let mentionedMessageIds = "mention_ids"
-        static let conversationID = "cid"
     }
     
     static let newMessageOutOfVisibleBoundsNotification = Notification.Name("one.mixin.messenger.ConversationDataSource.MessageOutOfBounds")
@@ -579,15 +578,13 @@ extension ConversationDataSource {
         }
         if messageIsSentByMe,
            let source = notification.userInfo?[MessageDAO.UserInfoKey.messsageSource] as? String,
-           source == MessageDAO.LocalMessageSource.sendMessage || source == MessageDAO.LocalMessageSource.transfer
+           source == MessageDAO.LocalMessageSource.sendMessage
         {
             Queue.main.autoAsync {
                 guard !self.didPostSendFirstMessageNotification else {
                     return
                 }
-                NotificationCenter.default.post(name: Self.didSendFirstMessageNotification,
-                                                object: self,
-                                                userInfo: [Self.UserInfoKey.conversationID: conversationId])
+                NotificationCenter.default.post(name: Self.didSendFirstMessageNotification, object: self, userInfo: nil)
                 self.didPostSendFirstMessageNotification = true
             }
         }

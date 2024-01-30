@@ -151,7 +151,7 @@ extension DepositViewController: UICollectionViewDelegate {
         let id = usdtNetworks.elements[indexPath.item].key
         let previousTask = self.task
         addAddressGeneratingView()
-        task = Task.detached {
+        task = Task.detached { [weak self] in
             if let previousTask {
                 previousTask.cancel()
                 let _ = await previousTask.result
@@ -165,7 +165,7 @@ extension DepositViewController: UICollectionViewDelegate {
                 await MainActor.run { [weak self] in
                     self?.addAddressGeneratingView()
                 }
-                let remoteToken = try await self.withAutoRetrying {
+                let remoteToken = try await Self.withAutoRetrying {
                     try await SafeAPI.assets(id: id)
                 }
                 TokenDAO.shared.save(assets: [remoteToken])
@@ -173,7 +173,7 @@ extension DepositViewController: UICollectionViewDelegate {
                 try Task.checkCancellation()
             }
             
-            try await self.reloadData(token: token)
+            try await self?.reloadData(token: token)
         }
     }
     
@@ -193,95 +193,7 @@ extension DepositViewController: WalletHintViewControllerDelegate {
 
 extension DepositViewController {
     
-    @globalActor 
-    private actor BackgroundActor {
-        static let shared = BackgroundActor()
-    }
-    
-    @BackgroundActor
-    private func reloadData(token: TokenItem) async throws {
-        let chain: Chain
-        if let tokenChain = token.chain {
-            chain = tokenChain
-        } else if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
-            chain = localChain
-        } else {
-            chain = try await withAutoRetrying {
-                try await NetworkAPI.chain(id: token.chainID)
-            }
-            ChainDAO.shared.save([chain])
-            try Task.checkCancellation()
-        }
-        
-        let localEntry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chain.chainId)
-        try Task.checkCancellation()
-        
-        await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
-                guard let container = UIApplication.homeContainerViewController else {
-                    return
-                }
-                let selector = DepositNetworkSelectorViewController(token: token, chain: chain)
-                selector.onDismiss = {
-                    continuation.resume()
-                }
-                container.present(selector, animated: true)
-            }
-        }
-        
-        await MainActor.run { [weak self] in
-            guard let self, let localEntry else {
-                return
-            }
-            self.displayingToken = token
-            self.updateViews(token: token, entry: localEntry)
-            self.removeAddressGeneratingView()
-            self.removeDepositSuspendedView()
-        }
-        
-        do {
-            let remoteEntries = try await withAutoRetrying {
-                try await SafeAPI.depositEntries(chainID: chain.chainId)
-            }
-            DepositEntryDAO.shared.replace(entries: remoteEntries, forChainWith: token.chainID)
-            if let remoteEntry = remoteEntries.first(where: { $0.chainID == chain.chainId && $0.isPrimary }) {
-                try Task.checkCancellation()
-                await MainActor.run { [weak self] in
-                    guard let self else {
-                        return
-                    }
-                    self.displayingToken = token
-                    self.updateViews(token: token, entry: remoteEntry)
-                    self.removeAddressGeneratingView()
-                    self.removeDepositSuspendedView()
-                    
-                    let isAddressChanged: Bool = if let localEntry {
-                        localEntry.destination != remoteEntry.destination || localEntry.tag != remoteEntry.tag
-                    } else {
-                        false
-                    }
-                    guard isAddressChanged, let container = UIApplication.homeContainerViewController else {
-                        return
-                    }
-                    let hint = WalletHintViewController(token: token)
-                    hint.setTitle(R.string.localizable.depost_address_updated(token.symbol),
-                                  description: R.string.localizable.depost_address_updated_description(token.symbol))
-                    hint.delegate = self
-                    container.present(hint, animated: true)
-                }
-            }
-        } catch MixinAPIError.addressGenerating {
-            await MainActor.run { [weak self] in
-                self?.addDepositSuspendedView(token: token)
-            }
-        } catch {
-            // Only `addressGenerating` and `unauthorized` could be thrown
-            // Do nothing when encountered
-        }
-    }
-    
-    @BackgroundActor
-    private func withAutoRetrying<Result>(
+    private static func withAutoRetrying<Result>(
         interval: TimeInterval = 3,
         execute block: () async throws -> Result
     ) async throws -> Result {
@@ -299,6 +211,89 @@ extension DepositViewController {
             }
         } while LoginManager.shared.isLoggedIn
         throw MixinAPIError.unauthorized
+    }
+    
+    private func reloadData(token: TokenItem) async throws {
+        Task.detached { [weak self] in
+            let chain: Chain
+            if let tokenChain = token.chain {
+                chain = tokenChain
+            } else if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
+                chain = localChain
+            } else {
+                chain = try await Self.withAutoRetrying {
+                    try await NetworkAPI.chain(id: token.chainID)
+                }
+                ChainDAO.shared.save([chain])
+                try Task.checkCancellation()
+            }
+            
+            let localEntry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chain.chainId)
+            try Task.checkCancellation()
+            
+            await withCheckedContinuation { [weak self] (continuation) in
+                DispatchQueue.main.async { [weak self] in
+                    guard let self, self.view.window != nil, let container = UIApplication.homeContainerViewController else {
+                        return
+                    }
+                    let selector = DepositNetworkSelectorViewController(token: token, chain: chain)
+                    selector.onDismiss = {
+                        continuation.resume()
+                    }
+                    container.present(selector, animated: true)
+                }
+            }
+            
+            await MainActor.run { [weak self] in
+                guard let self, let localEntry else {
+                    return
+                }
+                self.displayingToken = token
+                self.updateViews(token: token, entry: localEntry)
+                self.removeAddressGeneratingView()
+                self.removeDepositSuspendedView()
+            }
+            
+            do {
+                let remoteEntries = try await Self.withAutoRetrying {
+                    try await SafeAPI.depositEntries(chainID: chain.chainId)
+                }
+                DepositEntryDAO.shared.replace(entries: remoteEntries, forChainWith: token.chainID)
+                if let remoteEntry = remoteEntries.first(where: { $0.chainID == chain.chainId && $0.isPrimary }) {
+                    try Task.checkCancellation()
+                    await MainActor.run { [weak self] in
+                        guard let self else {
+                            return
+                        }
+                        self.displayingToken = token
+                        self.updateViews(token: token, entry: remoteEntry)
+                        self.removeAddressGeneratingView()
+                        self.removeDepositSuspendedView()
+                        
+                        let isAddressChanged: Bool = if let localEntry {
+                            localEntry.destination != remoteEntry.destination || localEntry.tag != remoteEntry.tag
+                        } else {
+                            false
+                        }
+                        guard isAddressChanged, let container = UIApplication.homeContainerViewController else {
+                            return
+                        }
+                        let hint = WalletHintViewController(token: token)
+                        hint.setTitle(R.string.localizable.depost_address_updated(token.symbol),
+                                      description: R.string.localizable.depost_address_updated_description(token.symbol))
+                        hint.delegate = self
+                        container.present(hint, animated: true)
+                    }
+                }
+            } catch MixinAPIError.addressGenerating {
+                await MainActor.run { [weak self] in
+                    self?.addDepositSuspendedView(token: token)
+                }
+            } catch {
+                // Only `addressGenerating` and `unauthorized` could be thrown
+                // Do nothing when encountered
+            }
+        }
     }
     
     private func updateViews(token: TokenItem, entry: DepositEntry) {

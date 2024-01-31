@@ -25,7 +25,7 @@
                             <rect key="frame" x="14" y="12" width="321" height="117"/>
                             <color key="backgroundColor" name="background_input"/>
                             <string key="text">The deposit for MGD has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the MGD assets already stored in the wallet remain transferable.</string>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                             <color key="textColor" name="red"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>

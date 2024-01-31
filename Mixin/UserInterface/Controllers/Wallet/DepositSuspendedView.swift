@@ -9,11 +9,25 @@ final class DepositSuspendedView: UIView {
     var symbol: String? {
         didSet {
             if let symbol {
-                label.text = R.string.localizable.suspended_deposit(symbol, symbol)
+                label.attributedText = description(symbol: symbol)
             } else {
-                label.text = nil
+                label.attributedText = nil
             }
         }
+    }
+    
+    private func description(symbol: String) -> NSAttributedString {
+        let string = R.string.localizable.suspended_deposit(symbol, symbol)
+        let attributes: [NSAttributedString.Key: Any] = {
+            let style = NSMutableParagraphStyle()
+            style.lineSpacing = 5
+            style.alignment = .center
+            return [
+                .paragraphStyle: style.copy(),
+                .font: UIFont.systemFont(ofSize: 14, weight: .medium)
+            ]
+        }()
+        return NSAttributedString(string: string, attributes: attributes)
     }
     
 }

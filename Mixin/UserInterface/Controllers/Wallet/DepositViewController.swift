@@ -52,6 +52,7 @@ final class DepositViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addAddressGeneratingView()
+        container?.setSubtitle(subtitle: initialToken.symbol)
         task = Task { [initialToken] in
             try await self.reloadData(token: initialToken)
         }
@@ -249,6 +250,7 @@ extension DepositViewController {
                 guard let self, let localEntry else {
                     return
                 }
+                self.container?.setSubtitle(subtitle: token.symbol)
                 self.displayingToken = token
                 self.updateViews(token: token, entry: localEntry)
                 self.removeAddressGeneratingView()

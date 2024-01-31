@@ -169,22 +169,12 @@ extension SafeAPI {
 // MARK: - Deposit
 extension SafeAPI {
     
-    public static func depositEntries(
-        chainID: String,
-        queue: DispatchQueue = .main,
-        completion: @escaping (MixinAPI.Result<[DepositEntry]>) -> Void
-    ) {
-        request(method: .post, path: "/safe/deposit/entries", parameters: ["chain_id": chainID], queue: queue) { (result: MixinAPI.Result<[DepositEntry]>) in
-            switch result {
-            case .success(let entries):
-                if entries.allSatisfy(\.isSignatureValid) {
-                    completion(.success(entries))
-                } else {
-                    completion(.failure(.invalidSignature))
-                }
-            case .failure:
-                completion(result)
-            }
+    public static func depositEntries(chainID: String) async throws -> [DepositEntry] {
+        let entries: [DepositEntry] = try await request(method: .post, path: "/safe/deposit/entries", parameters: ["chain_id": chainID])
+        if entries.allSatisfy(\.isSignatureValid) {
+            return entries
+        } else {
+            throw MixinAPIError.invalidSignature
         }
     }
     

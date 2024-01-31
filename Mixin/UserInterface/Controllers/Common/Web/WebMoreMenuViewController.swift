@@ -27,7 +27,7 @@ class WebMoreMenuViewController: UIViewController {
         self.menuSections = sections
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .custom
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
     }
     
     required init?(coder: NSCoder) {

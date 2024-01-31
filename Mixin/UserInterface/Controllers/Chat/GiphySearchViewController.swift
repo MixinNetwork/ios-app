@@ -60,7 +60,7 @@ class GiphySearchViewController: UIViewController {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         modalPresentationStyle = .custom
     }
     

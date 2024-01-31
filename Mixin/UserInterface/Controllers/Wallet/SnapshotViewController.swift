@@ -22,7 +22,7 @@ class SnapshotViewController: UIViewController {
         self.snapshot = snapshot
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .custom
-        self.transitioningDelegate = PopupPresentationManager.shared
+        self.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
     }
     
     required init?(coder: NSCoder) {

@@ -16,7 +16,7 @@ class PopupSelectorViewController: UIViewController {
     init() {
         let nib = R.nib.popupSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
-        transitioningDelegate = PopupPresentationManager.shared
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         modalPresentationStyle = .custom
     }
     

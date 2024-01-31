@@ -59,7 +59,7 @@ class AssetFilterViewController: UIViewController {
     
     class func instance() -> AssetFilterViewController {
         let vc = R.storyboard.wallet.asset_filter()!
-        vc.transitioningDelegate = PopupPresentationManager.shared
+        vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         vc.modalPresentationStyle = .custom
         return vc
     }

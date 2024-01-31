@@ -6,7 +6,7 @@ final class EmergencyTipsViewController: UIViewController {
     
     class func instance() -> EmergencyTipsViewController {
         let vc = R.storyboard.setting.emergency_tips()!
-        vc.transitioningDelegate = PopupPresentationManager.shared
+        vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         vc.modalPresentationStyle = .custom
         return vc
     }

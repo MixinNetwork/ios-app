@@ -84,14 +84,6 @@ extension Token {
 
 extension Token {
     
-    public var isDepositSupported: Bool {
-        !AssetID.depositNotSupported.contains(assetID)
-    }
-    
-}
-
-extension Token {
-    
     private static let amountFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal

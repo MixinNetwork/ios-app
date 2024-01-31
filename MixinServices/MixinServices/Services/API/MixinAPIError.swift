@@ -34,6 +34,7 @@ public enum MixinAPIError: Error {
     case invalidCaptchaToken
     case requiresCaptcha
     case requiresUpdate
+    case addressGenerating
     case notRegisteredToSafe
     case invalidPhoneNumber
     case invalidPhoneVerificationCode
@@ -107,6 +108,8 @@ extension MixinAPIError {
             self = .requiresCaptcha
         case (202, 10006):
             self = .requiresUpdate
+        case (202, 10104):
+            self = .addressGenerating
         case (202, 10404):
             self = .notRegisteredToSafe
         case (202, 20110):

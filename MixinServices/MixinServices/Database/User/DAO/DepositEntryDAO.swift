@@ -17,17 +17,10 @@ public final class DepositEntryDAO: UserDatabaseDAO {
         db.select(with: "SELECT destination, tag FROM deposit_entries")
     }
     
-    public func replace(
-        entries: [DepositEntry],
-        forChainWith chainID: String,
-        completion: @escaping () -> Void
-    ) {
+    public func replace(entries: [DepositEntry], forChainWith chainID: String) {
         db.write { db in
             try db.execute(sql: "DELETE FROM deposit_entries WHERE chain_id = ?", arguments: [chainID])
             try entries.save(db)
-            db.afterNextTransaction { _ in
-                completion()
-            }
         }
     }
     

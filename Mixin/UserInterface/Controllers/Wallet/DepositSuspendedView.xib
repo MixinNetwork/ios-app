@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="rG0-FD-dFz" customClass="DepositSuspendedView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_deposit_warning" translatesAutoresizingMaskIntoConstraints="NO" id="WHj-de-d8o">
+                    <rect key="frame" x="161.66666666666666" y="99" width="70" height="72"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u6Q-oL-7iA">
+                    <rect key="frame" x="22" y="211" width="349" height="141"/>
+                    <subviews>
+                        <label contentMode="scaleToFill" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" translatesAutoresizingMaskIntoConstraints="NO" id="29V-8G-o4n">
+                            <rect key="frame" x="14" y="12" width="321" height="117"/>
+                            <color key="backgroundColor" name="background_input"/>
+                            <string key="text">The deposit for MGD has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the MGD assets already stored in the wallet remain transferable.</string>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                            <color key="textColor" name="red"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" name="background_input"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="29V-8G-o4n" secondAttribute="bottom" constant="12" id="1Wf-L9-Ag6"/>
+                        <constraint firstAttribute="trailing" secondItem="29V-8G-o4n" secondAttribute="trailing" constant="14" id="LIm-Qi-ZKG"/>
+                        <constraint firstItem="29V-8G-o4n" firstAttribute="top" secondItem="u6Q-oL-7iA" secondAttribute="top" constant="12" id="vRi-HE-j9F"/>
+                        <constraint firstItem="29V-8G-o4n" firstAttribute="leading" secondItem="u6Q-oL-7iA" secondAttribute="leading" constant="14" id="xmQ-rR-9vg"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VbN-o8-lty" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="109.66666666666669" y="714" width="174" height="48"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
+                    <state key="normal" title="Contact Support">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_support"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="ZOG-Lu-rQB"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="VbN-o8-lty" firstAttribute="centerX" secondItem="ZOG-Lu-rQB" secondAttribute="centerX" id="4Vr-tr-YFO"/>
+                <constraint firstItem="WHj-de-d8o" firstAttribute="top" secondItem="ZOG-Lu-rQB" secondAttribute="top" constant="40" id="4cq-Ei-p8d"/>
+                <constraint firstItem="ZOG-Lu-rQB" firstAttribute="bottom" secondItem="VbN-o8-lty" secondAttribute="bottom" priority="250" constant="56" id="NmG-zk-cqa"/>
+                <constraint firstItem="u6Q-oL-7iA" firstAttribute="top" secondItem="WHj-de-d8o" secondAttribute="bottom" constant="40" id="Uu9-AM-POG"/>
+                <constraint firstItem="ZOG-Lu-rQB" firstAttribute="trailing" secondItem="u6Q-oL-7iA" secondAttribute="trailing" constant="22" id="dqd-Vt-dqM"/>
+                <constraint firstItem="WHj-de-d8o" firstAttribute="centerX" secondItem="ZOG-Lu-rQB" secondAttribute="centerX" id="jSv-aV-iPJ"/>
+                <constraint firstItem="VbN-o8-lty" firstAttribute="top" relation="greaterThanOrEqual" secondItem="u6Q-oL-7iA" secondAttribute="bottom" constant="20" id="ncS-TZ-UIu"/>
+                <constraint firstItem="u6Q-oL-7iA" firstAttribute="leading" secondItem="ZOG-Lu-rQB" secondAttribute="leading" constant="22" id="r8d-Ln-5D6"/>
+            </constraints>
+            <connections>
+                <outlet property="contactSupportButton" destination="VbN-o8-lty" id="s94-dY-E0e"/>
+                <outlet property="label" destination="29V-8G-o4n" id="J17-OR-heh"/>
+            </connections>
+            <point key="canvasLocation" x="53" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_deposit_warning" width="70" height="72"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="red">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -76,7 +76,7 @@ final class AuthenticationViewController: UIViewController {
         if intentViewController.options.contains(.blurBackground) {
             self.presentationManager = PinValidationPresentationManager()
         } else {
-            self.presentationManager = PopupPresentationManager.shared
+            self.presentationManager = BackgroundDismissablePopupPresentationManager.shared
         }
         super.init(nibName: R.nib.authenticationView.name, bundle: nil)
         modalPresentationStyle = .custom
@@ -171,7 +171,7 @@ final class AuthenticationViewController: UIViewController {
                            object: nil)
         center.addObserver(self,
                            selector: #selector(presentationViewControllerWillDismissPresentedViewController(_:)),
-                           name: PopupPresentationController.willDismissPresentedViewControllerNotification,
+                           name: BackgroundDismissablePopupPresentationController.willDismissPresentedViewControllerNotification,
                            object: nil)
         if intentViewController.options.contains(.becomesFirstResponderOnAppear) {
             pinField.becomeFirstResponder()
@@ -269,7 +269,7 @@ final class AuthenticationViewController: UIViewController {
     }
     
     @objc private func presentationViewControllerWillDismissPresentedViewController(_ notification: Notification) {
-        guard let controller = notification.object as? PopupPresentationController else {
+        guard let controller = notification.object as? BackgroundDismissablePopupPresentationController else {
             return
         }
         guard controller.presentedViewController == self else {

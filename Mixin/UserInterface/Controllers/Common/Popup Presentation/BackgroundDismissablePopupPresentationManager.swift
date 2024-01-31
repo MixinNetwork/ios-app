@@ -1,6 +1,8 @@
 import UIKit
 
-final class PopupPresentationManager: NSObject, UIViewControllerTransitioningDelegate {
+final class BackgroundDismissablePopupPresentationManager: NSObject, UIViewControllerTransitioningDelegate {
+    
+    static let shared = BackgroundDismissablePopupPresentationManager()
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         PopupPresentationAnimator(isPresenting: true)
@@ -11,7 +13,7 @@ final class PopupPresentationManager: NSObject, UIViewControllerTransitioningDel
     }
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        PopupPresentationController(presentedViewController: presented, presenting: presenting)
+        BackgroundDismissablePopupPresentationController(presentedViewController: presented, presenting: presenting)
     }
     
 }

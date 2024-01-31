@@ -56,6 +56,13 @@ final class EditFavoriteAppsViewController: PeerViewController<[User], FavoriteA
         queue.addOperation(initDataOperation)
     }
     
+    override func stopSearching() {
+        super.stopSearching()
+        tableView.checkEmpty(dataCount: models[Section.favorite.rawValue].count + models[Section.candidate.rawValue].count,
+                             text: R.string.localizable.no_bots() + "\n" + R.string.localizable.profile_share_bot_hint(),
+                             photo: R.image.emptyIndicator.ic_data()!)
+    }
+    
     override func search(keyword: String) {
         queue.operations
             .filter({ $0 != initDataOperation })

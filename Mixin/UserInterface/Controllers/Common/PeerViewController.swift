@@ -108,9 +108,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
             .trimmingCharacters(in: .whitespaces)
             .lowercased()
         guard !trimmedLowercaseKeyword.isEmpty else {
-            searchingKeyword = nil
-            tableView.reloadData()
-            reloadTableViewSelections()
+            stopSearching()
             return
         }
         guard trimmedLowercaseKeyword != searchingKeyword else {
@@ -138,6 +136,12 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     
     func catalog(users: [UserItem]) -> (titles: [String], models: [ModelType]) {
         return ([], [])
+    }
+    
+    func stopSearching() {
+        searchingKeyword = nil
+        tableView.reloadData()
+        reloadTableViewSelections()
     }
     
     func search(keyword: String) {

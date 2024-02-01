@@ -428,6 +428,7 @@ extension MixinWebViewController: WKScriptMessageHandler {
                 WalletConnectService.shared.presentRequest(viewController: authentication)
             }
         case .getAssets:
+            Logger.general.info(category: "GetAssets", message: "Start")
             if let body = message.body as? [Any],
                body.count == 2,
                let assetIDs = body[0] as? [String],
@@ -435,12 +436,14 @@ extension MixinWebViewController: WKScriptMessageHandler {
             {
                 let failureCallback = "\(callback)('[]');"
                 guard assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
+                    Logger.general.error(category: "GetAssets", message: "Invalid id: \(assetIDs)")
                     webView.evaluateJavaScript(failureCallback)
                     return
                 }
                 switch context.style {
                 case let .app(app, _):
                     guard let appHomeURL = URL(string: app.homeUri), let currentURL = webView.url, appHomeURL.host == currentURL.host else {
+                        Logger.general.error(category: "GetAssets", message: "URL Mismatch: \(app.homeUri) \(webView.url?.absoluteString ?? "(null)")")
                         webView.evaluateJavaScript(failureCallback)
                         return
                     }
@@ -448,28 +451,47 @@ extension MixinWebViewController: WKScriptMessageHandler {
                         switch result {
                         case let .success(response):
                             guard let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") else {
+                                Logger.general.error(category: "GetAssets", message: "Unauth: \(String(describing: response.first?.scopes))")
                                 webView?.evaluateJavaScript(failureCallback)
                                 return
                             }
                             DispatchQueue.global().async {
                                 let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
-                                if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
-                                    DispatchQueue.main.async {
-                                        webView?.evaluateJavaScript("\(callback)('\(string)');")
+                                do {
+                                    let data = try JSONEncoder.default.encode(tokens)
+                                    if let string = String(data: data, encoding: .utf8) {
+                                        Logger.general.info(category: "GetAssets", message: "Will report")
+                                        DispatchQueue.main.async {
+                                            webView?.evaluateJavaScript("\(callback)('\(string)');") { (result, error) in
+                                                if let error {
+                                                    Logger.general.error(category: "GetAssets", message: "Callback: \(error)")
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        Logger.general.error(category: "GetAssets", message: "UTF8 encoding")
+                                        DispatchQueue.main.async {
+                                            webView?.evaluateJavaScript(failureCallback)
+                                        }
                                     }
-                                } else {
+                                } catch {
+                                    Logger.general.error(category: "GetAssets", message: "Encode: \(error)")
                                     DispatchQueue.main.async {
                                         webView?.evaluateJavaScript(failureCallback)
                                     }
                                 }
                             }
-                        case .failure:
+                        case .failure(let error):
+                            Logger.general.error(category: "GetAssets", message: "API failed: \(error)")
                             webView?.evaluateJavaScript(failureCallback)
                         }
                     }
                 case .webPage:
+                    Logger.general.error(category: "GetAssets", message: "Webpage")
                     webView.evaluateJavaScript(failureCallback)
                 }
+            } else {
+                Logger.general.error(category: "GetAssets", message: "Invalid body: \(message.body)")
             }
         }
     }

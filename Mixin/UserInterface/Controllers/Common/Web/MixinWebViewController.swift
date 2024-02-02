@@ -454,8 +454,9 @@ extension MixinWebViewController: WKScriptMessageHandler {
                             DispatchQueue.global().async {
                                 let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
                                 if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
+                                    let assets = string.replacingOccurrences(of: "'", with: "\\'")
                                     DispatchQueue.main.async {
-                                        webView?.evaluateJavaScript("\(callback)('\(string)');")
+                                        webView?.evaluateJavaScript("\(callback)('\(assets)');")
                                     }
                                 } else {
                                     DispatchQueue.main.async {

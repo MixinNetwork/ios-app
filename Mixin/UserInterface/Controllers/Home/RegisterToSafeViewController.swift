@@ -91,7 +91,7 @@ final class RegisterToSafeViewController: UIViewController {
     
 }
 
-extension RegisterToSafeViewController: AuthenticationIntentViewController {
+extension RegisterToSafeViewController: AuthenticationIntent {
     
     var intentTitle: String {
         willRegisterToSafe ? R.string.localizable.enter_your_pin_to_continue() : ""

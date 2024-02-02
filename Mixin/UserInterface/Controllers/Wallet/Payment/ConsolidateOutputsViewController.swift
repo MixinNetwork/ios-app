@@ -28,7 +28,7 @@ final class ConsolidateOutputsViewController: UIViewController {
     
 }
 
-extension ConsolidateOutputsViewController: AuthenticationIntentViewController {
+extension ConsolidateOutputsViewController: AuthenticationIntent {
     
     var intentTitle: String {
         ""

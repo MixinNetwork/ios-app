@@ -145,7 +145,7 @@ final class TransferConfirmationViewController: PaymentConfirmationViewControlle
     
 }
 
-extension TransferConfirmationViewController: AuthenticationIntentViewController {
+extension TransferConfirmationViewController: AuthenticationIntent {
     
     var intentTitle: String {
         switch destination {

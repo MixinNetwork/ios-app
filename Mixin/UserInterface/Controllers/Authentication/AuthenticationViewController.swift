@@ -30,7 +30,7 @@ final class AuthenticationViewController: UIViewController {
     @IBOutlet weak var pinFieldHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
-    private let intentViewController: AuthenticationIntentViewController
+    private let intent: AuthenticationIntent
     private let presentationManager: any UIViewControllerTransitioningDelegate
     
     private weak var authenticateWithBiometryButton: UIButton?
@@ -39,7 +39,7 @@ final class AuthenticationViewController: UIViewController {
     private var customTryAgainAction: (() -> Void)?
     
     private var canAuthenticateWithBiometry: Bool {
-        guard intentViewController.options.contains(.allowsBiometricAuthentication) else {
+        guard intent.options.contains(.allowsBiometricAuthentication) else {
             return false
         }
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
@@ -71,9 +71,9 @@ final class AuthenticationViewController: UIViewController {
         return height
     }
     
-    init(intentViewController: AuthenticationIntentViewController) {
-        self.intentViewController = intentViewController
-        if intentViewController.options.contains(.blurBackground) {
+    init(intent: AuthenticationIntent) {
+        self.intent = intent
+        if intent.options.contains(.blurBackground) {
             self.presentationManager = PinValidationPresentationManager()
         } else {
             self.presentationManager = BackgroundDismissablePopupPresentationManager.shared
@@ -96,18 +96,24 @@ final class AuthenticationViewController: UIViewController {
         
         backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
-        addChild(intentViewController)
-        view.addSubview(intentViewController.view)
-        intentViewController.view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-        intentViewController.view.setContentHuggingPriority(.defaultLow, for: .vertical)
-        intentViewController.view.snp.makeConstraints({ (make) in
-            make.top.equalTo(titleStackView.snp.bottom)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(pinFieldWrapperView.snp.top)
-        })
-        intentViewController.didMove(toParent: self)
+        if let intentViewController = intent as? UIViewController {
+            addChild(intentViewController)
+            view.addSubview(intentViewController.view)
+            intentViewController.view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+            intentViewController.view.setContentHuggingPriority(.defaultLow, for: .vertical)
+            intentViewController.view.snp.makeConstraints({ (make) in
+                make.top.equalTo(titleStackView.snp.bottom)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalTo(pinFieldWrapperView.snp.top)
+            })
+            intentViewController.didMove(toParent: self)
+        } else {
+            titleStackView.snp.makeConstraints { make in
+                make.bottom.equalTo(pinFieldWrapperView.snp.top)
+            }
+        }
         
-        if intentViewController.options.contains(.unskippable) {
+        if intent.options.contains(.unskippable) {
             closeButton.isHidden = true
         }
         reloadTitleView()
@@ -149,7 +155,7 @@ final class AuthenticationViewController: UIViewController {
             authenticateWithBiometryButton = button
         }
         
-        if intentViewController.options.contains(.becomesFirstResponderOnAppear) {
+        if intent.options.contains(.becomesFirstResponderOnAppear) {
             pinFieldWrapperView.alpha = 1
             pinFieldWrapperHeightConstraint.constant = pinFieldWrapperHeight
         } else {
@@ -173,7 +179,7 @@ final class AuthenticationViewController: UIViewController {
                            selector: #selector(presentationViewControllerWillDismissPresentedViewController(_:)),
                            name: BackgroundDismissablePopupPresentationController.willDismissPresentedViewControllerNotification,
                            object: nil)
-        if intentViewController.options.contains(.becomesFirstResponderOnAppear) {
+        if intent.options.contains(.becomesFirstResponderOnAppear) {
             pinField.becomeFirstResponder()
         }
     }
@@ -203,16 +209,16 @@ final class AuthenticationViewController: UIViewController {
     }
     
     func reloadTitleView() {
-        titleLabel.text = intentViewController.intentTitle
-        if intentViewController.options.contains(.multipleLineSubtitle) {
+        titleLabel.text = intent.intentTitle
+        if intent.options.contains(.multipleLineSubtitle) {
             subtitleLabel.numberOfLines = 0
             subtitleLabel.lineBreakMode = .byCharWrapping
         } else {
             subtitleLabel.numberOfLines = 1
             subtitleLabel.lineBreakMode = .byTruncatingTail
         }
-        subtitleLabel.text = intentViewController.intentSubtitle
-        if let icon = intentViewController.intentSubtitleIconURL {
+        subtitleLabel.text = intent.intentSubtitle
+        if let icon = intent.intentSubtitleIconURL {
             let imageView = AvatarImageView()
             imageView.layer.cornerRadius = 8
             imageView.clipsToBounds = true
@@ -275,11 +281,11 @@ final class AuthenticationViewController: UIViewController {
         guard controller.presentedViewController == self else {
             return
         }
-        intentViewController.authenticationViewControllerWillDismiss(self)
+        intent.authenticationViewControllerWillDismiss(self)
     }
     
     @objc private func enableBiometricAuthentication(_ sender: Any) {
-        intentViewController.authenticationViewControllerWillDismiss(self)
+        intent.authenticationViewControllerWillDismiss(self)
         presentingViewController?.dismiss(animated: true) {
             guard let navigationController = UIApplication.homeNavigationController else {
                 return
@@ -302,8 +308,8 @@ final class AuthenticationViewController: UIViewController {
         pinField.isHidden = true
         pinField.receivesInput = false
         authenticateWithBiometryButton?.isHidden = true
-        intentViewController.authenticationViewController(self, didInput: pin) { result in
-            if !self.intentViewController.options.contains(.unskippable) {
+        intent.authenticationViewController(self, didInput: pin) { result in
+            if !self.intent.options.contains(.unskippable) {
                 self.closeButton.isHidden = false
             }
             self.validatingIndicator.stopAnimating()
@@ -323,7 +329,7 @@ final class AuthenticationViewController: UIViewController {
     }
     
     private func addEnableBiometricAuthButtonIfNeeded() {
-        guard !canAuthenticateWithBiometry && !intentViewController.options.contains(.neverRequestAddBiometricAuthentication) else {
+        guard !canAuthenticateWithBiometry && !intent.options.contains(.neverRequestAddBiometricAuthentication) else {
             return
         }
         let image: UIImage
@@ -375,7 +381,7 @@ final class AuthenticationViewController: UIViewController {
 extension AuthenticationViewController {
     
     @IBAction func close(_ sender: Any) {
-        intentViewController.authenticationViewControllerWillDismiss(self)
+        intent.authenticationViewControllerWillDismiss(self)
         presentingViewController?.dismiss(animated: true)
     }
     

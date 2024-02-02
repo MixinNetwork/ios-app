@@ -230,7 +230,7 @@ extension Payment {
                         consolidation.onCompletion = { result in
                             continuation.resume(with: .success(result))
                         }
-                        let auth = AuthenticationViewController(intentViewController: consolidation)
+                        let auth = AuthenticationViewController(intent: consolidation)
                         parent.present(auth, animated: true)
                     }
                 }

@@ -621,7 +621,7 @@ class UrlWindow {
                                                                           withdrawalFiatMoneyAmount: fiatMoneyAmount,
                                                                           addressLabel: nil)
                     withdrawal.manipulateNavigationStackOnFinished = false
-                    let authentication = AuthenticationViewController(intentViewController: withdrawal)
+                    let authentication = AuthenticationViewController(intent: withdrawal)
                     homeContainer.present(authentication, animated: true)
                 }
             } catch {
@@ -679,7 +679,7 @@ class UrlWindow {
                     if let address {
                         hud.hide()
                         let updateAddress = UpdateAddressViewController(token: token, delete: address)
-                        let authentication = AuthenticationViewController(intentViewController: updateAddress)
+                        let authentication = AuthenticationViewController(intent: updateAddress)
                         UIApplication.homeContainerViewController?.present(authentication, animated: true)
                     } else {
                         hud.set(style: .error, text: R.string.localizable.address_not_found())
@@ -696,7 +696,7 @@ class UrlWindow {
                                                                     destination: destination,
                                                                     tag: tag,
                                                                     action: address == nil ? .add : .update)
-                    let authentication = AuthenticationViewController(intentViewController: updateAddress)
+                    let authentication = AuthenticationViewController(intent: updateAddress)
                     UIApplication.homeContainerViewController?.present(authentication, animated: true)
                 }
             } else {
@@ -933,7 +933,7 @@ extension UrlWindow {
                                                                           fiatMoneyAmount: fiatMoneyAmount,
                                                                           redirection: redirection)
                         transfer.manipulateNavigationStackOnFinished = false
-                        let authentication = AuthenticationViewController(intentViewController: transfer)
+                        let authentication = AuthenticationViewController(intent: transfer)
                         homeContainer.present(authentication, animated: true)
                     }
                 }
@@ -1019,7 +1019,7 @@ extension UrlWindow {
                                                                       action: multisig.action,
                                                                       index: index,
                                                                       state: state)
-                    let authentication = AuthenticationViewController(intentViewController: multisig)
+                    let authentication = AuthenticationViewController(intent: multisig)
                     homeContainer.present(authentication, animated: true)
                 }
             case .failure(let error):

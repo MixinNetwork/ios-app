@@ -19,14 +19,12 @@ struct AuthenticationIntentOptions: OptionSet {
     
 }
 
-protocol AuthenticationIntentViewController: UIViewController {
+protocol AuthenticationIntent {
     
     var intentTitle: String { get }
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? { get }
     var intentSubtitle: String { get }
     var options: AuthenticationIntentOptions { get }
-    
-    var authenticationViewController: AuthenticationViewController? { get }
     
     func authenticationViewController(
         _ controller: AuthenticationViewController,
@@ -38,7 +36,7 @@ protocol AuthenticationIntentViewController: UIViewController {
     
 }
 
-extension AuthenticationIntentViewController {
+extension AuthenticationIntent where Self: UIViewController {
     
     var authenticationViewController: AuthenticationViewController? {
         parent as? AuthenticationViewController

@@ -113,7 +113,7 @@ final class MultisigConfirmationViewController: PaymentConfirmationViewControlle
     
 }
 
-extension MultisigConfirmationViewController: AuthenticationIntentViewController {
+extension MultisigConfirmationViewController: AuthenticationIntent {
     
     var intentTitle: String {
         switch action {

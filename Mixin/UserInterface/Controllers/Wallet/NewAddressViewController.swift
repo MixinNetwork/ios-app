@@ -153,7 +153,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         updateAddress.onSuccess = { [weak self] in
             self?.navigationController?.popViewController(animated: true)
         }
-        let authentication = AuthenticationViewController(intentViewController: updateAddress)
+        let authentication = AuthenticationViewController(intent: updateAddress)
         present(authentication, animated: true)
     }
     

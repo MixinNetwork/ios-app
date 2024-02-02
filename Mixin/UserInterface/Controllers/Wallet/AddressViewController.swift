@@ -151,7 +151,7 @@ extension AddressViewController {
             }
             let address = self.addresses[indexPath.row]
             let updateAddress = UpdateAddressViewController(token: self.token, delete: address)
-            let authentication = AuthenticationViewController(intentViewController: updateAddress)
+            let authentication = AuthenticationViewController(intent: updateAddress)
             self.present(authentication, animated: true)
             completionHandler(true)
         }

@@ -74,7 +74,7 @@ final class UpdateAddressViewController: UIViewController {
     
 }
 
-extension UpdateAddressViewController: AuthenticationIntentViewController {
+extension UpdateAddressViewController: AuthenticationIntent {
     
     var intentTitle: String {
         switch action {

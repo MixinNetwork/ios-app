@@ -322,7 +322,7 @@ extension WalletConnectService {
                 try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
             }
         }
-        let authentication = AuthenticationViewController(intentViewController: connectWallet)
+        let authentication = AuthenticationViewController(intent: connectWallet)
         presentRequest(viewController: authentication)
     }
     

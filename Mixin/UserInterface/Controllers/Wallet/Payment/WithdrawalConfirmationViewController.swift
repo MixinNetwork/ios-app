@@ -76,7 +76,7 @@ final class WithdrawalConfirmationViewController: PaymentConfirmationViewControl
     
 }
 
-extension WithdrawalConfirmationViewController: AuthenticationIntentViewController {
+extension WithdrawalConfirmationViewController: AuthenticationIntent {
     
     var intentTitle: String {
         if let addressLabel {

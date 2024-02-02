@@ -73,7 +73,7 @@ final class ConnectWalletViewController: UIViewController {
     
 }
 
-extension ConnectWalletViewController: AuthenticationIntentViewController {
+extension ConnectWalletViewController: AuthenticationIntent {
     
     var intentTitle: String {
         R.string.localizable.connect_wallet()

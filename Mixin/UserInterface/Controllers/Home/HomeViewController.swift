@@ -162,7 +162,7 @@ class HomeViewController: UIViewController {
         UTXOService.shared.synchronize()
         if let account = LoginManager.shared.account, !account.hasSafe {
             let register = RegisterToSafeViewController()
-            let authentication = AuthenticationViewController(intentViewController: register)
+            let authentication = AuthenticationViewController(intent: register)
             present(authentication, animated: true)
         } else {
             ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())

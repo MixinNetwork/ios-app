@@ -277,7 +277,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                                   tokenAmount: tokenAmount,
                                                                   fiatMoneyAmount: fiatMoneyAmount,
                                                                   redirection: nil)
-                let authentication = AuthenticationViewController(intentViewController: transfer)
+                let authentication = AuthenticationViewController(intent: transfer)
                 self.present(authentication, animated: true)
             }
         case .address(let address):
@@ -291,7 +291,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                                     withdrawalTokenAmount: tokenAmount,
                                                                     withdrawalFiatMoneyAmount: fiatMoneyAmount,
                                                                     addressLabel: address.label)
-                let authentication = AuthenticationViewController(intentViewController: withdraw)
+                let authentication = AuthenticationViewController(intent: withdraw)
                 self.present(authentication, animated: true)
             }
         case .mainnet(let address):
@@ -302,7 +302,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                                                                   tokenAmount: tokenAmount,
                                                                   fiatMoneyAmount: fiatMoneyAmount,
                                                                   redirection: nil)
-                let authentication = AuthenticationViewController(intentViewController: transfer)
+                let authentication = AuthenticationViewController(intent: transfer)
                 self.present(authentication, animated: true)
             }
         }

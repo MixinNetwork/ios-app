@@ -2,7 +2,7 @@ import UIKit
 import CryptoKit
 import MixinServices
 
-final class RevealPublicSpendKeyViewController: UIViewController, AuthenticationIntentViewController {
+final class RevealPublicSpendKeyIntent: AuthenticationIntent {
     
     @MainActor var onReveal: ((String) -> Void)?
     
@@ -34,7 +34,7 @@ final class RevealPublicSpendKeyViewController: UIViewController, Authentication
                 let publicKey = privateKey.publicKey.rawRepresentation.hexEncodedString()
                 await MainActor.run {
                     completion(.success)
-                    self.dismiss(animated: true) {
+                    controller.presentingViewController?.dismiss(animated: true) {
                         self.onReveal?(publicKey)
                     }
                 }

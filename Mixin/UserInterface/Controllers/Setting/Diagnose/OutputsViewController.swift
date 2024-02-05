@@ -3,17 +3,15 @@ import MixinServices
 
 final class OutputsViewController: UITableViewController {
     
-    private let kernelAssetID: String?
+    private let token: TokenItem?
     private let pageCount = 50
-    private let allowsForceSync: Bool
     
     private var outputs: [Output] = []
     private var isLoading = false
     private var didLoadEarliestOutput = false
     
-    init(kernelAssetID: String?) {
-        self.kernelAssetID = kernelAssetID
-        self.allowsForceSync = kernelAssetID == nil
+    init(token: TokenItem?) {
+        self.token = token
         super.init(style: .plain)
     }
     
@@ -26,18 +24,16 @@ final class OutputsViewController: UITableViewController {
         tableView.backgroundColor = .background
         tableView.register(R.nib.outputCell)
         loadMoreOutputsIfNeeded()
-        if allowsForceSync {
-            container?.rightButton.isEnabled = true
-            container?.rightButton.isHidden = false
-        } else {
-            container?.rightButton.isHidden = true
+        if let container {
+            container.rightButton.isEnabled = true
+            container.rightButton.isHidden = false
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.output, for: indexPath)!
         let output = outputs[indexPath.row]
-        cell.load(output: output, showAssetID: kernelAssetID == nil)
+        cell.load(output: output, showAssetID: token == nil)
         return cell
     }
     
@@ -79,7 +75,7 @@ final class OutputsViewController: UITableViewController {
         }
         isLoading = true
         let earliestOutputID = outputs.last?.id
-        DispatchQueue.global().async { [kernelAssetID, limit=pageCount] in
+        DispatchQueue.global().async { [kernelAssetID=token?.kernelAssetID, limit=pageCount] in
             let outputs = OutputDAO.shared.outputs(asset: kernelAssetID, before: earliestOutputID, limit: limit)
             let didLoadEarliestOutput = outputs.count < limit
             DispatchQueue.main.async {
@@ -96,22 +92,38 @@ final class OutputsViewController: UITableViewController {
 extension OutputsViewController: ContainerViewControllerDelegate {
     
     func textBarRightButton() -> String? {
-        allowsForceSync ? "Force Sync" : nil
+        "Force Sync"
     }
     
     func barRightButtonTappedAction() {
-        guard allowsForceSync else {
-            return
-        }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            OutputDAO.shared.deleteAll() {
-                DispatchQueue.main.async {
-                    UTXOService.shared.synchronize()
-                    hud.set(style: .notification, text: R.string.localizable.done())
-                    hud.scheduleAutoHidden()
-                    self.navigationController?.popViewController(animated: true)
+            if let token = self.token {
+                OutputDAO.shared.deleteAll(kernelAssetID: token.kernelAssetID) {
+                    UTXOService.shared.synchronize(assetID: token.assetID, kernelAssetID: token.kernelAssetID) { error in
+                        DispatchQueue.main.async {
+                            if let error {
+                                hud.set(style: .error, text: error.localizedDescription)
+                            } else {
+                                hud.set(style: .notification, text: R.string.localizable.done())
+                            }
+                            hud.scheduleAutoHidden()
+                            self.outputs = []
+                            self.tableView.reloadData()
+                            self.didLoadEarliestOutput = false
+                            self.loadMoreOutputsIfNeeded()
+                        }
+                    }
+                }
+            } else {
+                OutputDAO.shared.deleteAll() {
+                    DispatchQueue.main.async {
+                        UTXOService.shared.synchronize()
+                        hud.set(style: .notification, text: R.string.localizable.done())
+                        hud.scheduleAutoHidden()
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
             }
         }

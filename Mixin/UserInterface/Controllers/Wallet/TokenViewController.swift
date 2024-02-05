@@ -122,7 +122,7 @@ class TokenViewController: UIViewController {
     }
     
     @objc private func revealOutputs(_ sender: Any) {
-        let outputs = OutputsViewController(kernelAssetID: token.kernelAssetID)
+        let outputs = OutputsViewController(token: token)
         let container = ContainerViewController.instance(viewController: outputs, title: "Outputs")
         navigationController?.pushViewController(container, animated: true)
     }

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PaymentPreviewHeaderView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="262"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iz8-Vw-yDg">
+                    <rect key="frame" x="161.66666666666666" y="50" width="70" height="70"/>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="ai7-2z-x6B"/>
+                        <constraint firstAttribute="width" secondItem="iz8-Vw-yDg" secondAttribute="height" id="f4N-ov-CNP"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="bDK-3p-lbu">
+                    <rect key="frame" x="38" y="140" width="317" height="72"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="提现确认" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9rk-30-04q">
+                            <rect key="frame" x="0.0" y="0.0" width="317" height="21.666666666666668"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="请仔细检查收款地址、网络和金额，如果您转错了，资产将无法追回！" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdg-BJ-S56">
+                            <rect key="frame" x="0.0" y="31.666666666666661" width="317" height="40.333333333333343"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WQ9-rk-nRi">
+                    <rect key="frame" x="0.0" y="242" width="393" height="10"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="10" id="ZBS-3y-C7s"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="WQ9-rk-nRi" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6Y1-MR-q8a"/>
+                <constraint firstItem="iz8-Vw-yDg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="9ug-9Y-BTd"/>
+                <constraint firstItem="bDK-3p-lbu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="38" id="Fya-RI-bXS"/>
+                <constraint firstAttribute="trailing" secondItem="WQ9-rk-nRi" secondAttribute="trailing" id="MdA-0J-U4L"/>
+                <constraint firstItem="iz8-Vw-yDg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="50" id="TdY-6J-Zgr"/>
+                <constraint firstAttribute="trailing" secondItem="bDK-3p-lbu" secondAttribute="trailing" constant="38" id="YYO-uo-xqb"/>
+                <constraint firstItem="bDK-3p-lbu" firstAttribute="top" secondItem="iz8-Vw-yDg" secondAttribute="bottom" constant="20" id="gjE-SM-dVf"/>
+                <constraint firstAttribute="bottom" secondItem="WQ9-rk-nRi" secondAttribute="bottom" constant="10" id="vwk-rn-nQL"/>
+                <constraint firstItem="WQ9-rk-nRi" firstAttribute="top" secondItem="bDK-3p-lbu" secondAttribute="bottom" constant="30" id="w3F-Yi-ZjI"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="iconWrapperView" destination="iz8-Vw-yDg" id="7bH-28-wH7"/>
+                <outlet property="stackView" destination="bDK-3p-lbu" id="8xJ-p0-bk2"/>
+                <outlet property="subtitleLabel" destination="gdg-BJ-S56" id="oKm-tb-DmU"/>
+                <outlet property="titleLabel" destination="9rk-30-04q" id="EP8-lq-ZsB"/>
+            </connections>
+            <point key="canvasLocation" x="20.610687022900763" y="198.23943661971833"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

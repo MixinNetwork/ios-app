@@ -1,6 +1,6 @@
 import UIKit
 
-class LeftAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout {
+final class LeftAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         super.layoutAttributesForElements(in: rect)?.compactMap { attributes in

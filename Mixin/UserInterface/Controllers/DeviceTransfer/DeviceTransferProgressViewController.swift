@@ -213,7 +213,7 @@ extension DeviceTransferProgressViewController {
             stateObserver?.cancel()
             Logger.general.info(category: "DeviceTransferProgress", message: "Transfer succeeded")
         case .exception(let error):
-            let hint = R.string.localizable.transfer_failed()
+            let hint = R.string.localizable.device_transfer_failed()
             titleLabel.text = hint
             transferFailed(hint: hint)
             speedLabel.isHidden = true

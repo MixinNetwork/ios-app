@@ -24,7 +24,7 @@ struct TransferPaymentOperation {
     let spendingOutputs: UTXOService.OutputCollection
     let destination: Payment.TransferDestination
     let token: TokenItem
-    let tokenAmount: Decimal
+    let amount: Decimal
     let memo: String
     
     func start(pin: String) async throws {
@@ -32,7 +32,7 @@ struct TransferPaymentOperation {
         let traceID = self.traceID
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
-        let amount = Token.amountString(from: tokenAmount)
+        let amount = Token.amountString(from: amount)
         Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID)")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()

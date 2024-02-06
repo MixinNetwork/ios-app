@@ -150,9 +150,12 @@ extension AddressViewController {
                 self.searchBoxView.textField.resignFirstResponder()
             }
             let address = self.addresses[indexPath.row]
-            let updateAddress = UpdateAddressViewController(token: self.token, delete: address)
-            let authentication = AuthenticationViewController(intent: updateAddress)
-            self.present(authentication, animated: true)
+            let preview = EditAddressPreviewViewController(token: token,
+                                                           label: address.label,
+                                                           destination: address.destination,
+                                                           tag: address.tag,
+                                                           action: .delete(id: address.addressId))
+            self.present(preview, animated: true)
             completionHandler(true)
         }
     }

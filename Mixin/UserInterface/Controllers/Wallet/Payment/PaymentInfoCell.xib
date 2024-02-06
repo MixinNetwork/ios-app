@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" indentationWidth="10" reuseIdentifier="payment_info" id="KGk-i7-Jjw" customClass="PaymentInfoCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="62"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="62"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qWs-aZ-BSJ">
+                        <rect key="frame" x="28" y="10" width="264" height="42"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="AMOUNT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U7S-Hg-QNA">
+                                <rect key="frame" x="0.0" y="0.0" width="264" height="14.333333333333334"/>
+                                <color key="backgroundColor" name="background"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GE0-TW-ZhQ">
+                                <rect key="frame" x="0.0" y="22.333333333333336" width="264" height="19.666666666666664"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="qWs-aZ-BSJ" secondAttribute="trailing" constant="28" id="I72-yj-SFu"/>
+                    <constraint firstItem="qWs-aZ-BSJ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="28" id="Jad-0z-kxa"/>
+                    <constraint firstItem="qWs-aZ-BSJ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="agS-Nn-YNs"/>
+                    <constraint firstAttribute="bottom" secondItem="qWs-aZ-BSJ" secondAttribute="bottom" constant="10" id="ud1-BB-diq"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="captionLabel" destination="U7S-Hg-QNA" id="mzL-YT-DdL"/>
+                <outlet property="contentLabel" destination="GE0-TW-ZhQ" id="pBd-Wi-eR9"/>
+            </connections>
+            <point key="canvasLocation" x="21" y="42"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

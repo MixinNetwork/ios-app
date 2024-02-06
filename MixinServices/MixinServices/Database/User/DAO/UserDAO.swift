@@ -79,6 +79,10 @@ public final class UserDAO: UserDatabaseDAO {
         return verified ?? false
     }
     
+    public func isUserFriend(id: String) -> Bool {
+        db.select(with: "SELECT 1 FROM users WHERE user_id = ? AND relationship = 'FRIEND'", arguments: [id]) ?? false
+    }
+    
     public func getUsers(keyword: String, limit: Int?) -> [UserItem] {
         var sql = """
         \(Self.sqlQueryColumns)

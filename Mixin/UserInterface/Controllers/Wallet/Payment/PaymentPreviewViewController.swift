@@ -427,7 +427,10 @@ extension PaymentPreviewViewController {
                     newTrayView.alpha = 1
                 }
             case nil:
-                view.layoutIfNeeded()
+                // Reduce `UITableViewAlertForLayoutOutsideViewHierarchy`
+                if view.window != nil {
+                    view.layoutIfNeeded()
+                }
             }
             
             self.trayView = newTrayView

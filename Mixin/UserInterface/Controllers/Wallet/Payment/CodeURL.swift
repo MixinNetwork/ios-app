@@ -17,7 +17,7 @@ struct CodeURL {
         }
         
         let pathComponents = url.pathComponents
-        guard pathComponents.count == 3, pathComponents[1] == "scheme" else {
+        guard pathComponents.count == 3, pathComponents[1] == "schemes" else {
             return nil
         }
         

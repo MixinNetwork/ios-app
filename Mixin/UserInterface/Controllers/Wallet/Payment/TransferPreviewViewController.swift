@@ -53,7 +53,11 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         case let .user(user):
             rows.insert(.receivers([user], threshold: nil), at: 1)
         case let .multisig(threshold, users):
-            rows.insert(.receivers(users, threshold: threshold), at: 1)
+            if let account = LoginManager.shared.account {
+                let user = UserItem.createUser(from: account)
+                rows.insert(.senders([user], threshold: 1), at: 1)
+            }
+            rows.insert(.receivers(users, threshold: threshold), at: 2)
         case let .mainnet(address):
             rows.insert(.mainnetReceiver(address), at: 1)
         }

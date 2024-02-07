@@ -69,9 +69,14 @@ class PaymentPreviewViewController: UIViewController {
         tableView.tableHeaderView = tableHeaderView
     }
     
-    func layoutTableHeaderView(title: String, subtitle: String?) {
+    func layoutTableHeaderView(title: String, subtitle: String?, style: TableHeaderViewStyle = []) {
         tableHeaderView.titleLabel.text = title
         tableHeaderView.subtitleLabel.text = subtitle
+        if style.contains(.destructive) {
+            tableHeaderView.subtitleLabel.textColor = R.color.red()
+        } else {
+            tableHeaderView.subtitleLabel.textColor = R.color.text_secondary()
+        }
         layoutTableHeaderView()
     }
     
@@ -222,6 +227,14 @@ extension PaymentPreviewViewController {
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
         case fee(token: String, fiatMoney: String)
+    }
+    
+    struct TableHeaderViewStyle: OptionSet {
+        
+        let rawValue: UInt
+        
+        static let destructive = TableHeaderViewStyle(rawValue: 1 << 0)
+        
     }
     
 }

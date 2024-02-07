@@ -74,7 +74,8 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
                 await MainActor.run {
                     tableHeaderView.setIcon(progress: .failure)
                     layoutTableHeaderView(title: R.string.localizable.withdrawal_failed(),
-                                          subtitle: error.localizedDescription)
+                                          subtitle: error.localizedDescription,
+                                          style: .destructive)
                     tableView.setContentOffset(.zero, animated: true)
                     switch error {
                     case MixinAPIError.malformedPin, MixinAPIError.incorrectPin:

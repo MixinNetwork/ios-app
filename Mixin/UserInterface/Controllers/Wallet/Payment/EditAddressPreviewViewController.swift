@@ -166,7 +166,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
         case .delete:
             R.string.localizable.deleting_address_failed()
         }
-        layoutTableHeaderView(title: title, subtitle: errorDescription)
+        layoutTableHeaderView(title: title, subtitle: errorDescription, style: .destructive)
         tableView.setContentOffset(.zero, animated: true)
         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                  leftAction: #selector(self.close(_:)),

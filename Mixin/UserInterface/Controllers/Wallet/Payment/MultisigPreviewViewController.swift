@@ -187,14 +187,15 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
             } catch {
                 await MainActor.run {
                     tableHeaderView.setIcon(progress: .failure)
-                    switch action {
+                    let title = switch action {
                     case .sign:
-                        layoutTableHeaderView(title: R.string.localizable.multisig_signing_failed(),
-                                              subtitle: error.localizedDescription)
+                        R.string.localizable.multisig_signing_failed()
                     case .unlock:
-                        layoutTableHeaderView(title: R.string.localizable.revoking_multisig_failed(),
-                                              subtitle: error.localizedDescription)
+                        R.string.localizable.revoking_multisig_failed()
                     }
+                    layoutTableHeaderView(title: title,
+                                          subtitle: error.localizedDescription,
+                                          style: .destructive)
                     tableView.setContentOffset(.zero, animated: true)
                     loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                              leftAction: #selector(close(_:)),

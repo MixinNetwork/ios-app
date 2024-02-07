@@ -116,13 +116,14 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
         let tokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
         let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
+        let fee = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let rows: [Row] = [
             .amount(token: tokenAmount, fiatMoney: fiatMoneyValue),
             .senders(senders, threshold: sendersThreshold),
             .receivers(receivers, threshold: receiversThreshold),
             .info(caption: .receiverWillReceive, content: tokenAmount),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
-            .info(caption: .fee, content: "-")
+            .info(caption: .fee, content: fee)
         ]
         reloadData(with: rows)
     }
@@ -179,6 +180,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                         layoutTableHeaderView(title: R.string.localizable.multisig_revoked(),
                                               subtitle: R.string.localizable.multisig_unlocked_description())
                     }
+                    tableView.setContentOffset(.zero, animated: true)
                     loadSingleButtonTrayView(title: R.string.localizable.done(),
                                              action: #selector(close(_:)))
                 }
@@ -193,6 +195,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                         layoutTableHeaderView(title: R.string.localizable.revoking_multisig_failed(),
                                               subtitle: error.localizedDescription)
                     }
+                    tableView.setContentOffset(.zero, animated: true)
                     loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                              leftAction: #selector(close(_:)),
                                              rightTitle: R.string.localizable.retry(),

@@ -66,13 +66,16 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.withdrawal_request_sent(),
                                           subtitle: R.string.localizable.withdrawal_sent_description())
+                    tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
+                    manipulateNavigationStackIfNeeded()
                 }
             } catch {
                 await MainActor.run {
                     tableHeaderView.setIcon(progress: .failure)
                     layoutTableHeaderView(title: R.string.localizable.withdrawal_failed(),
                                           subtitle: error.localizedDescription)
+                    tableView.setContentOffset(.zero, animated: true)
                     switch error {
                     case MixinAPIError.malformedPin, MixinAPIError.incorrectPin:
                         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
@@ -89,24 +92,21 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
         }
     }
     
-    override func finish(_ sender: Any) {
+    private func manipulateNavigationStackIfNeeded() {
         guard manipulateNavigationStackOnFinished else {
-            presentingViewController?.dismiss(animated: true)
             return
         }
-        presentingViewController?.dismiss(animated: true) {
-            guard let navigation = UIApplication.homeNavigationController else {
-                return
-            }
-            var viewControllers = navigation.viewControllers
-            while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
-                if let _ = (viewControllers.last as? ContainerViewController)?.viewController as? TokenViewController {
-                    break
-                }
-                viewControllers.removeLast()
-            }
-            navigation.setViewControllers(viewControllers, animated: true)
+        guard let navigation = UIApplication.homeNavigationController else {
+            return
         }
+        var viewControllers = navigation.viewControllers
+        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+            if let _ = (viewControllers.last as? ContainerViewController)?.viewController as? TokenViewController {
+                break
+            }
+            viewControllers.removeLast()
+        }
+        navigation.setViewControllers(viewControllers, animated: false)
     }
     
 }

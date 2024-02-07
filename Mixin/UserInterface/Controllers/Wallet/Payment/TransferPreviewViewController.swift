@@ -42,11 +42,12 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         
         let tokenAmount = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
+        let fee = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         var rows: [Row] = [
             .amount(token: tokenAmount, fiatMoney: fiatMoneyAmount),
             .info(caption: .receiverWillReceive, content: tokenAmount),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
-            .info(caption: .fee, content: "0"),
+            .info(caption: .fee, content: fee),
         ]
         switch operation.destination {
         case let .user(user):
@@ -74,6 +75,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.transfer_success(),
                                           subtitle: R.string.localizable.transfer_sent_description())
+                    tableView.setContentOffset(.zero, animated: true)
                     if redirection == nil {
                         loadFinishedTrayView()
                     } else {
@@ -83,16 +85,18 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                             view.leftButton.setTitle(R.string.localizable.back_to_merchant(), for: .normal)
                             view.leftButton.addTarget(self, action: #selector(gotoMerchant(_:)), for: .touchUpInside)
                             view.rightButton.setTitle(R.string.localizable.stay_in_mixin(), for: .normal)
-                            view.rightButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
+                            view.rightButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
                             view.style = .info
                         }
                     }
+                    manipulateNavigationStackIfNeeded()
                 }
             } catch {
                 await MainActor.run {
                     tableHeaderView.setIcon(progress: .failure)
                     layoutTableHeaderView(title: R.string.localizable.transfer_failed(),
                                           subtitle: error.localizedDescription)
+                    tableView.setContentOffset(.zero, animated: true)
                     switch error {
                     case MixinAPIError.malformedPin, MixinAPIError.incorrectPin:
                         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
@@ -109,53 +113,46 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         }
     }
     
-    override func finish(_ sender: Any) {
-        guard manipulateNavigationStackOnFinished else {
-            presentingViewController?.dismiss(animated: true)
+    @objc private func gotoMerchant(_ sender: Any) {
+        guard let redirection = redirection else {
+            close(sender)
             return
         }
-        let destination = operation.destination
         presentingViewController?.dismiss(animated: true) {
-            guard let navigation = UIApplication.homeNavigationController else {
-                return
-            }
-            var viewControllers = navigation.viewControllers
-            switch destination {
-            case let .user(opponent):
-                if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
-                    while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
-                        viewControllers.removeLast()
-                    }
-                } else {
-                    if opponent.isCreatedByMessenger {
-                        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
-                            viewControllers.removeLast()
-                        }
-                        viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
-                    } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
-                        viewControllers.removeLast()
-                    }
-                }
-                navigation.setViewControllers(viewControllers, animated: true)
-            case .multisig, .mainnet:
-                if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
-                    viewControllers.removeLast()
-                }
-                navigation.setViewControllers(viewControllers, animated: true)
-            }
+            UIApplication.shared.open(redirection)
         }
     }
     
-    @objc private func gotoMerchant(_ sender: Any) {
-        guard let redirection = redirection else {
-            finish(sender)
+    private func manipulateNavigationStackIfNeeded() {
+        guard manipulateNavigationStackOnFinished else {
             return
         }
-        // A non-nil `redirection` doesn't imply `manipulateNavigationStackOnFinished` is false, despite the current state being so.
-        // Currently, all merchant payments are invoked via URL, so there's no need to manipulate the navigation stack.
-        // There might be issues here if the logic above changes.
-        presentingViewController?.dismiss(animated: true) {
-            UIApplication.shared.open(redirection)
+        guard let navigation = UIApplication.homeNavigationController else {
+            return
+        }
+        var viewControllers = navigation.viewControllers
+        switch operation.destination {
+        case let .user(opponent):
+            if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
+                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+                    viewControllers.removeLast()
+                }
+            } else {
+                if opponent.isCreatedByMessenger {
+                    while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                        viewControllers.removeLast()
+                    }
+                    viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+                } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
+                    viewControllers.removeLast()
+                }
+            }
+            navigation.setViewControllers(viewControllers, animated: false)
+        case .multisig, .mainnet:
+            if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
+                viewControllers.removeLast()
+            }
+            navigation.setViewControllers(viewControllers, animated: false)
         }
     }
     

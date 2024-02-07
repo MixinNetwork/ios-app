@@ -287,7 +287,7 @@ extension PaymentPreviewViewController {
                 view.leftButton.setTitle(R.string.localizable.enable(), for: .normal)
                 view.leftButton.addTarget(self, action: #selector(enableBiometricAuthentication(_:)), for: .touchUpInside)
                 view.rightButton.setTitle(R.string.localizable.not_now(), for: .normal)
-                view.rightButton.addTarget(self, action: #selector(finish(_:)), for: .touchUpInside)
+                view.rightButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
                 view.style = .info
             }
         }
@@ -298,7 +298,7 @@ extension PaymentPreviewViewController {
         case .touchID where !AppGroupUserDefaults.Wallet.payWithBiometricAuthentication:
             loadBiometricAuthenticationDialogView(icon: R.image.ic_pay_touch()!, type: R.string.localizable.touch_id())
         case .faceID, .touchID, .none:
-            loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(finish(_:)))
+            loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(close(_:)))
         }
     }
     
@@ -314,10 +314,6 @@ extension PaymentPreviewViewController {
             viewControllers.append(PinSettingsViewController.instance())
             navigationController.setViewControllers(viewControllers, animated: true)
         }
-    }
-    
-    @objc func finish(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
     }
     
 }

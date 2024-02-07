@@ -228,7 +228,7 @@ extension PaymentPreviewViewController {
 // MARK: - Initial Tray View
 extension PaymentPreviewViewController {
     
-    func loadInitialTrayView(animated: Bool) {
+    @objc func loadInitialTrayView(animated: Bool) {
         if unresolvedIssueIndex < issues.count {
             let issue = issues[unresolvedIssueIndex]
             let animation: TrayViewAnimation? = if animated {

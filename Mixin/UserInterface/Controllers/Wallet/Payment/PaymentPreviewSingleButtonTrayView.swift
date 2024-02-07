@@ -2,7 +2,7 @@ import UIKit
 
 final class PaymentPreviewSingleButtonTrayView: UIView {
     
-    let button = UIButton()
+    let button = UIButton(type: .system)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,8 +20,11 @@ final class PaymentPreviewSingleButtonTrayView: UIView {
     }
     
     private func loadSubview() {
+        backgroundColor = R.color.background()
+        
         button.backgroundColor = R.color.theme()
         button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
+        button.setTitleColor(.white, for: .normal)
         button.layer.masksToBounds = true
         addSubview(button)
         button.snp.makeConstraints { make in

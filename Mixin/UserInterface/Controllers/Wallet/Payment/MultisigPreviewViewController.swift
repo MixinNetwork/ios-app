@@ -127,6 +127,20 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
         reloadData(with: rows)
     }
     
+    override func loadInitialTrayView(animated: Bool) {
+        switch state {
+        case .paid, .signed, .unlocked:
+            loadSingleButtonTrayView(title: R.string.localizable.got_it(),
+                                     action: #selector(close(_:)))
+        case .pending:
+            loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
+                                     leftAction: #selector(close(_:)),
+                                     rightTitle: R.string.localizable.confirm(),
+                                     rightAction: #selector(confirm(_:)),
+                                     animation: animated ? .vertical : nil)
+        }
+    }
+    
     override func performAction(with pin: String) {
         tableHeaderView.setIcon(progress: .busy)
         switch action {

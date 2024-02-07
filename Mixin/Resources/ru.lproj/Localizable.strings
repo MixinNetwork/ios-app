@@ -573,8 +573,10 @@
 "monthly" = "Ежемесячно";
 "more" = "Больше";
 "move_and_scale" = "Cдвиг и масштаб";
+"multisig_receiver" = "Receiver";
 "multisig_receivers_threshold" = "Получатели (%@)";
 "multisig_revoked" = "Multisig Revoked";
+"multisig_sender" = "Sender";
 "multisig_senders_threshold" = "Senders (%@)";
 "multisig_signed" = "Multisig Signed";
 "multisig_signed_description" = "Your signature has been confirmed by the Mixin mainnet.";

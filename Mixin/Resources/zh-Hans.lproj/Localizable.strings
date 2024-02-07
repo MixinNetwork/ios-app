@@ -573,8 +573,10 @@
 "monthly" = "每月";
 "more" = "更多";
 "move_and_scale" = "移动和缩放";
+"multisig_receiver" = "交易接收人";
 "multisig_receivers_threshold" = "交易接收人（%@）";
 "multisig_revoked" = "已撤销多签";
+"multisig_sender" = "交易发起人";
 "multisig_senders_threshold" = "交易发起人（%@）";
 "multisig_signed" = "多签签名成功";
 "multisig_signed_description" = "您的签名已通过 Mixin 主网确认";

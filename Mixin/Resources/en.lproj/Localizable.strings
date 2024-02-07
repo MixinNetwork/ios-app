@@ -573,8 +573,10 @@
 "monthly" = "Monthly";
 "more" = "More";
 "move_and_scale" = "Move and Scale";
+"multisig_receiver" = "Receiver";
 "multisig_receivers_threshold" = "Receivers (%@)";
 "multisig_revoked" = "Multisig Revoked";
+"multisig_sender" = "Sender";
 "multisig_senders_threshold" = "Senders (%@)";
 "multisig_signed" = "Multisig Signed";
 "multisig_signed_description" = "Your signature has been confirmed by the Mixin mainnet.";

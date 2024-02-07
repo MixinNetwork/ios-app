@@ -137,22 +137,28 @@ extension PaymentPreviewViewController: UITableViewDataSource {
             return cell
         case let .senders(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
-            if let threshold, users.count > 1 {
-                let threshold = "\(threshold)/\(users.count)"
-                cell.captionLabel.text = R.string.localizable.multisig_senders_threshold(threshold).uppercased()
+            cell.captionLabel.text = if let threshold {
+                if users.count > 1 {
+                    R.string.localizable.multisig_senders_threshold("\(threshold)/\(users.count)").uppercased()
+                } else {
+                    R.string.localizable.multisig_sender().uppercased()
+                }
             } else {
-                cell.captionLabel.text = R.string.localizable.sender().uppercased()
+                R.string.localizable.sender().uppercased()
             }
             cell.users = users
             cell.delegate = self
             return cell
         case let .receivers(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
-            if let threshold, users.count > 1 {
-                let threshold = "\(threshold)/\(users.count)"
-                cell.captionLabel.text = R.string.localizable.multisig_receivers_threshold(threshold).uppercased()
+            cell.captionLabel.text = if let threshold {
+                if users.count > 1 {
+                    R.string.localizable.multisig_receivers_threshold("\(threshold)/\(users.count)").uppercased()
+                } else {
+                    R.string.localizable.multisig_receiver().uppercased()
+                }
             } else {
-                cell.captionLabel.text = R.string.localizable.receiver().uppercased()
+                R.string.localizable.receiver().uppercased()
             }
             cell.users = users
             cell.delegate = self

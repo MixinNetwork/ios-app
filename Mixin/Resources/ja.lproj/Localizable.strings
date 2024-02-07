@@ -573,8 +573,10 @@
 "monthly" = "月";
 "more" = "もっとみる";
 "move_and_scale" = "移動と拡大縮小";
+"multisig_receiver" = "受取人";
 "multisig_receivers_threshold" = "受取人(%@)";
 "multisig_revoked" = "Multisig Revoked";
+"multisig_sender" = "Sender";
 "multisig_senders_threshold" = "Senders (%@)";
 "multisig_signed" = "Multisig Signed";
 "multisig_signed_description" = "Your signature has been confirmed by the Mixin mainnet.";

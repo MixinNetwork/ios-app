@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -24,6 +24,7 @@
                 <outlet property="subtitleStackView" destination="pfw-to-7M5" id="i2H-VF-vPN"/>
                 <outlet property="titleLabel" destination="v3g-yx-RtS" id="uUW-Y0-AEj"/>
                 <outlet property="titleStackView" destination="FTh-Wl-ql1" id="pFg-YE-oRi"/>
+                <outlet property="titleViewHeightConstraint" destination="O2F-tC-gdF" id="cFy-bh-ZON"/>
                 <outlet property="validatingIndicator" destination="52f-uG-VXh" id="DGU-A7-YP0"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -50,6 +51,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="56" id="SWX-0R-rHo"/>
+                                <constraint firstAttribute="width" secondItem="2Le-1x-lKZ" secondAttribute="height" multiplier="1:1" id="fdM-zp-UAC"/>
                             </constraints>
                             <state key="normal" image="ic_dialog_close"/>
                             <connections>
@@ -71,7 +73,6 @@
                             </userDefinedRuntimeAttributes>
                         </constraint>
                         <constraint firstAttribute="trailing" secondItem="2Le-1x-lKZ" secondAttribute="trailing" id="e4x-Pv-2QZ"/>
-                        <constraint firstItem="2Le-1x-lKZ" firstAttribute="width" secondItem="2Le-1x-lKZ" secondAttribute="height" multiplier="1:1" id="fdM-zp-UAC"/>
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FTh-Wl-ql1" userLabel="Title Stack View">
@@ -156,7 +157,7 @@
                 <constraint firstItem="FTh-Wl-ql1" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="8" id="5QT-UN-vby"/>
                 <constraint firstItem="crp-ud-1Lq" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fnl-2z-Ty3" secondAttribute="top" id="82D-yY-is6"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Xdi-PY-R4m" secondAttribute="trailing" id="H5i-2G-oZq"/>
-                <constraint firstItem="ZcH-6O-0pH" firstAttribute="top" secondItem="Xdi-PY-R4m" secondAttribute="bottom" priority="999" id="IHP-Wj-8Xs"/>
+                <constraint firstItem="ZcH-6O-0pH" firstAttribute="top" secondItem="Xdi-PY-R4m" secondAttribute="bottom" priority="999" constant="10" id="IHP-Wj-8Xs"/>
                 <constraint firstItem="Xdi-PY-R4m" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Id5-st-w66"/>
                 <constraint firstAttribute="bottom" secondItem="crp-ud-1Lq" secondAttribute="bottom" id="MvA-yh-34s"/>
                 <constraint firstItem="crp-ud-1Lq" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="OBP-QZ-gqW"/>
@@ -179,11 +180,11 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

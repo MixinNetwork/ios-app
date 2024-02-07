@@ -25,6 +25,7 @@ final class AuthenticationViewController: UIViewController {
     @IBOutlet weak var validatingIndicator: ActivityIndicatorView!
     @IBOutlet weak var keyboardPlaceholderView: UIView!
     
+    @IBOutlet weak var titleViewHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
     @IBOutlet weak var pinFieldWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pinFieldTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var pinFieldHeightConstraint: NSLayoutConstraint!
@@ -115,6 +116,7 @@ final class AuthenticationViewController: UIViewController {
         
         if intent.options.contains(.unskippable) {
             closeButton.isHidden = true
+            titleViewHeightConstraint.constant = 30
         }
         reloadTitleView()
         

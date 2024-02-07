@@ -27,7 +27,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="278" height="14.333333333333334"/>
                                         <color key="backgroundColor" name="background"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                        <color key="textColor" name="text_tertiary"/>
+                                        <color key="textColor" name="text_quaternary"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00001342 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JVH-Zw-kNW">
@@ -41,7 +41,7 @@
                                         <rect key="frame" x="0.0" y="41.666666666666664" width="278" height="14.333333333333336"/>
                                         <color key="backgroundColor" name="background"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                        <color key="textColor" name="text_secondary"/>
+                                        <color key="textColor" name="text_tertiary"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -81,6 +81,9 @@
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_secondary">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

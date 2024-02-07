@@ -74,10 +74,12 @@ final class AuthenticationViewController: UIViewController {
     
     init(intent: AuthenticationIntent) {
         self.intent = intent
-        if intent.options.contains(.blurBackground) {
-            self.presentationManager = PinValidationPresentationManager()
+        self.presentationManager = if intent.options.contains(.blurBackground) {
+            PinValidationPresentationManager()
+        } else if intent.options.contains(.backgroundDismissable) {
+            BackgroundDismissablePopupPresentationManager.shared
         } else {
-            self.presentationManager = BackgroundDismissablePopupPresentationManager.shared
+            PopupPresentationManager()
         }
         super.init(nibName: R.nib.authenticationView.name, bundle: nil)
         modalPresentationStyle = .custom

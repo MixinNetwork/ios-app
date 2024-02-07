@@ -9,7 +9,8 @@ final class PaymentPreviewAuthenticationIntent: AuthenticationIntent {
         .allowsBiometricAuthentication,
         .becomesFirstResponderOnAppear,
         .unskippable,
-        .neverRequestAddBiometricAuthentication
+        .neverRequestAddBiometricAuthentication,
+        .backgroundDismissable,
     ]
     let authenticationViewController: AuthenticationViewController? = nil
     

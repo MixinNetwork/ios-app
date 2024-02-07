@@ -183,7 +183,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                                              leftAction: #selector(close(_:)),
                                              rightTitle: R.string.localizable.retry(),
                                              rightAction: #selector(confirm(_:)),
-                                             animated: true)
+                                             animation: .vertical)
                 }
             }
         }

@@ -17,6 +17,7 @@ class PaymentPreviewViewController: UIViewController {
     
     private var trayView: UIView?
     private var trayViewBottomConstraint: NSLayoutConstraint?
+    private var trayViewCenterXConstraint: NSLayoutConstraint?
     
     private var unresolvedIssueIndex = 0
     
@@ -230,7 +231,12 @@ extension PaymentPreviewViewController {
     func loadInitialTrayView(animated: Bool) {
         if unresolvedIssueIndex < issues.count {
             let issue = issues[unresolvedIssueIndex]
-            loadDialogTrayView(animated: animated) { view in
+            let animation: TrayViewAnimation? = if animated {
+                unresolvedIssueIndex == 0 ? .vertical : .horizontal
+            } else {
+                nil
+            }
+            loadDialogTrayView(animation: animation) { view in
                 view.iconImageView.image = R.image.ic_warning()?.withRenderingMode(.alwaysTemplate)
                 if issues.count > 1 {
                     view.stepLabel.text = "\(unresolvedIssueIndex + 1)/\(issues.count)"
@@ -248,7 +254,7 @@ extension PaymentPreviewViewController {
                                      leftAction: #selector(close(_:)),
                                      rightTitle: R.string.localizable.confirm(),
                                      rightAction: #selector(confirm(_:)),
-                                     animated: animated)
+                                     animation: animated ? .vertical : nil)
         }
     }
     
@@ -274,7 +280,7 @@ extension PaymentPreviewViewController {
     func loadFinishedTrayView() {
         
         func loadBiometricAuthenticationDialogView(icon: UIImage, type: String) {
-            loadDialogTrayView(animated: true) { view in
+            loadDialogTrayView(animation: .vertical) { view in
                 view.iconImageView.image = icon.withRenderingMode(.alwaysTemplate)
                 view.titleLabel.text = R.string.localizable.enable_bioauth_description(type, type)
                 view.leftButton.setTitle(R.string.localizable.enable(), for: .normal)
@@ -318,14 +324,25 @@ extension PaymentPreviewViewController {
 // MARK: - Tray View Loader
 extension PaymentPreviewViewController {
     
+    enum TrayViewAnimation {
+        case vertical
+        case horizontal
+    }
+    
     func loadSingleButtonTrayView(title: String, action: Selector) {
         let trayView = PaymentPreviewSingleButtonTrayView()
         trayView.button.setTitle(title, for: .normal)
-        replaceTrayView(with: trayView, animated: false)
+        replaceTrayView(with: trayView, animation: .vertical)
         trayView.button.addTarget(self, action: action, for: .touchUpInside)
     }
     
-    func loadDoubleButtonTrayView(leftTitle: String, leftAction: Selector, rightTitle: String, rightAction: Selector, animated: Bool) {
+    func loadDoubleButtonTrayView(
+        leftTitle: String,
+        leftAction: Selector,
+        rightTitle: String,
+        rightAction: Selector,
+        animation: TrayViewAnimation?
+    ) {
         let trayView = R.nib.paymentPreviewDoubleButtonTrayView(withOwner: nil)!
         UIView.performWithoutAnimation {
             trayView.leftButton.setTitle(leftTitle, for: .normal)
@@ -333,45 +350,55 @@ extension PaymentPreviewViewController {
             trayView.rightButton.setTitle(rightTitle, for: .normal)
             trayView.rightButton.layoutIfNeeded()
         }
-        replaceTrayView(with: trayView, animated: animated)
+        replaceTrayView(with: trayView, animation: animation)
         trayView.leftButton.addTarget(self, action: leftAction, for: .touchUpInside)
         trayView.rightButton.addTarget(self, action: rightAction, for: .touchUpInside)
     }
     
-    func loadDialogTrayView(animated: Bool, configuration: (PaymentPreviewDialogView) -> Void) {
+    func loadDialogTrayView(animation: TrayViewAnimation?, configuration: (PaymentPreviewDialogView) -> Void) {
         let trayView = R.nib.paymentPreviewDialogView(withOwner: nil)!
         configuration(trayView)
-        replaceTrayView(with: trayView, animated: animated)
+        replaceTrayView(with: trayView, animation: animation)
     }
     
-    func replaceTrayView(with newTrayView: UIView?, animated: Bool) {
-        if let oldTrayView = trayView, let constraint = trayViewBottomConstraint {
-            if animated {
-                constraint.constant = oldTrayView.frame.height / 2
+    func replaceTrayView(with newTrayView: UIView?, animation: TrayViewAnimation?) {
+        if let oldTrayView = trayView, let bottomConstraint = trayViewBottomConstraint, let centerXConstraint = trayViewCenterXConstraint {
+            switch animation {
+            case .vertical:
+                bottomConstraint.constant = oldTrayView.frame.height / 2
                 UIView.animate(withDuration: 0.3) {
                     oldTrayView.alpha = 0
                     self.view.layoutIfNeeded()
                 } completion: { _ in
                     oldTrayView.removeFromSuperview()
                 }
-            } else {
+            case .horizontal:
+                centerXConstraint.constant = -oldTrayView.frame.width / 2
+                UIView.animate(withDuration: 0.3) {
+                    oldTrayView.alpha = 0
+                    self.view.layoutIfNeeded()
+                } completion: { _ in
+                    oldTrayView.removeFromSuperview()
+                }
+            case nil:
                 oldTrayView.removeFromSuperview()
             }
         }
         
         if let newTrayView {
-            if animated {
+            if animation != nil {
                 newTrayView.alpha = 0
             }
             
             view.addSubview(newTrayView)
-            newTrayView.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
-            }
+            newTrayView.translatesAutoresizingMaskIntoConstraints = false
+            let widthConstraint = newTrayView.widthAnchor.constraint(equalTo: view.widthAnchor)
+            let centerXConstraint = newTrayView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             let bottomConstraint = newTrayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            bottomConstraint.isActive = true
+            NSLayoutConstraint.activate([widthConstraint, centerXConstraint, bottomConstraint])
             
-            if animated {
+            switch animation {
+            case .vertical:
                 newTrayView.layoutIfNeeded()
                 bottomConstraint.constant = newTrayView.frame.height / 2
                 view.layoutIfNeeded()
@@ -380,16 +407,27 @@ extension PaymentPreviewViewController {
                     self.view.layoutIfNeeded()
                     newTrayView.alpha = 1
                 }
-            } else {
+            case .horizontal:
+                newTrayView.layoutIfNeeded()
+                centerXConstraint.constant = newTrayView.frame.width / 2
+                view.layoutIfNeeded()
+                centerXConstraint.constant = 0
+                UIView.animate(withDuration: 0.3) {
+                    self.view.layoutIfNeeded()
+                    newTrayView.alpha = 1
+                }
+            case nil:
                 view.layoutIfNeeded()
             }
             
             self.trayView = newTrayView
+            self.trayViewCenterXConstraint = centerXConstraint
             self.trayViewBottomConstraint = bottomConstraint
             self.tableView.contentInset.bottom = newTrayView.frame.height
             self.tableView.verticalScrollIndicatorInsets.bottom = newTrayView.frame.height
         } else {
             self.trayView = nil
+            self.trayViewCenterXConstraint = nil
             self.trayViewBottomConstraint = nil
             self.tableView.contentInset.bottom = 0
             self.tableView.verticalScrollIndicatorInsets.bottom = 0

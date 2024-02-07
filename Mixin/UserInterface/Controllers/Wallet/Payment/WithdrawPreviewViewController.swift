@@ -58,7 +58,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(title: R.string.localizable.sending_withdrawal_request(),
                               subtitle: R.string.localizable.withdrawal_sending_description())
-        replaceTrayView(with: nil, animated: true)
+        replaceTrayView(with: nil, animation: .vertical)
         Task {
             do {
                 try await operation.start(pin: pin)
@@ -79,7 +79,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
                                                  leftAction: #selector(close(_:)),
                                                  rightTitle: R.string.localizable.retry(),
                                                  rightAction: #selector(confirm(_:)),
-                                                 animated: true)
+                                                 animation: .vertical)
                     default:
                         loadSingleButtonTrayView(title: R.string.localizable.got_it(),
                                                  action: #selector(close(_:)))

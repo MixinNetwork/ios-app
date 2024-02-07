@@ -66,7 +66,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
                               subtitle: R.string.localizable.transfer_sending_description())
-        replaceTrayView(with: nil, animated: true)
+        replaceTrayView(with: nil, animation: .vertical)
         Task {
             do {
                 try await operation.start(pin: pin)
@@ -77,7 +77,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                     if redirection == nil {
                         loadFinishedTrayView()
                     } else {
-                        loadDialogTrayView(animated: true) { view in
+                        loadDialogTrayView(animation: .vertical) { view in
                             view.iconImageView.image = R.image.payment_merchant_success()?.withRenderingMode(.alwaysTemplate)
                             view.titleLabel.text = R.string.localizable.return_to_merchant_description()
                             view.leftButton.setTitle(R.string.localizable.back_to_merchant(), for: .normal)
@@ -99,7 +99,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                                                  leftAction: #selector(close(_:)),
                                                  rightTitle: R.string.localizable.retry(),
                                                  rightAction: #selector(confirm(_:)),
-                                                 animated: true)
+                                                 animation: .vertical)
                     default:
                         loadSingleButtonTrayView(title: R.string.localizable.got_it(),
                                                  action: #selector(close(_:)))

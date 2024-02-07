@@ -81,7 +81,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
             layoutTableHeaderView(title: R.string.localizable.deleting_address(),
                                   subtitle: nil)
         }
-        replaceTrayView(with: nil, animated: true)
+        replaceTrayView(with: nil, animation: .vertical)
         canDismissInteractively = false
         switch action {
         case .add, .update:
@@ -148,7 +148,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
                                      leftAction: #selector(close(_:)),
                                      rightTitle: R.string.localizable.withdrawal(),
                                      rightAction: #selector(close(_:)),
-                                     animated: true)
+                                     animation: .vertical)
         case .delete:
             loadSingleButtonTrayView(title: R.string.localizable.done(),
                                      action:  #selector(close(_:)))
@@ -170,7 +170,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
                                  leftAction: #selector(self.close(_:)),
                                  rightTitle: R.string.localizable.retry(),
                                  rightAction: #selector(self.confirm(_:)),
-                                 animated: true)
+                                 animation: .vertical)
     }
     
 }

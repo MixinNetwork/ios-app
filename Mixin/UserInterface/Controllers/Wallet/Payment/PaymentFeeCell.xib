@@ -21,24 +21,24 @@
                         <rect key="frame" x="28" y="10" width="278" height="56"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="2Sr-Jy-2Ib">
-                                <rect key="frame" x="0.0" y="0.0" width="234" height="56"/>
+                                <rect key="frame" x="0.0" y="0.0" width="278" height="56"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AMOUNT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xmu-DW-0t2">
-                                        <rect key="frame" x="0.0" y="0.0" width="234" height="14.333333333333334"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="278" height="14.333333333333334"/>
                                         <color key="backgroundColor" name="background"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="text_tertiary"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00001342 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JVH-Zw-kNW">
-                                        <rect key="frame" x="0.0" y="18.333333333333336" width="234" height="19.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="18.333333333333336" width="278" height="19.333333333333336"/>
                                         <color key="backgroundColor" name="background"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$1862.82" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VAO-wC-DB5">
-                                        <rect key="frame" x="0.0" y="41.666666666666664" width="234" height="14.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="41.666666666666664" width="278" height="14.333333333333336"/>
                                         <color key="backgroundColor" name="background"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="text_secondary"/>
@@ -46,14 +46,14 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grh-4D-7E6">
-                                <rect key="frame" x="234" y="0.0" width="44" height="56"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grh-4D-7E6">
+                                <rect key="frame" x="278" y="0.0" width="0.0" height="56"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="mXH-HP-f42"/>
+                                    <constraint firstAttribute="width" priority="999" constant="44" id="mXH-HP-f42"/>
                                 </constraints>
                                 <color key="tintColor" name="text_secondary"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="ic_selector_down"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="ic_selector_down"/>
                             </button>
                         </subviews>
                     </stackView>

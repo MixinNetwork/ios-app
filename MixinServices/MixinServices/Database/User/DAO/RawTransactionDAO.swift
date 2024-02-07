@@ -17,7 +17,7 @@ public final class RawTransactionDAO: UserDatabaseDAO {
     }
     
     public func latestCreatedAt(receiverID: String) -> String? {
-        db.select(with: "SELECT created_at FROM raw_transactions WHERE receiver_id = ? ORDER BY created_at DESC, rowid DESC LIMIT 1")
+        db.select(with: "SELECT created_at FROM raw_transactions WHERE receiver_id = ? ORDER BY created_at DESC, rowid DESC LIMIT 1", arguments: [receiverID])
     }
     
     public func rawTransaction(with requestID: String) -> RawTransaction? {

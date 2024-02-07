@@ -38,6 +38,7 @@ class PaymentPreviewViewController: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
+        tableView.allowsSelection = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 61
         tableView.separatorStyle = .none

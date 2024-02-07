@@ -27,9 +27,8 @@ final class PaymentPreviewAuthenticationIntent: AuthenticationIntent {
         completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
     ) {
         completion(.success)
-        controller.presentingViewController?.dismiss(animated: true, completion: {
-            self.onInput(pin)
-        })
+        onInput(pin)
+        controller.presentingViewController?.dismiss(animated: true)
     }
     
     func authenticationViewControllerWillDismiss(_ controller: AuthenticationViewController) {

@@ -298,7 +298,7 @@ extension PaymentPreviewViewController {
         case .touchID where !AppGroupUserDefaults.Wallet.payWithBiometricAuthentication:
             loadBiometricAuthenticationDialogView(icon: R.image.ic_pay_touch()!, type: R.string.localizable.touch_id())
         case .faceID, .touchID, .none:
-            loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(close(_:)))
+            loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(finish(_:)))
         }
     }
     

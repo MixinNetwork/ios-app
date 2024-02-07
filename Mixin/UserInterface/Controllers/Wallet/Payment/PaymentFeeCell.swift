@@ -9,7 +9,7 @@ final class PaymentFeeCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        tokenAmountLabel.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium),
+        tokenAmountLabel.setFont(scaledFor: .systemFont(ofSize: 16),
                                  adjustForContentSize: true)
     }
     

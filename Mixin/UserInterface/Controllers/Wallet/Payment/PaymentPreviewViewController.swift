@@ -387,12 +387,12 @@ extension PaymentPreviewViewController {
             self.trayView = newTrayView
             self.trayViewBottomConstraint = bottomConstraint
             self.tableView.contentInset.bottom = newTrayView.frame.height
-            self.tableView.scrollIndicatorInsets.bottom = newTrayView.frame.height
+            self.tableView.verticalScrollIndicatorInsets.bottom = newTrayView.frame.height
         } else {
             self.trayView = nil
             self.trayViewBottomConstraint = nil
             self.tableView.contentInset.bottom = 0
-            self.tableView.scrollIndicatorInsets.bottom = 0
+            self.tableView.verticalScrollIndicatorInsets.bottom = 0
         }
     }
     

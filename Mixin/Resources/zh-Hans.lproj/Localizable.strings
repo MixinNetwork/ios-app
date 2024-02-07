@@ -30,7 +30,6 @@
 "address_added_description" = "您添加地址的请求已通过 Mixin 服务器确认，您可以立刻使用该地址进行提现。";
 "address_adding_description" = "正在将添加地址的请求发送到 Mixin 服务器验证，请稍候。";
 "address_deleted" = "地址已删除";
-"address_deleting_description" = "删除地址不影响资金安全，确认删除该地址吗？";
 "address_edited" = "地址已修改";
 "address_edited_description" = "您修改地址的请求已通过 Mixin 服务器确认，您可以立刻使用该地址进行提现。";
 "address_editing_description" = "正在将修改地址的请求发送到 Mixin 服务器验证，请稍候。";
@@ -219,7 +218,7 @@
 "compressed" = "已压缩";
 "confirm" = "确认";
 "confirm_adding_address" = "添加地址确认";
-"confirm_deleteing_address" = "删除地址确认";
+"confirm_deleting_address" = "删除地址确认";
 "confirm_editing_address" = "修改地址确认";
 "confirm_signing_multisig" = "多签签名确认";
 "confirm_transfer" = "转账确认";
@@ -305,6 +304,7 @@
 "delete_account_detail_hint" = "本地消息和 iCloud 备份不会被自动删除";
 "delete_account_hint" = "删除你的账户和个人照片";
 "delete_address" = "删除地址";
+"delete_address_description" = "删除地址不影响资金安全，确认删除该地址吗？";
 "delete_by_pin" = "通过 PIN 删除";
 "delete_chat" = "删除聊天";
 "delete_circle" = "删除圈子";

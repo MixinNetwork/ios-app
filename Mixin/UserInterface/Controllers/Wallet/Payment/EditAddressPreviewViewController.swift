@@ -45,15 +45,17 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
         super.viewDidLoad()
         
         tableHeaderView.setIcon(token: token)
-        tableHeaderView.titleLabel.text = switch action {
+        switch action {
         case .add:
-            R.string.localizable.confirm_adding_address()
+            tableHeaderView.titleLabel.text = R.string.localizable.confirm_adding_address()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.review_address_hint()
         case .update:
-            R.string.localizable.confirm_editing_address()
+            tableHeaderView.titleLabel.text = R.string.localizable.confirm_editing_address()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.review_address_hint()
         case .delete:
-            R.string.localizable.confirm_deleteing_address()
+            tableHeaderView.titleLabel.text = R.string.localizable.confirm_deleting_address()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.delete_address_description()
         }
-        tableHeaderView.subtitleLabel.text = R.string.localizable.review_address_hint()
         
         var rows: [Row] = [
             .info(caption: .label, content: label),
@@ -68,8 +70,17 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
     
     override func performAction(with pin: String) {
         tableHeaderView.setIcon(progress: .busy)
-        layoutTableHeaderView(title: R.string.localizable.adding_address(),
-                              subtitle: R.string.localizable.address_adding_description())
+        switch action {
+        case .add:
+            layoutTableHeaderView(title: R.string.localizable.adding_address(),
+                                  subtitle: R.string.localizable.address_adding_description())
+        case .update:
+            layoutTableHeaderView(title: R.string.localizable.editing_address(),
+                                  subtitle: R.string.localizable.address_editing_description())
+        case .delete:
+            layoutTableHeaderView(title: R.string.localizable.deleting_address(),
+                                  subtitle: nil)
+        }
         replaceTrayView(with: nil, animated: true)
         canDismissInteractively = false
         switch action {
@@ -146,17 +157,15 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
     
     private func loadFailureViews(errorDescription: String) {
         tableHeaderView.setIcon(progress: .failure)
-        switch action {
+        let title = switch action {
         case .add:
-            layoutTableHeaderView(title: R.string.localizable.adding_address_failed(),
-                                  subtitle: errorDescription)
+            R.string.localizable.adding_address_failed()
         case .update:
-            layoutTableHeaderView(title: R.string.localizable.editing_address_failed(),
-                                  subtitle: errorDescription)
+            R.string.localizable.editing_address_failed()
         case .delete:
-            layoutTableHeaderView(title: R.string.localizable.address_deleted(),
-                                  subtitle: errorDescription)
+            R.string.localizable.deleting_address_failed()
         }
+        layoutTableHeaderView(title: title, subtitle: errorDescription)
         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                  leftAction: #selector(self.close(_:)),
                                  rightTitle: R.string.localizable.retry(),

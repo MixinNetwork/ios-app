@@ -30,7 +30,6 @@
 "address_added_description" = "The Mixin server has confirmed your address addition request. You can immediately use this address for withdrawals.";
 "address_adding_description" = "The request to add the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_deleted" = "Address Deleted";
-"address_deleting_description" = "Deleting the address does not compromise security. Are you sure you want to delete this address?";
 "address_edited" = "Address Edited";
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
@@ -219,7 +218,7 @@
 "compressed" = "Сжатый";
 "confirm" = "Подтвердить";
 "confirm_adding_address" = "Confirm Adding Address";
-"confirm_deleteing_address" = "Confirm Deleteing Address";
+"confirm_deleting_address" = "Confirm Deleting Address";
 "confirm_editing_address" = "Confirm Editing Address";
 "confirm_signing_multisig" = "Confirm Signing Multisig";
 "confirm_transfer" = "Confirm Transfer";
@@ -305,6 +304,7 @@
 "delete_account_detail_hint" = "Локальные сообщения и резервные копии iCloud не будут удаляться автоматически";
 "delete_account_hint" = "Удалить информацию об учетной записи и фото профиля";
 "delete_address" = "Удалить адрес";
+"delete_address_description" = "Deleting the address does not compromise security. Are you sure you want to delete this address?";
 "delete_by_pin" = "Delete by PIN";
 "delete_chat" = "Удалить чат";
 "delete_circle" = "Удалить круг";

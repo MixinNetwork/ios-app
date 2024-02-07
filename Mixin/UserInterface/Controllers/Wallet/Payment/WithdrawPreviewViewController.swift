@@ -44,7 +44,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
         let withdrawalFiatMoneyAmount = CurrencyFormatter.localizedString(from: operation.withdrawalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         let feeTokenAmount = CurrencyFormatter.localizedString(from: operation.feeAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let feeFiatMoneyAmount = CurrencyFormatter.localizedString(from: operation.withdrawalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
-        var rows: [Row] = [
+        let rows: [Row] = [
             .amount(token: withdrawalTokenAmount, fiatMoney: withdrawalFiatMoneyAmount),
             .address(value: operation.address.fullRepresentation, label: operation.addressLabel),
             .info(caption: .addressWillReceive, content: withdrawalTokenAmount),
@@ -64,14 +64,14 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
                 try await operation.start(pin: pin)
                 await MainActor.run {
                     tableHeaderView.setIcon(progress: .success)
-                    layoutTableHeaderView(title: R.string.localizable.transfer_success(),
-                                          subtitle: R.string.localizable.transfer_sent_description())
+                    layoutTableHeaderView(title: R.string.localizable.withdrawal_request_sent(),
+                                          subtitle: R.string.localizable.withdrawal_sent_description())
                     loadFinishedTrayView()
                 }
             } catch {
                 await MainActor.run {
                     tableHeaderView.setIcon(progress: .failure)
-                    layoutTableHeaderView(title: R.string.localizable.transfer_failed(),
+                    layoutTableHeaderView(title: R.string.localizable.withdrawal_failed(),
                                           subtitle: error.localizedDescription)
                     switch error {
                     case MixinAPIError.malformedPin, MixinAPIError.incorrectPin:

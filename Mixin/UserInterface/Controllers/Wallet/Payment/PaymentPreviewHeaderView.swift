@@ -11,6 +11,14 @@ final class PaymentPreviewHeaderView: UIView {
     private var assetIconView: AssetIconView?
     private var progressView: PaymentProgressView?
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .medium),
+                           adjustForContentSize: true)
+        subtitleLabel.setFont(scaledFor: .systemFont(ofSize: 14, weight: .regular),
+                              adjustForContentSize: true)
+    }
+    
     func setIcon(token: TokenItem) {
         progressView?.removeFromSuperview()
         let iconView: AssetIconView

@@ -28,13 +28,13 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="提现确认" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9rk-30-04q">
                             <rect key="frame" x="0.0" y="0.0" width="317" height="21.666666666666668"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="请仔细检查收款地址、网络和金额，如果您转错了，资产将无法追回！" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdg-BJ-S56">
                             <rect key="frame" x="0.0" y="31.666666666666661" width="317" height="40.333333333333343"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
@@ -75,6 +75,9 @@
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

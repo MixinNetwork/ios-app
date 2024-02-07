@@ -112,6 +112,7 @@ final class PaymentProgressView: UIView {
             ringLayer.add(colorAnimation, forKey: "stroke_color")
             
             toppingLayer.opacity = 0
+            toppingLayer.contents = nil
         default:
             fatalError()
         }

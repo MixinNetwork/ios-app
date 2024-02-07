@@ -93,8 +93,17 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                     tableHeaderView.setIcon(progress: .failure)
                     layoutTableHeaderView(title: R.string.localizable.transfer_failed(),
                                           subtitle: error.localizedDescription)
-                    loadSingleButtonTrayView(title: R.string.localizable.got_it(),
-                                             action: #selector(close(_:)))
+                    switch error {
+                    case MixinAPIError.malformedPin, MixinAPIError.incorrectPin:
+                        loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
+                                                 leftAction: #selector(close(_:)),
+                                                 rightTitle: R.string.localizable.retry(),
+                                                 rightAction: #selector(confirm(_:)),
+                                                 animated: true)
+                    default:
+                        loadSingleButtonTrayView(title: R.string.localizable.got_it(),
+                                                 action: #selector(close(_:)))
+                    }
                 }
             }
         }

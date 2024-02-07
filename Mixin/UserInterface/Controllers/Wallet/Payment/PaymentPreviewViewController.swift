@@ -170,8 +170,10 @@ extension PaymentPreviewViewController: UITableViewDataSource {
 extension PaymentPreviewViewController: PaymentUserGroupCellDelegate {
     
     func paymentUserGroupCellHeightDidUpdate(_ cell: PaymentUserGroupCell) {
-        tableView.beginUpdates()
-        tableView.endUpdates()
+        UIView.performWithoutAnimation {
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        }
     }
     
 }
@@ -378,13 +380,19 @@ extension PaymentPreviewViewController {
                     self.view.layoutIfNeeded()
                     newTrayView.alpha = 1
                 }
+            } else {
+                view.layoutIfNeeded()
             }
             
             self.trayView = newTrayView
             self.trayViewBottomConstraint = bottomConstraint
+            self.tableView.contentInset.bottom = newTrayView.frame.height
+            self.tableView.scrollIndicatorInsets.bottom = newTrayView.frame.height
         } else {
             self.trayView = nil
             self.trayViewBottomConstraint = nil
+            self.tableView.contentInset.bottom = 0
+            self.tableView.scrollIndicatorInsets.bottom = 0
         }
     }
     

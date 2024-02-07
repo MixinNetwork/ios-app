@@ -997,7 +997,7 @@ extension UrlWindow {
                     }
                     return
                 }
-                let state: MultisigConfirmationViewController.State
+                let state: MultisigPreviewViewController.State
                 if response.signers.count >= response.sendersThreshold {
                     state = .paid
                 } else if multisig.action == .sign && response.signers.contains(myUserId) {
@@ -1009,20 +1009,19 @@ extension UrlWindow {
                 }
                 DispatchQueue.main.async {
                     hud.hide()
-                    let multisig = MultisigConfirmationViewController(requestID: response.requestID,
-                                                                      token: token,
-                                                                      amount: amount,
-                                                                      sendersThreshold: response.sendersThreshold,
-                                                                      senders: senders,
-                                                                      receiversThreshold: receiver.threshold,
-                                                                      receivers: receiverMembers,
-                                                                      rawTransaction: response.rawTransaction,
-                                                                      viewKeys: response.views.joined(separator: ","),
-                                                                      action: multisig.action,
-                                                                      index: index,
-                                                                      state: state)
-                    let authentication = AuthenticationViewController(intent: multisig)
-                    homeContainer.present(authentication, animated: true)
+                    let preview = MultisigPreviewViewController(requestID: response.requestID,
+                                                                token: token,
+                                                                amount: amount,
+                                                                sendersThreshold: response.sendersThreshold,
+                                                                senders: senders,
+                                                                receiversThreshold: receiver.threshold,
+                                                                receivers: receiverMembers,
+                                                                rawTransaction: response.rawTransaction,
+                                                                viewKeys: response.views.joined(separator: ","),
+                                                                action: multisig.action,
+                                                                index: index,
+                                                                state: state)
+                    homeContainer.present(preview, animated: true)
                 }
             case .failure(let error):
                 DispatchQueue.main.async {

@@ -73,14 +73,44 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableHeaderView.setIcon(token: token)
-        switch action {
-        case .sign:
-            tableHeaderView.titleLabel.text = R.string.localizable.confirm_signing_multisig()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
-        case .unlock:
-            tableHeaderView.titleLabel.text = R.string.localizable.revoke_multisig_signature()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+        switch state {
+        case .paid:
+            tableHeaderView.setIcon(progress: .failure)
+            tableHeaderView.titleLabel.text = switch action {
+            case .sign:
+                R.string.localizable.multisig_transaction()
+            case .unlock:
+                R.string.localizable.revoke_multisig_transaction()
+            }
+            tableHeaderView.subtitleLabel.text = R.string.localizable.pay_paid()
+        case .signed:
+            tableHeaderView.setIcon(progress: .failure)
+            tableHeaderView.titleLabel.text = switch action {
+            case .sign:
+                R.string.localizable.multisig_transaction()
+            case .unlock:
+                R.string.localizable.revoke_multisig_transaction()
+            }
+            tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_signed()
+        case .unlocked:
+            tableHeaderView.setIcon(progress: .failure)
+            tableHeaderView.titleLabel.text = switch action {
+            case .sign:
+                R.string.localizable.multisig_transaction()
+            case .unlock:
+                R.string.localizable.revoke_multisig_transaction()
+            }
+            tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_unlocked()
+        case .pending:
+            tableHeaderView.setIcon(token: token)
+            switch action {
+            case .sign:
+                tableHeaderView.titleLabel.text = R.string.localizable.confirm_signing_multisig()
+                tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+            case .unlock:
+                tableHeaderView.titleLabel.text = R.string.localizable.revoke_multisig_signature()
+                tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+            }
         }
         
         let tokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never, symbol: .custom(token.symbol))
@@ -149,8 +179,11 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                         layoutTableHeaderView(title: R.string.localizable.revoking_multisig_failed(),
                                               subtitle: error.localizedDescription)
                     }
-                    loadSingleButtonTrayView(title: R.string.localizable.done(),
-                                             action: #selector(close(_:)))
+                    loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
+                                             leftAction: #selector(close(_:)),
+                                             rightTitle: R.string.localizable.retry(),
+                                             rightAction: #selector(confirm(_:)),
+                                             animated: true)
                 }
             }
         }

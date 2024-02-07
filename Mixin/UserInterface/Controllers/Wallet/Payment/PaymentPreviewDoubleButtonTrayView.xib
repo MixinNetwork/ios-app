@@ -65,7 +65,7 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="ajK-zt-lDW" firstAttribute="centerX" secondItem="j11-Su-6T1" secondAttribute="centerX" id="UlB-5g-d2N"/>
-                <constraint firstItem="ajK-zt-lDW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="YK5-Uf-PgI"/>
+                <constraint firstItem="ajK-zt-lDW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" priority="999" constant="20" id="YK5-Uf-PgI"/>
                 <constraint firstItem="j11-Su-6T1" firstAttribute="bottom" secondItem="ajK-zt-lDW" secondAttribute="bottom" constant="20" id="ZYU-Av-Ib4"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

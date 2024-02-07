@@ -48,7 +48,7 @@ extension PaymentUserGroupCell: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.payment_user, for: indexPath)!
         let user = users[indexPath.item]
         cell.avatarImageView.setImage(with: user)
-        cell.usernameLabel.text = "\(user.fullName)(\(user.identityNumber))"
+        cell.usernameLabel.text = "\(user.fullName) (\(user.identityNumber))"
         return cell
     }
     

@@ -71,6 +71,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         Task {
             do {
                 try await operation.start(pin: pin)
+                UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.transfer_success(),

@@ -113,15 +113,15 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
             }
         }
         
-        let tokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never, symbol: .custom(token.symbol))
+        let tokenValue = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
         let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         let fee = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let rows: [Row] = [
-            .amount(caption: .amount, token: tokenAmount, fiatMoney: fiatMoneyValue, display: .byToken),
+            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken),
             .senders(senders, threshold: sendersThreshold),
             .receivers(receivers, threshold: receiversThreshold),
-            .info(caption: .receiverWillReceive, content: tokenAmount),
+            .amount(caption: .receiverWillReceive, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
             .info(caption: .fee, content: fee)
         ]
@@ -153,6 +153,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
             layoutTableHeaderView(title: R.string.localizable.revoking_multisig_signature(),
                                   subtitle: R.string.localizable.multisig_unlocking_description())
         }
+        replaceTrayView(with: nil, animation: .vertical)
         Task {
             do {
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()

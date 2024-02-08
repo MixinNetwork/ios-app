@@ -124,10 +124,10 @@ final class AuthenticationViewController: UIViewController {
         
         let biometryType = BiometryType.payment
         if canAuthenticateWithBiometry && biometryType != .none {
-            let button = UIButton()
+            let button = UIButton(type: .system)
             button.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 0)
-            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -6, bottom: 0, right: 0)
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -12, bottom: 0, right: 0)
             button.setTitleColor(.theme, for: .normal)
             button.titleLabel?.font = .systemFont(ofSize: 14)
             switch biometryType {

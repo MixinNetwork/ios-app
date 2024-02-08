@@ -170,6 +170,7 @@
 "changed" = "変更しました";
 "changed_disappearing_message_settings" = "%@が消えるメッセージを設定しました";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
+"chat" = "Chat";
 "chat_background" = "チャットの背景";
 "chat_backup" = "チャットのバックアップ";
 "chat_bot_reception_title" = "ミニアプリを使用するためにボタンをタップしてください";

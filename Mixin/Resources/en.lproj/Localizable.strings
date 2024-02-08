@@ -170,6 +170,7 @@
 "changed" = "Changed";
 "changed_disappearing_message_settings" = "%@ changed disappearing message settings.";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
+"chat" = "Chat";
 "chat_background" = "Chat Background";
 "chat_backup" = "Chat Backup";
 "chat_bot_reception_title" = "Tap the button to interact with the bot";

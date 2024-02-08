@@ -170,6 +170,7 @@
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限时消息设置";
 "changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，点继续完成 PIN 修改";
+"chat" = "聊天";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天记录备份";
 "chat_bot_reception_title" = "点击按钮使用机器人";

@@ -11,6 +11,7 @@ final class TabBar: UIView {
         let id: Int
         let image: UIImage
         let selectedImage: UIImage
+        let text: String
     }
     
     override var intrinsicContentSize: CGSize {
@@ -103,9 +104,31 @@ final class TabBar: UIView {
         
         for (index, item) in items.enumerated() {
             let button = buttons[index]
-            button.setImage(item.image, for: .normal)
-            button.setImage(item.selectedImage, for: .selected)
-            button.setImage(item.selectedImage, for: [.highlighted, .selected])
+            if #available(iOS 15.0, *) {
+                button.configurationUpdateHandler = { button in
+                    var textAttributes: [NSAttributedString.Key: Any] = [
+                        .font: UIFont.systemFont(ofSize: 10, weight: .medium)
+                    ]
+                    var config: UIButton.Configuration = .plain()
+                    config.baseBackgroundColor = .clear
+                    config.imagePlacement = .top
+                    config.imagePadding = 3
+                    if button.state.contains(.selected) {
+                        config.image = item.selectedImage
+                        textAttributes[.foregroundColor] = R.color.text()
+                        config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
+                    } else {
+                        config.image = item.image
+                        textAttributes[.foregroundColor] = R.color.text_tertiary()
+                        config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
+                    }
+                    button.configuration = config
+                }
+            } else {
+                button.setImage(item.image, for: .normal)
+                button.setImage(item.selectedImage, for: .selected)
+                button.setImage(item.selectedImage, for: [.highlighted, .selected])
+            }
             button.tag = index
             button.isSelected = false
         }

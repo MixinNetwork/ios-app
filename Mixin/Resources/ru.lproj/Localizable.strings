@@ -170,6 +170,7 @@
 "changed" = "Измененный";
 "changed_disappearing_message_settings" = "%@ изменил настройки исчезающих сообщений.";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
+"chat" = "Chat";
 "chat_background" = "Фон чата";
 "chat_backup" = "Резервное копирование чата";
 "chat_bot_reception_title" = "Нажмите кнопку, чтобы взаимодействовать с ботом";

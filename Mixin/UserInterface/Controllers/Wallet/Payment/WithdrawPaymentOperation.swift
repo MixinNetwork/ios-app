@@ -320,6 +320,15 @@ struct WithdrawPaymentOperation {
         try await SafeAPI.withRetryingOnServerError(maxNumberOfTries: 20) {
             Logger.general.info(category: "Withdraw", message: "Will broadcast tx: \(broadcastRequestIDs)")
             try await SafeAPI.postTransaction(requests: broadcastRequests)
+        } shouldRetry: {
+            do {
+                _ = try await SafeAPI.transaction(id: traceID)
+                Logger.general.warn(category: "Withdraw", message: "Found tx, stop retrying")
+                return false
+            } catch {
+                Logger.general.warn(category: "Withdraw", message: "Keep retrying: \(error)")
+                return true
+            }
         }
         Logger.general.info(category: "Withdraw", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: broadcastRequestIDs)

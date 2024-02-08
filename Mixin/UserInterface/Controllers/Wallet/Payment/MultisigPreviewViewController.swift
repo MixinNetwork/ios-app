@@ -153,6 +153,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
             layoutTableHeaderView(title: R.string.localizable.revoking_multisig_signature(),
                                   subtitle: R.string.localizable.multisig_unlocking_description())
         }
+        replaceTrayView(with: nil, animation: .vertical)
         Task {
             do {
                 let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()

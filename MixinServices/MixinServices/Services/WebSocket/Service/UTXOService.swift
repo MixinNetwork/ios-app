@@ -97,6 +97,69 @@ public final class UTXOService {
         }
     }
     
+    @MainActor 
+    public func synchronize(
+        assetID: String,
+        kernelAssetID: String,
+        completion: @MainActor @escaping (Error?) -> Void
+    ) {
+        enum SyncError: Error {
+            case badNetwork
+            case encodeMembers
+        }
+        
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        guard ReachabilityManger.shared.isReachable else {
+            completion(SyncError.badNetwork)
+            return
+        }
+        let limit = self.synchronizeOutputPageCount
+        Task {
+            guard let userID = LoginManager.shared.account?.userID else {
+                return
+            }
+            guard let data = userID.data(using: .utf8), let membersHash = SHA3_256.hash(data: data) else {
+                await MainActor.run {
+                    completion(SyncError.encodeMembers)
+                }
+                return
+            }
+            let members = membersHash.hexEncodedString()
+            
+            var outputs: [Output] = []
+            var sequence = OutputDAO.shared.latestOutputSequence(asset: kernelAssetID)
+            
+            do {
+                repeat {
+                    outputs = try await SafeAPI.outputs(members: members,
+                                                        threshold: 1,
+                                                        offset: sequence,
+                                                        limit: limit,
+                                                        state: Output.State.unspent.rawValue,
+                                                        asset: kernelAssetID)
+                    guard let lastOutput = outputs.last else {
+                        break
+                    }
+                    OutputDAO.shared.insertOrIgnore(outputs: outputs) { db in
+                        try self.updateBalance(assetID: assetID, kernelAssetID: kernelAssetID, db: db)
+                    }
+                    sequence = lastOutput.sequence
+                } while outputs.count >= limit && LoginManager.shared.isLoggedIn
+            } catch MixinAPIError.unauthorized {
+                return
+            } catch {
+                await MainActor.run {
+                    completion(error)
+                }
+            }
+            await MainActor.run {
+                completion(nil)
+            }
+        }
+    }
+    
     public func updateBalance(assetID: String, kernelAssetID: String, db: GRDB.Database) throws {
         let limit = self.calculateBalancePageCount
         

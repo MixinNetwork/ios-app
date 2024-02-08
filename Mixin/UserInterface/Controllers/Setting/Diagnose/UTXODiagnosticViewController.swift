@@ -40,7 +40,7 @@ extension UTXODiagnosticViewController: UITableViewDelegate {
             let authentication = AuthenticationViewController(intent: reveal)
             present(authentication, animated: true)
         case (1, 0):
-            let outputs = OutputsViewController(kernelAssetID: nil)
+            let outputs = OutputsViewController(token: nil)
             let container = ContainerViewController.instance(viewController: outputs, title: "Outputs")
             navigationController?.pushViewController(container, animated: true)
         case (2, 0):

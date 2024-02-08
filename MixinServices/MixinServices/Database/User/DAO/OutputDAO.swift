@@ -9,6 +9,10 @@ public final class OutputDAO: UserDatabaseDAO {
         db.select(with: "SELECT sequence FROM outputs ORDER BY sequence DESC LIMIT 1")
     }
     
+    public func latestOutputSequence(asset: String) -> Int? {
+        db.select(with: "SELECT sequence FROM outputs WHERE asset = ? ORDER BY sequence DESC LIMIT 1", arguments: [asset])
+    }
+    
     public func unspentOutputs(asset: String, limit: Int) -> [Output] {
         db.select(with: "SELECT * FROM outputs WHERE state = 'unspent' AND asset = ? ORDER BY sequence ASC LIMIT ?", arguments: [asset, limit])
     }
@@ -62,6 +66,15 @@ public final class OutputDAO: UserDatabaseDAO {
             let sql = "UPDATE outputs SET state = 'signed' WHERE output_id IN ('\(ids)')"
             try db.execute(sql: sql)
             try change(db)
+        }
+    }
+    
+    public func deleteAll(kernelAssetID: String, completion: (() -> Void)? = nil) {
+        db.write { db in
+            try db.execute(sql: "DELETE FROM outputs WHERE asset = ?", arguments: [kernelAssetID])
+            try db.afterNextTransaction(onCommit: { _ in
+                completion?()
+            })
         }
     }
     

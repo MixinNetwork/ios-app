@@ -53,7 +53,8 @@ public final class SafeAPI: MixinAPI {
         threshold: Int,
         offset: Int?,
         limit: Int = 200,
-        state: String? = nil
+        state: String? = nil,
+        asset: String? = nil
     ) async throws -> [Output] {
         var path = "/safe/outputs?members=\(members)&threshold=\(threshold)&limit=\(limit)"
         if let offset {
@@ -61,6 +62,9 @@ public final class SafeAPI: MixinAPI {
         }
         if let state {
             path.append("&state=\(state)")
+        }
+        if let asset {
+            path.append("&asset=\(asset)")
         }
         return try await request(method: .get, path: path)
     }

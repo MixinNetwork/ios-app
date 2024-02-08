@@ -28,6 +28,8 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
     private let tag: String
     private let action: Action
     
+    private var savedAddress: Address?
+    
     init(token: TokenItem, label: String, destination: String, tag: String, action: Action) {
         self.token = token
         self.label = label
@@ -94,12 +96,14 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
                 self.canDismissInteractively = true
                 switch result {
                 case let .success(address):
+                    self.savedAddress = address
                     self.loadSuccessViews()
                     self.onSavingSuccess?()
                     DispatchQueue.global().async {
                         AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                     }
                 case let .failure(error):
+                    self.savedAddress = nil
                     let errorDescription = if case .malformedAddress = error {
                         if token.isEOSChain {
                             R.string.localizable.invalid_malformed_address_eos_hint()
@@ -117,6 +121,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
         case .delete(let id):
             AddressAPI.delete(addressID: id, pin: pin) { [assetID=token.assetID] result in
                 self.canDismissInteractively = true
+                self.savedAddress = nil
                 switch result {
                 case .success:
                     self.loadSuccessViews()
@@ -127,6 +132,19 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
                     self.loadFailureViews(errorDescription: error.localizedDescription)
                 }
             }
+        }
+    }
+    
+    @objc private func withdraw(_ sender: Any) {
+        guard let address = savedAddress else {
+            return
+        }
+        presentingViewController?.dismiss(animated: true) { [token] in
+            guard let navigationController = UIApplication.homeNavigationController else {
+                return
+            }
+            let transfer = TransferOutViewController.instance(token: token, to: .address(address))
+            navigationController.pushViewController(transfer, animated: true)
         }
     }
     
@@ -148,7 +166,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.close(),
                                      leftAction: #selector(close(_:)),
                                      rightTitle: R.string.localizable.withdrawal(),
-                                     rightAction: #selector(close(_:)),
+                                     rightAction: #selector(withdraw(_:)),
                                      animation: .vertical)
         case .delete:
             loadSingleButtonTrayView(title: R.string.localizable.done(),

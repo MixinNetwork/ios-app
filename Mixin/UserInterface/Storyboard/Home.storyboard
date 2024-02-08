@@ -269,16 +269,15 @@
                                                     <action selector="showSearchAction" destination="hQE-mj-dkd" eventType="touchUpInside" id="Vfm-8z-tYR"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGh-b1-PmH">
+                                            <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gVa-XX-xiz">
                                                 <rect key="frame" x="247" y="0.0" width="44" height="44"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="TGh-b1-PmH" secondAttribute="height" id="tcv-7n-ucx"/>
+                                                    <constraint firstAttribute="width" secondItem="gVa-XX-xiz" secondAttribute="height" id="H8h-rn-cnG"/>
                                                 </constraints>
                                                 <color key="tintColor" name="icon_tint"/>
-                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="ic_title_desktop"/>
+                                                <state key="normal" image="ic_app_category_scan"/>
                                                 <connections>
-                                                    <action selector="showDesktopAction" destination="hQE-mj-dkd" eventType="touchUpInside" id="zVC-E3-6nZ"/>
+                                                    <action selector="scanQRCode" destination="hQE-mj-dkd" eventType="touchUpInside" id="Qf2-EK-WqB"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgk-eO-xl5">
@@ -361,7 +360,6 @@
                         <outlet property="bulletinWrapperViewHeightConstraint" destination="yDn-Wa-bH8" id="Pu2-Qk-NIY"/>
                         <outlet property="circlesContainerView" destination="tgL-jC-hwU" id="Jbu-y0-Oeu"/>
                         <outlet property="connectingView" destination="px1-MZ-UBh" id="pJF-Aq-gui"/>
-                        <outlet property="desktopButton" destination="TGh-b1-PmH" id="cGR-Th-xsn"/>
                         <outlet property="guideButton" destination="mGh-0e-UXt" id="luZ-zh-eKQ"/>
                         <outlet property="guideLabel" destination="ihi-Yl-qaN" id="8oB-nb-bkP"/>
                         <outlet property="guideView" destination="L82-pj-DlR" id="X4h-WI-gQy"/>
@@ -1345,6 +1343,7 @@
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
         <image name="ic_announcement_close" width="12" height="12"/>
+        <image name="ic_app_category_scan" width="24" height="24"/>
         <image name="ic_chat_clock" width="14.5" height="14"/>
         <image name="ic_chat_mute" width="14" height="14"/>
         <image name="ic_chat_pin" width="14" height="14"/>
@@ -1353,7 +1352,6 @@
         <image name="ic_database" width="62" height="68"/>
         <image name="ic_message_photo" width="14" height="12"/>
         <image name="ic_title_add" width="16" height="16"/>
-        <image name="ic_title_desktop" width="24" height="24"/>
         <image name="ic_title_search" width="28.5" height="28"/>
         <image name="ic_user_bot" width="14" height="11"/>
         <namedColor name="background">

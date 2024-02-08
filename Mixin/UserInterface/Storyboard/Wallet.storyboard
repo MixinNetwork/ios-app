@@ -106,7 +106,7 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Yr-yj-uN7">
-                                        <rect key="frame" x="20" y="0.0" width="266" height="44"/>
+                                        <rect key="frame" x="20" y="0.0" width="212" height="44"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
@@ -116,7 +116,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FqI-YN-sPY">
-                                        <rect key="frame" x="306" y="0.0" width="98" height="44"/>
+                                        <rect key="frame" x="252" y="0.0" width="152" height="44"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="054-Y6-e3c">
                                                 <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -132,8 +132,19 @@
                                                     <action selector="searchAction:" destination="7b5-hR-M5c" eventType="touchUpInside" id="cZ5-CO-gmy"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RGi-oK-LTd">
+                                            <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZf-cH-27l">
                                                 <rect key="frame" x="54" y="0.0" width="44" height="44"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="VZf-cH-27l" secondAttribute="height" id="Mgn-7I-uWo"/>
+                                                </constraints>
+                                                <color key="tintColor" name="icon_tint"/>
+                                                <state key="normal" image="ic_app_category_scan"/>
+                                                <connections>
+                                                    <action selector="scanQRCode" destination="7b5-hR-M5c" eventType="touchUpInside" id="PxC-hs-E9q"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RGi-oK-LTd">
+                                                <rect key="frame" x="108" y="0.0" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="44" id="540-0d-oCe"/>
                                                 </constraints>
@@ -1813,6 +1824,7 @@
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
+        <image name="ic_app_category_scan" width="24" height="24"/>
         <image name="ic_arrow_down" width="30" height="30"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_scan_address" width="18" height="18"/>

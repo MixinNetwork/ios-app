@@ -94,6 +94,10 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         self.searchCenterYConstraint = constraint
     }
     
+    @IBAction func scanQRCode() {
+        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+    }
+    
     @IBAction func moreAction(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in

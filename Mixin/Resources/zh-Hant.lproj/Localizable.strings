@@ -170,6 +170,7 @@
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限時訊息設定";
 "changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，點繼續完成 PIN 修改";
+"chat" = "聊天";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天記錄備份";
 "chat_bot_reception_title" = "點選按鈕使用機器人";

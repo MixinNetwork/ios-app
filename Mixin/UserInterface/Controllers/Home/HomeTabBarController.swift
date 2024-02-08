@@ -26,13 +26,16 @@ final class HomeTabBarController: UIViewController {
         tabBar.items = [
             TabBar.Item(id: ChildID.chat.rawValue,
                         image: R.image.home_tab_chat()!,
-                        selectedImage: R.image.home_tab_chat_selected()!),
+                        selectedImage: R.image.home_tab_chat_selected()!,
+                        text: R.string.localizable.chat()),
             TabBar.Item(id: ChildID.wallet.rawValue,
                         image: R.image.home_tab_wallet()!,
-                        selectedImage: R.image.home_tab_wallet_selected()!),
+                        selectedImage: R.image.home_tab_wallet_selected()!,
+                        text: R.string.localizable.wallet()),
             TabBar.Item(id: ChildID.explore.rawValue,
                         image: R.image.home_tab_explore()!,
-                        selectedImage: R.image.home_tab_explore_selected()!),
+                        selectedImage: R.image.home_tab_explore_selected()!,
+                        text: R.string.localizable.explore()),
         ]
         tabBar.selectedIndex = 0
         tabBar.delegate = self

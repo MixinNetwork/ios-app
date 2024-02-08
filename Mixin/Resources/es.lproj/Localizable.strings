@@ -170,6 +170,7 @@
 "changed" = "Cambiado";
 "changed_disappearing_message_settings" = "%@ ha cambiado la configuración de los mensajes que desaparecen.";
 "changing_pin_terminated_unexpectedly" = "El cambio de PIN ha finalizado inesperadamente, haz clic en Continuar para completar el cambio";
+"chat" = "Chat";
 "chat_background" = "Fondo de chat";
 "chat_backup" = "Copia de seguridad de chat";
 "chat_bot_reception_title" = "Toca el botón para interactuar con el bot";

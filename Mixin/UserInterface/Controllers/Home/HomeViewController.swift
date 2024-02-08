@@ -24,7 +24,6 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var titleButton: HomeTitleButton!
     @IBOutlet weak var bulletinWrapperView: UIView!
     @IBOutlet weak var myAvatarImageView: AvatarImageView!
-    @IBOutlet weak var desktopButton: UIButton!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
@@ -89,7 +88,6 @@ class HomeViewController: UIViewController {
         if let account = LoginManager.shared.account {
             myAvatarImageView.setImage(with: account)
         }
-        updateDesktopButtonHidden()
         updateBulletinView()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
@@ -112,7 +110,6 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateDesktopButtonHidden), name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateBulletinView), name: TIP.didUpdateNotification, object: nil)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -181,8 +178,8 @@ class HomeViewController: UIViewController {
         DispatchQueue.main.async(execute: layoutBulletinView)
     }
     
-    @IBAction func showDesktopAction() {
-        navigationController?.pushViewController(DesktopViewController.instance(), animated: true)
+    @IBAction func scanQRCode() {
+        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
     }
     
     @IBAction func showSearchAction() {
@@ -365,10 +362,6 @@ class HomeViewController: UIViewController {
     
     @objc private func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
-    }
-    
-    @objc private func updateDesktopButtonHidden() {
-        desktopButton.isHidden = !AppGroupUserDefaults.Account.isDesktopLoggedIn
     }
     
     func setNeedsRefresh() {

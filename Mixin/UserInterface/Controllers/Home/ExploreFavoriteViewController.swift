@@ -8,26 +8,8 @@ final class ExploreFavoriteViewController: UITableViewController {
         case favorites = 1
     }
     
-    private struct FixedItem {
-        let icon: UIImage
-        let title: String
-        let subtitle: String
-        let action: ExploreAction
-    }
-    
-    private let fixedItems: [FixedItem] = [
-        FixedItem(icon: R.image.explore.camera()!,
-                  title: R.string.localizable.camera(),
-                  subtitle: R.string.localizable.take_a_photo(),
-                  action: .camera),
-        FixedItem(icon: R.image.explore.link_desktop()!,
-                  title: R.string.localizable.link_desktop(),
-                  subtitle: R.string.localizable.link_desktop_description(),
-                  action: .linkDesktop),
-        FixedItem(icon: R.image.explore.customer_service()!,
-                  title: R.string.localizable.contact_support(),
-                  subtitle: R.string.localizable.leave_message_to_team_mixin(),
-                  action: .contactSupport),
+    private let fixedActions: [ExploreAction] = [
+        .camera, .linkDesktop, .customerService,
     ]
     
     private var favoriteAppUsers: [User] = []
@@ -45,6 +27,7 @@ final class ExploreFavoriteViewController: UITableViewController {
         reloadFavoriteAppsFromRemote()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadFavoriteAppsFromLocal), name: UserDAO.usersDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadFavoriteAppsFromLocal), name: FavoriteAppsDAO.favoriteAppsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateLinkDesktopAction), name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification, object: nil)
     }
     
     // MARK: - UITableViewDataSource
@@ -55,7 +38,7 @@ final class ExploreFavoriteViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section) {
         case .fixed:
-            return fixedItems.count
+            return fixedActions.count
         case .favorites:
             return favoriteAppUsers.count + 1
         case nil:
@@ -67,11 +50,8 @@ final class ExploreFavoriteViewController: UITableViewController {
         switch Section(rawValue: indexPath.section)! {
         case .fixed:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.explore_action, for: indexPath)!
-            let item = fixedItems[indexPath.row]
-            cell.iconTrayImageView.image = R.image.explore.action_tray()
-            cell.iconImageView.image = item.icon
-            cell.titleLabel.text = item.title
-            cell.subtitleLabel.text = item.subtitle
+            let action = fixedActions[indexPath.row]
+            cell.load(action: action)
             return cell
         case .favorites:
             if indexPath.row < favoriteAppUsers.count {
@@ -82,10 +62,7 @@ final class ExploreFavoriteViewController: UITableViewController {
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.explore_action, for: indexPath)!
-                cell.iconTrayImageView.image = R.image.explore.edit_favorite_app()
-                cell.iconImageView.image = nil
-                cell.titleLabel.text = R.string.localizable.my_favorite_bots()
-                cell.subtitleLabel.text = R.string.localizable.add_or_remove_favorite_bots()
+                cell.load(action: .editFavoriteApps)
                 return cell
             }
         }
@@ -119,8 +96,8 @@ final class ExploreFavoriteViewController: UITableViewController {
         }
         switch Section(rawValue: indexPath.section) {
         case .fixed:
-            let item = fixedItems[indexPath.row]
-            explore.perform(action: item.action)
+            let action = fixedActions[indexPath.row]
+            explore.perform(action: action)
         case .favorites:
             if indexPath.row < favoriteAppUsers.count {
                 let user = favoriteAppUsers[indexPath.row]
@@ -134,6 +111,14 @@ final class ExploreFavoriteViewController: UITableViewController {
     }
     
     // MARK: - Data Loader
+    @objc private func updateLinkDesktopAction() {
+        guard let row = fixedActions.firstIndex(of: .linkDesktop) else {
+            return
+        }
+        let indexPath = IndexPath(row: row, section: Section.fixed.rawValue)
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
     @objc private func reloadFavoriteAppsFromLocal() {
         DispatchQueue.global().async { [weak self] in
             let users = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: myUserId)

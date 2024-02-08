@@ -51,6 +51,11 @@ final class ExploreViewController: UIViewController {
         UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
     }
     
+    @IBAction func openSettings(_ sender: Any) {
+        let settings = SettingsViewController.instance()
+        navigationController?.pushViewController(settings, animated: true)
+    }
+    
     func perform(action: ExploreAction) {
         switch action {
         case .camera:
@@ -58,7 +63,7 @@ final class ExploreViewController: UIViewController {
         case .linkDesktop:
             let desktop = DesktopViewController.instance()
             navigationController?.pushViewController(desktop, animated: true)
-        case .contactSupport:
+        case .customerService:
             if let user = UserDAO.shared.getUser(identityNumber: "7000") {
                 let conversation = ConversationViewController.instance(ownerUser: user)
                 navigationController?.pushViewController(conversation, animated: true)

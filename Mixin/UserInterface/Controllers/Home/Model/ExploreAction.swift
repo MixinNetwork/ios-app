@@ -11,7 +11,7 @@ enum ExploreAction {
     var trayImage: UIImage? {
         switch self {
         case .camera, .linkDesktop, .customerService:
-            nil
+            R.image.explore.action_tray()
         case .editFavoriteApps:
             R.image.explore.edit_favorite_app()
         }

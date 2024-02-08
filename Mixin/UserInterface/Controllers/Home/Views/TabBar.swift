@@ -91,7 +91,7 @@ final class TabBar: UIView {
                 stackView.addArrangedSubview(wrapper)
                 buttons.append(button)
                 button.snp.makeConstraints { make in
-                    make.width.equalTo(60)
+                    make.width.greaterThanOrEqualTo(60)
                     make.top.bottom.centerX.equalToSuperview()
                 }
             }
@@ -106,8 +106,9 @@ final class TabBar: UIView {
             let button = buttons[index]
             if #available(iOS 15.0, *) {
                 button.configurationUpdateHandler = { button in
-                    var textAttributes: [NSAttributedString.Key: Any] = [
-                        .font: UIFont.systemFont(ofSize: 10, weight: .medium)
+                    let textAttributes: [NSAttributedString.Key: Any] = [
+                        .font: UIFont.systemFont(ofSize: 10, weight: .medium),
+                        .foregroundColor: R.color.text()!,
                     ]
                     var config: UIButton.Configuration = .plain()
                     config.baseBackgroundColor = .clear
@@ -115,11 +116,9 @@ final class TabBar: UIView {
                     config.imagePadding = 3
                     if button.state.contains(.selected) {
                         config.image = item.selectedImage
-                        textAttributes[.foregroundColor] = R.color.text()
                         config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
                     } else {
                         config.image = item.image
-                        textAttributes[.foregroundColor] = R.color.text_tertiary()
                         config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
                     }
                     button.configuration = config

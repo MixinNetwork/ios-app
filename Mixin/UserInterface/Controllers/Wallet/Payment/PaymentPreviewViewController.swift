@@ -110,9 +110,9 @@ extension PaymentPreviewViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = rows[indexPath.row]
         switch row {
-        case let .amount(token, fiatMoney, display):
+        case let .amount(caption, token, fiatMoney, display):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_amount, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.amount().uppercased()
+            cell.captionLabel.text = caption.rawValue.uppercased()
             switch display {
             case .byToken:
                 cell.amountLabel.text = token
@@ -208,6 +208,7 @@ extension PaymentPreviewViewController {
     
     enum Caption {
         
+        case amount
         case label
         case address
         case network
@@ -218,6 +219,8 @@ extension PaymentPreviewViewController {
         
         var rawValue: String {
             switch self {
+            case .amount:
+                R.string.localizable.amount()
             case .label:
                 R.string.localizable.label()
             case .address:
@@ -238,7 +241,7 @@ extension PaymentPreviewViewController {
     }
     
     enum Row {
-        case amount(token: String, fiatMoney: String, display: AmountIntent)
+        case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent)
         case info(caption: Caption, content: String)
         case address(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)

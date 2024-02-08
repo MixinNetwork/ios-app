@@ -44,7 +44,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         let fee = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         var rows: [Row] = [
-            .amount(token: tokenAmount, fiatMoney: fiatMoneyAmount, display: amountDisplay),
+            .amount(caption: .amount, token: tokenAmount, fiatMoney: fiatMoneyAmount, display: amountDisplay),
             .info(caption: .receiverWillReceive, content: tokenAmount),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
             .info(caption: .fee, content: fee),

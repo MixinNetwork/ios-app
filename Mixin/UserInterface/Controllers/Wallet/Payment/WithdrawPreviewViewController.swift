@@ -47,9 +47,9 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
         let feeTokenValue = CurrencyFormatter.localizedString(from: operation.feeAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: feeFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         let rows: [Row] = [
-            .amount(token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay),
+            .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay),
             .address(value: operation.address.fullRepresentation, label: operation.addressLabel),
-            .info(caption: .addressWillReceive, content: withdrawalTokenValue),
+            .amount(caption: .addressWillReceive, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
             .fee(token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay)
         ]

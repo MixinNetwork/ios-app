@@ -228,6 +228,15 @@ struct TransferPaymentOperation {
         try await SafeAPI.withRetryingOnServerError(maxNumberOfTries: 20) {
             Logger.general.info(category: "Transfer", message: "Will broadcast tx: \(broadcastRequest.id)")
             try await SafeAPI.postTransaction(requests: [broadcastRequest])
+        } shouldRetry: {
+            do {
+                _ = try await SafeAPI.transaction(id: traceID)
+                Logger.general.warn(category: "Transfer", message: "Found tx, stop retrying")
+                return false
+            } catch {
+                Logger.general.warn(category: "Transfer", message: "Keep retrying: \(error)")
+                return true
+            }
         }
         Logger.general.info(category: "Transfer", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID])

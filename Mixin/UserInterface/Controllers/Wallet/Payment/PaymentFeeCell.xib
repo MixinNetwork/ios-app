@@ -72,10 +72,10 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="amountLabel" destination="JVH-Zw-kNW" id="rTw-K8-ik5"/>
                 <outlet property="captionLabel" destination="xmu-DW-0t2" id="bNY-dh-LFh"/>
-                <outlet property="fiatMoneyAmountLabel" destination="VAO-wC-DB5" id="Iz4-Ah-Ohc"/>
                 <outlet property="labelStackView" destination="2Sr-Jy-2Ib" id="Sw0-dW-UvH"/>
-                <outlet property="tokenAmountLabel" destination="JVH-Zw-kNW" id="rTw-K8-ik5"/>
+                <outlet property="secondaryAmountLabel" destination="VAO-wC-DB5" id="Iz4-Ah-Ohc"/>
             </connections>
             <point key="canvasLocation" x="21" y="42"/>
         </tableViewCell>

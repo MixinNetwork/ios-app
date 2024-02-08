@@ -110,11 +110,17 @@ extension PaymentPreviewViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = rows[indexPath.row]
         switch row {
-        case let .amount(token, fiatMoney):
+        case let .amount(token, fiatMoney, display):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_amount, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.amount().uppercased()
-            cell.tokenAmountLabel.text = token
-            cell.fiatMoneyAmountLabel.text = fiatMoney
+            switch display {
+            case .byToken:
+                cell.amountLabel.text = token
+                cell.secondaryAmountLabel.text = fiatMoney
+            case .byFiatMoney:
+                cell.amountLabel.text = fiatMoney
+                cell.secondaryAmountLabel.text = token
+            }
             return cell
         case let .address(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
@@ -168,11 +174,17 @@ extension PaymentPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.contentLabel.text = address
             return cell
-        case let .fee(token, fiatMoney):
+        case let .fee(token, fiatMoney, display):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_fee, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.network_fee().uppercased()
-            cell.tokenAmountLabel.text = token
-            cell.fiatMoneyAmountLabel.text = fiatMoney
+            switch display {
+            case .byToken:
+                cell.amountLabel.text = token
+                cell.secondaryAmountLabel.text = fiatMoney
+            case .byFiatMoney:
+                cell.amountLabel.text = fiatMoney
+                cell.secondaryAmountLabel.text = token
+            }
             return cell
         }
     }
@@ -226,13 +238,13 @@ extension PaymentPreviewViewController {
     }
     
     enum Row {
-        case amount(token: String, fiatMoney: String)
+        case amount(token: String, fiatMoney: String, display: AmountIntent)
         case info(caption: Caption, content: String)
         case address(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
-        case fee(token: String, fiatMoney: String)
+        case fee(token: String, fiatMoney: String, display: AmountIntent)
     }
     
     struct TableHeaderViewStyle: OptionSet {

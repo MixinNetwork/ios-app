@@ -118,7 +118,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
         let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         let fee = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let rows: [Row] = [
-            .amount(token: tokenAmount, fiatMoney: fiatMoneyValue),
+            .amount(token: tokenAmount, fiatMoney: fiatMoneyValue, display: .byToken),
             .senders(senders, threshold: sendersThreshold),
             .receivers(receivers, threshold: receiversThreshold),
             .info(caption: .receiverWillReceive, content: tokenAmount),

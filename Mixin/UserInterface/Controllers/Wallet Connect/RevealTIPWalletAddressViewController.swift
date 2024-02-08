@@ -7,7 +7,7 @@ final class RevealTIPWalletAddressViewController: UIViewController {
     
 }
 
-extension RevealTIPWalletAddressViewController: AuthenticationIntentViewController {
+extension RevealTIPWalletAddressViewController: AuthenticationIntent {
     
     var intentTitle: String {
         "Reveal Address"

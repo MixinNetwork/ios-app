@@ -288,7 +288,7 @@ extension TokenViewController {
 //            let transfer = TransferOutViewController.instance(token: asset, to: .tipWallet(address))
 //            self.navigationController?.pushViewController(transfer, animated: true)
 //        }
-//        let authentication = AuthenticationViewController(intentViewController: reveal)
+//        let authentication = AuthenticationViewController(intent: reveal)
 //        present(authentication, animated: true)
     }
     

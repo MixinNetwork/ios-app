@@ -19,7 +19,7 @@ public struct SafeMultisigResponse: Decodable {
     public let assetID: String
     public let amount: String
     public let sendersHash: String
-    public let sendersThreshold: Int
+    public let sendersThreshold: Int32
     public let senders: [String]
     public let signers: [String]
     public let rawTransaction: String
@@ -40,7 +40,7 @@ extension SafeMultisigResponse {
         
         public let members: [String]
         public let membersHash: String
-        public let threshold: Int
+        public let threshold: Int32
         
     }
     

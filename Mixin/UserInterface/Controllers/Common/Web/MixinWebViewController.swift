@@ -394,7 +394,7 @@ extension MixinWebViewController: WKScriptMessageHandler {
                 connectWallet.onReject = {
                     self.webView.evaluateJavaScript(callback + "('');")
                 }
-                let authentication = AuthenticationViewController(intentViewController: connectWallet)
+                let authentication = AuthenticationViewController(intent: connectWallet)
                 WalletConnectService.shared.presentRequest(viewController: authentication)
             }
         case .tipSign:
@@ -424,7 +424,7 @@ extension MixinWebViewController: WKScriptMessageHandler {
                     }
                     self.webView.evaluateJavaScript("\(callback)('\(signature)');")
                 }
-                let authentication = AuthenticationViewController(intentViewController: signRequest)
+                let authentication = AuthenticationViewController(intent: signRequest)
                 WalletConnectService.shared.presentRequest(viewController: authentication)
             }
         case .getAssets:

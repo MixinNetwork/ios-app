@@ -613,16 +613,16 @@ class UrlWindow {
                         hud.set(style: .error, text: message)
                         hud.scheduleAutoHidden()
                     }
-                } onSuccess: { operation in
+                } onSuccess: { (operation, issues) in
                     hud.hide()
-                    let withdrawal = WithdrawalConfirmationViewController(operation: operation,
-                                                                          amountDisplay: .byToken,
-                                                                          withdrawalTokenAmount: resolvedAmount,
-                                                                          withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                                          addressLabel: nil)
-                    withdrawal.manipulateNavigationStackOnFinished = false
-                    let authentication = AuthenticationViewController(intentViewController: withdrawal)
-                    homeContainer.present(authentication, animated: true)
+                    let preview = WithdrawPreviewViewController(issues: issues,
+                                                                operation: operation,
+                                                                amountDisplay: .byToken,
+                                                                withdrawalTokenAmount: resolvedAmount,
+                                                                withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                                addressLabel: nil)
+                    preview.manipulateNavigationStackOnFinished = false
+                    homeContainer.present(preview, animated: true)
                 }
             } catch {
                 await MainActor.run {
@@ -678,9 +678,12 @@ class UrlWindow {
                 DispatchQueue.main.async {
                     if let address {
                         hud.hide()
-                        let updateAddress = UpdateAddressViewController(token: token, delete: address)
-                        let authentication = AuthenticationViewController(intentViewController: updateAddress)
-                        UIApplication.homeContainerViewController?.present(authentication, animated: true)
+                        let preview = EditAddressPreviewViewController(token: token,
+                                                                       label: address.label,
+                                                                       destination: address.destination,
+                                                                       tag: address.tag,
+                                                                       action: .delete(id: address.addressId))
+                        UIApplication.homeContainerViewController?.present(preview, animated: true)
                     } else {
                         hud.set(style: .error, text: R.string.localizable.address_not_found())
                         hud.scheduleAutoHidden()
@@ -691,13 +694,12 @@ class UrlWindow {
                 let address = AddressDAO.shared.getAddress(assetId: assetID, destination: destination, tag: tag)
                 DispatchQueue.main.async {
                     hud.hide()
-                    let updateAddress = UpdateAddressViewController(token: token,
-                                                                    label: label,
-                                                                    destination: destination,
-                                                                    tag: tag,
-                                                                    action: address == nil ? .add : .update)
-                    let authentication = AuthenticationViewController(intentViewController: updateAddress)
-                    UIApplication.homeContainerViewController?.present(authentication, animated: true)
+                    let preview = EditAddressPreviewViewController(token: token,
+                                                                   label: label,
+                                                                   destination: destination,
+                                                                   tag: tag,
+                                                                   action: address == nil ? .add : .update)
+                    UIApplication.homeContainerViewController?.present(preview, animated: true)
                 }
             } else {
                 hud.hideInMainThread()
@@ -924,17 +926,17 @@ extension UrlWindow {
                             hud.set(style: .error, text: message)
                             hud.scheduleAutoHidden()
                         }
-                    } onSuccess: { operation in
+                    } onSuccess: { (operation, issues) in
                         hud.hide()
                         let redirection = source.isExternal ? paymentURL.redirection : nil
-                        let transfer = TransferConfirmationViewController(operation: operation,
-                                                                          amountDisplay: .byToken,
-                                                                          tokenAmount: request.amount,
-                                                                          fiatMoneyAmount: fiatMoneyAmount,
-                                                                          redirection: redirection)
-                        transfer.manipulateNavigationStackOnFinished = false
-                        let authentication = AuthenticationViewController(intentViewController: transfer)
-                        homeContainer.present(authentication, animated: true)
+                        let preview = TransferPreviewViewController(issues: issues,
+                                                                    operation: operation,
+                                                                    amountDisplay: .byToken,
+                                                                    tokenAmount: request.amount,
+                                                                    fiatMoneyAmount: fiatMoneyAmount,
+                                                                    redirection: redirection)
+                        preview.manipulateNavigationStackOnFinished = false
+                        homeContainer.present(preview, animated: true)
                     }
                 }
             } else {
@@ -995,7 +997,7 @@ extension UrlWindow {
                     }
                     return
                 }
-                let state: MultisigConfirmationViewController.State
+                let state: MultisigPreviewViewController.State
                 if response.signers.count >= response.sendersThreshold {
                     state = .paid
                 } else if multisig.action == .sign && response.signers.contains(myUserId) {
@@ -1007,20 +1009,19 @@ extension UrlWindow {
                 }
                 DispatchQueue.main.async {
                     hud.hide()
-                    let multisig = MultisigConfirmationViewController(requestID: response.requestID,
-                                                                      token: token,
-                                                                      amount: amount,
-                                                                      sendersThreshold: response.sendersThreshold,
-                                                                      senders: senders,
-                                                                      receiversThreshold: receiver.threshold,
-                                                                      receivers: receiverMembers,
-                                                                      rawTransaction: response.rawTransaction,
-                                                                      viewKeys: response.views.joined(separator: ","),
-                                                                      action: multisig.action,
-                                                                      index: index,
-                                                                      state: state)
-                    let authentication = AuthenticationViewController(intentViewController: multisig)
-                    homeContainer.present(authentication, animated: true)
+                    let preview = MultisigPreviewViewController(requestID: response.requestID,
+                                                                token: token,
+                                                                amount: amount,
+                                                                sendersThreshold: response.sendersThreshold,
+                                                                senders: senders,
+                                                                receiversThreshold: receiver.threshold,
+                                                                receivers: receiverMembers,
+                                                                rawTransaction: response.rawTransaction,
+                                                                viewKeys: response.views.joined(separator: ","),
+                                                                action: multisig.action,
+                                                                index: index,
+                                                                state: state)
+                    homeContainer.present(preview, animated: true)
                 }
             case .failure(let error):
                 DispatchQueue.main.async {

@@ -149,12 +149,15 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             }
         }
         let tag = memoView.isHidden ? "" : memoValue
-        let updateAddress = UpdateAddressViewController(token: asset, label: labelValue, destination: destination, tag: tag, action: .add)
-        updateAddress.onSuccess = { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+        let preview = EditAddressPreviewViewController(token: asset,
+                                                      label: labelValue,
+                                                      destination: destination,
+                                                      tag: tag,
+                                                      action: .add)
+        preview.onSavingSuccess = {
+            self.navigationController?.popViewController(animated: false)
         }
-        let authentication = AuthenticationViewController(intentViewController: updateAddress)
-        present(authentication, animated: true)
+        present(preview, animated: true)
     }
     
     @IBAction func memoHintTapAction(_ recognizer: UITapGestureRecognizer) {

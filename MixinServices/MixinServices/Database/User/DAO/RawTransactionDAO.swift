@@ -16,6 +16,10 @@ public final class RawTransactionDAO: UserDatabaseDAO {
         return db.select(with: "SELECT * FROM raw_transactions WHERE state = 'unspent' AND type IN (\(types)) ORDER BY created_at ASC, rowid ASC LIMIT 1")
     }
     
+    public func latestCreatedAt(receiverID: String) -> String? {
+        db.select(with: "SELECT created_at FROM raw_transactions WHERE receiver_id = ? ORDER BY created_at DESC, rowid DESC LIMIT 1", arguments: [receiverID])
+    }
+    
     public func rawTransaction(with requestID: String) -> RawTransaction? {
         db.select(with: "SELECT * FROM raw_transactions WHERE request_id = ?", arguments: [requestID])
     }

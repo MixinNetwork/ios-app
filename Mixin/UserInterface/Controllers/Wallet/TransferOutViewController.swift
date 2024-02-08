@@ -270,40 +270,40 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         switch opponent {
         case .contact(let opponent):
-            payment.checkPreconditions(transferTo: .user(opponent), on: self, onFailure: onPreconditonFailure) { operation in
+            payment.checkPreconditions(transferTo: .user(opponent), on: self, onFailure: onPreconditonFailure) { (operation, issues) in
                 self.continueButton.isBusy = false
-                let transfer = TransferConfirmationViewController(operation: operation,
-                                                                  amountDisplay: amountIntent,
-                                                                  tokenAmount: tokenAmount,
-                                                                  fiatMoneyAmount: fiatMoneyAmount,
-                                                                  redirection: nil)
-                let authentication = AuthenticationViewController(intentViewController: transfer)
-                self.present(authentication, animated: true)
+                let preview = TransferPreviewViewController(issues: issues,
+                                                            operation: operation,
+                                                            amountDisplay: amountIntent,
+                                                            tokenAmount: tokenAmount,
+                                                            fiatMoneyAmount: fiatMoneyAmount,
+                                                            redirection: nil)
+                self.present(preview, animated: true)
             }
         case .address(let address):
             guard let feeItem = selectedFeeItem else {
                 return
             }
-            payment.checkPreconditions(withdrawTo: .address(address), fee: feeItem, on: self, onFailure: onPreconditonFailure) { operation in
+            payment.checkPreconditions(withdrawTo: .address(address), fee: feeItem, on: self, onFailure: onPreconditonFailure) { (operation, issues) in
                 self.continueButton.isBusy = false
-                let withdraw = WithdrawalConfirmationViewController(operation: operation,
-                                                                    amountDisplay: amountIntent,
-                                                                    withdrawalTokenAmount: tokenAmount,
-                                                                    withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                                    addressLabel: address.label)
-                let authentication = AuthenticationViewController(intentViewController: withdraw)
-                self.present(authentication, animated: true)
+                let preview = WithdrawPreviewViewController(issues: issues,
+                                                            operation: operation,
+                                                            amountDisplay: amountIntent,
+                                                            withdrawalTokenAmount: tokenAmount,
+                                                            withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                            addressLabel: address.label)
+                self.present(preview, animated: true)
             }
         case .mainnet(let address):
-            payment.checkPreconditions(transferTo: .mainnet(address), on: self, onFailure: onPreconditonFailure) { operation in
+            payment.checkPreconditions(transferTo: .mainnet(address), on: self, onFailure: onPreconditonFailure) { (operation, issues) in
                 self.continueButton.isBusy = false
-                let transfer = TransferConfirmationViewController(operation: operation,
-                                                                  amountDisplay: amountIntent,
-                                                                  tokenAmount: tokenAmount,
-                                                                  fiatMoneyAmount: fiatMoneyAmount,
-                                                                  redirection: nil)
-                let authentication = AuthenticationViewController(intentViewController: transfer)
-                self.present(authentication, animated: true)
+                let preview = TransferPreviewViewController(issues: issues,
+                                                            operation: operation,
+                                                            amountDisplay: amountIntent,
+                                                            tokenAmount: tokenAmount,
+                                                            fiatMoneyAmount: fiatMoneyAmount,
+                                                            redirection: nil)
+                self.present(preview, animated: true)
             }
         }
     }

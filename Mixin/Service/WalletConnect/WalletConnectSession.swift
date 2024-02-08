@@ -215,7 +215,7 @@ extension WalletConnectSession {
                 }
             }
             
-            let authentication = AuthenticationViewController(intentViewController: transactionRequest)
+            let authentication = AuthenticationViewController(intent: transactionRequest)
             WalletConnectService.shared.presentRequest(viewController: authentication)
         } catch {
             Logger.walletConnect.debug(category: "WalletConnectSession", message: "Failed to send transaction: \(error)")
@@ -268,7 +268,7 @@ extension WalletConnectSession {
                 }
                 try approve(message, account)
             }
-            let authentication = AuthenticationViewController(intentViewController: signRequest)
+            let authentication = AuthenticationViewController(intent: signRequest)
             WalletConnectService.shared.presentRequest(viewController: authentication)
         } catch {
             let title = R.string.localizable.request_rejected()

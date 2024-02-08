@@ -36,7 +36,7 @@ extension Payment {
         transferTo destination: TransferDestination,
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
-        onSuccess: @MainActor @escaping (TransferPaymentOperation) -> Void
+        onSuccess: @MainActor @escaping (TransferPaymentOperation, [PaymentPreconditionIssue]) -> Void
     ) {
         Task {
             let preconditions: [PaymentPrecondition]
@@ -49,11 +49,12 @@ extension Payment {
                                             tokenAmount: tokenAmount,
                                             fiatMoneyAmount: fiatMoneyAmount,
                                             memo: memo),
-                    TransferAmountPrecondition(opponent: opponent,
-                                               token: token,
-                                               tokenAmount: tokenAmount,
-                                               fiatMoneyAmount: fiatMoneyAmount,
-                                               memo: memo)
+                    LargeAmountPrecondition(opponent: opponent,
+                                            token: token,
+                                            tokenAmount: tokenAmount,
+                                            fiatMoneyAmount: fiatMoneyAmount,
+                                            memo: memo),
+                    OpponentIsContactPrecondition(opponent: opponent),
                 ]
             case .multisig, .mainnet:
                 preconditions = [
@@ -61,31 +62,29 @@ extension Payment {
                     AlreadyPaidPrecondition(traceID: traceID)
                 ]
             }
+            
             switch await check(preconditions: preconditions) {
-            case .passed:
-                break
             case .failed(let reason):
                 await MainActor.run {
                     onFailure(reason)
                 }
-                return
-            }
-            
-            let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
-            switch result {
-            case .success(let collection):
-                let operation = TransferPaymentOperation(traceID: traceID,
-                                                         spendingOutputs: collection,
-                                                         destination: destination,
-                                                         token: token,
-                                                         tokenAmount: tokenAmount,
-                                                         memo: memo)
-                await MainActor.run {
-                    onSuccess(operation)
-                }
-            case .failure(let reason):
-                await MainActor.run {
-                    onFailure(reason)
+            case .passed(let issues):
+                let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
+                switch result {
+                case .success(let collection):
+                    let operation = TransferPaymentOperation(traceID: traceID,
+                                                             spendingOutputs: collection,
+                                                             destination: destination,
+                                                             token: token,
+                                                             amount: tokenAmount,
+                                                             memo: memo)
+                    await MainActor.run {
+                        onSuccess(operation, issues)
+                    }
+                case .failure(let reason):
+                    await MainActor.run {
+                        onFailure(reason)
+                    }
                 }
             }
         }
@@ -125,7 +124,7 @@ extension Payment {
         fee: WithdrawFeeItem,
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
-        onSuccess: @MainActor @escaping (WithdrawPaymentOperation) -> Void
+        onSuccess: @MainActor @escaping (WithdrawPaymentOperation, [PaymentPreconditionIssue]) -> Void
     ) {
         Task {
             let preconditions: [PaymentPrecondition]
@@ -141,9 +140,7 @@ extension Payment {
                                             tokenAmount: tokenAmount,
                                             fiatMoneyAmount: fiatMoneyAmount,
                                             memo: memo),
-                    FirstWithdrawPrecondition(addressID: address.addressId,
-                                              token: token,
-                                              fiatMoneyAmount: fiatMoneyAmount)
+                    AddressValidityPrecondition(address: address),
                 ]
             case let .temporary(address):
                 preconditions = [
@@ -157,46 +154,47 @@ extension Payment {
             }
             
             switch await check(preconditions: preconditions) {
-            case .passed:
-                break
             case .failed(let reason):
                 await MainActor.run {
                     onFailure(reason)
                 }
-                return
-            }
-            
-            let amount: Decimal
-            if fee.tokenItem.assetID == token.assetID {
-                amount = tokenAmount + fee.amount
-            } else {
-                amount = tokenAmount
-            }
-            let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: amount, on: parent)
-            switch result {
-            case .success(let collection):
-                let addressID: String?
-                switch destination {
-                case let .address(address):
-                    addressID = address.addressId
-                case .temporary:
-                    addressID = nil
+            case .passed(let issues):
+                let amount: Decimal
+                if fee.tokenItem.assetID == token.assetID {
+                    amount = tokenAmount + fee.amount
+                } else {
+                    amount = tokenAmount
                 }
-                let operation = WithdrawPaymentOperation(traceID: traceID,
-                                                         withdrawalToken: token,
-                                                         withdrawalTokenAmount: tokenAmount,
-                                                         withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                         withdrawalOutputs: collection,
-                                                         feeToken: fee.tokenItem,
-                                                         feeAmount: fee.amount,
-                                                         address: destination.withdrawable,
-                                                         addressID: addressID)
-                await MainActor.run {
-                    onSuccess(operation)
-                }
-            case .failure(let reason):
-                await MainActor.run {
-                    onFailure(reason)
+                let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: amount, on: parent)
+                switch result {
+                case .success(let collection):
+                    let addressLabel: String?
+                    let addressID: String?
+                    switch destination {
+                    case let .address(address):
+                        addressLabel = address.label
+                        addressID = address.addressId
+                    case .temporary:
+                        addressLabel = nil
+                        addressID = nil
+                    }
+                    let operation = WithdrawPaymentOperation(traceID: traceID,
+                                                             withdrawalToken: token,
+                                                             withdrawalTokenAmount: tokenAmount,
+                                                             withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                             withdrawalOutputs: collection,
+                                                             feeToken: fee.tokenItem,
+                                                             feeAmount: fee.amount,
+                                                             address: destination.withdrawable,
+                                                             addressLabel: addressLabel,
+                                                             addressID: addressID)
+                    await MainActor.run {
+                        onSuccess(operation, issues)
+                    }
+                case .failure(let reason):
+                    await MainActor.run {
+                        onFailure(reason)
+                    }
                 }
             }
         }
@@ -230,7 +228,7 @@ extension Payment {
                         consolidation.onCompletion = { result in
                             continuation.resume(with: .success(result))
                         }
-                        let auth = AuthenticationViewController(intentViewController: consolidation)
+                        let auth = AuthenticationViewController(intent: consolidation)
                         parent.present(auth, animated: true)
                     }
                 }
@@ -245,16 +243,17 @@ extension Payment {
     }
     
     private func check(preconditions: [PaymentPrecondition]) async -> PaymentPreconditionCheckingResult {
+        var issues: [PaymentPreconditionIssue] = []
         for precondition in preconditions {
             let result = await precondition.check()
             switch result {
-            case .passed:
-                continue
+            case .passed(let newIssues):
+                issues.append(contentsOf: newIssues)
             case .failed(let reason):
                 return .failed(reason)
             }
         }
-        return .passed
+        return .passed(issues)
     }
     
 }

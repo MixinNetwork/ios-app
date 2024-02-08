@@ -28,7 +28,7 @@ extension UTXODiagnosticViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
-            let reveal = RevealPublicSpendKeyViewController()
+            let reveal = RevealPublicSpendKeyIntent()
             reveal.onReveal = { (publicKey) in
                 let alert = UIAlertController(title: "Copy Public SpendKey", message: publicKey, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { _ in
@@ -37,7 +37,7 @@ extension UTXODiagnosticViewController: UITableViewDelegate {
                 alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
                 self.present(alert, animated: true)
             }
-            let authentication = AuthenticationViewController(intentViewController: reveal)
+            let authentication = AuthenticationViewController(intent: reveal)
             present(authentication, animated: true)
         case (1, 0):
             let outputs = OutputsViewController(kernelAssetID: nil)

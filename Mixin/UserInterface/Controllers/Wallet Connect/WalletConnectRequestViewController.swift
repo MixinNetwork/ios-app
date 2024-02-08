@@ -71,7 +71,7 @@ class WalletConnectRequestViewController: UIViewController {
     
 }
 
-extension WalletConnectRequestViewController: AuthenticationIntentViewController {
+extension WalletConnectRequestViewController: AuthenticationIntent {
     
     @objc var intentTitle: String {
         "WalletConnect Request"

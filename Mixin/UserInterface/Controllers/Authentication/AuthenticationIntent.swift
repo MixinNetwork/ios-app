@@ -16,17 +16,16 @@ struct AuthenticationIntentOptions: OptionSet {
     static let blurBackground = AuthenticationIntentOptions(rawValue: 1 << 3)
     static let neverRequestAddBiometricAuthentication = AuthenticationIntentOptions(rawValue: 1 << 4)
     static let multipleLineSubtitle = AuthenticationIntentOptions(rawValue: 1 << 5)
+    static let backgroundDismissable = AuthenticationIntentOptions(rawValue: 1 << 6)
     
 }
 
-protocol AuthenticationIntentViewController: UIViewController {
+protocol AuthenticationIntent {
     
     var intentTitle: String { get }
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? { get }
     var intentSubtitle: String { get }
     var options: AuthenticationIntentOptions { get }
-    
-    var authenticationViewController: AuthenticationViewController? { get }
     
     func authenticationViewController(
         _ controller: AuthenticationViewController,
@@ -38,7 +37,7 @@ protocol AuthenticationIntentViewController: UIViewController {
     
 }
 
-extension AuthenticationIntentViewController {
+extension AuthenticationIntent where Self: UIViewController {
     
     var authenticationViewController: AuthenticationViewController? {
         parent as? AuthenticationViewController

@@ -7,15 +7,15 @@ class PopupPresentationController: UIPresentationController {
     private var isTransitioning = false
     
     override var frameOfPresentedViewInContainerView: CGRect {
-        let presentingBounds = presentingViewController.view.bounds
+        let maxBounds = containerView?.bounds ?? presentingViewController.view.bounds
         if presentedViewController.preferredContentSize != .zero {
-            let height = min(presentingBounds.height, presentedViewController.preferredContentSize.height)
+            let height = min(maxBounds.height, presentedViewController.preferredContentSize.height)
             return CGRect(x: 0,
-                          y: presentingBounds.height - height,
-                          width: presentingBounds.width,
+                          y: maxBounds.height - height,
+                          width: maxBounds.width,
                           height: height)
         } else {
-            return presentingBounds
+            return maxBounds
         }
     }
     

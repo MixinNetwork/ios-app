@@ -28,7 +28,7 @@ final class ConsolidateOutputsViewController: UIViewController {
     
 }
 
-extension ConsolidateOutputsViewController: AuthenticationIntentViewController {
+extension ConsolidateOutputsViewController: AuthenticationIntent {
     
     var intentTitle: String {
         ""
@@ -62,7 +62,7 @@ extension ConsolidateOutputsViewController: AuthenticationIntentViewController {
                                                          spendingOutputs: outputs,
                                                          destination: .user(me),
                                                          token: token,
-                                                         tokenAmount: outputs.amount,
+                                                         amount: outputs.amount,
                                                          memo: "")
                 try await operation.start(pin: pin)
                 await MainActor.run {

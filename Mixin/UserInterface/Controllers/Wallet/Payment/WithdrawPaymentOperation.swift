@@ -53,6 +53,7 @@ struct WithdrawPaymentOperation {
     let feeAmount: Decimal
     
     let address: WithdrawableAddress
+    let addressLabel: String?
     let addressID: String?
     
     private let cashierID = "674d6776-d600-4346-af46-58e77d8df185"
@@ -60,7 +61,8 @@ struct WithdrawPaymentOperation {
     init(
         traceID: String, withdrawalToken: TokenItem, withdrawalTokenAmount: Decimal,
         withdrawalFiatMoneyAmount: Decimal, withdrawalOutputs: UTXOService.OutputCollection,
-        feeToken: Token, feeAmount: Decimal, address: WithdrawableAddress, addressID: String? = nil
+        feeToken: Token, feeAmount: Decimal, address: WithdrawableAddress,
+        addressLabel: String? = nil, addressID: String? = nil
     ) {
         self.traceID = traceID
         self.withdrawalToken = withdrawalToken
@@ -70,6 +72,7 @@ struct WithdrawPaymentOperation {
         self.feeToken = feeToken
         self.feeAmount = feeAmount
         self.address = address
+        self.addressLabel = addressLabel
         self.addressID = addressID
     }
     

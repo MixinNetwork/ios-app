@@ -68,6 +68,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
     }
     
     override func performAction(with pin: String) {
+        canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
                               subtitle: R.string.localizable.transfer_sending_description())
@@ -77,6 +78,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                 try await operation.start(pin: pin)
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
+                    canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.transfer_success(),
                                           subtitle: R.string.localizable.transfer_sent_description())
@@ -98,6 +100,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                 }
             } catch {
                 await MainActor.run {
+                    canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
                     layoutTableHeaderView(title: R.string.localizable.transfer_failed(),
                                           subtitle: error.localizedDescription, 

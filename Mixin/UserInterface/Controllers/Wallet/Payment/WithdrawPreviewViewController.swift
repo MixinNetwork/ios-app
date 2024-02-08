@@ -57,6 +57,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
     }
     
     override func performAction(with pin: String) {
+        canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(title: R.string.localizable.sending_withdrawal_request(),
                               subtitle: R.string.localizable.withdrawal_sending_description())
@@ -65,6 +66,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
             do {
                 try await operation.start(pin: pin)
                 await MainActor.run {
+                    canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.withdrawal_request_sent(),
                                           subtitle: R.string.localizable.withdrawal_sent_description())
@@ -74,6 +76,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
                 }
             } catch {
                 await MainActor.run {
+                    canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
                     layoutTableHeaderView(title: R.string.localizable.withdrawal_failed(),
                                           subtitle: error.localizedDescription,

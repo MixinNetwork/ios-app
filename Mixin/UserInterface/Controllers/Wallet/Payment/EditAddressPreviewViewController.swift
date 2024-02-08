@@ -71,6 +71,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
     }
     
     override func performAction(with pin: String) {
+        canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         switch action {
         case .add:
@@ -84,7 +85,6 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
                                   subtitle: nil)
         }
         replaceTrayView(with: nil, animation: .vertical)
-        canDismissInteractively = false
         switch action {
         case .add, .update:
             let request = AddressRequest(assetID: token.assetID,

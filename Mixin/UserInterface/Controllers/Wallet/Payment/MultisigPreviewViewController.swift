@@ -143,6 +143,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
     }
     
     override func performAction(with pin: String) {
+        canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         switch action {
         case .sign:
@@ -171,6 +172,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                 }
                 
                 await MainActor.run {
+                    canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     switch action {
                     case .sign:
@@ -186,6 +188,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                 }
             } catch {
                 await MainActor.run {
+                    canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
                     let title = switch action {
                     case .sign:

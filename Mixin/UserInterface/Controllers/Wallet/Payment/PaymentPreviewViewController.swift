@@ -201,6 +201,26 @@ extension PaymentPreviewViewController: PaymentUserGroupCellDelegate {
         }
     }
     
+    func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem) {
+        presentingViewController?.dismiss(animated: true) {
+            guard let navigation = UIApplication.homeNavigationController else {
+                return
+            }
+            var viewControllers = navigation.viewControllers
+            if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == item.userId {
+                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+                    viewControllers.removeLast()
+                }
+            } else {
+                while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                    viewControllers.removeLast()
+                }
+                viewControllers.append(ConversationViewController.instance(ownerUser: item))
+            }
+            navigation.setViewControllers(viewControllers, animated: true)
+        }
+    }
+    
 }
 
 // MARK: - Data Structure

@@ -3,6 +3,7 @@ import MixinServices
 
 protocol PaymentUserGroupCellDelegate: AnyObject {
     func paymentUserGroupCellHeightDidUpdate(_ cell: PaymentUserGroupCell)
+    func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem)
 }
 
 final class PaymentUserGroupCell: UITableViewCell {
@@ -25,6 +26,7 @@ final class PaymentUserGroupCell: UITableViewCell {
         super.awakeFromNib()
         collectionView.register(R.nib.paymentUserCell)
         collectionView.dataSource = self
+        collectionView.delegate = self
         networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
             guard let newValue = change.newValue, let self else {
                 return
@@ -50,6 +52,17 @@ extension PaymentUserGroupCell: UICollectionViewDataSource {
         cell.avatarImageView.setImage(with: user)
         cell.usernameLabel.text = "\(user.fullName) (\(user.identityNumber))"
         return cell
+    }
+    
+}
+
+extension PaymentUserGroupCell: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let user = users[indexPath.item]
+        if user.isCreatedByMessenger {
+            delegate?.paymentUserGroupCell(self, didSelectMessengerUser: user)
+        }
     }
     
 }

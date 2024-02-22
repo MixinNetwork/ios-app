@@ -30,7 +30,7 @@ final class PaymentPreviewSingleButtonTrayView: UIView {
         button.snp.makeConstraints { make in
             make.width.greaterThanOrEqualTo(128)
             make.height.greaterThanOrEqualTo(44)
-            make.center.equalToSuperview()
+            make.center.equalToSuperview().priority(.almostRequired)
             make.top.equalToSuperview().offset(20)
             make.bottom.equalTo(safeAreaLayoutGuide).offset(-20)
         }

@@ -99,11 +99,16 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
                     manipulateNavigationStackIfNeeded()
                 }
             } catch {
+                let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {
+                    await PINVerificationFailureHandler.handle(error: error)
+                } else {
+                    error.localizedDescription
+                }
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
                     layoutTableHeaderView(title: R.string.localizable.transfer_failed(),
-                                          subtitle: error.localizedDescription, 
+                                          subtitle: errorDescription, 
                                           style: .destructive)
                     tableView.setContentOffset(.zero, animated: true)
                     switch error {

@@ -741,6 +741,7 @@
 		94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */; };
 		94396F2A29EBE52400A57833 /* DeviceTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2929EBE52400A57833 /* DeviceTransferClient.swift */; };
 		94396F3029ED005200A57833 /* DeviceTransferFileStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */; };
+		943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */; };
 		943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */; };
 		943B5EAB2B600D77001C1F6E /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943B5EAA2B600D77001C1F6E /* AppCell.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
@@ -1947,6 +1948,7 @@
 		94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWParameters+DeviceTransfer.swift"; sourceTree = "<group>"; };
 		94396F2929EBE52400A57833 /* DeviceTransferClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClient.swift; sourceTree = "<group>"; };
 		94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferFileStream.swift; sourceTree = "<group>"; };
+		943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIPNodeResponseError+Localization.swift"; sourceTree = "<group>"; };
 		943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPPopupInputViewController.swift; sourceTree = "<group>"; };
 		943B5EAA2B600D77001C1F6E /* AppCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
@@ -3620,6 +3622,7 @@
 				7B57186D24D9375300682D86 /* MixinAPIError+Localization.swift */,
 				94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */,
 				94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */,
+				943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */,
 				E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */,
 				DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */,
 				DFB6CE2423C48A8E00FB6615 /* DateExtension.swift */,
@@ -5811,6 +5814,7 @@
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
 				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,
+				943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */,
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,

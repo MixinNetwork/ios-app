@@ -15,17 +15,7 @@ enum TIPSignResponse: Decodable {
     
     struct Failure: Decodable {
         
-        struct Error: Swift.Error, Decodable {
-            
-            let code: Int
-            
-            var isFatal: Bool {
-                [403, 429, 500].contains(code)
-            }
-            
-        }
-        
-        let error: Error
+        let error: TIPNodeResponseError
         
     }
     

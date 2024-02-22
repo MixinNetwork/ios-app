@@ -18,7 +18,7 @@ public enum TIPNode {
         case userSkNotAvailable
         case assigneeSkNotAvailable
         case assigneePubNotAvailable
-        case signTIPNode(NSError?)
+        case decodePublicKey(NSError?)
         case decodeResponseSignature
         case decodeResponseCipher
         case decryptResponseCipher
@@ -31,9 +31,7 @@ public enum TIPNode {
         case differentIdentity
         case invalidAssignorData
         case retryLimitExceeded
-        case internalServerError
-        case tooManyRequests
-        case incorrectPIN
+        case response(TIPNodeResponseError)
     }
     
     private struct TIPSignResponseData {
@@ -138,24 +136,23 @@ public enum TIPNode {
         }
         
         var data: [TIPSignResponseData] = []
-        var errorCodes: [Int] = []
+        var errors: [TIPNodeResponseError] = []
         for result in results {
             switch result {
             case .success(let datum):
                 data.append(datum)
             case .failure(let error):
-                if let error = error as? TIPSignResponse.Failure.Error {
-                    errorCodes.append(error.code)
+                if let error = error as? TIPNodeResponseError {
+                    errors.append(error)
                 }
             }
         }
         
-        if errorCodes.contains(429) {
-            throw Error.tooManyRequests
-        } else if errorCodes.contains(403) {
-            throw Error.incorrectPIN
-        } else if errorCodes.contains(500) {
-            throw Error.internalServerError
+        let fatalErrorIndex = errors.firstIndex(of: .tooManyRequests)
+        ?? errors.firstIndex(of: .incorrectPIN)
+        ?? errors.firstIndex(of: .internalServer)
+        if let index = fatalErrorIndex {
+            throw Error.response(errors[index])
         }
         
         if !forRecover && data.count < allSigners.count {
@@ -291,7 +288,7 @@ public enum TIPNode {
                             Logger.tip.info(category: "TIPNode", message: "Node \(signer.index) sign succeed")
                             return .success(sig)
                         } catch {
-                            if let error = error as? TIPSignResponse.Failure.Error {
+                            if let error = error as? TIPNodeResponseError {
                                 Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(error.code), id: \(requestID)")
                                 if error.isFatal {
                                     return .failure(error)
@@ -349,7 +346,7 @@ public enum TIPNode {
         case .success(let response):
             var error: NSError?
             guard let signerPk = TipPubKeyFromBase58(signer.identity, &error), error == nil else {
-                throw Error.signTIPNode(error)
+                throw Error.decodePublicKey(error)
             }
             let msg = try JSONEncoder.default.encode(response.data)
             guard let responseSignature = Data(hexEncodedString: response.signature) else {

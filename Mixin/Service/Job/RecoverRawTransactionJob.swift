@@ -32,7 +32,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                     _ = try await SafeAPI.transaction(id: transaction.requestID)
                     RawTransactionDAO.shared.signRawTransactions(with: requestIDs)
                     Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by finding")
-                } catch MixinAPIError.notFound {
+                } catch MixinAPIResponseError.notFound {
                     do {
                         var requests = [TransactionRequest(id: transaction.requestID, raw: transaction.rawTransaction)]
                         if let feeTransaction {

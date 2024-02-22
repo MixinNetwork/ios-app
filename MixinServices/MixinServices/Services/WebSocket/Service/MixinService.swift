@@ -124,7 +124,7 @@ public class MixinService {
                 return
             case .failure(.unauthorized):
                 return
-            case let .failure(error):
+            case .failure:
                 checkNetworkAndWebSocket()
             }
         } while true
@@ -214,7 +214,7 @@ public class MixinService {
                 return true
             case .failure(.unauthorized):
                 return false
-            case let .failure(error):
+            case .failure:
                 if retry {
                     checkNetworkAndWebSocket()
                 } else {
@@ -234,9 +234,9 @@ public class MixinService {
         repeat {
             do {
                 return try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
-            } catch MixinAPIError.unauthorized {
+            } catch MixinAPIResponseError.unauthorized {
                 return nil
-            } catch MixinAPIError.forbidden {
+            } catch MixinAPIResponseError.forbidden {
                 return nil
             } catch {
                 checkNetworkAndWebSocket()
@@ -251,11 +251,11 @@ public class MixinService {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage, false)
-            } catch MixinAPIError.unauthorized {
+            } catch MixinAPIResponseError.unauthorized {
                 return (false, nil, false)
-            } catch MixinAPIError.forbidden {
+            } catch MixinAPIResponseError.forbidden {
                 return (true, nil, false)
-            } catch MixinAPIError.invalidConversationChecksum {
+            } catch MixinAPIResponseError.invalidConversationChecksum {
                 if let conversationId = blazeMessage.params?.conversationId {
                     syncConversation(conversationId: conversationId)
                 }
@@ -282,7 +282,7 @@ public class MixinService {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage)
-            } catch let error as MixinAPIError {
+            } catch let error as MixinAPIResponseError {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
                 #endif
@@ -298,7 +298,7 @@ public class MixinService {
                     throw error
                 default:
                     checkNetworkAndWebSocket()
-                    if error.isClientError {
+                    if error.isClientErrorResponse {
                         continue
                     } else {
                         throw error

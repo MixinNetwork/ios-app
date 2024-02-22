@@ -204,14 +204,14 @@ extension DepositViewController {
                 return try await block()
             } catch {
                 switch error {
-                case MixinAPIError.unauthorized, MixinAPIError.addressGenerating:
+                case MixinAPIResponseError.unauthorized, MixinAPIResponseError.addressGenerating:
                     throw error
                 default:
                     try await Task.sleep(nanoseconds: 3 * NSEC_PER_SEC)
                 }
             }
         } while LoginManager.shared.isLoggedIn
-        throw MixinAPIError.unauthorized
+        throw MixinAPIResponseError.unauthorized
     }
     
     private func reloadData(token: TokenItem) async throws {
@@ -288,7 +288,7 @@ extension DepositViewController {
                         container.present(hint, animated: true)
                     }
                 }
-            } catch MixinAPIError.addressGenerating {
+            } catch MixinAPIResponseError.addressGenerating {
                 await MainActor.run { [weak self] in
                     self?.addDepositSuspendedView(token: token)
                 }

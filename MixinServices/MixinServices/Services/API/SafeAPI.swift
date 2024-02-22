@@ -16,7 +16,7 @@ public final class SafeAPI: MixinAPI {
             } catch {
                 numberOfTries += 1
                 switch error {
-                case MixinAPIError.internalServerError, MixinAPIError.httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode)):
+                case MixinAPIResponseError.internalServerError, MixinAPIError.httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode)):
                     if numberOfTries == maxNumberOfTries {
                         throw error
                     } else if await !shouldRetry() {

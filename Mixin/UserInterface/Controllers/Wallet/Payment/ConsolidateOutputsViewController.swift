@@ -75,9 +75,9 @@ extension ConsolidateOutputsViewController: AuthenticationIntent {
                 Logger.general.error(category: "Consolidation", message: "Failed to consolidate: \(error)")
                 let action: AuthenticationViewController.RetryAction
                 switch error {
-                case MixinAPIError.malformedPin, MixinAPIError.incorrectPin, MixinAPIError.insufficientPool, MixinAPIError.internalServerError:
+                case MixinAPIResponseError.malformedPin, MixinAPIResponseError.incorrectPin, MixinAPIResponseError.insufficientPool, MixinAPIResponseError.internalServerError:
                     action = .inputPINAgain
-                case MixinAPIError.notRegisteredToSafe:
+                case MixinAPIResponseError.notRegisteredToSafe:
                     action = .notAllowed
                 default:
                     action = .notAllowed

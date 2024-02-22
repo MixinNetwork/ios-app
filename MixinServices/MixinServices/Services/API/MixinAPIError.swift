@@ -3,223 +3,22 @@ import Alamofire
 
 public enum MixinAPIError: Error {
     
-    // The nil result error below should not appear in normal cases
-    // Debug to reduce it once happended
     case foundNilResult
     
-    case prerequistesNotFulfilled
     case invalidJSON(Error)
     case invalidServerPinToken
     case invalidPath
     case httpTransport(AFError)
-    case webSocketTimeout
     case requestSigningTimeout
     case clockSkewDetected
     case pinEncryption(Error)
     case invalidSignature
-    case unknown(status: Int, code: Int, description: String)
     
-    case invalidRequestBody
-    case unauthorized
-    case forbidden
-    case notFound
-    case tooManyRequests
-    
-    case internalServerError
-    case blazeServerError
-    case blazeOperationTimedOut
-    
-    case invalidRequestData(field: String?, reason: String?)
-    case failedToDeliverSMS
-    case invalidCaptchaToken
-    case requiresCaptcha
-    case requiresUpdate
-    case addressGenerating
-    case notRegisteredToSafe
-    case invalidPhoneNumber
-    case invalidPhoneVerificationCode
-    case expiredPhoneVerificationCode
-    case invalidQrCode
-    case groupChatIsFull
-    case insufficientBalance
-    case malformedPin
-    case incorrectPin
-    case transferAmountTooSmall
-    case expiredAuthorizationCode
-    case phoneNumberInUse
-    case insufficientFee
-    case transferIsAlreadyPaid
-    case tooManyStickers
-    case withdrawAmountTooSmall
-    case tooManyFriends
-    case sendingVerificationCodeTooFrequently
-    case invalidEmergencyContact
-    case malformedWithdrawalMemo
-    case sharedAppReachLimit
-    case circleConversationReachLimit
-    case withdrawFeeTooSmall
-    case withdrawSuspended
-    case invalidConversationChecksum
-    
-    case chainNotInSync
-    case malformedAddress
-    case insufficientPool
-    
-    case invalidParameters
-    case invalidSDP
-    case invalidCandidate
-    case roomFull
-    case peerNotFound
-    case peerClosed
-    case trackNotFound
-    case invalidTransition
-    
-}
-
-extension MixinAPIError {
-    
-    init(status: Int, code: Int, description: String, extra: Extra?) {
-        switch (status, code) {
-        case (202, 400):
-            self = .invalidRequestBody
-        case (202, 401):
-            self = .unauthorized
-        case (202, 403):
-            self = .forbidden
-        case (202, 404):
-            self = .notFound
-        case (202, 429):
-            self = .tooManyRequests
-            
-        case (500, 500):
-            self = .internalServerError
-        case (500, 7000):
-            self = .blazeServerError
-        case (500, 7001):
-            self = .blazeOperationTimedOut
-            
-        case (202, 10002):
-            self = .invalidRequestData(field: extra?.field, reason: extra?.reason)
-        case (202, 10003):
-            self = .failedToDeliverSMS
-        case (202, 10004):
-            self = .invalidCaptchaToken
-        case (202, 10005):
-            self = .requiresCaptcha
-        case (202, 10006):
-            self = .requiresUpdate
-        case (202, 10104):
-            self = .addressGenerating
-        case (202, 10404):
-            self = .notRegisteredToSafe
-        case (202, 20110):
-            self = .invalidPhoneNumber
-        case (202, 20113):
-            self = .invalidPhoneVerificationCode
-        case (202, 20114):
-            self = .expiredPhoneVerificationCode
-        case (202, 20115):
-            self = .invalidQrCode
-        case (202, 20116):
-            self = .groupChatIsFull
-        case (202, 20117):
-            self = .insufficientBalance
-        case (202, 20118):
-            self = .malformedPin
-        case (202, 20119):
-            self = .incorrectPin
-        case (202, 20120):
-            self = .transferAmountTooSmall
-        case (202, 20121):
-            self = .expiredAuthorizationCode
-        case (202, 20122):
-            self = .phoneNumberInUse
-        case (202, 20124):
-            self = .insufficientFee
-        case (202, 20125):
-            self = .transferIsAlreadyPaid
-        case (202, 20126):
-            self = .tooManyStickers
-        case (202, 20127):
-            self = .withdrawAmountTooSmall
-        case (202, 20128):
-            self = .tooManyFriends
-        case (202, 20129):
-            self = .sendingVerificationCodeTooFrequently
-        case (202, 20130):
-            self = .invalidEmergencyContact
-        case (202, 20131):
-            self = .malformedWithdrawalMemo
-        case (202, 20132):
-            self = .sharedAppReachLimit
-        case (202, 20133):
-            self = .circleConversationReachLimit
-        case (202, 20135):
-            self = .withdrawFeeTooSmall
-        case (202, 20137):
-            self = .withdrawSuspended
-        case (202, 20140):
-            self = .invalidConversationChecksum
-            
-        case (202, 30100):
-            self = .chainNotInSync
-        case (202, 30102):
-            self = .malformedAddress
-        case (202, 30103):
-            self = .insufficientPool
-            
-        case (202, 5002000):
-            self = .roomFull
-        case (202, 5002001):
-            self = .peerNotFound
-        case (202, 5002002):
-            self = .peerClosed
-        case (202, 5002003):
-            self = .trackNotFound
-        case (500, 5003002):
-            self = .invalidTransition
-            
-        default:
-            self = .unknown(status: status, code: code, description: description)
-        }
-    }
-    
-}
-
-extension MixinAPIError: Decodable {
-    
-    enum CodingKeys: CodingKey {
-        case code
-        case status
-        case description
-        case extra
-    }
-    
-    struct Extra: Decodable {
-        let field: String?
-        let reason: String?
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        fatalError("This func encodes nothing currently")
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let status = try container.decode(Int.self, forKey: .status)
-        let code = try container.decode(Int.self, forKey: .code)
-        let description = try container.decode(String.self, forKey: .description)
-        let extra = try container.decodeIfPresent(Extra.self, forKey: .extra)
-        self.init(status: status, code: code, description: description, extra: extra)
-    }
-    
-}
-
-extension MixinAPIError {
+    case response(MixinAPIResponseError)
     
     public var isTransportTimedOut: Bool {
         switch self {
-        case .webSocketTimeout, .clockSkewDetected, .requestSigningTimeout:
+        case .clockSkewDetected, .requestSigningTimeout:
             return true
         case let .httpTransport(error):
             guard let underlying = (error.underlyingError as NSError?) else {
@@ -233,12 +32,10 @@ extension MixinAPIError {
     
     public var isClientError: Bool {
         switch self {
-        case .invalidRequestBody, .unauthorized, .forbidden, .notFound, .tooManyRequests:
-            return true
-        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(code))):
-            return code >= 400 && code < 500
-        case let .unknown(status, _, _):
+        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
             return status >= 400 && status < 500
+        case let .response(error):
+            return error.status >= 400 && error.status < 500
         default:
             return false
         }
@@ -246,12 +43,10 @@ extension MixinAPIError {
     
     public var isServerError: Bool {
         switch self {
-        case .internalServerError, .blazeServerError, .blazeOperationTimedOut:
-            return true
-        case .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(let code))):
-            return code >= 500
-        case let .unknown(status, _, _):
+        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
             return status >= 500
+        case let .response(error):
+            return error.status >= 500
         default:
             return false
         }
@@ -264,10 +59,103 @@ extension MixinAPIError {
         switch self {
         case .httpTransport(let error):
             return error.worthRetrying
-        case .webSocketTimeout, .clockSkewDetected:
+        case .clockSkewDetected:
             return true
         default:
             return false
+        }
+    }
+    
+}
+
+public struct MixinAPIResponseError: Error, Codable {
+    
+    public let status: Int
+    public let code: Int
+    public let description: String?
+    
+    private init(status: Int, code: Int, description: String? = nil) {
+        self.status = status
+        self.code = code
+        self.description = description
+    }
+    
+}
+
+extension MixinAPIResponseError {
+    
+    var isClientErrorResponse: Bool {
+        status >= 400 && status < 500
+    }
+    
+    public var isServerErrorResponse: Bool {
+        status >= 500
+    }
+    
+}
+
+extension MixinAPIResponseError {
+    
+    public static let invalidRequestBody                   = MixinAPIResponseError(status: 202, code: 400)
+    public static let unauthorized                         = MixinAPIResponseError(status: 202, code: 401)
+    public static let forbidden                            = MixinAPIResponseError(status: 202, code: 403)
+    public static let notFound                             = MixinAPIResponseError(status: 202, code: 404)
+    public static let tooManyRequests                      = MixinAPIResponseError(status: 202, code: 429)
+    
+    public static let internalServerError                  = MixinAPIResponseError(status: 500, code: 500)
+    public static let blazeServerError                     = MixinAPIResponseError(status: 500, code: 7000)
+    public static let blazeOperationTimedOut               = MixinAPIResponseError(status: 500, code: 7001)
+    
+    public static let invalidRequestData                   = MixinAPIResponseError(status: 202, code: 10002)
+    public static let failedToDeliverSMS                   = MixinAPIResponseError(status: 202, code: 10003)
+    public static let invalidCaptchaToken                  = MixinAPIResponseError(status: 202, code: 10004)
+    public static let requiresCaptcha                      = MixinAPIResponseError(status: 202, code: 10005)
+    public static let requiresUpdate                       = MixinAPIResponseError(status: 202, code: 10006)
+    public static let addressGenerating                    = MixinAPIResponseError(status: 202, code: 10104)
+    public static let notRegisteredToSafe                  = MixinAPIResponseError(status: 202, code: 10404)
+    public static let invalidPhoneNumber                   = MixinAPIResponseError(status: 202, code: 20110)
+    public static let invalidPhoneVerificationCode         = MixinAPIResponseError(status: 202, code: 20113)
+    public static let expiredPhoneVerificationCode         = MixinAPIResponseError(status: 202, code: 20114)
+    public static let invalidQrCode                        = MixinAPIResponseError(status: 202, code: 20115)
+    public static let groupChatIsFull                      = MixinAPIResponseError(status: 202, code: 20116)
+    public static let insufficientBalance                  = MixinAPIResponseError(status: 202, code: 20117)
+    public static let malformedPin                         = MixinAPIResponseError(status: 202, code: 20118)
+    public static let incorrectPin                         = MixinAPIResponseError(status: 202, code: 20119)
+    public static let transferAmountTooSmall               = MixinAPIResponseError(status: 202, code: 20120)
+    public static let expiredAuthorizationCode             = MixinAPIResponseError(status: 202, code: 20121)
+    public static let phoneNumberInUse                     = MixinAPIResponseError(status: 202, code: 20122)
+    public static let insufficientFee                      = MixinAPIResponseError(status: 202, code: 20124)
+    public static let transferIsAlreadyPaid                = MixinAPIResponseError(status: 202, code: 20125)
+    public static let tooManyStickers                      = MixinAPIResponseError(status: 202, code: 20126)
+    public static let withdrawAmountTooSmall               = MixinAPIResponseError(status: 202, code: 20127)
+    public static let tooManyFriends                       = MixinAPIResponseError(status: 202, code: 20128)
+    public static let sendingVerificationCodeTooFrequently = MixinAPIResponseError(status: 202, code: 20129)
+    public static let invalidEmergencyContact              = MixinAPIResponseError(status: 202, code: 20130)
+    public static let malformedWithdrawalMemo              = MixinAPIResponseError(status: 202, code: 20131)
+    public static let sharedAppReachLimit                  = MixinAPIResponseError(status: 202, code: 20132)
+    public static let circleConversationReachLimit         = MixinAPIResponseError(status: 202, code: 20133)
+    public static let withdrawFeeTooSmall                  = MixinAPIResponseError(status: 202, code: 20135)
+    public static let withdrawSuspended                    = MixinAPIResponseError(status: 202, code: 20137)
+    public static let invalidConversationChecksum          = MixinAPIResponseError(status: 202, code: 20140)
+    
+    public static let chainNotInSync                       = MixinAPIResponseError(status: 202, code: 30100)
+    public static let malformedAddress                     = MixinAPIResponseError(status: 202, code: 30102)
+    public static let insufficientPool                     = MixinAPIResponseError(status: 202, code: 30103)
+    
+    public static let roomFull                             = MixinAPIResponseError(status: 202, code: 5002000)
+    public static let peerNotFound                         = MixinAPIResponseError(status: 202, code: 5002001)
+    public static let peerClosed                           = MixinAPIResponseError(status: 202, code: 5002002)
+    public static let trackNotFound                        = MixinAPIResponseError(status: 202, code: 5002003)
+    public static let invalidTransition                    = MixinAPIResponseError(status: 500, code: 5003002)
+    
+    public static func ~=(lhs: Self, rhs: Error) -> Bool {
+        switch rhs {
+        case let .response(rhs) as MixinAPIError:
+            lhs.status == rhs.status && lhs.code == rhs.code
+        case let rhs as MixinAPIResponseError:
+            lhs.status == rhs.status && lhs.code == rhs.code
+        default:
+            false
         }
     }
     

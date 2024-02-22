@@ -527,11 +527,11 @@ extension GroupCall: KrakenMessageRetrieverDelegate {
             return false
         }
         switch error {
-        case MixinAPIError.unauthorized:
+        case MixinAPIResponseError.unauthorized:
             Logger.call.info(category: "GroupCall", message: "Got 401 when requesting: \(request.debugDescription)")
             self.end(reason: .failed, by: .local)
             return false
-        case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound, MixinAPIError.roomFull, MixinAPIError.invalidTransition:
+        case MixinAPIResponseError.peerNotFound, MixinAPIResponseError.peerClosed, MixinAPIResponseError.trackNotFound, MixinAPIResponseError.roomFull, MixinAPIResponseError.invalidTransition:
             return false
         default:
             let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
@@ -681,15 +681,15 @@ extension GroupCall {
             }
         case let .failure(error):
             switch error {
-            case MixinAPIError.roomFull:
+            case MixinAPIResponseError.roomFull:
                 return .failure(.roomFull)
-            case MixinAPIError.peerNotFound:
+            case MixinAPIResponseError.peerNotFound:
                 return .failure(.peerNotFound)
-            case MixinAPIError.peerClosed:
+            case MixinAPIResponseError.peerClosed:
                 return .failure(.peerClosed)
-            case MixinAPIError.trackNotFound:
+            case MixinAPIResponseError.trackNotFound:
                 return .failure(.trackNotFound)
-            case MixinAPIError.invalidTransition:
+            case MixinAPIResponseError.invalidTransition:
                 return .failure(.invalidTransition)
             default:
                 return .failure(.networkFailure)

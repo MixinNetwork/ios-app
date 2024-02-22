@@ -19,6 +19,7 @@ open class MixinAPI {
         
     }
     
+    // Async version, model as parameter
     public static func request<Parameters: Encodable, Response: Decodable>(
         method: HTTPMethod,
         path: String,
@@ -38,6 +39,7 @@ open class MixinAPI {
         }
     }
     
+    // Callback version, model as parameter
     @discardableResult
     public static func request<Parameters: Encodable, Response>(
         method: HTTPMethod,
@@ -45,7 +47,7 @@ open class MixinAPI {
         parameters: Parameters,
         options: Options = [],
         queue: DispatchQueue = .main,
-        completion: @escaping (MixinAPI.Result<Response>) -> Void
+        completion: @escaping (Result<Response>) -> Void
     ) -> Request? {
         guard let url = url(with: path) else {
             queue.async {
@@ -58,6 +60,7 @@ open class MixinAPI {
         }, options: options, isAsync: true, queue: queue, completion: completion)
     }
     
+    // Async version, dictionary as parameter
     @discardableResult
     public static func request<Response: Decodable>(
         method: HTTPMethod,
@@ -78,6 +81,7 @@ open class MixinAPI {
         }
     }
     
+    // Callback version, dictionary as parameter
     @discardableResult
     public static func request<Response>(
         method: HTTPMethod,
@@ -98,6 +102,7 @@ open class MixinAPI {
         }, options: options, isAsync: true, queue: queue, completion: completion)
     }
     
+    // Blocking version, model as parameter
     @discardableResult
     public static func request<Parameters: Encodable, Response>(
         method: HTTPMethod,
@@ -114,6 +119,7 @@ open class MixinAPI {
         }, debugDescription: path)
     }
     
+    // Blocking version, dictionary as parameter
     @discardableResult
     public static func request<Response>(
         method: HTTPMethod,
@@ -136,7 +142,7 @@ extension MixinAPI {
     
     private struct ResponseObject<Response: Decodable>: Decodable {
         let data: Response?
-        let error: MixinAPIError?
+        let error: MixinAPIResponseError?
     }
     
     private static let session: Alamofire.Session = {
@@ -215,7 +221,7 @@ extension MixinAPI {
                 }
                 completion(.failure(.clockSkewDetected))
             } else {
-                completion(.failure(.unauthorized))
+                completion(.failure(.response(.unauthorized)))
                 reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
                 LoginManager.shared.logout(reason: "API access unauthorized, request: \(response?.url?.absoluteString ?? "(null)")")
             }
@@ -230,7 +236,7 @@ extension MixinAPI {
                         let responseRequestId = response.response?.value(forHTTPHeaderField: "x-request-id") ?? ""
                         if requestId != responseRequestId {
                             Logger.general.error(category: "MixinAPI", message: "Mismatched request id. Request path: \(response.request?.url?.path), id: \(requestId), responded header: \(response.response?.allHeaderFields)")
-                            completion(.failure(.internalServerError))
+                            completion(.failure(.response(.internalServerError)))
                             return
                         }
                     }
@@ -238,10 +244,10 @@ extension MixinAPI {
                         let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
                         if let data = responseObject.data {
                             completion(.success(data))
-                        } else if case .unauthorized = responseObject.error {
+                        } else if case .some(.unauthorized) = responseObject.error {
                             handleDeauthorization(response: response.response)
                         } else if let error = responseObject.error {
-                            completion(.failure(error))
+                            completion(.failure(.response(error)))
                         } else {
                             completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
                         }

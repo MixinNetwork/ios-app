@@ -25,13 +25,10 @@ public class CreateConversationJob: BaseJob {
             case let .success(response):
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: ConversationStatus.SUCCESS)
                 CircleConversationDAO.shared.update(conversation: response)
-            case let .failure(error):
-                switch error {
-                case .forbidden, .notFound:
-                    ConversationDAO.shared.exitGroup(conversationId: conversationId)
-                default:
-                    throw error
-                }
+            case .failure(.forbidden), .failure(.notFound):
+                ConversationDAO.shared.exitGroup(conversationId: conversationId)
+            case .failure(let error):
+                throw error
             }
         } else {
             var participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
@@ -45,13 +42,8 @@ public class CreateConversationJob: BaseJob {
 
             let name = conversation.category == ConversationCategory.CONTACT.rawValue ? nil : conversation.name
             let request = ConversationRequest(conversationId: conversation.conversationId, name: name, category: conversation.category, participants: participants, duration: nil, announcement: nil)
-
-            switch ConversationAPI.createConversation(conversation: request) {
-            case let .success(response):
-                ConversationDAO.shared.createConversation(conversation: response, targetStatus: ConversationStatus.SUCCESS)
-            case let.failure(error):
-                throw error
-            }
+            let response = try ConversationAPI.createConversation(conversation: request).get()
+            ConversationDAO.shared.createConversation(conversation: response, targetStatus: ConversationStatus.SUCCESS)
         }
     }
 }

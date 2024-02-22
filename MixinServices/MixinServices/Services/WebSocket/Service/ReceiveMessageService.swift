@@ -873,7 +873,7 @@ public class ReceiveMessageService: MixinService {
                 return transferStickerData
             case .failure(.notFound):
                 return nil
-            case let .failure(error):
+            case .failure:
                 checkNetworkAndWebSocket()
             }
         } while LoginManager.shared.isLoggedIn

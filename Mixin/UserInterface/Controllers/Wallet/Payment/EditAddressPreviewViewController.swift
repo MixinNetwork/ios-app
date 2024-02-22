@@ -104,7 +104,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
                     }
                 case let .failure(error):
                     self.savedAddress = nil
-                    let errorDescription = if case .malformedAddress = error {
+                    let errorDescription = if case MixinAPIResponseError.malformedAddress = error {
                         if token.isEOSChain {
                             R.string.localizable.invalid_malformed_address_eos_hint()
                         } else if self.token.isERC20 {

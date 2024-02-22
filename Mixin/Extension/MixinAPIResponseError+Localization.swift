@@ -1,37 +1,10 @@
 import Foundation
 import MixinServices
 
-extension MixinAPIError: LocalizedError {
+extension MixinAPIResponseError: LocalizedError {
     
     public var errorDescription: String? {
         switch self {
-        case .invalidJSON:
-            return R.string.localizable.data_parsing_error()
-        case let .httpTransport(error):
-            if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
-                switch underlying.code {
-                case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
-                    return R.string.localizable.no_network_connection()
-                case NSURLErrorTimedOut:
-                    return R.string.localizable.error_connection_timeout()
-                case NSURLErrorNetworkConnectionLost:
-                    return R.string.localizable.network_connection_lost()
-                default:
-                    return underlying.localizedDescription
-                }
-            } else {
-                switch error {
-                case .responseValidationFailed(.unacceptableStatusCode):
-                    return R.string.localizable.mixin_server_encounters_errors()
-                default:
-                    return R.string.localizable.error_network_task_failed()
-                }
-            }
-        case .webSocketTimeout, .clockSkewDetected, .requestSigningTimeout:
-            return R.string.localizable.error_connection_timeout()
-        case let .unknown(_, code, description):
-            return R.string.localizable.error_two_parts("\(code)", description)
-            
         case .invalidRequestBody:
             return R.string.localizable.invalid_request_body()
         case .unauthorized:
@@ -104,12 +77,6 @@ extension MixinAPIError: LocalizedError {
         case .malformedAddress:
             return R.string.localizable.error_invalid_address_plain()
             
-        case .invalidParameters:
-            return R.string.localizable.invalid_parameters()
-        case .invalidSDP:
-            return R.string.localizable.invalid_sdp()
-        case .invalidCandidate:
-            return R.string.localizable.invalid_candidate()
         case .roomFull:
             return R.string.localizable.room_is_full()
         case .peerNotFound:
@@ -120,11 +87,11 @@ extension MixinAPIError: LocalizedError {
             return R.string.localizable.track_not_found()
 
         default:
-            return R.string.localizable.error_internal_with_msg("\(self)")
+            return R.string.localizable.error_two_parts("\(code)", description ?? "")
         }
     }
     
-    func localizedDescription(overridingNotFoundDescriptionWith notFoundDescription: String) -> String {
+    public func localizedDescription(overridingNotFoundDescriptionWith notFoundDescription: String) -> String {
         switch self {
         case .notFound:
             return notFoundDescription

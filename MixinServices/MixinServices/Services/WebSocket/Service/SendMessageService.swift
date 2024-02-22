@@ -449,12 +449,12 @@ public class SendMessageService: MixinService {
     private func deliverLowPriorityMessages(blazeMessage: BlazeMessage) -> Bool {
         do {
             return try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil
-        } catch MixinAPIError.unauthorized {
+        } catch MixinAPIResponseError.unauthorized {
             return false
-        } catch MixinAPIError.forbidden {
+        } catch MixinAPIResponseError.forbidden {
             return true
         } catch {
-            if let error = error as? MixinAPIError, error.isClientError {
+            if let error = error as? MixinAPIResponseError, error.isClientErrorResponse {
                 Thread.sleep(forTimeInterval: 2)
             } else {
                 reporter.report(error: error)
@@ -572,7 +572,7 @@ public class SendMessageService: MixinService {
                     reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
                 
-                if case MixinAPIError.invalidRequestData = error {
+                if case MixinAPIResponseError.invalidRequestData = error {
                     return true
                 }
             }
@@ -791,13 +791,9 @@ extension SendMessageService {
             participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
         }
         let request = ConversationRequest(conversationId: conversation.conversationId, name: nil, category: conversation.category, participants: participants, duration: nil, announcement: nil)
-        switch ConversationAPI.createConversation(conversation: request) {
-        case let .success(response):
-            ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
-            return response.expireIn
-        case let .failure(error):
-            throw error
-        }
+        let response = try ConversationAPI.createConversation(conversation: request).get()
+        ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
+        return response.expireIn
     }
     
     private func sendCallMessage(blazeMessage: BlazeMessage) throws {
@@ -840,9 +836,9 @@ extension SendMessageService {
     private func deliverMessage(blazeMessage: BlazeMessage) throws {
         do {
             try deliver(blazeMessage: blazeMessage)
-        } catch MixinAPIError.forbidden {
+        } catch MixinAPIResponseError.forbidden {
             #if DEBUG
-            print("\(MixinAPIError.forbidden)")
+            print("\(MixinAPIResponseError.forbidden)")
             #endif
         } catch {
             #if DEBUG

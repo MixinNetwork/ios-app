@@ -5,7 +5,7 @@ enum PINVerificationFailureHandler {
     
     static func canHandle(error: MixinAPIError) -> Bool {
         switch error {
-        case .tooManyRequests, .incorrectPin:
+        case .tooManyRequests, .incorrectPin, .pinEncryption:
             return true
         default:
             return false

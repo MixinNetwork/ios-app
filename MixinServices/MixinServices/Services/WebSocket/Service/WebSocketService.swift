@@ -3,6 +3,11 @@ import Alamofire
 
 public class WebSocketService {
     
+    public enum SendingError: Error {
+        case timedOut
+        case response(MixinAPIResponseError)        
+    }
+    
     public static let didConnectNotification = Notification.Name("one.mixin.services.ws.connect")
     public static let didDisconnectNotification = Notification.Name("one.mixin.services.ws.disconnect")
     public static let didSendListPendingMessageNotification = Notification.Name("one.mixin.services.ws.pending")
@@ -130,7 +135,7 @@ public class WebSocketService {
                 return (false, nil)
             }
             var response: BlazeMessage?
-            var err = MixinAPIError.webSocketTimeout
+            var err: SendingError = .timedOut
             
             let semaphore = DispatchSemaphore(value: 0)
             messageHandlers[message.id] = { (jobResult) in
@@ -240,7 +245,7 @@ extension WebSocketService: WebSocketProviderDelegate {
         if let error = message.error {
             if let handler = messageHandlers[message.id] {
                 messageHandlers.removeValue(forKey: message.id)
-                handler(.failure(error))
+                handler(.failure(.response(error)))
             }
             if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.Account.isClockSkewed {
                 LoginManager.shared.logout(reason: "WS access unauthroized")
@@ -273,7 +278,7 @@ extension WebSocketService {
         case connected
     }
     
-    private typealias IncomingMessageHandler = (MixinAPI.Result<BlazeMessage>) -> Void
+    private typealias IncomingMessageHandler = (Result<BlazeMessage, SendingError>) -> Void
     
     @objc private func networkChanged() {
         connectIfNeeded()
@@ -283,7 +288,7 @@ extension WebSocketService {
         queue.autoAsync {
             ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
             for handler in self.messageHandlers.values {
-                handler(.failure(.webSocketTimeout))
+                handler(.failure(.timedOut))
             }
             self.messageHandlers.removeAll()
             ConcurrentJobQueue.shared.suspend()

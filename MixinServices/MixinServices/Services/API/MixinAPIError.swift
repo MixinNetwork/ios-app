@@ -30,30 +30,8 @@ public enum MixinAPIError: Error {
         }
     }
     
-    public var isClientError: Bool {
-        switch self {
-        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
-            return status >= 400 && status < 500
-        case let .response(error):
-            return error.status >= 400 && error.status < 500
-        default:
-            return false
-        }
-    }
-    
-    public var isServerError: Bool {
-        switch self {
-        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
-            return status >= 500
-        case let .response(error):
-            return error.status >= 500
-        default:
-            return false
-        }
-    }
-    
     public var worthRetrying: Bool {
-        if isClientError || isServerError {
+        if isClientErrorResponse || isServerErrorResponse {
             return true
         }
         switch self {
@@ -61,6 +39,28 @@ public enum MixinAPIError: Error {
             return error.worthRetrying
         case .clockSkewDetected:
             return true
+        default:
+            return false
+        }
+    }
+    
+    var isClientErrorResponse: Bool {
+        switch self {
+        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
+            return status >= 400 && status < 500
+        case let .response(error):
+            return error.isClientErrorResponse
+        default:
+            return false
+        }
+    }
+    
+    var isServerErrorResponse: Bool {
+        switch self {
+        case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
+            return status >= 500
+        case let .response(error):
+            return error.isServerErrorResponse
         default:
             return false
         }

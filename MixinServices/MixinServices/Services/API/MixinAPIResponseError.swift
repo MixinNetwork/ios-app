@@ -20,7 +20,7 @@ extension MixinAPIResponseError {
         status >= 400 && status < 500
     }
     
-    public var isServerErrorResponse: Bool {
+    var isServerErrorResponse: Bool {
         status >= 500
     }
     

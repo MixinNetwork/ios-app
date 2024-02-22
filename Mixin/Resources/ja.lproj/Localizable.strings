@@ -392,6 +392,7 @@
 "enter_your_phone_number" = "電話番号を入力してください";
 "enter_your_pin" = "PINコードを入力してください";
 "enter_your_pin_to_continue" = "PINコードを入力して、続けてください";
+"error_bad_data" = "エラー 10002：リクエストデータが無効です";
 "error_blockchain" = "エラー 30100：ブロックチェーンが同期できていません。後程もう一度お試しください。";
 "error_captcha_is_invalid" = "エラー10004：captchaが無効です";
 "error_connection_timeout" = "ネットワーク接続がタイムアウトしました";
@@ -401,9 +402,11 @@
 "error_insufficient_transaction_fee_with_amount" = "エラー 20124：取引手数料が不足しています。ウォレットに手数料用に最低でも%@があることを確認してください。";
 "error_internal_with_msg" = "内部エラー: %@";
 "error_invalid_address_plain" = "エラー30102：無効なアドレス形式です";
+"error_invalid_code_too_frequent" = "エラー 20129：認証コードを送信する頻度が多すぎます。しばらくしてからもう一度お試しください。";
 "error_invalid_emergency_contact" = "エラー 20130：無効な緊急連絡先です";
 "error_network_task_failed" = "ネットワーク接続に失敗しました。ネットワーク接続状態を確認した後にもう一度試してください。";
 "error_not_found" = "エラー 404：結果なし";
+"error_number_reached_limit" = "エラー 20132：数が上限に達しています";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "エラー 20110：無効な電話番号です";
 "error_phone_sms_delivery" = "エラー 10003：SMSの送信に失敗しました";
@@ -496,7 +499,6 @@
 "invalid_payment_link" = "支払いが無効です";
 "invalid_qr_code" = "無効なQRコード";
 "invalid_request_body" = "無効なリクエストボディ";
-"invalid_request_data" = "無効なリクエストデータ";
 "invalid_sdp" = "無効なSDP";
 "invalid_width" = "無効な横幅";
 "invite" = "招待する";
@@ -643,7 +645,6 @@
 "notification_content" = "友達からのメッセージを見逃さないで！";
 "notification_message_preview_description" = "通知でメッセージ内容を表示する";
 "now_an_addmin" = "%@は管理者です";
-"number_reached_limit" = "数が上限に達しました";
 "off" = "オフ";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
@@ -864,7 +865,6 @@
 "send_to_contact_description" = "Send crypto to Mixin contact";
 "send_to_developer" = "開発者へ送信";
 "send_to_title" = "振替先";
-"send_verification_code_frequent" = "しばらく経ってから再度送信してください";
 "send_video" = "ビデオを送信";
 "send_video_count" = "%d本のビデオを送信";
 "send_without_sound" = "通知音を鳴らさずに送信する";

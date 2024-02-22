@@ -9,20 +9,21 @@ extension MixinAPIError: LocalizedError {
             return R.string.localizable.data_parsing_error()
         case let .httpTransport(error):
             if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
-                switch underlying.code {
+                let description = switch underlying.code {
                 case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
-                    return R.string.localizable.no_network_connection()
+                    R.string.localizable.no_network_connection()
                 case NSURLErrorTimedOut:
-                    return R.string.localizable.error_connection_timeout()
+                    R.string.localizable.error_connection_timeout()
                 case NSURLErrorNetworkConnectionLost:
-                    return R.string.localizable.network_connection_lost()
+                    R.string.localizable.network_connection_lost()
                 default:
-                    return underlying.localizedDescription
+                    underlying.localizedDescription
                 }
+                return R.string.localizable.error_two_parts("\(underlying.code)", description)
             } else {
                 switch error {
-                case .responseValidationFailed(.unacceptableStatusCode):
-                    return R.string.localizable.mixin_server_encounters_errors()
+                case let .responseValidationFailed(.unacceptableStatusCode(code)):
+                    return R.string.localizable.error_two_parts("\(code)", R.string.localizable.mixin_server_encounters_errors())
                 default:
                     return R.string.localizable.error_network_task_failed()
                 }

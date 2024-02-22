@@ -392,6 +392,7 @@
 "enter_your_phone_number" = "Introduce tu número telefónico";
 "enter_your_pin" = "Introduce tu PIN";
 "enter_your_pin_to_continue" = "Introduce tu PIN para continuar";
+"error_bad_data" = "ERROR 10002: Los datos de la solicitud tienen un campo no válido";
 "error_blockchain" = "ERROR 30100: Blockchain no está sincronizado, inténtalo de nuevo más tarde.";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA no es válido";
 "error_connection_timeout" = "Se ha agotado el tiempo de espera de la conexión de red, inténtalo de nuevo";
@@ -401,9 +402,11 @@
 "error_insufficient_transaction_fee_with_amount" = "ERROR 20124: Tarifa de transacción insuficiente. Asegúrate de que tu cartera tenga %@ como tarifa";
 "error_internal_with_msg" = "Error interno: %@";
 "error_invalid_address_plain" = "ERROR 30102: formato de dirección no válido.";
+"error_invalid_code_too_frequent" = "ERROR 20129: enviar el código de verificación con demasiada frecuencia, inténtalo de nuevo más tarde.";
 "error_invalid_emergency_contact" = "ERROR 20130: Contacto de emergencia no válido";
 "error_network_task_failed" = "La conexión de red ha fallado. Comprueba o cambia tu red e inténtalo de nuevo";
 "error_not_found" = "Error 404 no encontrado";
+"error_number_reached_limit" = "ERROR 20132: El número ha llegado al límite.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "ERROR 20110: Número de teléfono no válido";
 "error_phone_sms_delivery" = "ERROR 10003: Error al entregar SMS";
@@ -496,7 +499,6 @@
 "invalid_payment_link" = "Enlace de pago inválido";
 "invalid_qr_code" = "Código QR inválido";
 "invalid_request_body" = "Cuerpo de solicitud inválido";
-"invalid_request_data" = "Datos de solicitud inválidos";
 "invalid_sdp" = "SDP inválido";
 "invalid_width" = "Ancho inválido";
 "invite" = "Invitar";
@@ -643,7 +645,6 @@
 "notification_content" = "No te pierdas los mensajes de tus amigos.";
 "notification_message_preview_description" = "Obtén una vista previa del texto del mensaje dentro de las notificaciones de mensajes nuevos.";
 "now_an_addmin" = "%@ ahora es administrador";
-"number_reached_limit" = "El número ha llegado al límite.";
 "off" = "Apagado";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
@@ -864,7 +865,6 @@
 "send_to_contact_description" = "Send crypto to Mixin contact";
 "send_to_developer" = "Enviar al Desarrollador";
 "send_to_title" = "Enviar a";
-"send_verification_code_frequent" = "Envíe el código de verificación con demasiada frecuencia, vuelve a intentarlo más tarde.";
 "send_video" = "Enviar 1 vídeo";
 "send_video_count" = "Enviar %d vídeos";
 "send_without_sound" = "Enviar sin sonido";

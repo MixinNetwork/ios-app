@@ -392,6 +392,7 @@
 "enter_your_phone_number" = "Enter your phone number";
 "enter_your_pin" = "Enter your PIN";
 "enter_your_pin_to_continue" = "Enter your PIN to continue";
+"error_bad_data" = "ERROR 10002: The request data has invalid field";
 "error_blockchain" = "ERROR 30100: Blockchain not in sync, please try again later.";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA is invalid";
 "error_connection_timeout" = "Network connection timeout, please try again";
@@ -401,9 +402,11 @@
 "error_insufficient_transaction_fee_with_amount" = "ERROR 20124: Insufficient transaction fee. Please make sure your wallet has %@ as fee";
 "error_internal_with_msg" = "Internal error: %@";
 "error_invalid_address_plain" = "ERROR 30102: Invalid address format.";
+"error_invalid_code_too_frequent" = "ERROR 20129: Send verification code too frequent, please try again later.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid emergency contact";
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";
 "error_not_found" = "ERROR 404: Not found";
+"error_number_reached_limit" = "ERROR 20132: The number has reached the limit.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "ERROR 20110: Invalid phone number";
 "error_phone_sms_delivery" = "ERROR 10003: Failed to deliver SMS";
@@ -496,7 +499,6 @@
 "invalid_payment_link" = "Invalid payment link";
 "invalid_qr_code" = "Invalid QR-Code";
 "invalid_request_body" = "Invalid request body";
-"invalid_request_data" = "Invalid request data";
 "invalid_sdp" = "Invalid SDP";
 "invalid_width" = "Invalid width";
 "invite" = "Invite";
@@ -643,7 +645,6 @@
 "notification_content" = "Don't miss messages from your friends.";
 "notification_message_preview_description" = "Preview message text inside new message notifications.";
 "now_an_addmin" = "%@ now an admin";
-"number_reached_limit" = "The number has reached the limit";
 "off" = "Off";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
@@ -864,7 +865,6 @@
 "send_to_contact_description" = "Send crypto to Mixin contact";
 "send_to_developer" = "Send to Developer";
 "send_to_title" = "Send To";
-"send_verification_code_frequent" = "Send verification code too frequent, please try again later.";
 "send_video" = "Send 1 Video";
 "send_video_count" = "Send %d Videos";
 "send_without_sound" = "Send Without Sound";

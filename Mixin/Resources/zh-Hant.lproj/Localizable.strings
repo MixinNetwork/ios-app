@@ -392,6 +392,7 @@
 "enter_your_phone_number" = "輸入你的手機號碼";
 "enter_your_pin" = "輸入你的 PIN";
 "enter_your_pin_to_continue" = "輸入你的 PIN 以繼續";
+"error_bad_data" = "錯誤 10002：請求資料不合法";
 "error_blockchain" = "錯誤 30100：區塊鏈同步異常，請稍後重試";
 "error_captcha_is_invalid" = "錯誤 10004：驗證失敗";
 "error_connection_timeout" = "網路連線超時";
@@ -401,10 +402,12 @@
 "error_insufficient_transaction_fee_with_amount" = "錯誤 20124：手續費不足。請確保錢包至少有 %@ 當作手續費。";
 "error_internal_with_msg" = "內部錯誤：%@";
 "error_invalid_address_plain" = "錯誤 30102：地址格式錯誤。";
+"error_invalid_code_too_frequent" = "錯誤 20129：傳送驗證碼太頻繁，請稍後再試";
 "error_invalid_emergency_contact" = "錯誤 20130：緊急聯絡人不正確";
 "error_network_task_failed" = "網路連線失敗。檢查或切換網路，然後重試";
 "error_not_found" = "錯誤 404：沒有找到相應的資訊";
-"error_opponent_not_registered_to_safe" = "ERROR 10404: 對方客戶端版本過低，請提醒對方更新客戶端到最新版本";
+"error_number_reached_limit" = "錯誤 20132： 已達到上限";
+"error_opponent_not_registered_to_safe" = "錯誤 10404: 對方客戶端版本過低，請提醒對方更新客戶端到最新版本";
 "error_phone_invalid_format" = "錯誤 20110：手機號碼不合法";
 "error_phone_sms_delivery" = "錯誤 10003：傳送簡訊失敗";
 "error_phone_verification_code_expired" = "錯誤 20114：驗證碼已過期";
@@ -496,7 +499,6 @@
 "invalid_payment_link" = "無效支付資訊";
 "invalid_qr_code" = "無效的二維碼";
 "invalid_request_body" = "無效的請求";
-"invalid_request_data" = "無效的請求資料";
 "invalid_sdp" = "無效的 SDP";
 "invalid_width" = "寬度無效";
 "invite" = "邀請";
@@ -643,7 +645,6 @@
 "notification_content" = "不再遺漏好友的訊息。";
 "notification_message_preview_description" = "在推送通知中顯示訊息內容。";
 "now_an_addmin" = "%@現在是管理員";
-"number_reached_limit" = "已達到上限";
 "off" = "關閉";
 "ok" = "好的";
 "old_device_is_waiting" = "確保舊的裝置已停留在同步等待掃碼的介面";
@@ -864,7 +865,6 @@
 "send_to_contact_description" = "轉出加密貨幣到 Mixin 聯絡人";
 "send_to_developer" = "把日誌發給開發者";
 "send_to_title" = "轉給";
-"send_verification_code_frequent" = "傳送驗證碼太頻繁，請稍後再試";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";
 "send_without_sound" = "靜音傳送";

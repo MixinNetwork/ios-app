@@ -20,7 +20,7 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.mixin_server_encounters_errors()
             
         case .invalidRequestData:
-            return R.string.localizable.invalid_request_data()
+            return R.string.localizable.error_bad_data()
         case .failedToDeliverSMS:
             return R.string.localizable.error_phone_sms_delivery()
         case .invalidCaptchaToken:
@@ -38,7 +38,7 @@ extension MixinAPIResponseError: LocalizedError {
         case .expiredPhoneVerificationCode:
             return R.string.localizable.error_phone_verification_code_expired()
         case .invalidQrCode:
-            return R.string.localizable.invalid_qr_code()
+            return R.string.localizable.error_two_parts("\(code)", R.string.localizable.invalid_qr_code())
         case .groupChatIsFull:
             return R.string.localizable.error_full_group()
         case .insufficientBalance:
@@ -52,7 +52,7 @@ extension MixinAPIResponseError: LocalizedError {
         case .phoneNumberInUse:
             return R.string.localizable.error_used_phone()
         case .insufficientFee:
-            return R.string.localizable.insufficient_transaction_fee()
+            return R.string.localizable.error_two_parts("\(code)", R.string.localizable.insufficient_transaction_fee())
         case .transferIsAlreadyPaid:
             return R.string.localizable.error_transfer_is_already_paid()
         case .tooManyStickers:
@@ -62,13 +62,13 @@ extension MixinAPIResponseError: LocalizedError {
         case .tooManyFriends:
             return R.string.localizable.error_too_many_friends()
         case .sendingVerificationCodeTooFrequently:
-            return R.string.localizable.send_verification_code_frequent()
+            return R.string.localizable.error_invalid_code_too_frequent()
         case .invalidEmergencyContact:
             return R.string.localizable.error_invalid_emergency_contact()
         case .malformedWithdrawalMemo:
             return R.string.localizable.error_withdrawal_memo_format_incorrect()
         case .sharedAppReachLimit:
-            return R.string.localizable.number_reached_limit()
+            return R.string.localizable.error_number_reached_limit()
         case .circleConversationReachLimit:
             return R.string.localizable.conversation_has_too_many_circles()
 
@@ -78,13 +78,13 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_invalid_address_plain()
             
         case .roomFull:
-            return R.string.localizable.room_is_full()
+            return R.string.localizable.error_two_parts("\(code)", R.string.localizable.room_is_full())
         case .peerNotFound:
-            return R.string.localizable.peer_not_found()
+            return R.string.localizable.error_two_parts("\(code)", R.string.localizable.peer_not_found())
         case .peerClosed:
-            return R.string.localizable.peer_closed()
+            return R.string.localizable.error_two_parts("\(code)", R.string.localizable.peer_closed())
         case .trackNotFound:
-            return R.string.localizable.track_not_found()
+            return R.string.localizable.error_two_parts("\(code)", R.string.localizable.track_not_found())
 
         default:
             return R.string.localizable.error_two_parts("\(code)", description ?? "")

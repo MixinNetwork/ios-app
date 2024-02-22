@@ -392,6 +392,7 @@
 "enter_your_phone_number" = "Введите свой номер телефона";
 "enter_your_pin" = "Введите свой PIN-код";
 "enter_your_pin_to_continue" = "Введите PIN-код, чтобы продолжить";
+"error_bad_data" = "ОШИБКА 10002: Данные запроса содержат недопустимое поле";
 "error_blockchain" = "ОШИБКА 30100: Блокчейн не синхронизирован, повторите попытку позже.";
 "error_captcha_is_invalid" = "ОШИБКА 10004: CAPTCHA недействительна";
 "error_connection_timeout" = "Тайм-аут подключения к сети, повторите попытку.";
@@ -401,9 +402,11 @@
 "error_insufficient_transaction_fee_with_amount" = "ОШИБКА 20124: Недостаточная комиссия за транзакцию. Убедитесь, что в вашем кошельке есть %@ в качестве комиссии.";
 "error_internal_with_msg" = "Внутренняя ошибка: %@";
 "error_invalid_address_plain" = "ОШИБКА 30102: Недопустимый формат адреса.";
+"error_invalid_code_too_frequent" = "ОШИБКА 20129: Код подтверждения отправляется слишком часто. Повторите попытку позже.";
 "error_invalid_emergency_contact" = "ОШИБКА 20130: Недопустимый экстренный контакт";
 "error_network_task_failed" = "Не удалось подключиться к сети. Проверьте или переключите сеть и повторите попытку.";
 "error_not_found" = "Ошибка 404: Не найдено";
+"error_number_reached_limit" = "ОШИБКА 20132: число достигло предела.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_phone_invalid_format" = "ОШИБКА 20110: Неверный номер телефона";
 "error_phone_sms_delivery" = "ОШИБКА 10003: Не удалось доставить SMS";
@@ -496,7 +499,6 @@
 "invalid_payment_link" = "Неверная ссылка для оплаты";
 "invalid_qr_code" = "Неверный QR-код";
 "invalid_request_body" = "Неверный текст запроса";
-"invalid_request_data" = "Неверные данные запроса";
 "invalid_sdp" = "Недействительный SDP";
 "invalid_width" = "Недопустимая ширина";
 "invite" = "Пригласить";
@@ -643,7 +645,6 @@
 "notification_content" = "Не пропустите сообщения от друзей.";
 "notification_message_preview_description" = "Предварительный просмотр текста сообщения в уведомлениях о новых сообщениях.";
 "now_an_addmin" = "%@ теперь администратор";
-"number_reached_limit" = "Количество достигло предела";
 "off" = "Выключенный";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
@@ -864,7 +865,6 @@
 "send_to_contact_description" = "Send crypto to Mixin contact";
 "send_to_developer" = "Отправить разработчику";
 "send_to_title" = "Отправить в";
-"send_verification_code_frequent" = "Код подтверждения отправляется слишком часто. Повторите попытку позже.";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
 "send_without_sound" = "Отправить без звука";

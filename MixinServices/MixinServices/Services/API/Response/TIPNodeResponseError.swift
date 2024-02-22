@@ -16,4 +16,12 @@ public struct TIPNodeResponseError: Error, Decodable, Equatable {
         lhs.code == rhs.code
     }
     
+    // `lhs` is pattern and `rhs` is the value to match
+    public static func ~=(lhs: Self, rhs: Error) -> Bool {
+        guard let rhs = rhs as? TIPNodeResponseError else {
+            return false
+        }
+        return lhs.code == rhs.code
+    }
+    
 }

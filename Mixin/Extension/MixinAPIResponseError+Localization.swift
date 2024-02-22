@@ -13,7 +13,7 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.access_denied()
         case .notFound:
             return R.string.localizable.not_found()
-        case .tooManyRequests:
+        case Self.tooManyRequests:
             return R.string.localizable.error_too_many_request()
             
         case .internalServerError, .blazeServerError, .blazeOperationTimedOut, .insufficientPool:

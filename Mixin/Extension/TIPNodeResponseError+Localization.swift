@@ -5,7 +5,7 @@ extension TIPNodeResponseError: LocalizedError {
     
     public var errorDescription: String? {
         switch self {
-        case .tooManyRequests:
+        case TIPNodeResponseError.tooManyRequests:
             R.string.localizable.error_too_many_request()
         case .incorrectPIN:
             R.string.localizable.error_two_parts("\(code)", R.string.localizable.pin_incorrect())

@@ -11,7 +11,7 @@ public enum MixinAPIError: Error {
     case httpTransport(AFError)
     case requestSigningTimeout
     case clockSkewDetected
-    case pinEncryption(Error)
+    case pinEncryptionFailed(Error)
     case invalidSignature
     
     case response(MixinAPIResponseError)

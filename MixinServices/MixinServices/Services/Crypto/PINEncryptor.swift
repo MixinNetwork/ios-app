@@ -31,7 +31,7 @@ enum PINEncryptor {
                     onSuccess(encrypted)
                 case .failure(let error):
                     DispatchQueue.main.async {
-                        onFailure(.failure(.pinEncryption(error)))
+                        onFailure(.failure(.pinEncryptionFailed(error)))
                     }
                 }
             }
@@ -50,7 +50,7 @@ enum PINEncryptor {
                         if let error = error as? MixinAPIError {
                             onFailure(.failure(error))
                         } else {
-                            onFailure(.failure(.pinEncryption(error)))
+                            onFailure(.failure(.pinEncryptionFailed(error)))
                         }
                     }
                 }

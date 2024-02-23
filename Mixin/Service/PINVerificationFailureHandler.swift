@@ -5,7 +5,7 @@ enum PINVerificationFailureHandler {
     
     static func canHandle(error: MixinAPIError) -> Bool {
         switch error {
-        case MixinAPIResponseError.tooManyRequests, .incorrectPin, .pinEncryption:
+        case MixinAPIResponseError.tooManyRequests, .incorrectPin, .pinEncryptionFailed:
             return true
         default:
             return false
@@ -35,7 +35,7 @@ enum PINVerificationFailureHandler {
                     completion(R.string.localizable.pin_incorrect())
                 }
             }
-        case .pinEncryption(let error as TIPNode.Error):
+        case .pinEncryptionFailed(let error as TIPNode.Error):
             completion(error.localizedDescription)
         default:
             completion(error.localizedDescription)

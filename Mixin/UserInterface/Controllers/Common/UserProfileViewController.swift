@@ -303,11 +303,11 @@ extension UserProfileViewController {
             return
         }
         if let vc = navigationController.viewControllers.last as? ConversationViewController, vc.dataSource?.category == .contact && vc.dataSource?.conversation.ownerId == user.userId {
-            dismiss(animated: true, completion: nil)
+            checkedDismiss(animated: true)
             return
         }
         let vc = ConversationViewController.instance(ownerUser: user)
-        dismiss(animated: true) {
+        checkedDismiss(animated: true) { _ in
             UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
         }
     }
@@ -365,7 +365,7 @@ extension UserProfileViewController {
     
     @objc func openApp() {
         let userId = user.userId
-        dismiss(animated: true) {
+        checkedDismiss(animated: true) { _ in
             guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
                 return
             }
@@ -463,7 +463,7 @@ extension UserProfileViewController {
     
     @objc func callWithMixin() {
         let user = self.user!
-        dismiss(animated: true) {
+        checkedDismiss(animated: true) { _ in
             CallService.shared.makePeerCall(with: user)
         }
     }
@@ -552,7 +552,7 @@ extension UserProfileViewController {
                     DispatchQueue.main.async {
                         hud.set(style: .notification, text: R.string.localizable.user_is_reported())
                         hud.scheduleAutoHidden()
-                        self.dismiss(animated: true, completion: nil)
+                        self.presentingViewController?.dismiss(animated: true)
                     }
                 case let .failure(error):
                     DispatchQueue.main.async {

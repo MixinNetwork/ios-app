@@ -223,7 +223,7 @@ extension GroupProfileViewController {
                     guard let self = self else {
                         return
                     }
-                    self.dismiss(animated: true) {
+                    self.checkedDismiss(animated: true) { _ in
                         hud.set(style: .notification, text: R.string.localizable.done())
                         hud.scheduleAutoHidden()
                         if UIApplication.currentConversationId() == conversationId {
@@ -493,7 +493,7 @@ extension GroupProfileViewController {
                 return
             }
             DispatchQueue.main.async {
-                self?.dismiss(animated: true, completion: {
+                self?.checkedDismiss(animated: true, completion: { _ in
                     let vc = ConversationViewController.instance(conversation: conversation)
                     UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                 })

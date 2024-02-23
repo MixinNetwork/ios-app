@@ -19,6 +19,8 @@ class ProfileViewController: ResizablePopupViewController {
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var menuStackViewTopConstraint: NSLayoutConstraint!
     
+    var dismissPresentingViewControllerOnNavigation = false
+    
     lazy var relationshipView = ProfileRelationshipView()
     lazy var descriptionView: ProfileDescriptionView = {
         let view = ProfileDescriptionView()
@@ -105,12 +107,42 @@ class ProfileViewController: ResizablePopupViewController {
         }
     }
     
+    override func dismissAndPresent(_ viewController: UIViewController) {
+        checkedDismiss(animated: true) { presentingViewController in
+            presentingViewController.present(viewController, animated: true)
+        }
+    }
+    
+    override func dismissAndPush(_ viewController: UIViewController) {
+        checkedDismiss(animated: true) { presentingViewController in
+            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+    
     @IBAction func dismissAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction func previewAvatarAction(_ sender: Any) {
         
+    }
+    
+    // Checks if `presentingViewController` should be dismissed too
+    func checkedDismiss(animated flag: Bool, completion: ((UIViewController) -> Void)? = nil) {
+        if let top = presentingViewController,
+            let bottom = top.presentingViewController,
+            dismissPresentingViewControllerOnNavigation
+        {
+            top.dismiss(animated: flag) {
+                bottom.dismiss(animated: flag) {
+                    completion?(bottom)
+                }
+            }
+        } else if let presentingViewController {
+            presentingViewController.dismiss(animated: flag) {
+                completion?(presentingViewController)
+            }
+        }
     }
     
     func presentEditNameController(title: String, text: String, placeholder: String, onChange: @escaping (String) -> Void) {

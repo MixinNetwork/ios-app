@@ -18,38 +18,44 @@
                 <rect key="frame" x="0.0" y="0.0" width="157" height="30"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rwr-rh-XxE" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="6" width="18" height="18"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstAttribute="width" secondItem="rwr-rh-XxE" secondAttribute="height" id="8Ci-cO-Ox6"/>
-                            <constraint firstAttribute="width" constant="18" id="tlp-Cn-ygN"/>
-                        </constraints>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
-                                <real key="value" value="12"/>
-                            </userDefinedRuntimeAttribute>
-                        </userDefinedRuntimeAttributes>
-                    </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="John (762532)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z6d-NK-LeL">
-                        <rect key="frame" x="22" y="5" width="115" height="20"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <color key="textColor" name="text"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="KOc-C9-ISf">
+                        <rect key="frame" x="0.0" y="6" width="137" height="18"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rwr-rh-XxE" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
+                                <color key="backgroundColor" name="background"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="rwr-rh-XxE" secondAttribute="height" id="8Ci-cO-Ox6"/>
+                                    <constraint firstAttribute="width" constant="18" id="tlp-Cn-ygN"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                        <real key="value" value="12"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="John (762532)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z6d-NK-LeL">
+                                <rect key="frame" x="22" y="0.0" width="108" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xMW-D3-xdi">
+                                <rect key="frame" x="134" y="0.0" width="3" height="18"/>
+                            </imageView>
+                        </subviews>
+                    </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="rwr-rh-XxE" firstAttribute="leading" secondItem="eOJ-4l-Ba2" secondAttribute="leading" id="4p7-bm-MGU"/>
-                    <constraint firstAttribute="bottom" secondItem="rwr-rh-XxE" secondAttribute="bottom" constant="6" id="6Kn-50-uQb"/>
-                    <constraint firstAttribute="trailing" secondItem="Z6d-NK-LeL" secondAttribute="trailing" constant="20" id="AoY-k7-Vtj"/>
-                    <constraint firstItem="rwr-rh-XxE" firstAttribute="top" secondItem="eOJ-4l-Ba2" secondAttribute="top" constant="6" id="JXi-tv-lOX"/>
-                    <constraint firstItem="Z6d-NK-LeL" firstAttribute="leading" secondItem="rwr-rh-XxE" secondAttribute="trailing" constant="4" id="Wki-sf-Mdq"/>
-                    <constraint firstItem="Z6d-NK-LeL" firstAttribute="leading" secondItem="rwr-rh-XxE" secondAttribute="trailing" constant="4" id="XQ8-Yo-Td5"/>
-                    <constraint firstItem="Z6d-NK-LeL" firstAttribute="centerY" secondItem="eOJ-4l-Ba2" secondAttribute="centerY" id="gdk-PH-mjN"/>
+                    <constraint firstAttribute="trailing" secondItem="KOc-C9-ISf" secondAttribute="trailing" constant="20" id="Kre-U4-VqO"/>
+                    <constraint firstItem="KOc-C9-ISf" firstAttribute="top" secondItem="eOJ-4l-Ba2" secondAttribute="top" constant="6" id="gZq-lu-rqF"/>
+                    <constraint firstAttribute="bottom" secondItem="KOc-C9-ISf" secondAttribute="bottom" constant="6" id="mLX-NC-NSB"/>
+                    <constraint firstItem="KOc-C9-ISf" firstAttribute="leading" secondItem="eOJ-4l-Ba2" secondAttribute="leading" id="xuc-QH-Lvn"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>
                 <outlet property="avatarImageView" destination="rwr-rh-XxE" id="7eX-pU-5kj"/>
+                <outlet property="badgeImageView" destination="xMW-D3-xdi" id="N7n-QU-4Tz"/>
                 <outlet property="usernameLabel" destination="Z6d-NK-LeL" id="P1V-jc-bxN"/>
             </connections>
             <point key="canvasLocation" x="-98" y="197"/>

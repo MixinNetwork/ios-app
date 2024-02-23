@@ -51,6 +51,13 @@ extension PaymentUserGroupCell: UICollectionViewDataSource {
         let user = users[indexPath.item]
         cell.avatarImageView.setImage(with: user)
         cell.usernameLabel.text = "\(user.fullName) (\(user.identityNumber))"
+        cell.badge = if user.isVerified {
+            .verified
+        } else if user.isBot {
+            .bot
+        } else {
+            nil
+        }
         return cell
     }
     

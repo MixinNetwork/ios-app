@@ -188,6 +188,11 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                                              action: #selector(close(_:)))
                 }
             } catch {
+                let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {
+                    await PINVerificationFailureHandler.handle(error: error)
+                } else {
+                    error.localizedDescription
+                }
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
@@ -198,7 +203,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
                         R.string.localizable.revoking_multisig_failed()
                     }
                     layoutTableHeaderView(title: title,
-                                          subtitle: error.localizedDescription,
+                                          subtitle: errorDescription,
                                           style: .destructive)
                     tableView.setContentOffset(.zero, animated: true)
                     loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),

@@ -408,7 +408,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             do {
                 let fees = try await SafeAPI.fees(assetID: token.assetID, destination: address.destination)
                 guard let fee = fees.first else {
-                    throw MixinAPIError.withdrawSuspended
+                    throw MixinAPIResponseError.withdrawSuspended
                 }
                 let allAssetIDs = fees.map(\.assetID)
                 let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: allAssetIDs)
@@ -450,7 +450,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                     }
                     self.continueButton.isBusy = false
                 }
-            } catch MixinAPIError.withdrawSuspended {
+            } catch MixinAPIResponseError.withdrawSuspended {
                 await MainActor.run {
                     let suspended = WalletHintViewController(token: token)
                     suspended.setTitle(R.string.localizable.withdrawal_suspended(token.symbol),

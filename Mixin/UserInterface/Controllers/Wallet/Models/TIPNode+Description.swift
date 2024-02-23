@@ -15,6 +15,8 @@ extension TIPNode.Error: LocalizedError {
             }
         case .differentIdentity:
             return R.string.localizable.pin_not_same_as_last_time()
+        case .response(let error):
+            return error.localizedDescription
         default:
             return R.string.localizable.set_or_update_pin_failed()
         }

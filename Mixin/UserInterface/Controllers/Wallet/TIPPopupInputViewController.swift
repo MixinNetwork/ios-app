@@ -144,7 +144,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     if let error = error as? MixinAPIError {
                         handle(error: error)
                     } else {
-                        handle(error: .pinEncryption(error))
+                        handle(error: .pinEncryptionFailed(error))
                     }
                 }
             }
@@ -218,7 +218,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     if let error = error as? MixinAPIError {
                         handle(error: error)
                     } else {
-                        handle(error: .pinEncryption(error))
+                        handle(error: .pinEncryptionFailed(error))
                     }
                     titleLabel.text = R.string.localizable.enter_your_old_pin()
                     oldPIN = nil

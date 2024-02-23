@@ -65,7 +65,7 @@ struct AlreadyPaidPrecondition: PaymentPrecondition {
         do {
             let _ = try await SafeAPI.transaction(id: traceID)
             return .failed(.description(R.string.localizable.pay_paid()))
-        } catch MixinAPIError.notFound {
+        } catch MixinAPIResponseError.notFound {
             return .passed([])
         } catch {
             return .failed(.description(error.localizedDescription))
@@ -121,7 +121,7 @@ struct DuplicationPrecondition: PaymentPrecondition {
                 let response = try await SafeAPI.transaction(id: trace.traceId)
                 TraceDAO.shared.updateSnapshot(traceId: trace.traceId, snapshotId: response.snapshotID)
                 traceCreatedAt = response.createdAt.toUTCDate()
-            } catch MixinAPIError.notFound {
+            } catch MixinAPIResponseError.notFound {
                 return .passed([])
             } catch {
                 return .failed(.description(error.localizedDescription))

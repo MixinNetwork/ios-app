@@ -32,7 +32,7 @@ public class KrakenMessageRetriever {
             } else {
                 return nil
             }
-        } catch MixinAPIError.invalidConversationChecksum {
+        } catch MixinAPIResponseError.invalidConversationChecksum {
             SendMessageService.shared.syncConversation(conversationId: id)
             try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: id)
             return requestPeers(forConversationWith: id)
@@ -60,7 +60,7 @@ public class KrakenMessageRetriever {
                 let error: Error = blazeMessage?.error ?? MixinServicesError.badKrakenBlazeMessage
                 return .failure(error)
             }
-        } catch MixinAPIError.invalidConversationChecksum {
+        } catch MixinAPIResponseError.invalidConversationChecksum {
             if let conversationId = blazeMessage.params?.conversationId {
                 SendMessageService.shared.syncConversation(conversationId: conversationId)
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)

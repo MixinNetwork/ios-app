@@ -596,7 +596,7 @@ class UrlWindow {
                     throw Error.syncTokenFailed
                 }
                 guard let fee = try await SafeAPI.fees(assetID: assetID, destination: address.destination).first else {
-                    throw MixinAPIError.withdrawSuspended
+                    throw MixinAPIResponseError.withdrawSuspended
                 }
                 guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
                     throw Error.invalidPaymentLink

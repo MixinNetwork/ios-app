@@ -5,7 +5,7 @@ enum PINVerificationFailureHandler {
     
     static func canHandle(error: MixinAPIError) -> Bool {
         switch error {
-        case .tooManyRequests, .incorrectPin:
+        case MixinAPIResponseError.tooManyRequests, .incorrectPin, .pinEncryptionFailed:
             return true
         default:
             return false
@@ -14,10 +14,8 @@ enum PINVerificationFailureHandler {
     
     static func handle(error: MixinAPIError, completion: @escaping (String) -> Void) {
         switch error {
-        case .tooManyRequests:
+        case MixinAPIResponseError.tooManyRequests:
             completion(R.string.localizable.error_pin_check_too_many_request())
-        case .pinEncryption(TIPNode.Error.tooManyRequests):
-            completion(R.string.localizable.error_too_many_request())
         case .incorrectPin:
             AccountAPI.logs(category: .incorrectPin, limit: 5) { (result) in
                 switch result {
@@ -37,12 +35,18 @@ enum PINVerificationFailureHandler {
                     completion(R.string.localizable.pin_incorrect())
                 }
             }
-        case .pinEncryption(TIPNode.Error.incorrectPIN):
-            completion(R.string.localizable.pin_incorrect())
-        case .pinEncryption(let error as TIPNode.Error):
+        case .pinEncryptionFailed(let error as TIPNode.Error):
             completion(error.localizedDescription)
         default:
             completion(error.localizedDescription)
+        }
+    }
+    
+    static func handle(error: MixinAPIError) async -> String {
+        await withCheckedContinuation { continuation in
+            handle(error: error) { result in
+                continuation.resume(returning: result)
+            }
         }
     }
     

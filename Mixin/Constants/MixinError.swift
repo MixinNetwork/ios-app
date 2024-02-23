@@ -6,7 +6,6 @@ enum MixinError: Error {
     case invalidPin
     case missingBackup
     case requestLoginVerificationCode([String: String])
-    case generateRsaKeyPair
     case unrecognizedCaptchaMessage(String)
     case unrecognizedUrl(URL)
     case missingApp
@@ -29,14 +28,12 @@ extension MixinError: CustomNSError {
             return 3
         case .requestLoginVerificationCode:
             return 4
-        case .generateRsaKeyPair:
-            return 5
         case .unrecognizedCaptchaMessage:
-            return 6
+            return 5
         case .unrecognizedUrl:
-            return 7
+            return 6
         case .missingApp:
-            return 8
+            return 7
         }
     }
     
@@ -44,7 +41,7 @@ extension MixinError: CustomNSError {
         switch self {
         case let .loadAvatar(url, error):
             return ["url": url, "error": error ?? "(null)"]
-        case .invalidPin, .missingBackup, .generateRsaKeyPair, .missingApp:
+        case .invalidPin, .missingBackup, .missingApp:
             return [:]
         case let .requestLoginVerificationCode(info):
             return info

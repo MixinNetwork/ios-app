@@ -162,7 +162,7 @@
 		7B54F95922B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95822B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift */; };
 		7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95A22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift */; };
 		7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B56DBD01FEFC5B900B50D82 /* PinField.swift */; };
-		7B57186E24D9375300682D86 /* MixinAPIError+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B57186D24D9375300682D86 /* MixinAPIError+Description.swift */; };
+		7B57186E24D9375300682D86 /* MixinAPIError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B57186D24D9375300682D86 /* MixinAPIError+Localization.swift */; };
 		7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58433E2175911D0053332F /* SnapKitExtension.swift */; };
 		7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */; };
 		7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534A2267206D00D59DB4 /* OneSideShadowView.swift */; };
@@ -713,6 +713,8 @@
 		9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */; };
 		9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */; };
 		9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */; };
+		94287EE12B8743E50088DEAD /* MixinAPIResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */; };
+		94287EE62B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */; };
 		942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */; };
 		942D90F02B05F8FE00E81358 /* WithdrawFeeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90EE2B05F8FE00E81358 /* WithdrawFeeCell.swift */; };
 		942D90F12B05F8FE00E81358 /* WithdrawFeeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942D90EF2B05F8FE00E81358 /* WithdrawFeeCell.xib */; };
@@ -739,6 +741,7 @@
 		94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */; };
 		94396F2A29EBE52400A57833 /* DeviceTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2929EBE52400A57833 /* DeviceTransferClient.swift */; };
 		94396F3029ED005200A57833 /* DeviceTransferFileStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */; };
+		943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */; };
 		943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */; };
 		943B5EAB2B600D77001C1F6E /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943B5EAA2B600D77001C1F6E /* AppCell.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
@@ -1361,7 +1364,7 @@
 		7B54F95822B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7B54F95A22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEmergencyContactVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B56DBD01FEFC5B900B50D82 /* PinField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinField.swift; sourceTree = "<group>"; };
-		7B57186D24D9375300682D86 /* MixinAPIError+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MixinAPIError+Description.swift"; sourceTree = "<group>"; };
+		7B57186D24D9375300682D86 /* MixinAPIError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MixinAPIError+Localization.swift"; sourceTree = "<group>"; };
 		7B58433E2175911D0053332F /* SnapKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapKitExtension.swift; sourceTree = "<group>"; };
 		7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationViewController.swift; sourceTree = "<group>"; };
 		7B59534A2267206D00D59DB4 /* OneSideShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneSideShadowView.swift; sourceTree = "<group>"; };
@@ -1917,6 +1920,8 @@
 		9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfoView.swift; sourceTree = "<group>"; };
 		9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItemCell.swift; sourceTree = "<group>"; };
 		9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
+		94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MixinAPIResponseError+Localization.swift"; sourceTree = "<group>"; };
+		94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocketServiceSendingError+Localization.swift"; sourceTree = "<group>"; };
 		942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeSelectorViewController.swift; sourceTree = "<group>"; };
 		942D90EE2B05F8FE00E81358 /* WithdrawFeeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeCell.swift; sourceTree = "<group>"; };
 		942D90EF2B05F8FE00E81358 /* WithdrawFeeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawFeeCell.xib; sourceTree = "<group>"; };
@@ -1943,6 +1948,7 @@
 		94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWParameters+DeviceTransfer.swift"; sourceTree = "<group>"; };
 		94396F2929EBE52400A57833 /* DeviceTransferClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClient.swift; sourceTree = "<group>"; };
 		94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferFileStream.swift; sourceTree = "<group>"; };
+		943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIPNodeResponseError+Localization.swift"; sourceTree = "<group>"; };
 		943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPPopupInputViewController.swift; sourceTree = "<group>"; };
 		943B5EAA2B600D77001C1F6E /* AppCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
@@ -3613,7 +3619,10 @@
 				DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */,
 				DF08F0A523828B8F005CFD34 /* PHAssetExtension.swift */,
 				7B58433E2175911D0053332F /* SnapKitExtension.swift */,
-				7B57186D24D9375300682D86 /* MixinAPIError+Description.swift */,
+				7B57186D24D9375300682D86 /* MixinAPIError+Localization.swift */,
+				94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */,
+				94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */,
+				943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */,
 				E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */,
 				DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */,
 				DFB6CE2423C48A8E00FB6615 /* DateExtension.swift */,
@@ -5214,6 +5223,7 @@
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
 				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
 				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
+				94287EE12B8743E50088DEAD /* MixinAPIResponseError+Localization.swift in Sources */,
 				7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */,
 				94FFD9A429C199FD0054DCA7 /* BIP32Tests.swift in Sources */,
 				7C53049D28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift in Sources */,
@@ -5535,7 +5545,7 @@
 				94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */,
 				94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
-				7B57186E24D9375300682D86 /* MixinAPIError+Description.swift in Sources */,
+				7B57186E24D9375300682D86 /* MixinAPIError+Localization.swift in Sources */,
 				E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,
 				7B54F95922B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift in Sources */,
@@ -5804,6 +5814,7 @@
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
 				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,
+				943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */,
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,
@@ -5836,6 +5847,7 @@
 				9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */,
+				94287EE62B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift in Sources */,
 				7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */,
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
 				E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */,

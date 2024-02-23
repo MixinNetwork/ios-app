@@ -88,7 +88,7 @@ public final class UTXOService {
                     sequence = lastOutput.sequence
                 } while outputs.count >= limit && LoginManager.shared.isLoggedIn
                 Logger.general.info(category: "UTXO", message: "All UTXOs are synced")
-            } catch MixinAPIError.unauthorized {
+            } catch MixinAPIResponseError.unauthorized {
                 Logger.general.error(category: "UTXO", message: "Unauthorized, stop syncing")
             } catch {
                 Logger.general.error(category: "UTXO", message: "Failed to sync: \(error)")
@@ -147,7 +147,7 @@ public final class UTXOService {
                     }
                     sequence = lastOutput.sequence
                 } while outputs.count >= limit && LoginManager.shared.isLoggedIn
-            } catch MixinAPIError.unauthorized {
+            } catch MixinAPIResponseError.unauthorized {
                 return
             } catch {
                 await MainActor.run {

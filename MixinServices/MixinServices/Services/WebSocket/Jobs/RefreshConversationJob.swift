@@ -29,13 +29,10 @@ public class RefreshConversationJob: BaseJob {
             } else if response.category == ConversationCategory.CONTACT.rawValue {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [response.creatorId]))
             }
+        case .failure(.forbidden), .failure(.notFound):
+            ConversationDAO.shared.exitGroup(conversationId: conversationId)
         case let .failure(error):
-            switch error {
-            case .forbidden, .notFound:
-                ConversationDAO.shared.exitGroup(conversationId: conversationId)
-            default:
-                throw error
-            }
+            throw error
         }
     }
     

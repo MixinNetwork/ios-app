@@ -206,18 +206,7 @@ extension StickerAddViewController {
                 }
             case let .failure(error):
                 self?.container?.rightButton.isBusy = false
-                switch error {
-                case let .invalidRequestData(field, _):
-                    if field == "width" {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_width())
-                    } else if field == "height" {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_height())
-                    } else {
-                        fallthrough
-                    }
-                default:
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         })
     }

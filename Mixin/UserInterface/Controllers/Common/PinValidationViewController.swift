@@ -82,7 +82,7 @@ class PinValidationViewController: UIViewController {
         pinField.clear()
         pinField.receivesInput = true
         switch error {
-        case .tooManyRequests:
+        case MixinAPIResponseError.tooManyRequests:
             self.loadingIndicator.stopAnimating()
             limitationHintView.isHidden = false
             descriptionLabel.isHidden = true

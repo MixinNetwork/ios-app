@@ -148,6 +148,7 @@ public enum TIPNode {
             }
         }
         
+        // When different errors are mixed in response, throw the most critical one
         let fatalErrorIndex = errors.firstIndex(of: .tooManyRequests)
         ?? errors.firstIndex(of: .incorrectPIN)
         ?? errors.firstIndex(of: .internalServer)

@@ -201,6 +201,12 @@ extension PaymentPreviewViewController: PaymentUserGroupCellDelegate {
         }
     }
     
+    func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem) {
+        let controller = UserProfileViewController(user: item)
+        controller.dismissPresentingViewControllerOnNavigation = true
+        present(controller, animated: true, completion: nil)
+    }
+    
 }
 
 // MARK: - Data Structure

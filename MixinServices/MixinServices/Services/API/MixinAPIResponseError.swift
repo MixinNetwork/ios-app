@@ -83,9 +83,9 @@ extension MixinAPIResponseError {
     // `lhs` is pattern and `rhs` is the value to match
     public static func ~=(lhs: Self, rhs: Error) -> Bool {
         switch rhs {
-        case let .response(rhs) as MixinAPIError:
-            lhs.status == rhs.status && lhs.code == rhs.code
         case let rhs as MixinAPIResponseError:
+            lhs.status == rhs.status && lhs.code == rhs.code
+        case let .response(rhs) as MixinAPIError, let .response(rhs) as WebSocketService.SendingError:
             lhs.status == rhs.status && lhs.code == rhs.code
         default:
             false

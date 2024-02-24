@@ -5,7 +5,7 @@ public class WebSocketService {
     
     public enum SendingError: Error {
         case timedOut
-        case response(MixinAPIResponseError)        
+        case response(MixinAPIResponseError)
     }
     
     public static let didConnectNotification = Notification.Name("one.mixin.services.ws.connect")

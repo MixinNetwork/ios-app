@@ -42,7 +42,7 @@ class TokenViewController: UIViewController {
         view.layoutIfNeeded()
         updateTableViewContentInset()
         updateTableHeaderFooterView()
-        tableHeaderView.render(asset: token)
+        tableHeaderView.render(token: token)
         tableHeaderView.sizeToFit()
         tableHeaderView.transferActionView.delegate = self
         let revealOutputsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
@@ -303,16 +303,16 @@ extension TokenViewController {
     private func reloadToken() {
         let assetId = token.assetID
         DispatchQueue.global().async { [weak self] in
-            guard let asset = TokenDAO.shared.tokenItem(with: assetId) else {
+            guard let token = TokenDAO.shared.tokenItem(with: assetId) else {
                 return
             }
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return
                 }
-                self.token = asset
+                self.token = token
                 UIView.performWithoutAnimation {
-                    self.tableHeaderView.render(asset: asset)
+                    self.tableHeaderView.render(token: token)
                     self.tableHeaderView.sizeToFit()
                     self.updateTableHeaderFooterView()
                 }

@@ -14,6 +14,8 @@ class AssetTableHeaderView: InfiniteTopView {
     @IBOutlet weak var infoStackViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var infoStackViewTrailingConstraint: NSLayoutConstraint!
     
+    private var token: TokenItem?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         amountTextView.textContainerInset = .zero
@@ -25,17 +27,24 @@ class AssetTableHeaderView: InfiniteTopView {
         return CGSize(width: size.width, height: layoutSize.height)
     }
     
-    func render(asset: TokenItem) {
-        assetIconView.setIcon(token: asset)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection), let token {
+            render(token: token)
+        }
+    }
+    
+    func render(token: TokenItem) {
+        assetIconView.setIcon(token: token)
         let amount: String
-        if asset.balance == "0" {
+        if token.balance == "0" {
             amount = "0\(currentDecimalSeparator)00"
             fiatMoneyValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
         } else {
-            amount = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
-            fiatMoneyValueLabel.text = asset.localizedFiatMoneyBalance
+            amount = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? ""
+            fiatMoneyValueLabel.text = token.localizedFiatMoneyBalance
         }
-        let attributedAmount = attributedString(amount: amount, symbol: asset.symbol)
+        let attributedAmount = attributedString(amount: amount, symbol: token.symbol)
         amountTextView.attributedText = attributedAmount
         
         let range = NSRange(location: 0, length: attributedAmount.length)
@@ -51,6 +60,7 @@ class AssetTableHeaderView: InfiniteTopView {
             attributedAmount.insert(linebreak, at: attributedAmount.length - minGlyphCountOfLastLine)
             amountTextView.attributedText = attributedAmount
         }
+        self.token = token
     }
     
     private func attributedString(amount: String, symbol: String) -> NSMutableAttributedString {

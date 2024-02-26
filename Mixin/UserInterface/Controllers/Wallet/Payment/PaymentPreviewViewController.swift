@@ -125,21 +125,12 @@ extension PaymentPreviewViewController: UITableViewDataSource {
         case let .address(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
             cell.captionLabel.text = Caption.address.rawValue.uppercased()
-            cell.contentLabel.attributedText = {
-                var attributes: [NSAttributedString.Key: Any] = [:]
-                if let font = cell.contentLabel.font {
-                    attributes[.font] = font
-                }
-                if let textColor = cell.contentLabel.textColor {
-                    attributes[.foregroundColor] = textColor
-                }
-                return NSMutableAttributedString(string: value, attributes: attributes)
-            }()
+            cell.setContent(value, labelContent: label)
             return cell
         case let .info(caption, content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
-            cell.contentLabel.text = content
+            cell.setContent(content, labelContent: nil)
             return cell
         case let .senders(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
@@ -172,7 +163,7 @@ extension PaymentPreviewViewController: UITableViewDataSource {
         case let .mainnetReceiver(address):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
-            cell.contentLabel.text = address
+            cell.setContent(address, labelContent: nil)
             return cell
         case let .fee(token, fiatMoney, display):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_fee, for: indexPath)!

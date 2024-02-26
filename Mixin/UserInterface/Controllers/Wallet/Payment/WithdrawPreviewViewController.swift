@@ -34,25 +34,42 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let token = operation.withdrawalToken
+        let withdrawalToken = operation.withdrawalToken
+        let withdrawalTokenAmount = operation.withdrawalTokenAmount
+        let feeToken = operation.feeToken
+        let feeTokenAmount = operation.feeAmount
         
-        tableHeaderView.setIcon(token: token)
+        tableHeaderView.setIcon(token: withdrawalToken)
         tableHeaderView.titleLabel.text = R.string.localizable.confirm_withdrawal()
         tableHeaderView.subtitleLabel.text = R.string.localizable.review_withdrawal_hint()
         
-        let feeFiatMoneyAmount = operation.feeAmount * operation.feeToken.decimalUSDPrice * Decimal(Currency.current.rate)
+        let feeFiatMoneyAmount = feeTokenAmount * feeToken.decimalUSDPrice * Decimal(Currency.current.rate)
+        let totalFiatMoneyAmount = withdrawalFiatMoneyAmount + feeFiatMoneyAmount
         
-        let withdrawalTokenValue = CurrencyFormatter.localizedString(from: operation.withdrawalTokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
-        let withdrawalFiatMoneyValue = CurrencyFormatter.localizedString(from: operation.withdrawalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
-        let feeTokenValue = CurrencyFormatter.localizedString(from: operation.feeAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
-        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: feeFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
-        let rows: [Row] = [
+        let withdrawalTokenValue = CurrencyFormatter.localizedString(from: withdrawalTokenAmount, format: .precision, sign: .never, symbol: .custom(withdrawalToken.symbol))
+        let withdrawalFiatMoneyValue = CurrencyFormatter.localizedString(from: operation.withdrawalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let feeTokenValue = CurrencyFormatter.localizedString(from: feeTokenAmount, format: .precision, sign: .never, symbol: .custom(feeToken.symbol))
+        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: feeFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let totalFiatMoneyValue = CurrencyFormatter.localizedString(from: totalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        
+        var rows: [Row] = [
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay),
-            .address(value: operation.address.fullRepresentation, label: operation.addressLabel),
-            .amount(caption: .addressWillReceive, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay),
-            .info(caption: .network, content: token.depositNetworkName ?? ""),
-            .fee(token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay)
+            .receivingAddress(value: operation.address.fullRepresentation, label: operation.addressLabel),
         ]
+        if let account = LoginManager.shared.account {
+            let user = UserItem.createUser(from: account)
+            rows.append(.senders([user], threshold: nil))
+        }
+        rows.append(.fee(token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay))
+        if operation.isFeeTokenDifferent {
+            let totalTokenValue = "\(withdrawalTokenValue) + \(feeTokenValue)"
+            rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay))
+        } else {
+            let totalTokenAmount = withdrawalTokenAmount + feeTokenAmount
+            let totalTokenValue = CurrencyFormatter.localizedString(from: totalTokenAmount, format: .precision, sign: .never, symbol: .custom(withdrawalToken.symbol))
+            rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay))
+        }
+        rows.append(.info(caption: .network, content: withdrawalToken.depositNetworkName ?? ""))
         reloadData(with: rows)
     }
     

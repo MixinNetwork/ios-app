@@ -40,27 +40,35 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
         tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
         
-        let tokenAmount = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
-        let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
-        let fee = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
+        let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
+        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
+        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        
         var rows: [Row] = [
-            .amount(caption: .amount, token: tokenAmount, fiatMoney: fiatMoneyAmount, display: amountDisplay),
-            .amount(caption: .receiverWillReceive, token: tokenAmount, fiatMoney: fiatMoneyAmount, display: amountDisplay),
-            .info(caption: .network, content: token.depositNetworkName ?? ""),
-            .info(caption: .fee, content: fee),
+            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay),
         ]
+        let senderThreshold: Int32?
         switch operation.destination {
         case let .user(user):
-            rows.insert(.receivers([user], threshold: nil), at: 1)
+            rows.append(.receivers([user], threshold: nil))
+            senderThreshold = nil
         case let .multisig(threshold, users):
-            if let account = LoginManager.shared.account {
-                let user = UserItem.createUser(from: account)
-                rows.insert(.senders([user], threshold: 1), at: 1)
-            }
-            rows.insert(.receivers(users, threshold: threshold), at: 2)
+            rows.append(.receivers(users, threshold: threshold))
+            senderThreshold = 1
         case let .mainnet(address):
-            rows.insert(.mainnetReceiver(address), at: 1)
+            rows.append(.mainnetReceiver(address))
+            senderThreshold = nil
         }
+        if let account = LoginManager.shared.account {
+            let user = UserItem.createUser(from: account)
+            rows.append(.senders([user], threshold: senderThreshold))
+        }
+        rows.append(contentsOf: [
+            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay),
+            .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay),
+            .info(caption: .network, content: token.depositNetworkName ?? ""),
+        ])
         if !operation.memo.isEmpty {
             rows.append(.info(caption: .memo, content: operation.memo))
         }

@@ -122,9 +122,9 @@ extension PaymentPreviewViewController: UITableViewDataSource {
                 cell.secondaryAmountLabel.text = token
             }
             return cell
-        case let .address(value, label):
+        case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
-            cell.captionLabel.text = Caption.address.rawValue.uppercased()
+            cell.captionLabel.text = R.string.localizable.receiver()
             cell.setContent(value, labelContent: label)
             return cell
         case let .info(caption, content):
@@ -204,8 +204,7 @@ extension PaymentPreviewViewController {
         case network
         case fee
         case memo
-        case receiverWillReceive
-        case addressWillReceive
+        case total
         
         var rawValue: String {
             switch self {
@@ -221,10 +220,8 @@ extension PaymentPreviewViewController {
                 R.string.localizable.network_fee()
             case .memo:
                 R.string.localizable.memo()
-            case .receiverWillReceive:
-                R.string.localizable.receiver_will_receive()
-            case .addressWillReceive:
-                R.string.localizable.address_will_receive()
+            case .total:
+                R.string.localizable.total()
             }
         }
         
@@ -233,7 +230,7 @@ extension PaymentPreviewViewController {
     enum Row {
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent)
         case info(caption: Caption, content: String)
-        case address(value: String, label: String?)
+        case receivingAddress(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)

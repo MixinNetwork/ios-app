@@ -51,6 +51,7 @@ struct WithdrawPaymentOperation {
     
     let feeToken: Token
     let feeAmount: Decimal
+    let isFeeTokenDifferent: Bool
     
     let address: WithdrawableAddress
     let addressLabel: String?
@@ -71,13 +72,13 @@ struct WithdrawPaymentOperation {
         self.withdrawalOutputs = withdrawalOutputs
         self.feeToken = feeToken
         self.feeAmount = feeAmount
+        self.isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
         self.address = address
         self.addressLabel = addressLabel
         self.addressID = addressID
     }
     
     func start(pin: String) async throws {
-        let isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
         let senderID = myUserId
         let threshold: Int32 = 1
         let emptyMemo = ""

@@ -304,6 +304,9 @@ public class MixinService {
                         throw error
                     }
                 }
+            } catch WebSocketService.SendingError.timedOut {
+                checkNetworkAndWebSocket()
+                throw WebSocketService.SendingError.timedOut
             } catch {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")

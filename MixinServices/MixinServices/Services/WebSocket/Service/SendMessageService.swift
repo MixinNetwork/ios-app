@@ -454,7 +454,7 @@ public class SendMessageService: MixinService {
         } catch MixinAPIResponseError.forbidden {
             return true
         } catch {
-            if let error = error as? MixinAPIResponseError, error.isClientErrorResponse {
+            if case let WebSocketService.SendingError.response(error) = error, error.isClientErrorResponse {
                 Thread.sleep(forTimeInterval: 2)
             } else {
                 reporter.report(error: error)

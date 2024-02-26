@@ -534,9 +534,13 @@ public class SendMessageService: MixinService {
                 return true
             } catch {
                 checkNetworkAndWebSocket()
-                if let error = error as? MixinAPIError, error.isTransportTimedOut {
-                    
-                } else {
+                switch error {
+                case let error as MixinAPIError where error.isTransportTimedOut:
+                    // TODO: Guess this case will never match
+                    break
+                case WebSocketService.SendingError.timedOut:
+                    break
+                default:
                     var blazeMessage = ""
                     var conversationId = job.conversationId ?? ""
                     if let bm = job.blazeMessage {

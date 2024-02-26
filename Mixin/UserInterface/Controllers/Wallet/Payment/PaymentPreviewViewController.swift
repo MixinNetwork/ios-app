@@ -194,13 +194,6 @@ extension PaymentPreviewViewController: UITableViewDataSource {
 // MARK: - PaymentUserGroupCellDelegate
 extension PaymentPreviewViewController: PaymentUserGroupCellDelegate {
     
-    func paymentUserGroupCellHeightDidUpdate(_ cell: PaymentUserGroupCell) {
-        UIView.performWithoutAnimation {
-            tableView.beginUpdates()
-            tableView.endUpdates()
-        }
-    }
-    
     func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem) {
         let controller = UserProfileViewController(user: item)
         controller.dismissPresentingViewControllerOnNavigation = true

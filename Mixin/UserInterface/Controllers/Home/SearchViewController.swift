@@ -333,8 +333,8 @@ extension SearchViewController: UITableViewDelegate {
             case let .number(number):
                 search(number: number)
             case let .link(url, _):
-                if let parent = homeViewController {
-                    MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+                if let home = UIApplication.homeContainerViewController?.homeTabBarController {
+                    MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: home)
                 }
             case .none:
                 break

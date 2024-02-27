@@ -138,6 +138,17 @@ extension SnapshotViewController: ContainerViewControllerDelegate {
         return true
     }
     
+    func imageBarRightButton() -> UIImage? {
+        R.image.customer_service()
+    }
+    
+    func barRightButtonTappedAction() {
+        if let user = UserDAO.shared.getUser(identityNumber: "7000") {
+            let conversation = ConversationViewController.instance(ownerUser: user)
+            navigationController?.pushViewController(withBackRoot: conversation)
+        }
+    }
+    
 }
 
 extension SnapshotViewController: UITableViewDataSource {

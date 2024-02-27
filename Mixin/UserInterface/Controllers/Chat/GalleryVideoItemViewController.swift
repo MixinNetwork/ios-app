@@ -266,7 +266,11 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                 if success {
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.saved())
                 } else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_video())
+                    let alert = UIAlertController(title: R.string.localizable.unable_to_save_video(),
+                                                  message: error?.localizedDescription ?? "No description",
+                                                  preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
+                    self.present(alert, animated: true)
                 }
             }
         })

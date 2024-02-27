@@ -39,6 +39,8 @@ class PaymentPreviewViewController: UIViewController {
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
         tableView.allowsSelection = false
+        tableView.contentInsetAdjustmentBehavior = .never
+        tableView.automaticallyAdjustsScrollIndicatorInsets = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 61
         tableView.separatorStyle = .none
@@ -57,6 +59,18 @@ class PaymentPreviewViewController: UIViewController {
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         layoutTableHeaderView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let bottomInset = max(view.safeAreaInsets.bottom, trayView?.frame.height ?? 0)
+        UIView.animate(withDuration: 0.3) {
+            self.tableView.contentInset.bottom = bottomInset
+            self.tableView.verticalScrollIndicatorInsets.bottom = bottomInset
+            if self.tableView.contentSize.height + bottomInset < self.tableView.frame.height {
+                self.tableView.setContentOffset(.zero, animated: false)
+            }
+        }
     }
     
     func layoutTableHeaderView() {
@@ -444,14 +458,10 @@ extension PaymentPreviewViewController {
             self.trayView = newTrayView
             self.trayViewCenterXConstraint = centerXConstraint
             self.trayViewBottomConstraint = bottomConstraint
-            self.tableView.contentInset.bottom = newTrayView.frame.height
-            self.tableView.verticalScrollIndicatorInsets.bottom = newTrayView.frame.height
         } else {
             self.trayView = nil
             self.trayViewCenterXConstraint = nil
             self.trayViewBottomConstraint = nil
-            self.tableView.contentInset.bottom = 0
-            self.tableView.verticalScrollIndicatorInsets.bottom = 0
         }
     }
     

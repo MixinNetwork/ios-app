@@ -1,16 +1,15 @@
-import Foundation
+import UIKit
 
 final class PaymentPreviewAuthenticationIntent: AuthenticationIntent {
     
     let intentTitle: String
+    let intentTitleIcon: UIImage? = R.image.ic_pin_setting()
     let intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? = nil
     let intentSubtitle = ""
     let options: AuthenticationIntentOptions = [
         .allowsBiometricAuthentication,
         .becomesFirstResponderOnAppear,
-        .unskippable,
         .neverRequestAddBiometricAuthentication,
-        .backgroundDismissable,
     ]
     let authenticationViewController: AuthenticationViewController? = nil
     

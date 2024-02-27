@@ -77,6 +77,10 @@ extension WalletConnectRequestViewController: AuthenticationIntent {
         "WalletConnect Request"
     }
     
+    var intentTitleIcon: UIImage? {
+        nil
+    }
+    
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         switch requester {
         case let .walletConnect(session):

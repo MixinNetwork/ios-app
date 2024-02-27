@@ -34,6 +34,10 @@ extension ConsolidateOutputsViewController: AuthenticationIntent {
         ""
     }
     
+    var intentTitleIcon: UIImage? {
+        nil
+    }
+    
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         nil
     }

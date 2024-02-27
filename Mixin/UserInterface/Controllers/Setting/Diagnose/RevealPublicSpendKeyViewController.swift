@@ -10,6 +10,10 @@ final class RevealPublicSpendKeyIntent: AuthenticationIntent {
         "Input PIN to Reveal"
     }
     
+    var intentTitleIcon: UIImage? {
+        nil
+    }
+    
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         nil
     }

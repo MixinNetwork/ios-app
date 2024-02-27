@@ -97,6 +97,10 @@ extension RegisterToSafeViewController: AuthenticationIntent {
         willRegisterToSafe ? R.string.localizable.enter_your_pin_to_continue() : ""
     }
     
+    var intentTitleIcon: UIImage? {
+        nil
+    }
+    
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         nil
     }

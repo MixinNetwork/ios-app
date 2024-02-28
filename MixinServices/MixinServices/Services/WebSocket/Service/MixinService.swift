@@ -282,7 +282,7 @@ public class MixinService {
             do {
                 let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
                 return (response.success, response.blazeMessage)
-            } catch let .response(error) as WebSocketService.SendingError {
+            } catch let WebSocketService.SendingError.response(error) {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
                 #endif

@@ -20,7 +20,7 @@ enum PaymentPreconditionIssue {
             let interval = previous.simpleTimeAgo()
             return R.string.localizable.duplication_reminder(amount, interval)
         case let .bigAmount(user, value, symbol):
-            let value = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
+            let value = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currencyCode)
             return R.string.localizable.large_amount_reminder(value, symbol, user.fullName, user.identityNumber)
         case let .notContact(user):
             return R.string.localizable.unfamiliar_person_reminder(user.fullName, user.identityNumber)

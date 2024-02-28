@@ -115,15 +115,17 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
         
         let tokenValue = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
-        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
-        let fee = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
+        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
+        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        
         let rows: [Row] = [
-            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken),
-            .senders(senders, threshold: sendersThreshold),
+            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: true),
             .receivers(receivers, threshold: receiversThreshold),
-            .amount(caption: .receiverWillReceive, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken),
+            .senders(senders, threshold: sendersThreshold),
+            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
+            .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
-            .info(caption: .fee, content: fee)
         ]
         reloadData(with: rows)
     }

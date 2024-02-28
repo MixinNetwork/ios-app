@@ -59,8 +59,8 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="amountLabel" destination="oU8-Z0-mSS" id="xvy-50-A7D"/>
                 <outlet property="captionLabel" destination="kuh-qd-sTw" id="pRY-CS-esS"/>
+                <outlet property="primaryAmountLabel" destination="oU8-Z0-mSS" id="xvy-50-A7D"/>
                 <outlet property="secondaryAmountLabel" destination="yOR-d4-0ou" id="BEq-Dx-VJe"/>
                 <outlet property="stackView" destination="4Bd-Ul-JcF" id="kXu-mT-qOe"/>
             </connections>

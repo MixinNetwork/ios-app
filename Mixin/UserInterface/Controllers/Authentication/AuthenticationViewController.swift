@@ -34,6 +34,8 @@ final class AuthenticationViewController: UIViewController {
     private let intent: AuthenticationIntent
     private let presentationManager: any UIViewControllerTransitioningDelegate
     
+    private weak var titleImageView: UIImageView?
+    private weak var subtitleImageView: AvatarImageView?
     private weak var authenticateWithBiometryButton: UIButton?
     private weak var failureView: UIView?
     
@@ -76,8 +78,6 @@ final class AuthenticationViewController: UIViewController {
         self.intent = intent
         self.presentationManager = if intent.options.contains(.blurBackground) {
             PinValidationPresentationManager()
-        } else if intent.options.contains(.backgroundDismissable) {
-            BackgroundDismissablePopupPresentationManager.shared
         } else {
             PopupPresentationManager()
         }
@@ -214,6 +214,19 @@ final class AuthenticationViewController: UIViewController {
     
     func reloadTitleView() {
         titleLabel.text = intent.intentTitle
+        if let icon = intent.intentTitleIcon {
+            if let view = titleImageView {
+                view.image = icon
+            } else {
+                let imageView = UIImageView(image: icon)
+                titleStackView.insertArrangedSubview(imageView, at: 0)
+                titleStackView.setCustomSpacing(24, after: imageView)
+                titleImageView = imageView
+            }
+        } else {
+            titleImageView?.removeFromSuperview()
+            titleImageView = nil
+        }
         if intent.options.contains(.multipleLineSubtitle) {
             subtitleLabel.numberOfLines = 0
             subtitleLabel.lineBreakMode = .byCharWrapping
@@ -223,14 +236,20 @@ final class AuthenticationViewController: UIViewController {
         }
         subtitleLabel.text = intent.intentSubtitle
         if let icon = intent.intentSubtitleIconURL {
-            let imageView = AvatarImageView()
-            imageView.layer.cornerRadius = 8
-            imageView.clipsToBounds = true
-            imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            subtitleStackView.insertArrangedSubview(imageView, at: 0)
-            imageView.snp.makeConstraints { make in
-                make.height.equalTo(imageView.snp.width)
-                make.width.equalTo(16)
+            let imageView: AvatarImageView
+            if let view = subtitleImageView {
+                imageView = view
+            } else {
+                imageView = AvatarImageView()
+                imageView.layer.cornerRadius = 8
+                imageView.clipsToBounds = true
+                imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+                subtitleStackView.insertArrangedSubview(imageView, at: 0)
+                imageView.snp.makeConstraints { make in
+                    make.height.equalTo(imageView.snp.width)
+                    make.width.equalTo(16)
+                }
+                subtitleImageView = imageView
             }
             switch icon {
             case let .app(app):
@@ -238,6 +257,9 @@ final class AuthenticationViewController: UIViewController {
             case let .url(url):
                 imageView.imageView.sd_setImage(with: url)
             }
+        } else {
+            subtitleImageView?.removeFromSuperview()
+            subtitleImageView = nil
         }
         UIView.performWithoutAnimation(titleStackView.layoutIfNeeded)
     }

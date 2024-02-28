@@ -79,6 +79,10 @@ extension ConnectWalletViewController: AuthenticationIntent {
         R.string.localizable.connect_wallet()
     }
     
+    var intentTitleIcon: UIImage? {
+        nil
+    }
+    
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         switch info {
         case let .walletConnect(proposal):

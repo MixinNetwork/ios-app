@@ -34,8 +34,7 @@
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "Dirección no encontrada.";
-"address_validity_reminder" = "Address validity reminder: Verify the validity of the address %1$@(%2$@); It has not been used for over 30 days.";
-"address_will_receive" = "Address will receive";
+"address_validity_reminder" = "Verify the validity of the address %1$@(%2$@); It has not been used for over 30 days.";
 "admin" = "Administrador";
 "agree_hint" = "Al continuar, aceptas el %@ y el %@.";
 "albums" = "Álbumes";
@@ -361,7 +360,7 @@
 "dont_have_assets" = "¿No tienes activos?";
 "duplicate_transfer_confirmation" = "Confirmación de transferencia duplicada";
 "duplicate_withdraw_confirmation" = "Confirmación de retiro duplicado";
-"duplication_reminder" = "Duplication reminder: You transferred %1$@ to the recipient %2$@ ago.";
+"duplication_reminder" = "You transferred %1$@ to the recipient %2$@ ago.";
 "edit" = "Editar";
 "edit_address" = "Editar dirección de %@";
 "edit_biography" = "Editar biografía";
@@ -516,7 +515,7 @@
 "language" = "Idioma";
 "large_amount_confirmation" = "Confirmación de gran cantidad";
 "large_amount_confirmation_with_symbol" = "Confirmación de gran cantidad(%@)";
-"large_amount_reminder" = "Large amount reminder: Confirm the transfer of %1$@ worth of %2$@ to %3$@ (%4$@)?";
+"large_amount_reminder" = "Confirm the transfer of %1$@ worth of %2$@ to %3$@ (%4$@)?";
 "last_active_time" = "Último Activo %@";
 "last_backup_hint" = "Última copia de seguridad en %@, tamaño total %@.";
 "later" = "Más tarde";
@@ -750,7 +749,6 @@
 "receive" = "Recibir";
 "receive_money" = "Recibir dinero";
 "receiver" = "Receptor";
-"receiver_will_receive" = "Receiver will receive";
 "receivers" = "Receptores";
 "recent_chats" = "CHATS";
 "recent_searches" = "Búsquedas recientes";
@@ -976,6 +974,7 @@
 "title_participants_count" = "%d Participantes";
 "to" = "A";
 "today" = "Hoy";
+"total" = "Total";
 "touch_id" = "identifición de toque";
 "track_not_found" = "Pista no encontrada";
 "transaction" = "Transacción";
@@ -1023,7 +1022,7 @@
 "unable_to_share_content" = "No se puede compartir este contenido";
 "unauthorized" = "No autorizado";
 "unblock" = "Desbloquear";
-"unfamiliar_person_reminder" = "Unfamiliar person reminder: Confirm the transfer to %1$@ (%2$@)? He is not in your contacts. Sending to the wrong person may result in irrecoverable asset loss.";
+"unfamiliar_person_reminder" = "Confirm the transfer to %1$@ (%2$@)? They are not in your contacts. Sending to the wrong person may result in irrecoverable asset loss.";
 "unit_day" = "día";
 "unit_day_count" = "días";
 "unit_hour" = "hora";

@@ -2,7 +2,6 @@ import UIKit
 import MixinServices
 
 protocol PaymentUserGroupCellDelegate: AnyObject {
-    func paymentUserGroupCellHeightDidUpdate(_ cell: PaymentUserGroupCell)
     func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem)
 }
 
@@ -31,10 +30,8 @@ final class PaymentUserGroupCell: UITableViewCell {
             guard let newValue = change.newValue, let self else {
                 return
             }
-            collectionViewHeightConstraint.constant = newValue.height
-            DispatchQueue.main.async { // XXX: Doesn't work without dispatching
-                self.delegate?.paymentUserGroupCellHeightDidUpdate(self)
-            }
+            self.collectionViewHeightConstraint.constant = newValue.height
+            self.invalidateIntrinsicContentSize()
         }
     }
     

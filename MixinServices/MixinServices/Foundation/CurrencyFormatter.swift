@@ -17,7 +17,8 @@ public struct CurrencyFormatter {
     
     public enum Symbol {
         case btc
-        case currentCurrency
+        case currencyCode
+        case currencySymbol
         case custom(String)
     }
     
@@ -100,8 +101,10 @@ public struct CurrencyFormatter {
             switch symbol {
             case .btc:
                 str += " BTC"
-            case .currentCurrency:
+            case .currencyCode:
                 str += " " + Currency.current.code
+            case .currencySymbol:
+                str = Currency.current.symbol + str
             case .custom(let symbol):
                 str += " " + symbol
             }

@@ -62,11 +62,12 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
         var rows: [Row] = [
             .info(caption: .label, content: label),
             .info(caption: .address, content: destination),
-            .info(caption: .network, content: token.depositNetworkName ?? ""),
         ]
         if !tag.isEmpty {
-            rows.append(.info(caption: .memo, content: tag))
+            let caption: Caption = token.usesTag ? .tag : .memo
+            rows.append(.info(caption: caption, content: tag))
         }
+        rows.append(.info(caption: .network, content: token.depositNetworkName ?? ""))
         reloadData(with: rows)
     }
     

@@ -196,7 +196,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         switch amountIntent {
         case .byToken:
             let fiatMoneyAmount = amount * fiatMoneyPrice
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
             
             if amount == token.decimalBalance {
                 hideInputAccessoryView()

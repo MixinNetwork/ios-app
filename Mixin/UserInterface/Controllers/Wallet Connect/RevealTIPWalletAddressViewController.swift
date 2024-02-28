@@ -13,6 +13,10 @@ extension RevealTIPWalletAddressViewController: AuthenticationIntent {
         "Reveal Address"
     }
     
+    var intentTitleIcon: UIImage? {
+        nil
+    }
+    
     var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
         nil
     }

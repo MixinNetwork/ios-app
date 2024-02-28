@@ -39,6 +39,8 @@ class PaymentPreviewViewController: UIViewController {
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
         tableView.allowsSelection = false
+        tableView.contentInsetAdjustmentBehavior = .never
+        tableView.automaticallyAdjustsScrollIndicatorInsets = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 61
         tableView.separatorStyle = .none
@@ -57,6 +59,18 @@ class PaymentPreviewViewController: UIViewController {
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         layoutTableHeaderView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let bottomInset = max(view.safeAreaInsets.bottom, trayView?.frame.height ?? 0)
+        UIView.animate(withDuration: 0.3) {
+            self.tableView.contentInset.bottom = bottomInset
+            self.tableView.verticalScrollIndicatorInsets.bottom = bottomInset
+            if self.tableView.contentSize.height + bottomInset < self.tableView.frame.height {
+                self.tableView.setContentOffset(.zero, animated: false)
+            }
+        }
     }
     
     func layoutTableHeaderView() {
@@ -110,36 +124,28 @@ extension PaymentPreviewViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = rows[indexPath.row]
         switch row {
-        case let .amount(caption, token, fiatMoney, display):
+        case let .amount(caption, token, fiatMoney, display, boldPrimaryAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_amount, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             switch display {
             case .byToken:
-                cell.amountLabel.text = token
+                cell.primaryAmountLabel.text = token
                 cell.secondaryAmountLabel.text = fiatMoney
             case .byFiatMoney:
-                cell.amountLabel.text = fiatMoney
+                cell.primaryAmountLabel.text = fiatMoney
                 cell.secondaryAmountLabel.text = token
             }
+            cell.setPrimaryAmountLabel(usesBoldFont: boldPrimaryAmount)
             return cell
-        case let .address(value, label):
+        case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
-            cell.captionLabel.text = Caption.address.rawValue.uppercased()
-            cell.contentLabel.attributedText = {
-                var attributes: [NSAttributedString.Key: Any] = [:]
-                if let font = cell.contentLabel.font {
-                    attributes[.font] = font
-                }
-                if let textColor = cell.contentLabel.textColor {
-                    attributes[.foregroundColor] = textColor
-                }
-                return NSMutableAttributedString(string: value, attributes: attributes)
-            }()
+            cell.captionLabel.text = R.string.localizable.receiver().uppercased()
+            cell.setContent(value, labelContent: label)
             return cell
         case let .info(caption, content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
-            cell.contentLabel.text = content
+            cell.setContent(content, labelContent: nil)
             return cell
         case let .senders(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
@@ -172,19 +178,7 @@ extension PaymentPreviewViewController: UITableViewDataSource {
         case let .mainnetReceiver(address):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
-            cell.contentLabel.text = address
-            return cell
-        case let .fee(token, fiatMoney, display):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_fee, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.network_fee().uppercased()
-            switch display {
-            case .byToken:
-                cell.amountLabel.text = token
-                cell.secondaryAmountLabel.text = fiatMoney
-            case .byFiatMoney:
-                cell.amountLabel.text = fiatMoney
-                cell.secondaryAmountLabel.text = token
-            }
+            cell.setContent(address, labelContent: nil)
             return cell
         }
     }
@@ -193,13 +187,6 @@ extension PaymentPreviewViewController: UITableViewDataSource {
 
 // MARK: - PaymentUserGroupCellDelegate
 extension PaymentPreviewViewController: PaymentUserGroupCellDelegate {
-    
-    func paymentUserGroupCellHeightDidUpdate(_ cell: PaymentUserGroupCell) {
-        UIView.performWithoutAnimation {
-            tableView.beginUpdates()
-            tableView.endUpdates()
-        }
-    }
     
     func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem) {
         let controller = UserProfileViewController(user: item)
@@ -220,8 +207,8 @@ extension PaymentPreviewViewController {
         case network
         case fee
         case memo
-        case receiverWillReceive
-        case addressWillReceive
+        case tag
+        case total
         
         var rawValue: String {
             switch self {
@@ -234,26 +221,25 @@ extension PaymentPreviewViewController {
             case .network:
                 R.string.localizable.network()
             case .fee:
-                R.string.localizable.network_fee()
+                R.string.localizable.fee()
             case .memo:
                 R.string.localizable.memo()
-            case .receiverWillReceive:
-                R.string.localizable.receiver_will_receive()
-            case .addressWillReceive:
-                R.string.localizable.address_will_receive()
+            case .tag:
+                R.string.localizable.tag()
+            case .total:
+                R.string.localizable.total()
             }
         }
         
     }
     
     enum Row {
-        case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent)
+        case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
         case info(caption: Caption, content: String)
-        case address(value: String, label: String?)
+        case receivingAddress(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
-        case fee(token: String, fiatMoney: String, display: AmountIntent)
     }
     
     struct TableHeaderViewStyle: OptionSet {
@@ -463,14 +449,10 @@ extension PaymentPreviewViewController {
             self.trayView = newTrayView
             self.trayViewCenterXConstraint = centerXConstraint
             self.trayViewBottomConstraint = bottomConstraint
-            self.tableView.contentInset.bottom = newTrayView.frame.height
-            self.tableView.verticalScrollIndicatorInsets.bottom = newTrayView.frame.height
         } else {
             self.trayView = nil
             self.trayViewCenterXConstraint = nil
             self.trayViewBottomConstraint = nil
-            self.tableView.contentInset.bottom = 0
-            self.tableView.verticalScrollIndicatorInsets.bottom = 0
         }
     }
     

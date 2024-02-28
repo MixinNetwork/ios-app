@@ -34,8 +34,7 @@
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "アドレスが見つかりません";
-"address_validity_reminder" = "Address validity reminder: Verify the validity of the address %1$@(%2$@); It has not been used for over 30 days.";
-"address_will_receive" = "Address will receive";
+"address_validity_reminder" = "Verify the validity of the address %1$@(%2$@); It has not been used for over 30 days.";
 "admin" = "管理者";
 "agree_hint" = "%@と%@に同意し次へ進む";
 "albums" = "アルバム";
@@ -361,7 +360,7 @@
 "dont_have_assets" = "Don't have assets?";
 "duplicate_transfer_confirmation" = "二重送金の確認";
 "duplicate_withdraw_confirmation" = "二重出金の確認";
-"duplication_reminder" = "Duplication reminder: You transferred %1$@ to the recipient %2$@ ago.";
+"duplication_reminder" = "You transferred %1$@ to the recipient %2$@ ago.";
 "edit" = "編集";
 "edit_address" = "%@アドレスを修正";
 "edit_biography" = "自己紹介文を変更";
@@ -516,7 +515,7 @@
 "language" = "言語";
 "large_amount_confirmation" = "送金時に通知を行う金額の設定";
 "large_amount_confirmation_with_symbol" = "送金時に通知を行う金額の設定（%@）";
-"large_amount_reminder" = "Large amount reminder: Confirm the transfer of %1$@ worth of %2$@ to %3$@ (%4$@)?";
+"large_amount_reminder" = "Confirm the transfer of %1$@ worth of %2$@ to %3$@ (%4$@)?";
 "last_active_time" = "直近のアクティビティ%@";
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "later" = "後で";
@@ -750,7 +749,6 @@
 "receive" = "入金";
 "receive_money" = "仮想通貨を受け取る";
 "receiver" = "受取人";
-"receiver_will_receive" = "Receiver will receive";
 "receivers" = "受取人";
 "recent_chats" = "チャット";
 "recent_searches" = "最近の検索";
@@ -976,6 +974,7 @@
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";
 "today" = "今日";
+"total" = "Total";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
 "transaction" = "トランザクション";
@@ -1023,7 +1022,7 @@
 "unable_to_share_content" = "この内容は共有できません";
 "unauthorized" = "権限がありません";
 "unblock" = "ブロックを解除";
-"unfamiliar_person_reminder" = "Unfamiliar person reminder: Confirm the transfer to %1$@ (%2$@)? He is not in your contacts. Sending to the wrong person may result in irrecoverable asset loss.";
+"unfamiliar_person_reminder" = "Confirm the transfer to %1$@ (%2$@)? They are not in your contacts. Sending to the wrong person may result in irrecoverable asset loss.";
 "unit_day" = "日";
 "unit_day_count" = "日間";
 "unit_hour" = "時";

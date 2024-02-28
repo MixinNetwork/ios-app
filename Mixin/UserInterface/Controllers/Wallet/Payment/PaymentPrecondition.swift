@@ -9,9 +9,9 @@ enum PaymentPreconditionFailureReason {
 enum PaymentPreconditionIssue {
     
     case duplication(previous: Date, amount: Decimal, symbol: String)
-    case bigAmount(opponent: UserItem, value: Decimal, symbol: String)
+    case bigAmount(tokenAmount: Decimal, fiatMoneyAmount: Decimal, symbol: String)
     case notContact(opponent: UserItem)
-    case agedAddress(label: String, compactRepresentation: String)
+    case agedAddress(label: String, compactRepresentation: String, age: Int)
     
     var description: String {
         switch self {
@@ -19,13 +19,14 @@ enum PaymentPreconditionIssue {
             let amount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never, symbol: .custom(symbol))
             let interval = previous.simpleTimeAgo()
             return R.string.localizable.duplication_reminder(amount, interval)
-        case let .bigAmount(user, value, symbol):
-            let value = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currencyCode)
-            return R.string.localizable.large_amount_reminder(value, symbol, user.fullName, user.identityNumber)
+        case let .bigAmount(tokenAmount, fiatMoneyAmount, symbol):
+            let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(symbol))
+            let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            return R.string.localizable.large_amount_reminder(tokenValue, fiatMoneyValue)
         case let .notContact(user):
             return R.string.localizable.unfamiliar_person_reminder(user.fullName, user.identityNumber)
-        case let .agedAddress(label, compactRepresentation):
-            return R.string.localizable.address_validity_reminder(label, compactRepresentation)
+        case let .agedAddress(label, compactRepresentation, age):
+            return R.string.localizable.address_validity_reminder(label, compactRepresentation, "\(age)")
         }
     }
     
@@ -135,16 +136,14 @@ struct DuplicationPrecondition: PaymentPrecondition {
 
 struct LargeAmountPrecondition: PaymentPrecondition {
     
-    let opponent: UserItem
     let token: TokenItem
     let tokenAmount: Decimal
     let fiatMoneyAmount: Decimal
-    let memo: String
     
     func check() async -> PaymentPreconditionCheckingResult {
         let threshold = Decimal(LoginManager.shared.account?.transferConfirmationThreshold ?? 0)
         if threshold != 0 && fiatMoneyAmount >= threshold {
-            return .passed([.bigAmount(opponent: opponent, value: fiatMoneyAmount, symbol: token.symbol)])
+            return .passed([.bigAmount(tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, symbol: token.symbol)])
         } else {
             return .passed([])
         }
@@ -212,12 +211,13 @@ struct NoPendingTransactionPrecondition: PaymentPrecondition {
 struct AddressValidityPrecondition: PaymentPrecondition {
     
     let address: Address
+    let maxNumberOfDays = 30
     
     func check() async -> PaymentPreconditionCheckingResult {
         if let createdAt = RawTransactionDAO.shared.latestCreatedAt(receiverID: address.fullRepresentation) {
             let date = createdAt.toUTCDate()
-            if -date.timeIntervalSinceNow > 30 * .day {
-                return .passed([.agedAddress(label: address.label, compactRepresentation: address.compactRepresentation)])
+            if -date.timeIntervalSinceNow > TimeInterval(maxNumberOfDays) * .day {
+                return .passed([.agedAddress(label: address.label, compactRepresentation: address.compactRepresentation, age: maxNumberOfDays)])
             } else {
                 return .passed([])
             }

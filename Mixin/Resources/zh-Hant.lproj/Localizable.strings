@@ -34,7 +34,7 @@
 "address_edited_description" = "您修改地址的請求已透過 Mixin 伺服器確認，您可以立刻使用該地址進行提現。";
 "address_editing_description" = "正在將修改地址的請求傳送到 Mixin 伺服器驗證，請稍候。";
 "address_not_found" = "找不到該地址。";
-"address_validity_reminder" = "請確認地址 %1$@（%2$@）仍然有效，您已經超過 30 天沒有使用該地址。";
+"address_validity_reminder" = "您已經超過 %3$@ 天沒有使用地址 %1$@（%2$@），請注意檢查地址是否仍然有效。";
 "admin" = "管理員";
 "agree_hint" = "繼續使用即表示你同意 %@ 和 %@";
 "albums" = "相簿";
@@ -515,7 +515,7 @@
 "language" = "語言";
 "large_amount_confirmation" = "大額轉賬確認";
 "large_amount_confirmation_with_symbol" = "大額轉賬確認（%@）";
-"large_amount_reminder" = "確定給 %3$@（%4$@）轉價值 %1$@ 的 %2$@？";
+"large_amount_reminder" = "本次轉賬 %1$@ 的價值高達 %2$@，請注意金額是否正確。";
 "last_active_time" = "最後登入於 %@";
 "last_backup_hint" = "上次備份是 %@，佔用空間 %@。";
 "later" = "稍後";
@@ -1022,7 +1022,7 @@
 "unable_to_share_content" = "無法分享此內容";
 "unauthorized" = "未授權";
 "unblock" = "解除封鎖";
-"unfamiliar_person_reminder" = "確定給 %1$@（%2$@）轉賬？他不是你的聯絡人，如果您轉錯人，資產將無法追回。";
+"unfamiliar_person_reminder" = "%1$@（%2$@）不是你的聯絡人，請注意收款人是否正確。";
 "unit_day" = "天";
 "unit_day_count" = "天";
 "unit_hour" = "小時";

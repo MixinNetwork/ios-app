@@ -49,11 +49,9 @@ extension Payment {
                                             tokenAmount: tokenAmount,
                                             fiatMoneyAmount: fiatMoneyAmount,
                                             memo: memo),
-                    LargeAmountPrecondition(opponent: opponent,
-                                            token: token,
+                    LargeAmountPrecondition(token: token,
                                             tokenAmount: tokenAmount,
-                                            fiatMoneyAmount: fiatMoneyAmount,
-                                            memo: memo),
+                                            fiatMoneyAmount: fiatMoneyAmount),
                     OpponentIsContactPrecondition(opponent: opponent),
                 ]
             case .multisig, .mainnet:

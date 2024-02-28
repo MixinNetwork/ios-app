@@ -124,6 +124,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
             .receivers(receivers, threshold: receiversThreshold),
             .senders(senders, threshold: sendersThreshold),
             .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
+            .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
         ]
         reloadData(with: rows)

@@ -34,7 +34,7 @@
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "Address not found.";
-"address_validity_reminder" = "Verify the validity of the address %1$@(%2$@); It has not been used for over 30 days.";
+"address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
 "admin" = "Admin";
 "agree_hint" = "By proceeding, you agree to the %@ and %@.";
 "albums" = "Albums";
@@ -515,7 +515,7 @@
 "language" = "Language";
 "large_amount_confirmation" = "Large Amount Confirmation";
 "large_amount_confirmation_with_symbol" = "Large Amount Confirmation(%@)";
-"large_amount_reminder" = "Confirm the transfer of %1$@ worth of %2$@ to %3$@ (%4$@)?";
+"large_amount_reminder" = "The value of this transfer of %1$@ is up to %2$@. Please ensure the amount is correct.";
 "last_active_time" = "Last active %@";
 "last_backup_hint" = "Last backup on %@, total size %@.";
 "later" = "Later";
@@ -1022,7 +1022,7 @@
 "unable_to_share_content" = "Unable to share this content";
 "unauthorized" = "Unauthorized";
 "unblock" = "Unblock";
-"unfamiliar_person_reminder" = "Confirm the transfer to %1$@ (%2$@)? They are not in your contacts. Sending to the wrong person may result in irrecoverable asset loss.";
+"unfamiliar_person_reminder" = "%1$@ (%2$@) is not in your contacts. Please verify if the recipient is correct.";
 "unit_day" = "day";
 "unit_day_count" = "days";
 "unit_hour" = "hour";

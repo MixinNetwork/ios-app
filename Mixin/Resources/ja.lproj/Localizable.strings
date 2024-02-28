@@ -34,7 +34,7 @@
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "アドレスが見つかりません";
-"address_validity_reminder" = "Verify the validity of the address %1$@(%2$@); It has not been used for over 30 days.";
+"address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
 "admin" = "管理者";
 "agree_hint" = "%@と%@に同意し次へ進む";
 "albums" = "アルバム";
@@ -515,7 +515,7 @@
 "language" = "言語";
 "large_amount_confirmation" = "送金時に通知を行う金額の設定";
 "large_amount_confirmation_with_symbol" = "送金時に通知を行う金額の設定（%@）";
-"large_amount_reminder" = "Confirm the transfer of %1$@ worth of %2$@ to %3$@ (%4$@)?";
+"large_amount_reminder" = "The value of this transfer of %1$@ is up to %2$@. Please ensure the amount is correct.";
 "last_active_time" = "直近のアクティビティ%@";
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "later" = "後で";
@@ -1022,7 +1022,7 @@
 "unable_to_share_content" = "この内容は共有できません";
 "unauthorized" = "権限がありません";
 "unblock" = "ブロックを解除";
-"unfamiliar_person_reminder" = "Confirm the transfer to %1$@ (%2$@)? They are not in your contacts. Sending to the wrong person may result in irrecoverable asset loss.";
+"unfamiliar_person_reminder" = "%1$@ (%2$@) is not in your contacts. Please verify if the recipient is correct.";
 "unit_day" = "日";
 "unit_day_count" = "日間";
 "unit_hour" = "時";

@@ -269,9 +269,8 @@ extension PaymentPreviewViewController {
                     view.stepLabel.text = "\(unresolvedIssueIndex + 1)/\(issues.count)"
                 }
                 view.titleLabel.text = issue.description
-                view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
-                view.leftButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
-                view.rightButton.setTitle(R.string.localizable.confirm(), for: .normal)
+                view.leftButton.isHidden = true
+                view.rightButton.setTitle(R.string.localizable.got_it(), for: .normal)
                 view.rightButton.addTarget(self, action: #selector(ignoreCurrentIssue(_:)), for: .touchUpInside)
                 view.style = .warning
             }

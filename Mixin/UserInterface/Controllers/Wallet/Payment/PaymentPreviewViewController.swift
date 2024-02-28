@@ -139,7 +139,7 @@ extension PaymentPreviewViewController: UITableViewDataSource {
             return cell
         case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.receiver()
+            cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(value, labelContent: label)
             return cell
         case let .info(caption, content):
@@ -180,18 +180,6 @@ extension PaymentPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(address, labelContent: nil)
             return cell
-        case let .fee(token, fiatMoney, display):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_fee, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.network_fee().uppercased()
-            switch display {
-            case .byToken:
-                cell.amountLabel.text = token
-                cell.secondaryAmountLabel.text = fiatMoney
-            case .byFiatMoney:
-                cell.amountLabel.text = fiatMoney
-                cell.secondaryAmountLabel.text = token
-            }
-            return cell
         }
     }
     
@@ -219,6 +207,7 @@ extension PaymentPreviewViewController {
         case network
         case fee
         case memo
+        case tag
         case total
         
         var rawValue: String {
@@ -235,6 +224,8 @@ extension PaymentPreviewViewController {
                 R.string.localizable.fee()
             case .memo:
                 R.string.localizable.memo()
+            case .tag:
+                R.string.localizable.tag()
             case .total:
                 R.string.localizable.total()
             }
@@ -249,7 +240,6 @@ extension PaymentPreviewViewController {
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
-        case fee(token: String, fiatMoney: String, display: AmountIntent)
     }
     
     struct TableHeaderViewStyle: OptionSet {

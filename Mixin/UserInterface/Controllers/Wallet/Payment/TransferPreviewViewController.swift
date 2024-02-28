@@ -46,7 +46,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
         var rows: [Row] = [
-            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay),
+            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
         ]
         let senderThreshold: Int32?
         switch operation.destination {
@@ -65,8 +65,8 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
             rows.append(.senders([user], threshold: senderThreshold))
         }
         rows.append(contentsOf: [
-            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay),
-            .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay),
+            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
+            .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
         ])
         if !operation.memo.isEmpty {

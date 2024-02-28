@@ -124,17 +124,18 @@ extension PaymentPreviewViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = rows[indexPath.row]
         switch row {
-        case let .amount(caption, token, fiatMoney, display):
+        case let .amount(caption, token, fiatMoney, display, boldPrimaryAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_amount, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             switch display {
             case .byToken:
-                cell.amountLabel.text = token
+                cell.primaryAmountLabel.text = token
                 cell.secondaryAmountLabel.text = fiatMoney
             case .byFiatMoney:
-                cell.amountLabel.text = fiatMoney
+                cell.primaryAmountLabel.text = fiatMoney
                 cell.secondaryAmountLabel.text = token
             }
+            cell.setPrimaryAmountLabel(usesBoldFont: boldPrimaryAmount)
             return cell
         case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
@@ -231,7 +232,7 @@ extension PaymentPreviewViewController {
             case .network:
                 R.string.localizable.network()
             case .fee:
-                R.string.localizable.network_fee()
+                R.string.localizable.fee()
             case .memo:
                 R.string.localizable.memo()
             case .total:
@@ -242,7 +243,7 @@ extension PaymentPreviewViewController {
     }
     
     enum Row {
-        case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent)
+        case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
         case info(caption: Caption, content: String)
         case receivingAddress(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)

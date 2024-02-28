@@ -53,7 +53,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
         let totalFiatMoneyValue = CurrencyFormatter.localizedString(from: totalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
         var rows: [Row] = [
-            .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay),
+            .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
             .receivingAddress(value: operation.address.fullRepresentation, label: operation.addressLabel),
         ]
         if let account = LoginManager.shared.account {
@@ -63,11 +63,11 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
         rows.append(.fee(token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay))
         if operation.isFeeTokenDifferent {
             let totalTokenValue = "\(withdrawalTokenValue) + \(feeTokenValue)"
-            rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay))
+            rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         } else {
             let totalTokenAmount = withdrawalTokenAmount + feeTokenAmount
             let totalTokenValue = CurrencyFormatter.localizedString(from: totalTokenAmount, format: .precision, sign: .never, symbol: .custom(withdrawalToken.symbol))
-            rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay))
+            rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         }
         rows.append(.info(caption: .network, content: withdrawalToken.depositNetworkName ?? ""))
         reloadData(with: rows)

@@ -120,10 +120,10 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
         let rows: [Row] = [
-            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken),
+            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: true),
             .receivers(receivers, threshold: receiversThreshold),
             .senders(senders, threshold: sendersThreshold),
-            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken),
+            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
         ]
         reloadData(with: rows)

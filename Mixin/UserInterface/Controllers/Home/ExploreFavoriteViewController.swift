@@ -101,7 +101,7 @@ final class ExploreFavoriteViewController: UITableViewController {
         case .favorites:
             if indexPath.row < favoriteAppUsers.count {
                 let user = favoriteAppUsers[indexPath.row]
-                explore.presentProfile(user: user)
+                explore.openApp(user: user)
             } else {
                 explore.perform(action: .editFavoriteApps)
             }

@@ -105,7 +105,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
                                           style: .destructive)
                     tableView.setContentOffset(.zero, animated: true)
                     switch error {
-                    case MixinAPIResponseError.malformedPin, MixinAPIResponseError.incorrectPin:
+                    case MixinAPIResponseError.malformedPin, MixinAPIResponseError.incorrectPin, TIPNode.Error.response(.incorrectPIN), TIPNode.Error.response(.internalServer):
                         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                                  leftAction: #selector(close(_:)),
                                                  rightTitle: R.string.localizable.retry(),

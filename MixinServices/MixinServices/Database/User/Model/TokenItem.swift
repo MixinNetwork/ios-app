@@ -9,7 +9,11 @@ public final class TokenItem: Token, NumberStringLocalizable {
     
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
     
-    public lazy var localizedBalance = localizedNumberString(balance)
+    public private(set) lazy var localizedBalance = localizedNumberString(balance)
+    public private(set) lazy var localizedBalanceWithSymbol = CurrencyFormatter.localizedString(from: decimalBalance,
+                                                                                                format: .precision,
+                                                                                                sign: .never,
+                                                                                                symbol: .custom(symbol))
     
     public lazy var localizedFiatMoneyPrice: String = {
         let value = usdPrice.doubleValue * Currency.current.rate

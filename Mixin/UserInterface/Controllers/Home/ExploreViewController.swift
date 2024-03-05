@@ -80,6 +80,22 @@ final class ExploreViewController: UIViewController {
         present(profile, animated: true, completion: nil)
     }
     
+    func openApp(user: User) {
+        guard let home = UIApplication.homeContainerViewController?.homeTabBarController else {
+            return
+        }
+        DispatchQueue.global().async {
+            guard let app = AppDAO.shared.getApp(ofUserId: user.userId) else {
+                return
+            }
+            DispatchQueue.main.async {
+                AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
+                MixinWebViewController.presentInstance(with: .init(conversationId: "", app: app), asChildOf: home)
+            }
+            reporter.report(event: .openApp, userInfo: ["source": "Explore", "identityNumber": app.appNumber])
+        }
+    }
+    
     func cancelSearching() {
         guard let searchViewController, let searchViewCenterYConstraint else {
             return

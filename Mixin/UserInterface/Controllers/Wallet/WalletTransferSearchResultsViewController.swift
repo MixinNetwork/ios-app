@@ -1,6 +1,6 @@
 import UIKit
 
-class WalletTransferSearchResultsViewController: WalletSearchResultsViewController {
+final class WalletTransferSearchResultsViewController: TokenSearchResultsViewController {
 
     weak var transferSearchController: TransferSearchViewController?
     
@@ -11,6 +11,13 @@ class WalletTransferSearchResultsViewController: WalletSearchResultsViewControll
             make.top.equalToSuperview()
         }
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.compact_asset, for: indexPath)!
+        let item = searchResults[indexPath.row]
+        cell.render(token: item, style: .nameWithBalance)
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

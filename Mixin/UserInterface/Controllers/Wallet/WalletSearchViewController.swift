@@ -9,7 +9,7 @@ class WalletSearchViewController: UIViewController {
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let recommendation = WalletSearchRecommendationViewController()
-    private let searchResults = WalletSearchResultsViewController()
+    private let searchResults = TokenSearchResultsViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()

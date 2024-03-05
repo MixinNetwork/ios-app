@@ -82,7 +82,7 @@ extension WalletSearchRecommendationViewController: UITableViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .history:
             let item = history[indexPath.row]
-            cell.render(token: item)
+            cell.render(token: item, style: .symbolWithName)
         case .trending:
             let item = trending[indexPath.row]
             cell.render(asset: item)

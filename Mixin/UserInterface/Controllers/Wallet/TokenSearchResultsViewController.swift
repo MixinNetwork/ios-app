@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class WalletSearchResultsViewController: WalletSearchTableViewController {
+class TokenSearchResultsViewController: WalletSearchTableViewController {
     
     let activityIndicator = ActivityIndicatorView()
     
@@ -147,7 +147,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
     
 }
 
-extension WalletSearchResultsViewController: UITableViewDataSource {
+extension TokenSearchResultsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         searchResults.count
@@ -156,13 +156,13 @@ extension WalletSearchResultsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.compact_asset, for: indexPath)!
         let item = searchResults[indexPath.row]
-        cell.render(token: item)
+        cell.render(token: item, style: .symbolWithName)
         return cell
     }
     
 }
 
-extension WalletSearchResultsViewController: UITableViewDelegate {
+extension TokenSearchResultsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

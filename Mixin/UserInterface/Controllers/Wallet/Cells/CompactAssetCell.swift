@@ -97,7 +97,7 @@ final class CompactAssetCell: UITableViewCell {
     
     func render(token: TokenItem, isSelected: Bool) {
         assetIconView.setIcon(token: token)
-        nameLabel.text = token.symbol
+        nameLabel.text = token.name
         descriptionLabel.text = token.localizedBalanceWithSymbol
         if let tag = token.chainTag {
             chainTagLabel.text = tag

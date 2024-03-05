@@ -3,9 +3,9 @@ import MixinServices
 
 final class CompactAssetCell: UITableViewCell {
     
-    enum Description {
-        case tokenName
-        case balance
+    enum Style {
+        case symbolWithName
+        case nameWithBalance
     }
     
     @IBOutlet weak var assetIconView: AssetIconView!
@@ -58,14 +58,15 @@ final class CompactAssetCell: UITableViewCell {
         checkmarkImageView.isHidden = true
     }
     
-    func render(token: TokenItem, description: Description) {
+    func render(token: TokenItem, style: Style) {
         assetIconView.setIcon(token: token)
-        nameLabel.text = token.symbol
-        descriptionLabel.text = switch description {
-        case .tokenName:
-            token.name
-        case .balance:
-            token.localizedBalanceWithSymbol
+        switch style {
+        case .symbolWithName:
+            nameLabel.text = token.symbol
+            descriptionLabel.text = token.name
+        case .nameWithBalance:
+            nameLabel.text = token.name
+            descriptionLabel.text = token.localizedBalanceWithSymbol
         }
         if let tag = token.chainTag {
             chainTagLabel.text = tag

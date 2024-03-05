@@ -156,7 +156,7 @@ extension TokenSearchResultsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.compact_asset, for: indexPath)!
         let item = searchResults[indexPath.row]
-        cell.render(token: item, description: .tokenName)
+        cell.render(token: item, style: .symbolWithName)
         return cell
     }
     

@@ -592,11 +592,11 @@ class UrlWindow {
                 }
                 let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
                 
-                guard let feeToken = syncToken(assetID: response.feeAssetId, hud: hud) else {
-                    throw Error.syncTokenFailed
-                }
                 guard let fee = try await SafeAPI.fees(assetID: assetID, destination: address.destination).first else {
                     throw MixinAPIResponseError.withdrawSuspended
+                }
+                guard let feeToken = syncToken(assetID: fee.assetID, hud: hud) else {
+                    throw Error.syncTokenFailed
                 }
                 guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
                     throw Error.invalidPaymentLink

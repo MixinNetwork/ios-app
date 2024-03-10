@@ -74,11 +74,6 @@ class DatabaseUpgradeViewController: UIViewController {
                     AppGroupKeychain.deviceID = id
                 }
             }
-            if localVersion < 32 {
-                AppGroupUserDefaults.Wallet.allTransactionsOffset = nil
-                AppGroupUserDefaults.Wallet.assetTransactionsOffset = [:]
-                AppGroupUserDefaults.Wallet.opponentTransactionsOffset = [:]
-            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

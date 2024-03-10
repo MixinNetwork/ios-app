@@ -5,7 +5,7 @@ protocol SnapshotCellDelegate: AnyObject {
     func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell)
 }
 
-class SnapshotCell: ModernSelectedBackgroundCell {
+final class SnapshotCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
@@ -76,7 +76,7 @@ class SnapshotCell: ModernSelectedBackgroundCell {
                 amountLabel.textColor = .walletGreen
             }
         }
-        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
         symbolLabel.text = token?.symbol ?? snapshot.tokenSymbol
     }
     

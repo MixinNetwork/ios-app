@@ -508,7 +508,7 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
             let vc = PeerTransactionsViewController.instance(opponentId: user.userId)
             navigationController?.pushViewController(vc, animated: true)
         case let .address(address):
-            let vc = AddressTransactionsViewController.instance(asset: address.assetId, destination: address.destination, tag: address.tag)
+            let vc = AddressTransactionsViewController.instance(assetID: address.assetId, address: address.fullRepresentation)
             navigationController?.pushViewController(vc, animated: true)
         case .mainnet:
             break

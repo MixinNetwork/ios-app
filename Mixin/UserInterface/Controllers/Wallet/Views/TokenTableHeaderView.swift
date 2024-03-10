@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class AssetTableHeaderView: InfiniteTopView {
+final class TokenTableHeaderView: InfiniteTopView {
     
     @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!

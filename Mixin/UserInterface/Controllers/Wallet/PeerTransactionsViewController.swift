@@ -1,15 +1,18 @@
 import UIKit
 
-class PeerTransactionsViewController: AllTransactionsViewController {
+final class PeerTransactionsViewController: SafeSnapshotListViewController {
     
-    override var showFilters: Bool {
-        return false
+    init(opponentUserID: String) {
+        super.init(displayFilter: .user(id: opponentUserID))
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
     }
     
     class func instance(opponentId: String) -> UIViewController {
-        let vc = R.storyboard.wallet.peer_transaction()!
-        vc.dataSource = SnapshotDataSource(category: .user(id: opponentId))
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.transactions())
+        let controller = PeerTransactionsViewController(opponentUserID: opponentId)
+        let container = ContainerViewController.instance(viewController: controller, title: R.string.localizable.transactions())
         return container
     }
     

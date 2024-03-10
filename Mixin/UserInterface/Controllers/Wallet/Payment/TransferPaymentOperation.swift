@@ -195,7 +195,7 @@ struct TransferPaymentOperation {
                                                       lastOutput: spendingOutputs.lastOutput)
                     try output.save(db)
                 } else {
-                    try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)
+                    try SafeSnapshotDAO.shared.save(snapshot: snapshot, db: db)
                     try trace?.save(db)
                     if opponent.isCreatedByMessenger {
                         let receiverID = opponent.userId
@@ -216,7 +216,7 @@ struct TransferPaymentOperation {
                     }
                 }
             case .multisig, .mainnet:
-                try SafeSnapshotDAO.shared.save(snapshots: [snapshot], db: db)
+                try SafeSnapshotDAO.shared.save(snapshot: snapshot, db: db)
                 try trace?.save(db)
             }
             try rawTransaction.save(db)

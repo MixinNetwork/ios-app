@@ -1257,7 +1257,7 @@ extension ReceiveMessageService {
             depositHash = nil
         }
         
-        SafeSnapshotDAO.shared.save(snapshot: snapshot, postChangeNotification: true) { db in
+        SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
             if let hash = depositHash {
                 try SafeSnapshotDAO.shared.deletePendingSnapshots(depositHash: hash, db: db)
             }

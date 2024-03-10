@@ -12,7 +12,7 @@ final class SyncSafeSnapshotJob: BaseJob {
     override func run() throws {
         let initialOffset: String? = PropertiesDAO.shared.value(forKey: .snapshotOffset)
         Logger.general.debug(category: "SyncSafeSnapshot", message: "Sync from initial offset: \(initialOffset ?? "(null)")")
-        var result = SafeAPI.snapshots(asset: nil, opponent: nil, offset: initialOffset, limit: limit)
+        var result = SafeAPI.snapshots(offset: initialOffset, limit: limit)
         while true {
             let snapshots = try result.get()
             let offset = snapshots.last?.createdAt
@@ -27,7 +27,7 @@ final class SyncSafeSnapshotJob: BaseJob {
                 break
             } else {
                 Logger.general.debug(category: "SyncSafeSnapshot", message: "Sync from initial offset: \(offset ?? "(null)")")
-                result = SafeAPI.snapshots(asset: nil, opponent: nil, offset: offset, limit: limit)
+                result = SafeAPI.snapshots(offset: offset, limit: limit)
             }
         }
     }

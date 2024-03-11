@@ -37,6 +37,7 @@ final class TokenViewController: SafeSnapshotListViewController {
         super.viewDidLoad()
         tableHeaderView.render(token: token)
         tableHeaderView.transferActionView.delegate = self
+        tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilter(_:)), for: .touchUpInside)
         let revealOutputsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
         revealOutputsGestureRecognizer.numberOfTapsRequired = 5
         tableHeaderView.assetIconView.addGestureRecognizer(revealOutputsGestureRecognizer)
@@ -75,7 +76,7 @@ final class TokenViewController: SafeSnapshotListViewController {
         }
     }
     
-    @IBAction func presentFilterWindow(_ sender: Any) {
+    @IBAction func presentFilter(_ sender: Any) {
         let filterController = AssetFilterViewController.instance()
         filterController.delegate = self
         present(filterController, animated: true, completion: nil)

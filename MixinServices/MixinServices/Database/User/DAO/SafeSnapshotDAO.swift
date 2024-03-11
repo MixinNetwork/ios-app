@@ -188,7 +188,6 @@ extension SafeSnapshotDAO {
         }
         
         sql += "\nLIMIT \(limit)"
-        Logger.general.debug(category: "SafeSnapshotDAO", message: "Query with SQL:\n" + sql)
         
         let snapshots: [SafeSnapshotItem] = db.select(with: sql, arguments: StatementArguments(arguments))
         for snapshot in snapshots where snapshot.tokenSymbol == nil {

@@ -15,7 +15,7 @@ class SafeSnapshotListViewController: UIViewController {
                 "token: " + id
             case let .user(id):
                 "user: " + id
-            case let .address(assetID, address):
+            case let .address(_, address):
                 "address: " + address
             }
         }
@@ -109,47 +109,6 @@ class SafeSnapshotListViewController: UIViewController {
                              photo: R.image.emptyIndicator.ic_data()!)
     }
     
-    @objc private func snapshotsDidSave(_ notification: Notification) {
-        if let snapshots = notification.userInfo?[SafeSnapshotDAO.snapshotsUserInfoKey] as? [SafeSnapshot], snapshots.count == 1 {
-            let snapshot = snapshots[0]
-            let isSnapshotAssociated = switch displayFilter {
-            case .token(let id):
-                snapshot.assetID == id
-            case .user(let id):
-                snapshot.opponentID == id
-            case let .address(assetID, address):
-                snapshot.assetID == assetID && (snapshot.deposit?.sender == address || snapshot.withdrawal?.receiver == address)
-            case nil:
-                true
-            }
-            if !isSnapshotAssociated {
-                // The snapshot will never show in this view, no need to load
-                return
-            }
-            if items[snapshot.id] != nil {
-                // If there's only 1 item is saved, reduce db access by reloading it in place
-                let operation = ReloadSingleItemOperation(viewController: self, snapshotID: snapshots[0].id)
-                queue.addOperation(operation)
-                return
-            }
-        }
-        let behavior: LoadLocalDataOperation.Behavior
-        if let firstVisibleCell = tableView.visibleCells.first,
-           let firstVisibleIndexPath = tableView.indexPath(for: firstVisibleCell),
-           let snapshotID = dataSource.itemIdentifier(for: firstVisibleIndexPath),
-           let firstItem = items[snapshotID]
-        {
-            behavior = .reloadVisibleItems(offset: firstItem)
-        } else {
-            behavior = .reload
-        }
-        let operation = LoadLocalDataOperation(viewController: self,
-                                               behavior: behavior,
-                                               filter: displayFilter,
-                                               sort: sort)
-        queue.addOperation(operation)
-    }
-    
 }
 
 extension SafeSnapshotListViewController: UITableViewDelegate {
@@ -216,6 +175,47 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
 
 extension SafeSnapshotListViewController {
     
+    @objc private func snapshotsDidSave(_ notification: Notification) {
+        if let snapshots = notification.userInfo?[SafeSnapshotDAO.snapshotsUserInfoKey] as? [SafeSnapshot], snapshots.count == 1 {
+            let snapshot = snapshots[0]
+            let isSnapshotAssociated = switch displayFilter {
+            case .token(let id):
+                snapshot.assetID == id
+            case .user(let id):
+                snapshot.opponentID == id
+            case let .address(assetID, address):
+                snapshot.assetID == assetID && (snapshot.deposit?.sender == address || snapshot.withdrawal?.receiver == address)
+            case nil:
+                true
+            }
+            if !isSnapshotAssociated {
+                // The snapshot will never show in this view, no need to load
+                return
+            }
+            if items[snapshot.id] != nil {
+                // If there's only 1 item is saved, reduce db access by reloading it in place
+                let operation = ReloadSingleItemOperation(viewController: self, snapshotID: snapshots[0].id)
+                queue.addOperation(operation)
+                return
+            }
+        }
+        let behavior: LoadLocalDataOperation.Behavior
+        if let firstVisibleCell = tableView.visibleCells.first,
+           let firstVisibleIndexPath = tableView.indexPath(for: firstVisibleCell),
+           let snapshotID = dataSource.itemIdentifier(for: firstVisibleIndexPath),
+           let firstItem = items[snapshotID]
+        {
+            behavior = .reloadVisibleItems(offset: firstItem)
+        } else {
+            behavior = .reload
+        }
+        let operation = LoadLocalDataOperation(viewController: self,
+                                               behavior: behavior,
+                                               filter: displayFilter,
+                                               sort: sort)
+        queue.addOperation(operation)
+    }
+    
     private func loadPreviousPage() {
         guard let firstItem else {
             return
@@ -236,6 +236,26 @@ extension SafeSnapshotListViewController {
                                                filter: displayFilter,
                                                sort: sort)
         queue.addOperation(operation)
+    }
+    
+    private func withTableViewContentOffsetManaged(_ block: () -> Void) {
+        let contentSizeBefore = tableView.contentSize
+        let wasAtTableTop = tableView.contentOffset.y < 1
+        let wasAtTableBottom = abs(tableView.contentOffset.y - (tableView.contentSize.height - tableView.frame.height)) < 1
+        block()
+        view.layoutIfNeeded() // Important, ensures `tableView.contentSize` is correct
+        let contentOffset: CGPoint
+        if wasAtTableTop {
+            contentOffset = .zero
+        } else if wasAtTableBottom {
+            let y = tableView.contentSize.height - tableView.frame.height
+            contentOffset = CGPoint(x: 0, y: y)
+        } else {
+            let contentSizeAfter = tableView.contentSize
+            let y = max(tableView.contentOffset.y, tableView.contentOffset.y + contentSizeAfter.height - contentSizeBefore.height)
+            contentOffset = CGPoint(x: tableView.contentOffset.x, y: y)
+        }
+        tableView.setContentOffset(contentOffset, animated: false)
     }
     
 }
@@ -439,23 +459,21 @@ extension SafeSnapshotListViewController {
                         controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
                     }
                 case .reloadVisibleItems:
-                    controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
-                    controller.firstItem = items.first
-                    if #available(iOS 15.0, *) {
-                        controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
-                    } else {
-                        controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
+                    controller.withTableViewContentOffsetManaged {
+                        controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
+                        controller.firstItem = items.first
+                        if #available(iOS 15.0, *) {
+                            controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
+                        } else {
+                            controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
+                        }
                     }
                 case .prepend:
-                    let beforeContentSize = controller.tableView.contentSize
-                    controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
-                    controller.firstItem = items.last // `items` are inserted in reversed order
-                    controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
-                    controller.view.layoutIfNeeded() // Important, ensures `afterContentSize` is correct
-                    let afterContentSize = controller.tableView.contentSize
-                    var contentOffset = controller.tableView.contentOffset
-                    contentOffset.y += (afterContentSize.height - beforeContentSize.height)
-                    controller.tableView.contentOffset = contentOffset
+                    controller.withTableViewContentOffsetManaged {
+                        controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
+                        controller.firstItem = items.last // `items` are inserted in reversed order
+                        controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
+                    }
                 case .append:
                     controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
                 }

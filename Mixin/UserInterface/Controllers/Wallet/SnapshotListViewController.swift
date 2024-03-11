@@ -238,17 +238,20 @@ extension SafeSnapshotListViewController {
     }
     
     private func withTableViewContentOffsetManaged(_ block: () -> Void) {
+        var tableBottomContentOffsetY: CGFloat {
+            tableView.adjustedContentInset.vertical + tableView.contentSize.height - tableView.frame.height
+        }
+        
         let contentSizeBefore = tableView.contentSize
         let wasAtTableTop = tableView.contentOffset.y < 1
-        let wasAtTableBottom = abs(tableView.contentOffset.y - (tableView.contentSize.height - tableView.frame.height)) < 1
+        let wasAtTableBottom = abs(tableView.contentOffset.y - tableBottomContentOffsetY) < 1
         block()
         view.layoutIfNeeded() // Important, ensures `tableView.contentSize` is correct
         let contentOffset: CGPoint
         if wasAtTableTop {
             contentOffset = .zero
         } else if wasAtTableBottom {
-            let y = tableView.contentSize.height - tableView.frame.height
-            contentOffset = CGPoint(x: 0, y: y)
+            contentOffset = CGPoint(x: 0, y: tableBottomContentOffsetY)
         } else {
             let contentSizeAfter = tableView.contentSize
             let y = max(tableView.contentOffset.y, tableView.contentOffset.y + contentSizeAfter.height - contentSizeBefore.height)

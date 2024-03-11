@@ -82,7 +82,6 @@ class SafeSnapshotListViewController: UIViewController {
         
         reloadData(with: .createdAt)
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
-        ConcurrentJobQueue.shared.addJob(job: SyncSafeSnapshotJob())
     }
     
     override func viewIsAppearing(_ animated: Bool) {

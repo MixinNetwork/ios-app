@@ -6533,7 +6533,7 @@
 			repositoryURL = "https://github.com/WalletConnect/WalletConnectSwiftV2";
 			requirement = {
 				kind = exactVersion;
-				version = 1.6.11;
+				version = 1.13.0;
 			};
 		};
 		9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
@@ -6549,7 +6549,7 @@
 			repositoryURL = "https://github.com/argentlabs/web3.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 1.6.0;
+				version = 1.6.1;
 			};
 		};
 		944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {

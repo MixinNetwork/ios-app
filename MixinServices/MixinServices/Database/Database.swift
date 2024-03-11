@@ -41,8 +41,11 @@ open class Database {
                     AppGroupUserDefaults.User.needsRebuildDatabase = true
                 }
             }
-            reporter.report(error: Error(code: code.rawValue, message: message))
-            Logger.database.error(category: "Error", message: "code: \(code), message: \(message)\n")
+            // Stupid error from CoreFoundation
+            if !message.hasSuffix("cfurl_cache_response.request_key") {
+                reporter.report(error: Error(code: code.rawValue, message: message))
+                Logger.database.error(category: "Error", message: "code: \(code), message: \(message)\n")
+            }
         }
         return {}
     }()

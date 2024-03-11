@@ -45,12 +45,14 @@ final class WalletConnectService {
     private weak var presentedViewController: UIViewController?
     
     private init() {
-        Networking.configure(projectId: MixinKeys.walletConnect,
+        Networking.configure(groupIdentifier: appGroupIdentifier,
+                             projectId: MixinKeys.walletConnect,
                              socketFactory: StarscreamFactory())
         let meta = AppMetadata(name: walletName,
                                description: walletDescription,
                                url: URL.mixinMessenger.absoluteString,
-                               icons: ["https://mixin.one/assets/eccaf16dd38b2210f935.png"])
+                               icons: ["https://mixin.one/assets/eccaf16dd38b2210f935.png"],
+                               redirect: .init(native: "mixin://", universal: nil))
         Web3Wallet.configure(metadata: meta, crypto: Web3CryptoProvider())
         Web3Wallet.instance.sessionsPublisher
             .receive(on: DispatchQueue.main)
@@ -267,7 +269,7 @@ extension WalletConnectService {
             }
             presentRejection(title: "Chain not supported", message: "\(proposal.proposer.name) requires to support \(requiredNamespaces)")
             Task {
-                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejectedChains)
+                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .unsupportedChains)
             }
             return
         }
@@ -278,7 +280,7 @@ extension WalletConnectService {
             logger.warn(category: "WalletConnectService", message: "Requires to support \(proposalEvents)")
             presentRejection(title: "Chain not supported", message: "\(proposal.proposer.name) requires to support \(proposalEvents.joined(separator: ", "))")
             Task {
-                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejectedEvents)
+                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .upsupportedEvents)
             }
             return
         }

@@ -1,11 +1,11 @@
 import UIKit
 import MixinServices
 
-class PaymentPreviewViewController: UIViewController {
+class AuthenticationPreviewViewController: UIViewController {
     
-    let issues: [PaymentPreconditionIssue]
+    let warnings: [String]
     let tableView = UITableView()
-    let tableHeaderView = R.nib.paymentPreviewHeaderView(withOwner: nil)!
+    let tableHeaderView = R.nib.authenticationPreviewHeaderView(withOwner: nil)!
     
     var canDismissInteractively = true
     
@@ -19,10 +19,10 @@ class PaymentPreviewViewController: UIViewController {
     private var trayViewBottomConstraint: NSLayoutConstraint?
     private var trayViewCenterXConstraint: NSLayoutConstraint?
     
-    private var unresolvedIssueIndex = 0
+    private var unresolvedWarningIndex = 0
     
-    init(issues: [PaymentPreconditionIssue]) {
-        self.issues = issues
+    init(warnings: [String]) {
+        self.warnings = warnings
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -106,7 +106,7 @@ class PaymentPreviewViewController: UIViewController {
 }
 
 // MARK: - UIAdaptivePresentationControllerDelegate
-extension PaymentPreviewViewController: UIAdaptivePresentationControllerDelegate {
+extension AuthenticationPreviewViewController: UIAdaptivePresentationControllerDelegate {
     
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         canDismissInteractively
@@ -115,7 +115,7 @@ extension PaymentPreviewViewController: UIAdaptivePresentationControllerDelegate
 }
 
 // MARK: - UITableViewDataSource
-extension PaymentPreviewViewController: UITableViewDataSource {
+extension AuthenticationPreviewViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -186,7 +186,7 @@ extension PaymentPreviewViewController: UITableViewDataSource {
 }
 
 // MARK: - PaymentUserGroupCellDelegate
-extension PaymentPreviewViewController: PaymentUserGroupCellDelegate {
+extension AuthenticationPreviewViewController: PaymentUserGroupCellDelegate {
     
     func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem) {
         let controller = UserProfileViewController(user: item)
@@ -197,7 +197,7 @@ extension PaymentPreviewViewController: PaymentUserGroupCellDelegate {
 }
 
 // MARK: - Data Structure
-extension PaymentPreviewViewController {
+extension AuthenticationPreviewViewController {
     
     enum Caption {
         
@@ -253,28 +253,28 @@ extension PaymentPreviewViewController {
 }
 
 // MARK: - Initial Tray View
-extension PaymentPreviewViewController {
+extension AuthenticationPreviewViewController {
     
     @objc func loadInitialTrayView(animated: Bool) {
-        if unresolvedIssueIndex < issues.count {
-            let issue = issues[unresolvedIssueIndex]
+        if unresolvedWarningIndex < warnings.count {
+            let warning = warnings[unresolvedWarningIndex]
             let animation: TrayViewAnimation? = if animated {
-                unresolvedIssueIndex == 0 ? .vertical : .horizontal
+                unresolvedWarningIndex == 0 ? .vertical : .horizontal
             } else {
                 nil
             }
             loadDialogTrayView(animation: animation) { view in
                 view.iconImageView.image = R.image.ic_warning()?.withRenderingMode(.alwaysTemplate)
-                if issues.count > 1 {
-                    view.stepLabel.text = "\(unresolvedIssueIndex + 1)/\(issues.count)"
+                if warnings.count > 1 {
+                    view.stepLabel.text = "\(unresolvedWarningIndex + 1)/\(warnings.count)"
                 }
-                view.titleLabel.text = issue.description
+                view.titleLabel.text = warning
                 view.leftButton.isHidden = true
                 view.rightButton.setTitle(R.string.localizable.got_it(), for: .normal)
-                view.rightButton.addTarget(self, action: #selector(ignoreCurrentIssue(_:)), for: .touchUpInside)
+                view.rightButton.addTarget(self, action: #selector(ignoreCurrentWarning(_:)), for: .touchUpInside)
                 view.style = .warning
             }
-            unresolvedIssueIndex += 1
+            unresolvedWarningIndex += 1
         } else {
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                      leftAction: #selector(close(_:)),
@@ -284,12 +284,12 @@ extension PaymentPreviewViewController {
         }
     }
     
-    @objc private func ignoreCurrentIssue(_ sender: Any) {
+    @objc private func ignoreCurrentWarning(_ sender: Any) {
         loadInitialTrayView(animated: true)
     }
     
     @objc func confirm(_ sender: Any) {
-        let intent = PaymentPreviewAuthenticationIntent(title: authenticationTitle, onInput: performAction(with:))
+        let intent = PreviewedAuthenticationIntent(title: authenticationTitle, onInput: performAction(with:))
         let authentication = AuthenticationViewController(intent: intent)
         present(authentication, animated: true)
     }
@@ -301,7 +301,7 @@ extension PaymentPreviewViewController {
 }
 
 // MARK: - Finished Tray View
-extension PaymentPreviewViewController {
+extension AuthenticationPreviewViewController {
     
     func loadFinishedTrayView() {
         
@@ -344,7 +344,7 @@ extension PaymentPreviewViewController {
 }
 
 // MARK: - Tray View Loader
-extension PaymentPreviewViewController {
+extension AuthenticationPreviewViewController {
     
     enum TrayViewAnimation {
         case vertical
@@ -352,7 +352,7 @@ extension PaymentPreviewViewController {
     }
     
     func loadSingleButtonTrayView(title: String, action: Selector) {
-        let trayView = PaymentPreviewSingleButtonTrayView()
+        let trayView = AuthenticationPreviewSingleButtonTrayView()
         trayView.button.setTitle(title, for: .normal)
         replaceTrayView(with: trayView, animation: .vertical)
         trayView.button.addTarget(self, action: action, for: .touchUpInside)
@@ -365,7 +365,7 @@ extension PaymentPreviewViewController {
         rightAction: Selector,
         animation: TrayViewAnimation?
     ) {
-        let trayView = R.nib.paymentPreviewDoubleButtonTrayView(withOwner: nil)!
+        let trayView = R.nib.authenticationPreviewDoubleButtonTrayView(withOwner: nil)!
         UIView.performWithoutAnimation {
             trayView.leftButton.setTitle(leftTitle, for: .normal)
             trayView.leftButton.layoutIfNeeded()
@@ -377,8 +377,8 @@ extension PaymentPreviewViewController {
         trayView.rightButton.addTarget(self, action: rightAction, for: .touchUpInside)
     }
     
-    func loadDialogTrayView(animation: TrayViewAnimation?, configuration: (PaymentPreviewDialogView) -> Void) {
-        let trayView = R.nib.paymentPreviewDialogView(withOwner: nil)!
+    func loadDialogTrayView(animation: TrayViewAnimation?, configuration: (AuthenticationPreviewDialogView) -> Void) {
+        let trayView = R.nib.authenticationPreviewDialogView(withOwner: nil)!
         configuration(trayView)
         replaceTrayView(with: trayView, animation: animation)
     }
@@ -453,6 +453,48 @@ extension PaymentPreviewViewController {
             self.trayViewCenterXConstraint = nil
             self.trayViewBottomConstraint = nil
         }
+    }
+    
+}
+
+// MARK: - PreviewedAuthenticationIntent
+extension AuthenticationPreviewViewController {
+    
+    private final class PreviewedAuthenticationIntent: AuthenticationIntent {
+        
+        let intentTitle: String
+        let intentTitleIcon: UIImage? = R.image.ic_pin_setting()
+        let intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? = nil
+        let intentSubtitle = ""
+        let options: AuthenticationIntentOptions = [
+            .allowsBiometricAuthentication,
+            .becomesFirstResponderOnAppear,
+            .neverRequestAddBiometricAuthentication,
+        ]
+        let authenticationViewController: AuthenticationViewController? = nil
+        
+        private let onInput: (String) -> Void
+        
+        init(title: String, onInput: @escaping (String) -> Void) {
+            self.intentTitle = title
+            self.onInput = onInput
+        }
+        
+        @MainActor
+        func authenticationViewController(
+            _ controller: AuthenticationViewController,
+            didInput pin: String,
+            completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
+        ) {
+            completion(.success)
+            onInput(pin)
+            controller.presentingViewController?.dismiss(animated: true)
+        }
+        
+        func authenticationViewControllerWillDismiss(_ controller: AuthenticationViewController) {
+            
+        }
+        
     }
     
 }

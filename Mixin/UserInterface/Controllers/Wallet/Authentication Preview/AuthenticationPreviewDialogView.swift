@@ -1,6 +1,6 @@
 import UIKit
 
-final class PaymentPreviewDialogView: UIView {
+final class AuthenticationPreviewDialogView: UIView {
     
     enum Style {
         case info

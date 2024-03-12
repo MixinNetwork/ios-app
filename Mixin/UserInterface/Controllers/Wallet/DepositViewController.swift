@@ -17,6 +17,7 @@ final class DepositViewController: UIViewController {
         AssetID.eosUSDT:        "EOS",
         AssetID.polygonUSDT:    "Polygon",
         AssetID.bep20USDT:      "BEP-20",
+        AssetID.solanaUSDT:     "Solana",
     ]
     
     private let initialToken: TokenItem

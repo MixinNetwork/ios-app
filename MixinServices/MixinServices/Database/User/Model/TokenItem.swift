@@ -139,27 +139,27 @@ extension TokenItem {
     }
     
     public var chainTag: String? {
-        if chainID == ChainID.bnbBeaconChain {
-            return "BEP-2"
-        } else if chainID == ChainID.bnbSmartChain {
-            return "BEP-20"
-        } else if chainID == ChainID.mvm {
-            return "MVM"
-        } else if assetID == chainID {
-            return nil
-        } else {
-            switch chainID {
-            case ChainID.ethereum:
-                return "ERC-20"
-            case ChainID.tron:
-                return (assetKey ?? "").isDigitsOnly ? "TRC-10" : "TRC-20"
-            case ChainID.eos:
-                return "EOS"
-            case ChainID.polygon:
-                return "Polygon"
-            default:
-                return nil
-            }
+        switch chainID {
+        case ChainID.bnbBeaconChain:
+            "BEP-2"
+        case ChainID.bnbSmartChain:
+            "BEP-20"
+        case ChainID.mvm:
+            "MVM"
+        case assetID:
+            nil
+        case ChainID.ethereum:
+            "ERC-20"
+        case ChainID.tron:
+            (assetKey ?? "").isDigitsOnly ? "TRC-10" : "TRC-20"
+        case ChainID.eos:
+            "EOS"
+        case ChainID.polygon:
+            "Polygon"
+        case ChainID.solana:
+            "Solana"
+        default:
+            nil
         }
     }
     

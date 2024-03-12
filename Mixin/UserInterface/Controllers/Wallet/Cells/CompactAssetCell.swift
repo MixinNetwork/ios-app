@@ -20,6 +20,8 @@ final class CompactAssetCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         chainTagLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
+        chainTagLabel.layer.cornerRadius = 4
+        chainTagLabel.layer.masksToBounds = true
     }
     
     override func prepareForReuse() {

@@ -43,8 +43,10 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_full_group()
         case .insufficientBalance:
             return R.string.localizable.error_insufficient_balance()
-        case .malformedPin, .incorrectPin:
-            return R.string.localizable.pin_incorrect()
+        case .malformedPin:
+            return R.string.localizable.error_two_parts("\(code)", R.string.localizable.pin_incorrect())
+        case .incorrectPin:
+            return R.string.localizable.error_pin_incorrect()
         case .transferAmountTooSmall:
             return R.string.localizable.error_too_small_transfer_amount()
         case .expiredAuthorizationCode:

@@ -4033,6 +4033,7 @@
 				DF05F0131FE6757600F98479 /* Views */,
 				DF736F881FC08B67001DB063 /* Cells */,
 				94BE6E922BA0622B00CE65A3 /* Authentication Preview */,
+				94F952512AE60CED0025B995 /* Payment */,
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
 				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
@@ -4075,7 +4076,6 @@
 				94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */,
 				94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */,
 				94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */,
-				94F952512AE60CED0025B995 /* Payment */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";

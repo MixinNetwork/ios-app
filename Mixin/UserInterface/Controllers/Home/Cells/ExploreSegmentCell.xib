@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="explore_segment" id="fsA-H4-dVJ" customClass="ExploreSegmentCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="91" height="38"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="SSS-bE-ORu">
+                <rect key="frame" x="0.0" y="0.0" width="91" height="38"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzq-xa-agh" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="5" y="0.0" width="81" height="38"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" name="text"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="wzq-xa-agh" secondAttribute="trailing" constant="5" id="9WS-SG-vu1"/>
+                    <constraint firstItem="wzq-xa-agh" firstAttribute="leading" secondItem="SSS-bE-ORu" secondAttribute="leading" constant="5" id="D1r-iP-Q82"/>
+                    <constraint firstItem="wzq-xa-agh" firstAttribute="top" secondItem="SSS-bE-ORu" secondAttribute="top" id="fhA-dd-bbz"/>
+                    <constraint firstAttribute="bottom" secondItem="wzq-xa-agh" secondAttribute="bottom" id="hNi-RG-200"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="label" destination="wzq-xa-agh" id="1Ix-Bx-nx7"/>
+            </connections>
+            <point key="canvasLocation" x="115" y="-137"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

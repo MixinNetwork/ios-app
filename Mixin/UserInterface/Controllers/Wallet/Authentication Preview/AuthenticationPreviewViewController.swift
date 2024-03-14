@@ -44,8 +44,8 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 61
         tableView.separatorStyle = .none
-        tableView.register(R.nib.paymentAmountCell)
-        tableView.register(R.nib.paymentInfoCell)
+        tableView.register(R.nib.authenticationPreviewInfoCell)
+        tableView.register(R.nib.authenticationPreviewCompactInfoCell)
         tableView.register(R.nib.paymentFeeCell)
         tableView.register(R.nib.paymentUserGroupCell)
         tableView.dataSource = self
@@ -125,25 +125,25 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
         let row = rows[indexPath.row]
         switch row {
         case let .amount(caption, token, fiatMoney, display, boldPrimaryAmount):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_amount, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             switch display {
             case .byToken:
-                cell.primaryAmountLabel.text = token
-                cell.secondaryAmountLabel.text = fiatMoney
+                cell.primaryLabel.text = token
+                cell.secondaryLabel.text = fiatMoney
             case .byFiatMoney:
-                cell.primaryAmountLabel.text = fiatMoney
-                cell.secondaryAmountLabel.text = token
+                cell.primaryLabel.text = fiatMoney
+                cell.secondaryLabel.text = token
             }
             cell.setPrimaryAmountLabel(usesBoldFont: boldPrimaryAmount)
             return cell
         case let .receivingAddress(value, label):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(value, labelContent: label)
             return cell
         case let .info(caption, content):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setContent(content, labelContent: nil)
             return cell
@@ -176,7 +176,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.delegate = self
             return cell
         case let .mainnetReceiver(address):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_info, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(address, labelContent: nil)
             return cell

@@ -1,11 +1,11 @@
 import UIKit
 
-final class PaymentAmountCell: UITableViewCell {
+final class AuthenticationPreviewInfoCell: UITableViewCell {
     
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var captionLabel: UILabel!
-    @IBOutlet weak var primaryAmountLabel: UILabel!
-    @IBOutlet weak var secondaryAmountLabel: UILabel!
+    @IBOutlet weak var primaryLabel: UILabel!
+    @IBOutlet weak var secondaryLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -14,8 +14,8 @@ final class PaymentAmountCell: UITableViewCell {
     
     func setPrimaryAmountLabel(usesBoldFont: Bool) {
         let weight: UIFont.Weight = usesBoldFont ? .medium : .regular
-        primaryAmountLabel.setFont(scaledFor: .systemFont(ofSize: 16, weight: weight),
-                                   adjustForContentSize: true)
+        primaryLabel.setFont(scaledFor: .systemFont(ofSize: 16, weight: weight),
+                             adjustForContentSize: true)
     }
     
 }

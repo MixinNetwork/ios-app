@@ -1,6 +1,6 @@
 import UIKit
 
-final class PaymentInfoCell: UITableViewCell {
+final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
     
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var contentTextView: UITextView!

@@ -36,7 +36,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         if asset.balance == "0" {
             balance = "0\(currentDecimalSeparator)00"
         } else {
-            balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
+            balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
         }
         balanceLabel.text = balance
         if let attributedSymbol = attributedSymbol {

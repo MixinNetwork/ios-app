@@ -44,6 +44,7 @@ extension Payment {
             case let .user(opponent):
                 preconditions = [
                     NoPendingTransactionPrecondition(token: token),
+                    AlreadyPaidPrecondition(traceID: traceID),
                     DuplicationPrecondition(operation: .transfer(opponent),
                                             token: token,
                                             tokenAmount: tokenAmount,

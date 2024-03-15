@@ -144,30 +144,13 @@ extension SafeAPI {
         request(method: .get, path: "/safe/snapshots/" + id, queue: queue, completion: completion)
     }
     
-    public static func snapshots(
-        asset: String?,
-        opponent: String?,
-        offset: String?,
-        limit: Int?
-    ) -> MixinAPI.Result<[SafeSnapshot]> {
-        var parameters: [String] = []
-        if let asset {
-            parameters.append("asset=\(asset)")
-        }
-        if let opponent {
-            parameters.append("opponent=\(opponent)")
-        }
+    public static func snapshots(offset: String?, limit: Int) -> MixinAPI.Result<[SafeSnapshot]> {
+        var parameters = ["limit=\(limit)"]
         if let offset {
             parameters.append("offset=\(offset)")
         }
-        if let limit {
-            parameters.append("limit=\(limit)")
-        }
-        var path = "/safe/snapshots"
-        if !parameters.isEmpty {
-            path.append("?")
-            path.append(parameters.joined(separator: "&"))
-        }
+        var path = "/safe/snapshots?"
+        path.append(parameters.joined(separator: "&"))
         return request(method: .get, path: path)
     }
     

@@ -5,6 +5,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
     
     public enum Key: String {
         case iterator
+        case snapshotOffset = "snapshot_offset"
     }
     
     public static let shared = PropertiesDAO()
@@ -19,6 +20,13 @@ public final class PropertiesDAO: UserDatabaseDAO {
         try! db.writeAndReturnError { db in
             try set(value, forKey: key, db: db)
         }
+    }
+    
+    public func set(_ value: LosslessStringConvertible, forKey key: Key, db: GRDB.Database) throws {
+        let property = Property(key: key.rawValue,
+                                value: value.description,
+                                updatedAt: Date().toUTCString())
+        try property.save(db)
     }
     
     public func removeValue(forKey key: Key) {
@@ -52,13 +60,6 @@ extension PropertiesDAO {
         } else {
             return nil
         }
-    }
-    
-    private func set(_ value: LosslessStringConvertible, forKey key: Key, db: GRDB.Database) throws {
-        let property = Property(key: key.rawValue,
-                                value: value.description,
-                                updatedAt: Date().toUTCString())
-        try property.save(db)
     }
     
     private func removeValue(forKey key: Key, db: GRDB.Database) throws {

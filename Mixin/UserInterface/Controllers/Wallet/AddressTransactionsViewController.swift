@@ -1,16 +1,24 @@
 import UIKit
 
-class AddressTransactionsViewController: AllTransactionsViewController {
-
-    override var showFilters: Bool {
-        return false
+final class AddressTransactionsViewController: SafeSnapshotListViewController {
+    
+    private let assetID: String
+    private let address: String
+    
+    init(assetID: String, address: String) {
+        self.assetID = assetID
+        self.address = address
+        super.init(displayFilter: .address(assetID: assetID, address: address))
     }
-
-    class func instance(asset: String, destination: String, tag: String) -> UIViewController {
-        let vc = R.storyboard.wallet.peer_transaction()!
-        vc.dataSource = SnapshotDataSource(category: .address(asset: asset, destination: destination, tag: tag))
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.transactions())
-        container.delegate = nil
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
+    class func instance(assetID: String, address: String) -> UIViewController {
+        let list = AddressTransactionsViewController(assetID: assetID, address: address)
+        let container = ContainerViewController.instance(viewController: list, title: R.string.localizable.transactions())
         return container
     }
+    
 }

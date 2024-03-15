@@ -278,7 +278,8 @@ struct WithdrawPaymentOperation {
                 try UTXOService.shared.updateBalance(assetID: feeToken.assetID,
                                                      kernelAssetID: feeToken.kernelAssetID,
                                                      db: db)
-                try SafeSnapshotDAO.shared.save(snapshots: [withdrawalSnapshot, feeSnapshot], db: db)
+                try SafeSnapshotDAO.shared.save(snapshot: withdrawalSnapshot, db: db)
+                try SafeSnapshotDAO.shared.save(snapshot: feeSnapshot, db: db)
                 try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: withdrawalSnapshot.id))
                 db.afterNextTransaction { _ in
                     Logger.general.info(category: "Withdraw", message: "Outputs signed")
@@ -310,7 +311,7 @@ struct WithdrawPaymentOperation {
                 try UTXOService.shared.updateBalance(assetID: withdrawalToken.assetID,
                                                      kernelAssetID: withdrawalToken.kernelAssetID,
                                                      db: db)
-                try SafeSnapshotDAO.shared.save(snapshots: [withdrawalSnapshot], db: db)
+                try SafeSnapshotDAO.shared.save(snapshot: withdrawalSnapshot, db: db)
                 try Trace.filter(key: traceID).updateAll(db, Trace.column(of: .snapshotId).set(to: withdrawalSnapshot.id))
                 db.afterNextTransaction { _ in
                     Logger.general.info(category: "Withdraw", message: "Outputs signed")

@@ -75,6 +75,16 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard not supported")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    class func instance(token: TokenItem?, to opponent: Opponent) -> UIViewController {
+        let controller = TransferOutViewController(token: token, to: opponent)
+        let container = ContainerViewController.instance(viewController: controller, title: "")
+        return container
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tokenSelectorView.button.addTarget(self, action: #selector(switchToken(_:)), for: .touchUpInside)
@@ -119,16 +129,22 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         if let token {
             updateViews(token: token)
         } else {
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(fetchAvailableAssets),
-                                                   name: TokenDAO.tokensDidChangeNotification,
-                                                   object: nil)
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(fetchAvailableAssets),
-                                                   name: ChainDAO.chainsDidChangeNotification,
-                                                   object: nil)
+            let center = NotificationCenter.default
+            center.addObserver(self,
+                               selector: #selector(fetchAvailableAssets),
+                               name: TokenDAO.tokensDidChangeNotification,
+                               object: nil)
+            center.addObserver(self,
+                               selector: #selector(fetchAvailableAssets),
+                               name: ChainDAO.chainsDidChangeNotification,
+                               object: nil)
+            center.addObserver(self,
+                               selector: #selector(fetchAvailableAssets),
+                               name: UTXOService.balanceDidUpdateNotification,
+                               object: nil)
             ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             fetchAvailableAssets()
+            UTXOService.shared.synchronize()
         }
         
         amountTextField.adjustsFontForContentSizeCategory = true
@@ -142,16 +158,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             }
             self.amountTextField.becomeFirstResponder()
         }
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    class func instance(token: TokenItem?, to opponent: Opponent) -> UIViewController {
-        let controller = TransferOutViewController(token: token, to: opponent)
-        let container = ContainerViewController.instance(viewController: controller, title: "")
-        return container
     }
     
     override func keyboardWillChangeFrame(_ notification: Notification) {
@@ -508,7 +514,7 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
             let vc = PeerTransactionsViewController.instance(opponentId: user.userId)
             navigationController?.pushViewController(vc, animated: true)
         case let .address(address):
-            let vc = AddressTransactionsViewController.instance(asset: address.assetId, destination: address.destination, tag: address.tag)
+            let vc = AddressTransactionsViewController.instance(assetID: address.assetId, address: address.fullRepresentation)
             navigationController?.pushViewController(vc, animated: true)
         case .mainnet:
             break

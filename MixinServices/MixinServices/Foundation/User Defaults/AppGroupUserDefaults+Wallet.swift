@@ -14,9 +14,6 @@ extension AppGroupUserDefaults {
             case defaultTransferAssetId = "default_transfer_asset_id"
             case withdrawnAddressIds = "withdrawn_asset_ids"
             
-            case allTransactionsOffset = "all_transactions_offset"
-            case assetTransactionsOffset = "asset_transactions_offset"
-            case opponentTransactionsOffset = "opponent_transactions_offset"
             case currencyCode = "currency_code"
         }
         
@@ -38,15 +35,6 @@ extension AppGroupUserDefaults {
         @Default(namespace: .wallet, key: Key.withdrawnAddressIds, defaultValue: [:])
         public static var withdrawnAddressIds: [String: Bool]
         
-        @Default(namespace: .wallet, key: Key.allTransactionsOffset, defaultValue: nil)
-        public static var allTransactionsOffset: String?
-        
-        @Default(namespace: .wallet, key: Key.assetTransactionsOffset, defaultValue: [:])
-        public static var assetTransactionsOffset: [String: String]
-
-        @Default(namespace: .wallet, key: Key.opponentTransactionsOffset, defaultValue: [:])
-        public static var opponentTransactionsOffset: [String: String]
-        
         @Default(namespace: .wallet, key: Key.currencyCode, defaultValue: nil)
         public static var currencyCode: String?
         
@@ -58,8 +46,6 @@ extension AppGroupUserDefaults {
             biometricPaymentExpirationInterval = WalletUserDefault.shared.pinInterval
             
             defaultTransferAssetId = WalletUserDefault.shared.defalutTransferAssetId
-            allTransactionsOffset = WalletUserDefault.shared.allTransactionOffset
-            assetTransactionsOffset = WalletUserDefault.shared.assetTransactionOffset
             currencyCode = WalletUserDefault.shared.currencyCode
         }
         

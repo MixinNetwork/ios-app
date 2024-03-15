@@ -172,7 +172,6 @@ public class RefreshAssetsJob: AsynchronousJob {
                     guard !MixinService.isStopProcessMessages else {
                         return
                     }
-                    AppGroupUserDefaults.Wallet.assetTransactionsOffset[assetId] = snapshots.last?.createdAt
                     SnapshotDAO.shared.saveSnapshots(snapshots: snapshots)
                 }
             case let .failure(error):

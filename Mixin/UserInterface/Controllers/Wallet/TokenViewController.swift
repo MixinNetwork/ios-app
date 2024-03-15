@@ -2,71 +2,58 @@ import UIKit
 import web3 // Remove this after TIP Wallet transfer is removed
 import MixinServices
 
-class TokenViewController: UIViewController {
+final class TokenViewController: SafeSnapshotListViewController {
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var tableHeaderView: AssetTableHeaderView!
+    private let tableHeaderView = R.nib.tokenTableHeaderView(withOwner: nil)!
     
-    private enum ReuseId {
-        static let header = "header"
+    private(set) var token: TokenItem
+    
+    private var performSendOnAppear: Bool
+    
+    private lazy var filterController = SnapshotFilterViewController(sort: .createdAt)
+    private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
+    
+    init(token: TokenItem, performSendOnAppear: Bool) {
+        self.token = token
+        self.performSendOnAppear = performSendOnAppear
+        super.init(displayFilter: .token(id: token.assetID))
+        self.tokens[token.assetID] = token
     }
     
-    private let loadMoreThreshold = 20
-    
-    private(set) var token: TokenItem!
-    
-    private var snapshotDataSource: SnapshotDataSource!
-    private var performSendOnAppear = false
-        
-    private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
-    private lazy var filterController = AssetFilterViewController.instance()
-    
-    private weak var job: AsynchronousJob?
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
     
     deinit {
-        job?.cancel()
         NotificationCenter.default.removeObserver(self)
     }
     
     class func instance(token: TokenItem, performSendOnAppear: Bool = false) -> UIViewController {
-        let vc = R.storyboard.wallet.asset()!
-        vc.token = token
-        vc.performSendOnAppear = performSendOnAppear
-        vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: token.assetID))
-        let container = ContainerViewController.instance(viewController: vc, title: token.name)
+        let controller = TokenViewController(token: token, performSendOnAppear: performSendOnAppear)
+        let container = ContainerViewController.instance(viewController: controller, title: token.name)
         return container
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.layoutIfNeeded()
-        updateTableViewContentInset()
-        updateTableHeaderFooterView()
         tableHeaderView.render(token: token)
-        tableHeaderView.sizeToFit()
         tableHeaderView.transferActionView.delegate = self
+        tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilter(_:)), for: .touchUpInside)
         let revealOutputsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
         revealOutputsGestureRecognizer.numberOfTapsRequired = 5
         tableHeaderView.assetIconView.addGestureRecognizer(revealOutputsGestureRecognizer)
-        tableView.register(R.nib.snapshotCell)
-        tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
-        tableView.dataSource = self
-        tableView.delegate = self
         reloadToken()
-        snapshotDataSource.onReload = { [weak self] in
-            guard let weakSelf = self else {
-                return
-            }
-            weakSelf.tableView.reloadData()
-            weakSelf.updateTableHeaderFooterView()
-        }
-        snapshotDataSource.reloadFromLocal()
         NotificationCenter.default.addObserver(self, selector: #selector(balanceDidUpdate(_:)), name: UTXOService.balanceDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: TokenDAO.tokensDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
-        let job = RefreshTokenJob(assetID: token.assetID)
-        self.job = job
-        ConcurrentJobQueue.shared.addJob(job: job)
+        ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        view.layoutIfNeeded()
+        tableHeaderView.sizeToFit()
+        tableView.tableHeaderView = tableHeaderView
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -77,12 +64,20 @@ class TokenViewController: UIViewController {
         }
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updateTableViewContentInset()
+    override func updateEmptyIndicator(numberOfItems: Int) {
+        if numberOfItems == 0 {
+            tableHeaderView.transactionsHeaderView.isHidden = false
+            noTransactionFooterView.frame.size.height = tableView.frame.height
+            - tableView.contentSize.height
+            - tableView.adjustedContentInset.vertical
+            tableView.tableFooterView = noTransactionFooterView
+        } else {
+            tableHeaderView.transactionsHeaderView.isHidden = false
+            tableView.tableFooterView = nil
+        }
     }
     
-    @IBAction func presentFilterWindow(_ sender: Any) {
+    @IBAction func presentFilter(_ sender: Any) {
         filterController.delegate = self
         present(filterController, animated: true, completion: nil)
     }
@@ -150,7 +145,7 @@ extension TokenViewController: ContainerViewControllerDelegate {
     }
     
     func barRightButtonTappedAction() {
-        let token = self.token!
+        let token = self.token
         let wasHidden = token.isHidden
         let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -175,64 +170,11 @@ extension TokenViewController: ContainerViewControllerDelegate {
     
 }
 
-extension TokenViewController: UITableViewDataSource {
+extension TokenViewController: SnapshotFilterViewController.Delegate {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return snapshotDataSource.titles.count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return snapshotDataSource.snapshots[section].count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-        let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
-        cell.render(snapshot: snapshot, token: token)
-        cell.delegate = self
-        return cell
-    }
-    
-}
-
-extension TokenViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
-        let viewController = SnapshotViewController.instance(token: token, snapshot: snapshot)
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! AssetHeaderView
-        header.label.text = snapshotDataSource.titles[section]
-        return header
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let title = snapshotDataSource.titles[section]
-        return title.isEmpty ? .leastNormalMagnitude : 44
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let distance = snapshotDataSource.distanceToLastItem(of: indexPath) else {
-            return
-        }
-        if distance < loadMoreThreshold {
-            snapshotDataSource.loadMoreIfPossible()
-        }
-    }
-    
-}
-
-extension TokenViewController: AssetFilterViewControllerDelegate {
-    
-    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort) {
+    func snapshotFilterViewController(_ controller: SnapshotFilterViewController, didApplySort sort: Snapshot.Sort) {
         tableView.setContentOffset(.zero, animated: false)
-        tableView.layoutIfNeeded()
-        snapshotDataSource.setSort(sort)
-        updateTableHeaderFooterView()
+        reloadData(with: sort)
     }
     
 }
@@ -240,10 +182,13 @@ extension TokenViewController: AssetFilterViewControllerDelegate {
 extension TokenViewController: SnapshotCellDelegate {
     
     func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else {
+        guard
+            let indexPath = tableView.indexPath(for: cell),
+            let snapshotID = dataSource.itemIdentifier(for: indexPath),
+            let snapshot = items[snapshotID]
+        else {
             return
         }
-        let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
         guard let userId = snapshot.opponentUserID else {
             return
         }
@@ -263,9 +208,7 @@ extension TokenViewController: SnapshotCellDelegate {
 extension TokenViewController {
     
     private func send() {
-        guard let token = self.token else {
-            return
-        }
+        let token = self.token
         let selector = SendingDestinationSelectorViewController(destinations: [.address, .contact]) { destination in
             switch destination {
             case .address:
@@ -292,14 +235,6 @@ extension TokenViewController {
 //        present(authentication, animated: true)
     }
     
-    private func updateTableViewContentInset() {
-        if view.safeAreaInsets.bottom < 1 {
-            tableView.contentInset.bottom = 10
-        } else {
-            tableView.contentInset.bottom = 0
-        }
-    }
-    
     private func reloadToken() {
         let assetId = token.assetID
         DispatchQueue.global().async { [weak self] in
@@ -314,22 +249,8 @@ extension TokenViewController {
                 UIView.performWithoutAnimation {
                     self.tableHeaderView.render(token: token)
                     self.tableHeaderView.sizeToFit()
-                    self.updateTableHeaderFooterView()
                 }
             }
-        }
-    }
-    
-    private func updateTableHeaderFooterView() {
-        if snapshotDataSource.snapshots.isEmpty {
-            tableHeaderView.transactionsHeaderView.isHidden = false
-            noTransactionFooterView.frame.size.height = tableView.frame.height
-                - tableView.contentSize.height
-                - tableView.adjustedContentInset.vertical
-            tableView.tableFooterView = noTransactionFooterView
-        } else {
-            tableHeaderView.transactionsHeaderView.isHidden = false
-            tableView.tableFooterView = nil
         }
     }
     

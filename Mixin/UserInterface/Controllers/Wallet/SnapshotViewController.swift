@@ -369,12 +369,14 @@ extension SnapshotViewController {
     }
     
     private func reloadData(with snapshot: SafeSnapshot) {
-        guard let item = SafeSnapshotDAO.shared.saveAndFetch(snapshot: snapshot) else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.snapshot = item
-            self.reloadData()
+        SafeSnapshotDAO.shared.save(snapshot: snapshot) { item in
+            guard let item else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.snapshot = item
+                self.reloadData()
+            }
         }
     }
     

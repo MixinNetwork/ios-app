@@ -3,6 +3,8 @@ import MixinServices
 
 final class AllTransactionsViewController: SafeSnapshotListViewController {
     
+    private lazy var filterController = SnapshotFilterViewController(sort: .createdAt)
+    
     init() {
         super.init(displayFilter: nil)
     }
@@ -48,12 +50,7 @@ final class AllTransactionsViewController: SafeSnapshotListViewController {
 
 extension AllTransactionsViewController: ContainerViewControllerDelegate {
     
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
-    }
-    
     func barRightButtonTappedAction() {
-        let filterController = AssetFilterViewController.instance()
         filterController.delegate = self
         present(filterController, animated: true, completion: nil)
     }
@@ -64,9 +61,9 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
     
 }
 
-extension AllTransactionsViewController: AssetFilterViewControllerDelegate {
+extension AllTransactionsViewController: SnapshotFilterViewController.Delegate {
     
-    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort) {
+    func snapshotFilterViewController(_ controller: SnapshotFilterViewController, didApplySort sort: Snapshot.Sort) {
         tableView.setContentOffset(.zero, animated: false)
         reloadData(with: sort)
     }

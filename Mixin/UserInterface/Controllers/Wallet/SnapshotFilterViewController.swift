@@ -1,11 +1,11 @@
 import UIKit
 import MixinServices
 
-protocol AssetFilterViewControllerDelegate: AnyObject {
-    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort)
-}
-
-class AssetFilterViewController: UIViewController {
+final class SnapshotFilterViewController: UIViewController {
+    
+    protocol Delegate: AnyObject {
+        func snapshotFilterViewController(_ controller: SnapshotFilterViewController, didApplySort sort: Snapshot.Sort)
+    }
     
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -23,16 +23,17 @@ class AssetFilterViewController: UIViewController {
         }
     }
     
-    weak var delegate: AssetFilterViewControllerDelegate?
+    weak var delegate: Delegate?
     
-    private(set) var sort = Snapshot.Sort.createdAt
-    private(set) var filter = Snapshot.Filter.all
+    private(set) var sort: Snapshot.Sort
+    private(set) var filter: Snapshot.Filter = .all
     
     private lazy var sortDraft = sort
     private lazy var filterDraft = filter
     
     private let cellReuseId = "condition"
     private let headerReuseId = "header"
+    
     private var headers: [String] {
         if showFilters {
             return [R.string.localizable.sort_by(),
@@ -41,6 +42,7 @@ class AssetFilterViewController: UIViewController {
             return [R.string.localizable.sort_by()]
         }
     }
+    
     private var titles: [[String]] {
         let sortTitles = [R.string.localizable.time(), R.string.localizable.amount()]
         let filterTitles = [R.string.localizable.all(),
@@ -57,15 +59,21 @@ class AssetFilterViewController: UIViewController {
         }
     }
     
-    class func instance() -> AssetFilterViewController {
-        let vc = R.storyboard.wallet.asset_filter()!
-        vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
-        vc.modalPresentationStyle = .custom
-        return vc
+    init(sort: Snapshot.Sort) {
+        self.sort = sort
+        let nib = R.nib.snapshotFilterView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.register(R.nib.snapshotFilterConditionCell)
         collectionView.register(AssetFilterHeaderView.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: headerReuseId)
@@ -103,20 +111,20 @@ class AssetFilterViewController: UIViewController {
     @IBAction func applyAction(_ sender: Any) {
         sort = sortDraft
         filter = filterDraft
-        delegate?.assetFilterViewController(self, didApplySort: sort)
+        delegate?.snapshotFilterViewController(self, didApplySort: sort)
         dismiss(animated: true, completion: nil)
     }
     
 }
 
-extension AssetFilterViewController: UICollectionViewDataSource {
+extension SnapshotFilterViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return titles[section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AssetFilterConditionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.snapshot_filter_condition, for: indexPath)!
         cell.titleLabel.text = titles[indexPath.section][indexPath.row]
         return cell
     }
@@ -133,7 +141,7 @@ extension AssetFilterViewController: UICollectionViewDataSource {
     
 }
 
-extension AssetFilterViewController: UICollectionViewDelegate {
+extension SnapshotFilterViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
@@ -157,7 +165,7 @@ extension AssetFilterViewController: UICollectionViewDelegate {
     
 }
 
-extension AssetFilterViewController: UICollectionViewDelegateFlowLayout {
+extension SnapshotFilterViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         if section == 0 {
@@ -169,7 +177,7 @@ extension AssetFilterViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
-extension AssetFilterViewController {
+extension SnapshotFilterViewController {
     
     private func reloadSelection() {
         for indexPath in collectionView.indexPathsForSelectedItems ?? [] {

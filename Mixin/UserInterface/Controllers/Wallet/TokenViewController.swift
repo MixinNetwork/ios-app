@@ -10,6 +10,7 @@ final class TokenViewController: SafeSnapshotListViewController {
     
     private var performSendOnAppear: Bool
     
+    private lazy var filterController = SnapshotFilterViewController(sort: .createdAt)
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
     
     init(token: TokenItem, performSendOnAppear: Bool) {
@@ -77,7 +78,6 @@ final class TokenViewController: SafeSnapshotListViewController {
     }
     
     @IBAction func presentFilter(_ sender: Any) {
-        let filterController = AssetFilterViewController.instance()
         filterController.delegate = self
         present(filterController, animated: true, completion: nil)
     }
@@ -170,9 +170,9 @@ extension TokenViewController: ContainerViewControllerDelegate {
     
 }
 
-extension TokenViewController: AssetFilterViewControllerDelegate {
+extension TokenViewController: SnapshotFilterViewController.Delegate {
     
-    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort) {
+    func snapshotFilterViewController(_ controller: SnapshotFilterViewController, didApplySort sort: Snapshot.Sort) {
         tableView.setContentOffset(.zero, animated: false)
         reloadData(with: sort)
     }

@@ -5,9 +5,9 @@ import MixinServices
 // TODO: Move this extension back to TIP.swift after dependencies are managed with SPM
 extension TIP {
     
-    static func ethereumPrivateKey(pin: String) async throws -> Data {
-        let priv = try await getOrRecoverTIPPriv(pin: pin)
-        let derived = try ExtendedKey(seed: priv)
+    static func web3WalletPrivateKey(pin: String) async throws -> Data {
+        let spendKey = try await TIP.spendPriv(pin: pin)
+        let derived = try ExtendedKey(seed: spendKey)
             .privateKey(index: .hardened(44))
             .privateKey(index: .hardened(60))
             .privateKey(index: .hardened(0))

@@ -36,7 +36,7 @@ extension RevealTIPWalletAddressViewController: AuthenticationIntent {
     ) {
         Task {
             do {
-                let priv = try await TIP.ethereumPrivateKey(pin: pin)
+                let priv = try await TIP.web3WalletPrivateKey(pin: pin)
                 await MainActor.run {
                     completion(.success)
                     self.dismiss(animated: true) {

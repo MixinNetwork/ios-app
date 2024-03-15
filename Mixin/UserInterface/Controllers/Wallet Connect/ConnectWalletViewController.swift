@@ -120,7 +120,7 @@ extension ConnectWalletViewController: AuthenticationIntent {
     ) {
         Task {
             do {
-                let priv = try await TIP.ethereumPrivateKey(pin: pin)
+                let priv = try await TIP.web3WalletPrivateKey(pin: pin)
                 await MainActor.run {
                     self.onApprove?(priv)
                     completion(.success)

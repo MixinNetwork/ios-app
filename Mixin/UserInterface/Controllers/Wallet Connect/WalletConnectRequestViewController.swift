@@ -118,7 +118,7 @@ extension WalletConnectRequestViewController: AuthenticationIntent {
     ) {
         Task {
             do {
-                let priv = try await TIP.ethereumPrivateKey(pin: pin)
+                let priv = try await TIP.web3WalletPrivateKey(pin: pin)
                 try await onApprove?(priv)
                 await MainActor.run {
                     self.isApproved = true

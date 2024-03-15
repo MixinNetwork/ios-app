@@ -1,6 +1,6 @@
 import UIKit
 
-final class PaymentPreviewDoubleButtonTrayView: UIView {
+final class AuthenticationPreviewDoubleButtonTrayView: UIView {
     
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var rightButton: UIButton!

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class EditAddressPreviewViewController: PaymentPreviewViewController {
+final class EditAddressPreviewViewController: AuthenticationPreviewViewController {
     
     enum Action {
         case add
@@ -36,7 +36,7 @@ final class EditAddressPreviewViewController: PaymentPreviewViewController {
         self.destination = destination
         self.tag = tag
         self.action = action
-        super.init(issues: [])
+        super.init(warnings: [])
     }
     
     required init?(coder: NSCoder) {

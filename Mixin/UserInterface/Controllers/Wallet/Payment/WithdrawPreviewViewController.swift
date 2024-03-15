@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class WithdrawPreviewViewController: PaymentPreviewViewController {
+final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     
@@ -24,7 +24,7 @@ final class WithdrawPreviewViewController: PaymentPreviewViewController {
         self.withdrawalTokenAmount = withdrawalTokenAmount
         self.withdrawalFiatMoneyAmount = withdrawalFiatMoneyAmount
         self.addressLabel = addressLabel
-        super.init(issues: issues)
+        super.init(warnings: issues.map(\.description))
     }
     
     required init?(coder: NSCoder) {

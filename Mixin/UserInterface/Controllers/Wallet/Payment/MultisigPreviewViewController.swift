@@ -2,7 +2,7 @@ import UIKit
 import MixinServices
 import Tip
 
-final class MultisigPreviewViewController: PaymentPreviewViewController {
+final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     
     enum State {
         case paid
@@ -63,7 +63,7 @@ final class MultisigPreviewViewController: PaymentPreviewViewController {
         self.action = action
         self.index = index
         self.state = state
-        super.init(issues: [])
+        super.init(warnings: [])
     }
     
     required init?(coder: NSCoder) {

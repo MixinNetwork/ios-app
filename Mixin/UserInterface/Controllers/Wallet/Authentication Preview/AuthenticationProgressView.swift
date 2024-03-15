@@ -1,6 +1,6 @@
 import UIKit
 
-final class PaymentProgressView: UIView {
+final class AuthenticationProgressView: UIView {
     
     enum Progress {
         case busy

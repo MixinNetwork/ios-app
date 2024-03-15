@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class PaymentPreviewHeaderView: UIView {
+final class AuthenticationPreviewHeaderView: UIView {
     
     @IBOutlet weak var iconWrapperView: UIView!
     @IBOutlet weak var stackView: UIStackView!
@@ -9,7 +9,7 @@ final class PaymentPreviewHeaderView: UIView {
     @IBOutlet weak var subtitleLabel: UILabel!
     
     private var assetIconView: AssetIconView?
-    private var progressView: PaymentProgressView?
+    private var progressView: AuthenticationProgressView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,13 +35,13 @@ final class PaymentPreviewHeaderView: UIView {
         iconView.setIcon(token: token)
     }
     
-    func setIcon(progress: PaymentProgressView.Progress) {
+    func setIcon(progress: AuthenticationProgressView.Progress) {
         assetIconView?.removeFromSuperview()
-        let progressView: PaymentProgressView
+        let progressView: AuthenticationProgressView
         if let view = self.progressView {
             progressView = view
         } else {
-            progressView = PaymentProgressView()
+            progressView = AuthenticationProgressView()
             iconWrapperView.addSubview(progressView)
             progressView.snp.makeEdgesEqualToSuperview()
             self.progressView = progressView

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TransferPreviewViewController: PaymentPreviewViewController {
+final class TransferPreviewViewController: AuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     
@@ -24,7 +24,7 @@ final class TransferPreviewViewController: PaymentPreviewViewController {
         self.tokenAmount = tokenAmount
         self.fiatMoneyAmount = fiatMoneyAmount
         self.redirection = redirection
-        super.init(issues: issues)
+        super.init(warnings: issues.map(\.description))
     }
     
     required init?(coder: NSCoder) {

@@ -1,6 +1,6 @@
 import UIKit
 
-final class PaymentPreviewSingleButtonTrayView: UIView {
+final class AuthenticationPreviewSingleButtonTrayView: UIView {
     
     let button = UIButton(type: .system)
     

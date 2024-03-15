@@ -685,6 +685,8 @@
 		940764C729B26EF300B779A6 /* AuthenticationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C629B26EF300B779A6 /* AuthenticationIntent.swift */; };
 		94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94095BB625BE8BC100F44832 /* TextPreviewView.xib */; };
 		94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */; };
+		940AE02C2BA0D88100E7A9FE /* ExploreSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940AE02A2BA0D88100E7A9FE /* ExploreSegmentCell.swift */; };
+		940AE02D2BA0D88100E7A9FE /* ExploreSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940AE02B2BA0D88100E7A9FE /* ExploreSegmentCell.xib */; };
 		940B30492A16050D00B45D26 /* NetworkSpeedInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */; };
 		940B304B2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */; };
 		940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */; };
@@ -1895,6 +1897,8 @@
 		940764C629B26EF300B779A6 /* AuthenticationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationIntent.swift; sourceTree = "<group>"; };
 		94095BB625BE8BC100F44832 /* TextPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextPreviewView.xib; sourceTree = "<group>"; };
 		94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewView.swift; sourceTree = "<group>"; };
+		940AE02A2BA0D88100E7A9FE /* ExploreSegmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSegmentCell.swift; sourceTree = "<group>"; };
+		940AE02B2BA0D88100E7A9FE /* ExploreSegmentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreSegmentCell.xib; sourceTree = "<group>"; };
 		940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSpeedInspector.swift; sourceTree = "<group>"; };
 		940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServerDataSource.swift; sourceTree = "<group>"; };
 		940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinAuthorizationsContentViewController.swift; sourceTree = "<group>"; };
@@ -4223,6 +4227,8 @@
 				7B2C8B302524D6C100347AC3 /* ClipThumbnailCell.swift */,
 				9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */,
 				943B5EAA2B600D77001C1F6E /* AppCell.swift */,
+				940AE02B2BA0D88100E7A9FE /* ExploreSegmentCell.xib */,
+				940AE02A2BA0D88100E7A9FE /* ExploreSegmentCell.swift */,
 				94ED08B52B5FB1C300493312 /* ExploreActionCell.xib */,
 				94ED08B42B5FB1C300493312 /* ExploreActionCell.swift */,
 			);
@@ -4701,6 +4707,7 @@
 				7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
+				940AE02D2BA0D88100E7A9FE /* ExploreSegmentCell.xib in Resources */,
 				7B9A18162428932A00187693 /* PageControlView.xib in Resources */,
 				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
 				7C2DEFF32824FF0600758208 /* ic_time_animation@3x.gif in Resources */,
@@ -5153,6 +5160,7 @@
 				7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */,
 				DF06D91F222FAE1400FE7FBC /* LegacyTransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
+				940AE02C2BA0D88100E7A9FE /* ExploreSegmentCell.swift in Sources */,
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,

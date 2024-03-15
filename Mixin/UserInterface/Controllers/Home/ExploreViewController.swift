@@ -3,26 +3,33 @@ import MixinServices
 
 final class ExploreViewController: UIViewController {
     
-    @IBOutlet weak var segmentStackView: UIStackView!
+    @IBOutlet weak var segmentsCollectionView: UICollectionView!
     @IBOutlet weak var contentContainerView: UIView!
     
     private let favoriteViewController = ExploreFavoriteViewController()
     private let allAppsViewController = ExploreAllAppsViewController()
     private let hiddenSearchTopMargin: CGFloat = -28
     
-    private var favoriteSegmentButton: UIButton!
-    private var botsSegmentButton: UIButton!
-    
     private weak var searchViewController: ExploreSearchViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        favoriteSegmentButton = addSegment(title: R.string.localizable.favorite(), action: #selector(switchToFavorite(_:)))
-        botsSegmentButton = addSegment(title: R.string.localizable.bots_title(), action: #selector(switchToAll(_:)))
         addContentViewController(allAppsViewController)
         addContentViewController(favoriteViewController)
-        switchToFavorite(self)
+        segmentsCollectionView.register(R.nib.exploreSegmentCell)
+        if let layout = segmentsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .horizontal
+            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+            layout.minimumInteritemSpacing = 0
+        }
+        segmentsCollectionView.contentInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        segmentsCollectionView.dataSource = self
+        segmentsCollectionView.delegate = self
+        segmentsCollectionView.reloadData()
+        let firstIndexPath = IndexPath(item: 0, section: 0)
+        segmentsCollectionView.selectItem(at: firstIndexPath, animated: false, scrollPosition: .left)
+        collectionView(segmentsCollectionView, didSelectItemAt: firstIndexPath)
     }
     
     @IBAction func searchApps(_ sender: Any) {
@@ -113,41 +120,54 @@ final class ExploreViewController: UIViewController {
     
 }
 
+extension ExploreViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        Segment.allCases.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+        cell.label.text = Segment.allCases[indexPath.item].name
+        return cell
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
+    
+}
+
+extension ExploreViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let segment = Segment(rawValue: indexPath.item)!
+        switch segment {
+        case .favorite:
+            contentContainerView.bringSubviewToFront(favoriteViewController.view)
+        case .bots:
+            contentContainerView.bringSubviewToFront(allAppsViewController.view)
+        }
+    }
+    
+}
+
 extension ExploreViewController {
     
-    @objc private func switchToFavorite(_ sender: Any) {
-        setSegmentButton(favoriteSegmentButton, isSelected: true)
-        setSegmentButton(botsSegmentButton, isSelected: false)
-        contentContainerView.bringSubviewToFront(favoriteViewController.view)
-    }
-    
-    @objc private func switchToAll(_ sender: Any) {
-        setSegmentButton(favoriteSegmentButton, isSelected: false)
-        setSegmentButton(botsSegmentButton, isSelected: true)
-        contentContainerView.bringSubviewToFront(allAppsViewController.view)
-    }
-    
-    private func addSegment(title: String, action: Selector) -> UIButton {
-        let button = UIButton()
-        button.setTitle(title, for: .normal)
-        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 19
-        button.layer.masksToBounds = true
-        segmentStackView.addArrangedSubview(button)
-        button.addTarget(self, action: action, for: .touchUpInside)
-        return button
-    }
-    
-    private func setSegmentButton(_ button: UIButton, isSelected: Bool) {
-        if isSelected {
-            button.layer.borderColor = R.color.theme()!.cgColor
-            button.setTitleColor(R.color.theme(), for: .normal)
-        } else {
-            button.layer.borderColor = R.color.line()!.cgColor
-            button.setTitleColor(R.color.text(), for: .normal)
+    private enum Segment: Int, CaseIterable {
+        
+        case favorite
+        case bots
+        
+        var name: String {
+            switch self {
+            case .favorite:
+                R.string.localizable.favorite()
+            case .bots:
+                R.string.localizable.bots_title()
+            }
         }
+        
     }
     
     private func addContentViewController(_ child: UIViewController) {

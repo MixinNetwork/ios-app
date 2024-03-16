@@ -15,14 +15,7 @@ final class WalletConnectService {
     
     static let shared = WalletConnectService()
     
-    static var isAccountAllowed: Bool {
-        LoginManager.shared.account?.features.contains("tip") ?? false
-    }
-    
     static var isAvailable: Bool {
-        guard isAccountAllowed else {
-            return false
-        }
         switch TIP.status {
         case .ready:
             return true

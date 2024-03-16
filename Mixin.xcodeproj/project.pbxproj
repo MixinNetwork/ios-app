@@ -6562,7 +6562,7 @@
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.0.5;
+				version = 1.1.0;
 			};
 		};
 		9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */ = {
@@ -6578,7 +6578,7 @@
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.8.0;
+				version = 1.8.1;
 			};
 		};
 		94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */ = {
@@ -6602,7 +6602,7 @@
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 7.4.0;
+				version = 7.5.0;
 			};
 		};
 		94C958D92ACFEF5F00C1412F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -6610,7 +6610,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = exactVersion;
-				version = 10.19.0;
+				version = 10.22.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -60,7 +60,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
             let user = UserItem.createUser(from: account)
             rows.append(.senders([user], threshold: nil))
         }
-        rows.append(.amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
+        rows.append(.amount(caption: .fee(speed: nil), token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         if operation.isFeeTokenDifferent {
             let totalTokenValue = "\(withdrawalTokenValue) + \(feeTokenValue)"
             rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))

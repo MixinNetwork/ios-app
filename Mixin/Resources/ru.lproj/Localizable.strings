@@ -267,6 +267,7 @@
 "continue" = "Продолжить";
 "continue_need_verify_your_pin" = "Continue need to verify your old PIN and new PIN";
 "continue_open_url" = "Продолжить Открыть URL";
+"continue_with_pin" = "Continue with PIN";
 "conversation" = "Беседа";
 "conversation_has_too_many_circles" = "В беседе слишком много кругов";
 "conversation_not_found" = "Разговор не найден.";

@@ -65,7 +65,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             rows.append(.senders([user], threshold: senderThreshold))
         }
         rows.append(contentsOf: [
-            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
+            .amount(caption: .fee(speed: nil), token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
             .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
             .info(caption: .network, content: token.depositNetworkName ?? ""),
         ])

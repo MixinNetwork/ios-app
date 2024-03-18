@@ -370,62 +370,16 @@ extension MixinWebViewController: WKScriptMessageHandler {
             if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 2 {
                 let chainId = body[0]
                 let callback = body[1]
-                let info: ConnectWalletViewController.Info
-                switch context.style {
-                case let .app(app, _):
-                    info = .bot(app)
-                case .webPage:
-                    info = .page(webView.url?.host ?? "")
-                }
-                let connectWallet = ConnectWalletViewController(info: info)
-                connectWallet.onApprove = { priv in
-                    let address: String
-                    do {
-                        let storage = InPlaceKeyStorage(raw: priv)
-                        let account = try EthereumAccount(keyStorage: storage)
-                        address = account.address.toChecksumAddress()
-                    } catch {
-                        address = ""
-                        Logger.tip.error(category: "WalletConnectService", message: "Failed to obtain address: \(error)")
-                    }
-                    let script = "\(callback)('\(address)');"
-                    self.webView.evaluateJavaScript(script)
-                }
-                connectWallet.onReject = {
-                    self.webView.evaluateJavaScript(callback + "('');")
-                }
-                let authentication = AuthenticationViewController(intent: connectWallet)
-                WalletConnectService.shared.presentRequest(viewController: authentication)
+                let address = "" // Empty address as rejection
+                webView.evaluateJavaScript("\(callback)('\(address)');")
             }
         case .tipSign:
             if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 3 {
                 let chainId = body[0]
                 let message = body[1]
                 let callback = body[2]
-                let requester: SignRequestViewController.Requester
-                switch context.style {
-                case let .app(app, _):
-                    requester = .app(app)
-                case .webPage:
-                    requester = .page(webView.url?.host ?? "")
-                }
-                let signRequest = SignRequestViewController(requester: requester, message: message)
-                signRequest.onReject = {
-                    self.webView.evaluateJavaScript("\(callback)('');")
-                }
-                signRequest.onApprove = { priv in
-                    let signature: String
-                    do {
-                        let storage = InPlaceKeyStorage(raw: priv)
-                        let account = try EthereumAccount(keyStorage: storage)
-                        signature = try account.sign(message: message).hexEncodedString()
-                    } catch {
-                        signature = ""
-                    }
-                    self.webView.evaluateJavaScript("\(callback)('\(signature)');")
-                }
-                let authentication = AuthenticationViewController(intent: signRequest)
-                WalletConnectService.shared.presentRequest(viewController: authentication)
+                let signature = "" // Empty signature as rejection
+                webView.evaluateJavaScript("\(callback)('\(signature)');")
             }
         case .getAssets:
             if let body = message.body as? [Any],

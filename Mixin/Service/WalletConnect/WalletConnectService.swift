@@ -99,7 +99,7 @@ final class WalletConnectService {
     }
     
     func presentRequest(viewController: UIViewController) {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let container = UIApplication.homeContainerViewController?.homeTabBarController else {
             return
         }
         guard presentedViewController == nil else {
@@ -112,7 +112,7 @@ final class WalletConnectService {
     }
     
     func presentRejection(title: String, message: String) {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let container = UIApplication.homeContainerViewController?.homeTabBarController else {
             return
         }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -200,16 +200,16 @@ extension WalletConnectService {
         
     }
     
-    static let supportedChains: OrderedDictionary<Int, Chain> = {
-        var chains: OrderedDictionary<Int, Chain> = [
-            Chain.ethereum.id:      .ethereum,
-            Chain.bnbSmartChain.id: .bnbSmartChain,
-            Chain.polygon.id:       .polygon,
-            Chain.arbitrum.id:      .arbitrum,
-            Chain.optimism.id:      .optimism,
+    static let supportedChains: OrderedDictionary<Blockchain, Chain> = {
+        var chains: OrderedDictionary<Blockchain, Chain> = [
+            Chain.ethereum.caip2:      .ethereum,
+            Chain.bnbSmartChain.caip2: .bnbSmartChain,
+            Chain.polygon.caip2:       .polygon,
+            Chain.arbitrum.caip2:      .arbitrum,
+            Chain.optimism.caip2:      .optimism,
         ]
 #if DEBUG
-        chains.updateValue(.goerli, forKey: Chain.goerli.id, insertingAt: 1)
+        chains.updateValue(.goerli, forKey: Chain.goerli.caip2, insertingAt: 1)
 #endif
         return chains
     }()
@@ -224,12 +224,6 @@ extension WalletConnectService {
     @MainActor
     private func show(proposal: WalletConnectSign.Session.Proposal) {
         connectionHud?.hide()
-        guard let container = UIApplication.homeContainerViewController else {
-            Task {
-                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
-            }
-            return
-        }
         logger.info(category: "WalletConnectService", message: "Showing: \(proposal))")
         
         var chains = Self.supportedChains.values.map(\.caip2)
@@ -278,47 +272,8 @@ extension WalletConnectService {
             return
         }
         
-        let connectWallet = ConnectWalletViewController(info: .walletConnect(proposal))
-        connectWallet.onApprove = { priv in
-            Task {
-                let approvalError: Swift.Error?
-                do {
-                    let keyStorage = InPlaceKeyStorage(raw: priv)
-                    let ethAddress = try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
-                    let accounts = chains.compactMap { chain in
-                        WalletConnectUtils.Account(blockchain: chain, address: ethAddress)
-                    }
-                    let sessionNamespaces = try AutoNamespaces.build(sessionProposal: proposal,
-                                                                     chains: chains,
-                                                                     methods: WalletConnectSession.Method.allCases.map(\.rawValue),
-                                                                     events: Array(events),
-                                                                     accounts: accounts)
-                    try await Web3Wallet.instance.approve(proposalId: proposal.id, namespaces: sessionNamespaces)
-                    approvalError = nil
-                } catch {
-                    logger.warn(category: "WalletConnectService", message: "Failed to approve: \(error)")
-                    approvalError = error
-                    try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
-                }
-                await MainActor.run {
-                    if let error = approvalError {
-                        self.presentRejection(title: "Connection Failed", message: error.localizedDescription)
-                    } else {
-                        let hud = self.loadHud()
-                        hud.show(style: .notification, text: R.string.localizable.connected(), on: container.view)
-                        hud.scheduleAutoHidden()
-                    }
-                }
-            }
-        }
-        connectWallet.onReject = {
-            Task {
-                logger.debug(category: "WalletConnectService", message: "Will reject proposal: \(proposal.id)")
-                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
-            }
-        }
-        let authentication = AuthenticationViewController(intent: connectWallet)
-        presentRequest(viewController: authentication)
+        let connectWallet = ConnectWalletViewController(proposal: proposal, chains: chains, events: Array(events))
+        presentRequest(viewController: connectWallet)
     }
     
     private func handle(request: WalletConnectSign.Request) {

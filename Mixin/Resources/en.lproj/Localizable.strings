@@ -267,6 +267,7 @@
 "continue" = "Continue";
 "continue_need_verify_your_pin" = "Continue need to verify your old PIN and new PIN";
 "continue_open_url" = "Continue Open URL";
+"continue_with_pin" = "Continue with PIN";
 "conversation" = "Conversation";
 "conversation_has_too_many_circles" = "The conversation has too many circles";
 "conversation_not_found" = "Conversation not found.";

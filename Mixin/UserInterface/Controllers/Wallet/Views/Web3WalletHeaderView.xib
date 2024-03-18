@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="Web3WalletHeaderView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="134"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="106" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="FU9-iJ-USd">
+                    <rect key="frame" x="252" y="24" width="106" height="100"/>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ehP-7X-dWj">
+                    <rect key="frame" x="40" y="30" width="313" height="104"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEy-s1-g0J">
+                            <rect key="frame" x="0.0" y="0.0" width="313" height="50"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G9S-fD-GbL">
+                            <rect key="frame" x="0.0" y="54" width="313" height="50"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x4d-dE-d0e">
+                    <rect key="frame" x="26" y="75" width="26" height="43"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                    <inset key="contentEdgeInsets" minX="13" minY="13" maxX="13" maxY="13"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <connections>
+                        <action selector="requestAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="klZ-eE-DSW"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="x4d-dE-d0e" secondAttribute="trailing" priority="999" constant="26" id="067-5m-aGx"/>
+                <constraint firstAttribute="bottom" secondItem="FU9-iJ-USd" secondAttribute="bottom" constant="10" id="3hQ-OE-Kst"/>
+                <constraint firstAttribute="trailing" secondItem="FU9-iJ-USd" secondAttribute="trailing" constant="35" id="Apu-Nw-D3R"/>
+                <constraint firstItem="x4d-dE-d0e" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="26" id="HVP-TM-oDp"/>
+                <constraint firstAttribute="bottom" secondItem="x4d-dE-d0e" secondAttribute="bottom" constant="16" id="LWU-gU-IOe"/>
+                <constraint firstAttribute="trailing" secondItem="ehP-7X-dWj" secondAttribute="trailing" priority="999" constant="40" id="ios-5s-bvk"/>
+                <constraint firstItem="ehP-7X-dWj" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="mxq-yI-Q0s"/>
+                <constraint firstItem="ehP-7X-dWj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="30" id="wWF-Y2-iui"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="bottomLabel" destination="G9S-fD-GbL" id="NzU-ia-Tf3"/>
+                <outlet property="button" destination="x4d-dE-d0e" id="Wec-BP-r0s"/>
+                <outlet property="iconImageView" destination="FU9-iJ-USd" id="f3l-Wb-ymU"/>
+                <outlet property="topLabel" destination="zEy-s1-g0J" id="jOz-bn-aIM"/>
+            </connections>
+            <point key="canvasLocation" x="136.64122137404578" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

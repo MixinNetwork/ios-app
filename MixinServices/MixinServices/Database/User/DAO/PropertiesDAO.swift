@@ -3,9 +3,12 @@ import GRDB
 
 public final class PropertiesDAO: UserDatabaseDAO {
     
+    public static let propertyDidUpdateNotification = Notification.Name("one.mixin.services.PropertiesDAO.Update")
+    
     public enum Key: String {
         case iterator
         case snapshotOffset = "snapshot_offset"
+        case evmAccount     = "evm_account"
     }
     
     public static let shared = PropertiesDAO()
@@ -27,6 +30,13 @@ public final class PropertiesDAO: UserDatabaseDAO {
                                 value: value.description,
                                 updatedAt: Date().toUTCString())
         try property.save(db)
+        try db.afterNextTransaction { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.propertyDidUpdateNotification,
+                                                object: self,
+                                                userInfo: [key: value])
+            }
+        }
     }
     
     public func removeValue(forKey key: Key) {
@@ -66,6 +76,13 @@ extension PropertiesDAO {
         try Property
             .filter(Property.column(of: .key) == key.rawValue)
             .deleteAll(db)
+        try db.afterNextTransaction { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.propertyDidUpdateNotification,
+                                                object: self,
+                                                userInfo: [key: NSNull()])
+            }
+        }
     }
     
 }

@@ -39,7 +39,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7zJ-Iz-fPf">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7zJ-Iz-fPf" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="148" y="0.0" width="128" height="42"/>
                             <color key="backgroundColor" name="theme"/>
                             <constraints>

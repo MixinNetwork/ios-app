@@ -267,6 +267,7 @@
 "continue" = "繼續";
 "continue_need_verify_your_pin" = "繼續需要驗證你的舊 PIN 以及新 PIN";
 "continue_open_url" = "繼續訪問";
+"continue_with_pin" = "輸入 PIN 繼續";
 "conversation" = "會話";
 "conversation_has_too_many_circles" = "已達圈子數上限";
 "conversation_not_found" = "找不到該會話";

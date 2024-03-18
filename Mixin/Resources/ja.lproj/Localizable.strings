@@ -267,6 +267,7 @@
 "continue" = "続ける";
 "continue_need_verify_your_pin" = "Continue need to verify your old PIN and new PIN";
 "continue_open_url" = "URLを開く";
+"continue_with_pin" = "Continue with PIN";
 "conversation" = "チャットルーム";
 "conversation_has_too_many_circles" = "グループリスト数を減らしてください";
 "conversation_not_found" = "チャットルームが見つかりません";

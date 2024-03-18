@@ -13,6 +13,7 @@ class ConversationDataSource {
     }
     
     static let newMessageOutOfVisibleBoundsNotification = Notification.Name("one.mixin.messenger.ConversationDataSource.MessageOutOfBounds")
+    static let didSendFirstMessageNotification = Notification.Name("one.mixin.messenger.ConversationDataSource.DidSendMessage")
     
     let queue = DispatchQueue(label: "one.mixin.ios.conversation.datasource")
     
@@ -47,6 +48,7 @@ class ConversationDataSource {
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
     private var pendingPinningUpdateMessageId: String?
+    private var didPostSendFirstMessageNotification = false
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
@@ -572,6 +574,18 @@ extension ConversationDataSource {
                     return
                 }
                 self.addMessageAndDisplay(message: message)
+            }
+        }
+        if messageIsSentByMe,
+           let source = notification.userInfo?[MessageDAO.UserInfoKey.messsageSource] as? String,
+           source == MessageDAO.LocalMessageSource.sendMessage
+        {
+            Queue.main.autoAsync {
+                guard !self.didPostSendFirstMessageNotification else {
+                    return
+                }
+                NotificationCenter.default.post(name: Self.didSendFirstMessageNotification, object: self, userInfo: nil)
+                self.didPostSendFirstMessageNotification = true
             }
         }
     }

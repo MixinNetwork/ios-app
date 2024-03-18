@@ -54,7 +54,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
         queue.maxConcurrentOperationCount = 1
         navigationItem.title = " "
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
-        cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.hideSearch), for: .touchUpInside)
+        cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.cancelSearching(_:)), for: .touchUpInside)
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
         switch category {
@@ -214,7 +214,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
         switch category {
         case .asset:
             let asset = (model as! AssetSearchResult).asset
-            pushAssetViewController(asset: asset)
+            pushTokenViewController(token: asset)
         case .user, .conversationsByName, .conversationsByMessage:
             pushViewController(keyword: trimmedLowercaseKeyword, result: model as! SearchResult)
         }

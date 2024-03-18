@@ -65,7 +65,7 @@ final class Web3WalletViewController: UIViewController {
             let address: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
             DispatchQueue.main.async {
                 if let address {
-                    self.tableHeaderView.showBalance(address: address, chain: chain)
+                    self.tableHeaderView.showCopyAddress(chain: chain)
                 } else {
                     self.tableHeaderView.showCreateAccount(chain: chain)
                 }
@@ -78,7 +78,7 @@ final class Web3WalletViewController: UIViewController {
             return
         }
         if let account = account as? String {
-            tableHeaderView.showBalance(address: account, chain: chain)
+            tableHeaderView.showCopyAddress(chain: chain)
         }
     }
     
@@ -92,8 +92,12 @@ extension Web3WalletViewController: Web3WalletHeaderView.Delegate {
         present(createAccount, animated: true)
     }
     
-    func web3WalletHeaderViewRequestToViewAccount(_ view: Web3WalletHeaderView) {
-        
+    func web3WalletHeaderViewRequestToCopyAddress(_ view: Web3WalletHeaderView) {
+        guard let address: String = PropertiesDAO.shared.value(forKey: .evmAccount) else {
+            return
+        }
+        UIPasteboard.general.string = address
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
 }

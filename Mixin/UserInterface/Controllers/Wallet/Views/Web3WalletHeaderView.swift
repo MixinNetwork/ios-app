@@ -4,12 +4,12 @@ final class Web3WalletHeaderView: UIView {
     
     protocol Delegate: AnyObject {
         func web3WalletHeaderViewRequestToCreateAccount(_ view: Web3WalletHeaderView)
-        func web3WalletHeaderViewRequestToViewAccount(_ view: Web3WalletHeaderView)
+        func web3WalletHeaderViewRequestToCopyAddress(_ view: Web3WalletHeaderView)
     }
     
     private enum Action {
         case createAccount
-        case viewAccount
+        case copyAddress
     }
     
     @IBOutlet weak var iconImageView: UIImageView!
@@ -52,8 +52,8 @@ final class Web3WalletHeaderView: UIView {
         switch action {
         case .createAccount:
             delegate?.web3WalletHeaderViewRequestToCreateAccount(self)
-        case .viewAccount:
-            delegate?.web3WalletHeaderViewRequestToViewAccount(self)
+        case .copyAddress:
+            delegate?.web3WalletHeaderViewRequestToCopyAddress(self)
         case nil:
             break
         }
@@ -74,23 +74,19 @@ final class Web3WalletHeaderView: UIView {
         action = .createAccount
     }
     
-    func showBalance(address: String, chain: WalletConnectService.Chain) {
+    func showCopyAddress(chain: WalletConnectService.Chain) {
         iconImageView.image = icon(of: chain)
         
-        topLabel.font = .systemFont(ofSize: 14)
-        topLabel.textColor = R.color.text_tertiary()
-        if address.count > addressPrefixCount + addressSuffixCount {
-            topLabel.text = address.prefix(addressPrefixCount) + "…" + address.suffix(addressSuffixCount)
-        } else {
-            topLabel.text = address
-        }
+        topLabel.font = .systemFont(ofSize: 18, weight: .medium)
+        topLabel.textColor = R.color.text()
+        topLabel.text = chain.name + " Account"
         
-        bottomLabel.font = .systemFont(ofSize: 24, weight: .medium)
-        bottomLabel.textColor = R.color.text()
-        bottomLabel.text = "Ethereum Account"
+        bottomLabel.font = .systemFont(ofSize: 14)
+        bottomLabel.textColor = R.color.text_tertiary()
+        bottomLabel.text = "Access dapps and DeFi projects."
         
-        button.setTitle("View", for: .normal)
-        action = .viewAccount
+        button.setTitle("Copy Address", for: .normal)
+        action = .copyAddress
     }
     
     private func updateBackgroundColors(with traitCollection: UITraitCollection) {

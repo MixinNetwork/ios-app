@@ -38,13 +38,13 @@
                                 <rect key="frame" x="0.0" y="22.999999999999996" width="264" height="38.666666666666657"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="-0.1342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KMB-bF-7qq">
-                                        <rect key="frame" x="0.0" y="3.6666666666666643" width="103.66666666666667" height="35"/>
+                                        <rect key="frame" x="0.0" y="8.6666666666666643" width="74.333333333333329" height="30"/>
                                         <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="30"/>
                                         <color key="textColor" name="red"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="ETH" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OhT-iD-mpn">
-                                        <rect key="frame" x="107.66666666666666" y="24.333333333333336" width="120.33333333333334" height="14.333333333333336"/>
+                                        <rect key="frame" x="78.333333333333329" y="24.333333333333336" width="149.66666666666669" height="14.333333333333336"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
@@ -69,13 +69,6 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <connections>
-                            <outlet property="assetIconView" destination="DEC-tR-7B4" id="DLP-by-AP0"/>
-                            <outlet property="fiatMoneyValueLabel" destination="LSH-Gm-qJD" id="r65-d7-0n4"/>
-                            <outlet property="symbolLabel" destination="OhT-iD-mpn" id="1eh-hO-DHC"/>
-                            <outlet property="titleLabel" destination="McQ-Ck-XUi" id="H6i-8F-DY8"/>
-                            <outlet property="valueLabel" destination="KMB-bF-7qq" id="i1a-xo-jZe"/>
-                        </connections>
                     </stackView>
                 </subviews>
                 <constraints>

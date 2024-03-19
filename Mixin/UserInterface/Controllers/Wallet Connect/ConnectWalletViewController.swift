@@ -5,10 +5,6 @@ import MixinServices
 
 final class ConnectWalletViewController: AuthenticationPreviewViewController {
     
-    override var authenticationTitle: String {
-        R.string.localizable.continue_with_pin()
-    }
-    
     private let proposal: WalletConnectSign.Session.Proposal
     private let chains: [Blockchain]
     private let events: [String]

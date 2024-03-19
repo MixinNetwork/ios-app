@@ -778,7 +778,6 @@
 		9459693928B28FF8006F5421 /* TIPActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693728B28FF8006F5421 /* TIPActionViewController.swift */; };
 		9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9459693828B28FF8006F5421 /* TIPActionView.xib */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
-		945E85A329BF9BBF000FDA54 /* RevealTIPWalletAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E85A229BF9BBF000FDA54 /* RevealTIPWalletAddressViewController.swift */; };
 		945E865029C078BB000FDA54 /* ExtendedKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E864F29C078BB000FDA54 /* ExtendedKey.swift */; };
 		945E865229C078E7000FDA54 /* RIPEMD160.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E865129C078E7000FDA54 /* RIPEMD160.swift */; };
 		945E871B29C1929D000FDA54 /* P2PKH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E871A29C1929D000FDA54 /* P2PKH.swift */; };
@@ -1988,7 +1987,6 @@
 		9459693728B28FF8006F5421 /* TIPActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPActionViewController.swift; sourceTree = "<group>"; };
 		9459693828B28FF8006F5421 /* TIPActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPActionView.xib; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
-		945E85A229BF9BBF000FDA54 /* RevealTIPWalletAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealTIPWalletAddressViewController.swift; sourceTree = "<group>"; };
 		945E864F29C078BB000FDA54 /* ExtendedKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedKey.swift; sourceTree = "<group>"; };
 		945E865129C078E7000FDA54 /* RIPEMD160.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RIPEMD160.swift; sourceTree = "<group>"; };
 		945E871A29C1929D000FDA54 /* P2PKH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = P2PKH.swift; sourceTree = "<group>"; };
@@ -3323,7 +3321,6 @@
 				948E276929D2A518002BFCE1 /* Model */,
 				94D308672BA54E220017494C /* CreateWeb3WalletViewController.swift */,
 				94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */,
-				945E85A229BF9BBF000FDA54 /* RevealTIPWalletAddressViewController.swift */,
 				9419794E2BA47620002BA19F /* SignRequestViewController.swift */,
 				94D3087F2BA73F810017494C /* TransactionRequestViewController.swift */,
 				946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */,
@@ -5796,7 +5793,6 @@
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,
 				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
 				94438D57252DAD73005760AF /* Clip.swift in Sources */,
-				945E85A329BF9BBF000FDA54 /* RevealTIPWalletAddressViewController.swift in Sources */,
 				7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */,
 				7BC3EBF72497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift in Sources */,
 				945E865029C078BB000FDA54 /* ExtendedKey.swift in Sources */,

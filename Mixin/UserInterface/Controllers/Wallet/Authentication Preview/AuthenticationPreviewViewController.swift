@@ -9,10 +9,6 @@ class AuthenticationPreviewViewController: UIViewController {
     
     var canDismissInteractively = true
     
-    var authenticationTitle: String {
-        R.string.localizable.send_by_pin()
-    }
-    
     private var rows: [Row] = []
     
     private(set) var trayView: UIView?
@@ -371,7 +367,8 @@ extension AuthenticationPreviewViewController {
     }
     
     @objc func confirm(_ sender: Any) {
-        let intent = PreviewedAuthenticationIntent(title: authenticationTitle, onInput: performAction(with:))
+        let intent = PreviewedAuthenticationIntent(title: R.string.localizable.continue_with_pin(),
+                                                   onInput: performAction(with:))
         let authentication = AuthenticationViewController(intent: intent)
         present(authentication, animated: true)
     }

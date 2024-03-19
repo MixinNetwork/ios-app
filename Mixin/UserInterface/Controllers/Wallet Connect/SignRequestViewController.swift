@@ -9,10 +9,6 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
         case mismatchedAddress
     }
     
-    override var authenticationTitle: String {
-        R.string.localizable.continue_with_pin()
-    }
-    
     private let session: WalletConnectSession
     private let request: WalletConnectDecodedSigningRequest
     

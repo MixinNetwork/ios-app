@@ -59,7 +59,7 @@ final class Web3WalletHeaderView: UIView {
         }
     }
     
-    func showCreateAccount(chain: WalletConnectService.Chain) {
+    func showUnlockAccount(chain: WalletConnectService.Chain) {
         iconImageView.image = icon(of: chain)
         
         topLabel.font = .systemFont(ofSize: 18, weight: .medium)

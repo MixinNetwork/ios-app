@@ -4,10 +4,6 @@ import MixinServices
 
 final class CreateWeb3WalletViewController: AuthenticationPreviewViewController {
     
-    override var authenticationTitle: String {
-        R.string.localizable.continue_with_pin()
-    }
-    
     private let chainName: String
     
     init(chainName: String) {

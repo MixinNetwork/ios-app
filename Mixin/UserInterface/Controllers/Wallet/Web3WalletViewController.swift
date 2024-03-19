@@ -31,6 +31,8 @@ final class Web3WalletViewController: UIViewController {
     private let chain: WalletConnectService.Chain
     private let dapps: [Dapp] = [.uniswap, .snapshot]
     
+    private var address: String?
+    
     init(chain: WalletConnectService.Chain) {
         self.chain = chain
         super.init(nibName: nil, bundle: nil)
@@ -52,7 +54,7 @@ final class Web3WalletViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        tableHeaderView.showCreateAccount(chain: chain)
+        tableHeaderView.showUnlockAccount(chain: chain)
         tableHeaderView.frame.size.height = 134
         tableHeaderView.delegate = self
         tableView.tableHeaderView = tableHeaderView
@@ -64,20 +66,18 @@ final class Web3WalletViewController: UIViewController {
         DispatchQueue.global().async { [chain] in
             let address: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
             DispatchQueue.main.async {
-                if let address {
-                    self.tableHeaderView.showCopyAddress(chain: chain)
+                if address == nil {
+                    self.tableHeaderView.showUnlockAccount(chain: chain)
                 } else {
-                    self.tableHeaderView.showCreateAccount(chain: chain)
+                    self.tableHeaderView.showCopyAddress(chain: chain)
                 }
             }
         }
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
-        guard let account = notification.userInfo?[PropertiesDAO.Key.evmAccount] else {
-            return
-        }
-        if let account = account as? String {
+        address = notification.userInfo?[PropertiesDAO.Key.evmAccount] as? String
+        if address != nil {
             tableHeaderView.showCopyAddress(chain: chain)
         }
     }

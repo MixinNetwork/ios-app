@@ -222,19 +222,6 @@ extension TokenViewController {
         present(selector, animated: true, completion: nil)
     }
     
-//    private func sendToMyWeb3Wallet() {
-//        let reveal = RevealTIPWalletAddressViewController()
-//        reveal.onApprove = { [token] priv in
-//            let storage = InPlaceKeyStorage(raw: priv)
-//            let account = try! EthereumAccount(keyStorage: storage)
-//            let address = account.address.toChecksumAddress()
-//            let transfer = TransferOutViewController.instance(token: token, to: .address(<#T##Address#>))
-//            self.navigationController?.pushViewController(transfer, animated: true)
-//        }
-//        let authentication = AuthenticationViewController(intent: reveal)
-//        present(authentication, animated: true)
-//    }
-    
     private func reloadToken() {
         let assetId = token.assetID
         DispatchQueue.global().async { [weak self] in

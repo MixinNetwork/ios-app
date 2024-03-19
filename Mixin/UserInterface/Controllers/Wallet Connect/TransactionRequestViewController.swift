@@ -9,10 +9,6 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         case mismatchedAddress
     }
     
-    override var authenticationTitle: String {
-        R.string.localizable.continue_with_pin()
-    }
-    
     private let session: WalletConnectSession
     private let request: WalletConnectSign.Request
     private let transactionPreview: WalletConnectTransactionPreview

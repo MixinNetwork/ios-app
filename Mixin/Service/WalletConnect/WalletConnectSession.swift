@@ -38,12 +38,12 @@ final class WalletConnectSession {
         session.peer.name
     }
     
-    var description: String? {
-        session.peer.description
+    var url: URL? {
+        URL(string: session.peer.url)
     }
     
     var host: String {
-        URL(string: session.peer.url)?.host ?? session.peer.url
+        url?.host ?? session.peer.url
     }
     
     private let session: WalletConnectSign.Session

@@ -46,36 +46,19 @@
                             </stackView>
                         </subviews>
                     </stackView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🦄" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qvn-t5-n53">
-                        <rect key="frame" x="20" y="10" width="50" height="50"/>
-                        <color key="backgroundColor" name="background_secondary"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                <integer key="value" value="25"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                        </userDefinedRuntimeAttributes>
-                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstItem="qvn-t5-n53" firstAttribute="trailing" secondItem="iqs-TD-yPa" secondAttribute="trailing" id="6hF-Zg-YoL"/>
-                    <constraint firstItem="qvn-t5-n53" firstAttribute="top" secondItem="iqs-TD-yPa" secondAttribute="top" id="8Il-bw-8qi"/>
-                    <constraint firstItem="qvn-t5-n53" firstAttribute="leading" secondItem="iqs-TD-yPa" secondAttribute="leading" id="9VQ-kG-o1v"/>
                     <constraint firstAttribute="bottom" secondItem="NwB-EC-ZiF" secondAttribute="bottom" constant="10" id="R5G-me-FlI"/>
                     <constraint firstItem="NwB-EC-ZiF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="Stg-Ld-YVg"/>
                     <constraint firstAttribute="trailing" secondItem="NwB-EC-ZiF" secondAttribute="trailing" constant="20" id="Z9Q-jZ-PGs"/>
                     <constraint firstItem="NwB-EC-ZiF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="mZR-YS-pjV"/>
-                    <constraint firstItem="qvn-t5-n53" firstAttribute="bottom" secondItem="iqs-TD-yPa" secondAttribute="bottom" id="sZH-jx-Kwn"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="hostLabel" destination="RSx-gu-AMa" id="0NQ-OO-ZVi"/>
-                <outlet property="iconLabel" destination="qvn-t5-n53" id="Yd3-jY-in4"/>
+                <outlet property="iconImageView" destination="iqs-TD-yPa" id="Hea-lr-VZN"/>
                 <outlet property="nameLabel" destination="Rfe-6d-HRy" id="URv-Dv-i6h"/>
             </connections>
             <point key="canvasLocation" x="139" y="42"/>
@@ -84,9 +67,6 @@
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="background_secondary">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

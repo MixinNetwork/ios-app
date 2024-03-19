@@ -70,7 +70,10 @@ final class Web3WalletHeaderView: UIView {
         bottomLabel.textColor = R.color.text_tertiary()
         bottomLabel.text = R.string.localizable.access_dapps_defi_projects()
         
-        button.setTitle(R.string.localizable.create(), for: .normal)
+        UIView.performWithoutAnimation {
+            button.setTitle(R.string.localizable.create(), for: .normal)
+            button.layoutIfNeeded()
+        }
         action = .createAccount
     }
     
@@ -85,7 +88,10 @@ final class Web3WalletHeaderView: UIView {
         bottomLabel.textColor = R.color.text_tertiary()
         bottomLabel.text = R.string.localizable.access_dapps_defi_projects()
         
-        button.setTitle(R.string.localizable.copy_address(), for: .normal)
+        UIView.performWithoutAnimation {
+            button.setTitle(R.string.localizable.copy_address(), for: .normal)
+            button.layoutIfNeeded()
+        }
         action = .copyAddress
     }
     

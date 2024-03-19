@@ -1,35 +1,64 @@
 import UIKit
+import Combine
 import MixinServices
 
 final class Web3WalletViewController: UIViewController {
     
-    struct Dapp {
+    private struct EmbeddedDapp {
         
-        static let uniswap = Dapp(
+        static let uniswap = EmbeddedDapp(
             name: "Uniswap",
             host: "app.uniswap.org",
-            url: URL(string: "https://app.uniswap.org")!,
-            icon: "🦄"
+            url: URL(string: "https://app.uniswap.org"),
+            icon: R.image.explore.uniswap()!,
+            session: nil
         )
         
-        static let snapshot = Dapp(
+        static let snapshot = EmbeddedDapp(
             name: "Snapshot",
             host: "snapshot.org",
-            url: URL(string: "https://snapshot.org")!,
-            icon: "⚡️"
+            url: URL(string: "https://snapshot.org"),
+            icon: R.image.explore.snapshot()!, 
+            session: nil
         )
         
         let name: String
         let host: String
-        let url: URL
-        let icon: String
+        let url: URL?
+        let icon: UIImage
+        let session: WalletConnectSession?
         
+        func replacingSession(with session: WalletConnectSession?) -> EmbeddedDapp {
+            if let session {
+                EmbeddedDapp(name: session.name,
+                             host: session.host,
+                             url: session.url,
+                             icon: icon,
+                             session: session)
+            } else {
+                EmbeddedDapp(name: name,
+                             host: host,
+                             url: url,
+                             icon: icon,
+                             session: nil)
+            }
+        }
+        
+    }
+    
+    private enum Section: Int, CaseIterable {
+        case embedded = 0
+        case session
     }
     
     private let tableView = UITableView()
     private let tableHeaderView = R.nib.web3WalletHeaderView(withOwner: nil)!
     private let chain: WalletConnectService.Chain
-    private let dapps: [Dapp] = [.uniswap, .snapshot]
+    
+    private var sessionsObserver: AnyCancellable?
+    
+    private var embeddedDapps: [EmbeddedDapp] = [.uniswap, .snapshot]
+    private var sessions: [WalletConnectSession] = []
     
     private var address: String?
     
@@ -73,6 +102,13 @@ final class Web3WalletViewController: UIViewController {
                 }
             }
         }
+        
+        sessionsObserver = WalletConnectService.shared.$sessions
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sessions in
+                self?.load(sessions: sessions)
+            }
+        self.load(sessions: WalletConnectService.shared.sessions)
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
@@ -80,6 +116,21 @@ final class Web3WalletViewController: UIViewController {
         if address != nil {
             tableHeaderView.showCopyAddress(chain: chain)
         }
+    }
+    
+    private func load(sessions: [WalletConnectSession]) {
+        var externalSessions = sessions // `sessions` subtracting embeddeds
+        self.embeddedDapps = embeddedDapps.map { dapp in
+            if let index = externalSessions.firstIndex(where: { $0.host == dapp.host }) {
+                let session = externalSessions[index]
+                externalSessions.remove(at: index)
+                return dapp.replacingSession(with: session)
+            } else {
+                return dapp
+            }
+        }
+        self.sessions = externalSessions
+        tableView.reloadData()
     }
     
 }
@@ -105,16 +156,33 @@ extension Web3WalletViewController: Web3WalletHeaderView.Delegate {
 // MARK: - UITableViewDataSource
 extension Web3WalletViewController: UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        Section.allCases.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        dapps.count
+        switch Section(rawValue: section)! {
+        case .embedded:
+            embeddedDapps.count
+        case .session:
+            sessions.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_dapp, for: indexPath)!
-        let dapp = dapps[indexPath.row]
-        cell.iconLabel.text = dapp.icon
-        cell.nameLabel.text = dapp.name
-        cell.hostLabel.text = dapp.host
+        switch Section(rawValue: indexPath.section)! {
+        case .embedded:
+            let dapp = embeddedDapps[indexPath.row]
+            cell.iconImageView.image = dapp.icon
+            cell.nameLabel.text = dapp.name
+            cell.hostLabel.text = dapp.host
+        case .session:
+            let session = sessions[indexPath.row]
+            cell.iconImageView.sd_setImage(with: session.iconURL)
+            cell.nameLabel.text = session.name
+            cell.hostLabel.text = session.host
+        }
         return cell
     }
     
@@ -126,8 +194,16 @@ extension Web3WalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let container = UIApplication.homeContainerViewController?.homeTabBarController {
-            let dapp = dapps[indexPath.row]
-            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: dapp.url), asChildOf: container)
+            let url = switch Section(rawValue: indexPath.section)! {
+            case .embedded:
+                embeddedDapps[indexPath.row].url
+            case .session:
+                sessions[indexPath.row].url
+            }
+            if let url {
+                MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url),
+                                                       asChildOf: container)
+            }
         }
     }
     

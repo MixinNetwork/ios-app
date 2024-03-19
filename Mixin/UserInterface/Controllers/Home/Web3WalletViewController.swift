@@ -88,8 +88,8 @@ final class Web3WalletViewController: UIViewController {
 extension Web3WalletViewController: Web3WalletHeaderView.Delegate {
     
     func web3WalletHeaderViewRequestToCreateAccount(_ view: Web3WalletHeaderView) {
-        let createAccount = CreateWeb3WalletViewController(chainName: chain.name)
-        present(createAccount, animated: true)
+        let unlock = UnlockWeb3WalletViewController(chain: chain)
+        present(unlock, animated: true)
     }
     
     func web3WalletHeaderViewRequestToCopyAddress(_ view: Web3WalletHeaderView) {

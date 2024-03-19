@@ -136,7 +136,7 @@ final class WalletConnectService {
 // MARK: - Chain
 extension WalletConnectService {
     
-    struct Chain: Equatable {
+    struct Chain: Equatable, Hashable {
         
         static let ethereum = Chain(
             id: 1,
@@ -146,22 +146,7 @@ extension WalletConnectService {
             gasSymbol: "ETH",
             caip2: Blockchain("eip155:1")!
         )
-        static let goerli = Chain(
-            id: 5,
-            internalID: ChainID.ethereum,
-            name: "Goerli",
-            rpcServerURL: URL(string: "https://rpc.ankr.com/eth_goerli")!,
-            gasSymbol: "ETH",
-            caip2: Blockchain("eip155:5")!
-        )
-        static let bnbSmartChain = Chain(
-            id: 56,
-            internalID: ChainID.bnbSmartChain,
-            name: "Binance Smart Chain",
-            rpcServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
-            gasSymbol: "BNB",
-            caip2: Blockchain("eip155:56")!
-        )
+        
         static let polygon = Chain(
             id: 137,
             internalID: ChainID.polygon,
@@ -170,21 +155,23 @@ extension WalletConnectService {
             gasSymbol: "MATIC",
             caip2: Blockchain("eip155:137")!
         )
-        static let arbitrum = Chain(
-            id: 42161,
-            internalID: ChainID.arbitrum,
-            name: "Arbitrum One",
-            rpcServerURL: URL(string: "https://arb1.arbitrum.io/rpc")!,
-            gasSymbol: "ETH",
-            caip2: Blockchain("eip155:42161")!
+        
+        static let bnbSmartChain = Chain(
+            id: 56,
+            internalID: ChainID.bnbSmartChain,
+            name: "BSC",
+            rpcServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
+            gasSymbol: "BNB",
+            caip2: Blockchain("eip155:56")!
         )
-        static let optimism = Chain(
-            id: 10,
-            internalID: ChainID.optimism,
-            name: "OP Mainnet",
-            rpcServerURL: URL(string: "https://mainnet.optimism.io")!,
+        
+        static let sepolia = Chain(
+            id: 11155111,
+            internalID: ChainID.ethereum,
+            name: "Sepolia",
+            rpcServerURL: URL(string: "https://rpc.sepolia.dev")!,
             gasSymbol: "ETH",
-            caip2: Blockchain("eip155:10")!
+            caip2: Blockchain("eip155:11155111")!
         )
         
         let id: Int
@@ -198,21 +185,25 @@ extension WalletConnectService {
             lhs.id == rhs.id
         }
         
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
     }
     
     static let supportedChains: OrderedDictionary<Blockchain, Chain> = {
         var chains: OrderedDictionary<Blockchain, Chain> = [
             Chain.ethereum.caip2:      .ethereum,
-            Chain.bnbSmartChain.caip2: .bnbSmartChain,
             Chain.polygon.caip2:       .polygon,
-            Chain.arbitrum.caip2:      .arbitrum,
-            Chain.optimism.caip2:      .optimism,
+            Chain.bnbSmartChain.caip2: .bnbSmartChain,
         ]
 #if DEBUG
-        chains.updateValue(.goerli, forKey: Chain.goerli.caip2, insertingAt: 1)
+        chains.updateValue(.sepolia, forKey: Chain.sepolia.caip2, insertingAt: 1)
 #endif
         return chains
     }()
+    
+    static let evmChains: OrderedSet<Chain> = [.ethereum, .polygon, .bnbSmartChain]
     
     static let defaultChain: Chain = .ethereum
     

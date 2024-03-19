@@ -34,8 +34,8 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                 imageView.sd_setImage(with: url)
             }
         }
-        tableHeaderView.titleLabel.text = "连接以太坊账户"
-        tableHeaderView.subtitleLabel.text = "Allow the app to view your account address and ask for your approval to make a transaction."
+        layoutTableHeaderView(title: R.string.localizable.connect_your_account(),
+                              subtitle: R.string.localizable.connect_web3_account_description())
         
         let host = URL(string: proposal.proposer.url)?.host ?? proposal.proposer.url
         var rows: [Row] = [
@@ -51,7 +51,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
     override func loadInitialTrayView(animated: Bool) {
         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                  leftAction: #selector(close(_:)),
-                                 rightTitle: "Connect",
+                                 rightTitle: R.string.localizable.connect(),
                                  rightAction: #selector(confirm(_:)),
                                  animation: animated ? .vertical : nil)
     }
@@ -68,7 +68,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        tableHeaderView.titleLabel.text = "正在连接"
+        tableHeaderView.titleLabel.text = R.string.localizable.connecting()
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [chains, proposal, events] in
             do {
@@ -90,7 +90,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                     self.canDismissInteractively = true
                     self.isProposalApproved = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.tableHeaderView.titleLabel.text = "连接成功"
+                    self.tableHeaderView.titleLabel.text = R.string.localizable.connected()
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadSingleButtonTrayView(title: R.string.localizable.done(),
                                                   action: #selector(self.close(_:)))
@@ -100,7 +100,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
-                    self.layoutTableHeaderView(title: "连接失败",
+                    self.layoutTableHeaderView(title: R.string.localizable.connection_failed(),
                                                subtitle: error.localizedDescription)
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),

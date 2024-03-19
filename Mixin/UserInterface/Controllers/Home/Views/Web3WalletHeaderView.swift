@@ -64,11 +64,11 @@ final class Web3WalletHeaderView: UIView {
         
         topLabel.font = .systemFont(ofSize: 18, weight: .medium)
         topLabel.textColor = R.color.text()
-        topLabel.text = chain.name + " Account"
+        topLabel.text = R.string.localizable.web3_account_network(chain.name)
         
         bottomLabel.font = .systemFont(ofSize: 14)
         bottomLabel.textColor = R.color.text_tertiary()
-        bottomLabel.text = "Access dapps and DeFi projects."
+        bottomLabel.text = R.string.localizable.access_dapps_defi_projects()
         
         button.setTitle(R.string.localizable.create(), for: .normal)
         action = .createAccount
@@ -79,13 +79,13 @@ final class Web3WalletHeaderView: UIView {
         
         topLabel.font = .systemFont(ofSize: 18, weight: .medium)
         topLabel.textColor = R.color.text()
-        topLabel.text = chain.name + " Account"
+        topLabel.text = R.string.localizable.web3_account_network(chain.name)
         
         bottomLabel.font = .systemFont(ofSize: 14)
         bottomLabel.textColor = R.color.text_tertiary()
-        bottomLabel.text = "Access dapps and DeFi projects."
+        bottomLabel.text = R.string.localizable.access_dapps_defi_projects()
         
-        button.setTitle("Copy Address", for: .normal)
+        button.setTitle(R.string.localizable.copy_address(), for: .normal)
         action = .copyAddress
     }
     

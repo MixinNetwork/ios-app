@@ -726,9 +726,6 @@
 		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
 		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
 		94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94317D062AFBE57200FDC9C9 /* MemoCell.xib */; };
-		94333CB329960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */; };
-		94333CB52996127500EFF0A8 /* ConnectedDappTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */; };
-		94333CB7299612F200EFF0A8 /* ConnectedDappViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */; };
 		94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF52862F302009C9147 /* libopusfile.xcframework */; };
 		94341BFA2862F302009C9147 /* libopus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF62862F302009C9147 /* libopus.xcframework */; };
 		94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF72862F302009C9147 /* libopusenc.xcframework */; };
@@ -820,8 +817,6 @@
 		947EFA8A2B995E2E00A53551 /* SnapshotListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947EFA892B995E2E00A53551 /* SnapshotListViewController.swift */; };
 		947EFA932B9AEAF600A53551 /* TokenTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947EFA922B9AEAF600A53551 /* TokenTableHeaderView.xib */; };
 		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
-		947FA4C829956DE100EF13A0 /* ConnectedDappsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947FA4C729956DE100EF13A0 /* ConnectedDappsViewController.swift */; };
-		947FA4CA29956E1B00EF13A0 /* ConnectedDappsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947FA4C929956E1B00EF13A0 /* ConnectedDappsContentViewController.swift */; };
 		947FA4CD299577B700EF13A0 /* AuthorizationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947FA4CB299577B700EF13A0 /* AuthorizationsViewController.swift */; };
 		947FA4CE299577B700EF13A0 /* AuthorizationsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947FA4CC299577B700EF13A0 /* AuthorizationsView.xib */; };
 		947FA4D229957A2400EF13A0 /* AuthorizationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947FA4D129957A2400EF13A0 /* AuthorizationTableViewCell.xib */; };
@@ -906,7 +901,7 @@
 		94CF1F3F2BA1EC0400BC52C1 /* Web3DappCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CF1F3E2BA1EC0400BC52C1 /* Web3DappCell.xib */; };
 		94CF1F402BA1EC0400BC52C1 /* Web3DappCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CF1F3D2BA1EC0400BC52C1 /* Web3DappCell.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
-		94D308682BA54E220017494C /* CreateWeb3WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308672BA54E220017494C /* CreateWeb3WalletViewController.swift */; };
+		94D308682BA54E220017494C /* UnlockWeb3WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */; };
 		94D308772BA72C8F0017494C /* Web3AmountChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */; };
 		94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */; };
 		94D308802BA73F810017494C /* TransactionRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3087F2BA73F810017494C /* TransactionRequestViewController.swift */; };
@@ -1936,9 +1931,6 @@
 		94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		94317D052AFBE57200FDC9C9 /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
 		94317D062AFBE57200FDC9C9 /* MemoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MemoCell.xib; sourceTree = "<group>"; };
-		94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectedDappTableHeaderView.xib; sourceTree = "<group>"; };
-		94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappTableHeaderView.swift; sourceTree = "<group>"; };
-		94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappViewController.swift; sourceTree = "<group>"; };
 		94341BF52862F302009C9147 /* libopusfile.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusfile.xcframework; sourceTree = "<group>"; };
 		94341BF62862F302009C9147 /* libopus.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopus.xcframework; sourceTree = "<group>"; };
 		94341BF72862F302009C9147 /* libopusenc.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusenc.xcframework; sourceTree = "<group>"; };
@@ -2030,8 +2022,6 @@
 		947EFA892B995E2E00A53551 /* SnapshotListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotListViewController.swift; sourceTree = "<group>"; };
 		947EFA922B9AEAF600A53551 /* TokenTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenTableHeaderView.xib; sourceTree = "<group>"; };
 		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
-		947FA4C729956DE100EF13A0 /* ConnectedDappsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappsViewController.swift; sourceTree = "<group>"; };
-		947FA4C929956E1B00EF13A0 /* ConnectedDappsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDappsContentViewController.swift; sourceTree = "<group>"; };
 		947FA4CB299577B700EF13A0 /* AuthorizationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsViewController.swift; sourceTree = "<group>"; };
 		947FA4CC299577B700EF13A0 /* AuthorizationsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationsView.xib; sourceTree = "<group>"; };
 		947FA4D129957A2400EF13A0 /* AuthorizationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationTableViewCell.xib; sourceTree = "<group>"; };
@@ -2109,7 +2099,7 @@
 		94CF1F3D2BA1EC0400BC52C1 /* Web3DappCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DappCell.swift; sourceTree = "<group>"; };
 		94CF1F3E2BA1EC0400BC52C1 /* Web3DappCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3DappCell.xib; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
-		94D308672BA54E220017494C /* CreateWeb3WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWeb3WalletViewController.swift; sourceTree = "<group>"; };
+		94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockWeb3WalletViewController.swift; sourceTree = "<group>"; };
 		94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AmountChangeCell.swift; sourceTree = "<group>"; };
 		94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AmountChangeCell.xib; sourceTree = "<group>"; };
 		94D3087F2BA73F810017494C /* TransactionRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRequestViewController.swift; sourceTree = "<group>"; };
@@ -2810,6 +2800,8 @@
 				94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */,
 				94658CB82B358E3100F5EB21 /* TabBar.swift */,
 				94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */,
+				94CF1F2B2BA1BB9800BC52C1 /* Web3WalletHeaderView.xib */,
+				94CF1F2D2BA1BDD500BC52C1 /* Web3WalletHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3319,7 +3311,7 @@
 			isa = PBXGroup;
 			children = (
 				948E276929D2A518002BFCE1 /* Model */,
-				94D308672BA54E220017494C /* CreateWeb3WalletViewController.swift */,
+				94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */,
 				94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */,
 				9419794E2BA47620002BA19F /* SignRequestViewController.swift */,
 				94D3087F2BA73F810017494C /* TransactionRequestViewController.swift */,
@@ -3555,8 +3547,6 @@
 				94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */,
 				942D90F72B06145F00E81358 /* TouchEventBypassView.swift */,
 				94CF1F322BA1CD7700BC52C1 /* BulletDescriptionView.swift */,
-				94CF1F2B2BA1BB9800BC52C1 /* Web3WalletHeaderView.xib */,
-				94CF1F2D2BA1BDD500BC52C1 /* Web3WalletHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3857,6 +3847,7 @@
 				94B577812B5E79B800AE576E /* ExploreAllAppsViewController.swift */,
 				94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */,
 				94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */,
+				94CF1F262BA1B74A00BC52C1 /* Web3WalletViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -4081,12 +4072,6 @@
 				9459693728B28FF8006F5421 /* TIPActionViewController.swift */,
 				943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */,
 				7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */,
-				947FA4C929956E1B00EF13A0 /* ConnectedDappsContentViewController.swift */,
-				947FA4C729956DE100EF13A0 /* ConnectedDappsViewController.swift */,
-				94333CB229960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib */,
-				94333CB42996127500EFF0A8 /* ConnectedDappTableHeaderView.swift */,
-				94333CB6299612F200EFF0A8 /* ConnectedDappViewController.swift */,
-				94CF1F262BA1B74A00BC52C1 /* Web3WalletViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -4624,7 +4609,6 @@
 				947FA4CE299577B700EF13A0 /* AuthorizationsView.xib in Resources */,
 				94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
-				94333CB329960F3900EFF0A8 /* ConnectedDappTableHeaderView.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */,
 				7C7579E029DC61890002DA0B /* TransferToPhoneQRCodeView.xib in Resources */,
@@ -5139,7 +5123,6 @@
 				7BC98FA721EF5B8C004A5D79 /* AudioMessagePlayingManager.swift in Sources */,
 				7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */,
 				7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */,
-				94333CB7299612F200EFF0A8 /* ConnectedDappViewController.swift in Sources */,
 				7BBCEC1825232A9800F270DF /* WebMoreMenuViewController.swift in Sources */,
 				E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */,
 				DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */,
@@ -5153,7 +5136,6 @@
 				7BF8AD83244050EE0038D293 /* PopupResizeGestureCoordinator.swift in Sources */,
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
 				7BA9F32024A22EC200D7C091 /* CallMemberCell.swift in Sources */,
-				947FA4C829956DE100EF13A0 /* ConnectedDappsViewController.swift in Sources */,
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
@@ -5399,7 +5381,7 @@
 				941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
-				94D308682BA54E220017494C /* CreateWeb3WalletViewController.swift in Sources */,
+				94D308682BA54E220017494C /* UnlockWeb3WalletViewController.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
 				7CB227862907CE060034F9FD /* DepositNetworkCell.swift in Sources */,
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
@@ -5745,7 +5727,6 @@
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
 				94B13FC22B5ED5F9001333BE /* ExploreSearchViewController.swift in Sources */,
-				94333CB52996127500EFF0A8 /* ConnectedDappTableHeaderView.swift in Sources */,
 				7B66AC072428D72000869DBD /* PostWebViewController.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
 				6001E88C2B0B7140006A053A /* DeviceTransferToken.swift in Sources */,
@@ -5772,7 +5753,6 @@
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */,
 				7C5DFE30284F23F6008733FC /* UserCenterViewController.swift in Sources */,
-				947FA4CA29956E1B00EF13A0 /* ConnectedDappsContentViewController.swift in Sources */,
 				945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */,
 				9416548325CD2D9A007E76D0 /* OggOpusRecorder.swift in Sources */,
 				94E206752AF388A400CCF6D8 /* SnapshotMessageViewModel.swift in Sources */,

@@ -33,8 +33,8 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
         tableHeaderView.setIcon { imageView in
             imageView.sd_setImage(with: session.iconURL)
         }
-        layoutTableHeaderView(title: R.string.localizable.signature_request(),
-                              subtitle: "我们无法验证此请求， 在发送此请求之前，请确保您信任此应用程序。",
+        layoutTableHeaderView(title: R.string.localizable.web3_signing_confirmation(),
+                              subtitle: R.string.localizable.web3_signing_warning(),
                               style: .destructive)
         reloadData()
     }
@@ -60,7 +60,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        tableHeaderView.titleLabel.text = "正在签名"
+        tableHeaderView.titleLabel.text = R.string.localizable.web3_signing()
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [request] in
             do {
@@ -80,8 +80,8 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                     self.signature = signature
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.layoutTableHeaderView(title: "签名成功",
-                                               subtitle: "点发送按钮立刻广播消息或点取消按钮丢弃已签名的消息。")
+                    self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
+                                               subtitle: R.string.localizable.web3_send_signature_description())
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.reloadData()
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.discard(),
@@ -95,7 +95,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
-                    self.layoutTableHeaderView(title: "连接失败",
+                    self.layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
                                                subtitle: error.localizedDescription)
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
@@ -172,9 +172,10 @@ extension SignRequestViewController {
             // FIXME: Get account by `self.request`
             rows.insert(.info(caption: .account, content: account), at: 2)
         }
-        let unsignedMessage: Row = .web3Message(caption: "Unsigned message", message: request.humanReadable)
+        let unsignedMessage: Row = .web3Message(caption: R.string.localizable.unsigned_message(),
+                                                message: request.humanReadable)
         if let signature {
-            rows.insert(.web3Message(caption: "SIGNED MESSAGE", message: signature), at: 0)
+            rows.insert(.web3Message(caption: R.string.localizable.signed_message(), message: signature), at: 0)
             rows.append(unsignedMessage)
         } else {
             rows.insert(unsignedMessage, at: 0)

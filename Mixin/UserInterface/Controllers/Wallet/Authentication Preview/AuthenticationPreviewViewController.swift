@@ -367,8 +367,7 @@ extension AuthenticationPreviewViewController {
     }
     
     @objc func confirm(_ sender: Any) {
-        let intent = PreviewedAuthenticationIntent(title: R.string.localizable.continue_with_pin(),
-                                                   onInput: performAction(with:))
+        let intent = PreviewedAuthenticationIntent(onInput: performAction(with:))
         let authentication = AuthenticationViewController(intent: intent)
         present(authentication, animated: true)
     }
@@ -541,7 +540,7 @@ extension AuthenticationPreviewViewController {
     
     private final class PreviewedAuthenticationIntent: AuthenticationIntent {
         
-        let intentTitle: String
+        let intentTitle: String = R.string.localizable.continue_with_pin()
         let intentTitleIcon: UIImage? = R.image.ic_pin_setting()
         let intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? = nil
         let intentSubtitle = ""
@@ -554,8 +553,7 @@ extension AuthenticationPreviewViewController {
         
         private let onInput: (String) -> Void
         
-        init(title: String, onInput: @escaping (String) -> Void) {
-            self.intentTitle = title
+        init(onInput: @escaping (String) -> Void) {
             self.onInput = onInput
         }
         

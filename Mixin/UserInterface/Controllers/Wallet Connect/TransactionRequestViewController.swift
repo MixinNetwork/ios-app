@@ -43,11 +43,11 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         tableHeaderView.setIcon { imageView in
             imageView.sd_setImage(with: session.iconURL)
         }
-        layoutTableHeaderView(title: "交易签名确认",
-                              subtitle: "我们无法验证此请求， 在发送此请求之前，请确保您信任此应用程序。",
+        layoutTableHeaderView(title: R.string.localizable.web3_signing_confirmation(),
+                              subtitle: R.string.localizable.web3_signing_warning(),
                               style: .destructive)
         var rows: [Row] = [
-            .web3Amount(caption: "Balance Changes (estimate)",
+            .web3Amount(caption: R.string.localizable.estimated_balance_change(),
                         tokenAmount: nil,
                         fiatMoneyAmount: nil,
                         token: .xin),
@@ -81,7 +81,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         }
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        tableHeaderView.titleLabel.text = "正在签名"
+        tableHeaderView.titleLabel.text = R.string.localizable.web3_signing()
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [chain, transactionPreview] in
             do {
@@ -103,8 +103,8 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                     self.transaction = transaction
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.layoutTableHeaderView(title: "签名成功",
-                                               subtitle: "点发送按钮立刻广播消息或点取消按钮丢弃已签名的消息。")
+                    self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
+                                               subtitle: R.string.localizable.web3_send_signature_description())
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.discard(),
                                                   leftAction: #selector(self.close(_:)),
@@ -117,7 +117,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
-                    self.layoutTableHeaderView(title: "连接失败",
+                    self.layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
                                                subtitle: error.localizedDescription)
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
@@ -142,7 +142,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                 switch chain {
                 case .ethereum:
                     network = .mainnet
-                case .goerli:
+                case .sepolia:
                     network = .goerli
                 default:
                     network = .custom("\(chain.id)")

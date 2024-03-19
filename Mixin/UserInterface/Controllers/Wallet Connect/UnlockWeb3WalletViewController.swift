@@ -2,12 +2,12 @@ import UIKit
 import web3
 import MixinServices
 
-final class CreateWeb3WalletViewController: AuthenticationPreviewViewController {
+final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController {
     
-    private let chainName: String
+    private let chain: WalletConnectService.Chain
     
-    init(chainName: String) {
-        self.chainName = chainName
+    init(chain: WalletConnectService.Chain) {
+        self.chain = chain
         super.init(warnings: [])
     }
     
@@ -20,16 +20,23 @@ final class CreateWeb3WalletViewController: AuthenticationPreviewViewController 
         tableHeaderView.setIcon { imageView in
             imageView.image = R.image.crypto_wallet()
         }
-        layoutTableHeaderView(title: "创建 \(chainName) 账户",
-                              subtitle: "您的 \(chainName) 账户基于 Mixin Messenger  的 MPC 钱包并根据 BIP44 协议派生而来。")
+        layoutTableHeaderView(title: R.string.localizable.unlock_web3_account(chain.name),
+                              subtitle: R.string.localizable.unlock_web3_account_description(chain.name))
         let tableFooterView = BulletDescriptionView()
-        let lines = [
-            "\(chainName) 账户与 Mixin 钱包资产隔离但使用同一个 PIN 进行资产管理。",
-            "在 \(chainName) 账户与 Mixin 钱包之间划转资产需要支付网络矿工费。",
-            "当您创建 \(chainName) 账户时，也将自动创建 Polygon、BSC 等 EVM 账户。",
+        var lines = [
+            R.string.localizable.unlock_web3_account_agreement_1(chain.name),
+            R.string.localizable.unlock_web3_account_agreement_2(chain.name),
         ]
-        tableFooterView.setText(preface: "建议与去中心化应用程序交互完后尽快将资产转回更安全的 Mixin 钱包。",
-                                bulletLines: lines)
+        if WalletConnectService.evmChains.contains(chain) {
+            let otherEVMChains = WalletConnectService.evmChains
+                .subtracting([chain])
+                .prefix(2)
+                .map(\.name)
+            if otherEVMChains.count == 2 {
+                let line = R.string.localizable.unlock_web3_account_agreement_3(chain.name, otherEVMChains[0], otherEVMChains[1])
+            }
+        }
+        tableFooterView.setText(preface: R.string.localizable.unlock_web3_account_agreement(), bulletLines: lines)
         tableView.tableFooterView = tableFooterView
     }
     
@@ -41,7 +48,7 @@ final class CreateWeb3WalletViewController: AuthenticationPreviewViewController 
     override func loadInitialTrayView(animated: Bool) {
         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                  leftAction: #selector(close(_:)),
-                                 rightTitle: R.string.localizable.create(),
+                                 rightTitle: R.string.localizable.unlock(),
                                  rightAction: #selector(confirm(_:)),
                                  animation: animated ? .vertical : nil)
     }
@@ -49,7 +56,7 @@ final class CreateWeb3WalletViewController: AuthenticationPreviewViewController 
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        tableHeaderView.titleLabel.text = "正在创建"
+        tableHeaderView.titleLabel.text = R.string.localizable.unlocking()
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached {
             do {
@@ -60,23 +67,20 @@ final class CreateWeb3WalletViewController: AuthenticationPreviewViewController 
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.tableHeaderView.titleLabel.text = "创建成功"
+                    self.tableHeaderView.titleLabel.text = R.string.localizable.unlock_web3_account_success()
                     self.reloadData(with: [
                         .info(caption: .account, content: address)
                     ])
                     self.tableView.setContentOffset(.zero, animated: true)
-                    self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.close(),
-                                                  leftAction: #selector(self.close(_:)),
-                                                  rightTitle: "View",
-                                                  rightAction: #selector(self.close(_:)),
-                                                  animation: .vertical)
+                    self.loadSingleButtonTrayView(title: R.string.localizable.done(),
+                                                  action:  #selector(self.close(_:)))
                 }
             } catch {
-                Logger.walletConnect.warn(category: "CreateWeb3Wallet", message: "Failed to create: \(error)")
+                Logger.walletConnect.warn(category: "Unlock", message: "\(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
-                    self.layoutTableHeaderView(title: "创建失败",
+                    self.layoutTableHeaderView(title: R.string.localizable.unlock_web3_account_failed(),
                                                subtitle: error.localizedDescription)
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),

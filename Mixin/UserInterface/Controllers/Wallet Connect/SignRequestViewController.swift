@@ -164,7 +164,7 @@ extension SignRequestViewController {
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         var rows: [Row] = [
-            .amount(caption: .fee(speed: nil), token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
+            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
             .proposer(name: session.name, host: session.host),
             .info(caption: .network, content: request.chain.name)
         ]

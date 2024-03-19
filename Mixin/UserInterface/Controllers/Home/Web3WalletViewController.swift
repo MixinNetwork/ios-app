@@ -119,17 +119,21 @@ final class Web3WalletViewController: UIViewController {
     }
     
     private func load(sessions: [WalletConnectSession]) {
-        var externalSessions = sessions // `sessions` subtracting embeddeds
+        var embeddedSessionsIndices: Set<Int> = []
         self.embeddedDapps = embeddedDapps.map { dapp in
-            if let index = externalSessions.firstIndex(where: { $0.host == dapp.host }) {
-                let session = externalSessions[index]
-                externalSessions.remove(at: index)
+            if let index = sessions.firstIndex(where: { $0.host == dapp.host }) {
+                let session = sessions[index]
+                embeddedSessionsIndices.insert(index)
                 return dapp.replacingSession(with: session)
             } else {
                 return dapp
             }
         }
-        self.sessions = externalSessions
+        self.sessions = sessions.enumerated()
+            .filter { (index, session) in
+                !embeddedSessionsIndices.contains(index)
+            }
+            .map(\.element)
         tableView.reloadData()
     }
     

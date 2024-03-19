@@ -54,6 +54,10 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "SELECT chain_id FROM tokens WHERE asset_id = ?", arguments: [assetID])
     }
     
+    public func token(with assetID: String) -> Token? {
+        db.select(with: "SELECT * FROM tokens WHERE asset_id = ?", arguments: [assetID])
+    }
+    
     public func tokenItem(with id: String) -> TokenItem? {
         db.select(with: SQL.selectWithAssetID, arguments: [id])
     }

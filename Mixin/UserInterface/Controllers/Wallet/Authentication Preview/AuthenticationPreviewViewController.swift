@@ -231,7 +231,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             return cell
         case let .selectableFee(selected, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
-            cell.captionLabel.text = "Fee (\(selected)".uppercased()
+            cell.captionLabel.text = R.string.localizable.fee_selection(selected).uppercased()
             cell.primaryLabel.text = tokenAmount
             cell.secondaryLabel.text = fiatMoneyAmount
             cell.setPrimaryAmountLabel(usesBoldFont: false)
@@ -272,7 +272,7 @@ extension AuthenticationPreviewViewController {
         case label
         case address
         case network
-        case fee(speed: String?)
+        case fee
         case memo
         case tag
         case total
@@ -288,12 +288,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.address()
             case .network:
                 R.string.localizable.network()
-            case .fee(let speed):
-                if let speed {
-                    "Fee (\(speed))"
-                } else {
-                    R.string.localizable.fee()
-                }
+            case .fee:
+                R.string.localizable.fee()
             case .memo:
                 R.string.localizable.memo()
             case .tag:

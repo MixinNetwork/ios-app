@@ -14,12 +14,13 @@ final class Web3AmountChangeCell: UITableViewCell {
         
         if let tokenAmount {
             tokenAmountLabel.text = tokenAmount
+            tokenAmountLabel.isHidden = false
             symbolLabel.text = token.symbol
             symbolLabel.setFont(scaledFor: .systemFont(ofSize: 12, weight: .medium),
                                 adjustForContentSize: true)
             symbolLabel.textColor = R.color.text()
         } else {
-            tokenAmountLabel.text = nil
+            tokenAmountLabel.isHidden = true
             symbolLabel.text = "Unlimited " + token.symbol
             symbolLabel.setFont(scaledFor: .systemFont(ofSize: 20, weight: .medium),
                                 adjustForContentSize: true)

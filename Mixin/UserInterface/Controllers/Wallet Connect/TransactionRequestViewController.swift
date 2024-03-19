@@ -51,7 +51,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                         tokenAmount: nil,
                         fiatMoneyAmount: nil,
                         token: .xin),
-            .amount(caption: .fee(speed: nil),
+            .amount(caption: .fee,
                     token: R.string.localizable.calculating(),
                     fiatMoney: R.string.localizable.calculating(),
                     display: .byToken,
@@ -64,6 +64,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
             rows.insert(.info(caption: .account, content: account), at: 3)
         }
         reloadData(with: rows)
+        loadGas()
     }
     
     override func close(_ sender: Any) {
@@ -73,6 +74,17 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     
     override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         rejectTransactionIfSignatureNotSent()
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRow row: Row) {
+        switch row {
+        case .selectableFee:
+            let selector = NetworkFeeSelectorViewController(options: feeOptions, gasSymbol: chain.gasSymbol)
+            selector.delegate = self
+            present(selector, animated: true)
+        default:
+            break
+        }
     }
     
     override func performAction(with pin: String) {
@@ -130,6 +142,19 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         }
     }
     
+}
+
+extension TransactionRequestViewController: NetworkFeeSelectorViewControllerDelegate {
+    
+    func networkFeeSelectorViewController(_ controller: NetworkFeeSelectorViewController, didSelectOption option: NetworkFeeOption) {
+        selectedFeeOption = option
+        reloadFeeRow(with: option)
+    }
+    
+}
+
+extension TransactionRequestViewController {
+    
     @objc private func send(_ sendButton: BusyButton) {
         guard let transaction, let account else {
             return
@@ -181,47 +206,52 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
             confirmButton.isBusy = true
             confirmButton.isEnabled = false
         }
-        TIPAPI.tipGas(id: chain.internalID) { [gas=transactionPreview.gas, weak self] result in
+        TIPAPI.tipGas(id: chain.internalID) { [gas=transactionPreview.gas, chain, weak self] result in
             switch result {
             case .success(let prices):
+                guard let token = TokenDAO.shared.token(with: chain.internalID) else {
+                    // FIXME: Load token if inexist
+                    return
+                }
+                let tokenPrice = token.decimalUSDPrice * Decimal(Currency.current.rate)
                 let options = [
                     NetworkFeeOption(speed: R.string.localizable.fast(),
-                                     cost: "",
+                                     tokenPrice: tokenPrice,
                                      duration: "",
                                      gas: gas,
                                      gasPrice: prices.fastGasPrice,
                                      gasLimit: prices.gasLimit),
                     NetworkFeeOption(speed: R.string.localizable.normal(),
-                                     cost: "",
+                                     tokenPrice: tokenPrice,
                                      duration: "",
                                      gas: gas,
                                      gasPrice: prices.proposeGasPrice,
                                      gasLimit: prices.gasLimit),
                     NetworkFeeOption(speed: R.string.localizable.slow(),
-                                     cost: "",
+                                     tokenPrice: tokenPrice,
                                      duration: "",
                                      gas: gas,
                                      gasPrice: prices.safeGasPrice,
                                      gasLimit: prices.gasLimit),
                 ].compactMap({ $0 })
-                DispatchQueue.main.async {
-                    guard let self else {
-                        return
-                    }
-                    if options.count == 3 {
-                        let selected = options[1]
+                if options.count == 3 {
+                    let selected = options[1]
+                    DispatchQueue.main.async {
+                        guard let self else {
+                            return
+                        }
                         self.feeOptions = options
                         self.selectedFeeOption = selected
-                        let row: Row = .amount(caption: .fee(speed: selected.speed),
-                                               token: "\(selected.gasValue) \(self.chain.gasSymbol)",
-                                               fiatMoney: "",
-                                               display: .byToken,
-                                               boldPrimaryAmount: false)
-                        self.replaceRow(at: 1, with: row)
+                        self.reloadFeeRow(with: selected)
                         if let confirmButton {
                             confirmButton.isBusy = false
                             confirmButton.isEnabled = true
                         }
+                    }
+                } else {
+                    Logger.walletConnect.error(category: "TransactionRequest", message: "Invalid prices: \(prices)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self?.loadGas()
                     }
                 }
             case .failure(let error):
@@ -241,6 +271,18 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
             let error = JSONRPCError(code: 0, message: "User rejected")
             try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
         }
+    }
+    
+    private func reloadFeeRow(with selected: NetworkFeeOption) {
+        guard feeOptions.count == 3 else {
+            return
+        }
+        let tokenAmountRange = "\(feeOptions[2].gasValue) - \(feeOptions[0].gasValue) \(chain.gasSymbol)"
+        let fiatMoneyAmountRange = "\(feeOptions[2].cost) - \(feeOptions[0].cost)"
+        let row: Row = .selectableFee(selected: selected.speed,
+                                      tokenAmount: tokenAmountRange,
+                                      fiatMoneyAmount: fiatMoneyAmountRange)
+        replaceRow(at: 1, with: row)
     }
     
 }

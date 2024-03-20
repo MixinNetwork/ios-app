@@ -116,7 +116,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                 guard transactionPreview.from == account.address else {
                     throw SignRequestError.mismatchedAddress
                 }
-                let transaction = EthereumTransaction(from: nil,
+                let transaction = EthereumTransaction(from: account.address,
                                                       to: transactionPreview.to,
                                                       value: transactionPreview.value,
                                                       data: transactionPreview.data,

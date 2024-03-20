@@ -34,7 +34,13 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         self.transactionPreview = transaction
         self.chain = chain
         self.chainToken = chainToken
-        super.init(warnings: [])
+        let canDecodeValue = (transaction.decimalValue ?? 0) != 0
+        let warnings: [String] = if canDecodeValue {
+            []
+        } else {
+            [R.string.localizable.decode_transaction_failed()]
+        }
+        super.init(warnings: warnings)
     }
     
     required init?(coder: NSCoder) {
@@ -59,7 +65,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
             .info(caption: .network, content: chain.name)
         ]
         let transactionRow: Row
-        if let tokenValue = transactionPreview.decimalValue {
+        if let tokenValue = transactionPreview.decimalValue, tokenValue != 0 {
             let tokenAmount = CurrencyFormatter.localizedString(from: tokenValue, format: .precision, sign: .never)
             let fiatMoneyValue = tokenValue * chainToken.decimalUSDPrice * Currency.current.decimalRate
             let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)

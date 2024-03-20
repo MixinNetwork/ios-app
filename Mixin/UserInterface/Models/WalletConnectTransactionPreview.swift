@@ -51,7 +51,7 @@ struct WalletConnectTransactionPreview: Codable {
             }
             decimalValue = weiValue * .wei
         } else {
-            value = 0
+            value = nil
             decimalValue = nil
         }
         

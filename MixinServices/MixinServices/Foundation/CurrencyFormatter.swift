@@ -7,6 +7,7 @@ public struct CurrencyFormatter {
         case pretty
         case fiatMoney
         case fiatMoneyPrice
+        case networkFee
     }
     
     public enum SignBehavior {
@@ -27,16 +28,25 @@ public struct CurrencyFormatter {
         formatter.locale = .current
         return formatter
     }()
+    
     static let prettyFormatter: NumberFormatter = {
         let formatter = NumberFormatter(numberStyle: .decimal, roundingMode: .down, locale: .current)
         formatter.locale = .current
         return formatter
     }()
+    
     static let fiatMoneyFormatter: NumberFormatter = {
         let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 2, roundingMode: .down, locale: .current)
         formatter.locale = .current
         return formatter
     }()
+    
+    static let networkFeeFormatter: NumberFormatter = {
+        let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 4, roundingMode: .up, locale: .current)
+        formatter.locale = .current
+        return formatter
+    }()
+    
     static let roundToIntegerBehavior = NSDecimalNumberHandler(roundingMode: .down, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
     
     public static func localizedString(from string: String?, locale: Locale = .us, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
@@ -95,6 +105,9 @@ public struct CurrencyFormatter {
                 setSignBehavior(sign, for: fiatMoneyFormatter)
                 str = fiatMoneyFormatter.string(from: number) ?? ""
             }
+        case .networkFee:
+            setSignBehavior(sign, for: networkFeeFormatter)
+            str = networkFeeFormatter.string(from: number) ?? ""
         }
         
         if let symbol = symbol {

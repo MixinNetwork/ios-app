@@ -61,14 +61,7 @@ class AuthenticationPreviewViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let bottomInset = max(view.safeAreaInsets.bottom, trayView?.frame.height ?? 0)
-        UIView.animate(withDuration: 0.3) {
-            self.tableView.contentInset.bottom = bottomInset
-            self.tableView.verticalScrollIndicatorInsets.bottom = bottomInset
-            if self.tableView.contentSize.height + bottomInset < self.tableView.frame.height {
-                self.tableView.setContentOffset(.zero, animated: false)
-            }
-        }
+        updateTableViewBottomInset()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -129,6 +122,13 @@ class AuthenticationPreviewViewController: UIViewController {
     
     func tableView(_ tableView: UITableView, didSelectRow row: Row) {
         
+    }
+    
+    private func updateTableViewBottomInset() {
+        let safeAreaInset = max(view.safeAreaInsets.bottom, 20)
+        let bottomInset = max(safeAreaInset, trayView?.frame.height ?? 0)
+        tableView.contentInset.bottom = bottomInset
+        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
     }
     
 }
@@ -467,6 +467,9 @@ extension AuthenticationPreviewViewController {
                     self.view.layoutIfNeeded()
                 } completion: { _ in
                     oldTrayView.removeFromSuperview()
+                    if newTrayView == nil {
+                        self.updateTableViewBottomInset()
+                    }
                 }
             case .horizontal:
                 centerXConstraint.constant = -oldTrayView.frame.width / 2
@@ -475,9 +478,15 @@ extension AuthenticationPreviewViewController {
                     self.view.layoutIfNeeded()
                 } completion: { _ in
                     oldTrayView.removeFromSuperview()
+                    if newTrayView == nil {
+                        self.updateTableViewBottomInset()
+                    }
                 }
             case nil:
                 oldTrayView.removeFromSuperview()
+                if newTrayView == nil {
+                    updateTableViewBottomInset()
+                }
             }
         }
         
@@ -502,6 +511,8 @@ extension AuthenticationPreviewViewController {
                 UIView.animate(withDuration: 0.3) {
                     self.view.layoutIfNeeded()
                     newTrayView.alpha = 1
+                } completion: { _ in
+                    self.updateTableViewBottomInset()
                 }
             case .horizontal:
                 newTrayView.layoutIfNeeded()
@@ -511,11 +522,14 @@ extension AuthenticationPreviewViewController {
                 UIView.animate(withDuration: 0.3) {
                     self.view.layoutIfNeeded()
                     newTrayView.alpha = 1
+                } completion: { _ in
+                    self.updateTableViewBottomInset()
                 }
             case nil:
                 // Reduce `UITableViewAlertForLayoutOutsideViewHierarchy`
                 if view.window != nil {
                     view.layoutIfNeeded()
+                    updateTableViewBottomInset()
                 }
             }
             

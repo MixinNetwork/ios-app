@@ -22,7 +22,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="102"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JtR-0l-kDI" customClass="EthereumTransactionView" customModule="Mixin" customModuleProvider="target">
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JtR-0l-kDI">
                         <rect key="frame" x="28" y="10" width="264" height="82"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Balance Changes (estimate)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="McQ-Ck-XUi">
@@ -37,13 +37,13 @@
                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" alignment="bottom" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="rKw-yC-uU0">
                                 <rect key="frame" x="0.0" y="22.999999999999996" width="264" height="38.666666666666657"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="-0.1342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KMB-bF-7qq">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="-0.1342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="KMB-bF-7qq">
                                         <rect key="frame" x="0.0" y="8.6666666666666643" width="74.333333333333329" height="30"/>
                                         <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="30"/>
                                         <color key="textColor" name="red"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="ETH" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OhT-iD-mpn">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="ETH" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OhT-iD-mpn" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="78.333333333333329" y="24.333333333333336" width="149.66666666666669" height="14.333333333333336"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                         <color key="textColor" name="text"/>
@@ -82,9 +82,11 @@
             <connections>
                 <outlet property="assetIconView" destination="DEC-tR-7B4" id="KGy-aM-See"/>
                 <outlet property="captionLabel" destination="McQ-Ck-XUi" id="9ow-HP-KHU"/>
+                <outlet property="contentStackView" destination="JtR-0l-kDI" id="d9K-W2-hWb"/>
                 <outlet property="fiatMoneyValueLabel" destination="LSH-Gm-qJD" id="x2K-ZH-ejd"/>
                 <outlet property="symbolLabel" destination="OhT-iD-mpn" id="3xw-6x-aDz"/>
                 <outlet property="tokenAmountLabel" destination="KMB-bF-7qq" id="rlv-6l-EW4"/>
+                <outlet property="tokenStackView" destination="rKw-yC-uU0" id="DCy-7r-6ka"/>
             </connections>
             <point key="canvasLocation" x="-8" y="42"/>
         </tableViewCell>

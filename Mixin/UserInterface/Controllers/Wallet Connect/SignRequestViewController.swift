@@ -77,13 +77,14 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                     try account.signMessage(message: data)
                 }
                 await MainActor.run {
-                    self.signature = signature
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .success)
                     self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
                                                subtitle: R.string.localizable.web3_send_signature_description())
-                    self.tableView.setContentOffset(.zero, animated: true)
+                    self.signature = signature
                     self.reloadData()
+                    self.tableView.layoutIfNeeded()
+                    self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.discard(),
                                                   leftAction: #selector(self.close(_:)),
                                                   rightTitle: R.string.localizable.send(),

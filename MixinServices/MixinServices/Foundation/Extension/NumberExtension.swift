@@ -73,6 +73,9 @@ public extension Int64 {
 
 public extension Decimal {
     
+    public static let wei = Decimal(sign: .plus, exponent: -18, significand: 1)
+    public static let gwei = Decimal(sign: .plus, exponent: -9, significand: 1)
+    
     public var numberOfSignificantFractionalDigits: Int {
         max(-exponent, 0)
     }

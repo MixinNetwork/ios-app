@@ -13,6 +13,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     private let request: WalletConnectSign.Request
     private let transactionPreview: WalletConnectTransactionPreview
     private let chain: WalletConnectService.Chain
+    private let chainToken: TokenItem
     
     private var feeOptions: [NetworkFeeOption] = []
     private var selectedFeeOption: NetworkFeeOption?
@@ -24,13 +25,15 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     init(
         session: WalletConnectSession,
         request: WalletConnectSign.Request,
+        transaction: WalletConnectTransactionPreview,
         chain: WalletConnectService.Chain,
-        transaction: WalletConnectTransactionPreview
+        chainToken: TokenItem
     ) {
         self.session = session
         self.request = request
-        self.chain = chain
         self.transactionPreview = transaction
+        self.chain = chain
+        self.chainToken = chainToken
         super.init(warnings: [])
     }
     
@@ -47,10 +50,6 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                               subtitle: R.string.localizable.web3_signing_warning(),
                               style: .destructive)
         var rows: [Row] = [
-            .web3Amount(caption: R.string.localizable.estimated_balance_change(),
-                        tokenAmount: nil,
-                        fiatMoneyAmount: nil,
-                        token: .xin),
             .amount(caption: .fee,
                     token: R.string.localizable.calculating(),
                     fiatMoney: R.string.localizable.calculating(),
@@ -59,6 +58,20 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
             .proposer(name: session.name, host: session.host),
             .info(caption: .network, content: chain.name)
         ]
+        let transactionRow: Row
+        if let tokenValue = transactionPreview.decimalValue {
+            let tokenAmount = CurrencyFormatter.localizedString(from: tokenValue, format: .precision, sign: .never)
+            let fiatMoneyValue = tokenValue * chainToken.decimalUSDPrice * Currency.current.decimalRate
+            let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            transactionRow = .web3Amount(caption: R.string.localizable.estimated_balance_change(),
+                                         tokenAmount: tokenAmount,
+                                         fiatMoneyAmount: fiatMoneyAmount,
+                                         token: chainToken)
+        } else {
+            transactionRow = .web3Message(caption: R.string.localizable.transaction(),
+                                          message: transactionPreview.hexData)
+        }
+        rows.insert(transactionRow, at: 0)
         if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {
             // FIXME: Get account by `self.request`
             rows.insert(.info(caption: .account, content: account), at: 3)
@@ -113,6 +126,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                                       chainId: chain.id)
                 await MainActor.run {
                     self.transaction = transaction
+                    self.account = account
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .success)
                     self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
@@ -127,6 +141,8 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
             } catch {
                 Logger.walletConnect.warn(category: "TransactionRequest", message: "Failed to approve: \(error)")
                 await MainActor.run {
+                    self.transaction = nil
+                    self.account = nil
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
                     self.layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
@@ -206,14 +222,10 @@ extension TransactionRequestViewController {
             confirmButton.isBusy = true
             confirmButton.isEnabled = false
         }
-        TIPAPI.tipGas(id: chain.internalID) { [gas=transactionPreview.gas, chain, weak self] result in
+        TIPAPI.tipGas(id: chain.internalID) { [gas=transactionPreview.gas, chainToken, weak self] result in
             switch result {
             case .success(let prices):
-                guard let token = TokenDAO.shared.token(with: chain.internalID) else {
-                    // FIXME: Load token if inexist
-                    return
-                }
-                let tokenPrice = token.decimalUSDPrice * Decimal(Currency.current.rate)
+                let tokenPrice = chainToken.decimalUSDPrice * Currency.current.decimalRate
                 let options = [
                     NetworkFeeOption(speed: R.string.localizable.fast(),
                                      tokenPrice: tokenPrice,
@@ -277,11 +289,9 @@ extension TransactionRequestViewController {
         guard feeOptions.count == 3 else {
             return
         }
-        let tokenAmountRange = "\(feeOptions[2].gasValue) - \(feeOptions[0].gasValue) \(chain.gasSymbol)"
-        let fiatMoneyAmountRange = "\(feeOptions[2].cost) - \(feeOptions[0].cost)"
-        let row: Row = .selectableFee(selected: selected.speed,
-                                      tokenAmount: tokenAmountRange,
-                                      fiatMoneyAmount: fiatMoneyAmountRange)
+        let row: Row = .selectableFee(speed: selected.speed,
+                                      tokenAmount: selected.gasValue + " " + chain.gasSymbol,
+                                      fiatMoneyAmount: selected.cost)
         replaceRow(at: 1, with: row)
     }
     

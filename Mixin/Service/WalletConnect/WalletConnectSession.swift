@@ -11,6 +11,7 @@ final class WalletConnectSession {
         case mismatchedNamespaces
         case noTransaction
         case noChain(String)
+        case noToken(String)
     }
     
     enum Method: String, CaseIterable {
@@ -125,7 +126,15 @@ extension WalletConnectSession {
             guard let chain = WalletConnectService.supportedChains[request.chainId] else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let transactionRequest = TransactionRequestViewController(session: self, request: request, chain: chain, transaction: transactionPreview)
+            guard let chainToken = TokenDAO.shared.tokenItem(with: chain.internalID) else {
+                // FIXME: Retrive token with API
+                throw Error.noToken(chain.internalID)
+            }
+            let transactionRequest = TransactionRequestViewController(session: self,
+                                                                      request: request,
+                                                                      transaction: transactionPreview,
+                                                                      chain: chain,
+                                                                      chainToken: chainToken)
             WalletConnectService.shared.presentRequest(viewController: transactionRequest)
         } catch {
             Logger.walletConnect.debug(category: "WalletConnectSession", message: "Failed to send transaction: \(error)")

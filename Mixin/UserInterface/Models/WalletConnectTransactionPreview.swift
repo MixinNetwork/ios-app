@@ -22,53 +22,57 @@ struct WalletConnectTransactionPreview: Codable {
     
     let from: EthereumAddress
     let to: EthereumAddress
-    let value: BigUInt
+    let value: BigUInt?
     let gas: BigUInt
+    let hexData: String
     let data: Data
     
-    let decimalValue: Decimal
+    let decimalValue: Decimal?
     let decimalGas: Decimal
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        let dataString = try container.decode(String.self, forKey: .data)
-        guard let data = Data(hex: dataString) else {
+        let hexData = try container.decode(String.self, forKey: .data)
+        guard let data = Data(hex: hexData) else {
             throw Error.invalidData
         }
         
-        let value: BigUInt
+        let value: BigUInt?
+        let decimalValue: Decimal?
         if let hexValue = try? container.decode(String.self, forKey: .value), let v = BigUInt(hex: hexValue) {
             value = v
+            let weiValueString = v.description
+            guard
+                weiValueString.count < 38,
+                var weiValue = Decimal(string: weiValueString, locale: .enUSPOSIX)
+            else {
+                throw Error.valueTooLarge
+            }
+            decimalValue = weiValue * .wei
         } else {
             value = 0
+            decimalValue = nil
         }
-        let decimalValueString = value.description
-        guard
-            decimalValueString.count < 38,
-            var decimalValue = Decimal(string: decimalValueString, locale: .enUSPOSIX)
-        else {
-            throw Error.valueTooLarge
-        }
-        decimalValue /= 1000000000000000000 // FIXME: Wei to decimal
         
         let hexGas = try container.decode(String.self, forKey: .gas)
         guard let gas = BigUInt(hex: hexGas) else {
             throw Error.invalidGas
         }
-        let decimalGasString = gas.description
+        let gweiGasString = gas.description
         guard
-            decimalGasString.count < 38,
-            var decimalGas = Decimal(string: decimalGasString, locale: .enUSPOSIX)
+            gweiGasString.count < 38,
+            var gweiGas = Decimal(string: gweiGasString, locale: .enUSPOSIX)
         else {
             throw Error.gasTooLarge
         }
-        decimalGas /= 1000000000 // FIXME: Gwei to decimal
+        let decimalGas = gweiGas * .gwei
         
         self.from = try container.decode(EthereumAddress.self, forKey: .from)
         self.to = try container.decode(EthereumAddress.self, forKey: .to)
         self.value = value
         self.gas = gas
+        self.hexData = hexData
         self.data = data
         self.decimalValue = decimalValue
         self.decimalGas = decimalGas

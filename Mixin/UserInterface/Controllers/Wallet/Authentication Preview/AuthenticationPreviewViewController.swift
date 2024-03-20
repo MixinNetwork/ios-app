@@ -229,9 +229,9 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = caption.uppercased()
             cell.setToken(token, tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
             return cell
-        case let .selectableFee(selected, tokenAmount, fiatMoneyAmount):
+        case let .selectableFee(speed, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.fee_selection(selected).uppercased()
+            cell.captionLabel.text = R.string.localizable.fee_selection(speed).uppercased()
             cell.primaryLabel.text = tokenAmount
             cell.secondaryLabel.text = fiatMoneyAmount
             cell.setPrimaryAmountLabel(usesBoldFont: false)
@@ -313,7 +313,7 @@ extension AuthenticationPreviewViewController {
         case mainnetReceiver(String)
         case web3Message(caption: String, message: String)
         case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: TokenItem) // Nil amount for unlimited
-        case selectableFee(selected: String, tokenAmount: String, fiatMoneyAmount: String)
+        case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
     }
     
     struct TableHeaderViewStyle: OptionSet {

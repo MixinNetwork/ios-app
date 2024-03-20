@@ -10,6 +10,11 @@ public class Currency: CustomDebugStringConvertible {
         return UIImage(named: "Currency/\(code)")!
     }
     
+    public var decimalRate: Decimal {
+        // TODO: Init with decimal value and derives double value
+        Decimal(rate)
+    }
+    
     init(code: String, symbol: String, rate: Double) {
         self.code = code
         self.symbol = symbol

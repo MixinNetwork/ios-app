@@ -3,11 +3,19 @@ import MixinServices
 
 final class Web3AmountChangeCell: UITableViewCell {
     
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var tokenStackView: UIStackView!
     @IBOutlet weak var tokenAmountLabel: UILabel!
-    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        symbolLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
+        contentStackView.setCustomSpacing(1, after: tokenStackView)
+    }
     
     func setToken(_ token: TokenItem, tokenAmount: String?, fiatMoneyAmount: String?) {
         assetIconView.setIcon(token: token)

@@ -212,59 +212,91 @@ extension WalletConnectService {
 // MARK: - WalletConnect Request
 extension WalletConnectService {
     
-    @MainActor
     private func show(proposal: WalletConnectSign.Session.Proposal) {
         connectionHud?.hide()
-        logger.info(category: "WalletConnectService", message: "Showing: \(proposal))")
-        
-        var chains = Self.supportedChains.values.map(\.caip2)
-        chains.removeAll { chain in
-            let isRequired = proposal.requiredNamespaces.values.contains { namespace in
-                namespace.chains?.contains(chain) ?? false
+        DispatchQueue.global().async {
+            var chains = Array(Self.supportedChains.values)
+            chains.removeAll { chain in
+                let isRequired = proposal.requiredNamespaces.values.contains { namespace in
+                    namespace.chains?.contains(chain.caip2) ?? false
+                }
+                let isOptional: Bool
+                if let namespaces = proposal.optionalNamespaces {
+                    isOptional = namespaces.values.contains { namespace in
+                        namespace.chains?.contains(chain.caip2) ?? false
+                    }
+                } else {
+                    isOptional = false
+                }
+                return !isRequired && !isOptional
             }
-            let isOptional: Bool
-            if let namespaces = proposal.optionalNamespaces {
-                isOptional = namespaces.values.contains { namespace in
-                    namespace.chains?.contains(chain) ?? false
+            guard !chains.isEmpty else {
+                logger.warn(category: "WalletConnectService", message: "Requires to support \(proposal.requiredNamespaces.values.compactMap(\.chains).flatMap { $0 })")
+                let requiredChains = proposal.requiredNamespaces.values
+                    .flatMap { namespace in
+                        namespace.chains ?? []
+                    }
+                    .map(\.namespace)
+                let requiredNamespaces: String
+                if requiredChains.isEmpty {
+                    requiredNamespaces = "<empty>"
+                } else {
+                    requiredNamespaces = requiredChains.joined(separator: ", ")
+                }
+                DispatchQueue.main.async {
+                    self.presentRejection(title: "Chain not supported",
+                                          message: "\(proposal.proposer.name) requires to support \(requiredNamespaces)")
+                }
+                Task {
+                    try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .unsupportedChains)
+                }
+                return
+            }
+            
+            let events: Set<String> = ["accountsChanged", "chainChanged"]
+            let proposalEvents = proposal.requiredNamespaces.values.map(\.events).flatMap({ $0 })
+            guard events.isSuperset(of: proposalEvents) else {
+                logger.warn(category: "WalletConnectService", message: "Requires to support \(proposalEvents)")
+                let events = proposalEvents.joined(separator: ", ")
+                DispatchQueue.main.async {
+                    self.presentRejection(title: "Chain not supported",
+                                          message: "\(proposal.proposer.name) requires to support \(events))")
+                }
+                Task {
+                    try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .upsupportedEvents)
+                }
+                return
+            }
+            
+            let account: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
+            if account == nil {
+                DispatchQueue.main.async {
+                    let unlock = UnlockWeb3WalletViewController(chain: chains[0])
+                    unlock.onDismiss = { isUnlocked in
+                        if isUnlocked {
+                            self.presentedViewController = nil // Value may not released immediately
+                            let connectWallet = ConnectWalletViewController(proposal: proposal,
+                                                                            chains: chains.map(\.caip2),
+                                                                            events: Array(events))
+                            self.presentRequest(viewController: connectWallet)
+                        } else {
+                            Task {
+                                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
+                            }
+                        }
+                    }
+                    self.presentRequest(viewController: unlock)
                 }
             } else {
-                isOptional = false
-            }
-            return !isRequired && !isOptional
-        }
-        guard !chains.isEmpty else {
-            logger.warn(category: "WalletConnectService", message: "Requires to support \(proposal.requiredNamespaces.values.compactMap(\.chains).flatMap { $0 })")
-            let requiredChains = proposal.requiredNamespaces.values
-                .flatMap { namespace in
-                    namespace.chains ?? []
+                logger.info(category: "WalletConnectService", message: "Showing: \(proposal))")
+                DispatchQueue.main.async {
+                    let connectWallet = ConnectWalletViewController(proposal: proposal,
+                                                                    chains: chains.map(\.caip2),
+                                                                    events: Array(events))
+                    self.presentRequest(viewController: connectWallet)
                 }
-                .map(\.namespace)
-            let requiredNamespaces: String
-            if requiredChains.isEmpty {
-                requiredNamespaces = "<empty>"
-            } else {
-                requiredNamespaces = requiredChains.joined(separator: ", ")
             }
-            presentRejection(title: "Chain not supported", message: "\(proposal.proposer.name) requires to support \(requiredNamespaces)")
-            Task {
-                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .unsupportedChains)
-            }
-            return
         }
-        
-        let events: Set<String> = ["accountsChanged", "chainChanged"]
-        let proposalEvents = proposal.requiredNamespaces.values.map(\.events).flatMap({ $0 })
-        guard events.isSuperset(of: proposalEvents) else {
-            logger.warn(category: "WalletConnectService", message: "Requires to support \(proposalEvents)")
-            presentRejection(title: "Chain not supported", message: "\(proposal.proposer.name) requires to support \(proposalEvents.joined(separator: ", "))")
-            Task {
-                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .upsupportedEvents)
-            }
-            return
-        }
-        
-        let connectWallet = ConnectWalletViewController(proposal: proposal, chains: chains, events: Array(events))
-        presentRequest(viewController: connectWallet)
     }
     
     private func handle(request: WalletConnectSign.Request) {

@@ -686,6 +686,7 @@
 		940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */; };
 		940C7541299AAE130006338F /* Web3Wallet in Frameworks */ = {isa = PBXBuildFile; productRef = 940C7540299AAE130006338F /* Web3Wallet */; };
 		940DC5922B075E03009A15D1 /* SafePaymentURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940DC5912B075E03009A15D1 /* SafePaymentURL.swift */; };
+		94130E292BAB35150098BE48 /* Web3DiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94130E282BAB35150098BE48 /* Web3DiagnosticViewController.swift */; };
 		94149B432A17B4D5003E9E1A /* NetworkSpeedConditioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94149B422A17B4D5003E9E1A /* NetworkSpeedConditioner.swift */; };
 		94149B482A190889003E9E1A /* DeviceTransferRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94149B472A190889003E9E1A /* DeviceTransferRecord.swift */; };
 		94149B582A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94149B572A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift */; };
@@ -1892,6 +1893,7 @@
 		940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServerDataSource.swift; sourceTree = "<group>"; };
 		940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinAuthorizationsContentViewController.swift; sourceTree = "<group>"; };
 		940DC5912B075E03009A15D1 /* SafePaymentURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafePaymentURL.swift; sourceTree = "<group>"; };
+		94130E282BAB35150098BE48 /* Web3DiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DiagnosticViewController.swift; sourceTree = "<group>"; };
 		94149B422A17B4D5003E9E1A /* NetworkSpeedConditioner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSpeedConditioner.swift; sourceTree = "<group>"; };
 		94149B472A190889003E9E1A /* DeviceTransferRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferRecord.swift; sourceTree = "<group>"; };
 		94149B572A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClosedReason.swift; sourceTree = "<group>"; };
@@ -3235,6 +3237,7 @@
 				94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */,
 				94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */,
 				94658C9F2B347E4100F5EB21 /* UTXODiagnosticViewController.swift */,
+				94130E282BAB35150098BE48 /* Web3DiagnosticViewController.swift */,
 				94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */,
 				94658CA62B34829B00F5EB21 /* OutputCell.swift */,
 				94658CA72B34829B00F5EB21 /* OutputCell.xib */,
@@ -5734,6 +5737,7 @@
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
 				94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */,
+				94130E292BAB35150098BE48 /* Web3DiagnosticViewController.swift in Sources */,
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,
 				94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */,
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,

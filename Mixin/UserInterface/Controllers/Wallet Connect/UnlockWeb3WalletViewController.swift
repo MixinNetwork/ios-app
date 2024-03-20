@@ -6,6 +6,10 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
     
     private let chain: WalletConnectService.Chain
     
+    var onDismiss: ((_ isUnlocked: Bool) -> Void)?
+    
+    private var isUnlocked = false
+    
     init(chain: WalletConnectService.Chain) {
         self.chain = chain
         super.init(warnings: [])
@@ -34,6 +38,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                 .map(\.name)
             if otherEVMChains.count == 2 {
                 let line = R.string.localizable.unlock_web3_account_agreement_3(chain.name, otherEVMChains[0], otherEVMChains[1])
+                lines.append(line)
             }
         }
         tableFooterView.setText(preface: R.string.localizable.unlock_web3_account_agreement(), bulletLines: lines)
@@ -53,6 +58,16 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                                  animation: animated ? .vertical : nil)
     }
     
+    override func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true) { [onDismiss, isUnlocked] in
+            onDismiss?(isUnlocked)
+        }
+    }
+    
+    override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        onDismiss?(isUnlocked)
+    }
+    
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
@@ -65,6 +80,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                 let address = try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
                 PropertiesDAO.shared.set(address, forKey: .evmAccount)
                 await MainActor.run {
+                    self.isUnlocked = true
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .success)
                     self.tableHeaderView.titleLabel.text = R.string.localizable.unlock_web3_account_success()
@@ -78,6 +94,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
             } catch {
                 Logger.walletConnect.warn(category: "Unlock", message: "\(error)")
                 await MainActor.run {
+                    self.isUnlocked = false
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
                     self.layoutTableHeaderView(title: R.string.localizable.unlock_web3_account_failed(),

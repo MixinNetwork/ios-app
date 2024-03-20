@@ -113,27 +113,29 @@ final class Web3WalletViewController: UIViewController {
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
         address = notification.userInfo?[PropertiesDAO.Key.evmAccount] as? String
-        if address != nil {
+        if address == nil {
+            tableHeaderView.showUnlockAccount(chain: chain)
+        } else {
             tableHeaderView.showCopyAddress(chain: chain)
         }
     }
     
     private func load(sessions: [WalletConnectSession]) {
-        var embeddedSessionsIndices: Set<Int> = []
-        self.embeddedDapps = embeddedDapps.map { dapp in
-            if let index = sessions.firstIndex(where: { $0.host == dapp.host }) {
-                let session = sessions[index]
-                embeddedSessionsIndices.insert(index)
-                return dapp.replacingSession(with: session)
+        let embeddedDapps = NSMutableArray(array: embeddedDapps)
+        let externalSessions = sessions.filter { session in
+            let embeddedIndex = embeddedDapps.indexOfObject { object, _, stop in
+                (object as! EmbeddedDapp).host == session.host
+            }
+            if embeddedIndex == NSNotFound {
+                return true
             } else {
-                return dapp
+                let dapp = embeddedDapps[embeddedIndex] as! EmbeddedDapp
+                embeddedDapps[embeddedIndex] = dapp.replacingSession(with: session)
+                return false
             }
         }
-        self.sessions = sessions.enumerated()
-            .filter { (index, session) in
-                !embeddedSessionsIndices.contains(index)
-            }
-            .map(\.element)
+        self.embeddedDapps = embeddedDapps as! [EmbeddedDapp]
+        self.sessions = externalSessions
         tableView.reloadData()
     }
     

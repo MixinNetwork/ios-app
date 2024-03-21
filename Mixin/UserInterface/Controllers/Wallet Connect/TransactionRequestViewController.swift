@@ -124,7 +124,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                 }
                 let transaction = EthereumTransaction(from: account.address,
                                                       to: transactionPreview.to,
-                                                      value: transactionPreview.value,
+                                                      value: transactionPreview.value ?? 0,
                                                       data: transactionPreview.data,
                                                       nonce: nil,
                                                       gasPrice: fee.gasPrice,

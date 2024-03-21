@@ -71,7 +71,7 @@ final class Web3WalletHeaderView: UIView {
         bottomLabel.text = R.string.localizable.access_dapps_defi_projects()
         
         UIView.performWithoutAnimation {
-            button.setTitle(R.string.localizable.create(), for: .normal)
+            button.setTitle(R.string.localizable.unlock(), for: .normal)
             button.layoutIfNeeded()
         }
         action = .createAccount

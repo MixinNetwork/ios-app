@@ -8,7 +8,7 @@ import Web3Wallet
 import MixinServices
 
 fileprivate var logger: MixinServices.Logger {
-    .walletConnect
+    .web3
 }
 
 final class WalletConnectService {

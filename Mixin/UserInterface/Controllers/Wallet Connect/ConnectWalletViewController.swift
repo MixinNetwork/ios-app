@@ -96,7 +96,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                                                   action: #selector(self.close(_:)))
                 }
             } catch {
-                Logger.walletConnect.warn(category: "ConnectWallet", message: "Failed to approve: \(error)")
+                Logger.web3.warn(category: "ConnectWallet", message: "Failed to approve: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)

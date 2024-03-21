@@ -69,7 +69,7 @@ final class WalletConnectSession {
         case .ethSignTransaction:
             WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
                                                          message: R.string.localizable.method_not_supported(request.method))
-            Logger.walletConnect.warn(category: "WalletConnectSession", message: "eth_signTransaction rejected")
+            Logger.web3.warn(category: "WalletConnectSession", message: "eth_signTransaction rejected")
             Task {
                 try await Web3Wallet.instance.respond(topic: request.topic,
                                                       requestId: request.id,
@@ -80,7 +80,7 @@ final class WalletConnectSession {
         case .none:
             WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
                                                          message: R.string.localizable.method_not_supported(request.method))
-            Logger.walletConnect.warn(category: "WalletConnectSession", message: "Unknown method: \(request.method)")
+            Logger.web3.warn(category: "WalletConnectSession", message: "Unknown method: \(request.method)")
             Task {
                 try await Web3Wallet.instance.respond(topic: request.topic,
                                                       requestId: request.id,
@@ -137,7 +137,7 @@ extension WalletConnectSession {
                                                                       chainToken: chainToken)
             WalletConnectService.shared.presentRequest(viewController: transactionRequest)
         } catch {
-            Logger.walletConnect.debug(category: "WalletConnectSession", message: "Failed to send transaction: \(error)")
+            Logger.web3.debug(category: "WalletConnectSession", message: "Failed to send transaction: \(error)")
             WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
                                                          message: R.string.localizable.unable_to_decode_the_request(error.localizedDescription))
             Task {

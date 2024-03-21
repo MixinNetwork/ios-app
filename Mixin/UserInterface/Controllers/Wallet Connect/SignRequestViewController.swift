@@ -92,7 +92,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                                                   animation: .vertical)
                 }
             } catch {
-                Logger.walletConnect.warn(category: "WalletConnectService", message: "Failed to approve: \(error)")
+                Logger.web3.warn(category: "WalletConnectService", message: "Failed to approve: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
@@ -148,6 +148,7 @@ extension SignRequestViewController {
                     self.close(sendButton)
                 }
             } catch {
+                Logger.web3.error(category: "SignRequest", message: "Failed to send: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     sendButton.isBusy = false

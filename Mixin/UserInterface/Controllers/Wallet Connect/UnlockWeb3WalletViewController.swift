@@ -92,7 +92,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                                                   action:  #selector(self.close(_:)))
                 }
             } catch {
-                Logger.walletConnect.warn(category: "Unlock", message: "\(error)")
+                Logger.web3.warn(category: "Unlock", message: "\(error)")
                 await MainActor.run {
                     self.isUnlocked = false
                     self.canDismissInteractively = true

@@ -145,7 +145,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                                   animation: .vertical)
                 }
             } catch {
-                Logger.walletConnect.warn(category: "TransactionRequest", message: "Failed to approve: \(error)")
+                Logger.web3.warn(category: "TransactionRequest", message: "Failed to approve: \(error)")
                 await MainActor.run {
                     self.transaction = nil
                     self.account = nil
@@ -194,11 +194,11 @@ extension TransactionRequestViewController {
                 default:
                     network = .custom("\(chain.id)")
                 }
-                Logger.walletConnect.info(category: "TransactionRequest", message: "New client with: \(chain)")
+                Logger.web3.info(category: "TransactionRequest", message: "New client with: \(chain)")
                 let client = EthereumHttpClient(url: chain.rpcServerURL, network: network)
-                Logger.walletConnect.debug(category: "TransactionRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
+                Logger.web3.debug(category: "TransactionRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
                 let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
-                Logger.walletConnect.debug(category: "TransactionRequest", message: "Will respond hash: \(hash)")
+                Logger.web3.debug(category: "TransactionRequest", message: "Will respond hash: \(hash)")
                 let response = RPCResult.response(AnyCodable(hash))
                 try await Web3Wallet.instance.respond(topic: request.topic,
                                                       requestId: request.id,
@@ -208,6 +208,7 @@ extension TransactionRequestViewController {
                 }
             } catch {
                 await MainActor.run {
+                    Logger.web3.error(category: "TransactionRequest", message: "Failed to send: \(error)")
                     self.canDismissInteractively = true
                     sendButton.isBusy = false
                     let alert = UIAlertController(title: "Failed to Send",
@@ -267,13 +268,13 @@ extension TransactionRequestViewController {
                         }
                     }
                 } else {
-                    Logger.walletConnect.error(category: "TransactionRequest", message: "Invalid prices: \(prices)")
+                    Logger.web3.error(category: "TransactionRequest", message: "Invalid prices: \(prices)")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         self?.loadGas()
                     }
                 }
             case .failure(let error):
-                Logger.walletConnect.error(category: "TransactionRequest", message: "Failed to get gas: \(error)")
+                Logger.web3.error(category: "TransactionRequest", message: "Failed to get gas: \(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self?.loadGas()
                 }

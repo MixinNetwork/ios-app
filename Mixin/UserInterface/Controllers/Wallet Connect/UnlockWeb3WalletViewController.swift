@@ -87,6 +87,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                     self.reloadData(with: [
                         .info(caption: .account, content: address)
                     ])
+                    self.tableView.tableFooterView = nil
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadSingleButtonTrayView(title: R.string.localizable.done(),
                                                   action:  #selector(self.close(_:)))

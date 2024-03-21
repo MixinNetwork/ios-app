@@ -69,7 +69,7 @@ final class WalletConnectSession {
         case .ethSignTransaction:
             WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
                                                          message: R.string.localizable.method_not_supported(request.method))
-            Logger.web3.warn(category: "WalletConnectSession", message: "eth_signTransaction rejected")
+            Logger.web3.warn(category: "Session", message: "eth_signTransaction rejected")
             Task {
                 try await Web3Wallet.instance.respond(topic: request.topic,
                                                       requestId: request.id,
@@ -80,7 +80,7 @@ final class WalletConnectSession {
         case .none:
             WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
                                                          message: R.string.localizable.method_not_supported(request.method))
-            Logger.web3.warn(category: "WalletConnectSession", message: "Unknown method: \(request.method)")
+            Logger.web3.warn(category: "Session", message: "Unknown method: \(request.method)")
             Task {
                 try await Web3Wallet.instance.respond(topic: request.topic,
                                                       requestId: request.id,

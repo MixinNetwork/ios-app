@@ -75,7 +75,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                          token: chainToken)
         } else {
             transactionRow = .web3Message(caption: R.string.localizable.transaction(),
-                                          message: transactionPreview.hexData)
+                                          message: transactionPreview.hexData ?? "")
         }
         rows.insert(transactionRow, at: 0)
         if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {

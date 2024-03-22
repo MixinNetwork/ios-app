@@ -200,7 +200,7 @@ extension TransactionRequestViewController {
                 }
                 Logger.web3.info(category: "TxRequest", message: "New client with: \(chain)")
                 let client = EthereumHttpClient(url: chain.rpcServerURL, network: network)
-                Logger.web3.debug(category: "TxRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
+                Logger.web3.info(category: "TxRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
                 let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
                 Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")
                 let response = RPCResult.response(AnyCodable(hash))

@@ -72,7 +72,7 @@ final class WalletConnectService {
     }
     
     func connect(to uri: WalletConnectURI) {
-        logger.debug(category: "WalletConnectService", message: "Will connect to v2 topic: \(uri.topic)")
+        logger.debug(category: "Service", message: "Will connect to v2 topic: \(uri.topic)")
         assert(Thread.isMainThread)
         let hud = loadHud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
@@ -80,7 +80,7 @@ final class WalletConnectService {
             do {
                 try await Web3Wallet.instance.pair(uri: uri)
             } catch {
-                logger.error(category: "WalletConnectService", message: "Failed to connect to: \(uri.absoluteString), error: \(error)")
+                logger.error(category: "Service", message: "Failed to connect to: \(uri.absoluteString), error: \(error)")
                 await MainActor.run {
                     hud.set(style: .error, text: error.localizedDescription)
                     hud.scheduleAutoHidden()
@@ -118,7 +118,7 @@ final class WalletConnectService {
             do {
                 try await Relay.instance.batchSubscribe(topics: topics)
             } catch {
-                logger.error(category: "WalletConnectService", message: "Failed to subscribe: \(error)")
+                logger.error(category: "Service", message: "Failed to subscribe: \(error)")
             }
         }
     }
@@ -234,7 +234,7 @@ extension WalletConnectService {
                 return !isRequired && !isOptional
             }
             guard !chains.isEmpty else {
-                logger.warn(category: "WalletConnectService", message: "Requires to support \(proposal.requiredNamespaces.values.compactMap(\.chains).flatMap { $0 })")
+                logger.warn(category: "Service", message: "Requires to support \(proposal.requiredNamespaces.values.compactMap(\.chains).flatMap { $0 })")
                 let requiredChains = proposal.requiredNamespaces.values
                     .flatMap { namespace in
                         namespace.chains ?? []
@@ -259,7 +259,7 @@ extension WalletConnectService {
             let events: Set<String> = ["accountsChanged", "chainChanged"]
             let proposalEvents = proposal.requiredNamespaces.values.map(\.events).flatMap({ $0 })
             guard events.isSuperset(of: proposalEvents) else {
-                logger.warn(category: "WalletConnectService", message: "Requires to support \(proposalEvents)")
+                logger.warn(category: "Service", message: "Requires to support \(proposalEvents)")
                 let events = proposalEvents.joined(separator: ", ")
                 DispatchQueue.main.async {
                     self.presentRejection(title: "Chain not supported",
@@ -291,7 +291,7 @@ extension WalletConnectService {
                     self.presentRequest(viewController: unlock)
                 }
             } else {
-                logger.info(category: "WalletConnectService", message: "Showing: \(proposal))")
+                logger.info(category: "Service", message: "Showing: \(proposal))")
                 DispatchQueue.main.async {
                     let connectWallet = ConnectWalletViewController(proposal: proposal,
                                                                     chains: chains.map(\.caip2),
@@ -308,7 +308,7 @@ extension WalletConnectService {
             if let session = self.sessions.first(where: { $0.topic == topic }) {
                 session.handle(request: request)
             } else {
-                logger.warn(category: "WalletConnectService", message: "Missing session for topic: \(topic)")
+                logger.warn(category: "Service", message: "Missing session for topic: \(topic)")
                 Task {
                     let error = JSONRPCError(code: -1, message: "Missing session")
                     try await Web3Wallet.instance.respond(topic: topic, requestId: request.id, response: .error(error))

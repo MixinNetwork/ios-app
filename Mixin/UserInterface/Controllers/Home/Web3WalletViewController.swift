@@ -4,53 +4,6 @@ import MixinServices
 
 final class Web3WalletViewController: UIViewController {
     
-    private struct EmbeddedDapp {
-        
-        static let uniswap = EmbeddedDapp(
-            name: "Uniswap",
-            host: "app.uniswap.org",
-            url: URL(string: "https://app.uniswap.org"),
-            icon: R.image.explore.uniswap()!,
-            session: nil
-        )
-        
-        static let snapshot = EmbeddedDapp(
-            name: "Snapshot",
-            host: "snapshot.org",
-            url: URL(string: "https://snapshot.org"),
-            icon: R.image.explore.snapshot()!, 
-            session: nil
-        )
-        
-        let name: String
-        let host: String
-        let url: URL?
-        let icon: UIImage
-        let session: WalletConnectSession?
-        
-        func replacingSession(with session: WalletConnectSession?) -> EmbeddedDapp {
-            if let session {
-                EmbeddedDapp(name: session.name,
-                             host: session.host,
-                             url: session.url,
-                             icon: icon,
-                             session: session)
-            } else {
-                EmbeddedDapp(name: name,
-                             host: host,
-                             url: url,
-                             icon: icon,
-                             session: nil)
-            }
-        }
-        
-    }
-    
-    private enum Section: Int, CaseIterable {
-        case embedded = 0
-        case session
-    }
-    
     private let tableView = UITableView()
     private let tableHeaderView = R.nib.web3WalletHeaderView(withOwner: nil)!
     private let chain: WalletConnectService.Chain
@@ -210,6 +163,58 @@ extension Web3WalletViewController: UITableViewDelegate {
                                                        asChildOf: container)
             }
         }
+    }
+    
+}
+
+// MARK: - Data Structure
+extension Web3WalletViewController {
+    
+    private struct EmbeddedDapp {
+        
+        static let uniswap = EmbeddedDapp(
+            name: "Uniswap",
+            host: "app.uniswap.org",
+            url: URL(string: "https://app.uniswap.org"),
+            icon: R.image.explore.uniswap()!,
+            session: nil
+        )
+        
+        static let snapshot = EmbeddedDapp(
+            name: "Snapshot",
+            host: "snapshot.org",
+            url: URL(string: "https://snapshot.org"),
+            icon: R.image.explore.snapshot()!,
+            session: nil
+        )
+        
+        let name: String
+        let host: String
+        let url: URL?
+        let icon: UIImage
+        let session: WalletConnectSession?
+        
+        func replacingSession(with session: WalletConnectSession?) -> EmbeddedDapp {
+            if let session {
+                EmbeddedDapp(name: session.name,
+                             host: session.host,
+                             url: session.url,
+                             icon: icon,
+                             session: session)
+            } else {
+                EmbeddedDapp(name: name,
+                             host: host,
+                             url: url,
+                             icon: icon,
+                             session: nil)
+            }
+        }
+        
+    }
+    
+    private enum Section: Int, CaseIterable {
+        case embedded = 0
+        case session
     }
     
 }

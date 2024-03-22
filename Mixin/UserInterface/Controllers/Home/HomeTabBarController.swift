@@ -68,14 +68,6 @@ final class HomeTabBarController: UIViewController {
         switchToChildAfterValidated(with: walletID)
     }
     
-    func presentOnTopMostPresentedController(_ viewControllerToPresent: UIViewController, animated: Bool) {
-        var topMost: UIViewController = self
-        while let next = topMost.presentedViewController, !next.isBeingDismissed {
-            topMost = next
-        }
-        topMost.present(viewControllerToPresent, animated: true)
-    }
-    
     private func updateTabBarShadow(resolveColorUsing traitCollection: UITraitCollection) {
         switch traitCollection.userInterfaceStyle {
         case .dark:

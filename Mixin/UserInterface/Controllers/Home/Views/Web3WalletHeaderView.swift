@@ -8,7 +8,7 @@ final class Web3WalletHeaderView: UIView {
     }
     
     private enum Action {
-        case createAccount
+        case unlockAccount
         case copyAddress
     }
     
@@ -50,7 +50,7 @@ final class Web3WalletHeaderView: UIView {
     
     @IBAction func requestAction(_ sender: Any) {
         switch action {
-        case .createAccount:
+        case .unlockAccount:
             delegate?.web3WalletHeaderViewRequestToCreateAccount(self)
         case .copyAddress:
             delegate?.web3WalletHeaderViewRequestToCopyAddress(self)
@@ -74,7 +74,7 @@ final class Web3WalletHeaderView: UIView {
             button.setTitle(R.string.localizable.unlock(), for: .normal)
             button.layoutIfNeeded()
         }
-        action = .createAccount
+        action = .unlockAccount
     }
     
     func showCopyAddress(chain: WalletConnectService.Chain, address: String) {

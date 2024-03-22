@@ -42,7 +42,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
             .proposer(name: proposal.proposer.name, host: host),
         ]
         if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {
-            // FIXME: Get account by `self.chains`
+            // TODO: Get account by `self.request` if blockchain other than EVMs is supported
             rows.append(.info(caption: .account, content: account))
         }
         reloadData(with: rows)
@@ -96,7 +96,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                                                   action: #selector(self.close(_:)))
                 }
             } catch {
-                Logger.web3.warn(category: "ConnectWallet", message: "Failed to approve: \(error)")
+                Logger.web3.error(category: "Connect", message: "Failed to approve: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
@@ -117,6 +117,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         guard !isProposalApproved else {
             return
         }
+        Logger.web3.info(category: "Connect", message: "Rejected by dismissing")
         Task {
             try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
         }

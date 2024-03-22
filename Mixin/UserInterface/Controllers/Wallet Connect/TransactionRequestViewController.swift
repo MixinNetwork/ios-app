@@ -79,7 +79,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         }
         rows.insert(transactionRow, at: 0)
         if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {
-            // FIXME: Get account by `self.request`
+            // TODO: Get account by `self.request` if blockchain other than EVMs is supported
             rows.insert(.info(caption: .account, content: account), at: 3)
         }
         reloadData(with: rows)
@@ -149,7 +149,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                                   animation: .vertical)
                 }
             } catch {
-                Logger.web3.warn(category: "TransactionRequest", message: "Failed to approve: \(error)")
+                Logger.web3.error(category: "TxRequest", message: "Failed to approve: \(error)")
                 await MainActor.run {
                     self.transaction = nil
                     self.account = nil
@@ -198,24 +198,25 @@ extension TransactionRequestViewController {
                 default:
                     network = .custom("\(chain.id)")
                 }
-                Logger.web3.info(category: "TransactionRequest", message: "New client with: \(chain)")
+                Logger.web3.info(category: "TxRequest", message: "New client with: \(chain)")
                 let client = EthereumHttpClient(url: chain.rpcServerURL, network: network)
-                Logger.web3.debug(category: "TransactionRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
+                Logger.web3.debug(category: "TxRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
                 let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
-                Logger.web3.debug(category: "TransactionRequest", message: "Will respond hash: \(hash)")
+                Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")
                 let response = RPCResult.response(AnyCodable(hash))
                 try await Web3Wallet.instance.respond(topic: request.topic,
                                                       requestId: request.id,
                                                       response: response)
                 await MainActor.run {
+                    self.hasTransactionSent = true
                     self.close(sendButton)
                 }
             } catch {
                 await MainActor.run {
-                    Logger.web3.error(category: "TransactionRequest", message: "Failed to send: \(error)")
+                    Logger.web3.error(category: "TxRequest", message: "Failed to send: \(error)")
                     self.canDismissInteractively = true
                     sendButton.isBusy = false
-                    let alert = UIAlertController(title: "Failed to Send",
+                    let alert = UIAlertController(title: R.string.localizable.transfer_failed(),
                                                   message: error.localizedDescription,
                                                   preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
@@ -272,13 +273,13 @@ extension TransactionRequestViewController {
                         }
                     }
                 } else {
-                    Logger.web3.error(category: "TransactionRequest", message: "Invalid prices: \(prices)")
+                    Logger.web3.error(category: "TxRequest", message: "Invalid prices: \(prices)")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         self?.loadGas()
                     }
                 }
             case .failure(let error):
-                Logger.web3.error(category: "TransactionRequest", message: "Failed to get gas: \(error)")
+                Logger.web3.error(category: "TxRequest", message: "Failed to get gas: \(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self?.loadGas()
                 }
@@ -290,6 +291,7 @@ extension TransactionRequestViewController {
         guard !hasTransactionSent else {
             return
         }
+        Logger.web3.info(category: "TxRequest", message: "Rejected by dismissing")
         Task {
             let error = JSONRPCError(code: 0, message: "User rejected")
             try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))

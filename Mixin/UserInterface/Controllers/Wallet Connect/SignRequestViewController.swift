@@ -94,7 +94,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                                                   animation: .vertical)
                 }
             } catch {
-                Logger.web3.warn(category: "WalletConnectService", message: "Failed to approve: \(error)")
+                Logger.web3.error(category: "Sign", message: "Failed to approve: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
@@ -108,26 +108,6 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                                                   animation: .vertical)
                 }
             }
-        }
-    }
-    
-}
-
-extension SignRequestViewController: TextPreviewViewDelegate {
-    
-    func textPreviewView(_ view: TextPreviewView, didSelectURL url: URL) {
-        
-    }
-    
-    func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL) {
-        
-    }
-    
-    func textPreviewViewDidFinishPreview(_ view: TextPreviewView) {
-        UIView.animate(withDuration: 0.3) {
-            view.alpha = 0
-        } completion: { (_) in
-            view.removeFromSuperview()
         }
     }
     
@@ -147,14 +127,15 @@ extension SignRequestViewController {
                 let response = RPCResult.response(AnyCodable(signature))
                 try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: response)
                 await MainActor.run {
+                    self.hasSignatureSent = true
                     self.close(sendButton)
                 }
             } catch {
-                Logger.web3.error(category: "SignRequest", message: "Failed to send: \(error)")
+                Logger.web3.error(category: "Sign", message: "Failed to send: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     sendButton.isBusy = false
-                    let alert = UIAlertController(title: "Failed to Send",
+                    let alert = UIAlertController(title: R.string.localizable.connection_failed(),
                                                   message: error.localizedDescription,
                                                   preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
@@ -173,7 +154,7 @@ extension SignRequestViewController {
             .info(caption: .network, content: request.chain.name)
         ]
         if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {
-            // FIXME: Get account by `self.request`
+            // TODO: Get account by `self.request` if blockchain other than EVMs is supported
             rows.insert(.info(caption: .account, content: account), at: 2)
         }
         let unsignedMessage: Row = .web3Message(caption: R.string.localizable.unsigned_message(),
@@ -191,26 +172,11 @@ extension SignRequestViewController {
         guard !hasSignatureSent else {
             return
         }
+        Logger.web3.info(category: "Sign", message: "Rejected by dismissing")
         Task {
             let error = JSONRPCError(code: 0, message: "User Rejected")
             try await Web3Wallet.instance.respond(topic: request.raw.topic, requestId: request.raw.id, response: .error(error))
         }
-    }
-    
-    private func preview(message: String) {
-        guard let view = UIApplication.homeContainerViewController?.view else {
-            return
-        }
-        let textPreviewView = R.nib.textPreviewView(withOwner: nil)!
-        textPreviewView.alpha = 0
-        textPreviewView.frame = view.bounds
-        view.addSubview(textPreviewView)
-        view.layoutIfNeeded()
-        textPreviewView.textView.text = message
-        UIView.animate(withDuration: 0.3) {
-            textPreviewView.alpha = 1
-        }
-        textPreviewView.delegate = self
     }
     
 }

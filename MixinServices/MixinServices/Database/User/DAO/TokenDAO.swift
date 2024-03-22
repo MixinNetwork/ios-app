@@ -164,4 +164,12 @@ public final class TokenDAO: UserDatabaseDAO {
     public func save(token: Token) {
         db.save(token)
     }
+    
+    public func saveAndFetch(token: Token) -> TokenItem? {
+        try! db.writeAndReturnError { db in
+            try token.save(db)
+            return try TokenItem.fetchOne(db, sql: SQL.selectWithAssetID, arguments: [token.assetID])
+        }
+    }
+    
 }

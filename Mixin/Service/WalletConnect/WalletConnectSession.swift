@@ -57,8 +57,8 @@ final class WalletConnectSession {
         try await Web3Wallet.instance.disconnect(topic: session.topic)
     }
     
-    @MainActor
     func handle(request: Request) {
+        assert(Thread.isMainThread)
         switch Method(rawValue: request.method) {
         case .personalSign:
             requestPersonalSign(with: request)
@@ -93,15 +93,15 @@ final class WalletConnectSession {
 
 extension WalletConnectSession {
     
-    @MainActor
     private func requestPersonalSign(with request: Request) {
+        assert(Thread.isMainThread)
         requestSigning(with: request) { request in
             try WalletConnectDecodedSigningRequest.personalSign(request: request)
         }
     }
     
-    @MainActor
     private func rejectETHSign(with request: Request) {
+        assert(Thread.isMainThread)
         Task {
             try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(.methodNotFound))
         }
@@ -109,54 +109,67 @@ extension WalletConnectSession {
                                                      message: R.string.localizable.method_not_supported(request.method))
     }
     
-    @MainActor
     private func requestETHSignTypedData(with request: Request) {
+        assert(Thread.isMainThread)
         requestSigning(with: request) { request in
             try WalletConnectDecodedSigningRequest.signTypedData(request: request)
         }
     }
     
-    @MainActor
     private func requestSendTransaction(with request: Request) {
-        do {
-            let params = try request.params.get([WalletConnectTransactionPreview].self)
-            guard let transactionPreview = params.first else {
-                throw Error.noTransaction
-            }
-            guard let chain = WalletConnectService.supportedChains[request.chainId] else {
-                throw Error.noChain(request.chainId.absoluteString)
-            }
-            guard let chainToken = TokenDAO.shared.tokenItem(with: chain.internalID) else {
-                // FIXME: Retrive token with API
-                throw Error.noToken(chain.internalID)
-            }
-            let transactionRequest = TransactionRequestViewController(session: self,
-                                                                      request: request,
-                                                                      transaction: transactionPreview,
-                                                                      chain: chain,
-                                                                      chainToken: chainToken)
-            WalletConnectService.shared.presentRequest(viewController: transactionRequest)
-        } catch {
-            Logger.web3.debug(category: "WalletConnectSession", message: "Failed to send transaction: \(error)")
-            WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
-                                                         message: R.string.localizable.unable_to_decode_the_request(error.localizedDescription))
-            Task {
-                let error = JSONRPCError(code: 0, message: "Local failed")
-                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+        assert(Thread.isMainThread)
+        DispatchQueue.global().async {
+            do {
+                let params = try request.params.get([WalletConnectTransactionPreview].self)
+                guard let transactionPreview = params.first else {
+                    throw Error.noTransaction
+                }
+                guard let chain = WalletConnectService.supportedChains[request.chainId] else {
+                    throw Error.noChain(request.chainId.absoluteString)
+                }
+                let chainToken: TokenItem?
+                if let token = TokenDAO.shared.tokenItem(with: chain.internalID) {
+                    chainToken = token
+                } else {
+                    let token = try SafeAPI.assets(id: chain.internalID).get()
+                    chainToken = TokenDAO.shared.saveAndFetch(token: token)
+                }
+                guard let chainToken else {
+                    throw Error.noToken(chain.internalID)
+                }
+                DispatchQueue.main.async {
+                    let transactionRequest = TransactionRequestViewController(session: self,
+                                                                              request: request,
+                                                                              transaction: transactionPreview,
+                                                                              chain: chain,
+                                                                              chainToken: chainToken)
+                    WalletConnectService.shared.presentRequest(viewController: transactionRequest)
+                }
+            } catch {
+                Logger.web3.error(category: "Session", message: "Failed to send tx: \(error)")
+                DispatchQueue.main.async {
+                    WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
+                                                                 message: R.string.localizable.unable_to_decode_the_request(error.localizedDescription))
+                }
+                Task {
+                    let error = JSONRPCError(code: 0, message: "Local failed")
+                    try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+                }
             }
         }
     }
     
-    @MainActor
     private func requestSigning(
         with request: WalletConnectSign.Request,
         decode: (WalletConnectSign.Request) throws -> (WalletConnectDecodedSigningRequest)
     ) {
+        assert(Thread.isMainThread)
         do {
             let decoded = try decode(request)
             let signRequest = SignRequestViewController(session: self, request: decoded)
             WalletConnectService.shared.presentRequest(viewController: signRequest)
         } catch {
+            Logger.web3.error(category: "Session", message: "Failed to sign: \(error)")
             let title = R.string.localizable.request_rejected()
             let message = R.string.localizable.unable_to_decode_the_request(error.localizedDescription)
             WalletConnectService.shared.presentRejection(title: title, message: message)

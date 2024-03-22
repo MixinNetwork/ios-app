@@ -28,11 +28,14 @@ final class WalletConnectSession {
     }
     
     var iconURL: URL? {
-        if let icon = session.peer.icons.first {
-            return URL(string: icon)
-        } else {
-            return nil
+        for icon in session.peer.icons {
+            if icon.hasSuffix("svg") {
+                continue
+            } else if let url = URL(string: icon) {
+                return url
+            }
         }
+        return nil
     }
     
     var name: String {

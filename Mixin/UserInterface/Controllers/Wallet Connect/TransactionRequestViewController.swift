@@ -97,6 +97,10 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     
     override func tableView(_ tableView: UITableView, didSelectRow row: Row) {
         switch row {
+        case let .web3Message(_, message):
+            let preview = R.nib.textPreviewView(withOwner: nil)!
+            preview.textView.text = message
+            preview.show(on: AppDelegate.current.mainWindow)
         case .selectableFee:
             let selector = NetworkFeeSelectorViewController(options: feeOptions, gasSymbol: chain.gasSymbol)
             selector.delegate = self

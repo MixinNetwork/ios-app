@@ -9,6 +9,7 @@ final class Web3MessageCell: UITableViewCell {
         super.awakeFromNib()
         messageTextView.textContainerInset = UIEdgeInsets(top: 10, left: 14, bottom: 10, right: 14)
         messageTextView.textContainer.lineFragmentPadding = 0
+        messageTextView.textContainer.maximumNumberOfLines = 5
         messageTextView.font = .systemFont(ofSize: 16)
         messageTextView.layer.borderWidth = 1
         messageTextView.layer.cornerRadius = 13

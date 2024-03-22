@@ -1,12 +1,12 @@
 import UIKit
+import MixinServices
 
 protocol TextPreviewViewDelegate: AnyObject {
     func textPreviewView(_ view: TextPreviewView, didSelectURL url: URL)
     func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL)
-    func textPreviewViewDidFinishPreview(_ view: TextPreviewView)
 }
 
-class TextPreviewView: UIView {
+final class TextPreviewView: UIView {
     
     @IBOutlet weak var visualEffectView: UIVisualEffectView!
     @IBOutlet weak var textView: LinkLocatingTextView!
@@ -23,7 +23,6 @@ class TextPreviewView: UIView {
             let range = NSRange(location: 0, length: text.length)
             text.addAttributes(attributes, range: range)
             textView.attributedText = text
-            layoutText()
         }
     }
     
@@ -52,19 +51,48 @@ class TextPreviewView: UIView {
         textView.delegate = self
     }
     
-    @IBAction func finishPreview(_ sender: Any) {
-        delegate?.textPreviewViewDidFinishPreview(self)
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        let center = NotificationCenter.default
+        if superview == nil {
+            center.removeObserver(self)
+        } else {
+            center.addObserver(self,
+                               selector: #selector(finishPreview(_:)),
+                               name: LoginManager.didLogoutNotification,
+                               object: nil)
+        }
     }
     
-    private func layoutText() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
         textView.layoutManager.ensureLayout(for: textView.textContainer)
         let textRect = textView.layoutManager.usedRect(for: textView.textContainer)
         let emptySpace = textView.bounds.size.height - ceil(textRect.height)
-        let topInset = floor(max(0, emptySpace / 2.3)) // Place text a little bit above the center line for better view
+        let topInset = floor(max(0, emptySpace / 2.5)) // Place text a little bit above the center line for better view
         textView.contentInset.top = topInset
         if let font = textView.font {
             let numberOfLines = Int(textRect.height / font.lineHeight)
             textView.textAlignment = numberOfLines == 1 ? .center : .natural
+        }
+    }
+    
+    func show(on superview: UIView) {
+        alpha = 0
+        superview.addSubview(self)
+        snp.makeEdgesEqualToSuperview()
+        setNeedsLayout()
+        superview.layoutIfNeeded()
+        UIView.animate(withDuration: 0.3) {
+            self.alpha = 1
+        }
+    }
+    
+    @IBAction func finishPreview(_ sender: Any) {
+        UIView.animate(withDuration: 0.3) {
+            self.alpha = 0
+        } completion: { (_) in
+            self.removeFromSuperview()
         }
     }
     

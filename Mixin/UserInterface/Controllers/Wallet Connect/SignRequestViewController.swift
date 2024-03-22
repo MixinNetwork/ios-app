@@ -51,7 +51,9 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
     override func tableView(_ tableView: UITableView, didSelectRow row: Row) {
         switch row {
         case let .web3Message(_, message):
-            break
+            let preview = R.nib.textPreviewView(withOwner: nil)!
+            preview.textView.text = message
+            preview.show(on: AppDelegate.current.mainWindow)
         default:
             break
         }

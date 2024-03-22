@@ -77,7 +77,7 @@ final class Web3WalletHeaderView: UIView {
         action = .createAccount
     }
     
-    func showCopyAddress(chain: WalletConnectService.Chain) {
+    func showCopyAddress(chain: WalletConnectService.Chain, address: String) {
         iconImageView.image = icon(of: chain)
         
         topLabel.font = .systemFont(ofSize: 18, weight: .medium)
@@ -86,10 +86,14 @@ final class Web3WalletHeaderView: UIView {
         
         bottomLabel.font = .systemFont(ofSize: 14)
         bottomLabel.textColor = R.color.text_tertiary()
-        bottomLabel.text = R.string.localizable.access_dapps_defi_projects()
+        if address.count > addressPrefixCount + addressSuffixCount {
+            bottomLabel.text = address.prefix(addressPrefixCount) + "…" + address.suffix(addressSuffixCount)
+        } else {
+            bottomLabel.text = address
+        }
         
         UIView.performWithoutAnimation {
-            button.setTitle(R.string.localizable.copy_address(), for: .normal)
+            button.setTitle(R.string.localizable.copy(), for: .normal)
             button.layoutIfNeeded()
         }
         action = .copyAddress

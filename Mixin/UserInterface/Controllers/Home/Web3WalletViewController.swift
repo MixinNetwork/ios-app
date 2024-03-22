@@ -95,10 +95,10 @@ final class Web3WalletViewController: UIViewController {
         DispatchQueue.global().async { [chain] in
             let address: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
             DispatchQueue.main.async {
-                if address == nil {
-                    self.tableHeaderView.showUnlockAccount(chain: chain)
+                if let address {
+                    self.tableHeaderView.showCopyAddress(chain: chain, address: address)
                 } else {
-                    self.tableHeaderView.showCopyAddress(chain: chain)
+                    self.tableHeaderView.showUnlockAccount(chain: chain)
                 }
             }
         }
@@ -113,10 +113,10 @@ final class Web3WalletViewController: UIViewController {
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
         address = notification.userInfo?[PropertiesDAO.Key.evmAccount] as? String
-        if address == nil {
-            tableHeaderView.showUnlockAccount(chain: chain)
+        if let address {
+            tableHeaderView.showCopyAddress(chain: chain, address: address)
         } else {
-            tableHeaderView.showCopyAddress(chain: chain)
+            tableHeaderView.showUnlockAccount(chain: chain)
         }
     }
     

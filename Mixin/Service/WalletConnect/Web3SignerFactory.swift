@@ -1,7 +1,7 @@
 import Foundation
 import CryptoSwift
 import web3
-import Auth
+import Web3Wallet
 
 struct Web3CryptoProvider: CryptoProvider {
     

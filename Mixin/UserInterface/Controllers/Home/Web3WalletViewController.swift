@@ -83,11 +83,6 @@ final class Web3WalletViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        tableHeaderView.showUnlockAccount(chain: chain)
-        tableHeaderView.frame.size.height = 134
-        tableHeaderView.delegate = self
-        tableView.tableHeaderView = tableHeaderView
-        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(propertiesDidUpdate(_:)),
                                                name: PropertiesDAO.propertyDidUpdateNotification,
@@ -95,11 +90,15 @@ final class Web3WalletViewController: UIViewController {
         DispatchQueue.global().async { [chain] in
             let address: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
             DispatchQueue.main.async {
+                let tableHeaderView = self.tableHeaderView
                 if let address {
-                    self.tableHeaderView.showCopyAddress(chain: chain, address: address)
+                    tableHeaderView.showCopyAddress(chain: chain, address: address)
                 } else {
-                    self.tableHeaderView.showUnlockAccount(chain: chain)
+                    tableHeaderView.showUnlockAccount(chain: chain)
                 }
+                tableHeaderView.frame.size.height = 134
+                tableHeaderView.delegate = self
+                self.tableView.tableHeaderView = tableHeaderView
             }
         }
         
@@ -108,7 +107,7 @@ final class Web3WalletViewController: UIViewController {
             .sink { [weak self] sessions in
                 self?.load(sessions: sessions)
             }
-        self.load(sessions: WalletConnectService.shared.sessions)
+        load(sessions: WalletConnectService.shared.sessions)
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {

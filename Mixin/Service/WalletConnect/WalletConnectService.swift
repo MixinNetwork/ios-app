@@ -3,7 +3,6 @@ import Combine
 import OrderedCollections
 import BigInt
 import web3
-import Auth
 import Web3Wallet
 import MixinServices
 
@@ -50,7 +49,7 @@ final class WalletConnectService {
         Web3Wallet.instance.sessionsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessions in
-                self?.reloadSessions()
+                self?.reloadSessions(sessions: sessions)
             }
             .store(in: &subscribes)
         Web3Wallet.instance.sessionProposalPublisher
@@ -68,16 +67,8 @@ final class WalletConnectService {
     }
     
     func reloadSessions() {
-        let sessions = Sign.instance.getSessions().map(WalletConnectSession.init(session:))
-        let topics = sessions.map(\.topic)
-        self.sessions = sessions
-        Task {
-            do {
-                try await Relay.instance.batchSubscribe(topics: topics)
-            } catch {
-                logger.error(category: "WalletConnectService", message: "Failed to subscribe: \(error)")
-            }
-        }
+        let sessions = Sign.instance.getSessions()
+        reloadSessions(sessions: sessions)
     }
     
     func connect(to uri: WalletConnectURI) {
@@ -99,7 +90,7 @@ final class WalletConnectService {
     }
     
     func presentRequest(viewController: UIViewController) {
-        guard let container = UIApplication.homeContainerViewController?.homeTabBarController else {
+        guard let container = UIApplication.homeContainerViewController else {
             return
         }
         guard presentedViewController == nil else {
@@ -112,12 +103,24 @@ final class WalletConnectService {
     }
     
     func presentRejection(title: String, message: String) {
-        guard let container = UIApplication.homeContainerViewController?.homeTabBarController else {
+        guard let container = UIApplication.homeContainerViewController else {
             return
         }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
         container.presentOnTopMostPresentedController(alert, animated: true)
+    }
+    
+    private func reloadSessions(sessions: [WalletConnectSign.Session]) {
+        self.sessions = sessions.map(WalletConnectSession.init(session:))
+        let topics = self.sessions.map(\.topic)
+        Task {
+            do {
+                try await Relay.instance.batchSubscribe(topics: topics)
+            } catch {
+                logger.error(category: "WalletConnectService", message: "Failed to subscribe: \(error)")
+            }
+        }
     }
     
     private func loadHud() -> Hud {
@@ -248,7 +251,7 @@ extension WalletConnectService {
                                           message: "\(proposal.proposer.name) requires to support \(requiredNamespaces)")
                 }
                 Task {
-                    try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .unsupportedChains)
+                    try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedChains)
                 }
                 return
             }
@@ -263,7 +266,7 @@ extension WalletConnectService {
                                           message: "\(proposal.proposer.name) requires to support \(events))")
                 }
                 Task {
-                    try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .upsupportedEvents)
+                    try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .upsupportedEvents)
                 }
                 return
             }
@@ -281,7 +284,7 @@ extension WalletConnectService {
                             self.presentRequest(viewController: connectWallet)
                         } else {
                             Task {
-                                try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
+                                try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
                             }
                         }
                     }

@@ -84,8 +84,8 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                                                                  methods: methods,
                                                                  events: Array(events),
                                                                  accounts: accounts)
-                try await Web3Wallet.instance.approve(proposalId: proposal.id,
-                                                      namespaces: sessionNamespaces)
+                _ = try await Web3Wallet.instance.approve(proposalId: proposal.id,
+                                                          namespaces: sessionNamespaces)
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.isProposalApproved = true
@@ -118,7 +118,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
             return
         }
         Task {
-            try await Web3Wallet.instance.reject(proposalId: proposal.id, reason: .userRejected)
+            try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
         }
     }
     

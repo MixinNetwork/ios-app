@@ -43,6 +43,7 @@ final class Web3WalletViewController: UIViewController {
         DispatchQueue.global().async { [chain] in
             let address: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
             DispatchQueue.main.async {
+                self.address = address
                 let tableHeaderView = self.tableHeaderView
                 if let address {
                     tableHeaderView.showCopyAddress(chain: chain, address: address)
@@ -64,11 +65,17 @@ final class Web3WalletViewController: UIViewController {
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
-        address = notification.userInfo?[PropertiesDAO.Key.evmAccount] as? String
-        if let address {
-            tableHeaderView.showCopyAddress(chain: chain, address: address)
-        } else {
+        guard let change = notification.userInfo?[PropertiesDAO.Key.evmAccount] as? PropertiesDAO.Change else {
+            return
+        }
+        switch change {
+        case .removed:
+            self.address = nil
             tableHeaderView.showUnlockAccount(chain: chain)
+        case .saved(let convertibleAddress):
+            let address = String(convertibleAddress)
+            self.address = address
+            tableHeaderView.showCopyAddress(chain: chain, address: address)
         }
     }
     
@@ -102,7 +109,7 @@ extension Web3WalletViewController: Web3WalletHeaderView.Delegate {
     }
     
     func web3WalletHeaderViewRequestToCopyAddress(_ view: Web3WalletHeaderView) {
-        guard let address: String = PropertiesDAO.shared.value(forKey: .evmAccount) else {
+        guard let address else {
             return
         }
         UIPasteboard.general.string = address

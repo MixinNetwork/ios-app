@@ -11,6 +11,11 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case evmAccount     = "evm_account"
     }
     
+    public enum Change {
+        case removed
+        case saved(LosslessStringConvertible)
+    }
+    
     public static let shared = PropertiesDAO()
     
     public func value<Value: LosslessStringConvertible>(forKey key: Key) -> Value? {
@@ -34,7 +39,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Self.propertyDidUpdateNotification,
                                                 object: self,
-                                                userInfo: [key: value])
+                                                userInfo: [key: Change.saved(value)])
             }
         }
     }
@@ -63,8 +68,7 @@ extension PropertiesDAO {
     private func value<Value: LosslessStringConvertible>(forKey key: Key, db: GRDB.Database) throws -> Value? {
         let string = try String.fetchOne(db,
                                          sql: "SELECT value FROM properties WHERE key=?",
-                                         arguments: [key.rawValue],
-                                         adapter: nil)
+                                         arguments: [key.rawValue])
         if let string = string {
             return Value(string)
         } else {
@@ -80,7 +84,7 @@ extension PropertiesDAO {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Self.propertyDidUpdateNotification,
                                                 object: self,
-                                                userInfo: [key: NSNull()])
+                                                userInfo: [key: Change.removed])
             }
         }
     }

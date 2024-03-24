@@ -21,7 +21,7 @@ public final class UTXOService {
             return
         }
         let limit = self.synchronizeOutputPageCount
-        Task {
+        Task.detached {
             guard let userID = LoginManager.shared.account?.userID else {
                 Logger.general.error(category: "UTXO", message: "No UID, give up")
                 return
@@ -92,7 +92,7 @@ public final class UTXOService {
                 Logger.general.error(category: "UTXO", message: "Unauthorized, stop syncing")
             } catch {
                 Logger.general.error(category: "UTXO", message: "Failed to sync: \(error)")
-                DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: synchronize)
+                DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: self.synchronize)
             }
         }
     }

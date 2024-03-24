@@ -39,6 +39,9 @@ class UrlWindow {
         from source: Source = .other,
         clearNavigationStack: Bool = true
     ) -> Bool {
+        // When a payment is invoked by a URL, the outputs may not in sync, potentially causing
+        // payment failures due to inaccurate balance. However, this synchronization lacks ordering
+        // guarantees, so the issue still occurs in some circumstances.
         if let payment = SafePaymentURL(url: url) {
             UTXOService.shared.synchronize()
             checkSafePaymentURL(payment, from: source)

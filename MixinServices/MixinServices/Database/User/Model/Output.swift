@@ -1,6 +1,6 @@
 import Foundation
 import GRDB
-import Tip
+import TIP
 
 public struct Output {
     

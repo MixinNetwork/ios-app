@@ -4,6 +4,10 @@ import MixinServices
 
 final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController {
     
+    private enum GenerationError: Swift.Error {
+        case mismatched
+    }
+    
     private let chain: WalletConnectService.Chain
     
     var onDismiss: ((_ isUnlocked: Bool) -> Void)?
@@ -76,8 +80,15 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
         Task.detached {
             do {
                 let priv = try await TIP.web3WalletPrivateKey(pin: pin)
-                let keyStorage = InPlaceKeyStorage(raw: priv)
-                let address = try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
+                let address = try {
+                    let keyStorage = InPlaceKeyStorage(raw: priv)
+                    let account = try EthereumAccount(keyStorage: keyStorage)
+                    return account.address.toChecksumAddress()
+                }()
+                let redundantAddress = try await TIP.web3WalletAddress(pin: pin)
+                guard address == redundantAddress else {
+                    throw GenerationError.mismatched
+                }
                 PropertiesDAO.shared.set(address, forKey: .evmAccount)
                 await MainActor.run {
                     self.isUnlocked = true

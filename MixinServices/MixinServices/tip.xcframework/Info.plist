@@ -6,11 +6,11 @@
 	<array>
 		<dict>
 			<key>BinaryPath</key>
-			<string>Tip.framework/Versions/A/Tip</string>
+			<string>TIP.framework/Versions/A/TIP</string>
 			<key>LibraryIdentifier</key>
 			<string>ios-arm64</string>
 			<key>LibraryPath</key>
-			<string>Tip.framework</string>
+			<string>TIP.framework</string>
 			<key>SupportedArchitectures</key>
 			<array>
 				<string>arm64</string>
@@ -20,11 +20,11 @@
 		</dict>
 		<dict>
 			<key>BinaryPath</key>
-			<string>Tip.framework/Versions/A/Tip</string>
+			<string>TIP.framework/Versions/A/TIP</string>
 			<key>LibraryIdentifier</key>
 			<string>ios-arm64-simulator</string>
 			<key>LibraryPath</key>
-			<string>Tip.framework</string>
+			<string>TIP.framework</string>
 			<key>SupportedArchitectures</key>
 			<array>
 				<string>arm64</string>

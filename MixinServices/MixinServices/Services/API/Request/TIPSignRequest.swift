@@ -1,5 +1,5 @@
 import Foundation
-import Tip
+import TIP
 
 struct TIPSignRequest: Encodable {
     

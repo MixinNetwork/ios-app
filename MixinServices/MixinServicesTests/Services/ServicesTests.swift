@@ -1,6 +1,6 @@
 import XCTest
 @testable import MixinServices
-@testable import Tip
+@testable import TIP
 
 class ServicesTests: XCTestCase {
     

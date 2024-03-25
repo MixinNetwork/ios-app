@@ -28,7 +28,6 @@ struct WalletConnectTransactionPreview: Codable {
     let data: Data?
     
     let decimalValue: Decimal?
-    let decimalGas: Decimal
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -66,14 +65,6 @@ struct WalletConnectTransactionPreview: Codable {
         guard let gas = BigUInt(hex: hexGas) else {
             throw Error.invalidGas
         }
-        let gweiGasString = gas.description
-        guard
-            gweiGasString.count < 38,
-            let gweiGas = Decimal(string: gweiGasString, locale: .enUSPOSIX)
-        else {
-            throw Error.gasTooLarge
-        }
-        let decimalGas = gweiGas * .gwei
         
         self.from = try container.decode(EthereumAddress.self, forKey: .from)
         self.to = try container.decode(EthereumAddress.self, forKey: .to)
@@ -82,7 +73,6 @@ struct WalletConnectTransactionPreview: Codable {
         self.hexData = hexData
         self.data = data
         self.decimalValue = decimalValue
-        self.decimalGas = decimalGas
     }
     
 }

@@ -12,6 +12,7 @@ final class WalletConnectSession {
         case noTransaction
         case noChain(String)
         case noToken(String)
+        case noAccount
     }
     
     enum Method: String, CaseIterable {
@@ -122,6 +123,7 @@ extension WalletConnectSession {
     private func requestSendTransaction(with request: Request) {
         assert(Thread.isMainThread)
         DispatchQueue.global().async {
+            Logger.web3.debug(category: "Session", message: "Got tx: \(request.params)")
             do {
                 let params = try request.params.get([WalletConnectTransactionPreview].self)
                 guard let transactionPreview = params.first else {
@@ -140,8 +142,13 @@ extension WalletConnectSession {
                 guard let chainToken else {
                     throw Error.noToken(chain.internalID)
                 }
+                // TODO: Get account by `chain`
+                guard let address: String = PropertiesDAO.shared.value(forKey: .evmAccount) else {
+                    throw Error.noAccount
+                }
                 DispatchQueue.main.async {
-                    let transactionRequest = TransactionRequestViewController(session: self,
+                    let transactionRequest = TransactionRequestViewController(address: address,
+                                                                              session: self,
                                                                               request: request,
                                                                               transaction: transactionPreview,
                                                                               chain: chain,
@@ -169,7 +176,11 @@ extension WalletConnectSession {
         assert(Thread.isMainThread)
         do {
             let decoded = try decode(request)
-            let signRequest = SignRequestViewController(session: self, request: decoded)
+            // TODO: Get account by `request.chainId`
+            guard let address: String = PropertiesDAO.shared.value(forKey: .evmAccount) else {
+                throw Error.noAccount
+            }
+            let signRequest = SignRequestViewController(address: address, session: self, request: decoded)
             WalletConnectService.shared.presentRequest(viewController: signRequest)
         } catch {
             Logger.web3.error(category: "Session", message: "Failed to sign: \(error)")

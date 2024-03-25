@@ -1,39 +1,71 @@
 import UIKit
+import BigInt
 import web3
 import Web3Wallet
 import MixinServices
 
 final class TransactionRequestViewController: AuthenticationPreviewViewController {
     
-    enum SignRequestError: Error {
-        case mismatchedAddress
+    private struct Fee {
+        
+        let gasLimit: BigUInt
+        let gasPrice: BigUInt // Wei
+        let feeValue: String
+        let feeCost: String
+        
+        init?(gasLimit: BigUInt, gasPrice: BigUInt, tokenPrice: Decimal) {
+            guard let weiFee = Decimal(string: (gasLimit * gasPrice).description, locale: .enUSPOSIX) else {
+                return nil
+            }
+            let decimalFee = weiFee * .wei
+            let cost = decimalFee * tokenPrice
+            
+            self.gasLimit = gasLimit
+            self.gasPrice = gasPrice
+            self.feeValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
+            if cost >= 0.01 {
+                self.feeCost = CurrencyFormatter.localizedString(from: cost, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            } else {
+                self.feeCost = "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            }
+        }
+        
     }
     
+    private enum TransactionRequestError: Error {
+        case mismatchedAddress
+        case invalidFee
+    }
+    
+    private let address: String
     private let session: WalletConnectSession
     private let request: WalletConnectSign.Request
     private let transactionPreview: WalletConnectTransactionPreview
     private let chain: WalletConnectService.Chain
     private let chainToken: TokenItem
+    private let client: EthereumHttpClient
     
-    private var feeOptions: [NetworkFeeOption] = []
-    private var selectedFeeOption: NetworkFeeOption?
+    private var fee: Fee?
     
     private var transaction: EthereumTransaction?
     private var account: EthereumAccount?
     private var hasTransactionSent = false
     
     init(
+        address: String,
         session: WalletConnectSession,
         request: WalletConnectSign.Request,
         transaction: WalletConnectTransactionPreview,
         chain: WalletConnectService.Chain,
         chainToken: TokenItem
     ) {
+        self.address = address
         self.session = session
         self.request = request
         self.transactionPreview = transaction
         self.chain = chain
         self.chainToken = chainToken
+        self.client = chain.makeEthereumClient()
         let canDecodeValue = (transaction.decimalValue ?? 0) != 0
         let warnings: [String] = if canDecodeValue {
             []
@@ -62,6 +94,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                     display: .byToken,
                     boldPrimaryAmount: false),
             .proposer(name: session.name, host: session.host),
+            .info(caption: .account, content: address),
             .info(caption: .network, content: chain.name)
         ]
         let transactionRow: Row
@@ -78,10 +111,6 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                           message: transactionPreview.hexData ?? "")
         }
         rows.insert(transactionRow, at: 0)
-        if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {
-            // TODO: Get account by `self.request` if blockchain other than EVMs is supported
-            rows.insert(.info(caption: .account, content: account), at: 3)
-        }
         reloadData(with: rows)
         loadGas()
     }
@@ -101,17 +130,13 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
             let preview = R.nib.textPreviewView(withOwner: nil)!
             preview.textView.text = message
             preview.show(on: AppDelegate.current.mainWindow)
-        case .selectableFee:
-            let selector = NetworkFeeSelectorViewController(options: feeOptions, gasSymbol: chain.gasSymbol)
-            selector.delegate = self
-            present(selector, animated: true)
         default:
             break
         }
     }
     
     override func performAction(with pin: String) {
-        guard let fee = selectedFeeOption else {
+        guard let fee = fee else {
             return
         }
         canDismissInteractively = false
@@ -124,7 +149,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                 let keyStorage = InPlaceKeyStorage(raw: priv)
                 let account = try EthereumAccount(keyStorage: keyStorage)
                 guard transactionPreview.from == account.address else {
-                    throw SignRequestError.mismatchedAddress
+                    throw TransactionRequestError.mismatchedAddress
                 }
                 let transaction = EthereumTransaction(from: account.address,
                                                       to: transactionPreview.to,
@@ -170,15 +195,6 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     
 }
 
-extension TransactionRequestViewController: NetworkFeeSelectorViewControllerDelegate {
-    
-    func networkFeeSelectorViewController(_ controller: NetworkFeeSelectorViewController, didSelectOption option: NetworkFeeOption) {
-        selectedFeeOption = option
-        reloadFeeRow(with: option)
-    }
-    
-}
-
 extension TransactionRequestViewController {
     
     @objc private func send(_ sendButton: BusyButton) {
@@ -187,19 +203,8 @@ extension TransactionRequestViewController {
         }
         canDismissInteractively = false
         sendButton.isBusy = true
-        Task.detached { [chain, request] in
+        Task.detached { [client, request] in
             do {
-                let network: EthereumNetwork
-                switch chain {
-                case .ethereum:
-                    network = .mainnet
-                case .sepolia:
-                    network = .sepolia
-                default:
-                    network = .custom("\(chain.id)")
-                }
-                Logger.web3.info(category: "TxRequest", message: "New client with: \(chain)")
-                let client = EthereumHttpClient(url: chain.rpcServerURL, network: network)
                 Logger.web3.info(category: "TxRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
                 let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
                 Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")
@@ -234,53 +239,42 @@ extension TransactionRequestViewController {
             confirmButton.isBusy = true
             confirmButton.isEnabled = false
         }
-        TIPAPI.tipGas(id: chain.internalID) { [gas=transactionPreview.gas, chainToken, weak self] result in
-            switch result {
-            case .success(let prices):
-                let tokenPrice = chainToken.decimalUSDPrice * Currency.current.decimalRate
-                let options = [
-                    NetworkFeeOption(speed: R.string.localizable.fast(),
-                                     tokenPrice: tokenPrice,
-                                     duration: "",
-                                     gas: gas,
-                                     gasPrice: prices.fastGasPrice,
-                                     gasLimit: prices.gasLimit),
-                    NetworkFeeOption(speed: R.string.localizable.normal(),
-                                     tokenPrice: tokenPrice,
-                                     duration: "",
-                                     gas: gas,
-                                     gasPrice: prices.proposeGasPrice,
-                                     gasLimit: prices.gasLimit),
-                    NetworkFeeOption(speed: R.string.localizable.slow(),
-                                     tokenPrice: tokenPrice,
-                                     duration: "",
-                                     gas: gas,
-                                     gasPrice: prices.safeGasPrice,
-                                     gasLimit: prices.gasLimit),
-                ].compactMap({ $0 })
-                if options.count == 3 {
-                    let selected = options[1]
-                    DispatchQueue.main.async {
-                        guard let self else {
-                            return
-                        }
-                        self.feeOptions = options
-                        self.selectedFeeOption = selected
-                        self.reloadFeeRow(with: selected)
-                        if let confirmButton {
-                            confirmButton.isBusy = false
-                            confirmButton.isEnabled = true
-                        }
+        let tokenPrice = chainToken.decimalUSDPrice * Currency.current.decimalRate
+        Task { [address, client, transactionPreview, weak self] in
+            do {
+                let dappGasLimit = transactionPreview.gas
+                let transaction = EthereumTransaction(from: EthereumAddress(address),
+                                                      to: transactionPreview.to,
+                                                      value: transactionPreview.value ?? 0,
+                                                      data: transactionPreview.data,
+                                                      nonce: nil,
+                                                      gasPrice: nil,
+                                                      gasLimit: nil,
+                                                      chainId: nil)
+                let rpcGasLimit = try await client.eth_estimateGas(transaction)
+                let gasLimit = max(dappGasLimit, rpcGasLimit)
+                let gasPrice = try await client.eth_gasPrice()
+                let fee = Fee(gasLimit: gasLimit,
+                              gasPrice: gasPrice,
+                              tokenPrice: tokenPrice)
+                guard let fee else {
+                    Logger.web3.error(category: "TxRequest", message: "Invalid gl: \(gasLimit.description), gp: \(gasPrice.description)")
+                    throw TransactionRequestError.invalidFee
+                }
+                await MainActor.run {
+                    guard let self else {
+                        return
                     }
-                } else {
-                    Logger.web3.error(category: "TxRequest", message: "Invalid prices: \(prices)")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        self?.loadGas()
+                    self.fee = fee
+                    self.reloadFeeRow(with: fee)
+                    if let confirmButton {
+                        confirmButton.isBusy = false
+                        confirmButton.isEnabled = true
                     }
                 }
-            case .failure(let error):
-                Logger.web3.error(category: "TxRequest", message: "Failed to get gas: \(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            } catch {
+                try await Task.sleep(nanoseconds: 3 * NSEC_PER_SEC)
+                await MainActor.run {
                     self?.loadGas()
                 }
             }
@@ -298,13 +292,12 @@ extension TransactionRequestViewController {
         }
     }
     
-    private func reloadFeeRow(with selected: NetworkFeeOption) {
-        guard feeOptions.count == 3 else {
-            return
-        }
-        let row: Row = .selectableFee(speed: selected.speed,
-                                      tokenAmount: selected.gasValue + " " + chain.gasSymbol,
-                                      fiatMoneyAmount: selected.cost)
+    private func reloadFeeRow(with selected: Fee) {
+        let row: Row = .amount(caption: .fee,
+                               token: selected.feeValue + " " + chain.feeSymbol,
+                               fiatMoney: selected.feeCost,
+                               display: .byToken,
+                               boldPrimaryAmount: false)
         replaceRow(at: 1, with: row)
     }
     

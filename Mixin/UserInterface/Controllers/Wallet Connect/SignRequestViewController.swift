@@ -9,6 +9,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
         case mismatchedAddress
     }
     
+    private let address: String
     private let session: WalletConnectSession
     private let request: WalletConnectDecodedSigningRequest
     
@@ -16,9 +17,11 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
     private var hasSignatureSent = false
     
     init(
+        address: String,
         session: WalletConnectSession,
         request: WalletConnectDecodedSigningRequest
     ) {
+        self.address = address
         self.session = session
         self.request = request
         super.init(warnings: [])
@@ -151,12 +154,9 @@ extension SignRequestViewController {
         var rows: [Row] = [
             .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
             .proposer(name: session.name, host: session.host),
+            .info(caption: .account, content: address),
             .info(caption: .network, content: request.chain.name)
         ]
-        if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {
-            // TODO: Get account by `self.request` if blockchain other than EVMs is supported
-            rows.insert(.info(caption: .account, content: account), at: 2)
-        }
         let unsignedMessage: Row = .web3Message(caption: R.string.localizable.unsigned_message(),
                                                 message: request.humanReadable)
         if let signature {

@@ -146,7 +146,7 @@ extension WalletConnectService {
             internalID: ChainID.ethereum,
             name: "Ethereum",
             rpcServerURL: URL(string: "https://cloudflare-eth.com")!,
-            gasSymbol: "ETH",
+            feeSymbol: "ETH",
             caip2: Blockchain("eip155:1")!
         )
         
@@ -155,7 +155,7 @@ extension WalletConnectService {
             internalID: ChainID.polygon,
             name: "Polygon",
             rpcServerURL: URL(string: "https://polygon-rpc.com")!,
-            gasSymbol: "MATIC",
+            feeSymbol: "MATIC",
             caip2: Blockchain("eip155:137")!
         )
         
@@ -164,7 +164,7 @@ extension WalletConnectService {
             internalID: ChainID.bnbSmartChain,
             name: "BSC",
             rpcServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
-            gasSymbol: "BNB",
+            feeSymbol: "BNB",
             caip2: Blockchain("eip155:56")!
         )
         
@@ -173,7 +173,7 @@ extension WalletConnectService {
             internalID: ChainID.ethereum,
             name: "Sepolia",
             rpcServerURL: URL(string: "https://rpc.sepolia.dev")!,
-            gasSymbol: "ETH",
+            feeSymbol: "ETH",
             caip2: Blockchain("eip155:11155111")!
         )
         
@@ -181,7 +181,7 @@ extension WalletConnectService {
         let internalID: String
         let name: String
         let rpcServerURL: URL
-        let gasSymbol: String
+        let feeSymbol: String
         let caip2: Blockchain
         
         static func == (lhs: Self, rhs: Self) -> Bool {
@@ -190,6 +190,18 @@ extension WalletConnectService {
         
         func hash(into hasher: inout Hasher) {
             hasher.combine(id)
+        }
+        
+        func makeEthereumClient() -> EthereumHttpClient {
+            let network: EthereumNetwork = switch self {
+            case .ethereum:
+                    .mainnet
+            case .sepolia:
+                    .sepolia
+            default:
+                    .custom("\(id)")
+            }
+            return EthereumHttpClient(url: rpcServerURL, network: network)
         }
         
     }

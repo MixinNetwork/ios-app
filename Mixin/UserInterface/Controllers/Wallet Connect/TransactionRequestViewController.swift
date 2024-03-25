@@ -205,7 +205,17 @@ extension TransactionRequestViewController {
         sendButton.isBusy = true
         Task.detached { [client, request] in
             do {
-                Logger.web3.info(category: "TxRequest", message: "Will send raw tx: \(transaction.jsonRepresentation ?? "(null)")")
+                let transactionDescription = try await {
+                    let nonce = try await client.eth_getTransactionCount(address: account.address, block: .Pending)
+                    var nonceInjectedTransaction = transaction
+                    nonceInjectedTransaction.nonce = nonce // Make getter of `raw` happy
+                    if let raw = nonceInjectedTransaction.raw {
+                        return raw.hexEncodedString()
+                    } else {
+                        return transaction.jsonRepresentation ?? "(null)"
+                    }
+                }()
+                Logger.web3.info(category: "TxRequest", message: "Will send tx: \(transactionDescription)")
                 let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
                 Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")
                 let response = RPCResult.response(AnyCodable(hash))
@@ -222,7 +232,7 @@ extension TransactionRequestViewController {
                     self.canDismissInteractively = true
                     sendButton.isBusy = false
                     let alert = UIAlertController(title: R.string.localizable.transfer_failed(),
-                                                  message: error.localizedDescription,
+                                                  message: "\(error)",
                                                   preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
                     self.present(alert, animated: true)

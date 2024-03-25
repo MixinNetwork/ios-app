@@ -194,7 +194,7 @@ extension TransactionRequestViewController {
                 case .ethereum:
                     network = .mainnet
                 case .sepolia:
-                    network = .goerli
+                    network = .sepolia
                 default:
                     network = .custom("\(chain.id)")
                 }

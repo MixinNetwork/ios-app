@@ -203,9 +203,9 @@ extension Web3WalletViewController {
         
         func replacingSession(with session: WalletConnectSession?) -> EmbeddedDapp {
             if let session {
-                EmbeddedDapp(name: session.name,
-                             host: session.host,
-                             url: session.url,
+                EmbeddedDapp(name: name,
+                             host: host,
+                             url: url,
                              icon: icon,
                              session: session)
             } else {

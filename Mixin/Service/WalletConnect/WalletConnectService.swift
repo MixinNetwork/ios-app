@@ -29,7 +29,8 @@ final class WalletConnectService {
     private let walletName = "Mixin Messenger"
     private let walletDescription = "An open source cryptocurrency wallet with Signal messaging. Fully non-custodial and recoverable with phone number and TIP."
     
-    private var connectionHud: Hud?
+    private weak var connectionHud: Hud?
+    
     private var subscribes = Set<AnyCancellable>()
     
     // Only one request or proposal can be presented at a time
@@ -80,11 +81,21 @@ final class WalletConnectService {
             do {
                 try await Web3Wallet.instance.pair(uri: uri)
                 logger.info(category: "Serivce", message: "Finished pairing to: \(uri.topic)")
+                try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+                await MainActor.run {
+                    guard let hud = self.connectionHud else {
+                        return
+                    }
+                    hud.set(style: .error, text: R.string.localizable.validation_timed_out())
+                    hud.scheduleAutoHidden()
+                    self.connectionHud = nil
+                }
             } catch {
                 logger.error(category: "Service", message: "Failed to connect to: \(uri.absoluteString), error: \(error)")
                 await MainActor.run {
                     hud.set(style: .error, text: error.localizedDescription)
                     hud.scheduleAutoHidden()
+                    self.connectionHud = nil
                 }
             }
         }
@@ -230,6 +241,7 @@ extension WalletConnectService {
     
     private func show(proposal: WalletConnectSign.Session.Proposal) {
         connectionHud?.hide()
+        connectionHud = nil
         DispatchQueue.global().async {
             var chains = Array(Self.supportedChains.values)
             chains.removeAll { chain in

@@ -27,7 +27,9 @@ struct WalletConnectDecodedSigningRequest {
             throw Error.chainNotSupported
         }
         let params = try request.params.get([String].self)
-        guard params.count == 2 else {
+        guard params.count >= 2 else {
+            // Some dapps send malformed `params` with 3 or more items
+            // e.g. 1inch sends 3 params with an empty string as last one
             throw Error.invalidParameters
         }
         let address = params[1]
@@ -48,7 +50,9 @@ struct WalletConnectDecodedSigningRequest {
             throw Error.chainNotSupported
         }
         let params = try request.params.get([String].self)
-        guard params.count == 2 else {
+        guard params.count >= 2 else {
+            // Some dapps send malformed `params` with 3 or more items
+            // e.g. 1inch sends 3 params with an empty string as last one
             throw Error.invalidParameters
         }
         let address = params[0]

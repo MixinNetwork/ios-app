@@ -36,6 +36,7 @@ PODS:
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
+    - SDWebImageSVGCoder
     - SocketRocket
     - Sodium
     - Zip
@@ -45,6 +46,7 @@ PODS:
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
+    - SDWebImageSVGCoder
     - SocketRocket
     - Sodium
     - Zip
@@ -60,6 +62,8 @@ PODS:
   - SDWebImageLottieCoder (0.2.0):
     - librlottie (~> 0.2)
     - SDWebImage (~> 5.10)
+  - SDWebImageSVGCoder (1.7.0):
+    - SDWebImage/Core (~> 5.6)
   - SnapKit (5.7.1)
   - SocketRocket (0.7.0)
   - Sodium (0.9.1)
@@ -86,6 +90,7 @@ SPEC REPOS:
     - libwebp
     - SDWebImage
     - SDWebImageLottieCoder
+    - SDWebImageSVGCoder
     - SnapKit
     - SocketRocket
     - Sodium
@@ -115,10 +120,11 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
-  MixinServices: 8149b4436bfdbb44025d673ddc9b24f7e859d9ea
+  MixinServices: e6351eac137115a6e6bd9362e62ec3142abdeafa
   PhoneNumberKit: 9c8d546d65c3784721d575a29e712ae8b992fe79
   SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
+  SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da

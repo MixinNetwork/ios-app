@@ -29,14 +29,9 @@ final class WalletConnectSession {
     }
     
     var iconURL: URL? {
-        for icon in session.peer.icons {
-            if icon.hasSuffix("svg") {
-                continue
-            } else if let url = URL(string: icon) {
-                return url
-            }
-        }
-        return nil
+        session.peer.icons.lazy
+            .compactMap(URL.init(string:))
+            .first
     }
     
     var name: String {

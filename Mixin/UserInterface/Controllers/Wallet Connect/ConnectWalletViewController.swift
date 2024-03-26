@@ -30,9 +30,10 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         super.viewDidLoad()
         
         tableHeaderView.setIcon { imageView in
-            if let icon = proposal.proposer.icons.first, let url = URL(string: icon) {
-                imageView.sd_setImage(with: url)
-            }
+            let url = proposal.proposer.icons.lazy
+                .compactMap(URL.init(string:))
+                .first
+            imageView.sd_setImage(with: url)
         }
         layoutTableHeaderView(title: R.string.localizable.connect_your_account(),
                               subtitle: R.string.localizable.connect_web3_account_description())

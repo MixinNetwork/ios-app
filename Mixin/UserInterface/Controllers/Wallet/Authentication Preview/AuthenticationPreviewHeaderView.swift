@@ -28,6 +28,8 @@ final class AuthenticationPreviewHeaderView: UIView {
                 iconView.removeFromSuperview()
             }
             let imageView = UIImageView()
+            imageView.layer.cornerRadius = 35
+            imageView.layer.masksToBounds = true
             iconWrapperView.addSubview(imageView)
             imageView.snp.makeEdgesEqualToSuperview()
             setter(imageView)

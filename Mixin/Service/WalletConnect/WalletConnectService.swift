@@ -79,6 +79,7 @@ final class WalletConnectService {
         Task {
             do {
                 try await Web3Wallet.instance.pair(uri: uri)
+                logger.info(category: "Serivce", message: "Finished pairing to: \(uri.topic)")
             } catch {
                 logger.error(category: "Service", message: "Failed to connect to: \(uri.absoluteString), error: \(error)")
                 await MainActor.run {

@@ -79,6 +79,10 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         fatalError("Storyboard is not supported")
     }
     
+    deinit {
+        Logger.web3.debug(category: "TxRequest", message: "\(self) deinited")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableHeaderView.setIcon { imageView in
@@ -262,7 +266,11 @@ extension TransactionRequestViewController {
                                                       gasLimit: nil,
                                                       chainId: nil)
                 let rpcGasLimit = try await client.eth_estimateGas(transaction)
-                let gasLimit = max(dappGasLimit, rpcGasLimit)
+                let gasLimit: BigUInt = if let dappGasLimit {
+                    max(dappGasLimit, rpcGasLimit)
+                } else {
+                    rpcGasLimit
+                }
                 let gasPrice = try await client.eth_gasPrice()
                 let fee = Fee(gasLimit: gasLimit,
                               gasPrice: gasPrice,

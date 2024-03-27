@@ -23,7 +23,7 @@ struct WalletConnectTransactionPreview: Codable {
     let from: EthereumAddress
     let to: EthereumAddress
     let value: BigUInt?
-    let gas: BigUInt
+    let gas: BigUInt?
     let hexData: String?
     let data: Data?
     
@@ -61,9 +61,16 @@ struct WalletConnectTransactionPreview: Codable {
             decimalValue = nil
         }
         
-        let hexGas = try container.decode(String.self, forKey: .gas)
-        guard let gas = BigUInt(hex: hexGas) else {
-            throw Error.invalidGas
+        let gas: BigUInt?
+        let hexGas = try container.decodeIfPresent(String.self, forKey: .gas)
+        if let hexGas {
+            if let g = BigUInt(hex: hexGas) {
+                gas = g
+            } else {
+                throw Error.invalidGas
+            }
+        } else {
+            gas = nil
         }
         
         self.from = try container.decode(EthereumAddress.self, forKey: .from)

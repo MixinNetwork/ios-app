@@ -150,7 +150,7 @@ extension WalletConnectSession {
                     WalletConnectService.shared.presentRequest(viewController: transactionRequest)
                 }
             } catch {
-                Logger.web3.error(category: "Session", message: "Failed to send tx: \(error)")
+                Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")
                 DispatchQueue.main.async {
                     WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
                                                                  message: R.string.localizable.unable_to_decode_the_request(error.localizedDescription))

@@ -105,7 +105,19 @@ final class WalletConnectService {
         guard let container = UIApplication.homeContainerViewController else {
             return
         }
-        guard presentedViewController == nil else {
+        let hasPendingRequest: Bool 
+        if let presentedViewController {
+            // FIXME: Workaround for the issue that requests can't be processed. In some cases, even after the previous
+            // request has been dismissed, the presentedViewController remains non-nil, preventing the handling of
+            // subsequent requests. There might be a retain cycle somewhere inside the view controller.
+            hasPendingRequest = presentedViewController.presentingViewController != nil
+            if hasPendingRequest {
+                Logger.web3.warn(category: "Service", message: "Previous request not released")
+            }
+        } else {
+            hasPendingRequest = false
+        }
+        guard !hasPendingRequest else {
             presentRejection(title: R.string.localizable.request_rejected(),
                              message: R.string.localizable.request_rejected_reason_another_request_in_process())
             return

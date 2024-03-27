@@ -3098,7 +3098,7 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
-		941F1F5A299CC3B80063FFB6 /* WalletConnect */ = {
+		941F1F5A299CC3B80063FFB6 /* Web3 */ = {
 			isa = PBXGroup;
 			children = (
 				945E864E29C07898000FDA54 /* BIP44 */,
@@ -3109,7 +3109,7 @@
 				940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */,
 				947C5E5A29B0FE9B00838458 /* WalletConnectSession.swift */,
 			);
-			path = WalletConnect;
+			path = Web3;
 			sourceTree = "<group>";
 		};
 		94463C54298E56FE00E63547 /* Authentication */ = {
@@ -4319,7 +4319,7 @@
 				E090B90D23B0B2330012C7E9 /* Storage */,
 				DFB6CE1F23C4859300FB6615 /* Message */,
 				DFC0EB5723BB3CD60091E7AC /* API */,
-				941F1F5A299CC3B80063FFB6 /* WalletConnect */,
+				941F1F5A299CC3B80063FFB6 /* Web3 */,
 				94659DA925C13793003403E5 /* DevicePerformance.swift */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
 				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,

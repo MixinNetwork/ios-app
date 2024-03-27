@@ -1,5 +1,4 @@
 import UIKit
-import web3 // Remove this after TIP Wallet transfer is removed
 import MixinServices
 
 final class TokenViewController: SafeSnapshotListViewController {

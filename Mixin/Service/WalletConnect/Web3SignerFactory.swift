@@ -1,6 +1,6 @@
 import Foundation
 import CryptoSwift
-import web3
+import secp256k1
 import Web3Wallet
 
 struct Web3CryptoProvider: CryptoProvider {
@@ -10,12 +10,9 @@ struct Web3CryptoProvider: CryptoProvider {
     }
     
     func recoverPubKey(signature: EthereumSignature, message: Data) throws -> Data {
-        let key = try web3.KeyUtil.recoverPublicKey(message: message, signature: signature.serialized)
-        if let data = Data(hex: key) {
-            return data
-        } else {
-            throw Error.hexDecoding
-        }
+        let signature = try secp256k1.Recovery.ECDSASignature(dataRepresentation: signature.serialized)
+        let publicKey = try secp256k1.Recovery.PublicKey(message, signature: signature, format: .uncompressed)
+        return publicKey.dataRepresentation
     }
     
     func keccak256(_ data: Data) -> Data {

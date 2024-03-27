@@ -1,7 +1,6 @@
 import UIKit
 import WebKit
 import Alamofire
-import web3
 import MixinServices
 
 class MixinWebViewController: WebViewController {

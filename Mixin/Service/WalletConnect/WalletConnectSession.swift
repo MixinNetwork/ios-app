@@ -1,6 +1,5 @@
 import Foundation
 import BigInt
-import web3
 import Web3Wallet
 import MixinServices
 

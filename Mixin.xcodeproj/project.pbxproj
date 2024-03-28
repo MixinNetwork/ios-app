@@ -4540,6 +4540,7 @@
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
 				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
 				94C958D92ACFEF5F00C1412F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -6599,6 +6600,14 @@
 			requirement = {
 				kind = exactVersion;
 				version = 10.22.1;
+			};
+		};
+		94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.16.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

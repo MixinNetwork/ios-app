@@ -43,20 +43,14 @@ final class Web3WalletViewController: UIViewController {
                                                selector: #selector(propertiesDidUpdate(_:)),
                                                name: PropertiesDAO.propertyDidUpdateNotification,
                                                object: nil)
-        DispatchQueue.global().async { [chain] in
-            let address: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
-            DispatchQueue.main.async {
-                self.address = address
-                let tableHeaderView = self.tableHeaderView
-                if let address {
-                    tableHeaderView.showCopyAddress(chain: chain, address: address)
-                } else {
-                    tableHeaderView.showUnlockAccount(chain: chain)
-                }
-                tableHeaderView.delegate = self
-                self.tableView.tableHeaderView = tableHeaderView
-            }
+        address = PropertiesDAO.shared.value(forKey: .evmAddress)
+        if let address {
+            tableHeaderView.showCopyAddress(chain: chain, address: address)
+        } else {
+            tableHeaderView.showUnlockAccount(chain: chain)
         }
+        tableHeaderView.delegate = self
+        tableView.tableHeaderView = tableHeaderView
     }
     
     func load(dapps: [Web3Dapp]) {

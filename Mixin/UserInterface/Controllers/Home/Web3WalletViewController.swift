@@ -8,9 +8,7 @@ final class Web3WalletViewController: UIViewController {
     private let tableHeaderView = R.nib.web3WalletHeaderView(withOwner: nil)!
     private let chain: WalletConnectService.Chain
     
-    private var sessionsObserver: AnyCancellable?
-    
-    private var embeddedDapps: [EmbeddedDapp] = [.uniswap, .snapshot]
+    private var dapps: [Web3Dapp]?
     private var sessions: [WalletConnectSession] = []
     
     private var address: String?
@@ -35,6 +33,11 @@ final class Web3WalletViewController: UIViewController {
         tableView.register(R.nib.web3DappCell)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.contentInset.bottom = 10
+        if dapps == nil {
+            let footerView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
+            tableView.tableFooterView = footerView
+        }
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(propertiesDidUpdate(_:)),
@@ -50,18 +53,19 @@ final class Web3WalletViewController: UIViewController {
                 } else {
                     tableHeaderView.showUnlockAccount(chain: chain)
                 }
-                tableHeaderView.frame.size.height = 134
                 tableHeaderView.delegate = self
                 self.tableView.tableHeaderView = tableHeaderView
             }
         }
-        
-        sessionsObserver = WalletConnectService.shared.$sessions
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessions in
-                self?.load(sessions: sessions)
-            }
-        load(sessions: WalletConnectService.shared.sessions)
+    }
+    
+    func load(dapps: [Web3Dapp]) {
+        let chainID = chain.internalID
+        self.dapps = dapps.filter { dapp in
+            dapp.chains.contains(chainID)
+        }
+        tableView.tableFooterView = nil
+        tableView.reloadData()
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
@@ -77,25 +81,6 @@ final class Web3WalletViewController: UIViewController {
             self.address = address
             tableHeaderView.showCopyAddress(chain: chain, address: address)
         }
-    }
-    
-    private func load(sessions: [WalletConnectSession]) {
-        let embeddedDapps = NSMutableArray(array: embeddedDapps)
-        let externalSessions = sessions.filter { session in
-            let embeddedIndex = embeddedDapps.indexOfObject { object, _, stop in
-                (object as! EmbeddedDapp).host == session.host
-            }
-            if embeddedIndex == NSNotFound {
-                return true
-            } else {
-                let dapp = embeddedDapps[embeddedIndex] as! EmbeddedDapp
-                embeddedDapps[embeddedIndex] = dapp.replacingSession(with: session)
-                return false
-            }
-        }
-        self.embeddedDapps = embeddedDapps as! [EmbeddedDapp]
-        self.sessions = externalSessions
-        tableView.reloadData()
     }
     
 }
@@ -121,32 +106,16 @@ extension Web3WalletViewController: Web3WalletHeaderView.Delegate {
 // MARK: - UITableViewDataSource
 extension Web3WalletViewController: UITableViewDataSource {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        Section.allCases.count
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
-        case .embedded:
-            embeddedDapps.count
-        case .session:
-            sessions.count
-        }
+        dapps?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_dapp, for: indexPath)!
-        switch Section(rawValue: indexPath.section)! {
-        case .embedded:
-            let dapp = embeddedDapps[indexPath.row]
-            cell.iconImageView.image = dapp.icon
+        if let dapp = dapps?[indexPath.row] {
+            cell.iconImageView.sd_setImage(with: dapp.iconURL)
             cell.nameLabel.text = dapp.name
             cell.hostLabel.text = dapp.host
-        case .session:
-            let session = sessions[indexPath.row]
-            cell.iconImageView.sd_setImage(with: session.iconURL)
-            cell.nameLabel.text = session.name
-            cell.hostLabel.text = session.host
         }
         return cell
     }
@@ -158,70 +127,10 @@ extension Web3WalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let container = UIApplication.homeContainerViewController?.homeTabBarController {
-            let url = switch Section(rawValue: indexPath.section)! {
-            case .embedded:
-                embeddedDapps[indexPath.row].url
-            case .session:
-                sessions[indexPath.row].url
-            }
-            if let url {
-                MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url),
-                                                       asChildOf: container)
-            }
+        if let container = UIApplication.homeContainerViewController?.homeTabBarController, let url = dapps?[indexPath.row].homeURL {
+            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url),
+                                                   asChildOf: container)
         }
-    }
-    
-}
-
-// MARK: - Data Structure
-extension Web3WalletViewController {
-    
-    private struct EmbeddedDapp {
-        
-        static let uniswap = EmbeddedDapp(
-            name: "Uniswap",
-            host: "app.uniswap.org",
-            url: URL(string: "https://app.uniswap.org"),
-            icon: R.image.explore.uniswap()!,
-            session: nil
-        )
-        
-        static let snapshot = EmbeddedDapp(
-            name: "Snapshot",
-            host: "snapshot.org",
-            url: URL(string: "https://snapshot.org"),
-            icon: R.image.explore.snapshot()!,
-            session: nil
-        )
-        
-        let name: String
-        let host: String
-        let url: URL?
-        let icon: UIImage
-        let session: WalletConnectSession?
-        
-        func replacingSession(with session: WalletConnectSession?) -> EmbeddedDapp {
-            if let session {
-                EmbeddedDapp(name: name,
-                             host: host,
-                             url: url,
-                             icon: icon,
-                             session: session)
-            } else {
-                EmbeddedDapp(name: name,
-                             host: host,
-                             url: url,
-                             icon: icon,
-                             session: nil)
-            }
-        }
-        
-    }
-    
-    private enum Section: Int, CaseIterable {
-        case embedded = 0
-        case session
     }
     
 }

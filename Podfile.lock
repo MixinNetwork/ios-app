@@ -120,7 +120,7 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
-  MixinServices: e6351eac137115a6e6bd9362e62ec3142abdeafa
+  MixinServices: c7f6482461e275a7ab980d5503b014c1f74a05a2
   PhoneNumberKit: 9c8d546d65c3784721d575a29e712ae8b992fe79
   SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336

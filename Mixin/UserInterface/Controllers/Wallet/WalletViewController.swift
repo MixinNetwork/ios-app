@@ -229,6 +229,16 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
     
 }
 
+extension WalletViewController: HomeTabBarControllerChild {
+    
+    func viewControllerDidSwitchToFront() {
+        ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
+        ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
+        ConcurrentJobQueue.shared.addJob(job: SyncSafeSnapshotJob())
+    }
+    
+}
+
 extension WalletViewController {
     
     private func updateTableViewContentInset() {

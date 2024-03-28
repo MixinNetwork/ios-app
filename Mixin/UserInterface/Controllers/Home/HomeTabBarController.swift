@@ -1,6 +1,10 @@
 import UIKit
 import MixinServices
 
+protocol HomeTabBarControllerChild {
+    func viewControllerDidSwitchToFront()
+}
+
 final class HomeTabBarController: UIViewController {
     
     private enum ChildID: Int {
@@ -86,9 +90,6 @@ final class HomeTabBarController: UIViewController {
             newChild = homeViewController
         case .wallet:
             newChild = walletViewController
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
-            ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
-            ConcurrentJobQueue.shared.addJob(job: SyncSafeSnapshotJob())
         case .explore:
             newChild = exploreViewController
         }
@@ -111,6 +112,9 @@ final class HomeTabBarController: UIViewController {
             make.bottom.equalTo(tabBar.snp.top)
         }
         newChild.didMove(toParent: self)
+        if let newChild = newChild as? HomeTabBarControllerChild {
+            newChild.viewControllerDidSwitchToFront()
+        }
     }
     
     private func switchToChildAfterValidated(with id: ChildID) {

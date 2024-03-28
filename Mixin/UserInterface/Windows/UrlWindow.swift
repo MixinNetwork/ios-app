@@ -39,13 +39,18 @@ class UrlWindow {
         from source: Source = .other,
         clearNavigationStack: Bool = true
     ) -> Bool {
+        // When a payment is invoked by a URL, the outputs may not in sync, potentially causing
+        // payment failures due to inaccurate balance. However, this synchronization lacks ordering
+        // guarantees, so the issue still occurs in some circumstances.
         if let payment = SafePaymentURL(url: url) {
+            UTXOService.shared.synchronize()
             checkSafePaymentURL(payment, from: source)
             return true
         } else if let multisig = MultisigURL(url: url) {
             checkMultisig(multisig)
             return true
         } else if let code = CodeURL(url: url) {
+            UTXOService.shared.synchronize()
             checkCode(code, from: source, clearNavigationStack: clearNavigationStack)
             return true
         } else if let mixinURL = MixinURL(url: url) {
@@ -1033,9 +1038,6 @@ extension UrlWindow {
     }
     
     private static func checkCode(_ code: CodeURL, from source: Source, clearNavigationStack: Bool) {
-        guard let homeContainer = UIApplication.homeContainerViewController else {
-            return
-        }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         SafeAPI.scheme(uuid: code.uuid) { result in

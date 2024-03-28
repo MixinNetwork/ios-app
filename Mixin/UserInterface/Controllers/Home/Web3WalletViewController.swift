@@ -41,7 +41,7 @@ final class Web3WalletViewController: UIViewController {
                                                name: PropertiesDAO.propertyDidUpdateNotification,
                                                object: nil)
         DispatchQueue.global().async { [chain] in
-            let address: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
+            let address: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
             DispatchQueue.main.async {
                 self.address = address
                 let tableHeaderView = self.tableHeaderView
@@ -65,7 +65,7 @@ final class Web3WalletViewController: UIViewController {
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
-        guard let change = notification.userInfo?[PropertiesDAO.Key.evmAccount] as? PropertiesDAO.Change else {
+        guard let change = notification.userInfo?[PropertiesDAO.Key.evmAddress] as? PropertiesDAO.Change else {
             return
         }
         switch change {

@@ -137,7 +137,7 @@ extension WalletConnectSession {
                     throw Error.noToken(chain.internalID)
                 }
                 // TODO: Get account by `chain`
-                guard let address: String = PropertiesDAO.shared.value(forKey: .evmAccount) else {
+                guard let address: String = PropertiesDAO.shared.value(forKey: .evmAddress) else {
                     throw Error.noAccount
                 }
                 DispatchQueue.main.async {
@@ -171,7 +171,7 @@ extension WalletConnectSession {
         do {
             let decoded = try decode(request)
             // TODO: Get account by `request.chainId`
-            guard let address: String = PropertiesDAO.shared.value(forKey: .evmAccount) else {
+            guard let address: String = PropertiesDAO.shared.value(forKey: .evmAddress) else {
                 throw Error.noAccount
             }
             let signRequest = SignRequestViewController(address: address, session: self, request: decoded)

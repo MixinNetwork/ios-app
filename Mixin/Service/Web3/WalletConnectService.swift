@@ -308,7 +308,7 @@ extension WalletConnectService {
                 return
             }
             
-            let account: String? = PropertiesDAO.shared.value(forKey: .evmAccount)
+            let account: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
             if account == nil {
                 DispatchQueue.main.async {
                     let unlock = UnlockWeb3WalletViewController(chain: chains[0])

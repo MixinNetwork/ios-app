@@ -26,7 +26,7 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
             DispatchQueue.global().async {
-                PropertiesDAO.shared.removeValue(forKey: .evmAccount)
+                PropertiesDAO.shared.removeValue(forKey: .evmAddress)
             }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
         case (1, 0):

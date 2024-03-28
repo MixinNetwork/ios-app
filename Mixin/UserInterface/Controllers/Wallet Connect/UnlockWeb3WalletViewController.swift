@@ -89,7 +89,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                 guard address == redundantAddress else {
                     throw GenerationError.mismatched
                 }
-                PropertiesDAO.shared.set(address, forKey: .evmAccount)
+                PropertiesDAO.shared.set(address, forKey: .evmAddress)
                 await MainActor.run {
                     self.isUnlocked = true
                     self.canDismissInteractively = true

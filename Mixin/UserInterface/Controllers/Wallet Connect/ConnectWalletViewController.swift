@@ -42,7 +42,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         var rows: [Row] = [
             .proposer(name: proposal.proposer.name, host: host),
         ]
-        if let account: String = PropertiesDAO.shared.value(forKey: .evmAccount) {
+        if let account: String = PropertiesDAO.shared.value(forKey: .evmAddress) {
             // TODO: Get account by `self.request` if blockchain other than EVMs is supported
             rows.append(.info(caption: .account, content: account))
         }

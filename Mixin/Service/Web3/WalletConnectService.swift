@@ -44,7 +44,7 @@ final class WalletConnectService {
         let meta = AppMetadata(name: walletName,
                                description: walletDescription,
                                url: URL.mixinMessenger.absoluteString,
-                               icons: ["https://mixin.one/assets/eccaf16dd38b2210f935.png"],
+                               icons: [],
                                redirect: .init(native: "mixin://", universal: nil))
         Web3Wallet.configure(metadata: meta, crypto: Web3CryptoProvider())
         Web3Wallet.instance.sessionsPublisher

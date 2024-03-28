@@ -11,7 +11,7 @@ struct NetworkFeeOption {
     let duration: String
     let gasValue: String // In cryptocurrency
     
-    init?(speed: String, cost: String, duration: String, gas: BigUInt, gasPrice: String, gasLimit: String) {
+    init?(speed: String, tokenPrice: Decimal, duration: String, gas: BigUInt, gasPrice: String, gasLimit: String) {
         guard let decimalGasPrice = Decimal(string: gasPrice, locale: .enUSPOSIX) else {
             return nil
         }
@@ -34,9 +34,9 @@ struct NetworkFeeOption {
         
         self.gasPrice = gasPrice
         self.speed = speed
-        self.cost = cost
+        self.cost = CurrencyFormatter.localizedString(from: decimalFee * tokenPrice, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         self.duration = duration
-        self.gasValue = CurrencyFormatter.localizedString(from: decimalFee, format: .precision, sign: .never, symbol: nil)
+        self.gasValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
         self.gasLimit = gasLimit
     }
     

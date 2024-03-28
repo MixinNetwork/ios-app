@@ -1,9 +1,10 @@
-framework module "Tip" {
+framework module "TIP" {
 	header "ref.h"
     header "Tip.objc.h"
     header "Kernel.objc.h"
+    header "Blockchain.objc.h"
     header "Universe.objc.h"
-    header "Tip.h"
+    header "TIP.h"
 
     export *
 }

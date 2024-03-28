@@ -10,8 +10,11 @@ final class ExploreViewController: UIViewController {
     private let allAppsViewController = ExploreAllAppsViewController()
     private let hiddenSearchTopMargin: CGFloat = -28
     
+    private weak var web3WalletViewController: Web3WalletViewController?
     private weak var searchViewController: ExploreSearchViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
+    
+    private var dapps: [Web3Dapp]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,14 +143,47 @@ extension ExploreViewController: UICollectionViewDataSource {
 
 extension ExploreViewController: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let alreadySelected = collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false
+        return !alreadySelected
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        removeWeb3WalletViewController()
         let segment = Segment(rawValue: indexPath.item)!
         switch segment {
         case .favorite:
             contentContainerView.bringSubviewToFront(favoriteViewController.view)
         case .bots:
             contentContainerView.bringSubviewToFront(allAppsViewController.view)
+        case .ethereum:
+            let wallet = Web3WalletViewController(chain: .ethereum)
+            addContentViewController(wallet)
+            web3WalletViewController = wallet
+        case .polygon:
+            let wallet = Web3WalletViewController(chain: .polygon)
+            addContentViewController(wallet)
+            web3WalletViewController = wallet
+        case .bsc:
+            let wallet = Web3WalletViewController(chain: .bnbSmartChain)
+            addContentViewController(wallet)
+            web3WalletViewController = wallet
         }
+        if let wallet = web3WalletViewController {
+            if let dapps {
+                wallet.load(dapps: dapps)
+            } else {
+                reloadDapps()
+            }
+        }
+    }
+    
+}
+
+extension ExploreViewController: HomeTabBarControllerChild {
+    
+    func viewControllerDidSwitchToFront() {
+        reloadDapps()
     }
     
 }
@@ -158,6 +194,9 @@ extension ExploreViewController {
         
         case favorite
         case bots
+        case ethereum
+        case polygon
+        case bsc
         
         var name: String {
             switch self {
@@ -165,6 +204,12 @@ extension ExploreViewController {
                 R.string.localizable.favorite()
             case .bots:
                 R.string.localizable.bots_title()
+            case .ethereum:
+                "Ethereum"
+            case .polygon:
+                "Polygon"
+            case .bsc:
+                "BSC"
             }
         }
         
@@ -175,6 +220,37 @@ extension ExploreViewController {
         contentContainerView.addSubview(child.view)
         child.view.snp.makeEdgesEqualToSuperview()
         child.didMove(toParent: self)
+    }
+    
+    private func removeWeb3WalletViewController() {
+        guard let wallet = web3WalletViewController else {
+            return
+        }
+        wallet.willMove(toParent: nil)
+        wallet.view.removeFromSuperview()
+        wallet.removeFromParent()
+        web3WalletViewController = nil
+    }
+    
+    private func reloadDapps() {
+        ExternalAPI.dapps { [weak self] result in
+            switch result {
+            case .success(let dapps):
+                guard let self else {
+                    return
+                }
+                Logger.web3.debug(category: "Explore", message: "Loaded \(dapps.count) dapps")
+                self.dapps = dapps
+                self.web3WalletViewController?.load(dapps: dapps)
+            case .failure(let error):
+                Logger.web3.debug(category: "Explore", message: "Failed to load dapps: \(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    if let self, self.dapps == nil {
+                        self.reloadDapps()
+                    }
+                }
+            }
+        }
     }
     
 }

@@ -27,6 +27,7 @@ class NetworkFeeSelectorViewController: PopupSelectorViewController {
         tableView.register(R.nib.networkFeeOptionCell)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.contentInset.bottom = max(20, view.safeAreaInsets.bottom)
         titleView.titleLabel.text = R.string.localizable.network_fee()
     }
     

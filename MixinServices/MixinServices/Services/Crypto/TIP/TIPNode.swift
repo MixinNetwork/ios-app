@@ -1,7 +1,7 @@
 import Foundation
 import AppCenterCrashes
 import Alamofire
-import Tip
+import TIP
 
 fileprivate let ephemeralGrace = 128 * UInt64(secondsPerDay) * UInt64(NSEC_PER_SEC)
 fileprivate let maximumRetries: UInt64 = 2

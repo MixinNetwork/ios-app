@@ -22,6 +22,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "UTXO", accessory: .disclosure),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Web3", accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -81,8 +84,11 @@ extension DiagnoseViewController: UITableViewDelegate {
         case (5, 0):
             let container = ContainerViewController.instance(viewController: UTXODiagnosticViewController(), title: "UTXO")
             navigationController?.pushViewController(container, animated: true)
-#if DEBUG
         case (6, 0):
+            let container = ContainerViewController.instance(viewController: Web3DiagnosticViewController(), title: "Web3")
+            navigationController?.pushViewController(container, animated: true)
+#if DEBUG
+        case (7, 0):
             let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
             navigationController?.pushViewController(container, animated: true)
 #endif

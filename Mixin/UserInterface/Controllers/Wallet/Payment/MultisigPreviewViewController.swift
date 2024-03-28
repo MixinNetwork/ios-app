@@ -1,6 +1,6 @@
 import UIKit
 import MixinServices
-import Tip
+import TIP
 
 final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     

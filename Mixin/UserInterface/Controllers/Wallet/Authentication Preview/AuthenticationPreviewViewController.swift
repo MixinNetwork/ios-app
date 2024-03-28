@@ -9,13 +9,9 @@ class AuthenticationPreviewViewController: UIViewController {
     
     var canDismissInteractively = true
     
-    var authenticationTitle: String {
-        R.string.localizable.send_by_pin()
-    }
-    
     private var rows: [Row] = []
     
-    private var trayView: UIView?
+    private(set) var trayView: UIView?
     private var trayViewBottomConstraint: NSLayoutConstraint?
     private var trayViewCenterXConstraint: NSLayoutConstraint?
     
@@ -38,7 +34,6 @@ class AuthenticationPreviewViewController: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
-        tableView.allowsSelection = false
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.automaticallyAdjustsScrollIndicatorInsets = false
         tableView.rowHeight = UITableView.automaticDimension
@@ -48,7 +43,10 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.authenticationPreviewCompactInfoCell)
         tableView.register(R.nib.paymentFeeCell)
         tableView.register(R.nib.paymentUserGroupCell)
+        tableView.register(R.nib.web3MessageCell)
+        tableView.register(R.nib.web3AmountChangeCell)
         tableView.dataSource = self
+        tableView.delegate = self
         
         // Prevent frame from changing when set as `tableHeaderView`
         tableHeaderView.autoresizingMask = []
@@ -63,13 +61,13 @@ class AuthenticationPreviewViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let bottomInset = max(view.safeAreaInsets.bottom, trayView?.frame.height ?? 0)
-        UIView.animate(withDuration: 0.3) {
-            self.tableView.contentInset.bottom = bottomInset
-            self.tableView.verticalScrollIndicatorInsets.bottom = bottomInset
-            if self.tableView.contentSize.height + bottomInset < self.tableView.frame.height {
-                self.tableView.setContentOffset(.zero, animated: false)
-            }
+        updateTableViewBottomInset()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            layoutTableHeaderView()
         }
     }
     
@@ -81,6 +79,19 @@ class AuthenticationPreviewViewController: UIViewController {
                                                                   verticalFittingPriority: .fittingSizeLevel)
         tableHeaderView.frame = CGRect(origin: .zero, size: fittingSize)
         tableView.tableHeaderView = tableHeaderView
+    }
+    
+    func layoutTableFooterView() {
+        guard let footerView = tableView.tableFooterView else {
+            return
+        }
+        let sizeToFit = CGSize(width: view.bounds.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let fittingSize = footerView.systemLayoutSizeFitting(sizeToFit,
+                                                             withHorizontalFittingPriority: .required,
+                                                             verticalFittingPriority: .fittingSizeLevel)
+        footerView.frame = CGRect(origin: .zero, size: fittingSize)
+        tableView.tableFooterView = footerView
     }
     
     func layoutTableHeaderView(title: String, subtitle: String?, style: TableHeaderViewStyle = []) {
@@ -103,6 +114,23 @@ class AuthenticationPreviewViewController: UIViewController {
         
     }
     
+    func replaceRow(at index: Int, with row: Row) {
+        rows[index] = row
+        let indexPath = IndexPath(row: index, section: 0)
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRow row: Row) {
+        
+    }
+    
+    private func updateTableViewBottomInset() {
+        let safeAreaInset = max(view.safeAreaInsets.bottom, 20)
+        let bottomInset = max(safeAreaInset, trayView?.frame.height ?? 0)
+        tableView.contentInset.bottom = bottomInset
+        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
+    }
+    
 }
 
 // MARK: - UIAdaptivePresentationControllerDelegate
@@ -110,6 +138,10 @@ extension AuthenticationPreviewViewController: UIAdaptivePresentationControllerD
     
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         canDismissInteractively
+    }
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        
     }
     
 }
@@ -136,6 +168,13 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.secondaryLabel.text = token
             }
             cell.setPrimaryAmountLabel(usesBoldFont: boldPrimaryAmount)
+            return cell
+        case let .proposer(name, host):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
+            cell.captionLabel.text = R.string.localizable.from().uppercased()
+            cell.primaryLabel.text = name
+            cell.secondaryLabel.text = host
+            cell.setPrimaryAmountLabel(usesBoldFont: false)
             return cell
         case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
@@ -180,7 +219,35 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(address, labelContent: nil)
             return cell
+        case let .web3Message(caption, message):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_message, for: indexPath)!
+            cell.captionLabel.text = caption.uppercased()
+            cell.messageTextView.text = message
+            return cell
+        case let .web3Amount(caption, tokenAmount, fiatMoneyAmount, token):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_amount_change, for: indexPath)!
+            cell.captionLabel.text = caption.uppercased()
+            cell.setToken(token, tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+            return cell
+        case let .selectableFee(speed, tokenAmount, fiatMoneyAmount):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
+            cell.captionLabel.text = R.string.localizable.fee_selection(speed).uppercased()
+            cell.primaryLabel.text = tokenAmount
+            cell.secondaryLabel.text = fiatMoneyAmount
+            cell.setPrimaryAmountLabel(usesBoldFont: false)
+            cell.disclosureImageView.isHidden = false
+            return cell
         }
+    }
+    
+}
+
+// MARK: - UITableViewDelegate
+extension AuthenticationPreviewViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let row = rows[indexPath.row]
+        self.tableView(tableView, didSelectRow: row)
     }
     
 }
@@ -209,6 +276,7 @@ extension AuthenticationPreviewViewController {
         case memo
         case tag
         case total
+        case account
         
         var rawValue: String {
             switch self {
@@ -228,6 +296,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.tag()
             case .total:
                 R.string.localizable.total()
+            case .account:
+                R.string.localizable.account()
             }
         }
         
@@ -235,11 +305,15 @@ extension AuthenticationPreviewViewController {
     
     enum Row {
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
+        case proposer(name: String, host: String)
         case info(caption: Caption, content: String)
         case receivingAddress(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
+        case web3Message(caption: String, message: String)
+        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: TokenItem) // Nil amount for unlimited
+        case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
     }
     
     struct TableHeaderViewStyle: OptionSet {
@@ -289,7 +363,7 @@ extension AuthenticationPreviewViewController {
     }
     
     @objc func confirm(_ sender: Any) {
-        let intent = PreviewedAuthenticationIntent(title: authenticationTitle, onInput: performAction(with:))
+        let intent = PreviewedAuthenticationIntent(onInput: performAction(with:))
         let authentication = AuthenticationViewController(intent: intent)
         present(authentication, animated: true)
     }
@@ -393,6 +467,9 @@ extension AuthenticationPreviewViewController {
                     self.view.layoutIfNeeded()
                 } completion: { _ in
                     oldTrayView.removeFromSuperview()
+                    if newTrayView == nil {
+                        self.updateTableViewBottomInset()
+                    }
                 }
             case .horizontal:
                 centerXConstraint.constant = -oldTrayView.frame.width / 2
@@ -401,9 +478,15 @@ extension AuthenticationPreviewViewController {
                     self.view.layoutIfNeeded()
                 } completion: { _ in
                     oldTrayView.removeFromSuperview()
+                    if newTrayView == nil {
+                        self.updateTableViewBottomInset()
+                    }
                 }
             case nil:
                 oldTrayView.removeFromSuperview()
+                if newTrayView == nil {
+                    updateTableViewBottomInset()
+                }
             }
         }
         
@@ -428,6 +511,8 @@ extension AuthenticationPreviewViewController {
                 UIView.animate(withDuration: 0.3) {
                     self.view.layoutIfNeeded()
                     newTrayView.alpha = 1
+                } completion: { _ in
+                    self.updateTableViewBottomInset()
                 }
             case .horizontal:
                 newTrayView.layoutIfNeeded()
@@ -437,11 +522,14 @@ extension AuthenticationPreviewViewController {
                 UIView.animate(withDuration: 0.3) {
                     self.view.layoutIfNeeded()
                     newTrayView.alpha = 1
+                } completion: { _ in
+                    self.updateTableViewBottomInset()
                 }
             case nil:
                 // Reduce `UITableViewAlertForLayoutOutsideViewHierarchy`
                 if view.window != nil {
                     view.layoutIfNeeded()
+                    updateTableViewBottomInset()
                 }
             }
             
@@ -462,7 +550,7 @@ extension AuthenticationPreviewViewController {
     
     private final class PreviewedAuthenticationIntent: AuthenticationIntent {
         
-        let intentTitle: String
+        let intentTitle: String = R.string.localizable.continue_with_pin()
         let intentTitleIcon: UIImage? = R.image.ic_pin_setting()
         let intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? = nil
         let intentSubtitle = ""
@@ -475,8 +563,7 @@ extension AuthenticationPreviewViewController {
         
         private let onInput: (String) -> Void
         
-        init(title: String, onInput: @escaping (String) -> Void) {
-            self.intentTitle = title
+        init(onInput: @escaping (String) -> Void) {
             self.onInput = onInput
         }
         

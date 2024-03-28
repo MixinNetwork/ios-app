@@ -2,14 +2,21 @@ import UIKit
 
 final class AuthenticationPreviewInfoCell: UITableViewCell {
     
-    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var labelStackView: UIStackView!
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
+    @IBOutlet weak var disclosureImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        stackView.setCustomSpacing(8, after: captionLabel)
+        labelStackView.setCustomSpacing(8, after: captionLabel)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disclosureImageView.isHidden = true
     }
     
     func setPrimaryAmountLabel(usesBoldFont: Bool) {

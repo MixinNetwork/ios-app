@@ -11,17 +11,6 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
     
     var onSavingSuccess: (() -> Void)?
     
-    override var authenticationTitle: String {
-        switch action {
-        case .add:
-            R.string.localizable.add_by_pin()
-        case .update:
-            R.string.localizable.edit_by_pin()
-        case .delete:
-            R.string.localizable.delete_by_pin()
-        }
-    }
-    
     private let token: TokenItem
     private let label: String
     private let destination: String

@@ -8,8 +8,9 @@ final class AuthenticationPreviewHeaderView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
-    private var assetIconView: AssetIconView?
-    private var progressView: AuthenticationProgressView?
+    private weak var imageView: UIImageView?
+    private weak var assetIconView: AssetIconView?
+    private weak var progressView: AuthenticationProgressView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -19,12 +20,31 @@ final class AuthenticationPreviewHeaderView: UIView {
                               adjustForContentSize: true)
     }
     
+    func setIcon(setter: (UIImageView) -> Void) {
+        if let imageView, imageView.isDescendant(of: iconWrapperView) {
+            setter(imageView)
+        } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
+            let imageView = UIImageView()
+            imageView.layer.cornerRadius = 35
+            imageView.layer.masksToBounds = true
+            iconWrapperView.addSubview(imageView)
+            imageView.snp.makeEdgesEqualToSuperview()
+            setter(imageView)
+            self.imageView = imageView
+        }
+    }
+    
     func setIcon(token: TokenItem) {
-        progressView?.removeFromSuperview()
         let iconView: AssetIconView
-        if let view = self.assetIconView {
+        if let view = self.assetIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
         } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
             iconView = AssetIconView()
             iconView.chainIconWidth = 23
             iconView.chainIconOutlineWidth = 0
@@ -36,11 +56,13 @@ final class AuthenticationPreviewHeaderView: UIView {
     }
     
     func setIcon(progress: AuthenticationProgressView.Progress) {
-        assetIconView?.removeFromSuperview()
         let progressView: AuthenticationProgressView
-        if let view = self.progressView {
+        if let view = self.progressView, view.isDescendant(of: iconWrapperView) {
             progressView = view
         } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
             progressView = AuthenticationProgressView()
             iconWrapperView.addSubview(progressView)
             progressView.snp.makeEdgesEqualToSuperview()

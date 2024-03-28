@@ -8,7 +8,7 @@ public enum Logger {
     case call
     case conversation(id: String)
     case tip
-    case walletConnect
+    case web3
     
     public static func migrate() {
         let fileManager = FileManager.default
@@ -52,7 +52,7 @@ public enum Logger {
     }
     
     public static func export(conversationId: String) -> URL? {
-        let subsystems = [general, database, call, conversation(id: conversationId), tip, walletConnect]
+        let subsystems = [general, database, call, conversation(id: conversationId), tip, web3]
         var files = subsystems.compactMap(\.fileURL)
         if FileManager.default.fileExists(atPath: AppGroupContainer.webRTCLogURL.path) {
             files.append(AppGroupContainer.webRTCLogURL)
@@ -186,7 +186,7 @@ extension Logger {
             filename = "\(id).log"
         case .tip:
             filename = "tip.log"
-        case .walletConnect:
+        case .web3:
             filename = "wc.log"
         }
         let url = AppGroupContainer.logUrl.appendingPathComponent(filename)

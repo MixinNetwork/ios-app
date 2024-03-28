@@ -3,9 +3,17 @@ import GRDB
 
 public final class PropertiesDAO: UserDatabaseDAO {
     
+    public static let propertyDidUpdateNotification = Notification.Name("one.mixin.services.PropertiesDAO.Update")
+    
     public enum Key: String {
         case iterator
         case snapshotOffset = "snapshot_offset"
+        case evmAddress     = "evm_address"
+    }
+    
+    public enum Change {
+        case removed
+        case saved(LosslessStringConvertible)
     }
     
     public static let shared = PropertiesDAO()
@@ -27,6 +35,13 @@ public final class PropertiesDAO: UserDatabaseDAO {
                                 value: value.description,
                                 updatedAt: Date().toUTCString())
         try property.save(db)
+        try db.afterNextTransaction { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.propertyDidUpdateNotification,
+                                                object: self,
+                                                userInfo: [key: Change.saved(value)])
+            }
+        }
     }
     
     public func removeValue(forKey key: Key) {
@@ -53,8 +68,7 @@ extension PropertiesDAO {
     private func value<Value: LosslessStringConvertible>(forKey key: Key, db: GRDB.Database) throws -> Value? {
         let string = try String.fetchOne(db,
                                          sql: "SELECT value FROM properties WHERE key=?",
-                                         arguments: [key.rawValue],
-                                         adapter: nil)
+                                         arguments: [key.rawValue])
         if let string = string {
             return Value(string)
         } else {
@@ -66,6 +80,13 @@ extension PropertiesDAO {
         try Property
             .filter(Property.column(of: .key) == key.rawValue)
             .deleteAll(db)
+        try db.afterNextTransaction { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.propertyDidUpdateNotification,
+                                                object: self,
+                                                userInfo: [key: Change.removed])
+            }
+        }
     }
     
 }

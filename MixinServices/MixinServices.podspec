@@ -24,11 +24,12 @@ Mixin Core Services.
   s.static_framework = true
 
   s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Database/**/*', 'MixinServices/Services/**/*'
-  s.vendored_frameworks = 'MixinServices/XKCP_SimpleFIPS202.xcframework', 'MixinServices/tip.xcframework'
+  s.vendored_frameworks = 'MixinServices/XKCP_SimpleFIPS202.xcframework', 'MixinServices/TIP.xcframework'
 
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
+  s.dependency 'SDWebImageSVGCoder'
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
   s.dependency 'SocketRocket'

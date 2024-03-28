@@ -1,162 +1,128 @@
 import UIKit
+import web3
 import Web3Wallet
 import MixinServices
 
-final class ConnectWalletViewController: UIViewController {
+final class ConnectWalletViewController: AuthenticationPreviewViewController {
     
-    enum Info {
-        case walletConnect(WalletConnectSign.Session.Proposal)
-        case bot(App)
-        case page(String)
-    }
+    private let proposal: WalletConnectSign.Session.Proposal
+    private let chains: [Blockchain]
+    private let events: [String]
     
-    enum Error: Swift.Error {
-        case invalidPIN
-        case missingPINToken
-    }
+    private var isProposalApproved = false
     
-    @IBOutlet weak var tableView: AuthorizationScopesTableView!
-    @IBOutlet weak var chainStackView: UIStackView!
-    @IBOutlet weak var chainNameLabel: UILabel!
-    
-    @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showChainConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideChainConstraint: NSLayoutConstraint!
-    
-    @MainActor var onApprove: ((Data) -> Void)?
-    @MainActor var onReject: (() -> Void)?
-    
-    private let info: Info
-    
-    init(info: Info) {
-        self.info = info
-        super.init(nibName: R.nib.connectWalletView.name, bundle: nil)
+    init(
+        proposal: WalletConnectSign.Session.Proposal,
+        chains: [Blockchain],
+        events: [String]
+    ) {
+        self.proposal = proposal
+        self.chains = chains
+        self.events = events
+        super.init(warnings: [])
     }
     
     required init?(coder: NSCoder) {
-        fatalError("Storyboard is not supported")
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.dataSource = self
-        tableView.reloadData()
-        switch info {
-        // TODO: Update with newest design
-        case .walletConnect, .bot, .page:
-            setChainName(nil)
+        
+        tableHeaderView.setIcon { imageView in
+            let url = proposal.proposer.icons.lazy
+                .compactMap(URL.init(string:))
+                .first
+            imageView.sd_setImage(with: url)
         }
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        tableViewHeightConstraint.constant = tableView.contentSize.height
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.isScrollEnabled = tableView.frame.height < tableView.contentSize.height
-    }
-    
-    private func setChainName(_ name: String?) {
-        if let name {
-            chainStackView.isHidden = false
-            showChainConstraint.priority = .almostRequired
-            hideChainConstraint.priority = .almostInexist
-            chainNameLabel.text = name
-        } else {
-            chainStackView.isHidden = true
-            showChainConstraint.priority = .almostInexist
-            hideChainConstraint.priority = .almostRequired
+        layoutTableHeaderView(title: R.string.localizable.connect_your_account(),
+                              subtitle: R.string.localizable.connect_web3_account_description())
+        
+        let host = URL(string: proposal.proposer.url)?.host ?? proposal.proposer.url
+        var rows: [Row] = [
+            .proposer(name: proposal.proposer.name, host: host),
+        ]
+        if let account: String = PropertiesDAO.shared.value(forKey: .evmAddress) {
+            // TODO: Get account by `self.request` if blockchain other than EVMs is supported
+            rows.append(.info(caption: .account, content: account))
         }
+        reloadData(with: rows)
     }
     
-}
-
-extension ConnectWalletViewController: AuthenticationIntent {
-    
-    var intentTitle: String {
-        R.string.localizable.connect_wallet()
+    override func loadInitialTrayView(animated: Bool) {
+        loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
+                                 leftAction: #selector(close(_:)),
+                                 rightTitle: R.string.localizable.connect(),
+                                 rightAction: #selector(confirm(_:)),
+                                 animation: animated ? .vertical : nil)
     }
     
-    var intentTitleIcon: UIImage? {
-        nil
+    override func close(_ sender: Any) {
+        super.close(sender)
+        rejectProposalIfNotApproved()
     }
     
-    var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
-        switch info {
-        case let .walletConnect(proposal):
-            if let url = proposal.proposer.icons.lazy.compactMap(URL.init(string:)).first {
-                return .url(url)
-            } else {
-                return nil
-            }
-        case let .bot(app):
-            return .app(app)
-        case .page:
-            return nil
-        }
+    override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        rejectProposalIfNotApproved()
     }
     
-    var intentSubtitle: String {
-        switch info {
-        case let .walletConnect(proposal):
-            return proposal.proposer.name
-        case let .bot(app):
-            return app.name + " (" + app.appNumber + ")"
-        case let .page(host):
-            return host
-        }
-    }
-    
-    var options: AuthenticationIntentOptions {
-        [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
-    }
-    
-    func authenticationViewController(
-        _ controller: AuthenticationViewController,
-        didInput pin: String,
-        completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
-    ) {
-        Task {
+    override func performAction(with pin: String) {
+        canDismissInteractively = false
+        tableHeaderView.setIcon(progress: .busy)
+        tableHeaderView.titleLabel.text = R.string.localizable.connecting()
+        replaceTrayView(with: nil, animation: .vertical)
+        Task.detached { [chains, proposal, events] in
             do {
-                let priv = try await TIP.ethereumPrivateKey(pin: pin)
+                let priv = try await TIP.web3WalletPrivateKey(pin: pin)
+                let keyStorage = InPlaceKeyStorage(raw: priv)
+                let address = try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
+                let accounts = chains.compactMap { chain in
+                    WalletConnectUtils.Account(blockchain: chain, address: address)
+                }
+                let methods = WalletConnectSession.Method.allCases.map(\.rawValue)
+                let sessionNamespaces = try AutoNamespaces.build(sessionProposal: proposal,
+                                                                 chains: chains,
+                                                                 methods: methods,
+                                                                 events: Array(events),
+                                                                 accounts: accounts)
+                _ = try await Web3Wallet.instance.approve(proposalId: proposal.id,
+                                                          namespaces: sessionNamespaces)
                 await MainActor.run {
-                    self.onApprove?(priv)
-                    completion(.success)
-                    self.dismiss(animated: true)
+                    self.canDismissInteractively = true
+                    self.isProposalApproved = true
+                    self.tableHeaderView.setIcon(progress: .success)
+                    self.layoutTableHeaderView(title: R.string.localizable.connected(),
+                                               subtitle: R.string.localizable.connect_web3_account_description())
+                    self.tableView.setContentOffset(.zero, animated: true)
+                    self.loadSingleButtonTrayView(title: R.string.localizable.done(),
+                                                  action: #selector(self.close(_:)))
                 }
             } catch {
+                Logger.web3.error(category: "Connect", message: "Failed to approve: \(error)")
                 await MainActor.run {
-                    completion(.failure(error: error, retry: .inputPINAgain))
+                    self.canDismissInteractively = true
+                    self.tableHeaderView.setIcon(progress: .failure)
+                    self.layoutTableHeaderView(title: R.string.localizable.connection_failed(),
+                                               subtitle: error.localizedDescription)
+                    self.tableView.setContentOffset(.zero, animated: true)
+                    self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
+                                                  leftAction: #selector(self.close(_:)),
+                                                  rightTitle: R.string.localizable.retry(),
+                                                  rightAction: #selector(self.confirm(_:)),
+                                                  animation: .vertical)
                 }
             }
         }
     }
     
-    func authenticationViewControllerWillDismiss(_ controller: AuthenticationViewController) {
-        onReject?()
-    }
-    
-}
-
-extension ConnectWalletViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.authorization_scope_list, for: indexPath)!
-        if indexPath.row == 0 {
-            cell.titleLabel.text = R.string.localizable.read_your_public_address()
-            cell.descriptionLabel.text = R.string.localizable.allow_dapp_access_public_address()
-        } else {
-            cell.titleLabel.text = R.string.localizable.request_approval()
-            cell.descriptionLabel.text = R.string.localizable.allow_dapp_request_approval()
+    private func rejectProposalIfNotApproved() {
+        guard !isProposalApproved else {
+            return
         }
-        cell.checkmarkView.status = .nonSelectable
-        return cell
+        Logger.web3.info(category: "Connect", message: "Rejected by dismissing")
+        Task {
+            try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
+        }
     }
     
 }

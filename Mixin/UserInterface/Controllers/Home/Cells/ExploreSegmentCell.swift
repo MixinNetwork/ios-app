@@ -30,9 +30,11 @@ final class ExploreSegmentCell: UICollectionViewCell {
         if isSelected {
             label.layer.borderColor = R.color.theme()!.cgColor
             label.textColor = R.color.theme()
+            label.backgroundColor = R.color.background_selection()
         } else {
             label.layer.borderColor = R.color.line()!.cgColor
             label.textColor = R.color.text()
+            label.backgroundColor = .clear
         }
     }
     

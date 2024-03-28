@@ -459,7 +459,7 @@ class UrlWindow {
         if let url = URL(string: string), checkUrl(url: url, clearNavigationStack: clearNavigationStack) {
             return
         }
-        if WalletConnectService.isAccountAllowed, let uri = WalletConnectURI(string: string) {
+        if let uri = try? WalletConnectURI(uriString: string) {
             switch TIP.status {
             case .ready:
                 WalletConnectService.shared.connect(to: uri)

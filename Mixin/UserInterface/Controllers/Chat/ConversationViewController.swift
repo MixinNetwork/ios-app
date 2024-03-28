@@ -162,12 +162,6 @@ class ConversationViewController: UIViewController {
         return button
     }()
     
-    private lazy var textPreviewView: TextPreviewView = {
-        let view = R.nib.textPreviewView(withOwner: nil)!
-        view.delegate = self
-        return view
-    }()
-    
     private lazy var pinMessageBannerView: PinMessageBannerView = {
         let banner = R.nib.pinMessageBannerView(withOwner: nil)!
         banner.isHidden = true
@@ -945,15 +939,9 @@ class ConversationViewController: UIViewController {
         guard !(tableView.isDragging && tableView.isDecelerating) else {
             return
         }
-        
-        textPreviewView.alpha = 0
-        textPreviewView.frame = view.bounds
-        view.addSubview(textPreviewView)
-        view.layoutIfNeeded()
+        let textPreviewView = R.nib.textPreviewView(withOwner: nil)!
         textPreviewView.attributedText = viewModel.contentAttributedString
-        UIView.animate(withDuration: 0.3) {
-            self.textPreviewView.alpha = 1
-        }
+        textPreviewView.show(on: view)
     }
     
     @objc func showReportMenuAction() {
@@ -1853,15 +1841,6 @@ extension ConversationViewController: TextPreviewViewDelegate {
     
     func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL) {
         handleLongPressing(on: url)
-    }
-    
-    func textPreviewViewDidFinishPreview(_ view: TextPreviewView) {
-        UIView.animate(withDuration: 0.3) {
-            self.textPreviewView.alpha = 0
-        } completion: { (_) in
-            self.textPreviewView.attributedText = nil
-            self.textPreviewView.removeFromSuperview()
-        }
     }
     
 }

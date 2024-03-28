@@ -1,5 +1,4 @@
 import UIKit
-import web3 // Remove this after TIP Wallet transfer is removed
 import MixinServices
 
 final class TokenViewController: SafeSnapshotListViewController {
@@ -220,19 +219,6 @@ extension TokenViewController {
             }
         }
         present(selector, animated: true, completion: nil)
-    }
-    
-    private func sendToMyTIPWallet() {
-//        let reveal = RevealTIPWalletAddressViewController()
-//        reveal.onApprove = { [asset] priv in
-//            let storage = InPlaceKeyStorage(raw: priv)
-//            let account = try! EthereumAccount(keyStorage: storage)
-//            let address = account.address.toChecksumAddress()
-//            let transfer = TransferOutViewController.instance(token: asset, to: .tipWallet(address))
-//            self.navigationController?.pushViewController(transfer, animated: true)
-//        }
-//        let authentication = AuthenticationViewController(intent: reveal)
-//        present(authentication, animated: true)
     }
     
     private func reloadToken() {

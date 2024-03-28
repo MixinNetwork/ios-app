@@ -54,8 +54,12 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "SELECT chain_id FROM tokens WHERE asset_id = ?", arguments: [assetID])
     }
     
-    public func tokenItem(with id: String) -> TokenItem? {
-        db.select(with: SQL.selectWithAssetID, arguments: [id])
+    public func token(with assetID: String) -> Token? {
+        db.select(with: "SELECT * FROM tokens WHERE asset_id = ?", arguments: [assetID])
+    }
+    
+    public func tokenItem(with assetID: String) -> TokenItem? {
+        db.select(with: SQL.selectWithAssetID, arguments: [assetID])
     }
     
     public func tokenItems(with ids: [String]) -> [TokenItem] {
@@ -160,4 +164,12 @@ public final class TokenDAO: UserDatabaseDAO {
     public func save(token: Token) {
         db.save(token)
     }
+    
+    public func saveAndFetch(token: Token) -> TokenItem? {
+        try! db.writeAndReturnError { db in
+            try token.save(db)
+            return try TokenItem.fetchOne(db, sql: SQL.selectWithAssetID, arguments: [token.assetID])
+        }
+    }
+    
 }

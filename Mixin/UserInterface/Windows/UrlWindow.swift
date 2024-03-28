@@ -47,7 +47,6 @@ class UrlWindow {
             checkSafePaymentURL(payment, from: source)
             return true
         } else if let multisig = MultisigURL(url: url) {
-            UTXOService.shared.synchronize()
             checkMultisig(multisig)
             return true
         } else if let code = CodeURL(url: url) {

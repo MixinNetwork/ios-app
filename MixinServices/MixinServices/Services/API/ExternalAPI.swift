@@ -22,7 +22,7 @@ public final class ExternalAPI: MixinAPI {
         request(method: .get, path: "/external/fiats", completion: completion)
     }
     
-    public static func dapps(completion: @escaping (MixinAPI.Result<[Web3Dapp]>) -> Void) {
+    public static func dapps(completion: @escaping (MixinAPI.Result<[Web3Chain]>) -> Void) {
         request(method: .get, path: "/external/dapps", completion: completion)
     }
     

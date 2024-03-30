@@ -169,21 +169,6 @@ extension ExploreViewController: UICollectionViewDelegate {
             addContentViewController(wallet)
             web3WalletViewController = wallet
         }
-        if let wallet = web3WalletViewController {
-            if let dapps {
-                wallet.load(dapps: dapps)
-            } else {
-                reloadDapps()
-            }
-        }
-    }
-    
-}
-
-extension ExploreViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        reloadDapps()
     }
     
 }
@@ -230,27 +215,6 @@ extension ExploreViewController {
         wallet.view.removeFromSuperview()
         wallet.removeFromParent()
         web3WalletViewController = nil
-    }
-    
-    private func reloadDapps() {
-        ExternalAPI.dapps { [weak self] result in
-            switch result {
-            case .success(let dapps):
-                guard let self else {
-                    return
-                }
-                Logger.web3.debug(category: "Explore", message: "Loaded \(dapps.count) dapps")
-                self.dapps = dapps
-                self.web3WalletViewController?.load(dapps: dapps)
-            case .failure(let error):
-                Logger.web3.debug(category: "Explore", message: "Failed to load dapps: \(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    if let self, self.dapps == nil {
-                        self.reloadDapps()
-                    }
-                }
-            }
-        }
     }
     
 }

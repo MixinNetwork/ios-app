@@ -15,6 +15,8 @@ extension AppGroupUserDefaults {
             case withdrawnAddressIds = "withdrawn_asset_ids"
             
             case currencyCode = "currency_code"
+            
+            case web3RPCURL = "web3_rpc"
         }
         
         @Default(namespace: .wallet, key: Key.lastPinVerifiedDate, defaultValue: nil)
@@ -37,6 +39,10 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.currencyCode, defaultValue: nil)
         public static var currencyCode: String?
+        
+        // Key is chain id
+        @Default(namespace: .wallet, key: Key.web3RPCURL, defaultValue: [:])
+        public static var web3RPCURL: [String: String]
         
         internal static func migrate() {
             lastPinVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

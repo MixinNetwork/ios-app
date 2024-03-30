@@ -34,10 +34,18 @@ final class Web3WalletViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.contentInset.bottom = 10
-        if dapps == nil {
+        
+        if let web3Chains = Web3Chain.global {
+            reloadDapps(web3Chains: web3Chains)
+        } else {
+            // Loading in progress by `Web3Chain.synchronize`. Wait for the updated notification
             let footerView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
             tableView.tableFooterView = footerView
         }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadDapps(notification:)),
+                                               name: Web3Chain.globalChainsDidUpdateNotification,
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(propertiesDidUpdate(_:)),
@@ -53,13 +61,11 @@ final class Web3WalletViewController: UIViewController {
         tableView.tableHeaderView = tableHeaderView
     }
     
-    func load(dapps: [Web3Dapp]) {
-        let chainID = chain.internalID
-        self.dapps = dapps.filter { dapp in
-            dapp.chains.contains(chainID)
+    @objc private func reloadDapps(notification: Notification) {
+        guard let web3Chains = Web3Chain.global else {
+            return
         }
-        tableView.tableFooterView = nil
-        tableView.reloadData()
+        reloadDapps(web3Chains: web3Chains)
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
@@ -75,6 +81,14 @@ final class Web3WalletViewController: UIViewController {
             self.address = address
             tableHeaderView.showCopyAddress(chain: chain, address: address)
         }
+    }
+    
+    private func reloadDapps(web3Chains: [String: Web3Chain]) {
+        if let dapps = web3Chains[chain.internalID]?.dapps {
+            self.dapps = dapps
+            tableView.reloadData()
+        }
+        tableView.tableFooterView = nil
     }
     
 }

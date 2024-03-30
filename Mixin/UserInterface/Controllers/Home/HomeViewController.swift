@@ -130,6 +130,7 @@ class HomeViewController: UIViewController {
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
         if WalletConnectService.isAvailable {
             WalletConnectService.shared.reloadSessions()
+            Web3Chain.synchronize()
         }
     }
     

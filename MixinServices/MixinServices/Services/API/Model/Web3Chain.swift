@@ -26,7 +26,7 @@ extension Web3Chain {
     public private(set) static var global: [String: Web3Chain]?
     
     public static func synchronize() {
-        ExternalAPI.chains { result in
+        ExternalAPI.dapps { result in
             switch result {
             case .success(let chains):
                 let idMappedChains = chains.reduce(into: [:]) { result, chain in

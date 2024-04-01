@@ -13,6 +13,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     private let chain: WalletConnectService.Chain
     private let chainToken: TokenItem
     private let client: EthereumHttpClient
+    private let canDecodeValue: Bool
     
     private var fee: Fee?
     
@@ -35,7 +36,8 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         self.chain = chain
         self.chainToken = chainToken
         self.client = chain.makeEthereumClient()
-        let canDecodeValue = (transaction.decimalValue ?? 0) != 0
+        self.canDecodeValue = (transaction.decimalValue ?? 0) != 0
+        
         let warnings: [String] = if canDecodeValue {
             []
         } else {
@@ -57,9 +59,12 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         tableHeaderView.setIcon { imageView in
             imageView.sd_setImage(with: session.iconURL)
         }
-        layoutTableHeaderView(title: R.string.localizable.web3_signing_confirmation(),
-                              subtitle: R.string.localizable.web3_signing_warning(),
-                              style: .destructive)
+        let title = if canDecodeValue {
+            R.string.localizable.web3_transaction_request()
+        } else {
+            R.string.localizable.signature_request()
+        }
+        layoutTableHeaderView(title: title, subtitle: R.string.localizable.web3_ensure_trust())
         var rows: [Row] = [
             .amount(caption: .fee,
                     token: R.string.localizable.calculating(),
@@ -114,7 +119,8 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         }
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        tableHeaderView.titleLabel.text = R.string.localizable.web3_signing()
+        layoutTableHeaderView(title: R.string.localizable.web3_signing(),
+                              subtitle: R.string.localizable.web3_ensure_trust())
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [chain, transactionPreview] in
             let account: EthereumAccount
@@ -140,7 +146,8 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
                     self.layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
-                                               subtitle: error.localizedDescription)
+                                               subtitle: error.localizedDescription,
+                                               style: .destructive)
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                                   leftAction: #selector(self.close(_:)),
@@ -149,6 +156,11 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                                   animation: .vertical)
                 }
                 return
+            }
+            
+            await MainActor.run {
+                self.layoutTableHeaderView(title: R.string.localizable.sending(),
+                                           subtitle: R.string.localizable.web3_ensure_trust())
             }
             await self.send(transaction: transaction, with: account)
         }
@@ -194,6 +206,10 @@ extension TransactionRequestViewController {
             return
         }
         canDismissInteractively = false
+        tableHeaderView.setIcon(progress: .busy)
+        layoutTableHeaderView(title: R.string.localizable.sending(),
+                              subtitle: R.string.localizable.web3_ensure_trust())
+        replaceTrayView(with: nil, animation: .vertical)
         Task.detached {
             await self.send(transaction: transaction, with: account)
         }
@@ -222,11 +238,14 @@ extension TransactionRequestViewController {
                 self.hasTransactionSent = true
                 self.canDismissInteractively = true
                 self.tableHeaderView.setIcon(progress: .success)
-                self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
-                                           subtitle: R.string.localizable.web3_send_signature_description())
+                let subtitle = if self.canDecodeValue {
+                    R.string.localizable.web3_signing_transaction_success()
+                } else {
+                    R.string.localizable.web3_signing_data_success()
+                }
+                self.layoutTableHeaderView(title: R.string.localizable.sending_success(), subtitle: subtitle)
                 self.tableView.setContentOffset(.zero, animated: true)
-                self.loadSingleButtonTrayView(title: R.string.localizable.done(),
-                                              action:  #selector(self.close(_:)))
+                self.loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(self.close(_:)))
             }
         } catch {
             Logger.web3.error(category: "TxRequest", message: "Failed to send: \(error)")
@@ -235,7 +254,7 @@ extension TransactionRequestViewController {
                 self.account = account
                 self.canDismissInteractively = true
                 self.tableHeaderView.setIcon(progress: .failure)
-                self.layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
+                self.layoutTableHeaderView(title: R.string.localizable.sending_failed(),
                                            subtitle: error.localizedDescription)
                 self.tableView.setContentOffset(.zero, animated: true)
                 self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),

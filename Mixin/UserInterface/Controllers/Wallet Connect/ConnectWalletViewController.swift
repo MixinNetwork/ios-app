@@ -91,7 +91,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                     self.canDismissInteractively = true
                     self.isProposalApproved = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.layoutTableHeaderView(title: R.string.localizable.connected(),
+                    self.layoutTableHeaderView(title: R.string.localizable.web3_account_connected(),
                                                subtitle: R.string.localizable.connect_web3_account_description())
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadSingleButtonTrayView(title: R.string.localizable.done(),

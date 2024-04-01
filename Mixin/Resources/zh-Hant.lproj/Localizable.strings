@@ -1,6 +1,6 @@
 "about" = "關於";
 "access_contacts_hint" = "同步通訊錄到 Mixin 發現更多好友";
-"access_dapps_defi_projects" = "訪問 dapps 或 DeFi 專案";
+"access_dapps_defi_projects" = "訪問 dApps 或 DeFi 專案";
 "access_denied" = "禁止訪問";
 "access_to_contacts" = "訪問通訊錄";
 "account" = "賬號";
@@ -298,7 +298,7 @@
 "date_format_month" = "MM 月 d 日 E";
 "date_format_week_date" = "yyyy 年 MM 月 d 日 E";
 "declined" = "已拒絕";
-"decode_transaction_failed" = "交易解析失敗，無法估計資產變化，注意只給您信任的應用程式簽名。";
+"decode_transaction_failed" = "簽名解析失敗，無法估計資產變化，注意只給您信任的應用程式簽名。";
 "delete" = "刪除";
 "delete_account_detail_hint" = "本地訊息和 iCloud 備份不會被自動刪除";
 "delete_account_hint" = "刪除你的賬戶和個人照片";
@@ -863,7 +863,10 @@
 "send_count" = "傳送（%d）";
 "sender" = "交易發起人";
 "senders" = "交易發起人";
+"sending" = "正在傳送";
+"sending_failed" = "傳送失敗";
 "sending_multisig_signature" = "正在傳送多簽交易";
+"sending_success" = "傳送成功";
 "sending_transfer_request" = "正在傳送轉賬";
 "sending_withdrawal_request" = "正在傳送提現";
 "session_not_found" = "沒有對應的連線";
@@ -915,7 +918,7 @@
 "sign_in" = "登入";
 "sign_with_emergency_contact" = "透過緊急聯絡人登入";
 "sign_with_phone_number" = "透過手機號登入";
-"signature_request" = "請求籤名";
+"signature_request" = "簽名確認";
 "signed_message" = "簽名";
 "skip" = "跳過";
 "slide_to_cancel" = "滑動取消";
@@ -1102,12 +1105,15 @@
 "web3_account" = "賬戶";
 "web3_account_connected" = "連線成功";
 "web3_account_network" = "%@ 賬戶";
-"web3_send_signature_description" = "點發送按鈕立刻廣播訊息或點丟棄按鈕丟棄已簽名的訊息。";
+"web3_ensure_trust" = "請確保您信任此應用程式。";
+"web3_message_request" = "訊息簽名";
 "web3_signing" = "正在簽名";
-"web3_signing_confirmation" = "簽名確認";
+"web3_signing_data_success" = "資料已簽名併發送成功，請返回 dApp 繼續操作。";
 "web3_signing_failed" = "簽名失敗";
-"web3_signing_success" = "簽名成功";
+"web3_signing_message_success" = "訊息已簽名併發送成功，請返回 dApp 繼續操作。";
+"web3_signing_transaction_success" = "交易已簽名併發送成功，請返回 dApp 繼續操作。";
 "web3_signing_warning" = "我們無法驗證此請求，在傳送此請求之前，請確保您信任此應用程式。";
+"web3_transaction_request" = "交易簽名";
 "weekly" = "每週";
 "weeks" = "週";
 "whats_your_name" = "你的名字？";

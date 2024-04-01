@@ -39,7 +39,15 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
         layoutTableHeaderView(title: R.string.localizable.web3_signing_confirmation(),
                               subtitle: R.string.localizable.web3_signing_warning(),
                               style: .destructive)
-        reloadData()
+        let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
+        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        reloadData(with: [
+            .web3Message(caption: R.string.localizable.unsigned_message(), message: request.humanReadable),
+            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
+            .proposer(name: session.name, host: session.host),
+            .info(caption: .account, content: address),
+            .info(caption: .network, content: request.chain.name)
+        ])
     }
     
     override func close(_ sender: Any) {
@@ -68,6 +76,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
         tableHeaderView.titleLabel.text = R.string.localizable.web3_signing()
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [request] in
+            let signature: String
             do {
                 let priv = try await TIP.web3WalletPrivateKey(pin: pin)
                 let keyStorage = InPlaceKeyStorage(raw: priv)
@@ -75,29 +84,14 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                 guard account.address.toChecksumAddress().lowercased() == request.address.lowercased() else {
                     throw SignRequestError.mismatchedAddress
                 }
-                let signature = switch request.signable {
+                signature = switch request.signable {
                 case .raw(let data):
                     try account.signMessage(message: data)
                 case .typed(let data):
                     try account.signMessage(message: data)
                 }
-                await MainActor.run {
-                    self.canDismissInteractively = true
-                    self.tableHeaderView.setIcon(progress: .success)
-                    self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
-                                               subtitle: R.string.localizable.web3_send_signature_description())
-                    self.signature = signature
-                    self.reloadData()
-                    self.tableView.layoutIfNeeded()
-                    self.tableView.setContentOffset(.zero, animated: true)
-                    self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.discard(),
-                                                  leftAction: #selector(self.close(_:)),
-                                                  rightTitle: R.string.localizable.send(),
-                                                  rightAction: #selector(self.send(_:)),
-                                                  animation: .vertical)
-                }
             } catch {
-                Logger.web3.error(category: "Sign", message: "Failed to approve: \(error)")
+                Logger.web3.error(category: "Sign", message: "Failed to sign: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
@@ -110,7 +104,9 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                                                   rightAction: #selector(self.confirm(_:)),
                                                   animation: .vertical)
                 }
+                return
             }
+            await self.send(signature: signature)
         }
     }
     
@@ -118,54 +114,48 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
 
 extension SignRequestViewController {
     
-    @objc private func send(_ sendButton: BusyButton) {
+    @objc private func resendSignature(_ sender: Any) {
         guard let signature else {
             return
         }
         canDismissInteractively = false
-        sendButton.isBusy = true
-        let request = request.raw
         Task.detached {
-            do {
-                let response = RPCResult.response(AnyCodable(signature))
-                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: response)
-                await MainActor.run {
-                    self.hasSignatureSent = true
-                    self.close(sendButton)
-                }
-            } catch {
-                Logger.web3.error(category: "Sign", message: "Failed to send: \(error)")
-                await MainActor.run {
-                    self.canDismissInteractively = true
-                    sendButton.isBusy = false
-                    let alert = UIAlertController(title: R.string.localizable.connection_failed(),
-                                                  message: error.localizedDescription,
-                                                  preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
-                    self.present(alert, animated: true)
-                }
-            }
+            await self.send(signature: signature)
         }
     }
     
-    private func reloadData() {
-        let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
-        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-        var rows: [Row] = [
-            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
-            .proposer(name: session.name, host: session.host),
-            .info(caption: .account, content: address),
-            .info(caption: .network, content: request.chain.name)
-        ]
-        let unsignedMessage: Row = .web3Message(caption: R.string.localizable.unsigned_message(),
-                                                message: request.humanReadable)
-        if let signature {
-            rows.insert(.web3Message(caption: R.string.localizable.signed_message(), message: signature), at: 0)
-            rows.append(unsignedMessage)
-        } else {
-            rows.insert(unsignedMessage, at: 0)
+    private func send(signature: String) async {
+        do {
+            let response = RPCResult.response(AnyCodable(signature))
+            try await Web3Wallet.instance.respond(topic: request.raw.topic,
+                                                  requestId: request.raw.id,
+                                                  response: response)
+            await MainActor.run {
+                self.hasSignatureSent = true
+                self.canDismissInteractively = true
+                self.tableHeaderView.setIcon(progress: .success)
+                self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
+                                           subtitle: R.string.localizable.web3_send_signature_description())
+                self.tableView.setContentOffset(.zero, animated: true)
+                self.loadSingleButtonTrayView(title: R.string.localizable.done(),
+                                              action:  #selector(self.close(_:)))
+            }
+        } catch {
+            Logger.web3.error(category: "Sign", message: "Failed to send: \(error)")
+            await MainActor.run {
+                self.signature = signature
+                self.canDismissInteractively = true
+                self.tableHeaderView.setIcon(progress: .failure)
+                self.layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
+                                           subtitle: error.localizedDescription)
+                self.tableView.setContentOffset(.zero, animated: true)
+                self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
+                                              leftAction: #selector(self.close(_:)),
+                                              rightTitle: R.string.localizable.retry(),
+                                              rightAction: #selector(self.resendSignature(_:)),
+                                              animation: .vertical)
+            }
         }
-        reloadData(with: rows)
     }
     
     private func rejectRequestIfSignatureNotSent() {

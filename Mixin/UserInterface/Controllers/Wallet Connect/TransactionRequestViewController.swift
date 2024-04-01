@@ -265,11 +265,14 @@ extension TransactionRequestViewController {
                                                       gasLimit: nil,
                                                       chainId: nil)
                 let rpcGasLimit = try await client.eth_estimateGas(transaction)
-                let gasLimit: BigUInt = if let dappGasLimit {
-                    max(dappGasLimit, rpcGasLimit)
-                } else {
-                    rpcGasLimit
-                }
+                let gasLimit: BigUInt = {
+                    let value = if let dappGasLimit {
+                        max(dappGasLimit, rpcGasLimit)
+                    } else {
+                        rpcGasLimit
+                    }
+                    return value + value / 2 // 1.5x gasLimit
+                }()
                 let gasPrice = try await client.eth_gasPrice()
                 let fee = Fee(gasLimit: gasLimit,
                               gasPrice: gasPrice,

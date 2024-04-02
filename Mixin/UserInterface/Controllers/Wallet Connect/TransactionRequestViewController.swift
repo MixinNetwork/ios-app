@@ -122,7 +122,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         layoutTableHeaderView(title: R.string.localizable.web3_signing(),
                               subtitle: R.string.localizable.web3_ensure_trust())
         replaceTrayView(with: nil, animation: .vertical)
-        Task.detached { [chain, transactionPreview] in
+        Task.detached { [chain, client, transactionPreview] in
             let account: EthereumAccount
             let transaction: EthereumTransaction
             do {
@@ -132,11 +132,12 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                 guard transactionPreview.from == account.address else {
                     throw TransactionRequestError.mismatchedAddress
                 }
+                let nonce = try await client.eth_getTransactionCount(address: account.address, block: .Pending)
                 transaction = EthereumTransaction(from: account.address,
                                                   to: transactionPreview.to,
                                                   value: transactionPreview.value ?? 0,
                                                   data: transactionPreview.data,
-                                                  nonce: nil,
+                                                  nonce: nonce,
                                                   gasPrice: fee.gasPrice,
                                                   gasLimit: fee.gasLimit,
                                                   chainId: chain.id)
@@ -217,16 +218,9 @@ extension TransactionRequestViewController {
     
     private func send(transaction: EthereumTransaction, with account: EthereumAccount) async {
         do {
-            let transactionDescription = try await {
-                let nonce = try await client.eth_getTransactionCount(address: account.address, block: .Pending)
-                var nonceInjectedTransaction = transaction
-                nonceInjectedTransaction.nonce = nonce // Make getter of `raw` happy
-                if let raw = nonceInjectedTransaction.raw {
-                    return raw.hexEncodedString()
-                } else {
-                    return transaction.jsonRepresentation ?? "(null)"
-                }
-            }()
+            let transactionDescription = transaction.raw?.hexEncodedString()
+                ?? transaction.jsonRepresentation
+                ?? "(null)"
             Logger.web3.info(category: "TxRequest", message: "Will send tx: \(transactionDescription)")
             let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
             Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")

@@ -723,7 +723,6 @@
 		942F472B299CDF8100528759 /* Web3SignerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942F472A299CDF8100528759 /* Web3SignerFactory.swift */; };
 		942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */ = {isa = PBXBuildFile; fileRef = 942F829725DD56E3004F913B /* opusenc_set_bitrate.c */; };
 		9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */; };
-		9431379229AD2F8F00C2484B /* web3.swift in Frameworks */ = {isa = PBXBuildFile; productRef = 9431379129AD2F8F00C2484B /* web3.swift */; };
 		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
 		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
 		94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94317D062AFBE57200FDC9C9 /* MemoCell.xib */; };
@@ -807,6 +806,7 @@
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
 		9473F8282AE51097004E5739 /* RegisterToSafeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */; };
 		94787E182A7C071E00BB0124 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = 94787E172A7C071E00BB0124 /* QRCode */; };
+		9479B7852BBBE589002A2C4F /* web3.swift in Frameworks */ = {isa = PBXBuildFile; productRef = 9479B7842BBBE589002A2C4F /* web3.swift */; };
 		947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36A825DEB72A00146111 /* PlaylistManager.swift */; };
 		947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36AD25DEB75A00146111 /* PlaylistViewController.swift */; };
 		947B36B325DEB79100146111 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947B36B225DEB79100146111 /* PlaylistView.xib */; };
@@ -2379,9 +2379,9 @@
 				DFCC4342206B668A006F50BE /* Security.framework in Frameworks */,
 				94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */,
 				94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */,
+				9479B7852BBBE589002A2C4F /* web3.swift in Frameworks */,
 				94787E182A7C071E00BB0124 /* QRCode in Frameworks */,
 				DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */,
-				9431379229AD2F8F00C2484B /* web3.swift in Frameworks */,
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
 				94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */,
 				940C7541299AAE130006338F /* Web3Wallet in Frameworks */,
@@ -4400,7 +4400,6 @@
 			name = Mixin;
 			packageProductDependencies = (
 				940C7540299AAE130006338F /* Web3Wallet */,
-				9431379129AD2F8F00C2484B /* web3.swift */,
 				9416231929BEEFB800E540B9 /* OrderedCollections */,
 				9481C03B2A49A9AA0009DAF8 /* Starscream */,
 				944B1BED2A4CB0AA00C36B61 /* CryptoSwift */,
@@ -4409,6 +4408,7 @@
 				94C958DC2ACFEF5F00C1412F /* FirebaseCrashlytics */,
 				94C958DE2ACFEF5F00C1412F /* FirebasePerformance */,
 				94881FAB2AD035ED00CA7A29 /* RswiftLibrary */,
+				9479B7842BBBE589002A2C4F /* web3.swift */,
 			);
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
@@ -4533,7 +4533,6 @@
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			packageReferences = (
 				940C753F299AAE130006338F /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */,
-				9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */,
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
@@ -4541,6 +4540,7 @@
 				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
 				94C958D92ACFEF5F00C1412F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
+				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -6554,14 +6554,6 @@
 				version = 1.1.0;
 			};
 		};
-		9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/argentlabs/web3.swift";
-			requirement = {
-				kind = exactVersion;
-				version = 1.6.1;
-			};
-		};
 		944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
@@ -6576,6 +6568,14 @@
 			requirement = {
 				kind = exactVersion;
 				version = 14.3.1;
+			};
+		};
+		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MixinNetwork/web3.swift";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */ = {
@@ -6623,11 +6623,6 @@
 			package = 9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
 		};
-		9431379129AD2F8F00C2484B /* web3.swift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9431379029AD2F8F00C2484B /* XCRemoteSwiftPackageReference "web3" */;
-			productName = web3.swift;
-		};
 		944B1BED2A4CB0AA00C36B61 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
@@ -6637,6 +6632,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */;
 			productName = QRCode;
+		};
+		9479B7842BBBE589002A2C4F /* web3.swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */;
+			productName = web3.swift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;

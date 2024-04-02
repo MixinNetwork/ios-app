@@ -90,6 +90,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                 }()
                 let redundantAddress = try await TIP.web3WalletAddress(pin: pin)
                 guard address == redundantAddress else {
+                    Logger.web3.error(category: "Unlock", message: "Address: \(address), RA: \(redundantAddress)")
                     throw GenerationError.mismatched
                 }
                 PropertiesDAO.shared.set(address, forKey: .evmAddress)

@@ -51,7 +51,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     }
     
     deinit {
-        Logger.web3.debug(category: "TxRequest", message: "\(self) deinited")
+        Logger.web3.info(category: "TxnRequest", message: "\(self) deinited")
     }
     
     override func viewDidLoad() {
@@ -123,6 +123,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                               subtitle: R.string.localizable.web3_ensure_trust())
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [chain, client, transactionPreview] in
+            Logger.web3.info(category: "TxnRequest", message: "Will sign")
             let account: EthereumAccount
             let transaction: EthereumTransaction
             do {
@@ -142,7 +143,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                                   gasLimit: fee.gasLimit,
                                                   chainId: chain.id)
             } catch {
-                Logger.web3.error(category: "TxRequest", message: "Failed to sign: \(error)")
+                Logger.web3.error(category: "TxnRequest", message: "Failed to sign: \(error)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
@@ -159,6 +160,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                 return
             }
             
+            Logger.web3.info(category: "TxnRequest", message: "Will send")
             await MainActor.run {
                 self.layoutTableHeaderView(title: R.string.localizable.sending(),
                                            subtitle: R.string.localizable.web3_ensure_trust())
@@ -212,6 +214,7 @@ extension TransactionRequestViewController {
                               subtitle: R.string.localizable.web3_ensure_trust())
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached {
+            Logger.web3.info(category: "TxnRequest", message: "Will resend")
             await self.send(transaction: transaction, with: account)
         }
     }
@@ -221,13 +224,14 @@ extension TransactionRequestViewController {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation
                 ?? "(null)"
-            Logger.web3.info(category: "TxRequest", message: "Will send tx: \(transactionDescription)")
+            Logger.web3.info(category: "TxnRequest", message: "Will send tx: \(transactionDescription)")
             let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
-            Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")
+            Logger.web3.info(category: "TxnRequest", message: "Will respond hash: \(hash)")
             let response = RPCResult.response(AnyCodable(hash))
             try await Web3Wallet.instance.respond(topic: request.topic,
                                                   requestId: request.id,
                                                   response: response)
+            Logger.web3.info(category: "TxnRequest", message: "Txn sent")
             await MainActor.run {
                 self.hasTransactionSent = true
                 self.canDismissInteractively = true
@@ -242,7 +246,7 @@ extension TransactionRequestViewController {
                 self.loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(self.close(_:)))
             }
         } catch {
-            Logger.web3.error(category: "TxRequest", message: "Failed to send: \(error)")
+            Logger.web3.error(category: "TxnRequest", message: "Failed to send: \(error)")
             await MainActor.run {
                 self.transaction = transaction
                 self.account = account
@@ -291,9 +295,10 @@ extension TransactionRequestViewController {
                               gasPrice: gasPrice,
                               tokenPrice: tokenPrice)
                 guard let fee else {
-                    Logger.web3.error(category: "TxRequest", message: "Invalid gl: \(gasLimit.description), gp: \(gasPrice.description)")
+                    Logger.web3.error(category: "TxnRequest", message: "Invalid limit: \(gasLimit.description), price: \(gasPrice.description)")
                     throw TransactionRequestError.invalidFee
                 }
+                Logger.web3.info(category: "TxnRequest", message: "Using limit: \(gasLimit.description), price: \(gasPrice.description)")
                 await MainActor.run {
                     guard let self else {
                         return
@@ -303,6 +308,7 @@ extension TransactionRequestViewController {
                     confirmButton?.isEnabled = true
                 }
             } catch {
+                Logger.web3.info(category: "TxnRequest", message: "Failed to load gas: \(error)")
                 try await Task.sleep(nanoseconds: 3 * NSEC_PER_SEC)
                 await MainActor.run {
                     self?.loadGas()
@@ -315,7 +321,7 @@ extension TransactionRequestViewController {
         guard !hasTransactionSent else {
             return
         }
-        Logger.web3.info(category: "TxRequest", message: "Rejected by dismissing")
+        Logger.web3.info(category: "TxnRequest", message: "Rejected by dismissing")
         Task {
             let error = JSONRPCError(code: 0, message: "User rejected")
             try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))

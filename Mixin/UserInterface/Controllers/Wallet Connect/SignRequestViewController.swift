@@ -76,6 +76,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                               subtitle: R.string.localizable.web3_ensure_trust())
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [request] in
+            Logger.web3.info(category: "Sign", message: "Will sign")
             let signature: String
             do {
                 let priv = try await TIP.web3WalletPrivateKey(pin: pin)
@@ -108,6 +109,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
                 return
             }
             
+            Logger.web3.info(category: "Sign", message: "Will send")
             await MainActor.run {
                 self.layoutTableHeaderView(title: R.string.localizable.sending(),
                                            subtitle: R.string.localizable.web3_ensure_trust())
@@ -129,6 +131,7 @@ extension SignRequestViewController {
         layoutTableHeaderView(title: R.string.localizable.sending(),
                               subtitle: R.string.localizable.web3_ensure_trust())
         replaceTrayView(with: nil, animation: .vertical)
+        Logger.web3.info(category: "Sign", message: "Will resend")
         Task.detached {
             await self.send(signature: signature)
         }
@@ -140,6 +143,7 @@ extension SignRequestViewController {
             try await Web3Wallet.instance.respond(topic: request.raw.topic,
                                                   requestId: request.raw.id,
                                                   response: response)
+            Logger.web3.info(category: "Sign", message: "Signature sent")
             await MainActor.run {
                 self.hasSignatureSent = true
                 self.canDismissInteractively = true

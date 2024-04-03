@@ -117,7 +117,7 @@ extension WalletConnectSession {
     private func requestSendTransaction(with request: Request) {
         assert(Thread.isMainThread)
         DispatchQueue.global().async {
-            Logger.web3.debug(category: "Session", message: "Got tx: \(request.params)")
+            Logger.web3.info(category: "Session", message: "Got tx: \(request.params)")
             do {
                 let params = try request.params.get([WalletConnectTransactionPreview].self)
                 guard let transactionPreview = params.first else {

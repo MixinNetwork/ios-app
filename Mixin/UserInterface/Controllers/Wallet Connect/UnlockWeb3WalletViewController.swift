@@ -76,6 +76,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
     }
     
     override func performAction(with pin: String) {
+        Logger.web3.info(category: "Unlock", message: "Will unlock web3")
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         tableHeaderView.titleLabel.text = R.string.localizable.unlocking()
@@ -94,6 +95,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                     throw GenerationError.mismatched
                 }
                 PropertiesDAO.shared.set(address, forKey: .evmAddress)
+                Logger.web3.info(category: "Unlock", message: "Web3 unlocked")
                 await MainActor.run {
                     self.isUnlocked = true
                     self.canDismissInteractively = true

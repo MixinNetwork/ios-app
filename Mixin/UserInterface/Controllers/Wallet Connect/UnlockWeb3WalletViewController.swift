@@ -14,6 +14,10 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
     
     private var isUnlocked = false
     
+    private var subtitle: String {
+        R.string.localizable.unlock_web3_account_description(chain.name)
+    }
+    
     init(chain: WalletConnectService.Chain) {
         self.chain = chain
         super.init(warnings: [])
@@ -28,8 +32,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
         tableHeaderView.setIcon { imageView in
             imageView.image = R.image.crypto_wallet()
         }
-        layoutTableHeaderView(title: R.string.localizable.unlock_web3_account(chain.name),
-                              subtitle: R.string.localizable.unlock_web3_account_description(chain.name))
+        layoutTableHeaderView(title: R.string.localizable.unlock_web3_account(chain.name), subtitle: subtitle)
         let tableFooterView = BulletDescriptionView()
         var lines = [
             R.string.localizable.unlock_web3_account_agreement_1(chain.name),
@@ -87,6 +90,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                 }()
                 let redundantAddress = try await TIP.web3WalletAddress(pin: pin)
                 guard address == redundantAddress else {
+                    Logger.web3.error(category: "Unlock", message: "Address: \(address), RA: \(redundantAddress)")
                     throw GenerationError.mismatched
                 }
                 PropertiesDAO.shared.set(address, forKey: .evmAddress)
@@ -94,7 +98,7 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                     self.isUnlocked = true
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.tableHeaderView.titleLabel.text = R.string.localizable.unlock_web3_account_success()
+                    self.layoutTableHeaderView(title: R.string.localizable.unlock_web3_account_success(), subtitle: self.subtitle)
                     self.reloadData(with: [
                         .info(caption: .account, content: address)
                     ])
@@ -110,7 +114,8 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
                     self.layoutTableHeaderView(title: R.string.localizable.unlock_web3_account_failed(),
-                                               subtitle: error.localizedDescription)
+                                               subtitle: error.localizedDescription,
+                                               style: .destructive)
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                                   leftAction: #selector(self.close(_:)),

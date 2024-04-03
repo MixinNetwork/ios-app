@@ -6,37 +6,6 @@ import MixinServices
 
 final class TransactionRequestViewController: AuthenticationPreviewViewController {
     
-    private struct Fee {
-        
-        let gasLimit: BigUInt
-        let gasPrice: BigUInt // Wei
-        let feeValue: String
-        let feeCost: String
-        
-        init?(gasLimit: BigUInt, gasPrice: BigUInt, tokenPrice: Decimal) {
-            guard let weiFee = Decimal(string: (gasLimit * gasPrice).description, locale: .enUSPOSIX) else {
-                return nil
-            }
-            let decimalFee = weiFee * .wei
-            let cost = decimalFee * tokenPrice
-            
-            self.gasLimit = gasLimit
-            self.gasPrice = gasPrice
-            self.feeValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
-            if cost >= 0.01 {
-                self.feeCost = CurrencyFormatter.localizedString(from: cost, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-            } else {
-                self.feeCost = "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-            }
-        }
-        
-    }
-    
-    private enum TransactionRequestError: Error {
-        case mismatchedAddress
-        case invalidFee
-    }
-    
     private let address: String
     private let session: WalletConnectSession
     private let request: WalletConnectSign.Request
@@ -44,6 +13,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     private let chain: WalletConnectService.Chain
     private let chainToken: TokenItem
     private let client: EthereumHttpClient
+    private let canDecodeValue: Bool
     
     private var fee: Fee?
     
@@ -66,7 +36,8 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         self.chain = chain
         self.chainToken = chainToken
         self.client = chain.makeEthereumClient()
-        let canDecodeValue = (transaction.decimalValue ?? 0) != 0
+        self.canDecodeValue = (transaction.decimalValue ?? 0) != 0
+        
         let warnings: [String] = if canDecodeValue {
             []
         } else {
@@ -88,9 +59,12 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         tableHeaderView.setIcon { imageView in
             imageView.sd_setImage(with: session.iconURL)
         }
-        layoutTableHeaderView(title: R.string.localizable.web3_signing_confirmation(),
-                              subtitle: R.string.localizable.web3_signing_warning(),
-                              style: .destructive)
+        let title = if canDecodeValue {
+            R.string.localizable.web3_transaction_request()
+        } else {
+            R.string.localizable.signature_request()
+        }
+        layoutTableHeaderView(title: title, subtitle: R.string.localizable.web3_ensure_trust())
         var rows: [Row] = [
             .amount(caption: .fee,
                     token: R.string.localizable.calculating(),
@@ -145,47 +119,36 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
         }
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        tableHeaderView.titleLabel.text = R.string.localizable.web3_signing()
+        layoutTableHeaderView(title: R.string.localizable.web3_signing(),
+                              subtitle: R.string.localizable.web3_ensure_trust())
         replaceTrayView(with: nil, animation: .vertical)
-        Task.detached { [chain, transactionPreview] in
+        Task.detached { [chain, client, transactionPreview] in
+            let account: EthereumAccount
+            let transaction: EthereumTransaction
             do {
                 let priv = try await TIP.web3WalletPrivateKey(pin: pin)
                 let keyStorage = InPlaceKeyStorage(raw: priv)
-                let account = try EthereumAccount(keyStorage: keyStorage)
+                account = try EthereumAccount(keyStorage: keyStorage)
                 guard transactionPreview.from == account.address else {
                     throw TransactionRequestError.mismatchedAddress
                 }
-                let transaction = EthereumTransaction(from: account.address,
-                                                      to: transactionPreview.to,
-                                                      value: transactionPreview.value ?? 0,
-                                                      data: transactionPreview.data,
-                                                      nonce: nil,
-                                                      gasPrice: fee.gasPrice,
-                                                      gasLimit: fee.gasLimit,
-                                                      chainId: chain.id)
-                await MainActor.run {
-                    self.transaction = transaction
-                    self.account = account
-                    self.canDismissInteractively = true
-                    self.tableHeaderView.setIcon(progress: .success)
-                    self.layoutTableHeaderView(title: R.string.localizable.web3_signing_success(),
-                                               subtitle: R.string.localizable.web3_send_signature_description())
-                    self.tableView.setContentOffset(.zero, animated: true)
-                    self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.discard(),
-                                                  leftAction: #selector(self.close(_:)),
-                                                  rightTitle: R.string.localizable.send(),
-                                                  rightAction: #selector(self.send(_:)),
-                                                  animation: .vertical)
-                }
+                let nonce = try await client.eth_getTransactionCount(address: account.address, block: .Pending)
+                transaction = EthereumTransaction(from: account.address,
+                                                  to: transactionPreview.to,
+                                                  value: transactionPreview.value ?? 0,
+                                                  data: transactionPreview.data,
+                                                  nonce: nonce,
+                                                  gasPrice: fee.gasPrice,
+                                                  gasLimit: fee.gasLimit,
+                                                  chainId: chain.id)
             } catch {
-                Logger.web3.error(category: "TxRequest", message: "Failed to approve: \(error)")
+                Logger.web3.error(category: "TxRequest", message: "Failed to sign: \(error)")
                 await MainActor.run {
-                    self.transaction = nil
-                    self.account = nil
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)
                     self.layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
-                                               subtitle: error.localizedDescription)
+                                               subtitle: error.localizedDescription,
+                                               style: .destructive)
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                                   leftAction: #selector(self.close(_:)),
@@ -193,7 +156,14 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                                   rightAction: #selector(self.confirm(_:)),
                                                   animation: .vertical)
                 }
+                return
             }
+            
+            await MainActor.run {
+                self.layoutTableHeaderView(title: R.string.localizable.sending(),
+                                           subtitle: R.string.localizable.web3_ensure_trust())
+            }
+            await self.send(transaction: transaction, with: account)
         }
     }
     
@@ -201,58 +171,100 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
 
 extension TransactionRequestViewController {
     
-    @objc private func send(_ sendButton: BusyButton) {
+    private struct Fee {
+        
+        let gasLimit: BigUInt
+        let gasPrice: BigUInt // Wei
+        let feeValue: String
+        let feeCost: String
+        
+        init?(gasLimit: BigUInt, gasPrice: BigUInt, tokenPrice: Decimal) {
+            guard let weiFee = Decimal(string: (gasLimit * gasPrice).description, locale: .enUSPOSIX) else {
+                return nil
+            }
+            let decimalFee = weiFee * .wei
+            let cost = decimalFee * tokenPrice
+            
+            self.gasLimit = gasLimit
+            self.gasPrice = gasPrice
+            self.feeValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
+            if cost >= 0.01 {
+                self.feeCost = CurrencyFormatter.localizedString(from: cost, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            } else {
+                self.feeCost = "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            }
+        }
+        
+    }
+    
+    private enum TransactionRequestError: Error {
+        case mismatchedAddress
+        case invalidFee
+    }
+    
+    @objc private func resendTransaction(_ sender: Any) {
         guard let transaction, let account else {
             return
         }
         canDismissInteractively = false
-        sendButton.isBusy = true
-        Task.detached { [client, request] in
-            do {
-                let transactionDescription = try await {
-                    let nonce = try await client.eth_getTransactionCount(address: account.address, block: .Pending)
-                    var nonceInjectedTransaction = transaction
-                    nonceInjectedTransaction.nonce = nonce // Make getter of `raw` happy
-                    if let raw = nonceInjectedTransaction.raw {
-                        return raw.hexEncodedString()
-                    } else {
-                        return transaction.jsonRepresentation ?? "(null)"
-                    }
-                }()
-                Logger.web3.info(category: "TxRequest", message: "Will send tx: \(transactionDescription)")
-                let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
-                Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")
-                let response = RPCResult.response(AnyCodable(hash))
-                try await Web3Wallet.instance.respond(topic: request.topic,
-                                                      requestId: request.id,
-                                                      response: response)
-                await MainActor.run {
-                    self.hasTransactionSent = true
-                    self.close(sendButton)
+        tableHeaderView.setIcon(progress: .busy)
+        layoutTableHeaderView(title: R.string.localizable.sending(),
+                              subtitle: R.string.localizable.web3_ensure_trust())
+        replaceTrayView(with: nil, animation: .vertical)
+        Task.detached {
+            await self.send(transaction: transaction, with: account)
+        }
+    }
+    
+    private func send(transaction: EthereumTransaction, with account: EthereumAccount) async {
+        do {
+            let transactionDescription = transaction.raw?.hexEncodedString()
+                ?? transaction.jsonRepresentation
+                ?? "(null)"
+            Logger.web3.info(category: "TxRequest", message: "Will send tx: \(transactionDescription)")
+            let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
+            Logger.web3.info(category: "TxRequest", message: "Will respond hash: \(hash)")
+            let response = RPCResult.response(AnyCodable(hash))
+            try await Web3Wallet.instance.respond(topic: request.topic,
+                                                  requestId: request.id,
+                                                  response: response)
+            await MainActor.run {
+                self.hasTransactionSent = true
+                self.canDismissInteractively = true
+                self.tableHeaderView.setIcon(progress: .success)
+                let subtitle = if self.canDecodeValue {
+                    R.string.localizable.web3_signing_transaction_success()
+                } else {
+                    R.string.localizable.web3_signing_data_success()
                 }
-            } catch {
-                await MainActor.run {
-                    Logger.web3.error(category: "TxRequest", message: "Failed to send: \(error)")
-                    self.canDismissInteractively = true
-                    sendButton.isBusy = false
-                    let alert = UIAlertController(title: R.string.localizable.transfer_failed(),
-                                                  message: "\(error)",
-                                                  preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
-                    self.present(alert, animated: true)
-                }
+                self.layoutTableHeaderView(title: R.string.localizable.sending_success(), subtitle: subtitle)
+                self.tableView.setContentOffset(.zero, animated: true)
+                self.loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(self.close(_:)))
+            }
+        } catch {
+            Logger.web3.error(category: "TxRequest", message: "Failed to send: \(error)")
+            await MainActor.run {
+                self.transaction = transaction
+                self.account = account
+                self.canDismissInteractively = true
+                self.tableHeaderView.setIcon(progress: .failure)
+                self.layoutTableHeaderView(title: R.string.localizable.sending_failed(),
+                                           subtitle: error.localizedDescription)
+                self.tableView.setContentOffset(.zero, animated: true)
+                self.loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
+                                              leftAction: #selector(self.close(_:)),
+                                              rightTitle: R.string.localizable.retry(),
+                                              rightAction: #selector(self.resendTransaction(_:)),
+                                              animation: .vertical)
             }
         }
     }
     
     private func loadGas() {
-        var confirmButton: BusyButton? {
+        var confirmButton: UIButton? {
             (trayView as? AuthenticationPreviewDoubleButtonTrayView)?.rightButton
         }
-        if let confirmButton {
-            confirmButton.isBusy = true
-            confirmButton.isEnabled = false
-        }
+        confirmButton?.isEnabled = false
         let tokenPrice = chainToken.decimalUSDPrice * Currency.current.decimalRate
         Task { [address, client, transactionPreview, weak self] in
             do {
@@ -266,11 +278,14 @@ extension TransactionRequestViewController {
                                                       gasLimit: nil,
                                                       chainId: nil)
                 let rpcGasLimit = try await client.eth_estimateGas(transaction)
-                let gasLimit: BigUInt = if let dappGasLimit {
-                    max(dappGasLimit, rpcGasLimit)
-                } else {
-                    rpcGasLimit
-                }
+                let gasLimit: BigUInt = {
+                    let value = if let dappGasLimit {
+                        max(dappGasLimit, rpcGasLimit)
+                    } else {
+                        rpcGasLimit
+                    }
+                    return value + value / 2 // 1.5x gasLimit
+                }()
                 let gasPrice = try await client.eth_gasPrice()
                 let fee = Fee(gasLimit: gasLimit,
                               gasPrice: gasPrice,
@@ -285,10 +300,7 @@ extension TransactionRequestViewController {
                     }
                     self.fee = fee
                     self.reloadFeeRow(with: fee)
-                    if let confirmButton {
-                        confirmButton.isBusy = false
-                        confirmButton.isEnabled = true
-                    }
+                    confirmButton?.isEnabled = true
                 }
             } catch {
                 try await Task.sleep(nanoseconds: 3 * NSEC_PER_SEC)

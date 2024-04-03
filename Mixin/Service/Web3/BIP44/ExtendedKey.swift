@@ -19,6 +19,7 @@ struct ExtendedKey {
         case createPublicKey
         case serializePublicKey
         case invalidIndex
+        case invalidKI
     }
     
     enum Index {
@@ -71,7 +72,15 @@ struct ExtendedKey {
             throw Error.invalidIndex
         }
         let kiData = ki.serialize()
-        return ExtendedKey(key: kiData, chainCode: ir)
+        let key: Data
+        if kiData.count < 32 {
+            key = Data(repeating: 0, count: 32 - kiData.count) + kiData
+        } else if kiData.count == 32 {
+            key = kiData
+        } else {
+            throw Error.invalidKI
+        }
+        return ExtendedKey(key: key, chainCode: ir)
     }
     
     func publicKey() throws -> Data {

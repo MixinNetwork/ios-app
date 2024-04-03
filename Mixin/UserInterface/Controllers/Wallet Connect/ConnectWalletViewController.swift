@@ -67,6 +67,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
     }
     
     override func performAction(with pin: String) {
+        Logger.web3.info(category: "Connect", message: "Will connect")
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         tableHeaderView.titleLabel.text = R.string.localizable.connecting()
@@ -87,6 +88,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                                                                  accounts: accounts)
                 _ = try await Web3Wallet.instance.approve(proposalId: proposal.id,
                                                           namespaces: sessionNamespaces)
+                Logger.web3.info(category: "Connect", message: "Connected")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.isProposalApproved = true

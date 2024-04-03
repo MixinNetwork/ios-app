@@ -219,10 +219,10 @@ extension WalletConnectService {
         func makeEthereumClient() -> EthereumHttpClient {
             let rpcServerURL: URL
             if let string = AppGroupUserDefaults.Wallet.web3RPCURL[internalID], let url = URL(string: string) {
-                Logger.web3.debug(category: "Service", message: "Using saved RPC")
+                Logger.web3.info(category: "Service", message: "Using saved RPC")
                 rpcServerURL = url
             } else {
-                Logger.web3.debug(category: "Service", message: "Using fail-safe RPC")
+                Logger.web3.info(category: "Service", message: "Using fail-safe RPC")
                 rpcServerURL = defaultRPCServerURL
             }
             let network: EthereumNetwork = switch self {

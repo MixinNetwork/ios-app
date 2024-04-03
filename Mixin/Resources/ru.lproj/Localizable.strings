@@ -820,6 +820,7 @@
 "search_conversation" = "Поиск беседы";
 "search_giphy" = "Поиск GIPHY";
 "search_open_link" = "Открыть ссылку: ";
+"search_placeholder_address" = "Label, Address";
 "search_placeholder_asset" = "Имя, Символ";
 "search_placeholder_contact" = "Mixin ID, имя, номер телефона";
 "search_placeholder_number" = "Найдите Mixin ID или номер телефона: ";

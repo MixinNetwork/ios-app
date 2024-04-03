@@ -187,7 +187,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="211"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IHE-HM-Hdw">
-                                                            <rect key="frame" x="143" y="0.0" width="128" height="40"/>
+                                                            <rect key="frame" x="116" y="0.0" width="182" height="40"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rtr-Z3-phX">
                                                                     <rect key="frame" x="0.0" y="0.0" width="11" height="21.666666666666668"/>
@@ -199,7 +199,7 @@
                                                                     </userDefinedRuntimeAttributes>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="65536.55" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGd-qQ-SHD">
-                                                                    <rect key="frame" x="15" y="2" width="113" height="40"/>
+                                                                    <rect key="frame" x="15" y="2" width="167" height="46.666666666666664"/>
                                                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="40"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -216,10 +216,10 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JDj-Ex-KE6">
-                                                            <rect key="frame" x="182" y="47" width="50" height="14"/>
+                                                            <rect key="frame" x="176" y="47" width="62.333333333333343" height="16.333333333333329"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4.617" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7s3-8d-IEj">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="23" height="14"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="4.617" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7s3-8d-IEj">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="35.333333333333336" height="16.333333333333332"/>
                                                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="14"/>
                                                                     <color key="textColor" name="text"/>
                                                                     <nil key="highlightedColor"/>
@@ -227,8 +227,8 @@
                                                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                                     </userDefinedRuntimeAttributes>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
-                                                                    <rect key="frame" x="26" y="-0.6666666666666643" width="24" height="14.333333333333332"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
+                                                                    <rect key="frame" x="38.333333333333343" y="2.0000000000000009" width="24" height="14.333333333333336"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="textColor" name="text_tertiary"/>
                                                                     <nil key="highlightedColor"/>
@@ -245,7 +245,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y25-bj-M31">
-                                                            <rect key="frame" x="0.0" y="84" width="414" height="64"/>
+                                                            <rect key="frame" x="0.0" y="86.333333333333329" width="414" height="61.666666666666671"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VuY-Uo-TGR" customClass="BarChartView" customModule="Mixin" customModuleProvider="target">
                                                                     <rect key="frame" x="20" y="0.0" width="374" height="4"/>
@@ -276,13 +276,13 @@
                                                                                             </constraints>
                                                                                         </imageView>
                                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="77V-eY-DVx">
-                                                                                            <rect key="frame" x="8" y="-0.33333333333334281" width="24" height="14.333333333333334"/>
+                                                                                            <rect key="frame" x="8" y="-0.3333333333333286" width="24" height="14.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                             <color key="textColor" name="text_tertiary"/>
                                                                                             <nil key="highlightedColor"/>
                                                                                         </label>
                                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tnh-04-JMO">
-                                                                                            <rect key="frame" x="38.000000000000007" y="-0.33333333333334281" width="25.333333333333336" height="14.333333333333334"/>
+                                                                                            <rect key="frame" x="38.000000000000007" y="-0.3333333333333286" width="25.333333333333336" height="14.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                             <color key="textColor" name="text_tertiary"/>
                                                                                             <nil key="highlightedColor"/>
@@ -321,13 +321,13 @@
                                                                                             </constraints>
                                                                                         </imageView>
                                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39J-2W-ONo">
-                                                                                            <rect key="frame" x="8" y="-0.33333333333334281" width="24" height="14.333333333333334"/>
+                                                                                            <rect key="frame" x="8" y="-0.3333333333333286" width="24" height="14.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                             <color key="textColor" name="text_tertiary"/>
                                                                                             <nil key="highlightedColor"/>
                                                                                         </label>
                                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gbE-kR-GOQ">
-                                                                                            <rect key="frame" x="38" y="-0.33333333333334281" width="25.333333333333329" height="14.333333333333334"/>
+                                                                                            <rect key="frame" x="38" y="-0.3333333333333286" width="25.333333333333329" height="14.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                             <color key="textColor" name="text_tertiary"/>
                                                                                             <nil key="highlightedColor"/>
@@ -366,13 +366,13 @@
                                                                                             </constraints>
                                                                                         </imageView>
                                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="laD-AH-fHv">
-                                                                                            <rect key="frame" x="8" y="-0.33333333333334281" width="24" height="14.333333333333334"/>
+                                                                                            <rect key="frame" x="8" y="-0.3333333333333286" width="24" height="14.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                             <color key="textColor" name="text_tertiary"/>
                                                                                             <nil key="highlightedColor"/>
                                                                                         </label>
                                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bdz-eK-Rbu">
-                                                                                            <rect key="frame" x="38" y="-0.33333333333334281" width="25.333333333333329" height="14.333333333333334"/>
+                                                                                            <rect key="frame" x="38" y="-0.3333333333333286" width="25.333333333333329" height="14.333333333333334"/>
                                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                             <color key="textColor" name="text_tertiary"/>
                                                                                             <nil key="highlightedColor"/>
@@ -578,7 +578,7 @@
                                                     </constraints>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="HOU-mR-kEE">
-                                                    <rect key="frame" x="98.666666666666686" y="80" width="177" height="55.666666666666657"/>
+                                                    <rect key="frame" x="69.666666666666671" y="80" width="234.66666666666663" height="55.666666666666657"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="enL-XN-l1B">
                                                             <rect key="frame" x="0.0" y="6" width="3" height="49.666666666666664"/>
@@ -588,7 +588,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
-                                                            <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
+                                                            <rect key="frame" x="7" y="6" width="200" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
                                                             <color key="textColor" red="0.16078431372549018" green="0.74509803921568629" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
@@ -598,7 +598,7 @@
                                                             </connections>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
+                                                            <rect key="frame" x="211" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
@@ -856,7 +856,7 @@
                                     <constraint firstAttribute="height" constant="40" id="E2c-Np-LL7"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="label"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="search_placeholder_address"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="66" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2gW-rd-zVj">

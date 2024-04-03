@@ -820,6 +820,7 @@
 "search_conversation" = "チャットルームを検索";
 "search_giphy" = "GIPHYを検索する";
 "search_open_link" = "リンクを開く:";
+"search_placeholder_address" = "ラベル、アドレス";
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_contact" = "Mixin ID, 名前, 電話番号";
 "search_placeholder_number" = "Mixin ID または電話番号を検索";

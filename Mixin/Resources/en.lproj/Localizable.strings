@@ -820,6 +820,7 @@
 "search_conversation" = "Search Conversation";
 "search_giphy" = "Search GIPHY";
 "search_open_link" = "Open Link: ";
+"search_placeholder_address" = "Label, Address";
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
 "search_placeholder_number" = "Search Mixin ID or phone number: ";

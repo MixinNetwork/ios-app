@@ -47,11 +47,14 @@ class AddressViewController: UIViewController {
     }
     
     @IBAction func searchAction(_ sender: Any) {
-        let keyword = (searchBoxView.textField.text ?? "").uppercased()
+        let keyword = (searchBoxView.textField.text ?? "").lowercased()
         if keyword.isEmpty {
             searchResult = []
         } else {
-            searchResult = addresses.filter { $0.label.uppercased().contains(keyword) }
+            searchResult = addresses.filter { address in
+                address.label.lowercased().contains(keyword)
+                || address.destination.lowercased().contains(keyword)
+            }
         }
         tableView.reloadData()
     }

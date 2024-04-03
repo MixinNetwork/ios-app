@@ -820,6 +820,7 @@
 "search_conversation" = "搜尋聊天記錄";
 "search_giphy" = "搜尋 GIPHY";
 "search_open_link" = "開啟連結：";
+"search_placeholder_address" = "名稱, 地址";
 "search_placeholder_asset" = "名稱, 符號";
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";

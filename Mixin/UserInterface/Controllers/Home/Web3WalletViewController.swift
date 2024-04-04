@@ -84,10 +84,6 @@ final class Web3WalletViewController: UIViewController {
     }
     
     private func reloadDapps(web3Chains: [String: Web3Chain]) {
-        if let dapps = web3Chains[chain.internalID]?.dapps {
-            self.dapps = dapps
-            tableView.reloadData()
-        }
         tableView.tableFooterView = nil
     }
     

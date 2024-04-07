@@ -73,7 +73,7 @@ final class WalletConnectService {
     }
     
     func connect(to uri: WalletConnectURI) {
-        logger.debug(category: "Service", message: "Will connect to v2 topic: \(uri.topic)")
+        logger.info(category: "Service", message: "Will connect to v2 topic: \(uri.topic)")
         assert(Thread.isMainThread)
         let hud = loadHud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)

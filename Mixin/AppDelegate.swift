@@ -240,6 +240,7 @@ extension AppDelegate {
     @objc func cleanForLogout() {
         WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         BackupJobQueue.shared.cancelAllOperations()
+        WalletConnectService.shared.disconnectAllSessions()
         
         UIApplication.shared.setShortcutItemsEnabled(false)
         UIApplication.shared.applicationIconBadgeNumber = 1

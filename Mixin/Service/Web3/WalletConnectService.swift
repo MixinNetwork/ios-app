@@ -101,6 +101,14 @@ final class WalletConnectService {
         }
     }
     
+    func disconnectAllSessions() {
+        Task { [sessions] in
+            for session in sessions {
+                try? await session.disconnect()
+            }
+        }
+    }
+    
     func presentRequest(viewController: UIViewController) {
         guard let container = UIApplication.homeContainerViewController else {
             return

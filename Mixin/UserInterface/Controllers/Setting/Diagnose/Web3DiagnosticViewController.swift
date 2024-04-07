@@ -30,12 +30,7 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
             }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
         case (1, 0):
-            Task {
-                let sessions = WalletConnectService.shared.sessions
-                for session in sessions {
-                    try? await session.disconnect()
-                }
-            }
+            WalletConnectService.shared.disconnectAllSessions()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
         default:
             break

@@ -88,11 +88,13 @@ class UrlWindow {
             case let .deviceTransfer(command):
                 result = checkDeviceTransfer(command: command)
             case let .walletConnect(uri):
-                // Ignore undocumented URIs. See MixinURL.walletConnect for details
                 if let uri {
                     WalletConnectService.shared.connect(to: uri)
+                    return true
+                } else {
+                    // Reject undocumented URIs. See `MixinURL.walletConnect` for details
+                    return false
                 }
-                return true
             case .unknown:
                 if source.isExternal && url.scheme == MixinURL.scheme {
                     UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()

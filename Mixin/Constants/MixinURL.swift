@@ -1,4 +1,5 @@
 import Foundation
+import Web3Wallet
 import MixinServices
 
 enum MixinURL {
@@ -21,6 +22,7 @@ enum MixinURL {
         static let snapshots = "snapshots"
         static let conversations = "conversations"
         static let deviceTransfer = "device-transfer"
+        static let walletConnect = "wc"
     }
     
     case codes(String)
@@ -36,6 +38,7 @@ enum MixinURL {
     case address
     case upgradeDesktop
     case deviceTransfer(DeviceTransferCommand)
+    case walletConnect(WalletConnectURI)
     
     init?(url: URL) {
         if url.scheme == MixinURL.scheme {
@@ -79,6 +82,8 @@ enum MixinURL {
                 } else {
                     self = .unknown(url)
                 }
+            } else if url.host == Host.walletConnect, let uri = try? WalletConnectURI(deeplinkUri: url) {
+                self = .walletConnect(uri)
             } else {
                 self = .unknown(url)
             }
@@ -100,6 +105,8 @@ enum MixinURL {
                 self = .transfer(url.pathComponents[2])
             } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.address {
                 self = .address
+            } else if let uri = try? WalletConnectURI(deeplinkUri: url) {
+                self = .walletConnect(uri)
             } else {
                 self = .unknown(url)
             }

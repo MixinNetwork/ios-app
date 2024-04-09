@@ -38,7 +38,9 @@ enum MixinURL {
     case address
     case upgradeDesktop
     case deviceTransfer(DeviceTransferCommand)
-    case walletConnect(WalletConnectURI)
+    
+    // Dapps may redirects to some undocumented URIs, in that case the value will be nil
+    case walletConnect(WalletConnectURI?)
     
     init?(url: URL) {
         if url.scheme == MixinURL.scheme {
@@ -82,8 +84,13 @@ enum MixinURL {
                 } else {
                     self = .unknown(url)
                 }
-            } else if url.host == Host.walletConnect, let uri = try? WalletConnectURI(deeplinkUri: url) {
-                self = .walletConnect(uri)
+            } else if url.host == Host.walletConnect {
+                do {
+                    let uri = try WalletConnectURI(deeplinkUri: url)
+                    self = .walletConnect(uri)
+                } catch {
+                    self = .walletConnect(nil)
+                }
             } else {
                 self = .unknown(url)
             }
@@ -105,8 +112,15 @@ enum MixinURL {
                 self = .transfer(url.pathComponents[2])
             } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.address {
                 self = .address
-            } else if let uri = try? WalletConnectURI(deeplinkUri: url) {
-                self = .walletConnect(uri)
+            } else if url.pathComponents.count == 2 && url.pathComponents[1] == Path.walletConnect {
+                if let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
+                   let string = items.first(where: { $0.name == "uri" })?.value,
+                   let uri = try? WalletConnectURI(uriString: string)
+                {
+                    self = .walletConnect(uri)
+                } else {
+                    self = .walletConnect(nil)
+                }
             } else {
                 self = .unknown(url)
             }

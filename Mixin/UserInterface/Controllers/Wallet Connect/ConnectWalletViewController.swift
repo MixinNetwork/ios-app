@@ -42,7 +42,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         var rows: [Row] = [
             .proposer(name: proposal.proposer.name, host: host),
         ]
-        if let account: String = PropertiesDAO.shared.value(forKey: .evmAddress) {
+        if let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
             // TODO: Get account by `self.request` if blockchain other than EVMs is supported
             rows.append(.info(caption: .account, content: account))
         }
@@ -63,6 +63,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
     }
     
     override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        super.presentationControllerDidDismiss(presentationController)
         rejectProposalIfNotApproved()
     }
     
@@ -122,6 +123,14 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
             return
         }
         Logger.web3.info(category: "Connect", message: "Rejected by dismissing")
+        reject()
+    }
+    
+}
+
+extension ConnectWalletViewController: Web3PopupViewController {
+    
+    func reject() {
         Task {
             try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
         }

@@ -65,8 +65,9 @@ final class WalletConnectSession {
         case .ethSignTypedData, .ethSignTypedDataV4:
             requestETHSignTypedData(with: request)
         case .ethSignTransaction:
-            WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
-                                                         message: R.string.localizable.method_not_supported(request.method))
+            let title = R.string.localizable.request_rejected()
+            let message = R.string.localizable.method_not_supported(request.method)
+            Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
             Logger.web3.warn(category: "Session", message: "eth_signTransaction rejected")
             Task {
                 try await Web3Wallet.instance.respond(topic: request.topic,
@@ -76,8 +77,9 @@ final class WalletConnectSession {
         case .ethSendTransaction:
             requestSendTransaction(with: request)
         case .none:
-            WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
-                                                         message: R.string.localizable.method_not_supported(request.method))
+            let title = R.string.localizable.request_rejected()
+            let message = R.string.localizable.method_not_supported(request.method)
+            Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
             Logger.web3.warn(category: "Session", message: "Unknown method: \(request.method)")
             Task {
                 try await Web3Wallet.instance.respond(topic: request.topic,
@@ -103,8 +105,9 @@ extension WalletConnectSession {
         Task {
             try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(.methodNotFound))
         }
-        WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
-                                                     message: R.string.localizable.method_not_supported(request.method))
+        let title = R.string.localizable.request_rejected()
+        let message = R.string.localizable.method_not_supported(request.method)
+        Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
     }
     
     private func requestETHSignTypedData(with request: Request) {
@@ -147,13 +150,14 @@ extension WalletConnectSession {
                                                                               transaction: transactionPreview,
                                                                               chain: chain,
                                                                               chainToken: chainToken)
-                    WalletConnectService.shared.presentRequest(viewController: transactionRequest)
+                    Web3PopupCoordinator.enqueue(popup: .request(transactionRequest))
                 }
             } catch {
                 Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")
                 DispatchQueue.main.async {
-                    WalletConnectService.shared.presentRejection(title: R.string.localizable.request_rejected(),
-                                                                 message: R.string.localizable.unable_to_decode_the_request(error.localizedDescription))
+                    let title = R.string.localizable.request_rejected()
+                    let message = R.string.localizable.unable_to_decode_the_request(error.localizedDescription)
+                    Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
                     let error = JSONRPCError(code: 0, message: "Local failed")
@@ -175,12 +179,12 @@ extension WalletConnectSession {
                 throw Error.noAccount
             }
             let signRequest = SignRequestViewController(address: address, session: self, request: decoded)
-            WalletConnectService.shared.presentRequest(viewController: signRequest)
+            Web3PopupCoordinator.enqueue(popup: .request(signRequest))
         } catch {
             Logger.web3.error(category: "Session", message: "Failed to sign: \(error)")
             let title = R.string.localizable.request_rejected()
             let message = R.string.localizable.unable_to_decode_the_request(error.localizedDescription)
-            WalletConnectService.shared.presentRejection(title: title, message: message)
+            Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
             Task {
                 let error = JSONRPCError(code: 0, message: error.localizedDescription)
                 try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))

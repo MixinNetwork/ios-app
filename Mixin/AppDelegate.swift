@@ -241,6 +241,7 @@ extension AppDelegate {
         WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         BackupJobQueue.shared.cancelAllOperations()
         WalletConnectService.shared.disconnectAllSessions()
+        Web3PopupCoordinator.rejectAllPopups()
         
         UIApplication.shared.setShortcutItemsEnabled(false)
         UIApplication.shared.applicationIconBadgeNumber = 1

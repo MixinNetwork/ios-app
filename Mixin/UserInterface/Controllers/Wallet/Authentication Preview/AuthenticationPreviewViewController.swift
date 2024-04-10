@@ -8,6 +8,7 @@ class AuthenticationPreviewViewController: UIViewController {
     let tableHeaderView = R.nib.authenticationPreviewHeaderView(withOwner: nil)!
     
     var canDismissInteractively = true
+    var onDismiss: (() -> Void)?
     
     private var rows: [Row] = []
     
@@ -141,7 +142,7 @@ extension AuthenticationPreviewViewController: UIAdaptivePresentationControllerD
     }
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        
+        onDismiss?()
     }
     
 }
@@ -369,7 +370,7 @@ extension AuthenticationPreviewViewController {
     }
     
     @objc func close(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
+        presentingViewController?.dismiss(animated: true, completion: onDismiss)
     }
     
 }

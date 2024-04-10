@@ -929,6 +929,7 @@
 		94E619B92645BAA000A38049 /* SuspiciousLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E619B82645BAA000A38049 /* SuspiciousLinkView.xib */; };
 		94E82DBC2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */; };
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
+		94E9C0962BC6978F00D6157C /* Web3PopupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E9C0952BC6978F00D6157C /* Web3PopupCoordinator.swift */; };
 		94ECCCAB261A029F004E9E2A /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ECCCAA261A029F004E9E2A /* Window.swift */; };
 		94ED08B02B5FAFC900493312 /* AppUserSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED08AF2B5FAFC900493312 /* AppUserSearchResult.swift */; };
 		94ED08B62B5FB1C300493312 /* ExploreActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED08B42B5FB1C300493312 /* ExploreActionCell.swift */; };
@@ -2127,6 +2128,7 @@
 		94E619B82645BAA000A38049 /* SuspiciousLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuspiciousLinkView.xib; sourceTree = "<group>"; };
 		94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorTableFooterView.xib; sourceTree = "<group>"; };
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		94E9C0952BC6978F00D6157C /* Web3PopupCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3PopupCoordinator.swift; sourceTree = "<group>"; };
 		94ECCCAA261A029F004E9E2A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		94ED08AF2B5FAFC900493312 /* AppUserSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUserSearchResult.swift; sourceTree = "<group>"; };
 		94ED08B42B5FB1C300493312 /* ExploreActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreActionCell.swift; sourceTree = "<group>"; };
@@ -3108,6 +3110,7 @@
 				942F4728299CDF1800528759 /* URLSessionWebSocketFactory.swift */,
 				942F472A299CDF8100528759 /* Web3SignerFactory.swift */,
 				94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */,
+				94E9C0952BC6978F00D6157C /* Web3PopupCoordinator.swift */,
 				94E35CA2298B836300ADB40D /* WalletConnectService.swift */,
 				940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */,
 				947C5E5A29B0FE9B00838458 /* WalletConnectSession.swift */,
@@ -5431,6 +5434,7 @@
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
 				DFC0ED0923BB7D990091E7AC /* GiphyImage.swift in Sources */,
 				7CEB735E29DBC44A006FB5B2 /* DeviceTransferParticipant.swift in Sources */,
+				94E9C0962BC6978F00D6157C /* Web3PopupCoordinator.swift in Sources */,
 				7CEB735C29DBB737006FB5B2 /* DeviceTransferConversation.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,

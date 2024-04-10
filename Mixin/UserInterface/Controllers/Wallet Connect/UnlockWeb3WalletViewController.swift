@@ -8,11 +8,9 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
         case mismatched
     }
     
+    private(set) var isUnlocked = false
+    
     private let chain: WalletConnectService.Chain
-    
-    var onDismiss: ((_ isUnlocked: Bool) -> Void)?
-    
-    private var isUnlocked = false
     
     private var subtitle: String {
         R.string.localizable.unlock_web3_account_description(chain.name)
@@ -63,16 +61,6 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
                                  rightTitle: R.string.localizable.unlock(),
                                  rightAction: #selector(confirm(_:)),
                                  animation: animated ? .vertical : nil)
-    }
-    
-    override func close(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true) { [onDismiss, isUnlocked] in
-            onDismiss?(isUnlocked)
-        }
-    }
-    
-    override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        onDismiss?(isUnlocked)
     }
     
     override func performAction(with pin: String) {

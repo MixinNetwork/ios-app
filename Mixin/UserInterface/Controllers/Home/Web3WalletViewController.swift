@@ -51,7 +51,7 @@ final class Web3WalletViewController: UIViewController {
                                                selector: #selector(propertiesDidUpdate(_:)),
                                                name: PropertiesDAO.propertyDidUpdateNotification,
                                                object: nil)
-        address = PropertiesDAO.shared.value(forKey: .evmAddress)
+        address = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
         if let address {
             tableHeaderView.showCopyAddress(chain: chain, address: address)
         } else {
@@ -84,6 +84,12 @@ final class Web3WalletViewController: UIViewController {
     }
     
     private func reloadDapps(web3Chains: [String: Web3Chain]) {
+#if DEBUG
+        if let dapps = web3Chains[chain.internalID]?.dapps {
+            self.dapps = dapps
+            tableView.reloadData()
+        }
+#endif
         tableView.tableFooterView = nil
     }
     

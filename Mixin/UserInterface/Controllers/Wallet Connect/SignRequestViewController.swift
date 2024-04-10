@@ -55,6 +55,7 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
     }
     
     override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        super.presentationControllerDidDismiss(presentationController)
         rejectRequestIfSignatureNotSent()
     }
     
@@ -120,6 +121,17 @@ final class SignRequestViewController: AuthenticationPreviewViewController {
     
 }
 
+extension SignRequestViewController: Web3PopupViewController {
+    
+    func reject() {
+        Task {
+            let error = JSONRPCError(code: 0, message: "User Rejected")
+            try await Web3Wallet.instance.respond(topic: request.raw.topic, requestId: request.raw.id, response: .error(error))
+        }
+    }
+    
+}
+
 extension SignRequestViewController {
     
     @objc private func resendSignature(_ sender: Any) {
@@ -178,10 +190,7 @@ extension SignRequestViewController {
             return
         }
         Logger.web3.info(category: "Sign", message: "Rejected by dismissing")
-        Task {
-            let error = JSONRPCError(code: 0, message: "User Rejected")
-            try await Web3Wallet.instance.respond(topic: request.raw.topic, requestId: request.raw.id, response: .error(error))
-        }
+        reject()
     }
     
 }

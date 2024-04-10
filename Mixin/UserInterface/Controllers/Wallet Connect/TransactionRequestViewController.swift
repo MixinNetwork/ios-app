@@ -99,6 +99,7 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
     }
     
     override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        super.presentationControllerDidDismiss(presentationController)
         rejectTransactionIfSignatureNotSent()
     }
     
@@ -166,6 +167,17 @@ final class TransactionRequestViewController: AuthenticationPreviewViewControlle
                                            subtitle: R.string.localizable.web3_ensure_trust())
             }
             await self.send(transaction: transaction, with: account)
+        }
+    }
+    
+}
+
+extension TransactionRequestViewController: Web3PopupViewController {
+    
+    func reject() {
+        Task {
+            let error = JSONRPCError(code: 0, message: "User rejected")
+            try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
         }
     }
     
@@ -322,10 +334,7 @@ extension TransactionRequestViewController {
             return
         }
         Logger.web3.info(category: "TxnRequest", message: "Rejected by dismissing")
-        Task {
-            let error = JSONRPCError(code: 0, message: "User rejected")
-            try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
-        }
+        reject()
     }
     
     private func reloadFeeRow(with selected: Fee) {

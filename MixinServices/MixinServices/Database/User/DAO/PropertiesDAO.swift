@@ -18,8 +18,16 @@ public final class PropertiesDAO: UserDatabaseDAO {
     
     public static let shared = PropertiesDAO()
     
+    // Maybe not the newest
+    public func unsafeValue<Value: LosslessStringConvertible>(forKey key: Key) -> Value? {
+        try? db.read { db -> Value? in
+            try value(forKey: key, db: db)
+        }
+    }
+    
     public func value<Value: LosslessStringConvertible>(forKey key: Key) -> Value? {
-        try? db.writeAndReturnError { db -> Value? in
+        assert(!Thread.isMainThread) // Prevent deadlock
+        return try? db.writeAndReturnError { db -> Value? in
             try value(forKey: key, db: db)
         }
     }

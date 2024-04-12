@@ -33,10 +33,6 @@ final class WalletConnectService {
     
     private var subscribes = Set<AnyCancellable>()
     
-    // Only one request or proposal can be presented at a time
-    // New incoming requests will be rejected if `presentedViewController` is not nil
-    private weak var presentedViewController: UIViewController?
-    
     private init() {
         Networking.configure(groupIdentifier: appGroupIdentifier,
                              projectId: MixinKeys.walletConnect,
@@ -109,40 +105,6 @@ final class WalletConnectService {
         }
     }
     
-    func presentRequest(viewController: UIViewController) {
-        guard let container = UIApplication.homeContainerViewController else {
-            return
-        }
-        let hasPendingRequest: Bool 
-        if let presentedViewController {
-            // FIXME: Workaround for the issue that requests can't be processed. In some cases, even after the previous
-            // request has been dismissed, the presentedViewController remains non-nil, preventing the handling of
-            // subsequent requests. There might be a retain cycle somewhere inside the view controller.
-            hasPendingRequest = presentedViewController.presentingViewController != nil
-            if hasPendingRequest {
-                Logger.web3.warn(category: "Service", message: "Previous request not released")
-            }
-        } else {
-            hasPendingRequest = false
-        }
-        guard !hasPendingRequest else {
-            presentRejection(title: R.string.localizable.request_rejected(),
-                             message: R.string.localizable.request_rejected_reason_another_request_in_process())
-            return
-        }
-        container.presentOnTopMostPresentedController(viewController, animated: true)
-        presentedViewController = viewController
-    }
-    
-    func presentRejection(title: String, message: String) {
-        guard let container = UIApplication.homeContainerViewController else {
-            return
-        }
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
-        container.presentOnTopMostPresentedController(alert, animated: true)
-    }
-    
     private func reloadSessions(sessions: [WalletConnectSign.Session]) {
         self.sessions = sessions.map(WalletConnectSession.init(session:))
         let topics = self.sessions.map(\.topic)
@@ -177,7 +139,7 @@ extension WalletConnectService {
             id: 1,
             internalID: ChainID.ethereum,
             name: "Ethereum",
-            defaultRPCServerURL: URL(string: "https://cloudflare-eth.com")!,
+            failsafeRPCServerURL: URL(string: "https://cloudflare-eth.com")!,
             feeSymbol: "ETH",
             caip2: Blockchain("eip155:1")!
         )
@@ -186,7 +148,7 @@ extension WalletConnectService {
             id: 137,
             internalID: ChainID.polygon,
             name: "Polygon",
-            defaultRPCServerURL: URL(string: "https://polygon-rpc.com")!,
+            failsafeRPCServerURL: URL(string: "https://polygon-rpc.com")!,
             feeSymbol: "MATIC",
             caip2: Blockchain("eip155:137")!
         )
@@ -195,7 +157,7 @@ extension WalletConnectService {
             id: 56,
             internalID: ChainID.bnbSmartChain,
             name: "BSC",
-            defaultRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
+            failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
             feeSymbol: "BNB",
             caip2: Blockchain("eip155:56")!
         )
@@ -204,7 +166,7 @@ extension WalletConnectService {
             id: 11155111,
             internalID: ChainID.ethereum,
             name: "Sepolia",
-            defaultRPCServerURL: URL(string: "https://rpc.sepolia.dev")!,
+            failsafeRPCServerURL: URL(string: "https://rpc.sepolia.dev")!,
             feeSymbol: "ETH",
             caip2: Blockchain("eip155:11155111")!
         )
@@ -212,9 +174,17 @@ extension WalletConnectService {
         let id: Int
         let internalID: String
         let name: String
-        let defaultRPCServerURL: URL
+        let failsafeRPCServerURL: URL
         let feeSymbol: String
         let caip2: Blockchain
+        
+        var rpcServerURL: URL {
+            if let string = AppGroupUserDefaults.Wallet.web3RPCURL[internalID], let url = URL(string: string) {
+                url
+            } else {
+                failsafeRPCServerURL
+            }
+        }
         
         static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.id == rhs.id
@@ -225,14 +195,6 @@ extension WalletConnectService {
         }
         
         func makeEthereumClient() -> EthereumHttpClient {
-            let rpcServerURL: URL
-            if let string = AppGroupUserDefaults.Wallet.web3RPCURL[internalID], let url = URL(string: string) {
-                Logger.web3.info(category: "Service", message: "Using saved RPC")
-                rpcServerURL = url
-            } else {
-                Logger.web3.info(category: "Service", message: "Using fail-safe RPC")
-                rpcServerURL = defaultRPCServerURL
-            }
             let network: EthereumNetwork = switch self {
             case .ethereum:
                     .mainnet
@@ -300,8 +262,9 @@ extension WalletConnectService {
                     requiredNamespaces = requiredChains.joined(separator: ", ")
                 }
                 DispatchQueue.main.async {
-                    self.presentRejection(title: "Chain not supported",
-                                          message: "\(proposal.proposer.name) requires to support \(requiredNamespaces)")
+                    let title = "Chain not supported"
+                    let message = "\(proposal.proposer.name) requires to support \(requiredNamespaces)"
+                    Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
                     try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedChains)
@@ -315,8 +278,9 @@ extension WalletConnectService {
                 logger.warn(category: "Service", message: "Requires to support \(proposalEvents)")
                 let events = proposalEvents.joined(separator: ", ")
                 DispatchQueue.main.async {
-                    self.presentRejection(title: "Chain not supported",
-                                          message: "\(proposal.proposer.name) requires to support \(events))")
+                    let title = "Chain not supported"
+                    let message = "\(proposal.proposer.name) requires to support \(events)"
+                    Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
                     try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .upsupportedEvents)
@@ -325,32 +289,15 @@ extension WalletConnectService {
             }
             
             let account: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
-            if account == nil {
-                DispatchQueue.main.async {
-                    let unlock = UnlockWeb3WalletViewController(chain: chains[0])
-                    unlock.onDismiss = { isUnlocked in
-                        if isUnlocked {
-                            self.presentedViewController = nil // Value may not released immediately
-                            let connectWallet = ConnectWalletViewController(proposal: proposal,
-                                                                            chains: chains.map(\.caip2),
-                                                                            events: Array(events))
-                            self.presentRequest(viewController: connectWallet)
-                        } else {
-                            Task {
-                                try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
-                            }
-                        }
-                    }
-                    self.presentRequest(viewController: unlock)
+            DispatchQueue.main.async {
+                if account == nil {
+                    let controller = UnlockWeb3WalletViewController(chain: chains[0])
+                    Web3PopupCoordinator.enqueue(popup: .unlock(controller))
                 }
-            } else {
-                logger.info(category: "Service", message: "Showing: \(proposal))")
-                DispatchQueue.main.async {
-                    let connectWallet = ConnectWalletViewController(proposal: proposal,
-                                                                    chains: chains.map(\.caip2),
-                                                                    events: Array(events))
-                    self.presentRequest(viewController: connectWallet)
-                }
+                let connectWallet = ConnectWalletViewController(proposal: proposal,
+                                                                chains: chains.map(\.caip2),
+                                                                events: Array(events))
+                Web3PopupCoordinator.enqueue(popup: .request(connectWallet))
             }
         }
     }
@@ -366,8 +313,9 @@ extension WalletConnectService {
                     let error = JSONRPCError(code: -1, message: "Missing session")
                     try await Web3Wallet.instance.respond(topic: topic, requestId: request.id, response: .error(error))
                 }
-                self.presentRejection(title: R.string.localizable.request_rejected(),
-                                      message: R.string.localizable.session_not_found())
+                let title = R.string.localizable.request_rejected()
+                let message = R.string.localizable.session_not_found()
+                Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
             }
         }
     }

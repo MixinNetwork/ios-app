@@ -61,7 +61,7 @@ final class ExploreBotsViewController: UITableViewController {
         case .actions:
             actions.count
         case .favorites:
-            favoriteAppUsers.count
+            favoriteAppUsers.count + 1
         default:
             indexedUsers(at: section).count
         }
@@ -128,7 +128,21 @@ final class ExploreBotsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let explore = parent as? ExploreViewController {
+        guard let explore = parent as? ExploreViewController else {
+            return
+        }
+        switch FixedSection(rawValue: indexPath.section) {
+        case .actions:
+            let action = actions[indexPath.row]
+            explore.perform(action: action)
+        case .favorites:
+            if indexPath.row < favoriteAppUsers.count {
+                let user = favoriteAppUsers[indexPath.row]
+                explore.openApp(user: user)
+            } else {
+                explore.perform(action: .editFavoriteApps)
+            }
+        case .none:
             let user = indexedUser(at: indexPath)
             explore.presentProfile(user: user)
         }
@@ -210,7 +224,15 @@ final class ExploreBotsViewController: UITableViewController {
     }
     
     private func indexedUsers(at section: Int) -> [User] {
-        indexedUsers[section - FixedSection.allCases.count]
+        switch FixedSection(rawValue: section) {
+        case .actions:
+            assertionFailure()
+            return []
+        case .favorites:
+            return favoriteAppUsers
+        case .none:
+            return indexedUsers[section - FixedSection.allCases.count]
+        }
     }
     
     private func indexedUser(at indexPath: IndexPath) -> User {

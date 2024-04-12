@@ -6,8 +6,7 @@ final class ExploreViewController: UIViewController {
     @IBOutlet weak var segmentsCollectionView: UICollectionView!
     @IBOutlet weak var contentContainerView: UIView!
     
-    private let favoriteViewController = ExploreFavoriteViewController()
-    private let allAppsViewController = ExploreAllAppsViewController()
+    private let exploreBotsViewController = ExploreBotsViewController()
     private let hiddenSearchTopMargin: CGFloat = -28
     
     private weak var web3WalletViewController: Web3WalletViewController?
@@ -18,8 +17,7 @@ final class ExploreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addContentViewController(allAppsViewController)
-        addContentViewController(favoriteViewController)
+        addContentViewController(exploreBotsViewController)
         segmentsCollectionView.register(R.nib.exploreSegmentCell)
         if let layout = segmentsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
@@ -36,7 +34,7 @@ final class ExploreViewController: UIViewController {
     }
     
     @IBAction func searchApps(_ sender: Any) {
-        let searchViewController = ExploreSearchViewController(users: allAppsViewController.allUsers)
+        let searchViewController = ExploreSearchViewController(users: exploreBotsViewController.allUsers)
         addChild(searchViewController)
         searchViewController.view.alpha = 0
         view.addSubview(searchViewController.view)
@@ -152,20 +150,10 @@ extension ExploreViewController: UICollectionViewDelegate {
         removeWeb3WalletViewController()
         let segment = Segment(rawValue: indexPath.item)!
         switch segment {
-        case .favorite:
-            contentContainerView.bringSubviewToFront(favoriteViewController.view)
         case .bots:
-            contentContainerView.bringSubviewToFront(allAppsViewController.view)
+            contentContainerView.bringSubviewToFront(exploreBotsViewController.view)
         case .ethereum:
             let wallet = Web3WalletViewController(chain: .ethereum)
-            addContentViewController(wallet)
-            web3WalletViewController = wallet
-        case .polygon:
-            let wallet = Web3WalletViewController(chain: .polygon)
-            addContentViewController(wallet)
-            web3WalletViewController = wallet
-        case .bsc:
-            let wallet = Web3WalletViewController(chain: .bnbSmartChain)
             addContentViewController(wallet)
             web3WalletViewController = wallet
         }
@@ -177,24 +165,15 @@ extension ExploreViewController {
     
     private enum Segment: Int, CaseIterable {
         
-        case favorite
         case bots
         case ethereum
-        case polygon
-        case bsc
         
         var name: String {
             switch self {
-            case .favorite:
-                R.string.localizable.favorite()
             case .bots:
                 R.string.localizable.bots_title()
             case .ethereum:
                 "Ethereum"
-            case .polygon:
-                "Polygon"
-            case .bsc:
-                "BSC"
             }
         }
         

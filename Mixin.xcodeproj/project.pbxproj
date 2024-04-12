@@ -851,9 +851,8 @@
 		94B2CD782B0F88D300D268E1 /* DepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B2CD772B0F88D300D268E1 /* DepositView.xib */; };
 		94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577692B5E554800AE576E /* ExploreViewController.swift */; };
 		94B5776F2B5E555B00AE576E /* ExploreView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B5776E2B5E555B00AE576E /* ExploreView.xib */; };
-		94B577772B5E6E3700AE576E /* ExploreFavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577752B5E6E3700AE576E /* ExploreFavoriteViewController.swift */; };
 		94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */; };
-		94B577822B5E79B800AE576E /* ExploreAllAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577812B5E79B800AE576E /* ExploreAllAppsViewController.swift */; };
+		94B577822B5E79B800AE576E /* ExploreBotsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */; };
 		94B577872B5EC11500AE576E /* ExploreAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577862B5EC11500AE576E /* ExploreAction.swift */; };
 		94B61EC32B344A7A00BD39AF /* HomeTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B61EC22B344A7A00BD39AF /* HomeTabBarController.swift */; };
 		94B6EDFE2B707F15001DCC50 /* WithdrawPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B6EDFD2B707F15001DCC50 /* WithdrawPreviewViewController.swift */; };
@@ -2054,9 +2053,8 @@
 		94B2CD772B0F88D300D268E1 /* DepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositView.xib; sourceTree = "<group>"; };
 		94B577692B5E554800AE576E /* ExploreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
 		94B5776E2B5E555B00AE576E /* ExploreView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreView.xib; sourceTree = "<group>"; };
-		94B577752B5E6E3700AE576E /* ExploreFavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreFavoriteViewController.swift; sourceTree = "<group>"; };
 		94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorHeaderFooterView.swift; sourceTree = "<group>"; };
-		94B577812B5E79B800AE576E /* ExploreAllAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAllAppsViewController.swift; sourceTree = "<group>"; };
+		94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreBotsViewController.swift; sourceTree = "<group>"; };
 		94B577862B5EC11500AE576E /* ExploreAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAction.swift; sourceTree = "<group>"; };
 		94B61EC22B344A7A00BD39AF /* HomeTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabBarController.swift; sourceTree = "<group>"; };
 		94B6EDFD2B707F15001DCC50 /* WithdrawPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawPreviewViewController.swift; sourceTree = "<group>"; };
@@ -3849,8 +3847,7 @@
 				9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */,
 				94B5776E2B5E555B00AE576E /* ExploreView.xib */,
 				94B577692B5E554800AE576E /* ExploreViewController.swift */,
-				94B577752B5E6E3700AE576E /* ExploreFavoriteViewController.swift */,
-				94B577812B5E79B800AE576E /* ExploreAllAppsViewController.swift */,
+				94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */,
 				94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */,
 				94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */,
 				94CF1F262BA1B74A00BC52C1 /* Web3WalletViewController.swift */,
@@ -5299,8 +5296,7 @@
 				7B5E9B4A243740C4000AE24E /* ConversationCircleEditorFooterView.swift in Sources */,
 				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
 				7CDF316C29890FB200421808 /* ConversationFontSet.swift in Sources */,
-				94B577772B5E6E3700AE576E /* ExploreFavoriteViewController.swift in Sources */,
-				94B577822B5E79B800AE576E /* ExploreAllAppsViewController.swift in Sources */,
+				94B577822B5E79B800AE576E /* ExploreBotsViewController.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
 				7C2AC42928F2B384005F369A /* DepositSuspendedView.swift in Sources */,

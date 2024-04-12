@@ -103,7 +103,8 @@ class Web3TransactionOperation {
                     }
                     return value + value / 2 // 1.5x gasLimit
                 }()
-                let gasPrice = try await client.eth_gasPrice()
+                var gasPrice = try await client.eth_gasPrice()
+                gasPrice += gasPrice / 5 // 1.2x gasPrice
                 let fee = Fee(gasLimit: gasLimit,
                               gasPrice: gasPrice,
                               tokenPrice: tokenPrice)

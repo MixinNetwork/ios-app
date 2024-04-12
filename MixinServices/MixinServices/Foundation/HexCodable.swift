@@ -4,7 +4,7 @@ import CryptoKit
 // - MARK: Decode
 extension Data {
     
-    public init?(hexEncodedString: String) {
+    public init?(hexEncodedString: any StringProtocol) {
         let (numberOfBytes, remainder) = hexEncodedString.count.quotientAndRemainder(dividingBy: 2)
         guard numberOfBytes > 0, remainder == 0 else {
             return nil

@@ -119,10 +119,11 @@ extension WalletConnectSession {
     
     private func requestSendTransaction(with request: Request) {
         assert(Thread.isMainThread)
+        let proposer = Web3Proposer(name: name, host: host)
         DispatchQueue.global().async {
             Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
             do {
-                let params = try request.params.get([WalletConnectTransactionPreview].self)
+                let params = try request.params.get([Web3TransactionPreview].self)
                 guard let transactionPreview = params.first else {
                     throw Error.noTransaction
                 }
@@ -143,14 +144,18 @@ extension WalletConnectSession {
                 guard let address: String = PropertiesDAO.shared.value(forKey: .evmAddress) else {
                     throw Error.noAccount
                 }
+                let operation = Web3TransactionWithWalletConnectOperation(
+                    address: address,
+                    proposer: proposer,
+                    transaction: transactionPreview,
+                    chain: chain,
+                    chainToken: chainToken,
+                    session: self,
+                    request: request
+                )
                 DispatchQueue.main.async {
-                    let transactionRequest = TransactionRequestViewController(address: address,
-                                                                              session: self,
-                                                                              request: request,
-                                                                              transaction: transactionPreview,
-                                                                              chain: chain,
-                                                                              chainToken: chainToken)
-                    Web3PopupCoordinator.enqueue(popup: .request(transactionRequest))
+                    let transaction = Web3TransactionViewController(operation: operation)
+                    Web3PopupCoordinator.enqueue(popup: .request(transaction))
                 }
             } catch {
                 Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")
@@ -175,10 +180,11 @@ extension WalletConnectSession {
         do {
             let decoded = try decode(request)
             // TODO: Get account by `request.chainId`
-            guard let address: String = PropertiesDAO.shared.value(forKey: .evmAddress) else {
+            guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) else {
                 throw Error.noAccount
             }
-            let signRequest = SignRequestViewController(address: address, session: self, request: decoded)
+            let operation = Web3SignWithWalletConnectOperation(address: address, session: self, request: decoded)
+            let signRequest = Web3SignViewController(operation: operation, chainName: decoded.chain.name)
             Web3PopupCoordinator.enqueue(popup: .request(signRequest))
         } catch {
             Logger.web3.error(category: "Session", message: "Failed to sign: \(error)")

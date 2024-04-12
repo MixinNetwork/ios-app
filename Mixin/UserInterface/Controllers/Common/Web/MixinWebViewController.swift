@@ -33,6 +33,7 @@ class MixinWebViewController: WebViewController {
         case getTIPAddress = "getTipAddress"
         case tipSign = "tipSign"
         case getAssets = "getAssets"
+        case web3Bridge = "_tw_"
     }
     
     private enum FradulentWarningBehavior {
@@ -52,6 +53,14 @@ class MixinWebViewController: WebViewController {
         config.mediaTypesRequiringUserActionForPlayback = .video
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
+        if let address: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
+            let chain = defaultChain
+            let scripts = [
+                Script.web3Provider,
+                Script.ethereumProvider(address: address, rpcURL: chain.rpcServerURL, chainID: chain.id)
+            ]
+            scripts.forEach(config.userContentController.addUserScript)
+        }
         for name in HandlerName.allCases.map(\.rawValue) {
             config.userContentController.add(scriptMessageProxy, name: name)
         }
@@ -60,6 +69,7 @@ class MixinWebViewController: WebViewController {
     }
     
     private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
+    private let defaultChain: WalletConnectService.Chain = .ethereum
     
     private(set) var context: Context!
     
@@ -71,7 +81,8 @@ class MixinWebViewController: WebViewController {
         return view
     }()
     private lazy var clipSwitcher = UIApplication.homeContainerViewController?.clipSwitcher
-
+    private lazy var web3Worker = Web3Worker(webView: webView, chain: defaultChain)
+    
     private weak var loadingFailureViewIfLoaded: UIView?
     
     private var isMessageHandlerAdded = true
@@ -104,6 +115,11 @@ class MixinWebViewController: WebViewController {
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
         webView.navigationDelegate = self
         webView.uiDelegate = self
+#if DEBUG
+        if #available(iOS 16.4, *) {
+            webView.isInspectable = true
+        }
+#endif
         loadWebView()
     }
     
@@ -386,45 +402,22 @@ extension MixinWebViewController: WKScriptMessageHandler {
                let assetIDs = body[0] as? [String],
                let callback = body[1] as? String
             {
-                let failureCallback = "\(callback)('[]');"
-                guard assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
-                    webView.evaluateJavaScript(failureCallback)
-                    return
-                }
-                switch context.style {
-                case let .app(app, _):
-                    guard let appHomeURL = URL(string: app.homeUri), let currentURL = webView.url, appHomeURL.host == currentURL.host else {
-                        webView.evaluateJavaScript(failureCallback)
-                        return
-                    }
-                    AuthorizeAPI.authorizations(appId: app.appId) { [weak webView] result in
-                        switch result {
-                        case let .success(response):
-                            guard let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") else {
-                                webView?.evaluateJavaScript(failureCallback)
-                                return
-                            }
-                            DispatchQueue.global().async {
-                                let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
-                                if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
-                                    let assets = string.replacingOccurrences(of: "'", with: "\\'")
-                                    DispatchQueue.main.async {
-                                        webView?.evaluateJavaScript("\(callback)('\(assets)');")
-                                    }
-                                } else {
-                                    DispatchQueue.main.async {
-                                        webView?.evaluateJavaScript(failureCallback)
-                                    }
-                                }
-                            }
-                        case .failure:
-                            webView?.evaluateJavaScript(failureCallback)
-                        }
-                    }
-                case .webPage:
-                    webView.evaluateJavaScript(failureCallback)
-                }
+                reportAssets(ids: assetIDs, callback: callback)
             }
+        case .web3Bridge:
+            let body: [String: Any]
+            if let string = message.body as? String,
+               let data = string.data(using: .utf8),
+               let object = try? JSONSerialization.jsonObject(with: data, options: []),
+               let dict = object as? [String: Any]
+            {
+                body = dict
+            } else if let object = message.body as? [String: Any] {
+                body = object
+            } else {
+                return
+            }
+            web3Worker.handleRequest(json: body)
         }
     }
     
@@ -730,11 +723,52 @@ extension MixinWebViewController {
         }
     }
     
+    private func reportAssets(ids assetIDs: [String], callback: String) {
+        let failureCallback = "\(callback)('[]');"
+        guard assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
+            webView.evaluateJavaScript(failureCallback)
+            return
+        }
+        switch context.style {
+        case let .app(app, _):
+            guard let appHomeURL = URL(string: app.homeUri), let currentURL = webView.url, appHomeURL.host == currentURL.host else {
+                webView.evaluateJavaScript(failureCallback)
+                return
+            }
+            AuthorizeAPI.authorizations(appId: app.appId) { [weak webView] result in
+                switch result {
+                case let .success(response):
+                    guard let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") else {
+                        webView?.evaluateJavaScript(failureCallback)
+                        return
+                    }
+                    DispatchQueue.global().async {
+                        let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
+                        if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
+                            let assets = string.replacingOccurrences(of: "'", with: "\\'")
+                            DispatchQueue.main.async {
+                                webView?.evaluateJavaScript("\(callback)('\(assets)');")
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                webView?.evaluateJavaScript(failureCallback)
+                            }
+                        }
+                    }
+                case .failure:
+                    webView?.evaluateJavaScript(failureCallback)
+                }
+            }
+        case .webPage:
+            webView.evaluateJavaScript(failureCallback)
+        }
+    }
+    
 }
 
 extension MixinWebViewController {
     
-    enum Script {
+    private enum Script {
         
         static let getThemeColor = """
             function getColor() {
@@ -759,6 +793,36 @@ extension MixinWebViewController {
                                 injectionTime: .atDocumentEnd,
                                 forMainFrameOnly: true)
         }()
+        
+        static let web3Provider: WKUserScript = {
+            let source = try! String(contentsOf: R.file.mixinMinJs()!)
+            return WKUserScript(source: source,
+                                injectionTime: .atDocumentStart,
+                                forMainFrameOnly: false)
+        }()
+        
+        static func ethereumProvider(address: String, rpcURL: URL, chainID: Int) -> WKUserScript {
+            let source = """
+                (function() {
+                    var config = {
+                        ethereum: {
+                            address: "\(address)",
+                            chainId: \(chainID),
+                            rpcUrl: "\(rpcURL.absoluteString)"
+                        }
+                    };
+
+                    mixinwallet.ethereum = new mixinwallet.Provider(config);
+
+                    mixinwallet.postMessage = (jsonString) => {
+                        webkit.messageHandlers._tw_.postMessage(jsonString)
+                    };
+
+                    window.ethereum = mixinwallet.ethereum;
+                })();
+            """
+            return WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        }
         
     }
     

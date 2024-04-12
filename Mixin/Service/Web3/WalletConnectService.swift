@@ -139,7 +139,7 @@ extension WalletConnectService {
             id: 1,
             internalID: ChainID.ethereum,
             name: "Ethereum",
-            defaultRPCServerURL: URL(string: "https://cloudflare-eth.com")!,
+            failsafeRPCServerURL: URL(string: "https://cloudflare-eth.com")!,
             feeSymbol: "ETH",
             caip2: Blockchain("eip155:1")!
         )
@@ -148,7 +148,7 @@ extension WalletConnectService {
             id: 137,
             internalID: ChainID.polygon,
             name: "Polygon",
-            defaultRPCServerURL: URL(string: "https://polygon-rpc.com")!,
+            failsafeRPCServerURL: URL(string: "https://polygon-rpc.com")!,
             feeSymbol: "MATIC",
             caip2: Blockchain("eip155:137")!
         )
@@ -157,7 +157,7 @@ extension WalletConnectService {
             id: 56,
             internalID: ChainID.bnbSmartChain,
             name: "BSC",
-            defaultRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
+            failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
             feeSymbol: "BNB",
             caip2: Blockchain("eip155:56")!
         )
@@ -166,7 +166,7 @@ extension WalletConnectService {
             id: 11155111,
             internalID: ChainID.ethereum,
             name: "Sepolia",
-            defaultRPCServerURL: URL(string: "https://rpc.sepolia.dev")!,
+            failsafeRPCServerURL: URL(string: "https://rpc.sepolia.dev")!,
             feeSymbol: "ETH",
             caip2: Blockchain("eip155:11155111")!
         )
@@ -174,9 +174,17 @@ extension WalletConnectService {
         let id: Int
         let internalID: String
         let name: String
-        let defaultRPCServerURL: URL
+        let failsafeRPCServerURL: URL
         let feeSymbol: String
         let caip2: Blockchain
+        
+        var rpcServerURL: URL {
+            if let string = AppGroupUserDefaults.Wallet.web3RPCURL[internalID], let url = URL(string: string) {
+                url
+            } else {
+                failsafeRPCServerURL
+            }
+        }
         
         static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.id == rhs.id
@@ -187,14 +195,6 @@ extension WalletConnectService {
         }
         
         func makeEthereumClient() -> EthereumHttpClient {
-            let rpcServerURL: URL
-            if let string = AppGroupUserDefaults.Wallet.web3RPCURL[internalID], let url = URL(string: string) {
-                Logger.web3.info(category: "Service", message: "Using saved RPC")
-                rpcServerURL = url
-            } else {
-                Logger.web3.info(category: "Service", message: "Using fail-safe RPC")
-                rpcServerURL = defaultRPCServerURL
-            }
             let network: EthereumNetwork = switch self {
             case .ethereum:
                     .mainnet

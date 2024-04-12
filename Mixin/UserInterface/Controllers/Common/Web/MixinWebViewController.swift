@@ -33,7 +33,7 @@ class MixinWebViewController: WebViewController {
         case getTIPAddress = "getTipAddress"
         case tipSign = "tipSign"
         case getAssets = "getAssets"
-        case web3Bridge = "_tw_"
+        case web3Bridge = "_mw_"
     }
     
     private enum FradulentWarningBehavior {
@@ -813,7 +813,7 @@ extension MixinWebViewController {
                     };
                     mixinwallet.ethereum = new mixinwallet.Provider(config);
                     mixinwallet.postMessage = (jsonString) => {
-                        webkit.messageHandlers._tw_.postMessage(jsonString)
+                        webkit.messageHandlers._mw_.postMessage(jsonString)
                     };
                     window.ethereum = mixinwallet.ethereum;
 

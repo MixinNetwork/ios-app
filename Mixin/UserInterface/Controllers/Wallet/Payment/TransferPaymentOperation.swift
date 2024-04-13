@@ -26,6 +26,7 @@ struct TransferPaymentOperation {
     let token: TokenItem
     let amount: Decimal
     let memo: String
+    let reference: String?
     
     func start(pin: String) async throws {
         let destination = self.destination
@@ -82,7 +83,7 @@ struct TransferPaymentOperation {
                                changeKeys,
                                changeMask,
                                memo,
-                               "",
+                               reference ?? "",
                                &error)
         case let .multisig(threshold, _):
             tx = KernelBuildTx(kernelAssetID,
@@ -94,7 +95,7 @@ struct TransferPaymentOperation {
                                changeKeys,
                                changeMask,
                                memo,
-                               "",
+                               reference ?? "",
                                &error)
         case .mainnet(let address):
             tx = KernelBuildTxToKernelAddress(kernelAssetID,
@@ -104,6 +105,7 @@ struct TransferPaymentOperation {
                                               changeKeys,
                                               changeMask,
                                               memo,
+                                              reference ?? "",
                                               &error)
         }
         if let error {
@@ -226,7 +228,7 @@ struct TransferPaymentOperation {
         
         let broadcastRequest = TransactionRequest(id: traceID, raw: signedTx.raw)
         try await SafeAPI.withRetryingOnServerError(maxNumberOfTries: 20) {
-            Logger.general.info(category: "Transfer", message: "Will broadcast tx: \(broadcastRequest.id)")
+            Logger.general.info(category: "Transfer", message: "Will broadcast tx: \(broadcastRequest.id), hash: \(signedTx.hash)")
             try await SafeAPI.postTransaction(requests: [broadcastRequest])
         } shouldRetry: {
             do {

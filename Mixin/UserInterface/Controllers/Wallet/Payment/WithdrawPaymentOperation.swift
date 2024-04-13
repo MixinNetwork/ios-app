@@ -320,7 +320,7 @@ struct WithdrawPaymentOperation {
         }
         let broadcastRequestIDs = broadcastRequests.map(\.id)
         try await SafeAPI.withRetryingOnServerError(maxNumberOfTries: 20) {
-            Logger.general.info(category: "Withdraw", message: "Will broadcast tx: \(broadcastRequestIDs)")
+            Logger.general.info(category: "Withdraw", message: "Will broadcast tx: \(broadcastRequestIDs), hash: \(signedWithdrawal.hash)")
             try await SafeAPI.postTransaction(requests: broadcastRequests)
         } shouldRetry: {
             do {

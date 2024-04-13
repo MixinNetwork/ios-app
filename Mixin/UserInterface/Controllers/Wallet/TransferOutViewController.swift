@@ -276,7 +276,12 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         switch opponent {
         case .contact(let opponent):
-            payment.checkPreconditions(transferTo: .user(opponent), on: self, onFailure: onPreconditonFailure) { (operation, issues) in
+            payment.checkPreconditions(
+                transferTo: .user(opponent),
+                reference: nil,
+                on: self,
+                onFailure: onPreconditonFailure
+            ) { (operation, issues) in
                 self.continueButton.isBusy = false
                 let preview = TransferPreviewViewController(issues: issues,
                                                             operation: operation,
@@ -301,7 +306,12 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 self.present(preview, animated: true)
             }
         case .mainnet(let address):
-            payment.checkPreconditions(transferTo: .mainnet(address), on: self, onFailure: onPreconditonFailure) { (operation, issues) in
+            payment.checkPreconditions(
+                transferTo: .mainnet(address),
+                reference: nil,
+                on: self,
+                onFailure: onPreconditonFailure
+            ) { (operation, issues) in
                 self.continueButton.isBusy = false
                 let preview = TransferPreviewViewController(issues: issues,
                                                             operation: operation,

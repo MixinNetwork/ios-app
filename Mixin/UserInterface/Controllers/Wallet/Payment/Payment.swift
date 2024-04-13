@@ -34,6 +34,7 @@ extension Payment {
     
     func checkPreconditions(
         transferTo destination: TransferDestination,
+        reference: String?,
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
         onSuccess: @MainActor @escaping (TransferPaymentOperation, [PaymentPreconditionIssue]) -> Void
@@ -54,11 +55,13 @@ extension Payment {
                                             tokenAmount: tokenAmount,
                                             fiatMoneyAmount: fiatMoneyAmount),
                     OpponentIsContactPrecondition(opponent: opponent),
+                    ReferenceValidityPrecondition(reference: reference),
                 ]
             case .multisig, .mainnet:
                 preconditions = [
                     NoPendingTransactionPrecondition(token: token),
-                    AlreadyPaidPrecondition(traceID: traceID)
+                    AlreadyPaidPrecondition(traceID: traceID),
+                    ReferenceValidityPrecondition(reference: reference),
                 ]
             }
             
@@ -76,7 +79,8 @@ extension Payment {
                                                              destination: destination,
                                                              token: token,
                                                              amount: tokenAmount,
-                                                             memo: memo)
+                                                             memo: memo,
+                                                             reference: reference)
                     await MainActor.run {
                         onSuccess(operation, issues)
                     }

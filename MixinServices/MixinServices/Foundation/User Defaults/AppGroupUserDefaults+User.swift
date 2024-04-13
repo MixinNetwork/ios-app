@@ -64,6 +64,7 @@ extension AppGroupUserDefaults {
             case wallpapers = "wallpapers"
             case chatFontSize = "chat_font_size"
             case useSystemFont = "use_system_font"
+            case exploreSegmentIndex = "explore_segment_index"
         }
         
         public static let version = 32
@@ -251,6 +252,9 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(name: UIContentSizeCategory.didChangeNotification, object: nil)
             }
         }
+        
+        @Default(namespace: .user, key: Key.exploreSegmentIndex, defaultValue: 0)
+        public static var exploreSegmentIndex: Int
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

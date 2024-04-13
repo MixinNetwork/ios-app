@@ -6,18 +6,18 @@ final class ExploreViewController: UIViewController {
     @IBOutlet weak var segmentsCollectionView: UICollectionView!
     @IBOutlet weak var contentContainerView: UIView!
     
-    private let exploreBotsViewController = ExploreBotsViewController()
     private let hiddenSearchTopMargin: CGFloat = -28
     
-    private weak var web3WalletViewController: Web3WalletViewController?
+    private lazy var exploreBotsViewController = ExploreBotsViewController()
+    private lazy var ethereumViewController = Web3WalletViewController(chain: .ethereum)
+    
     private weak var searchViewController: ExploreSearchViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
-    
-    private var dapps: [Web3Dapp]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addContentViewController(exploreBotsViewController)
+        addContentViewController(ethereumViewController)
         segmentsCollectionView.register(R.nib.exploreSegmentCell)
         if let layout = segmentsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
@@ -28,9 +28,13 @@ final class ExploreViewController: UIViewController {
         segmentsCollectionView.dataSource = self
         segmentsCollectionView.delegate = self
         segmentsCollectionView.reloadData()
-        let firstIndexPath = IndexPath(item: 0, section: 0)
-        segmentsCollectionView.selectItem(at: firstIndexPath, animated: false, scrollPosition: .left)
-        collectionView(segmentsCollectionView, didSelectItemAt: firstIndexPath)
+        let indexPath = if AppGroupUserDefaults.User.exploreSegmentIndex < Segment.allCases.count {
+            IndexPath(item: AppGroupUserDefaults.User.exploreSegmentIndex, section: 0)
+        } else {
+            IndexPath(item: 0, section: 0)
+        }
+        segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+        collectionView(segmentsCollectionView, didSelectItemAt: indexPath)
     }
     
     @IBAction func searchApps(_ sender: Any) {
@@ -147,16 +151,14 @@ extension ExploreViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        removeWeb3WalletViewController()
         let segment = Segment(rawValue: indexPath.item)!
         switch segment {
         case .bots:
             contentContainerView.bringSubviewToFront(exploreBotsViewController.view)
         case .ethereum:
-            let wallet = Web3WalletViewController(chain: .ethereum)
-            addContentViewController(wallet)
-            web3WalletViewController = wallet
+            contentContainerView.bringSubviewToFront(ethereumViewController.view)
         }
+        AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
     }
     
 }
@@ -184,16 +186,6 @@ extension ExploreViewController {
         contentContainerView.addSubview(child.view)
         child.view.snp.makeEdgesEqualToSuperview()
         child.didMove(toParent: self)
-    }
-    
-    private func removeWeb3WalletViewController() {
-        guard let wallet = web3WalletViewController else {
-            return
-        }
-        wallet.willMove(toParent: nil)
-        wallet.view.removeFromSuperview()
-        wallet.removeFromParent()
-        web3WalletViewController = nil
     }
     
 }

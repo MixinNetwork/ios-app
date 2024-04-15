@@ -10,7 +10,6 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let legalKeywordCharactersSet = Set("+0123456789")
-    private let phoneNumberValidator = PhoneNumberValidator()
     
     private var keywordTextField: UITextField {
         return searchBoxView.textField
@@ -81,7 +80,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
             return false
         }
         if keyword.hasPrefix("+") {
-            return phoneNumberValidator.isValid(keyword)
+            return PhoneNumberValidator.global.isValid(keyword)
         } else {
             return true
         }

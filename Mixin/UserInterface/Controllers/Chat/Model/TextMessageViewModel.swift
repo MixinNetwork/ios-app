@@ -1,5 +1,4 @@
 import UIKit
-import PhoneNumberKit
 import MixinServices
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
@@ -18,7 +17,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     private static let appIdentityNumberRegex = try? NSRegularExpression(pattern: #"(?<=^|\D)7000\d{6}(?=$|\D)"#, options: [])
     private static let phoneNumberDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
-    private static let phoneNumberKit = PhoneNumberKit()
     
     var content: CoreTextLabel.Content?
     var contentLabelFrame = CGRect.zero
@@ -387,12 +385,13 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 return
             }
             let rawNumber = nsString.substring(with: range)
-            guard let phoneNumber = try? Self.phoneNumberKit.parse(rawNumber) else {
+            let phoneNumberKit = PhoneNumberValidator.global.kit
+            guard let phoneNumber = try? phoneNumberKit.parse(rawNumber) else {
                 return
             }
             let outputNumber: String
             if rawNumber.hasPrefix("+") {
-                outputNumber = Self.phoneNumberKit.format(phoneNumber, toType: .e164)
+                outputNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
             } else {
                 outputNumber = phoneNumber.adjustedNationalNumber()
             }

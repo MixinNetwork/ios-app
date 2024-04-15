@@ -127,6 +127,7 @@
 "bot_not_found" = "找不到这个机器人";
 "bots" = "机器人";
 "bots_title" = "机器人";
+"browser" = "浏览器";
 "calculating" = "正在计算...";
 "call" = "语音";
 "call_declined" = "对方已拒绝";
@@ -272,6 +273,7 @@
 "conversations" = "对话";
 "copied" = "已复制";
 "copy" = "复制";
+"copy_address" = "复制地址";
 "copy_conversation_id" = "复制对话 ID";
 "copy_invite" = "复制邀请链接";
 "copy_link" = "复制链接";
@@ -1106,8 +1108,10 @@
 "web3_account" = "账户";
 "web3_account_connected" = "连接成功";
 "web3_account_network" = "%@ 账户";
+"web3_deposit_description" = "使用此地址在 Ethereum、Polygon、BSC 网络上接收代币";
 "web3_ensure_trust" = "请确保您信任此应用程序。";
 "web3_message_request" = "消息签名";
+"web3_no_asset" = "没有资产";
 "web3_signing" = "正在签名";
 "web3_signing_data_success" = "数据已签名并发送成功，请返回 dApp 继续操作。";
 "web3_signing_failed" = "签名失败";

@@ -27,9 +27,9 @@ final class ModernQRCodeView: UIView {
         layer.masksToBounds = true
     }
     
-    func setContent(_ content: String, size: CGSize, completion: @escaping () -> Void) {
+    func setContent(_ content: String, size: CGSize, completion: (() -> Void)? = nil) {
         guard content != self.content || size != self.size else {
-            completion()
+            completion?()
             return
         }
         
@@ -66,7 +66,7 @@ final class ModernQRCodeView: UIView {
                 }
                 self.activityIndicatorView.stopAnimating()
                 self.imageView.isHidden = false
-                completion()
+                completion?()
             }
         }
     }

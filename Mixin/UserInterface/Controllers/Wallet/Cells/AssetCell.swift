@@ -65,4 +65,35 @@ class AssetCell: ModernSelectedBackgroundCell {
         fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalance
     }
     
+    func render(web3Token token: Web3Token) {
+        assetIconView.setIcon(web3Token: token)
+        let balance: String
+        if token.balance == "0" {
+            balance = "0\(currentDecimalSeparator)00"
+        } else {
+            balance = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? ""
+        }
+        balanceLabel.text = balance
+        symbolLabel.attributedText = NSAttributedString(string: token.symbol, attributes: AssetCell.symbolAttributes)
+        if token.decimalUSDPrice > 0 {
+            changeLabel.text = token.localizedChange + "%"
+            if token.decimalPercentChange > 0 {
+                changeLabel.textColor = .walletGreen
+            } else {
+                changeLabel.textColor = .walletRed
+            }
+            fiatMoneyPriceLabel.text = token.localizedFiatMoneyPrice
+            changeLabel.alpha = 1
+            fiatMoneyPriceLabel.alpha = 1
+            noFiatMoneyPriceIndicatorLabel.alpha = 0
+        } else {
+            changeLabel.text = R.string.localizable.na() // Just for layout guidance
+            fiatMoneyPriceLabel.text = nil
+            changeLabel.alpha = 0
+            fiatMoneyPriceLabel.alpha = 0
+            noFiatMoneyPriceIndicatorLabel.alpha = 1
+        }
+        fiatMoneyBalanceLabel.text = token.localizedFiatMoneyBalance
+    }
+    
 }

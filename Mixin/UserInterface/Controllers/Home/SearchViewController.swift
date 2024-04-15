@@ -19,25 +19,17 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     }
     
     private let resultLimit = 3
-    private let idOrPhoneCharacterSet = Set("+0123456789")
-    private let phoneNumberValidator = PhoneNumberValidator()
     
     private var queue = OperationQueue()
-    private var topResult: TopResult?
+    private var quickAccess: QuickAccessSearchResult?
     private var assets = [AssetSearchResult]()
     private var users = [SearchResult]()
     private var conversationsByName = [SearchResult]()
     private var conversationsByMessage = [SearchResult]()
     private var lastKeyword: String?
     private var recentAppsViewController: RecentAppsViewController?
-    private var searchNumberRequest: Request?
     private var lastSearchFieldText: String?
     private var snapshot: DatabaseSnapshot?
-    
-    private var topResultCell: TopResultCell? {
-        let indexPath = IndexPath(row: 0, section: Section.top.rawValue)
-        return tableView.cellForRow(at: indexPath) as? TopResultCell
-    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -61,6 +53,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.register(R.nib.peerCell)
         tableView.register(R.nib.assetCell)
+        tableView.register(R.nib.quickAccessResultCell)
         let tableHeaderView = UIView()
         tableHeaderView.frame = CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude)
         tableView.tableHeaderView = tableHeaderView
@@ -107,8 +100,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             navigationSearchBoxView.isBusy = false
             return
         }
-        searchNumberRequest?.cancel()
-        searchNumberRequest = nil
+        quickAccess?.cancelPreviousPerformRequest()
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
@@ -117,7 +109,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 return
             }
             
-            let topResult = self.topResult(keyword: keyword)
+            let quickAccess = QuickAccessSearchResult(keyword: keyword)
             let assets = TokenDAO.shared.search(keyword: keyword, sortResult: true, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: keyword) }
             guard !op.isCancelled else {
@@ -136,7 +128,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 return
             }
             DispatchQueue.main.sync {
-                self.topResult = topResult
+                self.quickAccess = quickAccess
                 self.assets = assets
                 self.users = users
                 self.conversationsByName = conversationsByName
@@ -191,8 +183,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     }
     
     func willHide() {
-        searchNumberRequest?.cancel()
-        searchNumberRequest = nil
+        quickAccess?.cancelPreviousPerformRequest()
     }
     
 }
@@ -202,7 +193,7 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .top:
-            return topResult == nil ? 0 : 1
+            return quickAccess == nil ? 0 : 1
         case .asset:
             return min(resultLimit, assets.count)
         case .user:
@@ -217,16 +208,8 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .top:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_number, for: indexPath)!
-            switch topResult {
-            case let .number(number):
-                cell.setText(number: number)
-            case let .link(_, verbatim):
-                cell.setText(link: verbatim)
-            case .none:
-                assertionFailure()
-            }
-            cell.isBusy = searchNumberRequest != nil
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.quick_access, for: indexPath)!
+            cell.result = quickAccess
             return cell
         case .asset:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
@@ -329,15 +312,12 @@ extension SearchViewController: UITableViewDelegate {
         searchTextField.resignFirstResponder()
         switch Section(rawValue: indexPath.section)! {
         case .top:
-            switch topResult {
-            case let .number(number):
-                search(number: number)
-            case let .link(url, _):
-                if let home = UIApplication.homeContainerViewController?.homeTabBarController {
-                    MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: home)
+            quickAccess?.performQuickAccess() { [weak self] item in
+                guard let item else {
+                    return
                 }
-            case .none:
-                break
+                let profile = UserProfileViewController(user: item)
+                self?.present(profile, animated: true)
             }
         case .asset:
             pushAssetViewController(asset: assets[indexPath.row].asset)
@@ -384,11 +364,6 @@ extension SearchViewController {
         static let footer = "footer"
     }
     
-    enum TopResult {
-        case number(String)
-        case link(url: URL, verbatim: String)
-    }
-    
     enum Section: Int, CaseIterable {
         case top = 0
         case asset
@@ -415,48 +390,6 @@ extension SearchViewController {
             return IndexSet(integer: rawValue)
         }
         
-    }
-    
-    private func topResult(keyword: String) -> TopResult? {
-        let number: String? = {
-            guard keyword.count >= 4 else {
-                return nil
-            }
-            guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
-                return nil
-            }
-            if keyword.contains("+") {
-                if phoneNumberValidator.isValid(keyword) {
-                    return keyword
-                } else {
-                    return nil
-                }
-            } else {
-                return keyword
-            }
-        }()
-        let link: (URL, String)? = {
-            var link: (URL, String)?
-            Link.detector.enumerateMatches(in: keyword, options: []) { match, _, stop in
-                guard let match = match, let url = match.url else {
-                    return
-                }
-                let verbatim = (keyword as NSString).substring(with: match.range)
-                link = (url, verbatim)
-                stop.pointee = ObjCBool(true)
-            }
-            return link
-        }()
-        
-        if keyword.isEmpty {
-            return nil
-        } else if let number = number {
-            return .number(number)
-        } else if let link = link {
-            return .link(url: link.0, verbatim: link.1)
-        } else {
-            return nil
-        }
     }
     
     private func cancelOperation() {
@@ -494,14 +427,14 @@ extension SearchViewController {
     private func isEmptySection(_ section: Section) -> Bool {
         switch section {
         case .top:
-            return topResult == nil
+            return quickAccess == nil
         case .asset, .user, .group, .conversation:
             return models(forSection: section).isEmpty
         }
     }
     
     private func isFirstSection(_ section: Section) -> Bool {
-        let showTopResult = topResult != nil
+        let showTopResult = quickAccess != nil
         switch section {
         case .top:
             return showTopResult
@@ -513,31 +446,6 @@ extension SearchViewController {
             return !showTopResult && assets.isEmpty && users.isEmpty
         case .conversation:
             return !showTopResult && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
-        }
-    }
-    
-    private func search(number: String) {
-        searchNumberRequest?.cancel()
-        topResultCell?.isBusy = true
-        searchNumberRequest = UserAPI.search(keyword: number) { [weak self] (result) in
-            guard let weakSelf = self, weakSelf.searchNumberRequest != nil else {
-                return
-            }
-            weakSelf.topResultCell?.isBusy = false
-            weakSelf.searchNumberRequest = nil
-            switch result {
-            case let .success(user):
-                UserDAO.shared.updateUsers(users: [user])
-                let userItem = UserItem.createUser(from: user)
-                if userItem.isCreatedByMessenger {
-                    let vc = UserProfileViewController(user: userItem)
-                    vc.updateUserFromRemoteAfterReloaded = false
-                    weakSelf.present(vc, animated: true, completion: nil)
-                }
-            case let .failure(error):
-                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
-                showAutoHiddenHud(style: .error, text: text)
-            }
         }
     }
     

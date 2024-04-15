@@ -64,7 +64,11 @@ extension UIApplication {
         }
         UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
     }
-
+    
+    public func openAppStorePage() {
+        openURL(url: "itms-apps://itunes.apple.com/us/app/id1322324266")
+    }
+    
     public func openURL(url: String) {
         guard let url = URL(string: url) else {
             return

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Web3DepositViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="addressLabel" destination="8bi-oD-oV7" id="Bes-Br-0yw"/>
+                <outlet property="qrCodeView" destination="blk-o1-vbb" id="WB4-8Y-epP"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blk-o1-vbb" customClass="ModernQRCodeView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="86.666666666666686" y="99" width="220" height="220"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="220" id="Jaq-TH-bT0"/>
+                        <constraint firstAttribute="width" secondItem="blk-o1-vbb" secondAttribute="height" id="ddq-m5-YkT"/>
+                    </constraints>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="web3_deposit_icon" translatesAutoresizingMaskIntoConstraints="NO" id="T19-f2-6Be">
+                    <rect key="frame" x="164.66666666666666" y="177" width="64" height="64"/>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="K1h-w9-1ph">
+                    <rect key="frame" x="38" y="349" width="317" height="58"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8bi-oD-oV7">
+                            <rect key="frame" x="158.66666666666666" y="0.0" width="0.0" height="0.0"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="160-wn-meQ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="100.66666666666666" y="16" width="116" height="42"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                            <inset key="contentEdgeInsets" minX="40" minY="12" maxX="40" maxY="12"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Copy"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="copy"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="copyAddress:" destination="-1" eventType="touchUpInside" id="Xo1-H7-bC8"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="fe1-vT-m5d">
+                    <rect key="frame" x="37" y="748" width="319" height="40"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q7e-pY-hAo">
+                            <rect key="frame" x="0.0" y="0.0" width="319" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_tertiary"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web3_deposit_description"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="web3_deposit_deco" translatesAutoresizingMaskIntoConstraints="NO" id="BmN-jq-Zqz">
+                            <rect key="frame" x="0.0" y="16" width="319" height="24"/>
+                        </imageView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="fe1-vT-m5d" secondAttribute="bottom" constant="30" id="5JJ-1Y-ba5"/>
+                <constraint firstItem="blk-o1-vbb" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="40" id="7mg-Oq-KgU"/>
+                <constraint firstItem="K1h-w9-1ph" firstAttribute="top" secondItem="blk-o1-vbb" secondAttribute="bottom" constant="30" id="G7i-RL-0NH"/>
+                <constraint firstItem="K1h-w9-1ph" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="38" id="IBm-ou-hki"/>
+                <constraint firstItem="blk-o1-vbb" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="dJd-P5-Cfj"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="K1h-w9-1ph" secondAttribute="trailing" constant="38" id="qaF-Ef-z3E"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="fe1-vT-m5d" secondAttribute="trailing" constant="37" id="qq0-CD-qvF"/>
+                <constraint firstItem="T19-f2-6Be" firstAttribute="centerX" secondItem="blk-o1-vbb" secondAttribute="centerX" id="uvx-V7-eMI"/>
+                <constraint firstItem="fe1-vT-m5d" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="37" id="xyg-L6-eyP"/>
+                <constraint firstItem="T19-f2-6Be" firstAttribute="centerY" secondItem="blk-o1-vbb" secondAttribute="centerY" id="zYO-Ay-Jf0"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="web3_deposit_deco" width="52" height="24"/>
+        <image name="web3_deposit_icon" width="64" height="64"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -15,22 +15,12 @@ final class ExploreSearchViewController: UIViewController {
     private let queue = OperationQueue()
     private let initDataOperation = BlockOperation()
     
+    private var quickAccess: QuickAccessSearchResult?
     private var allAppUsers: [User]? = nil
     private var recentAppUsers: [UserItem] = []
     private var searchResults: [AppUserSearchResult] = []
     private var content: Content = .recentApps
     private var lastKeyword: String?
-    
-    private var trimmedLowercaseKeyword: String? {
-        guard let text = searchBoxView.textField.text else {
-            return nil
-        }
-        let trimmed = text.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty else {
-            return nil
-        }
-        return trimmed.lowercased()
-    }
     
     init(users: [User]?) {
         self.allAppUsers = users
@@ -51,6 +41,7 @@ final class ExploreSearchViewController: UIViewController {
         searchBoxView.isBusy = true
         
         tableView.register(R.nib.peerCell)
+        tableView.register(R.nib.quickAccessResultCell)
         tableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         tableView.dataSource = self
         tableView.delegate = self
@@ -86,8 +77,9 @@ final class ExploreSearchViewController: UIViewController {
     }
     
     @IBAction func searchKeyword(_ sender: Any) {
-        guard let keyword = trimmedLowercaseKeyword else {
+        guard let keyword = searchBoxView.spacesTrimmedText?.lowercased() else {
             cancelSearchOperations()
+            quickAccess = nil
             lastKeyword = nil
             searchBoxView.isBusy = false
             content = .recentApps
@@ -98,6 +90,7 @@ final class ExploreSearchViewController: UIViewController {
             searchBoxView.isBusy = false
             return
         }
+        quickAccess?.cancelPreviousPerformRequest()
         cancelSearchOperations()
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
@@ -105,6 +98,7 @@ final class ExploreSearchViewController: UIViewController {
             guard !op.isCancelled else {
                 return
             }
+            let quickAccess = QuickAccessSearchResult(keyword: keyword)
             let users = DispatchQueue.main.sync {
                 self.allAppUsers ?? []
             }
@@ -117,6 +111,7 @@ final class ExploreSearchViewController: UIViewController {
                 guard !op.isCancelled else {
                     return
                 }
+                self.quickAccess = quickAccess
                 self.lastKeyword = keyword
                 self.searchResults = searchResults
                 self.content = .searchResult
@@ -129,6 +124,7 @@ final class ExploreSearchViewController: UIViewController {
     }
     
     @IBAction func cancelSearching(_ sender: Any) {
+        searchBoxView.textField.resignFirstResponder()
         (parent as? ExploreViewController)?.cancelSearching()
     }
     
@@ -145,47 +141,84 @@ extension ExploreSearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch content {
         case .recentApps:
-            return recentAppUsers.count
+            recentAppUsers.count
         case .searchResult:
-            return searchResults.count
+            if section == 0 && quickAccess != nil {
+                1
+            } else {
+                searchResults.count
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
         switch content {
         case .recentApps:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
             let user = recentAppUsers[indexPath.row]
             cell.render(user: user)
+            cell.peerInfoView.avatarImageView.hasShadow = false
+            return cell
         case .searchResult:
-            let result = searchResults[indexPath.row]
-            cell.render(result: result)
+            if let quickAccess, indexPath.section == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.quick_access, for: indexPath)!
+                cell.result = quickAccess
+                cell.topShadowView.backgroundColor = R.color.background_secondary()
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
+                let result = searchResults[indexPath.row]
+                cell.render(result: result)
+                cell.peerInfoView.avatarImageView.hasShadow = false
+                return cell
+            }
         }
-        cell.peerInfoView.avatarImageView.hasShadow = false
-        return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        1
+        switch content {
+        case .recentApps:
+            1
+        case .searchResult:
+            quickAccess == nil ? 1 : 2
+        }
     }
     
 }
 
 extension ExploreSearchViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if quickAccess != nil, indexPath.section == 0 {
+            UITableView.automaticDimension
+        } else {
+            tableView.rowHeight
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         searchBoxView.textField.resignFirstResponder()
-        let item: UserItem
         switch content {
         case .recentApps:
-            item = recentAppUsers[indexPath.row]
+            let item = recentAppUsers[indexPath.row]
+            let profile = UserProfileViewController(user: item)
+            present(profile, animated: true)
         case .searchResult:
-            let user = searchResults[indexPath.row].user
-            item = UserItem.createUser(from: user)
+            if let quickAccess, indexPath.section == 0 {
+                quickAccess.performQuickAccess { [weak self] (item) in
+                    if let item {
+                        let profile = UserProfileViewController(user: item)
+                        self?.present(profile, animated: true)
+                    }
+                }
+            } else {
+                let user = searchResults[indexPath.row].user
+                let item = UserItem.createUser(from: user)
+                let profile = UserProfileViewController(user: item)
+                present(profile, animated: true)
+            }
         }
-        let profile = UserProfileViewController(user: item)
-        present(profile, animated: true)
     }
     
 }

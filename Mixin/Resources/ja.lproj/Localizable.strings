@@ -212,6 +212,7 @@
 "close" = "閉じる";
 "closing_balance" = "Closing Balance";
 "collectible_token_id" = "#%@";
+"collectibles" = "Collectibles";
 "combine_and_forward" = "まとめて転送";
 "compress_database" = "データの圧縮";
 "compressed" = "圧縮しました";
@@ -620,6 +621,7 @@
 "no_authorizations" = "権限がありません";
 "no_blocked_users" = "ブロック済みのユーザーはいません";
 "no_bots" = "ミニアプリがありません";
+"no_collectibles" = "NO COLLECTIBLES";
 "no_contacts" = "友達未追加";
 "no_files" = "ファイルがありません";
 "no_hidden_assets" = "非表示資産はありません";

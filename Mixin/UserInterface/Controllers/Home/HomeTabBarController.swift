@@ -10,7 +10,8 @@ final class HomeTabBarController: UIViewController {
     private enum ChildID: Int {
         case chat = 0
         case wallet = 1
-        case explore = 2
+        case collectibles = 2
+        case explore = 3
     }
     
     private(set) weak var selectedViewController: UIViewController?
@@ -20,6 +21,7 @@ final class HomeTabBarController: UIViewController {
     private let homeViewController = R.storyboard.home.home()!
     
     private lazy var walletViewController = R.storyboard.wallet.wallet()!
+    private lazy var collectiblesViewController = CollectiblesViewController()
     private lazy var exploreViewController = ExploreViewController()
     
     override func viewDidLoad() {
@@ -36,6 +38,10 @@ final class HomeTabBarController: UIViewController {
                         image: R.image.home_tab_wallet()!,
                         selectedImage: R.image.home_tab_wallet_selected()!,
                         text: R.string.localizable.wallet()),
+            TabBar.Item(id: ChildID.collectibles.rawValue,
+                        image: R.image.home_tab_collectibles()!,
+                        selectedImage: R.image.home_tab_collectibles_selected()!,
+                        text: R.string.localizable.collectibles()),
             TabBar.Item(id: ChildID.explore.rawValue,
                         image: R.image.home_tab_explore()!,
                         selectedImage: R.image.home_tab_explore_selected()!,
@@ -90,6 +96,8 @@ final class HomeTabBarController: UIViewController {
             newChild = homeViewController
         case .wallet:
             newChild = walletViewController
+        case .collectibles:
+            newChild = collectiblesViewController
         case .explore:
             newChild = exploreViewController
         }
@@ -119,7 +127,7 @@ final class HomeTabBarController: UIViewController {
     
     private func switchToChildAfterValidated(with id: ChildID) {
         switch id {
-        case .chat, .explore:
+        case .chat, .collectibles, .explore:
             switchToChild(with: id)
         case .wallet:
             switch TIP.status {

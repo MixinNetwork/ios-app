@@ -212,6 +212,7 @@
 "close" = "關閉";
 "closing_balance" = "期末餘額";
 "collectible_token_id" = "#%@";
+"collectibles" = "藏品";
 "combine_and_forward" = "合併轉發";
 "compress_database" = "壓縮資料庫";
 "compressed" = "已壓縮";
@@ -620,6 +621,7 @@
 "no_authorizations" = "沒有授權任何機器人";
 "no_blocked_users" = "沒有封鎖任何人";
 "no_bots" = "沒有機器人";
+"no_collectibles" = "沒有藏品";
 "no_contacts" = "沒有聯絡人";
 "no_files" = "沒有檔案";
 "no_hidden_assets" = "沒有隱藏的資產";

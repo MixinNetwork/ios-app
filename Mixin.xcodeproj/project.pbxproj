@@ -751,6 +751,8 @@
 		943BC6632BCD1FF4003FA778 /* Web3BrowserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC6622BCD1FF4003FA778 /* Web3BrowserView.xib */; };
 		943BC6642BCD1FF4003FA778 /* Web3BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC6612BCD1FF4003FA778 /* Web3BrowserViewController.swift */; };
 		943BC66F2BCD7227003FA778 /* Web3NoAssetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC66E2BCD7227003FA778 /* Web3NoAssetView.xib */; };
+		943BC6782BCE99BC003FA778 /* CollectiblesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */; };
+		943BC67A2BCE9A17003FA778 /* CollectiblesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC6792BCE9A17003FA778 /* CollectiblesView.xib */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
@@ -1978,6 +1980,8 @@
 		943BC6612BCD1FF4003FA778 /* Web3BrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3BrowserViewController.swift; sourceTree = "<group>"; };
 		943BC6622BCD1FF4003FA778 /* Web3BrowserView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3BrowserView.xib; sourceTree = "<group>"; };
 		943BC66E2BCD7227003FA778 /* Web3NoAssetView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3NoAssetView.xib; sourceTree = "<group>"; };
+		943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectiblesViewController.swift; sourceTree = "<group>"; };
+		943BC6792BCE9A17003FA778 /* CollectiblesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectiblesView.xib; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
@@ -3164,6 +3168,15 @@
 			path = Web3;
 			sourceTree = "<group>";
 		};
+		943BC6762BCE99A5003FA778 /* Collectible */ = {
+			isa = PBXGroup;
+			children = (
+				943BC6792BCE9A17003FA778 /* CollectiblesView.xib */,
+				943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */,
+			);
+			path = Collectible;
+			sourceTree = "<group>";
+		};
 		94463C54298E56FE00E63547 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
@@ -3748,6 +3761,7 @@
 				7C7579E129DC692A0002DA0B /* DeviceTransfer */,
 				94463C54298E56FE00E63547 /* Authentication */,
 				94ED3EF32990DB8D003BC236 /* Web3 */,
+				943BC6762BCE99A5003FA778 /* Collectible */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -4753,6 +4767,7 @@
 				7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */,
 				7B9650B024879B9000DE86B9 /* MinimizedCallView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
+				943BC67A2BCE9A17003FA778 /* CollectiblesView.xib in Resources */,
 				94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */,
 				94E34123261D829200E2F9D3 /* code.css in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
@@ -5194,6 +5209,7 @@
 				94B577872B5EC11500AE576E /* ExploreAction.swift in Sources */,
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
 				7BC98FA721EF5B8C004A5D79 /* AudioMessagePlayingManager.swift in Sources */,
+				943BC6782BCE99BC003FA778 /* CollectiblesViewController.swift in Sources */,
 				7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */,
 				7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */,
 				7BBCEC1825232A9800F270DF /* WebMoreMenuViewController.swift in Sources */,

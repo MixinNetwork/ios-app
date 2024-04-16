@@ -212,6 +212,7 @@
 "close" = "Закрыть";
 "closing_balance" = "Closing Balance";
 "collectible_token_id" = "#%@";
+"collectibles" = "Collectibles";
 "combine_and_forward" = "Объединить и вперед";
 "compress_database" = "Сжать базу данных";
 "compressed" = "Сжатый";
@@ -620,6 +621,7 @@
 "no_authorizations" = "НЕТ РАЗРЕШЕНИЙ";
 "no_blocked_users" = "Нет заблокированных пользователей";
 "no_bots" = "НЕТ БОТОВ";
+"no_collectibles" = "NO COLLECTIBLES";
 "no_contacts" = "НЕТ КОНТАКТОВ";
 "no_files" = "ФАЙЛОВ НЕТ";
 "no_hidden_assets" = "Нет скрытых активов";

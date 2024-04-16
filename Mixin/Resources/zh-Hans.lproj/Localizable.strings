@@ -212,6 +212,7 @@
 "close" = "关闭";
 "closing_balance" = "期末余额";
 "collectible_token_id" = "#%@";
+"collectibles" = "藏品";
 "combine_and_forward" = "合并转发";
 "compress_database" = "压缩数据库";
 "compressed" = "已压缩";
@@ -620,6 +621,7 @@
 "no_authorizations" = "没有授权任何机器人";
 "no_blocked_users" = "没有屏蔽任何人";
 "no_bots" = "没有机器人";
+"no_collectibles" = "没有藏品";
 "no_contacts" = "没有联系人";
 "no_files" = "没有文件";
 "no_hidden_assets" = "没有隐藏的资产";

@@ -13,4 +13,6 @@
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEthereumAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
 #endif

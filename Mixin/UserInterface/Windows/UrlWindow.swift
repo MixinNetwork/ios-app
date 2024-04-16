@@ -931,7 +931,11 @@ extension UrlWindow {
                                           tokenAmount: request.amount,
                                           fiatMoneyAmount: fiatMoneyAmount,
                                           memo: paymentURL.memo)
-                    payment.checkPreconditions(transferTo: destination, on: homeContainer) { reason in
+                    payment.checkPreconditions(
+                        transferTo: destination,
+                        reference: paymentURL.reference,
+                        on: homeContainer
+                    ) { reason in
                         switch reason {
                         case .userCancelled:
                             hud.hide()

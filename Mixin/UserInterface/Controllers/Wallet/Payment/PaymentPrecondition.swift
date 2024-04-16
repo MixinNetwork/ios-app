@@ -227,3 +227,21 @@ struct AddressValidityPrecondition: PaymentPrecondition {
     }
     
 }
+
+struct ReferenceValidityPrecondition: PaymentPrecondition {
+    
+    let reference: String?
+    
+    func check() async -> PaymentPreconditionCheckingResult {
+        if let reference {
+            if let data = Data(hexEncodedString: reference), data.count == 32 {
+                return .passed([])
+            } else {
+                return .failed(.description(R.string.localizable.invalid_payment_link()))
+            }
+        } else {
+            return .passed([])
+        }
+    }
+    
+}

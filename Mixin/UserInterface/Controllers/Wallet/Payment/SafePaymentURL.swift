@@ -23,6 +23,7 @@ struct SafePaymentURL {
     let memo: String
     let trace: String
     let redirection: URL?
+    let reference: String?
     
     init?(url: URL) {
         guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
@@ -127,6 +128,7 @@ struct SafePaymentURL {
         self.memo = queries["memo"] ?? ""
         self.trace = trace
         self.redirection = redirection
+        self.reference = queries["reference"]
     }
     
 }

@@ -10,7 +10,6 @@ class MobileNumberViewController: ContinueButtonViewController {
     @IBOutlet weak var callingCodeButton: UIButton!
     
     private let invertedPhoneNumberCharacterSet = CharacterSet(charactersIn: "0123456789+-() ").inverted
-    private let phoneNumberValidator = PhoneNumberValidator()
     private let countryLibrary = CountryLibrary()
     
     var mobileNumber: String {
@@ -87,7 +86,7 @@ class MobileNumberViewController: ContinueButtonViewController {
         if country == .anonymous {
             isNumberValid = !mobileNumber.isEmpty && mobileNumber.isDigitsOnly
         } else {
-            isNumberValid = phoneNumberValidator.isValid(callingCode: country.callingCode, number: mobileNumber)
+            isNumberValid = PhoneNumberValidator.global.isValid(callingCode: country.callingCode, number: mobileNumber)
         }
         continueButton.isHidden = !isNumberValid
     }
@@ -100,7 +99,7 @@ extension MobileNumberViewController: UITextFieldDelegate {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         let numericsInText = newText.digits()
         if newText != numericsInText,
-           let parsedPhoneNumber = try? phoneNumberValidator.phoneNumberKit.parse(newText),
+           let parsedPhoneNumber = try? PhoneNumberValidator.global.kit.parse(newText),
            let country = countryLibrary.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) })
         {
             self.country = country

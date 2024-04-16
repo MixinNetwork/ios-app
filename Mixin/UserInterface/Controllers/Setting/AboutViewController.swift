@@ -67,7 +67,7 @@ extension AboutViewController: UITableViewDelegate {
             let container = ContainerViewController.instance(viewController: acknow, title: title)
             navigationController?.pushViewController(container, animated: true)
         case 6:
-            UIApplication.shared.openURL(url: "itms-apps://itunes.apple.com/us/app/id1322324266")
+            UIApplication.shared.openAppStorePage()
         case 7:
             let diagnose = DiagnoseViewController()
             let container = ContainerViewController.instance(viewController: diagnose, title: R.string.localizable.diagnose())

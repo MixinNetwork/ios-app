@@ -19,6 +19,8 @@ open class MixinAPI {
         
     }
     
+    public static let userAgent = "Mixin/\(Bundle.main.shortVersion) (iOS \(UIDevice.current.systemVersion); \(Device.current.machineName); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
+    
     // Async version, model as parameter
     public static func request<Parameters: Encodable, Response: Decodable>(
         method: HTTPMethod,

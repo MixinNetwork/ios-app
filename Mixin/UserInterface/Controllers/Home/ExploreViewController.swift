@@ -9,15 +9,15 @@ final class ExploreViewController: UIViewController {
     private let hiddenSearchTopMargin: CGFloat = -28
     
     private lazy var exploreBotsViewController = ExploreBotsViewController()
-    private lazy var ethereumViewController = Web3WalletViewController(chain: .ethereum)
+    private lazy var ethereumViewController = ExploreWeb3ViewController(chain: .ethereum)
     
-    private weak var searchViewController: ExploreSearchViewController?
+    private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
+    
+    private weak var selectedViewController: UIViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addContentViewController(exploreBotsViewController)
-        addContentViewController(ethereumViewController)
         segmentsCollectionView.register(R.nib.exploreSegmentCell)
         if let layout = segmentsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
@@ -39,24 +39,7 @@ final class ExploreViewController: UIViewController {
     
     @IBAction func searchApps(_ sender: Any) {
         let searchViewController = ExploreSearchViewController(users: exploreBotsViewController.allUsers)
-        addChild(searchViewController)
-        searchViewController.view.alpha = 0
-        view.addSubview(searchViewController.view)
-        searchViewController.view.snp.makeConstraints { make in
-            make.size.centerX.equalToSuperview()
-        }
-        let searchViewCenterYConstraint = searchViewController.view.centerYAnchor
-            .constraint(equalTo: view.centerYAnchor, constant: hiddenSearchTopMargin)
-        searchViewCenterYConstraint.isActive = true
-        searchViewController.didMove(toParent: self)
-        view.layoutIfNeeded()
-        searchViewCenterYConstraint.constant = 0
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-            searchViewController.view.alpha = 1
-        }
-        self.searchViewController = searchViewController
-        self.searchViewCenterYConstraint = searchViewCenterYConstraint
+        presentSearch(with: searchViewController)
     }
     
     @IBAction func scanQRCode(_ sender: Any) {
@@ -92,6 +75,27 @@ final class ExploreViewController: UIViewController {
         present(profile, animated: true, completion: nil)
     }
     
+    func presentSearch(with searchViewController: UIViewController) {
+        addChild(searchViewController)
+        searchViewController.view.alpha = 0
+        view.addSubview(searchViewController.view)
+        searchViewController.view.snp.makeConstraints { make in
+            make.size.centerX.equalToSuperview()
+        }
+        let searchViewCenterYConstraint = searchViewController.view.centerYAnchor
+            .constraint(equalTo: view.centerYAnchor, constant: hiddenSearchTopMargin)
+        searchViewCenterYConstraint.isActive = true
+        searchViewController.didMove(toParent: self)
+        view.layoutIfNeeded()
+        searchViewCenterYConstraint.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+            searchViewController.view.alpha = 1
+        }
+        self.searchViewController = searchViewController
+        self.searchViewCenterYConstraint = searchViewCenterYConstraint
+    }
+    
     func openApp(user: User) {
         guard let home = UIApplication.homeContainerViewController?.homeTabBarController else {
             return
@@ -121,6 +125,12 @@ final class ExploreViewController: UIViewController {
             searchViewController.view.removeFromSuperview()
             searchViewController.removeFromParent()
         }
+    }
+    
+    func switchToSegment(_ segment: Segment) {
+        let indexPath = IndexPath(item: segment.rawValue, section: 0)
+        segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+        collectionView(segmentsCollectionView, didSelectItemAt: indexPath)
     }
     
 }
@@ -154,9 +164,9 @@ extension ExploreViewController: UICollectionViewDelegate {
         let segment = Segment(rawValue: indexPath.item)!
         switch segment {
         case .bots:
-            contentContainerView.bringSubviewToFront(exploreBotsViewController.view)
+            switchToChild(exploreBotsViewController)
         case .ethereum:
-            contentContainerView.bringSubviewToFront(ethereumViewController.view)
+            switchToChild(ethereumViewController)
         }
         AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
     }
@@ -165,7 +175,7 @@ extension ExploreViewController: UICollectionViewDelegate {
 
 extension ExploreViewController {
     
-    private enum Segment: Int, CaseIterable {
+    enum Segment: Int, CaseIterable {
         
         case bots
         case ethereum
@@ -181,11 +191,22 @@ extension ExploreViewController {
         
     }
     
-    private func addContentViewController(_ child: UIViewController) {
-        addChild(child)
-        contentContainerView.addSubview(child.view)
-        child.view.snp.makeEdgesEqualToSuperview()
-        child.didMove(toParent: self)
+    private func switchToChild(_ newChild: UIViewController) {
+        if let currentChild = selectedViewController {
+            if currentChild == newChild {
+                return
+            } else {
+                currentChild.willMove(toParent: nil)
+                currentChild.view.removeFromSuperview()
+                currentChild.removeFromParent()
+            }
+        }
+        selectedViewController = newChild
+        
+        addChild(newChild)
+        contentContainerView.addSubview(newChild.view)
+        newChild.view.snp.makeEdgesEqualToSuperview()
+        newChild.didMove(toParent: self)
     }
     
 }

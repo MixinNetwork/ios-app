@@ -16,7 +16,7 @@ class UpdateViewController: UIViewController {
     }
 
     @IBAction func continueAction(_ sender: Any) {
-        UIApplication.shared.openURL(url: "itms-apps://itunes.apple.com/us/app/id1322324266")
+        UIApplication.shared.openAppStorePage()
     }
 
 }

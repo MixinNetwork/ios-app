@@ -23,6 +23,17 @@ class SearchBoxView: UIView, XibDesignable {
         }
     }
     
+    var spacesTrimmedText: String? {
+        guard let text = textField.text else {
+            return nil
+        }
+        let trimmed = text.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else {
+            return nil
+        }
+        return trimmed
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

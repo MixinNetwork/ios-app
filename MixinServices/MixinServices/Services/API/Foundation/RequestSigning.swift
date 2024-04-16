@@ -36,7 +36,7 @@ extension RequestSigning {
         "Content-Type": "application/json",
         "Accept-Language": Locale.current.languageCode ?? "en",
         "Mixin-Device-Id": Device.current.id,
-        "User-Agent": "Mixin/\(Bundle.main.shortVersion) (iOS \(UIDevice.current.systemVersion); \(Device.current.machineName); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
+        "User-Agent": MixinAPI.userAgent
     ]
     
     private static var cachedEdDSAPrivateKey: Ed25519PrivateKey?

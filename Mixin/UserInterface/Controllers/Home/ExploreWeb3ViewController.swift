@@ -29,7 +29,7 @@ final class ExploreWeb3ViewController: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
-        tableView.rowHeight = 70
+        tableView.rowHeight = 74
         tableView.separatorStyle = .none
         tableView.register(R.nib.assetCell)
         tableView.dataSource = self
@@ -144,12 +144,7 @@ final class ExploreWeb3ViewController: UIViewController {
     private func reloadAccount(address: String) {
         Logger.web3.debug(category: "Explore", message: "Reloading with: \(address)")
         let chainName = chain.name
-        let noData = if let tokens {
-            tokens.isEmpty
-        } else {
-            true
-        }
-        if noData {
+        if tokens?.isEmpty ?? true {
             tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
         }
         lastAccountRequest?.cancel()

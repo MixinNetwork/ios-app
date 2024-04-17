@@ -13,7 +13,7 @@ public final class Web3API {
     }
     
     public static func account(address: String, completion: @escaping (MixinAPI.Result<Web3Account>) -> Void) -> Request {
-        request(method: .get, path: "/account/" + address, completion: completion)
+        request(method: .get, path: "/accounts/" + address, completion: completion)
     }
     
 }

@@ -456,6 +456,8 @@
 "fourth_pin_confirm_hint" = "這是最後一次確認 PIN，記住：PIN 丟失將永遠無法找回！";
 "free" = "免手續費";
 "from" = "來自";
+"from_address" = "從外部轉入";
+"from_mixin_wallet" = "從 Mixin 錢包劃轉";
 "generating" = "正在生成...";
 "generating_keys" = "正在建立金鑰...";
 "get_a_new_wallet" = "建立錢包";
@@ -746,6 +748,7 @@
 "read_your_snapshots" = "讀取你的轉賬記錄";
 "rebate" = "退款";
 "receive" = "轉入";
+"receive_from_address_description" = "從其他錢包或交易所轉入";
 "receive_money" = "我的收款碼";
 "receiver" = "至";
 "receivers" = "交易接收人";
@@ -825,6 +828,7 @@
 "search_placeholder_address" = "名稱, 地址";
 "search_placeholder_asset" = "名稱, 符號";
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
+"search_placeholder_dapp" = "名稱, URL";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";
 "search_related_message" = "%d 條相關的訊息";
 "search_related_message_count" = "%d 條相關的訊息";

@@ -456,6 +456,8 @@
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "free" = "FREE";
 "from" = "より";
+"from_address" = "From Address";
+"from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
@@ -746,6 +748,7 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "払い戻し";
 "receive" = "入金";
+"receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "仮想通貨を受け取る";
 "receiver" = "受取人";
 "receivers" = "受取人";
@@ -825,6 +828,7 @@
 "search_placeholder_address" = "ラベル、アドレス";
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_contact" = "Mixin ID, 名前, 電話番号";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Mixin ID または電話番号を検索";
 "search_related_message" = "%d個の関連するメッセージ";
 "search_related_message_count" = "%d個の関連するメッセージ";

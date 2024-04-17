@@ -10,21 +10,12 @@ final class Web3AccountHeaderView: UIView {
     @IBOutlet weak var amountLabel: InsetLabel!
     @IBOutlet weak var actionStackView: UIStackView!
     
-    @IBOutlet weak var actionsMarginWidthConstraint: NSLayoutConstraint!
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentStackView.setCustomSpacing(20, after: amountStackView)
         symbolLabel.text = Currency.current.symbol
         amountLabel.font = .condensed(size: 40)
         amountLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         amountLabel.text = "0" + currentDecimalSeparator + "00"
-        switch ScreenWidth.current {
-        case .long:
-            actionsMarginWidthConstraint.constant = 20
-        case .medium, .short:
-            actionsMarginWidthConstraint.constant = 0
-        }
     }
     
     func setNetworkName(_ name: String) {

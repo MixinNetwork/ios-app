@@ -456,6 +456,8 @@
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "free" = "FREE";
 "from" = "From";
+"from_address" = "From Address";
+"from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Get a new wallet";
@@ -746,6 +748,7 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Rebate";
 "receive" = "Receive";
+"receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "Receive Money";
 "receiver" = "Receiver";
 "receivers" = "Receivers";
@@ -825,6 +828,7 @@
 "search_placeholder_address" = "Label, Address";
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_related_message" = "%d related message";
 "search_related_message_count" = "%d related messages";

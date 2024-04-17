@@ -41,20 +41,20 @@ final class ExploreWeb3ViewController: UIViewController {
         reloadData(address: address)
     }
     
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if parent != nil, let address {
-            reloadAccount(address: address)
-        }
-    }
-    
-    @IBAction private func receive(_ sender: Any) {
+    @IBAction func receive(_ sender: Any) {
         guard let address else {
             return
         }
         let deposit = Web3DepositViewController(address: address)
         let container = ContainerViewController.instance(viewController: deposit, title: R.string.localizable.receive())
         navigationController?.pushViewController(container, animated: true)
+    }
+    
+    func reloadAccountIfUnlocked() {
+        guard let address, lastAccountRequest == nil else {
+            return
+        }
+        reloadAccount(address: address)
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
@@ -142,8 +142,16 @@ final class ExploreWeb3ViewController: UIViewController {
     }
     
     private func reloadAccount(address: String) {
+        Logger.web3.debug(category: "Explore", message: "Reloading with: \(address)")
         let chainName = chain.name
-        tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
+        let noData = if let tokens {
+            tokens.isEmpty
+        } else {
+            true
+        }
+        if noData {
+            tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
+        }
         lastAccountRequest?.cancel()
         lastAccountRequest = Web3API.account(address: address) { result in
             switch result {

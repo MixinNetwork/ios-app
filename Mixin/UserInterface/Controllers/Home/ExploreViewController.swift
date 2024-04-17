@@ -167,8 +167,19 @@ extension ExploreViewController: UICollectionViewDelegate {
             switchToChild(exploreBotsViewController)
         case .ethereum:
             switchToChild(ethereumViewController)
+            ethereumViewController.reloadAccountIfUnlocked()
         }
         AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
+    }
+    
+}
+
+extension ExploreViewController: HomeTabBarControllerChild {
+    
+    func viewControllerDidSwitchToFront() {
+        if let controller = selectedViewController as? ExploreWeb3ViewController {
+            controller.reloadAccountIfUnlocked()
+        }
     }
     
 }

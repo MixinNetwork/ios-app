@@ -456,6 +456,8 @@
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
 "free" = "FREE";
 "from" = "От";
+"from_address" = "From Address";
+"from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Получить новый кошелек";
@@ -746,6 +748,7 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Скидка";
 "receive" = "ПОЛУЧИТЬ";
+"receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "Получить деньги";
 "receiver" = "Получатель";
 "receivers" = "Получатели";
@@ -825,6 +828,7 @@
 "search_placeholder_address" = "Label, Address";
 "search_placeholder_asset" = "Имя, Символ";
 "search_placeholder_contact" = "Mixin ID, имя, номер телефона";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Найдите Mixin ID или номер телефона: ";
 "search_related_message" = "%d связанное сообщение";
 "search_related_message_count" = "%d похожие сообщения";

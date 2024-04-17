@@ -26,7 +26,7 @@ final class Web3BrowserViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_dapp()
         searchBoxView.textField.addTarget(self, action: #selector(searchKeyword(_:)), for: .editingChanged)
         searchBoxView.textField.becomeFirstResponder()
         

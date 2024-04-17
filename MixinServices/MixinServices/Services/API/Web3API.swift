@@ -44,7 +44,7 @@ extension Web3API {
                 if let bpk = Web3API.botPublicKey {
                     botPublicKey = bpk
                 } else {
-                    switch UserAPI.fetchSessions(userIds: ["489cfe0b-08d8-47f4-a330-fff193cc8086"]) {
+                    switch UserAPI.fetchSessions(userIds: ["57eff6cd-038b-4ad6-abab-5792f95e05d7"]) {
                     case let .failure(error):
                         throw error
                     case let .success(sessions):

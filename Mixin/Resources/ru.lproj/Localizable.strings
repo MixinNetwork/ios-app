@@ -127,6 +127,7 @@
 "bot_not_found" = "Бот не найден";
 "bots" = "БОТЫ";
 "bots_title" = "Боты";
+"browser" = "Browser";
 "calculating" = "Calculating...";
 "call" = "Вызов";
 "call_declined" = "Вызов отклонен";
@@ -272,6 +273,7 @@
 "conversations" = "Разговоры";
 "copied" = "Скопировано";
 "copy" = "Копировать";
+"copy_address" = "Copy Address";
 "copy_conversation_id" = "Скопировать идентификатор беседы";
 "copy_invite" = "Скопировать пригласительную ссылку";
 "copy_link" = "Копировать ссылку";
@@ -454,6 +456,8 @@
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
 "free" = "FREE";
 "from" = "От";
+"from_address" = "From Address";
+"from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Получить новый кошелек";
@@ -744,6 +748,7 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Скидка";
 "receive" = "ПОЛУЧИТЬ";
+"receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "Получить деньги";
 "receiver" = "Получатель";
 "receivers" = "Получатели";
@@ -823,6 +828,7 @@
 "search_placeholder_address" = "Label, Address";
 "search_placeholder_asset" = "Имя, Символ";
 "search_placeholder_contact" = "Mixin ID, имя, номер телефона";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Найдите Mixin ID или номер телефона: ";
 "search_related_message" = "%d связанное сообщение";
 "search_related_message_count" = "%d похожие сообщения";
@@ -1106,8 +1112,10 @@
 "web3_account" = "Account";
 "web3_account_connected" = "Account Connected";
 "web3_account_network" = "%@ Account";
+"web3_deposit_description" = "Use this address for receiving tokens on Ethereum, Polygon, BSC networks";
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
+"web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

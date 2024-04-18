@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="quick_access" rowHeight="85" id="o7k-J2-2dR" customClass="QuickAccessResultCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="o7k-J2-2dR" id="FYL-6e-ME5">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TzN-tr-eFY" customClass="TopShadowView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="10" id="lPm-OB-iY2"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fuR-gv-Q8P" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="75" width="375" height="10"/>
+                        <color key="backgroundColor" name="background_secondary"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="10" id="MsF-Zu-iWk"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uvh-5R-uqH">
+                        <rect key="frame" x="0.0" y="10" width="375" height="65"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Search Mixin ID or Phone number: " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wcm-JF-S17">
+                                <rect key="frame" x="20" y="24" width="303" height="17"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="eUG-9P-zRv" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="331" y="22.666666666666664" width="20" height="20"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" name="text_tertiary"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="wcm-JF-S17" firstAttribute="leading" secondItem="uvh-5R-uqH" secondAttribute="leading" constant="20" id="FHa-h8-vea"/>
+                            <constraint firstItem="wcm-JF-S17" firstAttribute="top" secondItem="uvh-5R-uqH" secondAttribute="top" constant="24" id="Hj2-Xq-KkR"/>
+                            <constraint firstItem="eUG-9P-zRv" firstAttribute="leading" secondItem="wcm-JF-S17" secondAttribute="trailing" constant="8" id="kvx-u9-ewB"/>
+                            <constraint firstItem="eUG-9P-zRv" firstAttribute="centerY" secondItem="uvh-5R-uqH" secondAttribute="centerY" id="nb9-sC-Le4"/>
+                            <constraint firstAttribute="trailing" secondItem="eUG-9P-zRv" secondAttribute="trailing" constant="24" id="oGC-kq-ZfK"/>
+                            <constraint firstAttribute="bottom" secondItem="wcm-JF-S17" secondAttribute="bottom" constant="24" id="tPI-Eo-2D2"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="fuR-gv-Q8P" firstAttribute="leading" secondItem="FYL-6e-ME5" secondAttribute="leading" id="AzU-yK-ip6"/>
+                    <constraint firstItem="uvh-5R-uqH" firstAttribute="leading" secondItem="FYL-6e-ME5" secondAttribute="leading" id="Hjw-qz-yxD"/>
+                    <constraint firstItem="uvh-5R-uqH" firstAttribute="top" secondItem="TzN-tr-eFY" secondAttribute="bottom" id="Rdn-Af-BZA"/>
+                    <constraint firstAttribute="trailing" secondItem="uvh-5R-uqH" secondAttribute="trailing" id="SdB-x1-b9g"/>
+                    <constraint firstItem="TzN-tr-eFY" firstAttribute="leading" secondItem="FYL-6e-ME5" secondAttribute="leading" id="TpU-Db-efy"/>
+                    <constraint firstAttribute="trailing" secondItem="fuR-gv-Q8P" secondAttribute="trailing" id="WMb-P3-Gdt"/>
+                    <constraint firstAttribute="trailing" secondItem="TzN-tr-eFY" secondAttribute="trailing" id="az7-1Z-MDU"/>
+                    <constraint firstItem="fuR-gv-Q8P" firstAttribute="top" secondItem="uvh-5R-uqH" secondAttribute="bottom" id="mJS-CZ-TIz"/>
+                    <constraint firstItem="TzN-tr-eFY" firstAttribute="top" secondItem="FYL-6e-ME5" secondAttribute="top" id="rYA-F5-phC"/>
+                    <constraint firstAttribute="bottom" secondItem="fuR-gv-Q8P" secondAttribute="bottom" id="u9y-vr-Jja"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="activityIndicator" destination="eUG-9P-zRv" id="iC4-Mv-jQj"/>
+                <outlet property="label" destination="wcm-JF-S17" id="38Q-bx-Ahe"/>
+                <outlet property="labelBackgroundView" destination="uvh-5R-uqH" id="UVz-Lq-Q9R"/>
+                <outlet property="topShadowView" destination="TzN-tr-eFY" id="zza-Rc-Sjc"/>
+            </connections>
+            <point key="canvasLocation" x="34" y="41"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

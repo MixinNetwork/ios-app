@@ -127,6 +127,7 @@
 "bot_not_found" = "Bot not found";
 "bots" = "BOTS";
 "bots_title" = "Bots";
+"browser" = "Browser";
 "calculating" = "Calculating...";
 "call" = "Call";
 "call_declined" = "Call declined";
@@ -272,6 +273,7 @@
 "conversations" = "Conversations";
 "copied" = "Copied";
 "copy" = "Copy";
+"copy_address" = "Copy Address";
 "copy_conversation_id" = "Copy Conversation ID";
 "copy_invite" = "Copy Invite Link";
 "copy_link" = "Copy Link";
@@ -454,6 +456,8 @@
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "free" = "FREE";
 "from" = "From";
+"from_address" = "From Address";
+"from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Get a new wallet";
@@ -744,6 +748,7 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Rebate";
 "receive" = "Receive";
+"receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "Receive Money";
 "receiver" = "Receiver";
 "receivers" = "Receivers";
@@ -823,6 +828,7 @@
 "search_placeholder_address" = "Label, Address";
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_related_message" = "%d related message";
 "search_related_message_count" = "%d related messages";
@@ -1106,8 +1112,10 @@
 "web3_account" = "Account";
 "web3_account_connected" = "Account Connected";
 "web3_account_network" = "%@ Account";
+"web3_deposit_description" = "Use this address for receiving tokens on Ethereum, Polygon, BSC networks";
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
+"web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

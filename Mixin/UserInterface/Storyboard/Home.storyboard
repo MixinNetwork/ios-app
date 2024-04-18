@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -425,76 +425,6 @@
                                 <rect key="frame" x="0.0" y="74" width="375" height="593"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="78" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="search_number" rowHeight="85" id="wcl-KA-lJ3" customClass="TopResultCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="85"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wcl-KA-lJ3" id="ad5-9S-eUX">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b7A-ao-ebb" customClass="TopShadowView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="10" id="gnA-lc-fQF"/>
-                                                    </constraints>
-                                                </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfp-PT-D7P" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="75" width="375" height="10"/>
-                                                    <color key="backgroundColor" name="background_secondary"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="10" id="8gQ-Gw-oN6"/>
-                                                    </constraints>
-                                                </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tY1-R3-K1U">
-                                                    <rect key="frame" x="0.0" y="10" width="375" height="65"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Search Mixin ID or Phone number: " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lx1-QB-xFP">
-                                                            <rect key="frame" x="20" y="24" width="303" height="17"/>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                            <color key="textColor" name="text"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="yTS-4P-BRs" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="331" y="22.5" width="20" height="20"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <color key="tintColor" name="text_tertiary"/>
-                                                        </view>
-                                                    </subviews>
-                                                    <color key="backgroundColor" name="background"/>
-                                                    <constraints>
-                                                        <constraint firstItem="Lx1-QB-xFP" firstAttribute="leading" secondItem="tY1-R3-K1U" secondAttribute="leading" constant="20" id="3jW-9p-qD1"/>
-                                                        <constraint firstAttribute="bottom" secondItem="Lx1-QB-xFP" secondAttribute="bottom" constant="24" id="I8J-5L-HFC"/>
-                                                        <constraint firstItem="Lx1-QB-xFP" firstAttribute="top" secondItem="tY1-R3-K1U" secondAttribute="top" constant="24" id="QN0-v9-BXi"/>
-                                                        <constraint firstAttribute="trailing" secondItem="yTS-4P-BRs" secondAttribute="trailing" constant="24" id="TnG-g8-0Zo"/>
-                                                        <constraint firstItem="yTS-4P-BRs" firstAttribute="centerY" secondItem="tY1-R3-K1U" secondAttribute="centerY" id="W5V-Lj-021"/>
-                                                        <constraint firstItem="yTS-4P-BRs" firstAttribute="leading" secondItem="Lx1-QB-xFP" secondAttribute="trailing" constant="8" id="Xya-et-IzJ"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstItem="Lfp-PT-D7P" firstAttribute="top" secondItem="tY1-R3-K1U" secondAttribute="bottom" id="DuT-Wz-pIf"/>
-                                                <constraint firstAttribute="trailing" secondItem="Lfp-PT-D7P" secondAttribute="trailing" id="FuM-61-RZq"/>
-                                                <constraint firstAttribute="bottom" secondItem="Lfp-PT-D7P" secondAttribute="bottom" id="RsI-MJ-Oye"/>
-                                                <constraint firstItem="tY1-R3-K1U" firstAttribute="top" secondItem="b7A-ao-ebb" secondAttribute="bottom" id="Xrk-xq-N80"/>
-                                                <constraint firstItem="Lfp-PT-D7P" firstAttribute="leading" secondItem="ad5-9S-eUX" secondAttribute="leading" id="fJc-A9-9Qd"/>
-                                                <constraint firstItem="b7A-ao-ebb" firstAttribute="leading" secondItem="ad5-9S-eUX" secondAttribute="leading" id="htn-DV-hbl"/>
-                                                <constraint firstAttribute="trailing" secondItem="b7A-ao-ebb" secondAttribute="trailing" id="nHZ-uo-iXa"/>
-                                                <constraint firstItem="b7A-ao-ebb" firstAttribute="top" secondItem="ad5-9S-eUX" secondAttribute="top" id="qgG-4a-9gH"/>
-                                                <constraint firstAttribute="trailing" secondItem="tY1-R3-K1U" secondAttribute="trailing" id="tf9-lT-FTg"/>
-                                                <constraint firstItem="tY1-R3-K1U" firstAttribute="leading" secondItem="ad5-9S-eUX" secondAttribute="leading" id="y5p-hS-VOs"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <connections>
-                                            <outlet property="activityIndicator" destination="yTS-4P-BRs" id="IiJ-eJ-d6R"/>
-                                            <outlet property="label" destination="Lx1-QB-xFP" id="pND-PC-US7"/>
-                                            <outlet property="labelBackgroundView" destination="tY1-R3-K1U" id="Jgm-2o-D13"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3KR-9K-hdW"/>
@@ -986,9 +916,6 @@
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <color key="textColor" name="text_tertiary"/>
                                 <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="app_update_tips"/>
-                                </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="rsg-Ae-cWf"/>

@@ -13,6 +13,7 @@ public enum MixinAPIError: Error {
     case clockSkewDetected
     case pinEncryptionFailed(Error)
     case invalidSignature
+    case emptyResponse
     
     case response(MixinAPIResponseError)
     

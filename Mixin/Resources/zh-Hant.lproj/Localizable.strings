@@ -127,6 +127,7 @@
 "bot_not_found" = "找不到這個機器人";
 "bots" = "機器人";
 "bots_title" = "機器人";
+"browser" = "瀏覽器";
 "calculating" = "正在計算...";
 "call" = "語音";
 "call_declined" = "對方已拒絕";
@@ -272,6 +273,7 @@
 "conversations" = "對話";
 "copied" = "已複製";
 "copy" = "複製";
+"copy_address" = "複製地址";
 "copy_conversation_id" = "複製對話 ID";
 "copy_invite" = "複製邀請連結";
 "copy_link" = "複製連結";
@@ -454,6 +456,8 @@
 "fourth_pin_confirm_hint" = "這是最後一次確認 PIN，記住：PIN 丟失將永遠無法找回！";
 "free" = "免手續費";
 "from" = "來自";
+"from_address" = "從外部轉入";
+"from_mixin_wallet" = "從 Mixin 錢包劃轉";
 "generating" = "正在生成...";
 "generating_keys" = "正在建立金鑰...";
 "get_a_new_wallet" = "建立錢包";
@@ -744,6 +748,7 @@
 "read_your_snapshots" = "讀取你的轉賬記錄";
 "rebate" = "退款";
 "receive" = "轉入";
+"receive_from_address_description" = "從其他錢包或交易所轉入";
 "receive_money" = "我的收款碼";
 "receiver" = "至";
 "receivers" = "交易接收人";
@@ -823,6 +828,7 @@
 "search_placeholder_address" = "名稱, 地址";
 "search_placeholder_asset" = "名稱, 符號";
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
+"search_placeholder_dapp" = "名稱, URL";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";
 "search_related_message" = "%d 條相關的訊息";
 "search_related_message_count" = "%d 條相關的訊息";
@@ -1106,8 +1112,10 @@
 "web3_account" = "賬戶";
 "web3_account_connected" = "連線成功";
 "web3_account_network" = "%@ 賬戶";
+"web3_deposit_description" = "使用此地址在 Ethereum、Polygon、BSC 網路上接收代幣";
 "web3_ensure_trust" = "請確保您信任此應用程式。";
 "web3_message_request" = "訊息簽名";
+"web3_no_asset" = "沒有資產";
 "web3_signing" = "正在簽名";
 "web3_signing_data_success" = "資料已簽名併發送成功，請返回 dApp 繼續操作。";
 "web3_signing_failed" = "簽名失敗";

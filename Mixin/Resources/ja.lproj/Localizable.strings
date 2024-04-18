@@ -127,6 +127,7 @@
 "bot_not_found" = "ミニアプリが見つかりません";
 "bots" = "ミニアプリ";
 "bots_title" = "Myミニアプリ一覧";
+"browser" = "Browser";
 "calculating" = "Calculating...";
 "call" = "電話";
 "call_declined" = "応答拒否";
@@ -272,6 +273,7 @@
 "conversations" = "チャットルーム";
 "copied" = "コピーしました";
 "copy" = "コピー";
+"copy_address" = "Copy Address";
 "copy_conversation_id" = "チャットルームIDをコピー";
 "copy_invite" = "招待リンクをコピーする";
 "copy_link" = "リンクをコピー";
@@ -454,6 +456,8 @@
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "free" = "FREE";
 "from" = "より";
+"from_address" = "From Address";
+"from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
@@ -744,6 +748,7 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "払い戻し";
 "receive" = "入金";
+"receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "仮想通貨を受け取る";
 "receiver" = "受取人";
 "receivers" = "受取人";
@@ -823,6 +828,7 @@
 "search_placeholder_address" = "ラベル、アドレス";
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_contact" = "Mixin ID, 名前, 電話番号";
+"search_placeholder_dapp" = "Name, URL";
 "search_placeholder_number" = "Mixin ID または電話番号を検索";
 "search_related_message" = "%d個の関連するメッセージ";
 "search_related_message_count" = "%d個の関連するメッセージ";
@@ -1106,8 +1112,10 @@
 "web3_account" = "Account";
 "web3_account_connected" = "Account Connected";
 "web3_account_network" = "%@ Account";
+"web3_deposit_description" = "Use this address for receiving tokens on Ethereum, Polygon, BSC networks";
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
+"web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

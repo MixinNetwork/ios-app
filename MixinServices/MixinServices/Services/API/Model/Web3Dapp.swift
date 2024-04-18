@@ -1,6 +1,13 @@
 import Foundation
 
-public struct Web3Dapp {
+public class Web3Dapp: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case homeURL = "home_url"
+        case iconURL = "icon_url"
+        case category
+    }
     
     public let name: String
     public let homeURL: URL
@@ -11,15 +18,12 @@ public struct Web3Dapp {
         homeURL.host ?? homeURL.absoluteString
     }
     
-}
-
-extension Web3Dapp: Decodable {
+    private lazy var lowercasedName = name.lowercased()
+    private lazy var lowercasedHomeURL = homeURL.absoluteString.lowercased()
     
-    enum CodingKeys: String, CodingKey {
-        case name
-        case homeURL = "home_url"
-        case iconURL = "icon_url"
-        case category
+    public func matches(keyword: String) -> Bool {
+        let lowercasedKeyword = keyword.lowercased()
+        return lowercasedName.contains(lowercasedKeyword) || lowercasedHomeURL.contains(lowercasedKeyword)
     }
     
 }

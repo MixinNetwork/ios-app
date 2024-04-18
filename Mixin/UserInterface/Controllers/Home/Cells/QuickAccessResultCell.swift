@@ -1,10 +1,16 @@
 import UIKit
+import Combine
+import Alamofire
+import MixinServices
 
-class TopResultCell: UITableViewCell {
+final class QuickAccessResultCell: UITableViewCell {
     
+    @IBOutlet weak var topShadowView: TopShadowView!
     @IBOutlet weak var labelBackgroundView: UIView!
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
+    
+    private var busyObserver: AnyCancellable?
     
     private var prefixAttributes: [NSAttributedString.Key: Any] {
         [.font: UIFont.preferredFont(forTextStyle: .subheadline), .foregroundColor: UIColor.text]
@@ -14,9 +20,22 @@ class TopResultCell: UITableViewCell {
         [.font: UIFont.preferredFont(forTextStyle: .subheadline), .foregroundColor: UIColor.theme]
     }
     
-    var isBusy = false {
+    var result: QuickAccessSearchResult? {
         didSet {
-            activityIndicator.isAnimating = isBusy
+            switch result?.content {
+            case let .number(number):
+                setText(prefix: R.string.localizable.search_placeholder_number(), content: number)
+            case let .link(_, verbatim):
+                setText(prefix: R.string.localizable.search_open_link(), content: verbatim)
+            case .none:
+                break
+            }
+            busyObserver?.cancel()
+            if let result {
+                busyObserver = result.$isBusy.sink() { [weak activityIndicator] busy in
+                    activityIndicator?.isAnimating = busy
+                }
+            }
         }
     }
     
@@ -31,14 +50,6 @@ class TopResultCell: UITableViewCell {
         } else {
             work()
         }
-    }
-    
-    func setText(number: String) {
-        setText(prefix: R.string.localizable.search_placeholder_number(), content: number)
-    }
-    
-    func setText(link: String) {
-        setText(prefix: R.string.localizable.search_open_link(), content: link)
     }
     
     private func setText(prefix: String, content: String) {

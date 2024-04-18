@@ -1,29 +1,15 @@
 import UIKit
 
-final class Web3WalletHeaderView: UIView {
-    
-    protocol Delegate: AnyObject {
-        func web3WalletHeaderViewRequestToCreateAccount(_ view: Web3WalletHeaderView)
-        func web3WalletHeaderViewRequestToCopyAddress(_ view: Web3WalletHeaderView)
-    }
-    
-    private enum Action {
-        case unlockAccount
-        case copyAddress
-    }
+final class Web3AccountLockedHeaderView: UIView {
     
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var topLabel: UILabel!
     @IBOutlet weak var bottomLabel: UILabel!
     @IBOutlet weak var button: UIButton!
     
-    weak var delegate: Delegate?
-    
     private let backgroundLayer = CAGradientLayer()
     private let addressPrefixCount = 8
     private let addressSuffixCount = 6
-    
-    private var action: Action?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -48,17 +34,6 @@ final class Web3WalletHeaderView: UIView {
         updateBackgroundColors(with: traitCollection)
     }
     
-    @IBAction func requestAction(_ sender: Any) {
-        switch action {
-        case .unlockAccount:
-            delegate?.web3WalletHeaderViewRequestToCreateAccount(self)
-        case .copyAddress:
-            delegate?.web3WalletHeaderViewRequestToCopyAddress(self)
-        case nil:
-            break
-        }
-    }
-    
     func showUnlockAccount(chain: WalletConnectService.Chain) {
         iconImageView.image = icon(of: chain)
         
@@ -74,29 +49,6 @@ final class Web3WalletHeaderView: UIView {
             button.setTitle(R.string.localizable.unlock(), for: .normal)
             button.layoutIfNeeded()
         }
-        action = .unlockAccount
-    }
-    
-    func showCopyAddress(chain: WalletConnectService.Chain, address: String) {
-        iconImageView.image = icon(of: chain)
-        
-        topLabel.font = .systemFont(ofSize: 18, weight: .medium)
-        topLabel.textColor = R.color.text()
-        topLabel.text = R.string.localizable.web3_account_network(chain.name)
-        
-        bottomLabel.font = .systemFont(ofSize: 14)
-        bottomLabel.textColor = R.color.text_tertiary()
-        if address.count > addressPrefixCount + addressSuffixCount {
-            bottomLabel.text = address.prefix(addressPrefixCount) + "…" + address.suffix(addressSuffixCount)
-        } else {
-            bottomLabel.text = address
-        }
-        
-        UIView.performWithoutAnimation {
-            button.setTitle(R.string.localizable.copy(), for: .normal)
-            button.layoutIfNeeded()
-        }
-        action = .copyAddress
     }
     
     private func updateBackgroundColors(with traitCollection: UITraitCollection) {
@@ -122,10 +74,6 @@ final class Web3WalletHeaderView: UIView {
         switch chain {
         case .ethereum:
             R.image.explore.web3_icon_eth()
-        case .polygon:
-            R.image.explore.web3_icon_matic()
-        case .bnbSmartChain:
-            R.image.explore.web3_icon_bsc()
         default:
             nil
         }

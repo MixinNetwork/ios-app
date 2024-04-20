@@ -19,11 +19,10 @@ public class Web3Dapp: Decodable {
     }
     
     private lazy var lowercasedName = name.lowercased()
-    private lazy var lowercasedHomeURL = homeURL.absoluteString.lowercased()
     
     public func matches(keyword: String) -> Bool {
         let lowercasedKeyword = keyword.lowercased()
-        return lowercasedName.contains(lowercasedKeyword) || lowercasedHomeURL.contains(lowercasedKeyword)
+        return lowercasedName.contains(lowercasedKeyword)
     }
     
 }

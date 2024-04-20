@@ -29,7 +29,6 @@ Mixin Core Services.
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
-  s.dependency 'SDWebImageSVGCoder'
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
   s.dependency 'SocketRocket'

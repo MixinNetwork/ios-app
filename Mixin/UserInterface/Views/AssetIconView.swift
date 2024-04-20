@@ -88,15 +88,17 @@ class AssetIconView: UIView {
     private func prepare() {
         backgroundColor = .clear
         chainBackgroundView.backgroundColorIgnoringSystemSettings = .background
-        iconImageView.clipsToBounds = true
-        chainBackgroundView.clipsToBounds = true
-        chainImageView.clipsToBounds = true
+        iconImageView.layer.masksToBounds = true
+        chainBackgroundView.layer.masksToBounds = true
+        chainImageView.layer.masksToBounds = true
         addSubview(iconImageView)
         addSubview(chainBackgroundView)
         addSubview(chainImageView)
         layer.shadowColor = R.color.icon_shadow()!.cgColor
         layer.shadowOpacity = 0.2
         layer.shadowRadius = 6
+        iconImageView.backgroundColor = R.color.background_secondary()
+        chainImageView.backgroundColor = R.color.background_secondary()
     }
     
 }

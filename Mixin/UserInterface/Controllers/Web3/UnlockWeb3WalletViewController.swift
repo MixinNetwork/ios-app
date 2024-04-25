@@ -10,14 +10,15 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
     
     private(set) var isUnlocked = false
     
-    private let chain: WalletConnectService.Chain
+    private let chains: [Web3Chain]
     
     private var subtitle: String {
-        R.string.localizable.unlock_web3_account_description(chain.name)
+        R.string.localizable.unlock_web3_account_description(chains[0].name)
     }
     
-    init(chain: WalletConnectService.Chain) {
-        self.chain = chain
+    init(chains: [Web3Chain]) {
+        assert(!chains.isEmpty)
+        self.chains = chains
         super.init(warnings: [])
     }
     
@@ -30,21 +31,15 @@ final class UnlockWeb3WalletViewController: AuthenticationPreviewViewController 
         tableHeaderView.setIcon { imageView in
             imageView.image = R.image.crypto_wallet()
         }
-        layoutTableHeaderView(title: R.string.localizable.unlock_web3_account(chain.name), subtitle: subtitle)
+        layoutTableHeaderView(title: R.string.localizable.unlock_web3_account(chains[0].name), subtitle: subtitle)
         let tableFooterView = BulletDescriptionView()
         var lines = [
-            R.string.localizable.unlock_web3_account_agreement_1(chain.name),
-            R.string.localizable.unlock_web3_account_agreement_2(chain.name),
+            R.string.localizable.unlock_web3_account_agreement_1(chains[0].name),
+            R.string.localizable.unlock_web3_account_agreement_2(chains[0].name),
         ]
-        if WalletConnectService.evmChains.contains(chain) {
-            let otherEVMChains = WalletConnectService.evmChains
-                .subtracting([chain])
-                .prefix(2)
-                .map(\.name)
-            if otherEVMChains.count == 2 {
-                let line = R.string.localizable.unlock_web3_account_agreement_3(chain.name, otherEVMChains[0], otherEVMChains[1])
-                lines.append(line)
-            }
+        if chains.count >= 3 {
+            let line = R.string.localizable.unlock_web3_account_agreement_3(chains[0].name, chains[1].name, chains[2].name)
+            lines.append(line)
         }
         tableFooterView.setText(preface: R.string.localizable.unlock_web3_account_agreement(), bulletLines: lines)
         tableView.tableFooterView = tableFooterView

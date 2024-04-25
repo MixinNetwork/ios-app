@@ -97,6 +97,32 @@ final class CompactAssetCell: UITableViewCell {
         checkmarkImageView.isHidden = true
     }
     
+    func render(web3Token token: Web3Token) {
+        assetIconView.setIcon(web3Token: token)
+        nameLabel.text = token.name
+        descriptionLabel.text = token.localizedBalanceWithSymbol
+        chainTagLabel.isHidden = true
+        if token.decimalUSDPrice > 0 {
+            changeLabel.text = token.localizedPercentChange
+            if token.decimalAbsoluteChange > 0 {
+                changeLabel.textColor = .walletGreen
+            } else {
+                changeLabel.textColor = .walletRed
+            }
+            priceLabel.text = Currency.current.symbol + token.localizedFiatMoneyPrice
+            changeLabel.isHidden = false
+            priceLabel.isHidden = false
+            noValueIndicator.isHidden = true
+        } else {
+            changeLabel.text = R.string.localizable.na() // Just for layout guidance
+            priceLabel.text = nil
+            changeLabel.isHidden = true
+            priceLabel.isHidden = true
+            noValueIndicator.isHidden = false
+        }
+        checkmarkImageView.isHidden = true
+    }
+    
     func render(token: TokenItem, isSelected: Bool) {
         assetIconView.setIcon(token: token)
         nameLabel.text = token.name

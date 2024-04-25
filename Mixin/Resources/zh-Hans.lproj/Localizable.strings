@@ -4,6 +4,7 @@
 "access_denied" = "禁止访问";
 "access_to_contacts" = "访问通讯录";
 "account" = "账号";
+"accounts" = "账户";
 "acknowledgements" = "许可证";
 "add" = "添加";
 "add_address" = "添加地址";
@@ -457,7 +458,7 @@
 "free" = "免手续费";
 "from" = "来自";
 "from_address" = "从外部转入";
-"from_mixin_wallet" = "从 Mixin 钱包划转";
+"from_mixin_wallet" = "从 Mixin 钱包转入";
 "generating" = "正在生成...";
 "generating_keys" = "正在创建密钥...";
 "get_a_new_wallet" = "创建钱包";
@@ -477,6 +478,7 @@
 "hidden_assets" = "隐藏的资产";
 "hide" = "隐藏";
 "hide_asset" = "隐藏资产";
+"hint_address" = "输入钱包地址";
 "hold_to_record_audio" = "长按说话，松手发送";
 "hour" = "%d 小时";
 "hour_count" = "%d 小时";
@@ -491,8 +493,10 @@
 "info" = "信息";
 "initializing" = "初始化...";
 "insufficient_balance" = "余额不足";
+"insufficient_gas" = "您的账户中没有足够的 %@ 来支付网络费用";
 "insufficient_transaction_fee" = "手续费不足";
 "interface_style" = "外观";
+"invalid_address" = "无效的地址";
 "invalid_candidate" = "无效的 Candidate";
 "invalid_height" = "高度无效";
 "invalid_malformed_address_eos_hint" = "地址格式错误。Mixin 不支持提现到 EOS 合约地址！";
@@ -555,6 +559,7 @@
 "manage" = "管理";
 "manage_your_apps" = "管理你所有的机器人";
 "manage_your_circles" = "管理你所有的圈子";
+"max" = "最大值";
 "max_favorite_bots_description" = "最多可以添加 5 个喜欢的机器人，注意其他人可以在你的个人信息弹窗里查看这些你喜欢的机器人。";
 "media" = "媒体";
 "memo" = "备注";
@@ -798,6 +803,7 @@
 "restore_from_icloud_confirmation" = "已经有 %@ 条本地聊天记录，最后一条消息的时间是 %@，确定用 iCloud 上的聊天数据覆盖本地数据吗？";
 "retry" = "重试";
 "return_to_merchant_description" = "来自商家的支付已完成，您可以选择返回商家或者停留在 Mixin。";
+"review" = "预览";
 "review_address_hint" = "请仔细检查地址、Memo（标签）和网络，如果您转错了，资产将无法追回。";
 "review_transfer_hint" = "请仔细检查收款人、网络和金额，如果您转错了，资产将无法追回。";
 "review_withdrawal_hint" = "请仔细检查收款地址、网络和金额，如果您转错了，资产将无法追回。";
@@ -975,6 +981,7 @@
 "title_participants" = "%d 成员";
 "title_participants_count" = "%d 成员";
 "to" = "至";
+"to_mixin_wallet" = "划转到 Mixin 钱包";
 "today" = "今天";
 "total" = "共计";
 "touch_id" = "指纹";

@@ -4,6 +4,11 @@ import TIP
 
 struct WithdrawPaymentOperation {
     
+    enum AddressInfo {
+        case label(String)
+        case web3Chain(String)
+    }
+    
     enum Error: Swift.Error, LocalizedError {
         
         case buildWithdrawalTx(Swift.Error?)
@@ -54,7 +59,7 @@ struct WithdrawPaymentOperation {
     let isFeeTokenDifferent: Bool
     
     let address: WithdrawableAddress
-    let addressLabel: String?
+    let addressInfo: AddressInfo?
     let addressID: String?
     
     private let cashierID = "674d6776-d600-4346-af46-58e77d8df185"
@@ -63,7 +68,7 @@ struct WithdrawPaymentOperation {
         traceID: String, withdrawalToken: TokenItem, withdrawalTokenAmount: Decimal,
         withdrawalFiatMoneyAmount: Decimal, withdrawalOutputs: UTXOService.OutputCollection,
         feeToken: Token, feeAmount: Decimal, address: WithdrawableAddress,
-        addressLabel: String? = nil, addressID: String? = nil
+        addressInfo: AddressInfo? = nil, addressID: String? = nil
     ) {
         self.traceID = traceID
         self.withdrawalToken = withdrawalToken
@@ -74,7 +79,7 @@ struct WithdrawPaymentOperation {
         self.feeAmount = feeAmount
         self.isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
         self.address = address
-        self.addressLabel = addressLabel
+        self.addressInfo = addressInfo
         self.addressID = addressID
     }
     

@@ -34,7 +34,7 @@ final class Web3AccountLockedHeaderView: UIView {
         updateBackgroundColors(with: traitCollection)
     }
     
-    func showUnlockAccount(chain: WalletConnectService.Chain) {
+    func showUnlockAccount(chain: Web3Chain) {
         iconImageView.image = icon(of: chain)
         
         topLabel.font = .systemFont(ofSize: 18, weight: .medium)
@@ -70,7 +70,7 @@ final class Web3AccountLockedHeaderView: UIView {
         }
     }
     
-    private func icon(of chain: WalletConnectService.Chain) -> UIImage? {
+    private func icon(of chain: Web3Chain) -> UIImage? {
         switch chain {
         case .ethereum:
             R.image.explore.web3_icon_eth()

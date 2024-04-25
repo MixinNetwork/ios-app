@@ -5,20 +5,16 @@ import MixinServices
 
 final class Web3Worker {
     
-    enum TransactionError: Error {
-        case noChainToken(String)
-    }
-    
-    private var chain: WalletConnectService.Chain
+    private var chain: Web3Chain
     
     private weak var webView: WKWebView?
     
-    private var currentProposer: Web3Proposer {
-        Web3Proposer(name: webView?.title ?? "(no title)",
-                     host: webView?.url?.host ?? "(no host)")
+    private var currentProposer: Web3DappProposer {
+        Web3DappProposer(name: webView?.title ?? "(no title)",
+                         host: webView?.url?.host ?? "(no host)")
     }
     
-    init(webView: WKWebView, chain: WalletConnectService.Chain) {
+    init(webView: WKWebView, chain: Web3Chain) {
         self.webView = webView
         self.chain = chain
     }
@@ -71,7 +67,7 @@ final class Web3Worker {
                 send(error: "Unsupported Chain", to: request)
                 return
             }
-            guard let chain = WalletConnectService.evmChains.first(where: { $0.id == chainID }) else {
+            guard let chain = Web3Chain.evmChains.first(where: { $0.id == chainID }) else {
                 showAutoHiddenHud(style: .error, text: "Chain not supported")
                 send(error: "Unknown Chain", to: request)
                 return
@@ -170,33 +166,27 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
-        do {
-            let preview = try Web3TransactionPreview(json: object)
-            let chainToken: TokenItem?
-            if let token = TokenDAO.shared.tokenItem(with: chain.internalID) {
-                chainToken = token
-            } else {
-                let token = try SafeAPI.assets(id: chain.internalID).get()
-                chainToken = TokenDAO.shared.saveAndFetch(token: token)
+        DispatchQueue.global().async { [chain, proposer=currentProposer] in
+            do {
+                let preview = try Web3TransactionPreview(json: object)
+                let operation = try Web3TransferWithBrowserWalletOperation(
+                    fromAddress: address,
+                    transaction: preview,
+                    chain: chain
+                ) { hash in
+                    try await self.send(result: hash, to: request)
+                } rejectWith: {
+                    self.send(error: "User Rejected", to: request)
+                }
+                DispatchQueue.main.async {
+                    let transaction = Web3TransactionViewController(operation: operation, proposer: .dapp(proposer))
+                    Web3PopupCoordinator.enqueue(popup: .request(transaction))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.send(error: "\(error)", to: request)
+                }
             }
-            guard let chainToken else {
-                throw TransactionError.noChainToken(chain.internalID)
-            }
-            let operation = Web3TransactionWithBrowserWalletOperation(
-                address: address,
-                proposer: currentProposer,
-                transaction: preview,
-                chain: chain,
-                chainToken: chainToken
-            ) { hash in
-                try await self.send(result: hash, to: request)
-            } rejectWith: {
-                self.send(error: "User Rejected", to: request)
-            }
-            let transaction = Web3TransactionViewController(operation: operation)
-            Web3PopupCoordinator.enqueue(popup: .request(transaction))
-        } catch {
-            send(error: "\(error)", to: request)
         }
     }
     

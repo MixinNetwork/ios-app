@@ -38,6 +38,7 @@ final class TokenViewController: SafeSnapshotListViewController {
         tableHeaderView.render(token: token)
         tableHeaderView.transferActionView.delegate = self
         tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilter(_:)), for: .touchUpInside)
+        tableHeaderView.tokenInfoButton.addTarget(self, action: #selector(showTokenInfo(_:)), for: .touchUpInside)
         let revealOutputsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
         revealOutputsGestureRecognizer.numberOfTapsRequired = 5
         tableHeaderView.assetIconView.addGestureRecognizer(revealOutputsGestureRecognizer)
@@ -46,17 +47,28 @@ final class TokenViewController: SafeSnapshotListViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: TokenDAO.tokensDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
+        if #unavailable(iOS 15) {
+            tableHeaderView.sizeToFit()
+            tableView.tableHeaderView = tableHeaderView
+        }
     }
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
-        view.layoutIfNeeded()
-        tableHeaderView.sizeToFit()
-        tableView.tableHeaderView = tableHeaderView
+        if #available(iOS 15.0, *) {
+            view.layoutIfNeeded()
+            tableHeaderView.sizeToFit()
+            tableView.tableHeaderView = tableHeaderView
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if #unavailable(iOS 15) {
+            view.layoutIfNeeded()
+            tableHeaderView.sizeToFit()
+            tableView.tableHeaderView = tableHeaderView
+        }
         if performSendOnAppear {
             performSendOnAppear = false
             DispatchQueue.main.async(execute: send)
@@ -76,12 +88,12 @@ final class TokenViewController: SafeSnapshotListViewController {
         }
     }
     
-    @IBAction func presentFilter(_ sender: Any) {
+    @objc private func presentFilter(_ sender: Any) {
         filterController.delegate = self
         present(filterController, animated: true, completion: nil)
     }
     
-    @IBAction func infoAction(_ sender: Any) {
+    @objc private func showTokenInfo(_ sender: Any) {
         AssetInfoWindow.instance().presentWindow(asset: token)
     }
     

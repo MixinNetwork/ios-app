@@ -43,7 +43,8 @@ extension SafeSnapshot {
                   traceID: "",
                   confirmations: pd.confirmations,
                   openingBalance: nil,
-                  closingBalance: nil,
+                  closingBalance: nil, 
+                  inscriptionHash: "",
                   deposit: .init(hash: pd.transactionHash, sender: ""),
                   withdrawal: nil)
     }

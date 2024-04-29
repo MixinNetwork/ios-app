@@ -119,6 +119,8 @@ public extension UNMutableNotificationContent {
             }
         } else if message.category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
             return R.string.localizable.alert_key_contact_transfer_message()
+        } else if message.category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
+            return R.string.localizable.alert_key_contact_transfer_message()
         } else if message.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
             return R.string.localizable.alert_key_contact_audio_call_message()
         } else if message.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {

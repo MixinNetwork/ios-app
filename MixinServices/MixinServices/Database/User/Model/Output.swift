@@ -28,13 +28,14 @@ public struct Output {
     public let signedAt: String
     public let spentAt: String
     public let sequence: Int
+    public let inscriptionHash: String?
     
     public init(
         id: String, transactionHash: String, outputIndex: Int, asset: String,
         amount: String, mask: String, keys: [String], receivers: [String],
         receiversHash: String, receiversThreshold: Int, extra: String, state: String,
         createdAt: String, updatedAt: String, signedBy: String, signedAt: String,
-        spentAt: String, sequence: Int
+        spentAt: String, sequence: Int, inscriptionHash: String?
     ) {
         self.id = id
         self.transactionHash = transactionHash
@@ -54,6 +55,7 @@ public struct Output {
         self.signedAt = signedAt
         self.spentAt = spentAt
         self.sequence = sequence
+        self.inscriptionHash = inscriptionHash
     }
     
     public init(change: KernelUtxo, asset: String, mask: String, keys: [String], lastOutput: Output) {
@@ -74,7 +76,8 @@ public struct Output {
                   signedBy: "",
                   signedAt: "",
                   spentAt: "",
-                  sequence: 0)
+                  sequence: 0,
+                  inscriptionHash: "")
     }
     
     public static func consolidation(
@@ -98,7 +101,8 @@ public struct Output {
                signedBy: "",
                signedAt: "",
                spentAt: "",
-               sequence: 0)
+               sequence: 0,
+               inscriptionHash: "")
     }
     
 }
@@ -124,6 +128,7 @@ extension Output: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixi
         case signedAt = "signed_at"
         case spentAt = "spent_at"
         case sequence
+        case inscriptionHash = "inscription_hash"
     }
     
 }

@@ -147,10 +147,11 @@ extension Message {
     }
     
     public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
-        createMessage(messageId: UUID().uuidString.lowercased(),
+        let category: MessageCategory = snapshot.isInscription() ? .SYSTEM_SAFE_SNAPSHOT : .SYSTEM_SAFE_INSCRIPTION
+        return createMessage(messageId: UUID().uuidString.lowercased(),
                       conversationId: conversationID,
                       userId: myUserId,
-                      category: MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue,
+                      category: category.rawValue,
                       status: MessageStatus.DELIVERED.rawValue,
                       action: snapshot.type,
                       snapshotId: snapshot.id,
@@ -335,6 +336,7 @@ public enum MessageCategory: String, Decodable {
     case SYSTEM_CONVERSATION
     case SYSTEM_ACCOUNT_SNAPSHOT
     case SYSTEM_SAFE_SNAPSHOT
+    case SYSTEM_SAFE_INSCRIPTION
     case SYSTEM_SESSION
     case SYSTEM_USER
     case SYSTEM_CIRCLE

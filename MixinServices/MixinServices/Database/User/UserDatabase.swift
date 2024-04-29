@@ -702,6 +702,59 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_raw_transactions_state_type` ON `raw_transactions` (`state`, `type`)")
         }
         
+        migrator.registerMigration("inscription") { db in
+            let outputsColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(outputs)").map(\.name)
+            if !outputsColumns.contains("inscription_hash") {
+                try db.execute(sql: "ALTER TABLE `outputs` ADD COLUMN `inscription_hash` TEXT NOT NULL DEFAULT ''")
+            }
+            
+            let tokensColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)").map(\.name)
+            if !tokensColumns.contains("inscription_hash") {
+                try db.execute(sql: "ALTER TABLE `tokens` ADD COLUMN `inscription_hash` TEXT NOT NULL DEFAULT ''")
+            }
+            
+            let snapshotColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(safe_snapshots)").map(\.name)
+            if !snapshotColumns.contains("inscription_hash") {
+                try db.execute(sql: "ALTER TABLE `safe_snapshots` ADD COLUMN `inscription_hash` TEXT NOT NULL DEFAULT ''")
+            }
+            
+            let sqls = [
+                """
+                CREATE TABLE IF NOT EXISTS `inscription_collection` (
+                    `collection_hash` TEXT NOT NULL,
+                    `type` TEXT NOT NULL,
+                    `supply` TEXT NOT NULL,
+                    `unit` TEXT NOT NULL,
+                    `symbol` TEXT NOT NULL,
+                    `name` TEXT NOT NULL,
+                    `icon_url` TEXT NOT NULL,
+                    `icon_at` TEXT NOT NULL,
+                    `updated_at` TEXT NOT NULL,
+                    PRIMARY KEY(`collection_hash`)
+                )
+                """,
+                
+                """
+                CREATE TABLE IF NOT EXISTS `inscription_item` (
+                    `type` TEXT NOT NULL,
+                    `inscription_hash` TEXT NOT NULL,
+                    `collection_hash` TEXT NOT NULL,
+                    `sequence` INTEGER NOT NULL,
+                    `content_type` TEXT NOT NULL,
+                    `content_url` TEXT NOT NULL,
+                    `occupied_by` TEXT,
+                    `occupied_at` TEXT,
+                    `created_at` TEXT NOT NULL,
+                    `updated_at` TEXT NOT NULL,
+                    PRIMARY KEY(`inscription_hash`)
+                )
+                """,
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
         return migrator
     }
     

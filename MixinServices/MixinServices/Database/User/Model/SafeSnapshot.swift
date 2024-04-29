@@ -23,6 +23,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case confirmations
         case openingBalance = "opening_balance"
         case closingBalance = "closing_balance"
+        case inscriptionHash = "inscription_hash"
         case deposit
         case withdrawal
     }
@@ -40,6 +41,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     public let confirmations: Int?
     public let openingBalance: String?
     public let closingBalance: String?
+    public let inscriptionHash: String?
     public let deposit: Deposit?
     public let withdrawal: Withdrawal?
     
@@ -57,7 +59,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
         traceID: String?, confirmations: Int?,
-        openingBalance: String?, closingBalance: String?,
+        openingBalance: String?, closingBalance: String?, inscriptionHash: String?,
         deposit: Deposit?, withdrawal: Withdrawal?
     ) {
         self.id = id
@@ -73,6 +75,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.confirmations = confirmations
         self.openingBalance = openingBalance
         self.closingBalance = closingBalance
+        self.inscriptionHash = inscriptionHash
         self.deposit = deposit
         self.withdrawal = withdrawal
     }
@@ -82,7 +85,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
         traceID: String?, confirmations: Int?,
-        openingBalance: String?, closingBalance: String?,
+        openingBalance: String?, closingBalance: String?, inscriptionHash: String?,
         deposit: Deposit?, withdrawal: Withdrawal?
     ) {
         self.id = id
@@ -98,6 +101,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.confirmations = confirmations
         self.openingBalance = openingBalance
         self.closingBalance = closingBalance
+        self.inscriptionHash = inscriptionHash
         self.deposit = deposit
         self.withdrawal = withdrawal
     }
@@ -121,10 +125,14 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.confirmations = nil
         self.openingBalance = nil
         self.closingBalance = nil
+        self.inscriptionHash = ""
         self.deposit = nil
         self.withdrawal = withdrawal
     }
     
+    public func isInscription() -> Bool {
+        !(inscriptionHash?.isEmpty ?? true)
+    }
 }
 
 extension SafeSnapshot: TableRecord, PersistableRecord {

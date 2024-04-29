@@ -12,7 +12,7 @@ public final class TokenDAO: UserDatabaseDAO {
         static let selector = """
         SELECT t.asset_id, t.kernel_asset_id, t.symbol, t.name, t.icon_url, t.price_btc, t.price_usd,
             t.chain_id, t.change_usd, t.change_btc, t.dust, t.confirmations, t.asset_key,
-            c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
+            t.inscription_hash, c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
             c.threshold AS chain_threshold, c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility,
             ifnull(te.balance,'0') AS balance, ifnull(te.hidden,FALSE) AS hidden
         FROM tokens t

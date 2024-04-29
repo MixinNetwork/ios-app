@@ -46,7 +46,8 @@ struct DeviceTransferToken {
               btcChange: btcChange,
               dust: dust,
               confirmations: confirmations,
-              assetKey: assetKey)
+              assetKey: assetKey, 
+              inscriptionHash: "")
     }
     
 }

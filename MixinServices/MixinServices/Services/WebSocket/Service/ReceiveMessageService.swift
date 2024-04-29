@@ -1149,6 +1149,8 @@ extension ReceiveMessageService {
             processSystemSnapshotMessage(data: data)
         case MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue:
             processSafeSnapshotMessage(data: data)
+        case MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue:
+            processSafeSnapshotMessage(data: data)
         case MessageCategory.SYSTEM_SESSION.rawValue:
             processSystemSessionMessage(data: data)
         case MessageCategory.SYSTEM_USER.rawValue:
@@ -1250,11 +1252,14 @@ extension ReceiveMessageService {
             ChainDAO.shared.save([chain])
         }
         
-        let depositHash: String?
-        if let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
-            depositHash = json["deposit_hash"] as? String
-        } else {
-            depositHash = nil
+        var depositHash: String?
+        
+        if let inscriptionHash = snapshot.inscriptionHash {
+            syncInscription(inscriptionHash: inscriptionHash)
+        } else if snapshot.type == SnapshotType.deposit.rawValue {
+            if let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
+                depositHash = json["deposit_hash"] as? String
+            }
         }
         
         SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
@@ -1265,6 +1270,21 @@ extension ReceiveMessageService {
         let message = Message.createMessage(snapshot: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         UTXOService.shared.synchronize()
+    }
+    
+    private func syncInscription(inscriptionHash: String) {
+        guard !inscriptionHash.isEmpty else {
+            return
+        }
+        
+        guard case let .success(inscription) = InscriptionAPI.inscription(inscriptionHash: inscriptionHash),
+              case let .success(collection) = InscriptionAPI.collection(collectionHash: inscription.collectionHash) else{
+            ConcurrentJobQueue.shared.addJob(job: RefreshInscriptionJob(inscriptionHash: inscriptionHash))
+            return
+        }
+        
+        InscriptionDAO.shared.save(inscription: inscription)
+        InscriptionDAO.shared.save(collection: collection)
     }
     
     private func processSystemSessionMessage(data: BlazeMessageData) {

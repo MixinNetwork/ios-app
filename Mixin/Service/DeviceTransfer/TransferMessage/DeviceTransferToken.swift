@@ -47,7 +47,7 @@ struct DeviceTransferToken {
               dust: dust,
               confirmations: confirmations,
               assetKey: assetKey, 
-              inscriptionHash: "")
+              collectionHash: "")
     }
     
 }

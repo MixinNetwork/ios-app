@@ -17,7 +17,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case dust
         case confirmations
         case assetKey = "asset_key"
-        case inscriptionHash = "inscription_hash"
+        case collectionHash = "collection_hash"
     }
     
     public static let databaseTableName = "tokens"
@@ -35,7 +35,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let dust: String
     public let confirmations: Int
     public let assetKey: String
-    public let inscriptionHash: String
+    public let collectionHash: String
     
     public private(set) lazy var decimalBTCPrice = Decimal(string: btcPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDPrice = Decimal(string: usdPrice, locale: .enUSPOSIX) ?? 0
@@ -45,7 +45,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public init(
         assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: String,
         btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
-        btcChange: String, dust: String, confirmations: Int, assetKey: String, inscriptionHash: String
+        btcChange: String, dust: String, confirmations: Int, assetKey: String, collectionHash: String
     ) {
         self.assetID = assetID
         self.kernelAssetID = kernelAssetID
@@ -60,7 +60,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         self.dust = dust
         self.confirmations = confirmations
         self.assetKey = assetKey
-        self.inscriptionHash = inscriptionHash
+        self.collectionHash = collectionHash
     }
     
 }
@@ -83,6 +83,9 @@ extension Token {
         chainID == ChainID.ethereum
     }
     
+    public var isNFT: Bool {
+        !collectionHash.isEmpty
+    }
 }
 
 extension Token {

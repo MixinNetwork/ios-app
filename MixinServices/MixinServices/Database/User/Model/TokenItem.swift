@@ -51,7 +51,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
                    dust: token.dust,
                    confirmations: token.confirmations,
                    assetKey: token.assetKey,
-                   inscriptionHash: token.inscriptionHash)
+                   collectionHash: token.collectionHash)
     }
     
     required init(from decoder: Decoder) throws {
@@ -107,7 +107,7 @@ extension TokenItem {
                           dust: "0.0001",
                           confirmations: 100,
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
-                          inscriptionHash: "")
+                          collectionHash: "")
         let chain = Chain(chainId: token.chainID,
                           name: "Ether",
                           symbol: "ETH",

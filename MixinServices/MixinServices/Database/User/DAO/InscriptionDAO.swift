@@ -16,7 +16,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
         """
         static let order = "i.updated_at DESC"
         static let selectWithInscriptionHash = "\(SQL.selector) WHERE i.inscription_hash = ?"
-        static let selectAll = "\(SQL.selector) WHERE i.inscription_hash IN (SELECT inscription_hash FROM outputs WHERE state = 'unspent' AND IFNULL(inscription_hash,'')== '')"
+        static let selectAll = "\(SQL.selector) WHERE i.inscription_hash IN (SELECT inscription_hash FROM outputs WHERE state = 'unspent' AND IFNULL(inscription_hash,'') <> '')"
     }
     
     public static let shared = InscriptionDAO()

@@ -26,7 +26,7 @@ struct InscriptionPaymentOperation {
     let memo = ""
     
     func start(pin: String) async throws {
-        guard let output = OutputDAO.shared.getAsset(inscriptionHash: inscription.inscriptionHash),
+        guard let output = OutputDAO.shared.getOutput(inscriptionHash: inscription.inscriptionHash),
               let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
             return
         }

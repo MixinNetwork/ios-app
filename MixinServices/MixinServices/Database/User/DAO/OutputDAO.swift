@@ -5,7 +5,7 @@ public final class OutputDAO: UserDatabaseDAO {
     
     public static let shared = OutputDAO()
     
-    public func getAsset(inscriptionHash: String) -> Output? {
+    public func getOutput(inscriptionHash: String) -> Output? {
         db.select(with: "SELECT * FROM outputs WHERE inscription_hash = ? LIMIT 1", arguments: [inscriptionHash])
     }
     
@@ -18,11 +18,11 @@ public final class OutputDAO: UserDatabaseDAO {
     }
     
     public func unspentOutputs(asset: String, limit: Int) -> [Output] {
-        db.select(with: "SELECT * FROM outputs WHERE state = 'unspent' AND asset = ? ORDER BY sequence ASC LIMIT ?", arguments: [asset, limit])
+        db.select(with: "SELECT * FROM outputs WHERE state = 'unspent' AND asset = ? AND IFNULL(inscription_hash,'') = '' ORDER BY sequence ASC LIMIT ?", arguments: [asset, limit])
     }
     
     public func unspentOutputs(asset: String, after sequence: Int?, limit: Int, db: GRDB.Database) throws -> [Output] {
-        var sql = "SELECT * FROM outputs WHERE state = 'unspent' AND asset = :asset"
+        var sql = "SELECT * FROM outputs WHERE state = 'unspent' AND asset = :asset AND IFNULL(inscription_hash,'') = ''"
         var arguments: [String: DatabaseValueConvertible] = ["asset": asset]
         
         if let sequence {
@@ -37,7 +37,7 @@ public final class OutputDAO: UserDatabaseDAO {
     }
     
     public func outputs(asset: String?, before outputID: String?, limit: Int) -> [Output] {
-        var sql = "SELECT * FROM outputs"
+        var sql = "SELECT * FROM outputs WHERE IFNULL(inscription_hash,'') = ''"
         
         var conditions: [String] = []
         var arguments: [String: any DatabaseValueConvertible] = ["limit": limit]
@@ -50,7 +50,7 @@ public final class OutputDAO: UserDatabaseDAO {
             arguments["id"] = outputID
         }
         if !conditions.isEmpty {
-            sql += " WHERE \(conditions.joined(separator: " AND "))"
+            sql += " AND \(conditions.joined(separator: " AND "))"
         }
         
         sql += " ORDER BY rowid DESC LIMIT :limit"

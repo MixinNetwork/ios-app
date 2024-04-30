@@ -709,8 +709,8 @@ public final class UserDatabase: Database {
             }
             
             let tokensColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)").map(\.name)
-            if !tokensColumns.contains("inscription_hash") {
-                try db.execute(sql: "ALTER TABLE `tokens` ADD COLUMN `inscription_hash` TEXT NOT NULL DEFAULT ''")
+            if !tokensColumns.contains("collection_hash") {
+                try db.execute(sql: "ALTER TABLE `tokens` ADD COLUMN `collection_hash` TEXT NOT NULL DEFAULT ''")
             }
             
             let snapshotColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(safe_snapshots)").map(\.name)

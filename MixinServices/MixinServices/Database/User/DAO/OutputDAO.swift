@@ -5,6 +5,10 @@ public final class OutputDAO: UserDatabaseDAO {
     
     public static let shared = OutputDAO()
     
+    public func getAsset(inscriptionHash: String) -> Output? {
+        db.select(with: "SELECT * FROM outputs WHERE inscription_hash = ? LIMIT 1", arguments: [inscriptionHash])
+    }
+    
     public func latestOutputSequence() -> Int? {
         db.select(with: "SELECT sequence FROM outputs ORDER BY sequence DESC LIMIT 1")
     }

@@ -722,7 +722,6 @@ public final class UserDatabase: Database {
                 """
                 CREATE TABLE IF NOT EXISTS `inscription_collection` (
                     `collection_hash` TEXT NOT NULL,
-                    `type` TEXT NOT NULL,
                     `supply` TEXT NOT NULL,
                     `unit` TEXT NOT NULL,
                     `symbol` TEXT NOT NULL,
@@ -736,7 +735,6 @@ public final class UserDatabase: Database {
                 
                 """
                 CREATE TABLE IF NOT EXISTS `inscription_item` (
-                    `type` TEXT NOT NULL,
                     `inscription_hash` TEXT NOT NULL,
                     `collection_hash` TEXT NOT NULL,
                     `sequence` INTEGER NOT NULL,

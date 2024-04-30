@@ -77,7 +77,7 @@ public struct Output {
                   signedAt: "",
                   spentAt: "",
                   sequence: 0,
-                  inscriptionHash: "")
+                  inscriptionHash: nil)
     }
     
     public static func consolidation(
@@ -102,7 +102,7 @@ public struct Output {
                signedAt: "",
                spentAt: "",
                sequence: 0,
-               inscriptionHash: "")
+               inscriptionHash: nil)
     }
     
 }

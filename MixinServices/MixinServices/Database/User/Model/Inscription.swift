@@ -4,7 +4,6 @@ import GRDB
 public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
     
     public enum CodingKeys: String, CodingKey {
-        case type
         case inscriptionHash = "inscription_hash"
         case collectionHash = "collection_hash"
         case sequence
@@ -16,7 +15,6 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
         case updatedAt = "updated_at"
     }
     
-    public let type: String
     public let inscriptionHash: String
     public let collectionHash: String
     public let sequence: String
@@ -27,8 +25,7 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
     public let createdAt: String
     public let updatedAt: String
     
-    public init(type: String, inscriptionHash: String, collectionHash: String, sequence: String, contentType: String, contentUrl: String, occupiedBy: String?, occupiedAt: String?, createdAt: String, updatedAt: String) {
-        self.type = type
+    public init(inscriptionHash: String, collectionHash: String, sequence: String, contentType: String, contentUrl: String, occupiedBy: String?, occupiedAt: String?, createdAt: String, updatedAt: String) {
         self.inscriptionHash = inscriptionHash
         self.collectionHash = collectionHash
         self.sequence = sequence

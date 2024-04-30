@@ -1254,9 +1254,7 @@ extension ReceiveMessageService {
         
         var depositHash: String?
         
-        if let inscriptionHash = snapshot.inscriptionHash {
-            syncInscription(inscriptionHash: inscriptionHash)
-        } else if snapshot.type == SnapshotType.deposit.rawValue {
+        if snapshot.type == SnapshotType.deposit.rawValue {
             if let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
                 depositHash = json["deposit_hash"] as? String
             }
@@ -1270,21 +1268,6 @@ extension ReceiveMessageService {
         let message = Message.createMessage(snapshot: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         UTXOService.shared.synchronize()
-    }
-    
-    private func syncInscription(inscriptionHash: String) {
-        guard !inscriptionHash.isEmpty else {
-            return
-        }
-        
-        guard case let .success(inscription) = InscriptionAPI.inscription(inscriptionHash: inscriptionHash),
-              case let .success(collection) = InscriptionAPI.collection(collectionHash: inscription.collectionHash) else{
-            ConcurrentJobQueue.shared.addJob(job: RefreshInscriptionJob(inscriptionHash: inscriptionHash))
-            return
-        }
-        
-        InscriptionDAO.shared.save(inscription: inscription)
-        InscriptionDAO.shared.save(collection: collection)
     }
     
     private func processSystemSessionMessage(data: BlazeMessageData) {

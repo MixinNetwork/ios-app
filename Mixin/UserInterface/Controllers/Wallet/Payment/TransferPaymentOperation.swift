@@ -169,7 +169,8 @@ struct TransferPaymentOperation {
                                     memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
                                     transactionHash: signedTx.hash,
                                     createdAt: now,
-                                    traceID: traceID)
+                                    traceID: traceID, 
+                                    inscriptionHash: nil)
         let trace: Trace?
         switch destination {
         case .user, .multisig:

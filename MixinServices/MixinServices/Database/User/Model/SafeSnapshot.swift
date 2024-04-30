@@ -85,7 +85,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
         traceID: String?, confirmations: Int?,
-        openingBalance: String?, closingBalance: String?, inscriptionHash: String?,
+        openingBalance: String?, closingBalance: String?,
         deposit: Deposit?, withdrawal: Withdrawal?
     ) {
         self.id = id
@@ -101,7 +101,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.confirmations = confirmations
         self.openingBalance = openingBalance
         self.closingBalance = closingBalance
-        self.inscriptionHash = inscriptionHash
+        self.inscriptionHash = nil
         self.deposit = deposit
         self.withdrawal = withdrawal
     }
@@ -110,7 +110,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         type: SnapshotType, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
-        traceID: String, withdrawal: Withdrawal? = nil
+        traceID: String, inscriptionHash: String?, withdrawal: Withdrawal? = nil
     ) {
         self.id = "\(userID):\(transactionHash)".uuidDigest()
         self.type = type.rawValue
@@ -125,7 +125,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.confirmations = nil
         self.openingBalance = nil
         self.closingBalance = nil
-        self.inscriptionHash = ""
+        self.inscriptionHash = inscriptionHash
         self.deposit = nil
         self.withdrawal = withdrawal
     }

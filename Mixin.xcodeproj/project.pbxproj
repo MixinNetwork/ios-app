@@ -12,6 +12,9 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		520DBEBA2BE0E06B0046F40C /* InscriptionPriviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520DBEB92BE0E06B0046F40C /* InscriptionPriviewViewController.swift */; };
+		520DBEBE2BE0ED0B0046F40C /* InscriptionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520DBEBD2BE0ED0B0046F40C /* InscriptionIconView.swift */; };
+		520DBEC02BE0ED9D0046F40C /* InscriptionPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520DBEBF2BE0ED9D0046F40C /* InscriptionPaymentOperation.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -1225,6 +1228,9 @@
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
+		520DBEB92BE0E06B0046F40C /* InscriptionPriviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionPriviewViewController.swift; sourceTree = "<group>"; };
+		520DBEBD2BE0ED0B0046F40C /* InscriptionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionIconView.swift; sourceTree = "<group>"; };
+		520DBEBF2BE0ED9D0046F40C /* InscriptionPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionPaymentOperation.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -3393,6 +3399,7 @@
 				94C5A8922B2157CE00201CDA /* Payment.swift */,
 				94C6987A2B23257B002377EA /* PaymentPrecondition.swift */,
 				94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */,
+				520DBEBF2BE0ED9D0046F40C /* InscriptionPaymentOperation.swift */,
 				945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */,
 				944C61FE2B6C033500C7DF06 /* EditAddressPreviewViewController.swift */,
 				9457F7622B6EEAFA008FC98F /* TransferPreviewViewController.swift */,
@@ -3783,6 +3790,7 @@
 				7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */,
 				7B4FCCDF2440A66600360F65 /* SolidBackgroundColorImageView.swift */,
 				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
+				520DBEBD2BE0ED0B0046F40C /* InscriptionIconView.swift */,
 				7B95534222438ECD00CE95E6 /* TopRoundedView.swift */,
 				7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */,
 				7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */,
@@ -4084,6 +4092,7 @@
 				7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */,
 				7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */,
 				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
+				520DBEB92BE0E06B0046F40C /* InscriptionPriviewViewController.swift */,
 				947EFA892B995E2E00A53551 /* SnapshotListViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */,
 				94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */,
@@ -5046,6 +5055,7 @@
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
 				7BEED0DB244DC1F300F3A2B9 /* SettingsTableViewController.swift in Sources */,
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
+				520DBEBE2BE0ED0B0046F40C /* InscriptionIconView.swift in Sources */,
 				7B3936D120C1722C0075A97A /* CaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
 				94B6EDFE2B707F15001DCC50 /* WithdrawPreviewViewController.swift in Sources */,
@@ -5610,6 +5620,7 @@
 				94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				7B57186E24D9375300682D86 /* MixinAPIError+Localization.swift in Sources */,
+				520DBEC02BE0ED9D0046F40C /* InscriptionPaymentOperation.swift in Sources */,
 				E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,
 				7B54F95922B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift in Sources */,
@@ -5746,6 +5757,7 @@
 				7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,
+				520DBEBA2BE0E06B0046F40C /* InscriptionPriviewViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
 				7BEB97182366CF42002DB190 /* MessageFontSet.swift in Sources */,
 				940764C129B1E31F00B779A6 /* Web3TransactionPreview.swift in Sources */,

@@ -10,16 +10,13 @@ public final class InscriptionDAO: UserDatabaseDAO {
     private enum SQL {
         
         static let selector = """
-        SELECT i.type, i.inscription_hash, i.collection_hash, i.sequence, i.content_type,
-            i.content_url, i.occupied_by, i.occupied_at, i.created_at, i.updated_at,
-            ic.type AS collection_type, ic.supply AS collection_supply, ic.unit AS collection_unit,
-            ic.symbol AS collection_symbol, ic.name AS collection_name, ic.icon_url AS collection_icon_url,
-            ic.created_at AS collection_created_at, ic.updated_at AS collection_updated_at
+        SELECT i.*, ic.name AS collection_name, ic.icon_url AS collection_icon_url
         FROM inscription_item i
             LEFT JOIN inscription_collection ic ON i.collection_hash = ic.collection_hash
         """
+        static let order = "i.updated_at DESC"
         static let selectWithInscriptionHash = "\(SQL.selector) WHERE i.inscription_hash = ?"
-        
+        static let selectAll = "\(SQL.selector) WHERE i.inscription_hash IN (SELECT inscription_hash FROM outputs WHERE state = 'unspent' AND IFNULL(inscription_hash,'')== '')"
     }
     
     public static let shared = InscriptionDAO()
@@ -28,8 +25,16 @@ public final class InscriptionDAO: UserDatabaseDAO {
         db.select(with: SQL.selectWithInscriptionHash, arguments: [inscriptionHash])
     }
     
+    public func allInscriptions() -> [InscriptionItem] {
+        db.select(with: SQL.selectAll)
+    }
+    
     public func inscriptionExists(inscriptionHash: String) -> Bool {
         db.recordExists(in: Inscription.self, where: Inscription.column(of: .inscriptionHash) == inscriptionHash)
+    }
+    
+    public func collectionExists(collectionHash: String) -> Bool {
+        db.recordExists(in: InscriptionCollection.self, where: Inscription.column(of: .collectionHash) == collectionHash)
     }
     
     public func save(inscription: Inscription) {

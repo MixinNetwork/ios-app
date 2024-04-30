@@ -51,12 +51,25 @@ public final class UTXOService {
                     }
                     
                     var missingKernelAssetIDs: Set<String> = []
-                    for kernelAssetID in outputs.map(\.asset) {
+                    for output in outputs {
+                        let kernelAssetID = output.asset
                         if assetIDs[kernelAssetID] == nil, !missingKernelAssetIDs.contains(kernelAssetID) {
                             if let id = TokenDAO.shared.assetID(ofAssetWith: kernelAssetID) {
                                 assetIDs[kernelAssetID] = id
                             } else {
                                 missingKernelAssetIDs.insert(kernelAssetID)
+                            }
+                        }
+                        
+                        if let inscriptionHash = output.inscriptionHash, 
+                            !inscriptionHash.isEmpty {
+                            
+                            let inscription = try await InscriptionAPI.inscription(inscriptionHash: inscriptionHash)
+                            InscriptionDAO.shared.save(inscription: inscription)
+                            
+                            if !InscriptionDAO.shared.collectionExists(collectionHash: inscription.collectionHash) {
+                                let collection = try await InscriptionAPI.collection(collectionHash: inscription.collectionHash)
+                                InscriptionDAO.shared.save(collection: collection)
                             }
                         }
                     }
@@ -216,7 +229,7 @@ extension UTXOService {
             "<OutputCollection outputs: \(outputs.count), amount: \(amount)>"
         }
         
-        init(outputs: [Output], amount: Decimal) {
+        public init(outputs: [Output], amount: Decimal) {
             self.outputs = outputs
             self.lastOutput = outputs.last!
             self.amount = amount

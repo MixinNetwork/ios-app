@@ -278,6 +278,7 @@ extension AuthenticationPreviewViewController {
         case tag
         case total
         case account
+        case collectible
         
         var rawValue: String {
             switch self {
@@ -299,6 +300,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.total()
             case .account:
                 R.string.localizable.account()
+            case .collectible:
+                "Collectible"       // FIX ME
             }
         }
         

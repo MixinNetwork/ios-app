@@ -35,7 +35,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let dust: String
     public let confirmations: Int
     public let assetKey: String
-    public let collectionHash: String
+    public let collectionHash: String?
     
     public private(set) lazy var decimalBTCPrice = Decimal(string: btcPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDPrice = Decimal(string: usdPrice, locale: .enUSPOSIX) ?? 0
@@ -45,7 +45,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public init(
         assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: String,
         btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
-        btcChange: String, dust: String, confirmations: Int, assetKey: String, collectionHash: String
+        btcChange: String, dust: String, confirmations: Int, assetKey: String, collectionHash: String?
     ) {
         self.assetID = assetID
         self.kernelAssetID = kernelAssetID
@@ -84,7 +84,7 @@ extension Token {
     }
     
     public var isNFT: Bool {
-        !collectionHash.isEmpty
+        !(collectionHash?.isEmpty ?? true)
     }
 }
 

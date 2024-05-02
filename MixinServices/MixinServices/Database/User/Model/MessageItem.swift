@@ -65,6 +65,12 @@ public final class MessageItem {
     public var quoteMessageId: String?
     public var quoteContent: Data?
     
+    public var inscriptionHash: String?
+    public var inscriptionCollectionName: String?
+    public var inscriptionSequence: String?
+    public var inscriptionContentType: String?
+    public var inscriptionContentUrl: String?
+    
     public var mentionsJson: Data?
     public var hasMentionRead: Bool?
     

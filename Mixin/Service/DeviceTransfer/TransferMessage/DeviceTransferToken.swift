@@ -16,6 +16,7 @@ struct DeviceTransferToken {
     let dust: String
     let confirmations: Int
     let assetKey: String
+    let collectionHash: String?
     
     init(token: Token) {
         assetID = token.assetID
@@ -31,6 +32,7 @@ struct DeviceTransferToken {
         dust = token.dust
         confirmations = token.confirmations
         assetKey = token.assetKey
+        collectionHash = token.collectionHash
     }
     
     func toToken() -> Token {
@@ -47,7 +49,7 @@ struct DeviceTransferToken {
               dust: dust,
               confirmations: confirmations,
               assetKey: assetKey, 
-              collectionHash: "")
+              collectionHash: collectionHash)
     }
     
 }
@@ -68,6 +70,7 @@ extension DeviceTransferToken: DeviceTransferRecord {
         case dust
         case confirmations
         case assetKey = "asset_key"
+        case collectionHash = "collection_hash"
     }
     
 }

@@ -107,7 +107,7 @@ extension TokenItem {
                           dust: "0.0001",
                           confirmations: 100,
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
-                          collectionHash: "")
+                          collectionHash: nil)
         let chain = Chain(chainId: token.chainID,
                           name: "Ether",
                           symbol: "ETH",

@@ -15,6 +15,9 @@
 		520DBEBA2BE0E06B0046F40C /* InscriptionPriviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520DBEB92BE0E06B0046F40C /* InscriptionPriviewViewController.swift */; };
 		520DBEBE2BE0ED0B0046F40C /* InscriptionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520DBEBD2BE0ED0B0046F40C /* InscriptionIconView.swift */; };
 		520DBEC02BE0ED9D0046F40C /* InscriptionPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520DBEBF2BE0ED9D0046F40C /* InscriptionPaymentOperation.swift */; };
+		52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */; };
+		52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */; };
+		52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -1231,6 +1234,9 @@
 		520DBEB92BE0E06B0046F40C /* InscriptionPriviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionPriviewViewController.swift; sourceTree = "<group>"; };
 		520DBEBD2BE0ED0B0046F40C /* InscriptionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionIconView.swift; sourceTree = "<group>"; };
 		520DBEBF2BE0ED9D0046F40C /* InscriptionPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionPaymentOperation.swift; sourceTree = "<group>"; };
+		52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageViewModel.swift; sourceTree = "<group>"; };
+		52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageCell.swift; sourceTree = "<group>"; };
+		52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionViewController.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -2631,6 +2637,7 @@
 				949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */,
 				7B09E55D1FD15BAA002E45D3 /* TransferMessageViewModel.swift */,
 				94E206742AF388A400CCF6D8 /* SnapshotMessageViewModel.swift */,
+				52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */,
 				7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */,
 				7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */,
 				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
@@ -4098,6 +4105,7 @@
 				94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
 				94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */,
+				52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */,
 				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
 				94317D052AFBE57200FDC9C9 /* MemoCell.swift */,
 				94317D062AFBE57200FDC9C9 /* MemoCell.xib */,
@@ -4232,6 +4240,7 @@
 				7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */,
 				7BC26533207B595500EA7DFF /* ContactMessageCell.swift */,
 				7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */,
+				52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */,
 				7B9F06C720A985E70095A51B /* VideoMessageCell.swift */,
 				7B91056122CF4A58002E3608 /* LiveMessageCell.swift */,
 				E081796923C32ACA005FEEAC /* PostMessageCell.swift */,
@@ -5577,6 +5586,7 @@
 				7C54078D296BD8430082368C /* ChatTextSizeViewController.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
 				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,
+				52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
@@ -5775,6 +5785,7 @@
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,
 				7C47352928571CC900ECD293 /* AccessPhoneContactHintWindow.swift in Sources */,
 				7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */,
+				52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */,
 				94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* SnapshotFilterConditionCell.swift in Sources */,
 				DF846CDD2369550B00AA1197 /* MultisigUserCell.swift in Sources */,
@@ -5803,6 +5814,7 @@
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
+				52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */,
 				94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */,
 				94130E292BAB35150098BE48 /* Web3DiagnosticViewController.swift in Sources */,
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,

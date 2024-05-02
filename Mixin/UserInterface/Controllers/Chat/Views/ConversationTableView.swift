@@ -165,6 +165,7 @@ class ConversationTableView: UITableView {
         register(LocationMessageCell.self, forCellReuseIdentifier: ReuseId.location.rawValue)
         register(TranscriptMessageCell.self, forCellReuseIdentifier: ReuseId.transcript.rawValue)
         register(PinMessageCell.self, forCellReuseIdentifier: ReuseId.pin.rawValue)
+        register(InscriptionMessageCell.self, forCellReuseIdentifier: ReuseId.inscription.rawValue)
     }
     
 }
@@ -199,6 +200,7 @@ extension ConversationTableView {
         case contact = "ContactMessageCell"
         case video = "VideoMessageCell"
         case appCard = "AppCardMessageCell"
+        case inscription = "InscriptionMessageCell"
         case audio = "AudioMessageCell"
         case live = "LiveMessageCell"
         case post = "PostMessageCell"
@@ -237,6 +239,8 @@ extension ConversationTableView {
                 self = .transfer
             } else if category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
                 self = .snapshot
+            } else if category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
+                self = .inscription
             } else if category == MessageCategory.EXT_UNREAD.rawValue {
                 self = .unreadHint
             } else if Self.systemMessageRepresentableMessageCategories.contains(category) {

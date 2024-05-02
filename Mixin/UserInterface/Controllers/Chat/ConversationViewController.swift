@@ -860,6 +860,17 @@ class ConversationViewController: UIViewController {
                         self?.navigationController?.pushViewController(viewController, animated: true)
                     }
                 }
+            } else if message.category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
+                conversationInputViewController.dismiss()
+                DispatchQueue.global().async { [weak self] in
+                    guard let inscriptionHash = message.inscriptionHash, let snapshotId = message.snapshotId, let inscription = InscriptionDAO.shared.inscriptionItem(with: inscriptionHash), let snapshot = SafeSnapshotDAO.shared.snapshotItem(id: snapshotId) else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        let viewController = InscriptionViewController.instance(inscription: inscription, snapshot: snapshot)
+                        self?.navigationController?.pushViewController(viewController, animated: true)
+                    }
+                }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 conversationInputViewController.dismiss()
                 openAppCard(appCard: appCard, sendUserId: message.userId)

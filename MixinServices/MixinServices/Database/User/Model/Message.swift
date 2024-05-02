@@ -147,7 +147,7 @@ extension Message {
     }
     
     public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
-        let category: MessageCategory = snapshot.isInscription() ? .SYSTEM_SAFE_SNAPSHOT : .SYSTEM_SAFE_INSCRIPTION
+        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_SNAPSHOT : .SYSTEM_SAFE_INSCRIPTION
         return createMessage(messageId: UUID().uuidString.lowercased(),
                       conversationId: conversationID,
                       userId: myUserId,

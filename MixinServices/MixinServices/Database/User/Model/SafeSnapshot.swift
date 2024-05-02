@@ -130,7 +130,7 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.withdrawal = withdrawal
     }
     
-    public func isInscription() -> Bool {
+    public var isInscription: Bool {
         !(inscriptionHash?.isEmpty ?? true)
     }
 }

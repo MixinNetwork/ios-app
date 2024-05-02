@@ -705,17 +705,17 @@ public final class UserDatabase: Database {
         migrator.registerMigration("inscription") { db in
             let outputsColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(outputs)").map(\.name)
             if !outputsColumns.contains("inscription_hash") {
-                try db.execute(sql: "ALTER TABLE `outputs` ADD COLUMN `inscription_hash` TEXT NOT NULL DEFAULT ''")
+                try db.execute(sql: "ALTER TABLE `outputs` ADD COLUMN `inscription_hash` TEXT")
             }
             
             let tokensColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)").map(\.name)
             if !tokensColumns.contains("collection_hash") {
-                try db.execute(sql: "ALTER TABLE `tokens` ADD COLUMN `collection_hash` TEXT NOT NULL DEFAULT ''")
+                try db.execute(sql: "ALTER TABLE `tokens` ADD COLUMN `collection_hash` TEXT")
             }
             
             let snapshotColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(safe_snapshots)").map(\.name)
             if !snapshotColumns.contains("inscription_hash") {
-                try db.execute(sql: "ALTER TABLE `safe_snapshots` ADD COLUMN `inscription_hash` TEXT NOT NULL DEFAULT ''")
+                try db.execute(sql: "ALTER TABLE `safe_snapshots` ADD COLUMN `inscription_hash` TEXT")
             }
             
             let sqls = [
@@ -746,6 +746,14 @@ public final class UserDatabase: Database {
                     `updated_at` TEXT NOT NULL,
                     PRIMARY KEY(`inscription_hash`)
                 )
+                """,
+                
+                """
+                CREATE INDEX IF NOT EXISTS `index_outputs_inscription_hash` ON `outputs` (`inscription_hash`)
+                """,
+                
+                """
+                CREATE INDEX IF NOT EXISTS `index_tokens_collection_hash` ON `tokens` (`collection_hash`)
                 """,
             ]
             for sql in sqls {

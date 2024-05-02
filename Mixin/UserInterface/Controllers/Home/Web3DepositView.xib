@@ -31,12 +31,12 @@
                     </constraints>
                 </view>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="web3_deposit_icon" translatesAutoresizingMaskIntoConstraints="NO" id="T19-f2-6Be">
-                    <rect key="frame" x="164.66666666666666" y="177" width="64" height="64"/>
+                    <rect key="frame" x="165.66666666666666" y="178" width="62" height="62"/>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="K1h-w9-1ph">
                     <rect key="frame" x="38" y="349" width="317" height="58"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8bi-oD-oV7">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8bi-oD-oV7">
                             <rect key="frame" x="158.66666666666666" y="0.0" width="0.0" height="0.0"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                             <color key="textColor" name="text"/>
@@ -96,7 +96,7 @@
     </objects>
     <resources>
         <image name="web3_deposit_deco" width="52" height="24"/>
-        <image name="web3_deposit_icon" width="64" height="64"/>
+        <image name="web3_deposit_icon" width="62" height="62"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

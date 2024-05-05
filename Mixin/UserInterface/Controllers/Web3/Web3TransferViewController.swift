@@ -5,13 +5,15 @@ import web3
 import Web3Wallet
 import MixinServices
 
-final class Web3TransactionViewController: AuthenticationPreviewViewController {
+final class Web3TransferViewController: AuthenticationPreviewViewController {
     
     enum Proposer {
         case dapp(Web3DappProposer)
         case web3ToMixinWallet
         case web3ToAddress
     }
+    
+    var manipulateNavigationStackOnFinished = false
     
     private let operation: Web3TransferOperation
     private let proposer: Proposer
@@ -185,12 +187,18 @@ final class Web3TransactionViewController: AuthenticationPreviewViewController {
             layoutTableHeaderView(title: R.string.localizable.sending_success(), subtitle: subtitle)
             tableView.setContentOffset(.zero, animated: true)
             loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(close(_:)))
+            if manipulateNavigationStackOnFinished,
+               let navigationController = UIApplication.homeNavigationController,
+               let home = navigationController.viewControllers.first
+            {
+                navigationController.setViewControllers([home], animated: false)
+            }
         }
     }
     
 }
 
-extension Web3TransactionViewController: Web3PopupViewController {
+extension Web3TransferViewController: Web3PopupViewController {
     
     func reject() {
         operation.reject()
@@ -198,7 +206,7 @@ extension Web3TransactionViewController: Web3PopupViewController {
     
 }
 
-extension Web3TransactionViewController {
+extension Web3TransferViewController {
     
     private func reloadFeeRow(with selected: Web3TransferOperation.Fee) {
         let weiFee = (selected.gasLimit * selected.gasPrice).description

@@ -141,8 +141,8 @@ extension WalletConnectSession {
                     request: request
                 )
                 DispatchQueue.main.async {
-                    let transaction = Web3TransactionViewController(operation: operation, proposer: .dapp(proposer))
-                    Web3PopupCoordinator.enqueue(popup: .request(transaction))
+                    let transfer = Web3TransferViewController(operation: operation, proposer: .dapp(proposer))
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }
             } catch {
                 Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")

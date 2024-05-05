@@ -30,14 +30,15 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
         
-        func transfer(proposer: Web3TransactionViewController.Proposer) {
+        func transfer(proposer: Web3TransferViewController.Proposer) {
             DispatchQueue.global().async { [payment] in
                 let initError: Error?
                 do {
                     let operation = try Web3TransferToAddressOperation(payment: payment, decimalAmount: amount)
                     DispatchQueue.main.async {
-                        let transaction = Web3TransactionViewController(operation: operation, proposer: proposer)
-                        Web3PopupCoordinator.enqueue(popup: .request(transaction))
+                        let transfer = Web3TransferViewController(operation: operation, proposer: proposer)
+                        transfer.manipulateNavigationStackOnFinished = true
+                        Web3PopupCoordinator.enqueue(popup: .request(transfer))
                     }
                     initError = nil
                 } catch {

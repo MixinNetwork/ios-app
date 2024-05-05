@@ -179,8 +179,8 @@ final class Web3Worker {
                     self.send(error: "User Rejected", to: request)
                 }
                 DispatchQueue.main.async {
-                    let transaction = Web3TransactionViewController(operation: operation, proposer: .dapp(proposer))
-                    Web3PopupCoordinator.enqueue(popup: .request(transaction))
+                    let transfer = Web3TransferViewController(operation: operation, proposer: .dapp(proposer))
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }
             } catch {
                 DispatchQueue.main.async {

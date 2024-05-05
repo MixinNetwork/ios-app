@@ -15,6 +15,7 @@
                 <outlet property="amountStackView" destination="PQy-wf-KED" id="FKT-ed-AnH"/>
                 <outlet property="calculatedValueLabel" destination="fhQ-Ea-Xwd" id="geq-n6-Vp6"/>
                 <outlet property="decimalSeparatorButton" destination="VAt-Xb-6QC" id="hUS-cI-rSF"/>
+                <outlet property="inputMaxValueButton" destination="uKN-F0-uEU" id="xWy-xv-9pR"/>
                 <outlet property="insufficientBalanceLabel" destination="SaA-gy-pGd" id="Njk-2d-77e"/>
                 <outlet property="reviewButton" destination="W8F-Bv-lIc" id="7Uu-iF-iV6"/>
                 <outlet property="tokenBalanceLabel" destination="xTj-6c-Ubg" id="1cm-D7-e90"/>
@@ -106,6 +107,11 @@
                                         <constraint firstAttribute="height" constant="42" id="E0l-gz-mZn"/>
                                         <constraint firstAttribute="width" secondItem="hm4-se-0DS" secondAttribute="height" id="gpU-12-KN5"/>
                                     </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                            <real key="value" value="14"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
                                 </view>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="SQV-Fa-Iqq">
                                     <rect key="frame" x="58.000000000000014" y="3.6666666666666856" width="181.33333333333337" height="36.666666666666664"/>

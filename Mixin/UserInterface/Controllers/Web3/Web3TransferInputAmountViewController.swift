@@ -26,7 +26,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     }
     
     override func review(_ sender: Any) {
-        let amount = accumulator.decimal
+        let amount = tokenAmount
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
         

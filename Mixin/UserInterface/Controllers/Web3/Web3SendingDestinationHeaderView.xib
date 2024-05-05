@@ -12,6 +12,7 @@
             <connections>
                 <outlet property="inputActionButton" destination="MpV-K7-xLN" id="7sL-2c-WCa"/>
                 <outlet property="invalidAddressLabel" destination="p19-0g-bbx" id="hSU-m9-3Lb"/>
+                <outlet property="placeholderLabel" destination="gHr-ki-ejv" id="38f-BT-3vD"/>
                 <outlet property="segmentsCollectionView" destination="fUX-S9-FfG" id="8LP-jr-hXe"/>
                 <outlet property="separatorLineView" destination="jHa-3t-oag" id="iHo-Hb-j9g"/>
                 <outlet property="textView" destination="4zo-9F-chp" id="NiD-5B-GQT"/>
@@ -36,6 +37,15 @@
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                         </textView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gHr-ki-ejv">
+                            <rect key="frame" x="16" y="16" width="321" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" name="text_quaternary"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="hint_address"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MpV-K7-xLN">
                             <rect key="frame" x="305" y="66" width="44" height="40"/>
                             <constraints>
@@ -52,9 +62,12 @@
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
                         <constraint firstItem="MpV-K7-xLN" firstAttribute="top" secondItem="4zo-9F-chp" secondAttribute="bottom" id="99I-Ei-Xuv"/>
+                        <constraint firstItem="gHr-ki-ejv" firstAttribute="top" secondItem="4zo-9F-chp" secondAttribute="top" id="DD9-Sl-TLW"/>
                         <constraint firstAttribute="trailing" secondItem="4zo-9F-chp" secondAttribute="trailing" constant="16" id="M0n-5Y-2uB"/>
+                        <constraint firstItem="gHr-ki-ejv" firstAttribute="trailing" secondItem="4zo-9F-chp" secondAttribute="trailing" id="PwL-fs-fq4"/>
                         <constraint firstItem="4zo-9F-chp" firstAttribute="top" secondItem="Y5B-8Y-1Mz" secondAttribute="top" constant="16" id="S26-SB-ESl"/>
                         <constraint firstAttribute="trailing" secondItem="MpV-K7-xLN" secondAttribute="trailing" constant="4" id="gxI-kP-qSB"/>
+                        <constraint firstItem="gHr-ki-ejv" firstAttribute="leading" secondItem="4zo-9F-chp" secondAttribute="leading" id="n9u-aq-1ID"/>
                         <constraint firstItem="4zo-9F-chp" firstAttribute="leading" secondItem="Y5B-8Y-1Mz" secondAttribute="leading" constant="16" id="o2h-mv-own"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="106" id="qtk-Pc-tvl"/>
                         <constraint firstAttribute="bottom" secondItem="MpV-K7-xLN" secondAttribute="bottom" id="sJQ-sO-3gr"/>
@@ -98,7 +111,7 @@
             </subviews>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="Y5B-8Y-1Mz" secondAttribute="trailing" constant="20" id="20J-81-dnM"/>
+                <constraint firstAttribute="trailing" secondItem="Y5B-8Y-1Mz" secondAttribute="trailing" priority="999" constant="20" id="20J-81-dnM"/>
                 <constraint firstItem="jHa-3t-oag" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="L5M-Hu-Oht"/>
                 <constraint firstItem="Y5B-8Y-1Mz" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Lpr-SA-nzs"/>
                 <constraint firstAttribute="trailing" secondItem="fUX-S9-FfG" secondAttribute="trailing" id="RR4-s1-apb"/>
@@ -128,6 +141,9 @@
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

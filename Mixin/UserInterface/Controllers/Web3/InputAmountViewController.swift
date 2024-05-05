@@ -11,6 +11,7 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var tokenIconView: AssetIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var tokenBalanceLabel: UILabel!
+    @IBOutlet weak var inputMaxValueButton: UIButton!
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
     @IBOutlet weak var reviewButton: RoundedButton!
     
@@ -58,6 +59,7 @@ class InputAmountViewController: UIViewController {
         super.viewDidLoad()
         amountStackView.setCustomSpacing(2, after: amountLabel)
         amountLabel.font = .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
+        inputMaxValueButton.setTitle(R.string.localizable.max().uppercased(), for: .normal)
         decimalSeparatorButton.setTitle(Locale.current.decimalSeparator ?? ".", for: .normal)
         reloadViews(inputAmount: accumulator.decimal)
     }

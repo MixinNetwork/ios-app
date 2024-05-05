@@ -10,6 +10,7 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
     }
     
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var placeholderLabel: UILabel!
     @IBOutlet weak var inputActionButton: UIButton!
     @IBOutlet weak var invalidAddressLabel: UILabel!
     @IBOutlet weak var separatorLineView: UIView!
@@ -183,6 +184,7 @@ extension Web3SendingDestinationViewController: UITextViewDelegate {
             }
         }
         inputAction = textView.text.isEmpty ? .scan : .clear
+        placeholderLabel.isHidden = !textView.text.isEmpty 
         invalidAddressLabel.isHidden = true
         continueButton?.isEnabled = true
     }

@@ -478,7 +478,7 @@
 "hidden_assets" = "Activos ocultos";
 "hide" = "Ocultar";
 "hide_asset" = "Ocultar activo";
-"hint_address" = "Enter a wallet addres";
+"hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "Sostén para grabar, suelta para enviar";
 "hour" = "%d Hora";
 "hour_count" = "%d Horas";

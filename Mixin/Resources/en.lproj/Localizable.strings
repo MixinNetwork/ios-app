@@ -478,7 +478,7 @@
 "hidden_assets" = "Hidden Assets";
 "hide" = "Hide";
 "hide_asset" = "Hide asset";
-"hint_address" = "Enter a wallet addres";
+"hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "Hold to record, release to send.";
 "hour" = "%d Hour";
 "hour_count" = "%d Hours";

@@ -478,7 +478,7 @@
 "hidden_assets" = "非表示資産";
 "hide" = "非表示";
 "hide_asset" = "資産を非表示にする";
-"hint_address" = "Enter a wallet addres";
+"hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "長押しして録音、離して送信";
 "hour" = "%d時間";
 "hour_count" = "%d時間";

@@ -478,7 +478,7 @@
 "hidden_assets" = "Скрытые активы";
 "hide" = "Скрыть";
 "hide_asset" = "Скрыть актив";
-"hint_address" = "Enter a wallet addres";
+"hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "Удерживайте, чтобы записать, отпустите, чтобы отправить";
 "hour" = "%d час";
 "hour_count" = "%d часы";

@@ -33,7 +33,7 @@ final class DecimalButton: UIControl {
         button.snp.makeEdgesEqualToSuperview()
         button.setTitleColor(.text, for: .normal)
         if let label = button.titleLabel {
-            label.font = .systemFont(ofSize: 25, weight: .semibold)
+            label.font = .systemFont(ofSize: 25, weight: .medium)
         }
         button.normalColor = .clear
         button.highlightedColor = .secondaryBackground

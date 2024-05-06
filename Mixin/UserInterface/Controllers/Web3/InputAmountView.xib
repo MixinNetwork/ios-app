@@ -114,16 +114,16 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="SQV-Fa-Iqq">
-                                    <rect key="frame" x="58.000000000000014" y="3.6666666666666856" width="181.33333333333337" height="36.666666666666664"/>
+                                    <rect key="frame" x="58" y="3.6666666666666856" width="198" height="36.666666666666664"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ethereum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8eP-9g-d3P">
-                                            <rect key="frame" x="0.0" y="0.0" width="181.33333333333334" height="19.333333333333332"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="198" height="19.333333333333332"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                             <color key="textColor" name="text"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8.936217846 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTj-6c-Ubg">
-                                            <rect key="frame" x="0.0" y="22.333333333333314" width="181.33333333333334" height="14.333333333333336"/>
+                                            <rect key="frame" x="0.0" y="22.333333333333314" width="198" height="14.333333333333336"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                             <color key="textColor" name="text_tertiary"/>
                                             <nil key="highlightedColor"/>
@@ -131,12 +131,16 @@
                                     </subviews>
                                 </stackView>
                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uKN-F0-uEU">
-                                    <rect key="frame" x="255.33333333333329" y="0.0" width="60.666666666666657" height="44"/>
+                                    <rect key="frame" x="272" y="0.0" width="44" height="44"/>
                                     <constraints>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="fgB-fy-lTX"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="xO5-a5-oUr"/>
                                     </constraints>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain" title="MAX"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="MAX">
+                                        <color key="titleColor" name="theme"/>
+                                    </state>
                                     <connections>
                                         <action selector="inputMaxValue:" destination="-1" eventType="touchUpInside" id="Gw9-0z-S5W"/>
                                     </connections>
@@ -338,7 +342,7 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                     <color key="tintColor" name="text"/>
-                                    <state key="normal" image="ic_keyboard_delete">
+                                    <state key="normal" image="input_amount_delete">
                                         <color key="titleColor" name="text"/>
                                     </state>
                                     <userDefinedRuntimeAttributes>
@@ -417,8 +421,8 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_keyboard_delete" width="22" height="16"/>
         <image name="ic_transfer_exchange" width="14" height="13"/>
+        <image name="input_amount_delete" width="21.666666030883789" height="18"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -433,6 +437,9 @@
         </namedColor>
         <namedColor name="text_tertiary">
             <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

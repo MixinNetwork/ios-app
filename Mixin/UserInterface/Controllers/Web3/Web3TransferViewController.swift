@@ -134,11 +134,11 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                     let me = UserItem.createUser(from: account)
                     rows.append(.receivers([me], threshold: nil))
                 }
-                rows.append(.info(caption: .sender, content: R.string.localizable.web3_account_network(operation.chain.name) + " (\(operation.fromAddress))"))
+                rows.append(.info(caption: .sender, content: operation.fromAddress))
             case .web3ToAddress:
                 let receiver = operation.transactionPreview.to.toChecksumAddress()
                 rows.append(.receivingAddress(value: receiver, label: nil))
-                rows.append(.info(caption: .sender, content: R.string.localizable.web3_account_network(operation.chain.name) + " (\(operation.fromAddress))"))
+                rows.append(.info(caption: .sender, content: operation.fromAddress))
             }
             
             rows.append(.info(caption: .network, content: operation.chain.name))

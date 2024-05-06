@@ -74,9 +74,13 @@ class AssetIconView: UIView {
     }
     
     func setIcon(web3Token token: Web3Token) {
-        iconImageView.sd_setImage(with: URL(string: token.iconURL),
-                                  placeholderImage: nil,
-                                  context: assetIconContext)
+        if let url = URL(string: token.iconURL) {
+            iconImageView.sd_setImage(with: URL(string: token.iconURL),
+                                      placeholderImage: nil,
+                                      context: assetIconContext)
+        } else {
+            iconImageView.image = R.image.unknown_session()
+        }
         if let url = URL(string: token.chainIconURL) {
             chainImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
             isChainIconHidden = false

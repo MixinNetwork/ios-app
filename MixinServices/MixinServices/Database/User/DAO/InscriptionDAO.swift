@@ -54,6 +54,17 @@ public final class InscriptionDAO: UserDatabaseDAO {
         db.save(inscription)
     }
     
+    public func saveInscription(inscription: Inscription) -> InscriptionItem? {
+        var inscriptionItem: InscriptionItem?
+        try db.save(inscription) { db in
+            inscriptionItem = try! InscriptionItem.fetchOne(db,
+                                                sql: SQL.selectWithInscriptionHash,
+                                                        arguments: [inscription.inscriptionHash],
+                                                adapter: nil)
+        }
+        return inscriptionItem
+    }
+    
     public func save(collection: InscriptionCollection) {
         db.save(collection)
     }

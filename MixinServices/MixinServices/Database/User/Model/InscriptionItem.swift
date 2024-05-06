@@ -12,8 +12,8 @@ public final class InscriptionItem: Inscription {
         case tokenIconUrl = "token_icon_url"
     }
     
-    public let collectionName: String?
-    public let collectionIconURL: String?
+    public var collectionName: String?
+    public var collectionIconURL: String?
     
     public let tokenName: String
     public let tokenSymbol: String

@@ -20,6 +20,7 @@ struct SafePaymentURL {
     
     let address: Address
     let request: Request?
+    let inscription: String?
     let memo: String
     let trace: String
     let redirection: URL?
@@ -74,6 +75,17 @@ struct SafePaymentURL {
             }
         } else {
             asset = nil
+        }
+        
+        if let inscriptionHash = queries["inscription"] {
+            if inscriptionHash.count == 32 {
+                self.inscription = inscriptionHash
+            } else {
+                Logger.general.warn(category: "SafePayment", message: "Invalid inscription:\(inscriptionHash)")
+                return nil
+            }
+        } else {
+            inscription = nil
         }
         
         let decimalAmount: Decimal?

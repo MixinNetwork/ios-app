@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class CompactAssetCell: UITableViewCell {
+final class CompactAssetCell: ModernSelectedBackgroundCell {
     
     enum Style {
         case symbolWithName

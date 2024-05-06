@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="xqK-Rx-yct">
-                    <rect key="frame" x="20" y="14" width="353" height="66"/>
+                    <rect key="frame" x="20" y="14" width="353" height="75"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ethereum Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iSL-Up-7Wz">
                             <rect key="frame" x="0.0" y="0.0" width="353" height="17"/>
@@ -27,7 +27,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="xvv-cx-XKv">
-                            <rect key="frame" x="0.0" y="25" width="353" height="41"/>
+                            <rect key="frame" x="0.0" y="25" width="353" height="50"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MdU-Kr-lAr">
                                     <rect key="frame" x="0.0" y="0.0" width="9" height="17"/>
@@ -38,8 +38,8 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-.--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IwL-Kc-C57" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="11" y="0.0" width="342" height="40"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IwL-Kc-C57" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="11" y="0.0" width="342" height="50"/>
                                     <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="40"/>
                                     <color key="textColor" name="text_secondary"/>
                                     <nil key="highlightedColor"/>
@@ -48,13 +48,8 @@
                         </stackView>
                     </subviews>
                 </stackView>
-                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IXo-j0-kCC">
-                    <rect key="frame" x="0.0" y="100" width="393" height="72"/>
-                    <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="H6H-0L-DhE">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="72"/>
-                        </stackView>
-                    </subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="IXo-j0-kCC">
+                    <rect key="frame" x="0.0" y="109" width="393" height="63"/>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V33-7N-9N6">
                     <rect key="frame" x="0.0" y="192" width="393" height="10"/>
@@ -80,7 +75,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="accountNameLabel" destination="iSL-Up-7Wz" id="l2A-lA-e1a"/>
-                <outlet property="actionStackView" destination="H6H-0L-DhE" id="6S4-Vk-IkP"/>
+                <outlet property="actionStackView" destination="IXo-j0-kCC" id="cB9-Jq-NGK"/>
                 <outlet property="amountLabel" destination="IwL-Kc-C57" id="TtH-Ir-gOF"/>
                 <outlet property="amountStackView" destination="xvv-cx-XKv" id="Ad8-bp-IZE"/>
                 <outlet property="contentStackView" destination="xqK-Rx-yct" id="GbU-tp-bPA"/>

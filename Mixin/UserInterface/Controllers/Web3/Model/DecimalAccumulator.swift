@@ -45,20 +45,18 @@ struct DecimalAccumulator {
                 integers = [0]
             } else {
                 integers = []
-                while integralPart != 0 {
+                while integralPart != 0, integers.count < maximumIntegerDigits {
                     let quotient = integralPart.dividing(by: 10, withBehavior: extractIntegralPart)
                     let remainder = integralPart.subtracting(quotient.multiplying(by: 10))
-                    if integers.count + 1 <= maximumIntegerDigits {
-                        let value = UInt8(truncating: remainder)
-                        integers.append(value)
-                    }
+                    let value = UInt8(truncating: remainder)
+                    integers.insert(value, at: 0)
                     integralPart = quotient
                 }
             }
             
             if fractionalPart.compare(0) == .orderedDescending {
                 var f: [UInt8] = []
-                while fractionalPart != 0 {
+                while fractionalPart != 0, f.count < maximumFractionDigits {
                     let shifted = fractionalPart.multiplying(by: 10)
                     let significant = shifted.rounding(accordingToBehavior: extractIntegralPart)
                     let value = UInt8(truncating: significant)

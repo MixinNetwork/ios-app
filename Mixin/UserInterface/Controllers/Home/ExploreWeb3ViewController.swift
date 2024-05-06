@@ -42,6 +42,13 @@ final class ExploreWeb3ViewController: UIViewController {
         reloadData(address: address)
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            layoutTableHeaderView()
+        }
+    }
+    
     func reloadAccountIfUnlocked() {
         guard let address, lastAccountRequest == nil else {
             return
@@ -125,17 +132,30 @@ final class ExploreWeb3ViewController: UIViewController {
                                       receive: #selector(receive(_:)),
                                       browse: #selector(browse(_:)),
                                       more: #selector(more(_:)))
-            tableHeaderView.sendButton.isEnabled = false
+            tableHeaderView.disableSendButton()
             tableView.tableHeaderView = tableHeaderView
+            layoutTableHeaderView()
             reloadAccount(address: address)
         } else {
             let tableHeaderView = R.nib.web3AccountLockedHeaderView(withOwner: nil)!
             tableHeaderView.showUnlockAccount(chain: chains[0])
             tableHeaderView.button.addTarget(self, action: #selector(unlockAccount(_:)), for: .touchUpInside)
             tableView.tableHeaderView = tableHeaderView
+            layoutTableHeaderView()
             tokens = nil
             tableView.reloadData()
         }
+    }
+    
+    private func layoutTableHeaderView() {
+        guard let tableHeaderView = tableView.tableHeaderView else {
+            return
+        }
+        let sizeToFit = CGSize(width: tableHeaderView.frame.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let height = tableHeaderView.systemLayoutSizeFitting(sizeToFit).height
+        tableHeaderView.frame.size.height = height
+        tableView.tableHeaderView = tableHeaderView
     }
     
     private func reloadAccount(address: String) {
@@ -153,7 +173,7 @@ final class ExploreWeb3ViewController: UIViewController {
                 if let headerView = self.tableView.tableHeaderView as? Web3AccountHeaderView {
                     headerView.setNetworkName(chainName)
                     headerView.amountLabel.text = account.localizedFiatMoneyBalance
-                    headerView.sendButton.isEnabled = true
+                    headerView.enableSendButton()
                 }
                 self.tableView.tableFooterView = if account.tokens.isEmpty {
                     R.nib.web3NoAssetView(withOwner: self)

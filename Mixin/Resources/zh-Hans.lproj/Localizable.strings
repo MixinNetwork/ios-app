@@ -1123,6 +1123,7 @@
 "web3_ensure_trust" = "请确保您信任此应用程序。";
 "web3_message_request" = "消息签名";
 "web3_no_asset" = "没有资产";
+"web3_request_from_mixin" = "该签名请求来自 Mixin Messenger。";
 "web3_signing" = "正在签名";
 "web3_signing_data_success" = "数据已签名并发送成功，请返回 dApp 继续操作。";
 "web3_signing_failed" = "签名失败";

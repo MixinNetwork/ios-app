@@ -87,7 +87,12 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                 if let operation = operation as? Web3TransferWithWalletConnectOperation {
                     imageView.sd_setImage(with: operation.session.iconURL)
                 } else {
-                    imageView.image = R.image.unknown_session()
+                    switch proposer {
+                    case .dapp:
+                        imageView.image = R.image.unknown_session()
+                    case .web3ToMixinWallet, .web3ToAddress:
+                        imageView.image = R.image.web3_sign_transfer()
+                    }
                 }
             }
             
@@ -96,7 +101,13 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             } else {
                 R.string.localizable.signature_request()
             }
-            layoutTableHeaderView(title: title, subtitle: R.string.localizable.web3_ensure_trust())
+            let subtitle = switch proposer {
+            case .dapp:
+                R.string.localizable.web3_ensure_trust()
+            case .web3ToMixinWallet, .web3ToAddress:
+                R.string.localizable.web3_request_from_mixin()
+            }
+            layoutTableHeaderView(title: title, subtitle: subtitle)
             
             var rows: [Row]
             if let tokenValue = operation.transactionPreview.decimalValue, tokenValue != 0 {

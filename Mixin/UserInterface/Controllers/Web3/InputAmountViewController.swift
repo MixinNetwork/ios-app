@@ -15,15 +15,6 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
     @IBOutlet weak var reviewButton: RoundedButton!
     
-    var accumulator: DecimalAccumulator {
-        didSet {
-            guard isViewLoaded else {
-                return
-            }
-            reloadViews(inputAmount: accumulator.decimal)
-        }
-    }
-    
     var token: Web3TransferableToken {
         fatalError("Must override")
     }
@@ -42,6 +33,15 @@ class InputAmountViewController: UIViewController {
         formatter.negativePrefix = ""
         return formatter
     }()
+    
+    private var accumulator: DecimalAccumulator {
+        didSet {
+            guard isViewLoaded else {
+                return
+            }
+            reloadViews(inputAmount: accumulator.decimal)
+        }
+    }
     
     init() {
         let defaultIntent: AmountIntent = .byToken
@@ -71,7 +71,9 @@ class InputAmountViewController: UIViewController {
         case .byFiatMoney:
             amountIntent = .byToken
         }
-        accumulator = DecimalAccumulator(intent: amountIntent)
+        var accumulator = DecimalAccumulator(intent: amountIntent)
+        accumulator.decimal = self.accumulator.decimal
+        self.accumulator = accumulator
     }
     
     @IBAction func inputMaxValue(_ sender: Any) {
@@ -111,11 +113,11 @@ class InputAmountViewController: UIViewController {
         switch amountIntent {
         case .byToken:
             tokenAmount = inputAmount
-            fiatMoneyAmount = inputAmount / price
+            fiatMoneyAmount = inputAmount * price
             calculatedValueLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
             inputAmountString.append(" " + token.symbol)
         case .byFiatMoney:
-            tokenAmount = inputAmount * price
+            tokenAmount = inputAmount / price
             fiatMoneyAmount = inputAmount
             calculatedValueLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
             inputAmountString.append(" " + Currency.current.code)
@@ -124,10 +126,10 @@ class InputAmountViewController: UIViewController {
         amountLabel.text = inputAmountString
         
         if tokenAmount > token.decimalBalance {
-            insufficientBalanceLabel.isHidden = false
+            insufficientBalanceLabel.alpha = 1
             reviewButton.isEnabled = false
         } else {
-            insufficientBalanceLabel.isHidden = true
+            insufficientBalanceLabel.alpha = 0
             reviewButton.isEnabled = tokenAmount > 0
         }
     }

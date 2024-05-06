@@ -17,13 +17,13 @@ struct WalletConnectDecodedSigningRequest {
     }
     
     let raw: WalletConnectSign.Request
-    let chain: WalletConnectService.Chain
+    let chain: Web3Chain
     let address: String
     let signable: Signable
     let humanReadable: String
     
     static func personalSign(request: WalletConnectSign.Request) throws -> WalletConnectDecodedSigningRequest {
-        guard let chain = WalletConnectService.supportedChains[request.chainId] else {
+        guard let chain = Web3Chain.chain(caip2: request.chainId) else {
             throw Error.chainNotSupported
         }
         let params = try request.params.get([String].self)
@@ -46,7 +46,7 @@ struct WalletConnectDecodedSigningRequest {
     }
     
     static func signTypedData(request: WalletConnectSign.Request) throws -> WalletConnectDecodedSigningRequest {
-        guard let chain = WalletConnectService.supportedChains[request.chainId] else {
+        guard let chain = Web3Chain.chain(caip2: request.chainId) else {
             throw Error.chainNotSupported
         }
         let params = try request.params.get([String].self)

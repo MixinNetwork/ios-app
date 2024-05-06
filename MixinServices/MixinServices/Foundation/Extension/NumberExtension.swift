@@ -81,3 +81,16 @@ public extension Decimal {
     }
     
 }
+
+public extension NSDecimalNumberHandler {
+    
+    public static let extractIntegralPart = NSDecimalNumberHandler(
+        roundingMode: .down,
+        scale: 0,
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
+    
+}

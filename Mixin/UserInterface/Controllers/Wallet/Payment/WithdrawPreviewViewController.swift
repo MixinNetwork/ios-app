@@ -54,8 +54,13 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         
         var rows: [Row] = [
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
-            .receivingAddress(value: operation.address.fullRepresentation, label: operation.addressLabel),
         ]
+        switch operation.addressInfo {
+        case .label(let label):
+            rows.append(.receivingAddress(value: operation.address.fullRepresentation, label: label))
+        case .web3Chain, .none:
+            rows.append(.receivingAddress(value: operation.address.fullRepresentation, label: nil))
+        }
         if let account = LoginManager.shared.account {
             let user = UserItem.createUser(from: account)
             rows.append(.senders([user], threshold: nil))

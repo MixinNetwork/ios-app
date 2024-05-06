@@ -10,19 +10,65 @@ final class Web3AccountHeaderView: UIView {
     @IBOutlet weak var amountLabel: InsetLabel!
     @IBOutlet weak var actionStackView: UIStackView!
     
+    private weak var sendButton: UIButton!
+    private weak var receiveButton: UIButton!
+    private weak var browseButton: UIButton!
+    private weak var moreButton: UIButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         symbolLabel.text = Currency.current.symbol
         amountLabel.font = .condensed(size: 40)
         amountLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         amountLabel.text = "0" + currentDecimalSeparator + "00"
+        sendButton = addAction(title: R.string.localizable.caption_send(),
+                               icon: R.image.web3_action_send()!)
+        receiveButton = addAction(title: R.string.localizable.receive(),
+                                  icon: R.image.web3_action_receive()!)
+        browseButton = addAction(title: R.string.localizable.browser(),
+                                 icon: R.image.web3_action_browser()!)
+        moreButton = addAction(title: R.string.localizable.more(),
+                               icon: R.image.web3_action_more()!)
     }
     
     func setNetworkName(_ name: String) {
         accountNameLabel.text = R.string.localizable.web3_account_network(name)
     }
     
-    func addAction(title: String, icon: UIImage, target: Any, action: Selector) {
+    func addTarget(_ target: Any, send: Selector, receive: Selector, browse: Selector, more: Selector) {
+        sendButton.removeTarget(nil, action: nil, for: .allEvents)
+        sendButton.addTarget(target, action: send, for: .touchUpInside)
+        
+        receiveButton.removeTarget(nil, action: nil, for: .allEvents)
+        receiveButton.addTarget(target, action: receive, for: .touchUpInside)
+        
+        browseButton.removeTarget(nil, action: nil, for: .allEvents)
+        browseButton.addTarget(target, action: browse, for: .touchUpInside)
+        
+        moreButton.removeTarget(nil, action: nil, for: .allEvents)
+        moreButton.addTarget(target, action: more, for: .touchUpInside)
+    }
+    
+    func enableSendButton() {
+        let wrapper = actionStackView.arrangedSubviews[0]
+        wrapper.alpha = 1
+        wrapper.isUserInteractionEnabled = true
+    }
+    
+    func disableSendButton() {
+        let wrapper = actionStackView.arrangedSubviews[0]
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            wrapper.alpha = 0.45
+        case .unspecified, .light:
+            fallthrough
+        @unknown default:
+            wrapper.alpha = 0.3
+        }
+        wrapper.isUserInteractionEnabled = false
+    }
+    
+    private func addAction(title: String, icon: UIImage) -> UIButton {
         let wrapper = UIView()
         
         let backgroundImageView = UIImageView(image: R.image.explore.action_tray())
@@ -50,12 +96,9 @@ final class Web3AccountHeaderView: UIView {
         button.snp.makeConstraints { make in
             make.edges.equalTo(backgroundImageView)
         }
-        button.addTarget(target, action: action, for: .touchUpInside)
         
-        wrapper.snp.makeConstraints { make in
-            make.width.equalTo(56)
-        }
         actionStackView.addArrangedSubview(wrapper)
+        return button
     }
     
 }

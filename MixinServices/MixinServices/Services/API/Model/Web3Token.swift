@@ -13,6 +13,8 @@ public class Web3Token: Codable {
         case price = "price"
         case absoluteChange = "change_absolute"
         case percentChange = "change_percent"
+        case assetKey = "asset_key"
+        case decimalValuePower = "decimals"
     }
     
     public let id: String
@@ -25,21 +27,52 @@ public class Web3Token: Codable {
     public let price: String
     public let absoluteChange: String
     public let percentChange: String
+    public let assetKey: String
+    public let decimalValuePower: Int16
     
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDPrice = Decimal(string: price, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalPercentChange = Decimal(string: percentChange, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalAbsoluteChange = Decimal(string: absoluteChange, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var localizedBalanceWithSymbol = {
+        CurrencyFormatter.localizedString(from: decimalBalance,
+                                          format: .precision,
+                                          sign: .never,
+                                          symbol: .custom(symbol))
+    }()
     
-    public private(set) lazy var localizedChange: String = CurrencyFormatter.localizedString(from: decimalPercentChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
+    public private(set) lazy var localizedPercentChange: String = {
+        let string = CurrencyFormatter.localizedString(from: decimalPercentChange, 
+                                                       format: .fiatMoney,
+                                                       sign: .whenNegative)
+        let change = string ?? "0\(currentDecimalSeparator)00"
+        return change + "%"
+    }()
     
     public private(set) lazy var localizedFiatMoneyPrice: String = {
         let value = decimalUSDPrice * Currency.current.decimalRate
-        return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never, symbol: .currencySymbol)
+        return CurrencyFormatter.localizedString(from: value,
+                                                 format: .fiatMoneyPrice,
+                                                 sign: .never,
+                                                 symbol: .currencySymbol)
     }()
     
     public private(set) lazy var localizedFiatMoneyBalance: String = {
         let fiatMoneyBalance = decimalBalance * decimalUSDPrice * Currency.current.decimalRate
         return CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
     }()
+    
+    public var mixinChainID: String? {
+        switch chainID {
+        case "ethereum":
+            ChainID.ethereum
+        case "polygon":
+            ChainID.polygon
+        case "binance-smart-chain":
+            ChainID.bnbSmartChain
+        default:
+            nil
+        }
+    }
     
 }

@@ -4,7 +4,13 @@ import web3
 import Web3Wallet
 import MixinServices
 
-class Web3TransactionOperation {
+class Web3TransferOperation {
+    
+    enum InitError: Error {
+        case noChainToken(String)
+        case invalidAmount(Decimal)
+        case invalidReceiver(String)
+    }
     
     enum State {
         case pending
@@ -16,29 +22,8 @@ class Web3TransactionOperation {
     }
     
     struct Fee {
-        
         let gasLimit: BigUInt
         let gasPrice: BigUInt // Wei
-        let feeValue: String
-        let feeCost: String
-        
-        init?(gasLimit: BigUInt, gasPrice: BigUInt, tokenPrice: Decimal) {
-            guard let weiFee = Decimal(string: (gasLimit * gasPrice).description, locale: .enUSPOSIX) else {
-                return nil
-            }
-            let decimalFee = weiFee * .wei
-            let cost = decimalFee * tokenPrice
-            
-            self.gasLimit = gasLimit
-            self.gasPrice = gasPrice
-            self.feeValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
-            if cost >= 0.01 {
-                self.feeCost = CurrencyFormatter.localizedString(from: cost, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-            } else {
-                self.feeCost = "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-            }
-        }
-        
     }
     
     private enum RequestError: Error {
@@ -46,10 +31,9 @@ class Web3TransactionOperation {
         case invalidFee
     }
     
-    let address: String
-    let proposer: Web3Proposer
+    let fromAddress: String
     let transactionPreview: Web3TransactionPreview
-    let chain: WalletConnectService.Chain
+    let chain: Web3Chain
     let chainToken: TokenItem
     let canDecodeValue: Bool
     
@@ -65,14 +49,23 @@ class Web3TransactionOperation {
     private var fee: Fee?
     
     fileprivate init(
-        address: String,
-        proposer: Web3Proposer,
+        fromAddress: String,
         transaction: Web3TransactionPreview,
-        chain: WalletConnectService.Chain,
-        chainToken: TokenItem
-    ) {
-        self.address = address
-        self.proposer = proposer
+        chain: Web3Chain
+    ) throws {
+        assert(!Thread.isMainThread)
+        let chainToken: TokenItem?
+        if let token = TokenDAO.shared.tokenItem(with: chain.mixinChainID) {
+            chainToken = token
+        } else {
+            let token = try SafeAPI.assets(id: chain.mixinChainID).get()
+            chainToken = TokenDAO.shared.saveAndFetch(token: token)
+        }
+        guard let chainToken else {
+            throw InitError.noChainToken(chain.mixinChainID)
+        }
+        
+        self.fromAddress = fromAddress
         self.transactionPreview = transaction
         self.chain = chain
         self.chainToken = chainToken
@@ -82,11 +75,10 @@ class Web3TransactionOperation {
     
     @MainActor
     func loadGas(completion: @escaping (Fee) -> Void) {
-        let tokenPrice = chainToken.decimalUSDPrice * Currency.current.decimalRate
-        Task { [address, client, transactionPreview, weak self] in
+        Task { [fromAddress, client, transactionPreview, weak self] in
             do {
                 let dappGasLimit = transactionPreview.gas
-                let transaction = EthereumTransaction(from: EthereumAddress(address),
+                let transaction = EthereumTransaction(from: EthereumAddress(fromAddress),
                                                       to: transactionPreview.to,
                                                       value: transactionPreview.value ?? 0,
                                                       data: transactionPreview.data,
@@ -105,13 +97,7 @@ class Web3TransactionOperation {
                 }()
                 var gasPrice = try await client.eth_gasPrice()
                 gasPrice += gasPrice / 5 // 1.2x gasPrice
-                let fee = Fee(gasLimit: gasLimit,
-                              gasPrice: gasPrice,
-                              tokenPrice: tokenPrice)
-                guard let fee else {
-                    Logger.web3.error(category: "TxnRequest", message: "Invalid limit: \(gasLimit.description), price: \(gasPrice.description)")
-                    throw RequestError.invalidFee
-                }
+                let fee = Fee(gasLimit: gasLimit, gasPrice: gasPrice)
                 Logger.web3.info(category: "TxnRequest", message: "Using limit: \(gasLimit.description), price: \(gasPrice.description)")
                 await MainActor.run {
                     guard let self else {
@@ -220,27 +206,23 @@ class Web3TransactionOperation {
     
 }
 
-final class Web3TransactionWithWalletConnectOperation: Web3TransactionOperation {
+final class Web3TransferWithWalletConnectOperation: Web3TransferOperation {
     
     let session: WalletConnectSession
     let request: WalletConnectSign.Request
     
     init(
-        address: String,
-        proposer: Web3Proposer,
+        fromAddress: String,
         transaction: Web3TransactionPreview,
-        chain: WalletConnectService.Chain,
-        chainToken: TokenItem,
+        chain: Web3Chain,
         session: WalletConnectSession,
         request: WalletConnectSign.Request
-    ) {
+    ) throws {
         self.session = session
         self.request = request
-        super.init(address: address,
-                   proposer: proposer,
-                   transaction: transaction,
-                   chain: chain,
-                   chainToken: chainToken)
+        try super.init(fromAddress: fromAddress,
+                       transaction: transaction,
+                       chain: chain)
     }
     
     override func respond(hash: String) async throws {
@@ -261,27 +243,23 @@ final class Web3TransactionWithWalletConnectOperation: Web3TransactionOperation 
     
 }
 
-final class Web3TransactionWithBrowserWalletOperation: Web3TransactionOperation {
+final class Web3TransferWithBrowserWalletOperation: Web3TransferOperation {
     
     private let respondImpl: ((String) async throws -> Void)?
     private let rejectImpl: (() -> Void)?
     
     init(
-        address: String,
-        proposer: Web3Proposer,
+        fromAddress: String,
         transaction: Web3TransactionPreview,
-        chain: WalletConnectService.Chain,
-        chainToken: TokenItem,
+        chain: Web3Chain,
         respondWith respondImpl: @escaping ((String) async throws -> Void),
         rejectWith rejectImpl: @escaping (() -> Void)
-    ) {
+    ) throws {
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl
-        super.init(address: address,
-                   proposer: proposer,
-                   transaction: transaction,
-                   chain: chain,
-                   chainToken: chainToken)
+        try super.init(fromAddress: fromAddress,
+                       transaction: transaction,
+                       chain: chain)
     }
     
     override func respond(hash: String) async throws {
@@ -290,6 +268,62 @@ final class Web3TransactionWithBrowserWalletOperation: Web3TransactionOperation 
     
     override func reject() {
         rejectImpl?()
+    }
+    
+}
+
+final class Web3TransferToAddressOperation: Web3TransferOperation {
+    
+    init(payment: Web3SendingTokenToAddressPayment, decimalAmount: Decimal) throws {
+        let decimalAmountNumber = decimalAmount as NSDecimalNumber
+        let amount = decimalAmountNumber.multiplying(byPowerOf10: payment.token.decimalValuePower)
+        guard amount == amount.rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart) else {
+            throw InitError.invalidAmount(decimalAmount)
+        }
+        let amountString = Token.amountString(from: amount as Decimal)
+        let transaction: Web3TransactionPreview
+        if payment.sendingNativeToken {
+            guard let value = BigUInt(amountString) else {
+                throw InitError.invalidAmount(decimalAmount)
+            }
+            transaction = Web3TransactionPreview(
+                from: EthereumAddress(payment.fromAddress),
+                to: EthereumAddress(payment.toAddress),
+                value: value,
+                data: nil,
+                decimalValue: decimalAmount
+            )
+        } else {
+            guard let receiver = EthereumAddress(payment.toAddress).asData(), receiver.count <= 32 else {
+                throw InitError.invalidReceiver(payment.toAddress)
+            }
+            guard let amountData = BigUInt(amountString, radix: 10)?.serialize(), amountData.count <= 32 else {
+                throw InitError.invalidAmount(decimalAmount)
+            }
+            let data = Data([0xa9, 0x05, 0x9c, 0xbb])
+            + Data(repeating: 0, count: 32 - receiver.count)
+            + receiver
+            + Data(repeating: 0, count: 32 - amountData.count)
+            + amountData
+            transaction = Web3TransactionPreview(
+                from: EthereumAddress(payment.fromAddress),
+                to: EthereumAddress(payment.token.assetKey),
+                value: nil,
+                data: data,
+                decimalValue: nil // TODO: Better preview with decimal value
+            )
+        }
+        try super.init(fromAddress: payment.fromAddress,
+                       transaction: transaction,
+                       chain: payment.chain)
+    }
+    
+    override func respond(hash: String) async throws {
+        
+    }
+    
+    override func reject() {
+        
     }
     
 }

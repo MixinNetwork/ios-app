@@ -101,6 +101,7 @@ extension Payment {
         
         case address(Address)
         case temporary(TemporaryAddress)
+        case web3(address: String, chain: String)
         
         var withdrawable: WithdrawableAddress {
             switch self {
@@ -108,6 +109,8 @@ extension Payment {
                 return address
             case .temporary(let address):
                 return address
+            case .web3(let destination, _):
+                return TemporaryAddress(destination: destination, tag: "")
             }
         }
         
@@ -117,6 +120,8 @@ extension Payment {
                 return "<WithdrawalDestination.address \(address.addressId)>"
             case let .temporary(address):
                 return "<WithdrawalDestination.temporary \(address.destination)>"
+            case let .web3(address, chain):
+                return "<WithdrawalDestination.web3 \(chain) \(address)>"
             }
         }
         
@@ -145,10 +150,10 @@ extension Payment {
                                             memo: memo),
                     AddressValidityPrecondition(address: address),
                 ]
-            case let .temporary(address):
+            case .temporary, .web3:
                 preconditions = [
                     NoPendingTransactionPrecondition(token: token),
-                    DuplicationPrecondition(operation: .withdraw(address),
+                    DuplicationPrecondition(operation: .withdraw(destination.withdrawable),
                                             token: token,
                                             tokenAmount: tokenAmount,
                                             fiatMoneyAmount: fiatMoneyAmount,
@@ -171,14 +176,17 @@ extension Payment {
                 let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: amount, on: parent)
                 switch result {
                 case .success(let collection):
-                    let addressLabel: String?
+                    let addressInfo: WithdrawPaymentOperation.AddressInfo?
                     let addressID: String?
                     switch destination {
                     case let .address(address):
-                        addressLabel = address.label
+                        addressInfo = .label(address.label)
                         addressID = address.addressId
                     case .temporary:
-                        addressLabel = nil
+                        addressInfo = nil
+                        addressID = nil
+                    case let .web3(_, chain):
+                        addressInfo = .web3Chain(chain)
                         addressID = nil
                     }
                     let operation = WithdrawPaymentOperation(traceID: traceID,
@@ -189,7 +197,7 @@ extension Payment {
                                                              feeToken: fee.tokenItem,
                                                              feeAmount: fee.amount,
                                                              address: destination.withdrawable,
-                                                             addressLabel: addressLabel,
+                                                             addressInfo: addressInfo,
                                                              addressID: addressID)
                     await MainActor.run {
                         onSuccess(operation, issues)

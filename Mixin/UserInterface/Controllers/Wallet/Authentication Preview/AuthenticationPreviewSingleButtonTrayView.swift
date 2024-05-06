@@ -2,7 +2,7 @@ import UIKit
 
 final class AuthenticationPreviewSingleButtonTrayView: UIView {
     
-    let button = UIButton(type: .system)
+    let button = StateResponsiveButton(type: .system)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,7 +22,7 @@ final class AuthenticationPreviewSingleButtonTrayView: UIView {
     private func loadSubview() {
         backgroundColor = R.color.background()
         
-        button.backgroundColor = R.color.theme()
+        button.updateWithIsEnabled()
         button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         button.setTitleColor(.white, for: .normal)
         button.layer.masksToBounds = true

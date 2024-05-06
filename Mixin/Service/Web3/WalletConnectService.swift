@@ -130,102 +130,6 @@ final class WalletConnectService {
     
 }
 
-// MARK: - Chain
-extension WalletConnectService {
-    
-    struct Chain: Equatable, Hashable {
-        
-        static let ethereum = Chain(
-            id: 1,
-            internalID: ChainID.ethereum,
-            name: "Ethereum",
-            failsafeRPCServerURL: URL(string: "https://cloudflare-eth.com")!,
-            feeSymbol: "ETH",
-            caip2: Blockchain("eip155:1")!
-        )
-        
-        static let polygon = Chain(
-            id: 137,
-            internalID: ChainID.polygon,
-            name: "Polygon",
-            failsafeRPCServerURL: URL(string: "https://polygon-rpc.com")!,
-            feeSymbol: "MATIC",
-            caip2: Blockchain("eip155:137")!
-        )
-        
-        static let bnbSmartChain = Chain(
-            id: 56,
-            internalID: ChainID.bnbSmartChain,
-            name: "BSC",
-            failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
-            feeSymbol: "BNB",
-            caip2: Blockchain("eip155:56")!
-        )
-        
-        static let sepolia = Chain(
-            id: 11155111,
-            internalID: ChainID.ethereum,
-            name: "Sepolia",
-            failsafeRPCServerURL: URL(string: "https://rpc.sepolia.dev")!,
-            feeSymbol: "ETH",
-            caip2: Blockchain("eip155:11155111")!
-        )
-        
-        let id: Int
-        let internalID: String
-        let name: String
-        let failsafeRPCServerURL: URL
-        let feeSymbol: String
-        let caip2: Blockchain
-        
-        var rpcServerURL: URL {
-            if let string = AppGroupUserDefaults.Wallet.web3RPCURL[internalID], let url = URL(string: string) {
-                url
-            } else {
-                failsafeRPCServerURL
-            }
-        }
-        
-        static func == (lhs: Self, rhs: Self) -> Bool {
-            lhs.id == rhs.id
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(id)
-        }
-        
-        func makeEthereumClient() -> EthereumHttpClient {
-            let network: EthereumNetwork = switch self {
-            case .ethereum:
-                    .mainnet
-            case .sepolia:
-                    .sepolia
-            default:
-                    .custom("\(id)")
-            }
-            return EthereumHttpClient(url: rpcServerURL, network: network)
-        }
-        
-    }
-    
-    static let supportedChains: OrderedDictionary<Blockchain, Chain> = {
-        var chains: OrderedDictionary<Blockchain, Chain> = [
-            Chain.ethereum.caip2:      .ethereum,
-            Chain.polygon.caip2:       .polygon,
-            Chain.bnbSmartChain.caip2: .bnbSmartChain,
-        ]
-#if DEBUG
-        chains.updateValue(.sepolia, forKey: Chain.sepolia.caip2, insertingAt: 1)
-#endif
-        return chains
-    }()
-    
-    static let evmChains: OrderedSet<Chain> = [.ethereum, .polygon, .bnbSmartChain]
-    
-    static let defaultChain: Chain = .ethereum
-    
-}
-
 // MARK: - WalletConnect Request
 extension WalletConnectService {
     
@@ -233,7 +137,7 @@ extension WalletConnectService {
         connectionHud?.hide()
         connectionHud = nil
         DispatchQueue.global().async {
-            var chains = Array(Self.supportedChains.values)
+            var chains = Web3Chain.all
             chains.removeAll { chain in
                 let isRequired = proposal.requiredNamespaces.values.contains { namespace in
                     namespace.chains?.contains(chain.caip2) ?? false
@@ -272,7 +176,7 @@ extension WalletConnectService {
                 return
             }
             
-            let events: Set<String> = ["accountsChanged", "chainChanged"]
+            let events: Set<String> = ["connect", "disconnect", "chainChanged", "accountsChanged", "message"]
             let proposalEvents = proposal.requiredNamespaces.values.map(\.events).flatMap({ $0 })
             guard events.isSuperset(of: proposalEvents) else {
                 logger.warn(category: "Service", message: "Requires to support \(proposalEvents)")
@@ -291,7 +195,7 @@ extension WalletConnectService {
             let account: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
             DispatchQueue.main.async {
                 if account == nil {
-                    let controller = UnlockWeb3WalletViewController(chain: chains[0])
+                    let controller = UnlockWeb3WalletViewController(chains: chains)
                     Web3PopupCoordinator.enqueue(popup: .unlock(controller))
                 }
                 let connectWallet = ConnectWalletViewController(proposal: proposal,

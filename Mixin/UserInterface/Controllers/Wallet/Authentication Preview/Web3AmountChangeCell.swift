@@ -17,8 +17,15 @@ final class Web3AmountChangeCell: UITableViewCell {
         contentStackView.setCustomSpacing(1, after: tokenStackView)
     }
     
-    func setToken(_ token: TokenItem, tokenAmount: String?, fiatMoneyAmount: String?) {
-        assetIconView.setIcon(token: token)
+    func setToken(_ token: Web3TransferableToken, tokenAmount: String?, fiatMoneyAmount: String?) {
+        switch token {
+        case let token as TokenItem:
+            assetIconView.setIcon(token: token)
+        case let token as Web3Token:
+            assetIconView.setIcon(web3Token: token)
+        default:
+            assertionFailure()
+        }
         
         if let tokenAmount {
             tokenAmountLabel.text = tokenAmount

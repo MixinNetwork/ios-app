@@ -54,7 +54,7 @@ class MixinWebViewController: WebViewController {
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
         if let address: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
-            let chain = defaultChain
+            let chain: Web3Chain = .default
             let scripts = [
                 Script.web3Provider,
                 Script.ethereumProvider(address: address, rpcURL: chain.rpcServerURL, chainID: chain.id)
@@ -69,7 +69,6 @@ class MixinWebViewController: WebViewController {
     }
     
     private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
-    private let defaultChain: WalletConnectService.Chain = .ethereum
     
     private(set) var context: Context!
     
@@ -81,7 +80,7 @@ class MixinWebViewController: WebViewController {
         return view
     }()
     private lazy var clipSwitcher = UIApplication.homeContainerViewController?.clipSwitcher
-    private lazy var web3Worker = Web3Worker(webView: webView, chain: defaultChain)
+    private lazy var web3Worker = Web3Worker(webView: webView, chain: .default)
     
     private weak var loadingFailureViewIfLoaded: UIView?
     

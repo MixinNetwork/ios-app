@@ -1,6 +1,7 @@
 import Foundation
 import BigInt
 import web3
+import MixinServices
 
 struct Web3TransactionPreview {
     
@@ -22,6 +23,16 @@ struct Web3TransactionPreview {
     let data: Data?
     
     let decimalValue: Decimal?
+    
+    init(from: EthereumAddress, to: EthereumAddress, value: BigUInt?, data: Data?, decimalValue: Decimal?) {
+        self.from = from
+        self.to = to
+        self.value = value
+        self.gas = nil
+        self.hexData = data?.hexEncodedString()
+        self.data = data
+        self.decimalValue = decimalValue
+    }
     
     init(json: [String: Any]) throws {
         guard let from = json["from"] as? String else {

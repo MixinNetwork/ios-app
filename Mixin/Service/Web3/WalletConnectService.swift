@@ -176,7 +176,7 @@ extension WalletConnectService {
                 return
             }
             
-            let events: Set<String> = ["accountsChanged", "chainChanged"]
+            let events: Set<String> = ["connect", "disconnect", "chainChanged", "accountsChanged", "message"]
             let proposalEvents = proposal.requiredNamespaces.values.map(\.events).flatMap({ $0 })
             guard events.isSuperset(of: proposalEvents) else {
                 logger.warn(category: "Service", message: "Requires to support \(proposalEvents)")

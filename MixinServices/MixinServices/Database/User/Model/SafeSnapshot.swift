@@ -54,13 +54,18 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         }
     }()
     
+    public var isInscription: Bool {
+        !(inscriptionHash?.isEmpty ?? true)
+    }
+    
     public init(
         id: String, type: String, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
         traceID: String?, confirmations: Int?,
-        openingBalance: String?, closingBalance: String?, inscriptionHash: String?,
-        deposit: Deposit?, withdrawal: Withdrawal?
+        openingBalance: String?, closingBalance: String?, 
+        inscriptionHash: String?, deposit: Deposit?,
+        withdrawal: Withdrawal?
     ) {
         self.id = id
         self.type = type
@@ -110,7 +115,8 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         type: SnapshotType, assetID: String, amount: String,
         userID: String, opponentID: String, memo: String,
         transactionHash: String, createdAt: String,
-        traceID: String, inscriptionHash: String?, withdrawal: Withdrawal? = nil
+        traceID: String, inscriptionHash: String?, 
+        withdrawal: Withdrawal? = nil
     ) {
         self.id = "\(userID):\(transactionHash)".uuidDigest()
         self.type = type.rawValue
@@ -130,9 +136,6 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.withdrawal = withdrawal
     }
     
-    public var isInscription: Bool {
-        !(inscriptionHash?.isEmpty ?? true)
-    }
 }
 
 extension SafeSnapshot: TableRecord, PersistableRecord {

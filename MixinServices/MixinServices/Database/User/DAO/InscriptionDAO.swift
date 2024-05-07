@@ -3,12 +3,7 @@ import GRDB
 
 public final class InscriptionDAO: UserDatabaseDAO {
     
-    public enum UserInfoKey {
-        public static let assetId = "aid"
-    }
-    
     private enum SQL {
-        
         static let selector = """
         SELECT i.*, ic.name AS collection_name, ic.icon_url AS collection_icon_url,
             t.symbol AS token_symbol, t.name AS token_name, t.icon_url AS token_icon_url

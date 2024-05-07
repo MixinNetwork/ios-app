@@ -20,11 +20,11 @@ struct SafePaymentURL {
     
     let address: Address
     let request: Request?
-    let inscription: String?
     let memo: String
     let trace: String
     let redirection: URL?
     let reference: String?
+    let inscription: String?
     
     init?(url: URL) {
         guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
@@ -77,17 +77,6 @@ struct SafePaymentURL {
             asset = nil
         }
         
-        if let inscriptionHash = queries["inscription"] {
-            if inscriptionHash.count == 32 {
-                self.inscription = inscriptionHash
-            } else {
-                Logger.general.warn(category: "SafePayment", message: "Invalid inscription:\(inscriptionHash)")
-                return nil
-            }
-        } else {
-            inscription = nil
-        }
-        
         let decimalAmount: Decimal?
         if let amount = queries["amount"] {
             if let amount = Decimal(string: amount, locale: .enUSPOSIX), amount > 0, amount.numberOfSignificantFractionalDigits <= 8 {
@@ -135,12 +124,25 @@ struct SafePaymentURL {
             redirection = nil
         }
         
+        let inscription: String?
+        if let hash = queries["inscription"] {
+            if hash.count == 32 {
+                inscription = hash
+            } else {
+                Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")
+                return nil
+            }
+        } else {
+            inscription = nil
+        }
+        
         self.address = address
         self.request = request
         self.memo = queries["memo"] ?? ""
         self.trace = trace
         self.redirection = redirection
         self.reference = queries["reference"]
+        self.inscription = inscription
     }
     
 }

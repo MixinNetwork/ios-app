@@ -86,6 +86,7 @@ extension Token {
     public var isNFT: Bool {
         !(collectionHash?.isEmpty ?? true)
     }
+    
 }
 
 extension Token {

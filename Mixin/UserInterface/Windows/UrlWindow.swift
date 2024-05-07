@@ -920,7 +920,6 @@ extension UrlWindow {
             case let .mainnet(address):
                 destination = .mainnet(address)
             }
-            
             if let request = paymentURL.request {
                 guard let token = syncToken(assetID: request.asset, hud: hud) else {
                     return
@@ -1184,7 +1183,7 @@ extension UrlWindow {
         }
         return asset
     }
-    
+
     private static func syncUser(userId: String, hud: Hud) -> (UserItem, Bool)? {
         var user = UserDAO.shared.getUser(userId: userId)
         var loadUserFromLocal = true

@@ -1252,12 +1252,11 @@ extension ReceiveMessageService {
             ChainDAO.shared.save([chain])
         }
         
-        var depositHash: String?
-        
-        if snapshot.type == SnapshotType.deposit.rawValue {
-            if let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
-                depositHash = json["deposit_hash"] as? String
-            }
+        let depositHash: String?
+        if snapshot.type == SnapshotType.deposit.rawValue, let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
+            depositHash = json["deposit_hash"] as? String
+        } else {
+            depositHash = nil
         }
         
         SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in

@@ -1,21 +1,22 @@
 import UIKit
 import Combine
 import Alamofire
+import web3
 import MixinServices
 
 final class ExploreWeb3ViewController: UIViewController {
     
     private let tableView = UITableView()
-    private let chain: WalletConnectService.Chain
+    private let chains: [Web3Chain]
     
     private weak var lastAccountRequest: Request?
     
     private var address: String?
-    
     private var tokens: [Web3Token]?
     
-    init(chain: WalletConnectService.Chain) {
-        self.chain = chain
+    init(chains: [Web3Chain]) {
+        assert(!chains.isEmpty)
+        self.chains = chains
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -41,13 +42,11 @@ final class ExploreWeb3ViewController: UIViewController {
         reloadData(address: address)
     }
     
-    @IBAction func receive(_ sender: Any) {
-        guard let address else {
-            return
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            layoutTableHeaderView()
         }
-        let deposit = Web3DepositViewController(address: address)
-        let container = ContainerViewController.instance(viewController: deposit, title: R.string.localizable.receive())
-        navigationController?.pushViewController(container, animated: true)
     }
     
     func reloadAccountIfUnlocked() {
@@ -78,19 +77,34 @@ final class ExploreWeb3ViewController: UIViewController {
     }
     
     @objc private func unlockAccount(_ sender: Any) {
-        let unlock = UnlockWeb3WalletViewController(chain: chain)
+        let unlock = UnlockWeb3WalletViewController(chains: chains)
         present(unlock, animated: true)
     }
     
     @objc private func send(_ sender: Any) {
-        showAutoHiddenHud(style: .warning, text: "Comming Soon")
+        guard let tokens else {
+            return
+        }
+        let selector = Web3TransferTokenSelectorViewController()
+        selector.delegate = self
+        selector.reload(tokens: tokens)
+        present(selector, animated: true)
+    }
+    
+    @objc private func receive(_ sender: Any) {
+        guard let address else {
+            return
+        }
+        let source = Web3ReceiveSourceViewController(address: address, chains: chains)
+        let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
+        navigationController?.pushViewController(container, animated: true)
     }
     
     @objc private func browse(_ sender: Any) {
         guard let explore = parent as? ExploreViewController else {
             return
         }
-        let browser = Web3BrowserViewController(chain: chain)
+        let browser = Web3BrowserViewController(chains: chains)
         explore.presentSearch(with: browser)
     }
     
@@ -98,7 +112,7 @@ final class ExploreWeb3ViewController: UIViewController {
         guard let address else {
             return
         }
-        let sheet = UIAlertController(title: R.string.localizable.web3_account_network(chain.name), 
+        let sheet = UIAlertController(title: R.string.localizable.web3_account_network(chains[0].name),
                                       message: Address.compactRepresentation(of: address),
                                       preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.copy_address(), style: .default, handler: { _ in
@@ -113,37 +127,40 @@ final class ExploreWeb3ViewController: UIViewController {
         self.address = address
         if let address {
             let tableHeaderView = R.nib.web3AccountHeaderView(withOwner: nil)!
-            tableHeaderView.addAction(title: R.string.localizable.caption_send(),
-                                      icon: R.image.web3_action_send()!,
-                                      target: self,
-                                      action: #selector(send(_:)))
-            tableHeaderView.addAction(title: R.string.localizable.receive(),
-                                      icon: R.image.web3_action_receive()!,
-                                      target: self,
-                                      action: #selector(receive(_:)))
-            tableHeaderView.addAction(title: R.string.localizable.browser(),
-                                      icon: R.image.web3_action_browser()!,
-                                      target: self,
-                                      action: #selector(browse(_:)))
-            tableHeaderView.addAction(title: R.string.localizable.more(),
-                                      icon: R.image.web3_action_more()!,
-                                      target: self,
-                                      action: #selector(more(_:)))
+            tableHeaderView.addTarget(self,
+                                      send: #selector(send(_:)),
+                                      receive: #selector(receive(_:)),
+                                      browse: #selector(browse(_:)),
+                                      more: #selector(more(_:)))
+            tableHeaderView.disableSendButton()
             tableView.tableHeaderView = tableHeaderView
+            layoutTableHeaderView()
             reloadAccount(address: address)
         } else {
             let tableHeaderView = R.nib.web3AccountLockedHeaderView(withOwner: nil)!
-            tableHeaderView.showUnlockAccount(chain: chain)
+            tableHeaderView.showUnlockAccount(chain: chains[0])
             tableHeaderView.button.addTarget(self, action: #selector(unlockAccount(_:)), for: .touchUpInside)
             tableView.tableHeaderView = tableHeaderView
+            layoutTableHeaderView()
             tokens = nil
             tableView.reloadData()
         }
     }
     
+    private func layoutTableHeaderView() {
+        guard let tableHeaderView = tableView.tableHeaderView else {
+            return
+        }
+        let sizeToFit = CGSize(width: tableHeaderView.frame.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let height = tableHeaderView.systemLayoutSizeFitting(sizeToFit).height
+        tableHeaderView.frame.size.height = height
+        tableView.tableHeaderView = tableHeaderView
+    }
+    
     private func reloadAccount(address: String) {
         Logger.web3.debug(category: "Explore", message: "Reloading with: \(address)")
-        let chainName = chain.name
+        let chainName = chains[0].name
         if tokens?.isEmpty ?? true {
             tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
         }
@@ -156,6 +173,7 @@ final class ExploreWeb3ViewController: UIViewController {
                 if let headerView = self.tableView.tableHeaderView as? Web3AccountHeaderView {
                     headerView.setNetworkName(chainName)
                     headerView.amountLabel.text = account.localizedFiatMoneyBalance
+                    headerView.enableSendButton()
                 }
                 self.tableView.tableFooterView = if account.tokens.isEmpty {
                     R.nib.web3NoAssetView(withOwner: self)
@@ -174,6 +192,8 @@ final class ExploreWeb3ViewController: UIViewController {
                 }))
                 self.present(alert, animated: true)
                 self.tableView.tableFooterView = nil
+            case .failure(.httpTransport(.explicitlyCancelled)):
+                break
             case .failure(let error):
                 Logger.web3.debug(category: "Explore", message: "\(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
@@ -207,6 +227,31 @@ extension ExploreWeb3ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+}
+
+// MARK: - Web3TransferTokenSelectorViewControllerDelegate
+extension ExploreWeb3ViewController: Web3TransferTokenSelectorViewControllerDelegate {
+    
+    func web3TransferTokenSelectorViewController(
+        _ viewController: Web3TransferTokenSelectorViewController,
+        didSelectToken token: TokenItem
+    ) {
+        
+    }
+    
+    func web3TransferTokenSelectorViewController(
+        _ viewController: Web3TransferTokenSelectorViewController,
+        didSelectToken token: Web3Token
+    ) {
+        guard let address, let chainID = token.mixinChainID, let chain = Web3Chain.chain(mixinChainID: chainID) else {
+            return
+        }
+        let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
+        let selector = Web3SendingDestinationViewController(payment: payment)
+        let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.address())
+        navigationController?.pushViewController(container, animated: true)
     }
     
 }

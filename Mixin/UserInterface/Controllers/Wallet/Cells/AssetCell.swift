@@ -76,7 +76,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         balanceLabel.text = balance
         symbolLabel.attributedText = NSAttributedString(string: token.symbol, attributes: AssetCell.symbolAttributes)
         if token.decimalUSDPrice > 0 {
-            changeLabel.text = token.localizedChange + "%"
+            changeLabel.text = token.localizedPercentChange
             if token.decimalPercentChange > 0 {
                 changeLabel.textColor = .walletGreen
             } else {

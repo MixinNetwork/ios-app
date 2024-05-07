@@ -1,4 +1,5 @@
 import UIKit
+import OrderedCollections
 import Alamofire
 import MixinServices
 
@@ -7,14 +8,15 @@ final class Web3BrowserViewController: UIViewController {
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     
-    private let chain: WalletConnectService.Chain
+    private let chains: [Web3Chain]
     
     private var quickAccess: QuickAccessSearchResult?
     private var searchResults: [Web3Dapp] = []
     private var lastKeyword: String?
     
-    init(chain: WalletConnectService.Chain) {
-        self.chain = chain
+    init(chains: [Web3Chain]) {
+        assert(!chains.isEmpty)
+        self.chains = chains
         let nib = R.nib.exploreSearchView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -65,7 +67,9 @@ final class Web3BrowserViewController: UIViewController {
             return
         }
         quickAccess = QuickAccessSearchResult(keyword: keyword)
-        let dapps = Web3Chain.global?[chain.internalID]?.dapps ?? []
+        var dapps: OrderedSet<Web3Dapp> = chains.reduce(into: []) { results, chain in
+            results.formUnion(chain.dapps)
+        }
         searchResults = dapps.filter { dapp in
             dapp.matches(keyword: keyword)
         }

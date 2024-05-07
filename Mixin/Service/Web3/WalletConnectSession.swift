@@ -10,7 +10,6 @@ final class WalletConnectSession {
         case mismatchedNamespaces
         case noTransaction
         case noChain(String)
-        case noToken(String)
         case noAccount
     }
     
@@ -119,7 +118,7 @@ extension WalletConnectSession {
     
     private func requestSendTransaction(with request: Request) {
         assert(Thread.isMainThread)
-        let proposer = Web3Proposer(name: name, host: host)
+        let proposer = Web3DappProposer(name: name, host: host)
         DispatchQueue.global().async {
             Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
             do {
@@ -127,35 +126,23 @@ extension WalletConnectSession {
                 guard let transactionPreview = params.first else {
                     throw Error.noTransaction
                 }
-                guard let chain = WalletConnectService.supportedChains[request.chainId] else {
+                guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
-                }
-                let chainToken: TokenItem?
-                if let token = TokenDAO.shared.tokenItem(with: chain.internalID) {
-                    chainToken = token
-                } else {
-                    let token = try SafeAPI.assets(id: chain.internalID).get()
-                    chainToken = TokenDAO.shared.saveAndFetch(token: token)
-                }
-                guard let chainToken else {
-                    throw Error.noToken(chain.internalID)
                 }
                 // TODO: Get account by `chain`
                 guard let address: String = PropertiesDAO.shared.value(forKey: .evmAddress) else {
                     throw Error.noAccount
                 }
-                let operation = Web3TransactionWithWalletConnectOperation(
-                    address: address,
-                    proposer: proposer,
+                let operation = try Web3TransferWithWalletConnectOperation(
+                    fromAddress: address,
                     transaction: transactionPreview,
                     chain: chain,
-                    chainToken: chainToken,
                     session: self,
                     request: request
                 )
                 DispatchQueue.main.async {
-                    let transaction = Web3TransactionViewController(operation: operation)
-                    Web3PopupCoordinator.enqueue(popup: .request(transaction))
+                    let transfer = Web3TransferViewController(operation: operation, proposer: .dapp(proposer))
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }
             } catch {
                 Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")

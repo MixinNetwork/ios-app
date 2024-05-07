@@ -116,8 +116,13 @@ public final class TokenDAO: UserDatabaseDAO {
         }
     }
     
-    public func positiveBalancedTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.selector) AND te.balance > 0 ORDER BY \(SQL.order)")
+    public func positiveBalancedTokens(chainIDs: [String] = []) -> [TokenItem] {
+        var sql = "\(SQL.selector) AND te.balance > 0"
+        if !chainIDs.isEmpty {
+            sql += " AND t.chain_id IN ('\(chainIDs.joined(separator: "','"))')"
+        }
+        sql += " ORDER BY \(SQL.order)"
+        return db.select(with: sql)
     }
     
     public func appTokens(ids: [String]) -> [AppToken] {

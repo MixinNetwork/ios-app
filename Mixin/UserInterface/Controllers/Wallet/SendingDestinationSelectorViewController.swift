@@ -22,6 +22,7 @@ final class SendingDestinationSelectorViewController: PopupSelectorViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.backgroundColor = R.color.background()
         tableView.rowHeight = 74
         tableView.register(R.nib.sendingDestinationCell)
         tableView.dataSource = self
@@ -54,6 +55,7 @@ extension SendingDestinationSelectorViewController: UITableViewDataSource {
             cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
         }
+        cell.disclosureIndicatorImageView.isHidden = true
         return cell
     }
     

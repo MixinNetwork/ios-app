@@ -278,6 +278,8 @@ extension AuthenticationPreviewViewController {
         case tag
         case total
         case account
+        case sender
+        case receiver
         case collectible
         
         var rawValue: String {
@@ -300,6 +302,10 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.total()
             case .account:
                 R.string.localizable.account()
+            case .sender:
+                R.string.localizable.sender()
+            case .receiver:
+                R.string.localizable.receiver()
             case .collectible:
                 "Collectible"       // FIX ME
             }
@@ -316,7 +322,7 @@ extension AuthenticationPreviewViewController {
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
         case web3Message(caption: String, message: String)
-        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: TokenItem) // Nil amount for unlimited
+        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3TransferableToken) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
     }
     

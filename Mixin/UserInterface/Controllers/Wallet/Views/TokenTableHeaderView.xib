@@ -141,6 +141,7 @@
                 <outlet property="infoStackView" destination="e0h-uc-lcp" id="mZd-lp-Jpc"/>
                 <outlet property="infoStackViewLeadingConstraint" destination="Npg-sl-r6o" id="NBl-Pn-AzH"/>
                 <outlet property="infoStackViewTrailingConstraint" destination="Z1B-DP-vKE" id="hlu-9A-wts"/>
+                <outlet property="tokenInfoButton" destination="qRr-zx-c8i" id="BW6-MM-nwa"/>
                 <outlet property="transactionsHeaderView" destination="7u0-mK-bTa" id="Vfq-mM-cP4"/>
                 <outlet property="transferActionView" destination="Lv5-Qs-x2V" id="UoW-xF-PnS"/>
             </connections>

@@ -4,6 +4,7 @@
 "access_denied" = "В доступе отказано";
 "access_to_contacts" = "Доступ к контактам";
 "account" = "Аккаунт";
+"accounts" = "Accounts";
 "acknowledgements" = "Благодарности";
 "add" = "Добавить";
 "add_address" = "Добавить адрес";
@@ -457,7 +458,7 @@
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
 "free" = "FREE";
 "from" = "От";
-"from_address" = "From Address";
+"from_address" = "From address";
 "from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
@@ -478,6 +479,7 @@
 "hidden_assets" = "Скрытые активы";
 "hide" = "Скрыть";
 "hide_asset" = "Скрыть актив";
+"hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "Удерживайте, чтобы записать, отпустите, чтобы отправить";
 "hour" = "%d час";
 "hour_count" = "%d часы";
@@ -492,8 +494,10 @@
 "info" = "Информация";
 "initializing" = "Инициализация...";
 "insufficient_balance" = "Insufficient balance";
+"insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
 "insufficient_transaction_fee" = "Недостаточная комиссия за транзакцию";
 "interface_style" = "Стиль интерфейса";
+"invalid_address" = "Invalid Address";
 "invalid_candidate" = "Недействительный кандидат";
 "invalid_height" = "Неверный рост";
 "invalid_malformed_address_eos_hint" = "Неверный формат адреса. Mixin не поддерживает вывод средств на адрес контракта EOS!";
@@ -556,6 +560,7 @@
 "manage" = "Управлять";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
+"max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Медиа";
 "memo" = "Памятка";
@@ -800,6 +805,7 @@
 "restore_from_icloud_confirmation" = "There are already %@ local chat records, and the last message was created at %@. Are you sure you want to overwrite the local data with the chat data on iCloud?";
 "retry" = "Повторить";
 "return_to_merchant_description" = "Merchant payment is complete. You can opt to return to the merchant or stay in Mixin.";
+"review" = "Review";
 "review_address_hint" = "Review the address, Memo (tag), and network. Any mistake may result in irretrievable asset loss.";
 "review_transfer_hint" = "Review the recipient, network, and amount. Any mistake may result in irretrievable asset loss.";
 "review_withdrawal_hint" = "Review the address, network, and amount meticulously. Any mistake may result in irretrievable asset loss.";
@@ -977,6 +983,7 @@
 "title_participants" = "%d участник";
 "title_participants_count" = "%d участников";
 "to" = "В";
+"to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Сегодня";
 "total" = "Total";
 "touch_id" = "Сенсорный идентификатор";
@@ -1118,6 +1125,7 @@
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
+"web3_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

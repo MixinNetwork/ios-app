@@ -19,7 +19,7 @@ class Web3SignOperation {
     }
     
     let address: String
-    let proposer: Web3Proposer
+    let proposer: Web3DappProposer
     let humanReadableMessage: String
     
     fileprivate let signable: WalletConnectDecodedSigningRequest.Signable
@@ -32,7 +32,7 @@ class Web3SignOperation {
     
     fileprivate init(
         address: String,
-        proposer: Web3Proposer,
+        proposer: Web3DappProposer,
         humanReadableMessage: String,
         signable: WalletConnectDecodedSigningRequest.Signable
     ) {
@@ -114,7 +114,7 @@ final class Web3SignWithWalletConnectOperation: Web3SignOperation {
     ) {
         self.session = session
         self.request = request
-        let proposer = Web3Proposer(name: session.name, host: session.host)
+        let proposer = Web3DappProposer(name: session.name, host: session.host)
         super.init(address: address,
                    proposer: proposer,
                    humanReadableMessage: request.humanReadable,
@@ -165,7 +165,7 @@ final class Web3SignWithBrowserWalletOperation: Web3SignOperation {
     
     init(
         address: String,
-        proposer: Web3Proposer,
+        proposer: Web3DappProposer,
         humanReadableMessage: String,
         signable: WalletConnectDecodedSigningRequest.Signable,
         sendWith sendImpl: @escaping ((String) async throws -> Void),

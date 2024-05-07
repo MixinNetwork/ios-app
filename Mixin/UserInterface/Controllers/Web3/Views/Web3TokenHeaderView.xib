@@ -19,8 +19,8 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="212"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="kAZ-pc-VB8">
-                    <rect key="frame" x="24" y="14" width="184.33333333333334" height="51"/>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="kAZ-pc-VB8">
+                    <rect key="frame" x="20" y="14" width="353" height="51"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jNj-El-Ol9" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="51" height="51"/>
@@ -31,16 +31,16 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="j7K-aB-xPd">
-                            <rect key="frame" x="58.999999999999993" y="0.0" width="125.33333333333331" height="51"/>
+                            <rect key="frame" x="59" y="0.0" width="294" height="51"/>
                             <subviews>
                                 <textView opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" scrollEnabled="NO" editable="NO" text="655366553" selectable="NO" layoutManager="textKit1" translatesAutoresizingMaskIntoConstraints="NO" id="4WH-iT-Ns3">
-                                    <rect key="frame" x="0.0" y="0.0" width="125.33333333333333" height="34"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="294" height="34"/>
                                     <color key="textColor" name="text"/>
                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="≈ $4080" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4F-lt-G0u">
-                                    <rect key="frame" x="0.0" y="34" width="125.33333333333333" height="17"/>
+                                    <rect key="frame" x="0.0" y="34" width="294" height="17"/>
                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                     <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>
@@ -74,7 +74,7 @@
                 <constraint firstAttribute="trailing" secondItem="ld8-8c-kZb" secondAttribute="trailing" id="bvk-gh-VZ6"/>
                 <constraint firstItem="ld8-8c-kZb" firstAttribute="leading" secondItem="Nfp-xu-toh" secondAttribute="leading" id="kDO-Mh-44A"/>
                 <constraint firstItem="lQD-eS-DOc" firstAttribute="leading" secondItem="Nfp-xu-toh" secondAttribute="leading" id="lCJ-08-Iki"/>
-                <constraint firstAttribute="trailing" secondItem="kAZ-pc-VB8" secondAttribute="trailing" priority="999" constant="20" id="wPQ-o4-PB8"/>
+                <constraint firstAttribute="trailing" secondItem="kAZ-pc-VB8" secondAttribute="trailing" constant="20" id="wPQ-o4-PB8"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>

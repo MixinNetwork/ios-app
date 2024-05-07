@@ -27,11 +27,13 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
         
     func render(transaction: Web3Transaction) {
         iconView.setIcon(web3Transaction: transaction)
+        titleLabel.text = transaction.operationType.capitalized
+
         let defalutLayer = { [unowned self] in
             hideViews(amountLabel1, symbolLabel1, amountLabel2, symbolLabel2, priceLabel)
-            titleLabel.text = transaction.operationType
             subtitleLabel.text = ""
         }
+        let isConfirmed = transaction.status == Web3Transaction.Web3TransactionStatus.confirmed.rawValue
         
         switch Web3Transaction.Web3TransactionType(rawValue: transaction.operationType) {
         case .receive, .send:
@@ -41,13 +43,22 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 
                 amountLabel1.text = CurrencyFormatter.localizedString(from: transfer.amount, format: .precision, sign: .always)
                 symbolLabel1.text = transfer.symbol
-                priceLabel.text = transfer.price
-                
-                if transfer.amount.hasMinusPrefix {
-                    amountLabel1.textColor = .walletRed
+                priceLabel.text = if transfer.decimalUSDPrice.isZero {
+                    R.string.localizable.na()
                 } else {
-                    amountLabel1.textColor = .walletGreen
+                    transfer.localizedFiatMoneyAmount
                 }
+                
+                if isConfirmed {
+                    if transfer.amount.hasMinusPrefix {
+                        amountLabel1.textColor = .walletRed
+                    } else {
+                        amountLabel1.textColor = .walletGreen
+                    }
+                } else {
+                    amountLabel1.textColor = .walletGray
+                }
+                
                 subtitleLabel.text = Address.compactRepresentation(of: transfer.sender)
             } else {
                 defalutLayer()
@@ -57,13 +68,14 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 hideViews(priceLabel)
                 showViews(amountLabel1, symbolLabel1, amountLabel2, symbolLabel2)
                 
+                subtitleLabel.text = "\(inTransfer.symbol) -> \(outTransfer.symbol)"
                 amountLabel1.text = CurrencyFormatter.localizedString(from: inTransfer.amount, format: .precision, sign: .always)
                 symbolLabel1.text = inTransfer.symbol
-                amountLabel1.textColor = .walletGreen
+                amountLabel1.textColor = isConfirmed ? .walletGreen : .walletGray
                 
-                amountLabel2.text = CurrencyFormatter.localizedString(from: outTransfer.amount, format: .precision, sign: .always)
+                amountLabel2.text = CurrencyFormatter.localizedString(from: "-\(outTransfer.amount)", format: .precision, sign: .always)
                 symbolLabel2.text = outTransfer.symbol
-                amountLabel2.textColor = .walletRed
+                amountLabel2.textColor = isConfirmed ? .walletRed : .walletGray
             } else {
                 defalutLayer()
             }

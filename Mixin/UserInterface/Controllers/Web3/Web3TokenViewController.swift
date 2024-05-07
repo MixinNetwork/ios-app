@@ -5,13 +5,15 @@ final class Web3TokenViewController: UIViewController {
     
     private let tableView = UITableView()
     
+    private let chains: [Web3Chain]
     private let address: String
     private let token: Web3Token
     
     private var transactions: [Web3Transaction]?
     
-    init(address: String, token: Web3Token) {
+    init(address: String, chains: [Web3Chain], token: Web3Token) {
         self.address = address
+        self.chains = chains
         self.token = token
         super.init(nibName: nil, bundle: nil)
     }
@@ -26,7 +28,7 @@ final class Web3TokenViewController: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
-        tableView.rowHeight = 50
+        tableView.rowHeight = 70
         tableView.separatorStyle = .none
         tableView.register(R.nib.web3TransactionCell)
         tableView.dataSource = self
@@ -35,8 +37,21 @@ final class Web3TokenViewController: UIViewController {
         loadTransactions()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            layoutTableHeaderView()
+        }
+    }
     
     private func loadTransactions() {
+        let tableHeaderView = R.nib.web3TokenHeaderView(withOwner: nil)!
+        tableHeaderView.render(token: token)
+        tableHeaderView.addTarget(self,
+                                  send: #selector(send(_:)),
+                                  receive: #selector(receive(_:)))
+        tableView.tableHeaderView = tableHeaderView
+        layoutTableHeaderView()
         tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
         
         Web3API.transactions(address: address, chainID: token.chainID, fungibleID: token.fungibleID) { result in
@@ -58,6 +73,32 @@ final class Web3TokenViewController: UIViewController {
         }
     }
     
+    private func layoutTableHeaderView() {
+        guard let tableHeaderView = tableView.tableHeaderView else {
+            return
+        }
+        let sizeToFit = CGSize(width: tableHeaderView.frame.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let height = tableHeaderView.systemLayoutSizeFitting(sizeToFit).height
+        tableHeaderView.frame.size.height = height
+        tableView.tableHeaderView = tableHeaderView
+    }
+    
+    @objc private func send(_ sender: Any) {
+        guard let chainID = token.mixinChainID, let chain = Web3Chain.chain(mixinChainID: chainID) else {
+            return
+        }
+        let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
+        let selector = Web3SendingDestinationViewController(payment: payment)
+        let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.address())
+        navigationController?.pushViewController(container, animated: true)
+    }
+    
+    @objc private func receive(_ sender: Any) {
+        let source = Web3ReceiveSourceViewController(address: address, chains: chains)
+        let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
+        navigationController?.pushViewController(container, animated: true)
+    }
 }
 
 // MARK: - UITableViewDataSource

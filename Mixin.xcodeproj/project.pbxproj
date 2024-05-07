@@ -15,6 +15,9 @@
 		521AEF542BEA03C200F48884 /* Web3TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */; };
 		521AEF582BEA044800F48884 /* Web3TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521AEF572BEA044800F48884 /* Web3TransactionCell.xib */; };
 		521AEF5A2BEA0AC300F48884 /* Web3TransactionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */; };
+		52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */; };
+		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
+		52589AE52BEA52910081C2BF /* Web3TokenHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -1250,6 +1253,9 @@
 		521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionCell.swift; sourceTree = "<group>"; };
 		521AEF572BEA044800F48884 /* Web3TransactionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionCell.xib; sourceTree = "<group>"; };
 		521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionIconView.swift; sourceTree = "<group>"; };
+		52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TokenHeaderView.xib; sourceTree = "<group>"; };
+		52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTextAttachment.swift; sourceTree = "<group>"; };
+		52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenHeaderView.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -2584,6 +2590,15 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		52589ADC2BEA50A60081C2BF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */,
+				52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		5E5CA7832674AC4100C1E113 /* ScreenLock */ = {
 			isa = PBXGroup;
 			children = (
@@ -2929,6 +2944,7 @@
 				7B26D1CD219EEB5A00AE113A /* Views */,
 				94E619B72645BA7400A38049 /* Web */,
 				7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */,
+				52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */,
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
 				7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */,
 				7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */,
@@ -3412,6 +3428,7 @@
 			isa = PBXGroup;
 			children = (
 				521AEF522BEA039700F48884 /* Cells */,
+				52589ADC2BEA50A60081C2BF /* Views */,
 				948E276929D2A518002BFCE1 /* Model */,
 				94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */,
 				94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */,
@@ -4775,6 +4792,7 @@
 				943BC6632BCD1FF4003FA778 /* Web3BrowserView.xib in Resources */,
 				7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
+				52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				94B13FC32B5ED5F9001333BE /* ExploreSearchView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
@@ -5148,6 +5166,7 @@
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
+				52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,
 				7BDFAE902559008800296F8B /* WalletSearchViewController.swift in Sources */,
@@ -5988,6 +6007,7 @@
 				7B9F8110222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
+				52589AE52BEA52910081C2BF /* Web3TokenHeaderView.swift in Sources */,
 				94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */,
 				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
 				7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */,

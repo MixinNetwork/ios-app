@@ -10,7 +10,7 @@ public struct Web3Transaction {
     public let receiver: String
     public let fee: Fee
     public let transfers: [Web3Transfer]
-    public let approvals: [Fee]
+    public let approvals: [Approval]
     public let appMetadata: AppMetadata?
     public let createdAt: String
     
@@ -74,7 +74,26 @@ extension Web3Transaction {
         
     }
     
-    public struct Web3Transfer: Decodable {
+    public class Approval: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case name = "name"
+            case symbol = "symbol"
+            case iconURL = "icon_url"
+            case sender = "sender"
+            case amount = "amount"
+        }
+        
+        public let name: String
+        public let symbol: String
+        public let iconURL: String
+        public let sender: String
+        public let amount: String
+        
+        public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+    }
+    
+    public class Web3Transfer: Decodable {
         
         enum CodingKeys: String, CodingKey {
             case name = "name"
@@ -94,6 +113,14 @@ extension Web3Transaction {
         public let amount: String
         public let price: String
         
+        public private(set) lazy var decimalUSDPrice = Decimal(string: price, locale: .enUSPOSIX) ?? 0
+        
+        public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+        
+        public private(set) lazy var localizedFiatMoneyAmount: String = {
+            let value = decimalAmount * decimalUSDPrice * Currency.current.decimalRate
+            return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        }()
         
         public enum Direction: String {
             case `in`
@@ -124,5 +151,10 @@ extension Web3Transaction {
         case trade
         case unstake
     }
-
+    
+    public enum Web3TransactionStatus: String {
+        case pending
+        case confirmed
+        case failed
+    }
 }

@@ -228,7 +228,7 @@ extension ExploreWeb3ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let address, let token = tokens?[indexPath.row] {
-            let viewController = Web3TokenViewController(address: address, token: token)
+            let viewController = Web3TokenViewController(address: address, chains: chains, token: token)
             let container = ContainerViewController.instance(viewController: viewController, title: token.name)
             navigationController?.pushViewController(container, animated: true)
         }

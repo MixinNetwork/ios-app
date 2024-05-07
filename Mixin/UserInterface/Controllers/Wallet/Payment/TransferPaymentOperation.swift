@@ -27,6 +27,7 @@ struct TransferPaymentOperation {
     let amount: Decimal
     let memo: String
     let reference: String?
+    let inscription: InscriptionItem?
     
     func start(pin: String) async throws {
         let destination = self.destination
@@ -34,7 +35,7 @@ struct TransferPaymentOperation {
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
         let amount = Token.amountString(from: amount)
-        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID)")
+        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), inscription: \(inscription?.inscriptionHash ?? "(null)")")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
         Logger.general.info(category: "Transfer", message: "SpendKey ready")
@@ -170,7 +171,7 @@ struct TransferPaymentOperation {
                                     transactionHash: signedTx.hash,
                                     createdAt: now,
                                     traceID: traceID, 
-                                    inscriptionHash: nil)
+                                    inscriptionHash: inscription?.inscriptionHash)
         let trace: Trace?
         switch destination {
         case .user, .multisig:

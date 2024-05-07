@@ -15,10 +15,6 @@ public final class InscriptionAPI: MixinAPI {
         
     }
     
-    public static func collection(collectionHash: String) -> MixinAPI.Result<InscriptionCollection> {
-        return request(method: .get, path: Path.collection(collectionHash: collectionHash))
-    }
-    
     public static func inscription(inscriptionHash: String) -> MixinAPI.Result<Inscription> {
         return request(method: .get, path: Path.inscription(inscriptionHash: inscriptionHash))
     }
@@ -27,7 +23,12 @@ public final class InscriptionAPI: MixinAPI {
         try await request(method: .get, path: Path.inscription(inscriptionHash: inscriptionHash))
     }
     
+    public static func collection(collectionHash: String) -> MixinAPI.Result<InscriptionCollection> {
+        return request(method: .get, path: Path.collection(collectionHash: collectionHash))
+    }
+    
     public static func collection(collectionHash: String) async throws -> InscriptionCollection {
         try await request(method: .get, path: Path.collection(collectionHash: collectionHash))
     }
+    
 }

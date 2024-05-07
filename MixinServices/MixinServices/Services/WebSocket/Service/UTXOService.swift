@@ -255,6 +255,12 @@ extension UTXOService {
         case maxSpendingCountExceeded
     }
     
+    public enum InscriptionCollectingResult {
+        case success(OutputCollection)
+        case missingOutput
+        case invalidAmount
+    }
+    
     public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
         // Select 1 more output to see if there's more outputs unspent
         var unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
@@ -302,6 +308,17 @@ extension UTXOService {
         }
         
         return OutputCollection(outputs: outputs, amount: amount)
+    }
+    
+    public func inscriptionOutput(hash: String) -> InscriptionCollectingResult {
+        guard let output = OutputDAO.shared.getOutput(inscriptionHash: hash) else {
+            return .missingOutput
+        }
+        guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+            return .invalidAmount
+        }
+        let collection = OutputCollection(outputs: [output], amount: amount)
+        return .success(collection)
     }
     
 }

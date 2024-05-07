@@ -33,4 +33,5 @@ public struct InscriptionCollection: Codable, DatabaseColumnConvertible, MixinFe
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
+    
 }

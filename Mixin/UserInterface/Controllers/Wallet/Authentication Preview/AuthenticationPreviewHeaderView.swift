@@ -10,7 +10,6 @@ final class AuthenticationPreviewHeaderView: UIView {
     
     private weak var imageView: UIImageView?
     private weak var assetIconView: AssetIconView?
-    private weak var inscriptionIconView: InscriptionIconView?
     private weak var progressView: AuthenticationProgressView?
     
     override func awakeFromNib() {
@@ -54,22 +53,6 @@ final class AuthenticationPreviewHeaderView: UIView {
             self.assetIconView = iconView
         }
         iconView.setIcon(token: token)
-    }
-    
-    func setIcon(inscription: InscriptionItem) {
-        let iconView: InscriptionIconView
-        if let view = self.inscriptionIconView, view.isDescendant(of: iconWrapperView) {
-            iconView = view
-        } else {
-            for iconView in iconWrapperView.subviews {
-                iconView.removeFromSuperview()
-            }
-            iconView = InscriptionIconView()
-            iconWrapperView.addSubview(iconView)
-            iconView.snp.makeEdgesEqualToSuperview()
-            self.inscriptionIconView = iconView
-        }
-        iconView.setIcon(inscription: inscription)
     }
     
     func setIcon(progress: AuthenticationProgressView.Progress) {

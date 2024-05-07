@@ -9,7 +9,7 @@ public final class InscriptionItem: Inscription {
         
         case tokenName = "token_name"
         case tokenSymbol = "token_symbol"
-        case tokenIconUrl = "token_icon_url"
+        case tokenIconURL = "token_icon_url"
     }
     
     public var collectionName: String?
@@ -17,7 +17,7 @@ public final class InscriptionItem: Inscription {
     
     public let tokenName: String
     public let tokenSymbol: String
-    public let tokenIconUrl: String
+    public let tokenIconURL: String
     
     required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: JoinedQueryCodingKeys.self)
@@ -27,8 +27,9 @@ public final class InscriptionItem: Inscription {
         
         self.tokenName = try container.decode(String.self, forKey: .tokenName)
         self.tokenSymbol = try container.decode(String.self, forKey: .tokenSymbol)
-        self.tokenIconUrl = try container.decode(String.self, forKey: .tokenIconUrl)
+        self.tokenIconURL = try container.decode(String.self, forKey: .tokenIconURL)
         
         try super.init(from: decoder)
     }
+    
 }

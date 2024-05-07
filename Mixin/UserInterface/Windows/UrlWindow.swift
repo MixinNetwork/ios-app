@@ -921,16 +921,6 @@ extension UrlWindow {
                 destination = .mainnet(address)
             }
             
-            let inscriptionItem: InscriptionItem?
-            if let inscriptionHash = paymentURL.inscription {
-                guard let item = syncInscription(inscriptionHash: inscriptionHash, hud: hud) else {
-                    return
-                }
-                inscriptionItem = item
-            } else {
-                inscriptionItem = nil
-            }
-            
             if let request = paymentURL.request {
                 guard let token = syncToken(assetID: request.asset, hud: hud) else {
                     return
@@ -945,6 +935,7 @@ extension UrlWindow {
                     payment.checkPreconditions(
                         transferTo: destination,
                         reference: paymentURL.reference,
+                        inscription: paymentURL.inscription,
                         on: homeContainer
                     ) { reason in
                         switch reason {
@@ -956,24 +947,14 @@ extension UrlWindow {
                         }
                     } onSuccess: { (operation, issues) in
                         hud.hide()
-                        
-                        let preview: UIViewController
-                        
-                        if let inscriptionItem = inscriptionItem {
-                            // FIX ME
-                            // preview = InscriptionPriviewViewController(inscription: inscriptionItem, operation: operation)
-                            preview = UIViewController()
-                        } else {
-                            let redirection = source.isExternal ? paymentURL.redirection : nil
-                            let preview = TransferPreviewViewController(issues: issues,
-                                                                        operation: operation,
-                                                                        amountDisplay: .byToken,
-                                                                        tokenAmount: request.amount,
-                                                                        fiatMoneyAmount: fiatMoneyAmount,
-                                                                        redirection: redirection)
-                            preview.manipulateNavigationStackOnFinished = false
-                        }
-                        
+                        let redirection = source.isExternal ? paymentURL.redirection : nil
+                        let preview = TransferPreviewViewController(issues: issues,
+                                                                    operation: operation,
+                                                                    amountDisplay: .byToken,
+                                                                    tokenAmount: request.amount,
+                                                                    fiatMoneyAmount: fiatMoneyAmount,
+                                                                    redirection: redirection)
+                        preview.manipulateNavigationStackOnFinished = false
                         homeContainer.present(preview, animated: true)
                     }
                 }
@@ -1204,47 +1185,6 @@ extension UrlWindow {
         return asset
     }
     
-    private static func syncInscription(inscriptionHash: String, hud: Hud) -> InscriptionItem? {
-        var inscriptionItem = InscriptionDAO.shared.inscriptionItem(with: inscriptionHash)
-        if inscriptionItem == nil {
-            switch InscriptionAPI.inscription(inscriptionHash: inscriptionHash) {
-            case let .success(inscription):
-                inscriptionItem = InscriptionDAO.shared.saveInscription(inscription: inscription)
-                if inscriptionItem == nil {
-                    Logger.general.error(category: "UrlWindow", message: "No inscription: \(inscriptionHash) from local")
-                }
-            case let .failure(error):
-                Logger.general.error(category: "UrlWindow", message: "No inscription: \(inscriptionHash) from remote, error: \(error)")
-                let text = error.localizedDescription(overridingNotFoundDescriptionWith: "Inscription not found") // FIX ME
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: text)
-                    hud.scheduleAutoHidden()
-                }
-                return nil
-            }
-        }
-        
-        if let collectionHash = inscriptionItem?.collectionHash,
-            !InscriptionDAO.shared.collectionExists(collectionHash: collectionHash) {
-            if case let .success(collection) = InscriptionAPI.collection(collectionHash: collectionHash) {
-                InscriptionDAO.shared.save(collection: collection)
-                inscriptionItem?.collectionName = collection.name
-                inscriptionItem?.collectionIconURL = collection.iconURL
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-        if inscriptionItem == nil {
-            DispatchQueue.main.async {
-                hud.set(style: .error, text: "Inscription not found") // FIX ME
-                hud.scheduleAutoHidden()
-            }
-        }
-        return inscriptionItem
-    }
-
     private static func syncUser(userId: String, hud: Hud) -> (UserItem, Bool)? {
         var user = UserDAO.shared.getUser(userId: userId)
         var loadUserFromLocal = true

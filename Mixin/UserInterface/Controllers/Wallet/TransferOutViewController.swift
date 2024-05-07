@@ -279,6 +279,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             payment.checkPreconditions(
                 transferTo: .user(opponent),
                 reference: nil,
+                inscription: nil,
                 on: self,
                 onFailure: onPreconditonFailure
             ) { (operation, issues) in
@@ -309,6 +310,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             payment.checkPreconditions(
                 transferTo: .mainnet(address),
                 reference: nil,
+                inscription: nil,
                 on: self,
                 onFailure: onPreconditonFailure
             ) { (operation, issues) in

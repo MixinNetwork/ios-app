@@ -36,18 +36,37 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         let token = operation.token
         
-        tableHeaderView.setIcon(token: token)
+        if let inscription = operation.inscription {
+            tableHeaderView.setIcon { imageView in
+                if inscription.contentType.starts(with: "image/"), let url = URL(string: inscription.contentURL) {
+                    imageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+                } else {
+                    // TODO: Placeholder
+                }
+            }
+        } else {
+            tableHeaderView.setIcon(token: token)
+        }
         tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
         tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+        
+        var rows: [Row]
         
         let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
-        var rows: [Row] = [
-            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
-        ]
+        if let inscription = operation.inscription {
+            rows = [
+                .info(caption: .collectible, content: "\(inscription.collectionName ?? "") #\(inscription.sequence)")
+            ]
+        } else {
+            rows = [
+                .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
+            ]
+        }
+        
         let senderThreshold: Int32?
         switch operation.destination {
         case let .user(user):
@@ -64,11 +83,15 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             let user = UserItem.createUser(from: account)
             rows.append(.senders([user], threshold: senderThreshold))
         }
-        rows.append(contentsOf: [
-            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
-            .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
-            .info(caption: .network, content: token.depositNetworkName ?? ""),
-        ])
+        
+        if operation.inscription == nil {
+            rows.append(contentsOf: [
+                .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
+                .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
+                .info(caption: .network, content: token.depositNetworkName ?? ""),
+            ])
+        }
+        
         if !operation.memo.isEmpty {
             rows.append(.info(caption: .memo, content: operation.memo))
         }

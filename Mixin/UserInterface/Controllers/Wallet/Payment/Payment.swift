@@ -11,6 +11,7 @@ struct Payment {
     
 }
 
+// MARK: - Transfer
 extension Payment {
     
     enum TransferDestination {
@@ -35,6 +36,7 @@ extension Payment {
     func checkPreconditions(
         transferTo destination: TransferDestination,
         reference: String?,
+        inscription: String?,
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
         onSuccess: @MainActor @escaping (TransferPaymentOperation, [PaymentPreconditionIssue]) -> Void
@@ -71,8 +73,30 @@ extension Payment {
                     onFailure(reason)
                 }
             case .passed(let issues):
-                let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
-                switch result {
+                let item: InscriptionItem?
+                let outputCollectionResult: OutputCollectingResult
+                if let inscriptionHash = inscription {
+                    do {
+                        item = try await inscriptionItem(hash: inscriptionHash)
+                        let result = UTXOService.shared.inscriptionOutput(hash: inscriptionHash)
+                        switch result {
+                        case .success(let collection):
+                            outputCollectionResult = .success(collection)
+                        case .missingOutput:
+                            outputCollectionResult = .failure(.description("Missing Output"))
+                        case .invalidAmount:
+                            outputCollectionResult = .failure(.description("Invalid Amount"))
+                        }
+                    } catch {
+                        item = nil
+                        outputCollectionResult = .failure(.description(error.localizedDescription))
+                    }
+                } else {
+                    item = nil
+                    outputCollectionResult = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
+                }
+                
+                switch outputCollectionResult {
                 case .success(let collection):
                     let operation = TransferPaymentOperation(traceID: traceID,
                                                              spendingOutputs: collection,
@@ -80,7 +104,8 @@ extension Payment {
                                                              token: token,
                                                              amount: tokenAmount,
                                                              memo: memo,
-                                                             reference: reference)
+                                                             reference: reference,
+                                                             inscription: item)
                     await MainActor.run {
                         onSuccess(operation, issues)
                     }
@@ -95,6 +120,7 @@ extension Payment {
     
 }
 
+// MARK: - Withdraw
 extension Payment {
     
     enum WithdrawalDestination {
@@ -213,11 +239,22 @@ extension Payment {
     
 }
 
+// MARK: - Private works
 extension Payment {
     
     enum OutputCollectingResult {
         case success(UTXOService.OutputCollection)
         case failure(PaymentPreconditionFailureReason)
+    }
+    
+    enum InscriptionError: Error, LocalizedError {
+        
+        case missingLocalItem
+        
+        var errorDescription: String? {
+            "Missing Inscription"
+        }
+        
     }
     
     private func collectOutputs(
@@ -265,6 +302,28 @@ extension Payment {
             }
         }
         return .passed(issues)
+    }
+    
+    private func inscriptionItem(hash: String) async throws -> InscriptionItem {
+        let inscriptionItem: InscriptionItem
+        if let item = InscriptionDAO.shared.inscriptionItem(with: hash) {
+            inscriptionItem = item
+        } else {
+            let inscription = try await InscriptionAPI.inscription(inscriptionHash: hash)
+            guard let item = InscriptionDAO.shared.saveAndFetch(inscription: inscription) else {
+                throw InscriptionError.missingLocalItem
+            }
+            inscriptionItem = item
+        }
+        
+        if inscriptionItem.collectionName == nil || inscriptionItem.collectionIconURL == nil {
+            let collection = try await InscriptionAPI.collection(collectionHash: inscriptionItem.collectionHash)
+            InscriptionDAO.shared.save(collection: collection)
+            inscriptionItem.collectionName = collection.name
+            inscriptionItem.collectionIconURL = collection.iconURL
+        }
+        
+        return inscriptionItem
     }
     
 }

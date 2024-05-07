@@ -704,6 +704,7 @@
 		9414A7832BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */; };
 		9414A7882BE78D8700FA35EB /* DecimalAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */; };
 		9414A78A2BE7911200FA35EB /* WithdrawInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */; };
+		9414A84A2BE9BF4600FA35EB /* Web3TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */; };
 		9415D4A32BCBEF6800C78A75 /* Web3DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */; };
 		9415D4A42BCBEF6800C78A75 /* Web3DepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */; };
 		9416231A29BEEFB800E540B9 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 9416231929BEEFB800E540B9 /* OrderedCollections */; };
@@ -1943,6 +1944,7 @@
 		9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferInputAmountViewController.swift; sourceTree = "<group>"; };
 		9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalAccumulator.swift; sourceTree = "<group>"; };
 		9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawInputAmountViewController.swift; sourceTree = "<group>"; };
+		9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenViewController.swift; sourceTree = "<group>"; };
 		9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DepositViewController.swift; sourceTree = "<group>"; };
 		9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3DepositView.xib; sourceTree = "<group>"; };
 		9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusRecorder.swift; sourceTree = "<group>"; };
@@ -3412,6 +3414,7 @@
 				9401A6052BDAA74A00679686 /* Web3AccountCell.swift */,
 				9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */,
 				9401A5F92BDA899900679686 /* Web3SendingDestinationViewController.swift */,
+				9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -5279,6 +5282,7 @@
 				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
+				9414A84A2BE9BF4600FA35EB /* Web3TokenViewController.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7BEED890246D0C3D00387EAE /* CallAdapter.swift in Sources */,

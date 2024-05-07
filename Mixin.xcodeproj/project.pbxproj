@@ -12,6 +12,9 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		521AEF542BEA03C200F48884 /* Web3TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */; };
+		521AEF582BEA044800F48884 /* Web3TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521AEF572BEA044800F48884 /* Web3TransactionCell.xib */; };
+		521AEF5A2BEA0AC300F48884 /* Web3TransactionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -1244,6 +1247,9 @@
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
+		521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionCell.swift; sourceTree = "<group>"; };
+		521AEF572BEA044800F48884 /* Web3TransactionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionCell.xib; sourceTree = "<group>"; };
+		521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionIconView.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -2564,6 +2570,20 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		521AEF522BEA039700F48884 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */,
+				946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */,
+				9401A6062BDAA74A00679686 /* Web3AccountCell.xib */,
+				9401A6052BDAA74A00679686 /* Web3AccountCell.swift */,
+				521AEF572BEA044800F48884 /* Web3TransactionCell.xib */,
+				521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */,
+				521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		5E5CA7832674AC4100C1E113 /* ScreenLock */ = {
 			isa = PBXGroup;
 			children = (
@@ -3391,13 +3411,12 @@
 		94ED3EF32990DB8D003BC236 /* Web3 */ = {
 			isa = PBXGroup;
 			children = (
+				521AEF522BEA039700F48884 /* Cells */,
 				948E276929D2A518002BFCE1 /* Model */,
 				94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */,
 				94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */,
 				9419794E2BA47620002BA19F /* Web3SignViewController.swift */,
 				94D3087F2BA73F810017494C /* Web3TransferViewController.swift */,
-				946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */,
-				946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */,
 				946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */,
 				943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */,
 				9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */,
@@ -3410,8 +3429,6 @@
 				9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */,
 				94350E372BCFE8C5007283B7 /* DecimalButton.swift */,
 				9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */,
-				9401A6062BDAA74A00679686 /* Web3AccountCell.xib */,
-				9401A6052BDAA74A00679686 /* Web3AccountCell.swift */,
 				9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */,
 				9401A5F92BDA899900679686 /* Web3SendingDestinationViewController.swift */,
 				9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */,
@@ -4869,6 +4886,7 @@
 				94CF1F2C2BA1BB9800BC52C1 /* Web3AccountLockedHeaderView.xib in Resources */,
 				7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
+				521AEF582BEA044800F48884 /* Web3TransactionCell.xib in Resources */,
 				948E6CB628AF95CC00DFF5DF /* IntroView.xib in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
@@ -5266,6 +5284,7 @@
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				DF7FAA85247D332F00B0164A /* AddressTransactionsViewController.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
+				521AEF542BEA03C200F48884 /* Web3TransactionCell.swift in Sources */,
 				944C61FF2B6C033500C7DF06 /* EditAddressPreviewViewController.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
@@ -5627,6 +5646,7 @@
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */,
 				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
+				521AEF5A2BEA0AC300F48884 /* Web3TransactionIconView.swift in Sources */,
 				7C0FAAC727E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				94350E3C2BCFE8C5007283B7 /* InputAmountViewController.swift in Sources */,

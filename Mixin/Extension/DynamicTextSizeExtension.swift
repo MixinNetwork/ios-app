@@ -72,6 +72,8 @@ extension UILabel {
                 font = .scaledFont(ofSize: 12, weight: .semibold)
             case "medium14":
                 font = .scaledFont(ofSize: 14, weight: .medium)
+            case "medium16":
+                font = .scaledFont(ofSize: 16, weight: .medium)
             case "regular18":
                 font = .scaledFont(ofSize: 18, weight: .regular)
             case "regular16":

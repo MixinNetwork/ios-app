@@ -9,9 +9,9 @@ public struct Web3Transaction {
     public let sender: String
     public let receiver: String
     public let fee: Fee
-    public let transfers: [Transfer]
+    public let transfers: [Web3Transfer]
     public let approvals: [Fee]
-    public let appMetadata: AppMetadata
+    public let appMetadata: AppMetadata?
     public let createdAt: String
     
 }
@@ -74,7 +74,7 @@ extension Web3Transaction {
         
     }
     
-    public struct Transfer: Decodable {
+    public struct Web3Transfer: Decodable {
         
         enum CodingKeys: String, CodingKey {
             case name = "name"
@@ -94,6 +94,35 @@ extension Web3Transaction {
         public let amount: String
         public let price: String
         
+        
+        public enum Direction: String {
+            case `in`
+            case out
+            case `self`
+        }
     }
     
+}
+
+extension Web3Transaction {
+    
+    public enum Web3TransactionType: String {
+        case receive
+        case send
+        case deposit
+        case withdraw
+        case approve
+        case borrow
+        case burn
+        case cancel
+        case claim
+        case deploy
+        case execute
+        case mint
+        case repay
+        case stake
+        case trade
+        case unstake
+    }
+
 }

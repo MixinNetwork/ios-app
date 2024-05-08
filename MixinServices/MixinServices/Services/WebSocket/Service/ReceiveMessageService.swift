@@ -1140,22 +1140,20 @@ extension ReceiveMessageService {
             return
         }
 
-        switch data.category {
-        case MessageCategory.SYSTEM_CONVERSATION.rawValue:
+        switch MessageCategory(rawValue: data.category) {
+        case .SYSTEM_CONVERSATION:
             messageDispatchQueue.sync {
                 processSystemConversationMessage(data: data)
             }
-        case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
+        case .SYSTEM_ACCOUNT_SNAPSHOT:
             processSystemSnapshotMessage(data: data)
-        case MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue:
+        case .SYSTEM_SAFE_SNAPSHOT, .SYSTEM_SAFE_INSCRIPTION:
             processSafeSnapshotMessage(data: data)
-        case MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue:
-            processSafeSnapshotMessage(data: data)
-        case MessageCategory.SYSTEM_SESSION.rawValue:
+        case .SYSTEM_SESSION:
             processSystemSessionMessage(data: data)
-        case MessageCategory.SYSTEM_USER.rawValue:
+        case .SYSTEM_USER:
             processSystemUserMessage(data: data)
-        case MessageCategory.SYSTEM_CIRCLE.rawValue:
+        case .SYSTEM_CIRCLE:
             processSystemCircleMessage(data: data)
         default:
             break

@@ -65,12 +65,6 @@ public final class MessageItem {
     public var quoteMessageId: String?
     public var quoteContent: Data?
     
-    public var inscriptionHash: String?
-    public var inscriptionCollectionName: String?
-    public var inscriptionSequence: String?
-    public var inscriptionContentType: String?
-    public var inscriptionContentUrl: String?
-    
     public var mentionsJson: Data?
     public var hasMentionRead: Bool?
     
@@ -80,6 +74,12 @@ public final class MessageItem {
     public var albumId: String?
 
     public var expireIn: Int64?
+    
+    public var inscriptionHash: String?
+    public var inscriptionCollectionName: String?
+    public var inscriptionSequence: UInt64?
+    public var inscriptionContentType: String?
+    public var inscriptionContentURL: String?
     
     public lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let content = content, let data = Data(base64Encoded: content) else {
@@ -290,6 +290,12 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case albumId = "album_id"
         
         case expireIn = "expire_in"
+        
+        case inscriptionHash = "inscription_hash"
+        case inscriptionCollectionName = "inscription_collection_name"
+        case inscriptionSequence = "inscription_sequence"
+        case inscriptionContentType = "inscription_content_type"
+        case inscriptionContentURL = "inscription_content_url"
     }
     
 }

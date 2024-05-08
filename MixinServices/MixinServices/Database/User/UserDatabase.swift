@@ -720,21 +720,21 @@ public final class UserDatabase: Database {
             
             let sqls = [
                 """
-                CREATE TABLE IF NOT EXISTS `inscription_collection` (
+                CREATE TABLE IF NOT EXISTS `inscription_collections` (
                     `collection_hash` TEXT NOT NULL,
                     `supply` TEXT NOT NULL,
                     `unit` TEXT NOT NULL,
                     `symbol` TEXT NOT NULL,
                     `name` TEXT NOT NULL,
                     `icon_url` TEXT NOT NULL,
-                    `icon_at` TEXT NOT NULL,
+                    `created_at` TEXT NOT NULL,
                     `updated_at` TEXT NOT NULL,
                     PRIMARY KEY(`collection_hash`)
                 )
                 """,
                 
                 """
-                CREATE TABLE IF NOT EXISTS `inscription_item` (
+                CREATE TABLE IF NOT EXISTS `inscription_items` (
                     `inscription_hash` TEXT NOT NULL,
                     `collection_hash` TEXT NOT NULL,
                     `sequence` INTEGER NOT NULL,
@@ -748,7 +748,7 @@ public final class UserDatabase: Database {
                 )
                 """,
                 
-                "CREATE INDEX IF NOT EXISTS `index_outputs_inscription_hash` ON `outputs` (`inscription_hash`)",
+                "CREATE INDEX IF NOT EXISTS `index_outputs_inscription_hash` ON `outputs` (`inscription_hash`) WHERE `inscription_hash` IS NOT NULL",
                 "CREATE INDEX IF NOT EXISTS `index_tokens_collection_hash` ON `tokens` (`collection_hash`)",
             ]
             for sql in sqls {

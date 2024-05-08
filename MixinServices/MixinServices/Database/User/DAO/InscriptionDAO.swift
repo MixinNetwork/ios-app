@@ -8,9 +8,9 @@ public final class InscriptionDAO: UserDatabaseDAO {
         SELECT i.*, ic.name AS collection_name, ic.icon_url AS collection_icon_url,
             t.symbol AS token_symbol, t.name AS token_name, t.icon_url AS token_icon_url
         FROM (SELECT inscription_hash, asset FROM outputs WHERE state = 'unspent' AND inscription_hash IS NOT NULL) op
-            INNER JOIN inscription_item i ON i.inscription_hash = op.inscription_hash
+            INNER JOIN inscription_items i ON i.inscription_hash = op.inscription_hash
             INNER JOIN tokens t ON t.kernel_asset_id = op.asset
-            LEFT JOIN inscription_collection ic ON i.collection_hash = ic.collection_hash
+            LEFT JOIN inscription_collections ic ON i.collection_hash = ic.collection_hash
         """
         static let order = "i.updated_at DESC"
         static let selectWithInscriptionHash = "\(SQL.selector) WHERE op.inscription_hash = ?"

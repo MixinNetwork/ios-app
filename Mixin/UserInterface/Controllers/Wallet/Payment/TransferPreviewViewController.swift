@@ -38,10 +38,12 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         if let inscription = operation.inscription {
             tableHeaderView.setIcon { imageView in
+                imageView.layer.cornerRadius = 12
                 if inscription.contentType.starts(with: "image/"), let url = URL(string: inscription.contentURL) {
                     imageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
                 } else {
-                    // TODO: Placeholder
+                    imageView.backgroundColor = R.color.sticker_button_background_disabled()
+                    imageView.image = R.image.inscription_Intaglio()
                 }
             }
         } else {

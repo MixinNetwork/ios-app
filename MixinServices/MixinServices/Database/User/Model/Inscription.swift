@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
+public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
     public enum CodingKeys: String, CodingKey {
         case inscriptionHash = "inscription_hash"
@@ -17,7 +17,7 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
     
     public let inscriptionHash: String
     public let collectionHash: String
-    public let sequence: String
+    public let sequence: UInt64
     public let contentType: String
     public let contentURL: String
     public let occupiedBy: String?
@@ -25,8 +25,8 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
     public let createdAt: String
     public let updatedAt: String
     
-    public init(
-        inscriptionHash: String, collectionHash: String, sequence: String,
+    init(
+        inscriptionHash: String, collectionHash: String, sequence: UInt64,
         contentType: String, contentURL: String, occupiedBy: String?,
         occupiedAt: String?, createdAt: String, updatedAt: String
     ) {
@@ -40,5 +40,11 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
+    
+}
+
+extension Inscription: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "inscription_items"
     
 }

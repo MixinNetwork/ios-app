@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class InscriptionViewController: UIViewController {
+final class InscriptionViewController: UIViewController {
     
     let tableView = UITableView()
     var tableHeaderView: InfiniteTopView!
@@ -40,8 +40,8 @@ class InscriptionViewController: UIViewController {
         let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
         return container
     }
+    
 }
-
 
 extension InscriptionViewController {
     

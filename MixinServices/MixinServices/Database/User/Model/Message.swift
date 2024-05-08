@@ -136,26 +136,27 @@ extension Message {
     }
     
     public static func createMessage(snapshot: SafeSnapshot, data: BlazeMessageData) -> Message {
-        createMessage(messageId: data.messageId,
-                      conversationId: data.conversationId,
-                      userId: data.userId,
-                      category: data.category,
-                      status: MessageStatus.DELIVERED.rawValue,
-                      action: snapshot.type,
-                      snapshotId: snapshot.id,
-                      createdAt: data.createdAt)
+        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_SNAPSHOT : .SYSTEM_SAFE_INSCRIPTION
+        return createMessage(messageId: data.messageId,
+                             conversationId: data.conversationId,
+                             userId: data.userId,
+                             category: category.rawValue,
+                             status: MessageStatus.DELIVERED.rawValue,
+                             action: snapshot.type,
+                             snapshotId: snapshot.id,
+                             createdAt: data.createdAt)
     }
     
     public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
         let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_SNAPSHOT : .SYSTEM_SAFE_INSCRIPTION
         return createMessage(messageId: UUID().uuidString.lowercased(),
-                      conversationId: conversationID,
-                      userId: myUserId,
-                      category: category.rawValue,
-                      status: MessageStatus.DELIVERED.rawValue,
-                      action: snapshot.type,
-                      snapshotId: snapshot.id,
-                      createdAt: createdAt)
+                             conversationId: conversationID,
+                             userId: myUserId,
+                             category: category.rawValue,
+                             status: MessageStatus.DELIVERED.rawValue,
+                             action: snapshot.type,
+                             snapshotId: snapshot.id,
+                             createdAt: createdAt)
     }
     
     public static func createMessage(textMessage plainText: String, data: BlazeMessageData) -> Message {

@@ -1,17 +1,17 @@
 import UIKit
 import MixinServices
 
-class Web3TransactionIconView: UIView {
+class BadgeIconView: UIView {
     
-    let chainIconWidth: CGFloat = 10
-    let chainIconOutlineWidth: CGFloat = 2
+    @IBInspectable var chainIconWidth: CGFloat = 10
+    @IBInspectable var chainIconOutlineWidth: CGFloat = 2
     
     let iconImageView = UIImageView()
     let chainBackgroundView = SolidBackgroundColoredView()
     let chainImageView = UIImageView()
     let shadowOffset: CGFloat = 5
     
-    private var isChainIconHidden = false {
+    var isChainIconHidden = false {
         didSet {
             chainBackgroundView.isHidden = isChainIconHidden
             chainImageView.isHidden = isChainIconHidden
@@ -48,28 +48,6 @@ class Web3TransactionIconView: UIView {
         chainImageView.sd_cancelCurrentImageLoad()
         iconImageView.image = nil
         chainImageView.image = nil
-    }
-    
-    func setIcon(web3Transaction transaction: Web3Transaction) {
-        switch transaction.operationType {
-        case Web3Transaction.Web3TransactionType.send.rawValue:
-            iconImageView.image = R.image.wallet.snapshot_withdrawal()
-            isChainIconHidden = true
-        case Web3Transaction.Web3TransactionType.receive.rawValue:
-            iconImageView.image = R.image.wallet.snapshot_deposit()
-            isChainIconHidden = true
-        default:
-            isChainIconHidden = false
-            if let app = transaction.appMetadata {
-                iconImageView.sd_setImage(with: URL(string: app.iconURL),
-                                          placeholderImage: nil,
-                                          context: assetIconContext)
-                chainImageView.sd_setImage(with: URL(string: transaction.fee.iconURL), placeholderImage: nil, context: assetIconContext)
-            } else {
-                iconImageView.image = nil
-                chainImageView.image = nil
-            }
-        }
     }
     
     private func prepare() {

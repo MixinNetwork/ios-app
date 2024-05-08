@@ -3,7 +3,7 @@ import MixinServices
 
 class Web3TransactionCell: ModernSelectedBackgroundCell {
     
-    @IBOutlet weak var iconView: Web3TransactionIconView!
+    @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var amountLabel1: UILabel!
@@ -13,13 +13,6 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var priceLabel: UILabel!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectedBackgroundView = UIView(frame: bounds)
-        selectedBackgroundView!.backgroundColor = .selectionBackground
-        
-    }
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         iconView.prepareForReuse()
@@ -27,7 +20,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
         
     func render(transaction: Web3Transaction) {
         iconView.setIcon(web3Transaction: transaction)
-        titleLabel.text = transaction.operationType.capitalized
+        titleLabel.text = transaction.localizedTransactionType
 
         let defalutLayer = { [unowned self] in
             hideViews(amountLabel1, symbolLabel1, amountLabel2, symbolLabel2, priceLabel)
@@ -36,7 +29,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
         let isConfirmed = transaction.status == Web3Transaction.Web3TransactionStatus.confirmed.rawValue
         
         switch Web3Transaction.Web3TransactionType(rawValue: transaction.operationType) {
-        case .receive, .send:
+        case .receive:
             if let transfer = transaction.transfers.first {
                 hideViews(amountLabel2, symbolLabel2)
                 showViews(amountLabel1, symbolLabel1, priceLabel)
@@ -48,18 +41,25 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 } else {
                     transfer.localizedFiatMoneyAmount
                 }
+                amountLabel1.textColor = isConfirmed ? .walletGreen : .walletGray
+                subtitleLabel.text = Address.compactRepresentation(of: transaction.sender)
+            } else {
+                defalutLayer()
+            }
+        case .send:
+            if let transfer = transaction.transfers.first {
+                hideViews(amountLabel2, symbolLabel2)
+                showViews(amountLabel1, symbolLabel1, priceLabel)
                 
-                if isConfirmed {
-                    if transfer.amount.hasMinusPrefix {
-                        amountLabel1.textColor = .walletRed
-                    } else {
-                        amountLabel1.textColor = .walletGreen
-                    }
+                amountLabel1.text = CurrencyFormatter.localizedString(from: "-\(transfer.amount)", format: .precision, sign: .never)
+                symbolLabel1.text = transfer.symbol
+                priceLabel.text = if transfer.decimalUSDPrice.isZero {
+                    R.string.localizable.na()
                 } else {
-                    amountLabel1.textColor = .walletGray
+                    transfer.localizedFiatMoneyAmount
                 }
-                
-                subtitleLabel.text = Address.compactRepresentation(of: transfer.sender)
+                amountLabel1.textColor = isConfirmed ? .walletRed : .walletGray
+                subtitleLabel.text = Address.compactRepresentation(of: transaction.receiver)
             } else {
                 defalutLayer()
             }
@@ -91,4 +91,30 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
     private func showViews(_ views: UIView...) {
         views.forEach({ $0.isHidden = false })
     }
+}
+
+extension BadgeIconView {
+    
+    func setIcon(web3Transaction transaction: Web3Transaction) {
+        switch transaction.operationType {
+        case Web3Transaction.Web3TransactionType.send.rawValue:
+            iconImageView.image = R.image.wallet.snapshot_withdrawal()
+            isChainIconHidden = true
+        case Web3Transaction.Web3TransactionType.receive.rawValue:
+            iconImageView.image = R.image.wallet.snapshot_deposit()
+            isChainIconHidden = true
+        default:
+            isChainIconHidden = false
+            if let app = transaction.appMetadata {
+                iconImageView.sd_setImage(with: URL(string: app.iconURL),
+                                          placeholderImage: nil,
+                                          context: assetIconContext)
+                chainImageView.sd_setImage(with: URL(string: transaction.fee.iconURL), placeholderImage: nil, context: assetIconContext)
+            } else {
+                iconImageView.image = nil
+                chainImageView.image = nil
+            }
+        }
+    }
+    
 }

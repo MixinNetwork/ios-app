@@ -14,10 +14,16 @@
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
 		521AEF542BEA03C200F48884 /* Web3TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */; };
 		521AEF582BEA044800F48884 /* Web3TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521AEF572BEA044800F48884 /* Web3TransactionCell.xib */; };
-		521AEF5A2BEA0AC300F48884 /* Web3TransactionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */; };
 		52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */; };
 		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
 		52589AE52BEA52910081C2BF /* Web3TokenHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */; };
+		5292D68E2BEB8F3200734F14 /* Web3Transaction+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D68D2BEB8F3200734F14 /* Web3Transaction+Type.swift */; };
+		5292D6932BEB910F00734F14 /* Web3TransactionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */; };
+		5292D6982BEB911900734F14 /* Web3TransactionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */; };
+		52C8859F2BEB4D570094AB7A /* Web3HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */; };
+		52C885A42BEB527F0094AB7A /* BadgeIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C885A32BEB527F0094AB7A /* BadgeIconView.swift */; };
+		52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */; };
+		52DE7B4F2BEB7C940060A364 /* ColumnListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* ColumnListViewController.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -1252,10 +1258,16 @@
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionCell.swift; sourceTree = "<group>"; };
 		521AEF572BEA044800F48884 /* Web3TransactionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionCell.xib; sourceTree = "<group>"; };
-		521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionIconView.swift; sourceTree = "<group>"; };
 		52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TokenHeaderView.xib; sourceTree = "<group>"; };
 		52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTextAttachment.swift; sourceTree = "<group>"; };
 		52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenHeaderView.swift; sourceTree = "<group>"; };
+		5292D68D2BEB8F3200734F14 /* Web3Transaction+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Type.swift"; sourceTree = "<group>"; };
+		5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionHeaderView.xib; sourceTree = "<group>"; };
+		5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionHeaderView.swift; sourceTree = "<group>"; };
+		52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3HeaderView.swift; sourceTree = "<group>"; };
+		52C885A32BEB527F0094AB7A /* BadgeIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeIconView.swift; sourceTree = "<group>"; };
+		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
+		52DE7B4E2BEB7C940060A364 /* ColumnListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnListViewController.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -2585,7 +2597,6 @@
 				9401A6052BDAA74A00679686 /* Web3AccountCell.swift */,
 				521AEF572BEA044800F48884 /* Web3TransactionCell.xib */,
 				521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */,
-				521AEF592BEA0AC300F48884 /* Web3TransactionIconView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2595,6 +2606,9 @@
 			children = (
 				52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */,
 				52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */,
+				5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */,
+				5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */,
+				52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2979,6 +2993,7 @@
 				94980FC62A5D653A0051AE6D /* IntroViewController.swift */,
 				941D3BF92A7912C700538504 /* QRCodeView.xib */,
 				941D3BF82A7912C700538504 /* QRCodeViewController.swift */,
+				52DE7B4E2BEB7C940060A364 /* ColumnListViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -3221,6 +3236,7 @@
 				946575972BC8684D00C4C4F4 /* Web3DappProposer.swift */,
 				9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */,
 				942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */,
+				5292D68D2BEB8F3200734F14 /* Web3Transaction+Type.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -3449,6 +3465,7 @@
 				9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */,
 				9401A5F92BDA899900679686 /* Web3SendingDestinationViewController.swift */,
 				9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */,
+				52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -3875,6 +3892,7 @@
 				7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */,
 				7B4FCCDF2440A66600360F65 /* SolidBackgroundColorImageView.swift */,
 				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
+				52C885A32BEB527F0094AB7A /* BadgeIconView.swift */,
 				7B95534222438ECD00CE95E6 /* TopRoundedView.swift */,
 				7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */,
 				7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */,
@@ -4711,6 +4729,7 @@
 				7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
+				5292D6932BEB910F00734F14 /* Web3TransactionHeaderView.xib in Resources */,
 				9401A6012BDA91F900679686 /* Web3SendingDestinationHeaderView.xib in Resources */,
 				948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
@@ -5189,6 +5208,7 @@
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */,
+				52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
@@ -5353,6 +5373,7 @@
 				7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */,
 				7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */,
 				ABE865BE23F2455800C0167D /* AuthorizationScope.swift in Sources */,
+				52C8859F2BEB4D570094AB7A /* Web3HeaderView.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
@@ -5400,6 +5421,7 @@
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
 				94F952622AE623B50025B995 /* TokenSelectorViewController.swift in Sources */,
 				94ECCCAB261A029F004E9E2A /* Window.swift in Sources */,
+				5292D68E2BEB8F3200734F14 /* Web3Transaction+Type.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
@@ -5415,6 +5437,7 @@
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				944C608F2B6A79FA00C7DF06 /* AuthenticationPreviewViewController.swift in Sources */,
 				7C7579D229DC54120002DA0B /* RestoreFromDesktopViewController.swift in Sources */,
+				52C885A42BEB527F0094AB7A /* BadgeIconView.swift in Sources */,
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
@@ -5588,6 +5611,7 @@
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,
 				7B34A19F22C0E73D00665F41 /* GalleryVideoView.swift in Sources */,
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
+				5292D6982BEB911900734F14 /* Web3TransactionHeaderView.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
 				94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */,
 				7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */,
@@ -5617,6 +5641,7 @@
 				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
 				7B3CDA6424FFDD1D003A3E80 /* FavoriteStickerCell.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
+				52DE7B4F2BEB7C940060A364 /* ColumnListViewController.swift in Sources */,
 				7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
 				7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */,
@@ -5665,7 +5690,6 @@
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */,
 				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
-				521AEF5A2BEA0AC300F48884 /* Web3TransactionIconView.swift in Sources */,
 				7C0FAAC727E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				94350E3C2BCFE8C5007283B7 /* InputAmountViewController.swift in Sources */,

@@ -1,10 +1,7 @@
 import UIKit
 import MixinServices
 
-class SnapshotViewController: UIViewController {
-    
-    let tableView = UITableView()
-    var tableHeaderView: InfiniteTopView!
+class SnapshotViewController: ColumnListViewController {
     
     @IBOutlet weak var headerContentStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
@@ -15,7 +12,6 @@ class SnapshotViewController: UIViewController {
     
     private var token: TokenItem
     private var snapshot: SafeSnapshotItem
-    private var columns: [Column] = []
     
     init(token: TokenItem, snapshot: SafeSnapshotItem) {
         self.token = token
@@ -27,14 +23,6 @@ class SnapshotViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        true
-    }
-    
-    override func loadView() {
-        self.view = tableView
     }
     
     override func viewDidLoad() {
@@ -76,6 +64,35 @@ class SnapshotViewController: UIViewController {
         assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
     }
     
+    override func deselectRow(column: Column) {
+        guard let key = column.key as? SnapshotKey else {
+            return
+        }
+        switch key {
+        case .from, .to:
+            guard let id = snapshot.opponentUserID, !id.isEmpty else {
+                return
+            }
+            DispatchQueue.global().async {
+                guard let user = UserDAO.shared.getUser(userId: id) else {
+                    return
+                }
+                DispatchQueue.main.async { [weak self] in
+                    let profile = UserProfileViewController(user: user)
+                    self?.present(profile, animated: true, completion: nil)
+                }
+            }
+        case .memo:
+            guard !snapshot.memo.isEmpty, let utf8DecodedMemo = snapshot.utf8DecodedMemo else {
+                return
+            }
+            let memo = MemoViewController(rawMemo: snapshot.memo, utf8DecodedMemo: utf8DecodedMemo)
+            present(memo, animated: true, completion: nil)
+        default:
+            break
+        }
+    }
+    
     @objc func backToAsset(_ recognizer: UITapGestureRecognizer) {
         guard let viewControllers = navigationController?.viewControllers else {
             return
@@ -89,21 +106,6 @@ class SnapshotViewController: UIViewController {
         } else {
             let viewController = TokenViewController.instance(token: token)
             navigationController?.pushViewController(viewController, animated: true)
-        }
-    }
-    
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updateTableViewContentInsetBottom()
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
-            DispatchQueue.main.async {
-                self.layoutTableHeaderView()
-                self.tableView.tableHeaderView = self.tableHeaderView
-            }
         }
     }
     
@@ -132,173 +134,61 @@ class SnapshotViewController: UIViewController {
     
 }
 
-extension SnapshotViewController: ContainerViewControllerDelegate {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.customer_service()
-    }
-    
-    func barRightButtonTappedAction() {
-        if let user = UserDAO.shared.getUser(identityNumber: "7000") {
-            let conversation = ConversationViewController.instance(ownerUser: user)
-            navigationController?.pushViewController(withBackRoot: conversation)
-        }
-    }
-    
-}
-
-extension SnapshotViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return columns.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
-        let column = columns[indexPath.row]
-        cell.titleLabel.text = column.key.localized.localizedUppercase
-        cell.subtitleLabel.text = column.value
-        if column.style.contains(.unavailable) {
-            cell.subtitleLabel.textColor = R.color.text_tertiary()!
-        } else {
-            cell.subtitleLabel.textColor = R.color.text()
-        }
-        cell.disclosureIndicatorImageView.isHidden = !column.style.contains(.disclosureIndicator)
-        return cell
-    }
-    
-}
-
-extension SnapshotViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        switch columns[indexPath.row].key {
-        case .from, .to:
-            guard let id = snapshot.opponentUserID, !id.isEmpty else {
-                return
-            }
-            DispatchQueue.global().async {
-                guard let user = UserDAO.shared.getUser(userId: id) else {
-                    return
-                }
-                DispatchQueue.main.async { [weak self] in
-                    let profile = UserProfileViewController(user: user)
-                    self?.present(profile, animated: true, completion: nil)
-                }
-            }
-        case .memo:
-            guard !snapshot.memo.isEmpty, let utf8DecodedMemo = snapshot.utf8DecodedMemo else {
-                return
-            }
-            let memo = MemoViewController(rawMemo: snapshot.memo, utf8DecodedMemo: utf8DecodedMemo)
-            present(memo, animated: true, completion: nil)
-        default:
-            break
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-        columns[indexPath.row].allowsCopy
-    }
-    
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        columns[indexPath.row].allowsCopy && action == #selector(copy(_:))
-    }
-    
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
-        UIPasteboard.general.string = columns[indexPath.row].value
-        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
-    }
-    
-}
-
 extension SnapshotViewController {
-    
-    private struct Column {
+
+    enum SnapshotKey: ColumnKey {
         
-        enum Key {
-            
-            case id
-            case transactionHash
-            case from
-            case to
-            case depositHash
-            case withdrawalHash
-            case depositProgress
-            case createdAt
-            case memo
-            
-            var localized: String {
-                switch self {
-                case .id:
-                    return R.string.localizable.transaction_id()
-                case .transactionHash:
-                    return R.string.localizable.transaction_hash()
-                case .from:
-                    return R.string.localizable.from()
-                case .to:
-                    return R.string.localizable.to()
-                case .depositHash:
-                    return R.string.localizable.deposit_hash()
-                case .withdrawalHash:
-                    return R.string.localizable.withdrawal_hash()
-                case .depositProgress:
-                    return R.string.localizable.status()
-                case .createdAt:
-                    return R.string.localizable.date()
-                case .memo:
-                    return R.string.localizable.memo()
-                }
+        case id
+        case transactionHash
+        case from
+        case to
+        case depositHash
+        case withdrawalHash
+        case depositProgress
+        case createdAt
+        case memo
+        
+        var localized: String {
+            switch self {
+            case .id:
+                return R.string.localizable.transaction_id()
+            case .transactionHash:
+                return R.string.localizable.transaction_hash()
+            case .from:
+                return R.string.localizable.from()
+            case .to:
+                return R.string.localizable.to()
+            case .depositHash:
+                return R.string.localizable.deposit_hash()
+            case .withdrawalHash:
+                return R.string.localizable.withdrawal_hash()
+            case .depositProgress:
+                return R.string.localizable.status()
+            case .createdAt:
+                return R.string.localizable.date()
+            case .memo:
+                return R.string.localizable.memo()
             }
-            
         }
         
-        struct Style: OptionSet {
-            
-            let rawValue: Int
-            
-            static let unavailable = Style(rawValue: 1 << 0)
-            static let disclosureIndicator = Style(rawValue: 1 << 1)
-            
-        }
-        
-        let key: Key
-        let value: String
-        let style: Style
-        
-        var allowsCopy: Bool {
-            let copyAllowedKeys: Set<Key> = [
-                .id, .transactionHash, .memo, .from,
-                .to, .depositHash, .withdrawalHash
-            ]
-            return copyAllowedKeys.contains(key)
-        }
-        
-        init(key: Key, value: String, style: Style = []) {
-            self.key = key
-            self.value = value
-            self.style = style
+        var allowCopy: Bool {
+            switch self {
+            case .id, .transactionHash, .memo, .from,
+                    .to, .depositHash, .withdrawalHash:
+                true
+            default:
+                false
+            }
         }
         
     }
     
-    private func updateTableViewContentInsetBottom() {
-        if view.safeAreaInsets.bottom > 20 {
-            tableView.contentInset.bottom = 0
-        } else {
-            tableView.contentInset.bottom = 20
+    class SnapshotColumn: Column {
+        
+        init(key: SnapshotKey, value: String, style: Column.Style = []) {
+            super.init(key: key, value: value, style: style)
         }
-    }
-    
-    private func layoutTableHeaderView() {
-        let targetSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width,
-                                height: UIView.layoutFittingExpandedSize.height)
-        tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFitting(targetSize).height
+        
     }
     
     private func reloadPrices() {
@@ -381,16 +271,16 @@ extension SnapshotViewController {
     }
     
     private func reloadData() {
-        var columns: [Column] = []
+        var columns: [SnapshotColumn] = []
         
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
             if let completed = snapshot.confirmations {
                 let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
-                columns.append(Column(key: .depositProgress, value: value))
+                columns.append(SnapshotColumn(key: .depositProgress, value: value))
             }
         } else {
-            columns.append(Column(key: .id, value: snapshot.id))
-            columns.append(Column(key: .transactionHash, value: snapshot.transactionHash))
+            columns.append(SnapshotColumn(key: .id, value: snapshot.id))
+            columns.append(SnapshotColumn(key: .transactionHash, value: snapshot.transactionHash))
         }
         
         if let deposit = snapshot.deposit {
@@ -403,8 +293,8 @@ extension SnapshotViewController {
                 sender = deposit.sender
                 style = []
             }
-            columns.append(Column(key: .from, value: sender, style: style))
-            columns.append(Column(key: .depositHash, value: deposit.hash))
+            columns.append(SnapshotColumn(key: .from, value: sender, style: style))
+            columns.append(SnapshotColumn(key: .depositHash, value: deposit.hash))
         } else if let withdrawal = snapshot.withdrawal {
             let receiver: String
             let receiverStyle: Column.Style
@@ -415,7 +305,7 @@ extension SnapshotViewController {
                 receiver = withdrawal.receiver
                 receiverStyle = []
             }
-            columns.append(Column(key: .to, value: receiver, style: receiverStyle))
+            columns.append(SnapshotColumn(key: .to, value: receiver, style: receiverStyle))
             
             let withdrawalHash: String
             let withdrawalStyle: Column.Style
@@ -426,7 +316,7 @@ extension SnapshotViewController {
                 withdrawalHash = withdrawal.hash
                 withdrawalStyle = []
             }
-            columns.append(Column(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
+            columns.append(SnapshotColumn(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
         } else {
             let style: Column.Style
             let opponentName: String
@@ -438,9 +328,9 @@ extension SnapshotViewController {
                 style = .unavailable
             }
             if snapshot.amount.hasMinusPrefix {
-                columns.append(Column(key: .to, value: opponentName, style: style))
+                columns.append(SnapshotColumn(key: .to, value: opponentName, style: style))
             } else {
-                columns.append(Column(key: .from, value: opponentName, style: style))
+                columns.append(SnapshotColumn(key: .from, value: opponentName, style: style))
             }
         }
         if !snapshot.memo.isEmpty {
@@ -453,9 +343,9 @@ extension SnapshotViewController {
                 style = []
                 value = snapshot.memo
             }
-            columns.append(Column(key: .memo, value: value, style: style))
+            columns.append(SnapshotColumn(key: .memo, value: value, style: style))
         }
-        columns.append(Column(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
+        columns.append(SnapshotColumn(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         self.columns = columns
         tableView.reloadData()
     }

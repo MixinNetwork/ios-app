@@ -96,10 +96,6 @@ extension ColumnListViewController {
         let value: String
         let style: Style
         
-        var allowsCopy: Bool {
-            return false
-        }
-        
         init(key: ColumnKey, value: String, style: Style = []) {
             self.key = key
             self.value = value
@@ -118,11 +114,11 @@ extension ColumnListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-        columns[indexPath.row].allowsCopy
+        columns[indexPath.row].key.allowCopy
     }
     
     func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        columns[indexPath.row].allowsCopy && action == #selector(copy(_:))
+        columns[indexPath.row].key.allowCopy && action == #selector(copy(_:))
     }
     
     func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {

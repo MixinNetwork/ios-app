@@ -1,10 +1,10 @@
 import UIKit
 import MixinServices
 
-class Web3TransactionViewController: ColumnListViewController {
+final class Web3TransactionViewController: RowListViewController {
     
-    private var token: Web3Token
-    private var transaction: Web3Transaction
+    private let token: Web3Token
+    private let transaction: Web3Transaction
     
     init(token: Web3Token, transaction: Web3Transaction) {
         self.token = token
@@ -18,33 +18,30 @@ class Web3TransactionViewController: ColumnListViewController {
         fatalError("Storyboard is not supported")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        let tableHeaderView = R.nib.web3TransactionHeaderView(withOwner: nil)!
-        tableHeaderView.render(transaction: transaction)
-        tableView.tableHeaderView = tableHeaderView
-        self.tableHeaderView = tableHeaderView
-        layoutTableHeaderView()
-        tableView.backgroundColor = .background
-        tableView.separatorStyle = .none
-        tableView.register(R.nib.snapshotColumnCell)
-        tableView.dataSource = self
-        tableView.delegate = self
-        
-        reloadData()
-    }
-    
     class func instance(web3Token token: Web3Token, transaction: Web3Transaction) -> UIViewController {
         let snapshot = Web3TransactionViewController(token: token, transaction: transaction)
         let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
         return container
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let tableHeaderView = R.nib.web3TransactionHeaderView(withOwner: nil)!
+        tableHeaderView.render(transaction: transaction)
+        tableView.tableHeaderView = tableHeaderView
+        self.tableHeaderView = tableHeaderView
+        layoutTableHeaderView()
+        
+        reloadData()
+    }
+    
 }
 
 extension Web3TransactionViewController {
     
-    enum TransactionKey: ColumnKey {
+    enum TransactionKey: RowKey {
+        
         case id
         case transactionHash
         case from
@@ -69,37 +66,35 @@ extension Web3TransactionViewController {
             }
         }
         
-        var allowCopy: Bool {
+        var allowsCopy: Bool {
             switch self {
-            case .id, .transactionHash, .from,
-                    .to:
+            case .id, .transactionHash, .from, .to:
                 true
             default:
                 false
             }
         }
+        
     }
     
-    class TransactionColumn: Column {
+    class TransactionRow: Row {
         
-        init(key: TransactionKey, value: String, style: Column.Style = []) {
+        init(key: TransactionKey, value: String, style: Row.Style = []) {
             super.init(key: key, value: value, style: style)
         }
         
     }
     
     private func reloadData() {
-        var columns: [TransactionColumn] = []
-        
-        columns.append(TransactionColumn(key: .id, value: transaction.id))
-        columns.append(TransactionColumn(key: .transactionHash, value: transaction.transactionHash))
-        
-        columns.append(TransactionColumn(key: .from, value: transaction.sender))
-        columns.append(TransactionColumn(key: .to, value: transaction.receiver))
-        
-        columns.append(TransactionColumn(key: .date, value: DateFormatter.dateFull.string(from: transaction.createdAt.toUTCDate())))
-        columns.append(TransactionColumn(key: .status, value: transaction.status.capitalized))
-        self.columns = columns
+        rows = [
+            TransactionRow(key: .id, value: transaction.id),
+            TransactionRow(key: .transactionHash, value: transaction.transactionHash),
+            TransactionRow(key: .from, value: transaction.sender),
+            TransactionRow(key: .to, value: transaction.receiver),
+            TransactionRow(key: .date, value: DateFormatter.dateFull.string(from: transaction.createdAt.toUTCDate())),
+            TransactionRow(key: .status, value: transaction.status.capitalized),
+        ]
         tableView.reloadData()
     }
+    
 }

@@ -19,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="212"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="kAZ-pc-VB8">
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="kAZ-pc-VB8">
                     <rect key="frame" x="20" y="14" width="353" height="51"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jNj-El-Ol9" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
@@ -29,18 +29,23 @@
                                 <constraint firstAttribute="width" secondItem="jNj-El-Ol9" secondAttribute="height" id="aMR-vZ-scn"/>
                                 <constraint firstAttribute="width" constant="51" id="cjO-i5-wmB"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                    <real key="value" value="13"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="j7K-aB-xPd">
-                            <rect key="frame" x="59" y="0.0" width="294" height="51"/>
+                            <rect key="frame" x="67" y="0.0" width="286" height="51"/>
                             <subviews>
                                 <textView opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" scrollEnabled="NO" editable="NO" text="655366553" selectable="NO" layoutManager="textKit1" translatesAutoresizingMaskIntoConstraints="NO" id="4WH-iT-Ns3">
-                                    <rect key="frame" x="0.0" y="0.0" width="294" height="34"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="286" height="34"/>
                                     <color key="textColor" name="text"/>
                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="≈ $4080" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4F-lt-G0u">
-                                    <rect key="frame" x="0.0" y="34" width="294" height="17"/>
+                                    <rect key="frame" x="0.0" y="34" width="286" height="17"/>
                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                     <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>

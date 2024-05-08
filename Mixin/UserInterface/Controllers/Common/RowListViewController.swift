@@ -1,12 +1,12 @@
 import UIKit
 import MixinServices
 
-class ColumnListViewController: UIViewController {
+class RowListViewController: UIViewController {
     
     let tableView = UITableView()
     var tableHeaderView: UIView!
-
-    var columns: [Column] = []
+    
+    var rows: [Row] = []
     
     override var canBecomeFirstResponder: Bool {
         true
@@ -14,6 +14,15 @@ class ColumnListViewController: UIViewController {
     
     override func loadView() {
         self.view = tableView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.backgroundColor = .background
+        tableView.separatorStyle = .none
+        tableView.register(R.nib.snapshotColumnCell)
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -31,7 +40,6 @@ class ColumnListViewController: UIViewController {
         }
     }
     
-    
     func layoutTableHeaderView() {
         let targetSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width,
                                 height: UIView.layoutFittingExpandedSize.height)
@@ -46,13 +54,10 @@ class ColumnListViewController: UIViewController {
         }
     }
     
-    func deselectRow(column: Column) {
-        
-    }
 }
 
 
-extension ColumnListViewController: ContainerViewControllerDelegate {
+extension RowListViewController: ContainerViewControllerDelegate {
     
     var prefersNavigationBarSeparatorLineHidden: Bool {
         return true
@@ -71,17 +76,14 @@ extension ColumnListViewController: ContainerViewControllerDelegate {
     
 }
 
-extension ColumnListViewController {
+extension RowListViewController {
     
-    protocol ColumnKey {
-        
-        var allowCopy: Bool { get }
-        
+    protocol RowKey {
+        var allowsCopy: Bool { get }
         var localized: String { get }
-        
     }
-
-    class Column {
+    
+    class Row {
         
         struct Style: OptionSet {
             
@@ -92,11 +94,11 @@ extension ColumnListViewController {
             
         }
         
-        let key: ColumnKey
+        let key: RowKey
         let value: String
         let style: Style
         
-        init(key: ColumnKey, value: String, style: Style = []) {
+        init(key: RowKey, value: String, style: Style = []) {
             self.key = key
             self.value = value
             self.style = style
@@ -106,46 +108,45 @@ extension ColumnListViewController {
     
 }
 
-extension ColumnListViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        deselectRow(column: columns[indexPath.row])
-    }
-    
-    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-        columns[indexPath.row].key.allowCopy
-    }
-    
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        columns[indexPath.row].key.allowCopy && action == #selector(copy(_:))
-    }
-    
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
-        UIPasteboard.general.string = columns[indexPath.row].value
-        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
-    }
-    
-}
-
-extension ColumnListViewController: UITableViewDataSource {
+extension RowListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return columns.count
+        rows.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
-        let column = columns[indexPath.row]
-        cell.titleLabel.text = column.key.localized.localizedUppercase
-        cell.subtitleLabel.text = column.value
-        if column.style.contains(.unavailable) {
+        let row = rows[indexPath.row]
+        cell.titleLabel.text = row.key.localized.localizedUppercase
+        cell.subtitleLabel.text = row.value
+        if row.style.contains(.unavailable) {
             cell.subtitleLabel.textColor = R.color.text_tertiary()!
         } else {
             cell.subtitleLabel.textColor = R.color.text()
         }
-        cell.disclosureIndicatorImageView.isHidden = !column.style.contains(.disclosureIndicator)
+        cell.disclosureIndicatorImageView.isHidden = !row.style.contains(.disclosureIndicator)
         return cell
+    }
+    
+}
+
+extension RowListViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+        rows[indexPath.row].key.allowsCopy
+    }
+    
+    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+        rows[indexPath.row].key.allowsCopy && action == #selector(copy(_:))
+    }
+    
+    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
+        UIPasteboard.general.string = rows[indexPath.row].value
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
 }

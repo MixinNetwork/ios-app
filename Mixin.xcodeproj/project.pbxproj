@@ -17,13 +17,12 @@
 		52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */; };
 		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
 		52589AE52BEA52910081C2BF /* Web3TokenHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */; };
-		5292D68E2BEB8F3200734F14 /* Web3Transaction+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D68D2BEB8F3200734F14 /* Web3Transaction+Type.swift */; };
+		5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */; };
 		5292D6932BEB910F00734F14 /* Web3TransactionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */; };
 		5292D6982BEB911900734F14 /* Web3TransactionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */; };
 		52C8859F2BEB4D570094AB7A /* Web3HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */; };
-		52C885A42BEB527F0094AB7A /* BadgeIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C885A32BEB527F0094AB7A /* BadgeIconView.swift */; };
 		52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */; };
-		52DE7B4F2BEB7C940060A364 /* ColumnListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* ColumnListViewController.swift */; };
+		52DE7B4F2BEB7C940060A364 /* RowListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -1261,13 +1260,12 @@
 		52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TokenHeaderView.xib; sourceTree = "<group>"; };
 		52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTextAttachment.swift; sourceTree = "<group>"; };
 		52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenHeaderView.swift; sourceTree = "<group>"; };
-		5292D68D2BEB8F3200734F14 /* Web3Transaction+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Type.swift"; sourceTree = "<group>"; };
+		5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Localize.swift"; sourceTree = "<group>"; };
 		5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionHeaderView.xib; sourceTree = "<group>"; };
 		5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionHeaderView.swift; sourceTree = "<group>"; };
 		52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3HeaderView.swift; sourceTree = "<group>"; };
-		52C885A32BEB527F0094AB7A /* BadgeIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeIconView.swift; sourceTree = "<group>"; };
 		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
-		52DE7B4E2BEB7C940060A364 /* ColumnListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnListViewController.swift; sourceTree = "<group>"; };
+		52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowListViewController.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -2993,7 +2991,7 @@
 				94980FC62A5D653A0051AE6D /* IntroViewController.swift */,
 				941D3BF92A7912C700538504 /* QRCodeView.xib */,
 				941D3BF82A7912C700538504 /* QRCodeViewController.swift */,
-				52DE7B4E2BEB7C940060A364 /* ColumnListViewController.swift */,
+				52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -3236,7 +3234,7 @@
 				946575972BC8684D00C4C4F4 /* Web3DappProposer.swift */,
 				9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */,
 				942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */,
-				5292D68D2BEB8F3200734F14 /* Web3Transaction+Type.swift */,
+				5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -3892,7 +3890,6 @@
 				7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */,
 				7B4FCCDF2440A66600360F65 /* SolidBackgroundColorImageView.swift */,
 				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
-				52C885A32BEB527F0094AB7A /* BadgeIconView.swift */,
 				7B95534222438ECD00CE95E6 /* TopRoundedView.swift */,
 				7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */,
 				7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */,
@@ -5421,7 +5418,7 @@
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
 				94F952622AE623B50025B995 /* TokenSelectorViewController.swift in Sources */,
 				94ECCCAB261A029F004E9E2A /* Window.swift in Sources */,
-				5292D68E2BEB8F3200734F14 /* Web3Transaction+Type.swift in Sources */,
+				5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
@@ -5437,7 +5434,6 @@
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				944C608F2B6A79FA00C7DF06 /* AuthenticationPreviewViewController.swift in Sources */,
 				7C7579D229DC54120002DA0B /* RestoreFromDesktopViewController.swift in Sources */,
-				52C885A42BEB527F0094AB7A /* BadgeIconView.swift in Sources */,
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
@@ -5641,7 +5637,7 @@
 				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
 				7B3CDA6424FFDD1D003A3E80 /* FavoriteStickerCell.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
-				52DE7B4F2BEB7C940060A364 /* ColumnListViewController.swift in Sources */,
+				52DE7B4F2BEB7C940060A364 /* RowListViewController.swift in Sources */,
 				7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
 				7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */,

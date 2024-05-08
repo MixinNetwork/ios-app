@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class SnapshotViewController: ColumnListViewController {
+final class SnapshotViewController: RowListViewController {
     
     @IBOutlet weak var headerContentStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
@@ -23,6 +23,12 @@ class SnapshotViewController: ColumnListViewController {
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
+    }
+    
+    class func instance(token: TokenItem, snapshot: SafeSnapshotItem) -> UIViewController {
+        let snapshot = SnapshotViewController(token: token, snapshot: snapshot)
+        let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
+        return container
     }
     
     override func viewDidLoad() {
@@ -50,11 +56,7 @@ class SnapshotViewController: ColumnListViewController {
             headerContentStackView.spacing = 2
         }
         layoutTableHeaderView()
-        tableView.backgroundColor = .background
-        tableView.separatorStyle = .none
-        tableView.register(R.nib.snapshotColumnCell)
-        tableView.dataSource = self
-        tableView.delegate = self
+        
         reloadData()
         updateTableViewContentInsetBottom()
         reloadPrices()
@@ -64,11 +66,9 @@ class SnapshotViewController: ColumnListViewController {
         assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
     }
     
-    override func deselectRow(column: Column) {
-        guard let key = column.key as? SnapshotKey else {
-            return
-        }
-        switch key {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
+        switch rows[indexPath.row].key as? SnapshotKey {
         case .from, .to:
             guard let id = snapshot.opponentUserID, !id.isEmpty else {
                 return
@@ -126,17 +126,11 @@ class SnapshotViewController: ColumnListViewController {
         UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     
-    class func instance(token: TokenItem, snapshot: SafeSnapshotItem) -> UIViewController {
-        let snapshot = SnapshotViewController(token: token, snapshot: snapshot)
-        let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
-        return container
-    }
-    
 }
 
 extension SnapshotViewController {
-
-    enum SnapshotKey: ColumnKey {
+    
+    enum SnapshotKey: RowKey {
         
         case id
         case transactionHash
@@ -171,7 +165,7 @@ extension SnapshotViewController {
             }
         }
         
-        var allowCopy: Bool {
+        var allowsCopy: Bool {
             switch self {
             case .id, .transactionHash, .memo, .from,
                     .to, .depositHash, .withdrawalHash:
@@ -183,13 +177,17 @@ extension SnapshotViewController {
         
     }
     
-    class SnapshotColumn: Column {
+    class SnapshotRow: Row {
         
-        init(key: SnapshotKey, value: String, style: Column.Style = []) {
+        init(key: SnapshotKey, value: String, style: Row.Style = []) {
             super.init(key: key, value: value, style: style)
         }
         
     }
+    
+}
+
+extension SnapshotViewController {
     
     private func reloadPrices() {
         AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self](result) in
@@ -271,20 +269,20 @@ extension SnapshotViewController {
     }
     
     private func reloadData() {
-        var columns: [SnapshotColumn] = []
+        var rows: [SnapshotRow] = []
         
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
             if let completed = snapshot.confirmations {
                 let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
-                columns.append(SnapshotColumn(key: .depositProgress, value: value))
+                rows.append(SnapshotRow(key: .depositProgress, value: value))
             }
         } else {
-            columns.append(SnapshotColumn(key: .id, value: snapshot.id))
-            columns.append(SnapshotColumn(key: .transactionHash, value: snapshot.transactionHash))
+            rows.append(SnapshotRow(key: .id, value: snapshot.id))
+            rows.append(SnapshotRow(key: .transactionHash, value: snapshot.transactionHash))
         }
         
         if let deposit = snapshot.deposit {
-            let style: Column.Style
+            let style: Row.Style
             let sender: String
             if deposit.sender.isEmpty {
                 sender = notApplicable
@@ -293,11 +291,11 @@ extension SnapshotViewController {
                 sender = deposit.sender
                 style = []
             }
-            columns.append(SnapshotColumn(key: .from, value: sender, style: style))
-            columns.append(SnapshotColumn(key: .depositHash, value: deposit.hash))
+            rows.append(SnapshotRow(key: .from, value: sender, style: style))
+            rows.append(SnapshotRow(key: .depositHash, value: deposit.hash))
         } else if let withdrawal = snapshot.withdrawal {
             let receiver: String
-            let receiverStyle: Column.Style
+            let receiverStyle: Row.Style
             if withdrawal.receiver.isEmpty {
                 receiver = notApplicable
                 receiverStyle = .unavailable
@@ -305,10 +303,10 @@ extension SnapshotViewController {
                 receiver = withdrawal.receiver
                 receiverStyle = []
             }
-            columns.append(SnapshotColumn(key: .to, value: receiver, style: receiverStyle))
+            rows.append(SnapshotRow(key: .to, value: receiver, style: receiverStyle))
             
             let withdrawalHash: String
-            let withdrawalStyle: Column.Style
+            let withdrawalStyle: Row.Style
             if withdrawal.hash.isEmpty {
                 withdrawalHash = R.string.localizable.withdrawal_pending()
                 withdrawalStyle = .unavailable
@@ -316,9 +314,9 @@ extension SnapshotViewController {
                 withdrawalHash = withdrawal.hash
                 withdrawalStyle = []
             }
-            columns.append(SnapshotColumn(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
+            rows.append(SnapshotRow(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
         } else {
-            let style: Column.Style
+            let style: Row.Style
             let opponentName: String
             if let name = snapshot.opponentFullname {
                 opponentName = name
@@ -328,13 +326,13 @@ extension SnapshotViewController {
                 style = .unavailable
             }
             if snapshot.amount.hasMinusPrefix {
-                columns.append(SnapshotColumn(key: .to, value: opponentName, style: style))
+                rows.append(SnapshotRow(key: .to, value: opponentName, style: style))
             } else {
-                columns.append(SnapshotColumn(key: .from, value: opponentName, style: style))
+                rows.append(SnapshotRow(key: .from, value: opponentName, style: style))
             }
         }
         if !snapshot.memo.isEmpty {
-            let style: Column.Style
+            let style: Row.Style
             let value: String
             if let utf8DecodedMemo = snapshot.utf8DecodedMemo {
                 style = .disclosureIndicator
@@ -343,10 +341,10 @@ extension SnapshotViewController {
                 style = []
                 value = snapshot.memo
             }
-            columns.append(SnapshotColumn(key: .memo, value: value, style: style))
+            rows.append(SnapshotRow(key: .memo, value: value, style: style))
         }
-        columns.append(SnapshotColumn(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
-        self.columns = columns
+        rows.append(SnapshotRow(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
+        self.rows = rows
         tableView.reloadData()
     }
     

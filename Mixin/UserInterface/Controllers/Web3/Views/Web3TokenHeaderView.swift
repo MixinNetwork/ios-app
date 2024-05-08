@@ -6,12 +6,13 @@ final class Web3TokenHeaderView: Web3HeaderView {
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountTextView: UITextView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
-
+    
     private var token: Web3Token?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         amountTextView.textContainerInset = .zero
+        amountTextView.textContainer.lineFragmentPadding = 0
         actionStackView.addArrangedSubview(UIView())
         actionStackView.addArrangedSubview(UIView())
     }
@@ -47,7 +48,6 @@ final class Web3TokenHeaderView: Web3HeaderView {
         self.token = token
     }
     
-    
     private func attributedString(amount: String, symbol: String) -> NSMutableAttributedString {
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFontMetrics.default.scaledFont(for: .condensed(size: 34)),
@@ -58,4 +58,5 @@ final class Web3TokenHeaderView: Web3HeaderView {
         str.append(NSAttributedString(attachment: attachment))
         return str
     }
+    
 }

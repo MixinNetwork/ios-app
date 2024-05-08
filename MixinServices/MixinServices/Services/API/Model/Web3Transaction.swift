@@ -36,6 +36,31 @@ extension Web3Transaction: Decodable {
 
 extension Web3Transaction {
     
+    public enum TransactionType: String {
+        case receive
+        case send
+        case deposit
+        case withdraw
+        case approve
+        case borrow
+        case burn
+        case cancel
+        case claim
+        case deploy
+        case execute
+        case mint
+        case repay
+        case stake
+        case trade
+        case unstake
+    }
+    
+    public enum Status: String {
+        case pending
+        case confirmed
+        case failed
+    }
+    
     public struct AppMetadata: Decodable {
         
         public let name: String
@@ -91,9 +116,16 @@ extension Web3Transaction {
         public let amount: String
         
         public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+        
     }
     
     public class Web3Transfer: Decodable {
+        
+        public enum Direction: String {
+            case `in`
+            case out
+            case `self`
+        }
         
         enum CodingKeys: String, CodingKey {
             case name = "name"
@@ -114,7 +146,6 @@ extension Web3Transaction {
         public let price: String
         
         public private(set) lazy var decimalUSDPrice = Decimal(string: price, locale: .enUSPOSIX) ?? 0
-        
         public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
         
         public private(set) lazy var localizedFiatMoneyAmount: String = {
@@ -122,39 +153,6 @@ extension Web3Transaction {
             return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         }()
         
-        public enum Direction: String {
-            case `in`
-            case out
-            case `self`
-        }
     }
     
-}
-
-extension Web3Transaction {
-    
-    public enum Web3TransactionType: String {
-        case receive
-        case send
-        case deposit
-        case withdraw
-        case approve
-        case borrow
-        case burn
-        case cancel
-        case claim
-        case deploy
-        case execute
-        case mint
-        case repay
-        case stake
-        case trade
-        case unstake
-    }
-    
-    public enum Web3TransactionStatus: String {
-        case pending
-        case confirmed
-        case failed
-    }
 }

@@ -1,16 +1,14 @@
 import UIKit
 import MixinServices
 
-internal class Web3HeaderView: UIView {
+class Web3HeaderView: UIView {
     
     @IBOutlet weak var actionStackView: UIStackView!
     
-    internal weak var sendButton: UIButton!
-    internal weak var receiveButton: UIButton!
-    internal weak var browseButton: UIButton!
-    internal weak var moreButton: UIButton!
-    
-    private var token: Web3Token?
+    weak var sendButton: UIButton!
+    weak var receiveButton: UIButton!
+    weak var browseButton: UIButton!
+    weak var moreButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,25 +18,15 @@ internal class Web3HeaderView: UIView {
                                   icon: R.image.web3_action_receive()!)
     }
     
-    func addTarget(_ target: Any, send: Selector, receive: Selector, browse: Selector? = nil, more: Selector? = nil) {
+    func addTarget(_ target: Any, send: Selector, receive: Selector) {
         sendButton.removeTarget(nil, action: nil, for: .allEvents)
         sendButton.addTarget(target, action: send, for: .touchUpInside)
         
         receiveButton.removeTarget(nil, action: nil, for: .allEvents)
         receiveButton.addTarget(target, action: receive, for: .touchUpInside)
-        
-        if let browse = browse {
-            browseButton.removeTarget(nil, action: nil, for: .allEvents)
-            browseButton.addTarget(target, action: browse, for: .touchUpInside)
-        }
-        
-        if let more = more {
-            moreButton.removeTarget(nil, action: nil, for: .allEvents)
-            moreButton.addTarget(target, action: more, for: .touchUpInside)
-        }
     }
     
-    internal func addAction(title: String, icon: UIImage) -> UIButton {
+    func addAction(title: String, icon: UIImage) -> UIButton {
         let wrapper = UIView()
         
         let backgroundImageView = UIImageView(image: R.image.explore.action_tray())
@@ -70,4 +58,5 @@ internal class Web3HeaderView: UIView {
         actionStackView.addArrangedSubview(wrapper)
         return button
     }
+    
 }

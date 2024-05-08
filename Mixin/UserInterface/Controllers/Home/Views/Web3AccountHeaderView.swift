@@ -25,6 +25,16 @@ final class Web3AccountHeaderView: Web3HeaderView {
         accountNameLabel.text = R.string.localizable.web3_account_network(name)
     }
     
+    func addTarget(_ target: Any, send: Selector, receive: Selector, browse: Selector, more: Selector) {
+        super.addTarget(target, send: send, receive: receive)
+        
+        browseButton.removeTarget(nil, action: nil, for: .allEvents)
+        browseButton.addTarget(target, action: browse, for: .touchUpInside)
+        
+        moreButton.removeTarget(nil, action: nil, for: .allEvents)
+        moreButton.addTarget(target, action: more, for: .touchUpInside)
+    }
+    
     func enableSendButton() {
         let wrapper = actionStackView.arrangedSubviews[0]
         wrapper.alpha = 1

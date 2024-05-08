@@ -24,7 +24,6 @@ final class Web3TokenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
@@ -34,6 +33,14 @@ final class Web3TokenViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.contentInset.bottom = 10
+        let tableHeaderView = R.nib.web3TokenHeaderView(withOwner: nil)!
+        tableHeaderView.render(token: token)
+        tableHeaderView.addTarget(self,
+                                  send: #selector(send(_:)),
+                                  receive: #selector(receive(_:)))
+        tableView.tableHeaderView = tableHeaderView
+        layoutTableHeaderView()
+        tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
         loadTransactions()
     }
     
@@ -45,15 +52,6 @@ final class Web3TokenViewController: UIViewController {
     }
     
     private func loadTransactions() {
-        let tableHeaderView = R.nib.web3TokenHeaderView(withOwner: nil)!
-        tableHeaderView.render(token: token)
-        tableHeaderView.addTarget(self,
-                                  send: #selector(send(_:)),
-                                  receive: #selector(receive(_:)))
-        tableView.tableHeaderView = tableHeaderView
-        layoutTableHeaderView()
-        tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
-        
         Web3API.transactions(address: address, chainID: token.chainID, fungibleID: token.fungibleID) { result in
             switch result {
             case .success(let transactions):
@@ -65,7 +63,7 @@ final class Web3TokenViewController: UIViewController {
                     nil
                 }
             case .failure(let error):
-                Logger.web3.warn(category: "Web3 Transactions", message: "\(error)")
+                Logger.web3.warn(category: "Web3TokenViewController", message: "\(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     self?.loadTransactions()
                 }
@@ -99,6 +97,7 @@ final class Web3TokenViewController: UIViewController {
         let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
         navigationController?.pushViewController(container, animated: true)
     }
+    
 }
 
 // MARK: - UITableViewDataSource
@@ -125,7 +124,7 @@ extension Web3TokenViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if let transaction = transactions?[indexPath.row] {
             let viewController = Web3TransactionViewController.instance(web3Token: token, transaction: transaction)
-            self.navigationController?.pushViewController(viewController, animated: true)
+            navigationController?.pushViewController(viewController, animated: true)
         }
     }
     

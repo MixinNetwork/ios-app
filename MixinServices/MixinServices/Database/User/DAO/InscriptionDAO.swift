@@ -41,10 +41,6 @@ public final class InscriptionDAO: UserDatabaseDAO {
         db.recordExists(in: Inscription.self, where: Inscription.column(of: .inscriptionHash) == inscriptionHash)
     }
     
-    public func collectionExists(collectionHash: String) -> Bool {
-        db.recordExists(in: InscriptionCollection.self, where: Inscription.column(of: .collectionHash) == collectionHash)
-    }
-    
     public func save(inscription: Inscription) {
         db.save(inscription)
     }
@@ -54,6 +50,14 @@ public final class InscriptionDAO: UserDatabaseDAO {
             try inscription.save(db)
             return try InscriptionItem.fetchOne(db, sql: SQL.selectWithInscriptionHash, arguments: [inscription.inscriptionHash])
         }
+    }
+    
+}
+
+extension InscriptionDAO {
+    
+    public func collection(hash: String) -> InscriptionCollection? {
+        db.select(where: InscriptionCollection.column(of: .collectionHash) == hash)
     }
     
     public func save(collection: InscriptionCollection) {

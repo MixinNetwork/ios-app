@@ -29,7 +29,11 @@ extension MessageItem {
         } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
             return (snapshotAmount ?? "0") + " " + (tokenSymbol ?? "")
         } else if category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
-            return "\(inscriptionCollectionName ?? "") #\(inscriptionSequence ?? 0)"
+            if let inscription {
+                return "\(inscription.name) #\(inscription.sequence)"
+            } else {
+                return ""
+            }
         } else if category.hasSuffix("_CONTACT") {
             return sharedUserIdentityNumber ?? ""
         } else if category.hasSuffix("_TRANSCRIPT") {

@@ -29,19 +29,16 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? InscriptionMessageViewModel {
             snapshotContentLeadingConstraint.constant = viewModel.leadingConstant
             snapshotContentTrailingConstraint.constant = viewModel.trailingConstant
-            let message = viewModel.message
-            if let contentType = message.inscriptionContentType,
-               contentType.starts(with: "image/"),
-               let string = message.inscriptionContentURL,
-               let url = URL(string: string)
-            {
-                inscriptionContentView.imageView.sd_setImage(with: url)
-            } else {
-                inscriptionContentView.imageView.image = R.image.inscription_Intaglio()
+            if let inscription = viewModel.message.inscription {
+                if inscription.contentType.starts(with: "image/"), let url = URL(string: inscription.contentURL) {
+                    inscriptionContentView.imageView.sd_setImage(with: url)
+                } else {
+                    inscriptionContentView.imageView.image = R.image.inscription_Intaglio()
+                }
+                inscriptionContentView.nameLabel.text = inscription.name
+                inscriptionContentView.sequenceLabel.text = "#\(inscription.sequence)"
+                inscriptionContentView.hashView.content = inscription.inscriptionHash
             }
-            inscriptionContentView.nameLabel.text = message.inscriptionCollectionName
-            inscriptionContentView.sequenceLabel.text = "#\(message.inscriptionSequence ?? 0)"
-            inscriptionContentView.hashView.content = message.inscriptionHash
         }
     }
     

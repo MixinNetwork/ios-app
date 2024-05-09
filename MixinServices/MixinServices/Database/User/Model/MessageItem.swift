@@ -75,12 +75,6 @@ public final class MessageItem {
 
     public var expireIn: Int64?
     
-    public var inscriptionHash: String?
-    public var inscriptionCollectionName: String?
-    public var inscriptionSequence: UInt64?
-    public var inscriptionContentType: String?
-    public var inscriptionContentURL: String?
-    
     public lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let content = content, let data = Data(base64Encoded: content) else {
             return nil
@@ -127,6 +121,13 @@ public final class MessageItem {
             return true
         }
         return extra.isShareable ?? true
+    }()
+    
+    public lazy var inscription: InscriptionData? = {
+        guard category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue, let data = content?.data(using: .utf8) else {
+            return nil
+        }
+        return try? JSONDecoder.default.decode(InscriptionData.self, from: data)
     }()
     
     public private(set) lazy var formattedSnapshotMemo: String? = {
@@ -290,12 +291,6 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case albumId = "album_id"
         
         case expireIn = "expire_in"
-        
-        case inscriptionHash = "inscription_hash"
-        case inscriptionCollectionName = "inscription_collection_name"
-        case inscriptionSequence = "inscription_sequence"
-        case inscriptionContentType = "inscription_content_type"
-        case inscriptionContentURL = "inscription_content_url"
     }
     
 }

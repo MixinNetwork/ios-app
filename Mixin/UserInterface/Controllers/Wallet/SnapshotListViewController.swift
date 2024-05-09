@@ -163,12 +163,9 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
                     guard let inscription = InscriptionDAO.shared.inscriptionItem(with: inscriptionHash) else {
                         return
                     }
-                    DispatchQueue.main.async {
-                        let viewController = InscriptionViewController.instance(inscription: inscription, snapshot: item)
-                        self?.navigationController?.pushViewController(viewController, animated: true)
-                    }
+                    // TODO: Preview
                 } else {
-                    guard let token = TokenDAO.shared.tokenItem(with: item.assetID) else {
+                    guard let token = TokenDAO.shared.tokenItem(assetID: item.assetID) else {
                         return
                     }
                     DispatchQueue.main.async {

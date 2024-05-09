@@ -937,6 +937,8 @@
 		94D0FF312BEB1BC900E3947F /* InscriptionContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF302BEB1BC900E3947F /* InscriptionContentView.swift */; };
 		94D0FF362BEB1BD700E3947F /* InscriptionContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0FF352BEB1BD700E3947F /* InscriptionContentView.xib */; };
 		94D0FF382BEB1CA200E3947F /* InscriptionHashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */; };
+		94D0FF7E2BEB7F9100E3947F /* InscriptionContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */; };
+		94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
 		94D308682BA54E220017494C /* UnlockWeb3WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */; };
 		94D308772BA72C8F0017494C /* Web3AmountChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */; };
@@ -2176,6 +2178,8 @@
 		94D0FF302BEB1BC900E3947F /* InscriptionContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentView.swift; sourceTree = "<group>"; };
 		94D0FF352BEB1BD700E3947F /* InscriptionContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionContentView.xib; sourceTree = "<group>"; };
 		94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionHashView.swift; sourceTree = "<group>"; };
+		94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentCell.swift; sourceTree = "<group>"; };
+		94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionContentCell.xib; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
 		94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockWeb3WalletViewController.swift; sourceTree = "<group>"; };
 		94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AmountChangeCell.swift; sourceTree = "<group>"; };
@@ -3210,6 +3214,9 @@
 			children = (
 				943BC6792BCE9A17003FA778 /* CollectiblesView.xib */,
 				943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */,
+				94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */,
+				94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */,
+				52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */,
 			);
 			path = Collectible;
 			sourceTree = "<group>";
@@ -4170,7 +4177,6 @@
 				94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
 				94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */,
-				52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */,
 				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
 				94317D052AFBE57200FDC9C9 /* MemoCell.swift */,
 				94317D062AFBE57200FDC9C9 /* MemoCell.xib */,
@@ -4799,6 +4805,7 @@
 				7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */,
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
+				94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */,
 				7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */,
 				944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
@@ -5972,6 +5979,7 @@
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
 				7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */,
 				DF846CD923694A2E00AA1197 /* MultisigUsersWindow.swift in Sources */,
+				94D0FF7E2BEB7F9100E3947F /* InscriptionContentCell.swift in Sources */,
 				94DCDAA0262DAF5B0064D1F3 /* DisplayAwakener.swift in Sources */,
 				9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */,
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,

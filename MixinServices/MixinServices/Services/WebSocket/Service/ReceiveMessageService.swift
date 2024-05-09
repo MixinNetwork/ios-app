@@ -1238,7 +1238,7 @@ extension ReceiveMessageService {
         }
         checkUser(userId: snapshot.opponentID, tryAgain: true)
         let chainId: String?
-        if let token = TokenDAO.shared.tokenItem(with: snapshot.assetID) {
+        if let token = TokenDAO.shared.tokenItem(assetID: snapshot.assetID) {
             chainId = token.chainID
         } else if case let .success(token) = SafeAPI.assets(id: snapshot.assetID) {
             TokenDAO.shared.save(assets: [token])
@@ -1262,8 +1262,39 @@ extension ReceiveMessageService {
                 try SafeSnapshotDAO.shared.deletePendingSnapshots(depositHash: hash, db: db)
             }
         }
+        
         let message = Message.createMessage(snapshot: snapshot, data: data)
-        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
+        func insert(message: Message) {
+            MessageDAO.shared.insertMessage(message: message,
+                                            messageSource: data.source,
+                                            silentNotification: data.silentNotification,
+                                            expireIn: data.expireIn)
+        }
+        
+        if let inscriptionHash = snapshot.inscriptionHash, !inscriptionHash.isEmpty {
+            Task.detached {
+                do {
+                    let inscription = try await InscriptionAPI.inscription(inscriptionHash: inscriptionHash)
+                    InscriptionDAO.shared.save(inscription: inscription)
+                    let collection: InscriptionCollection
+                    if let c = InscriptionDAO.shared.collection(hash: inscription.collectionHash) {
+                        collection = c
+                    } else {
+                        collection = try await InscriptionAPI.collection(collectionHash: inscription.collectionHash)
+                        InscriptionDAO.shared.save(collection: collection)
+                    }
+                    let data = InscriptionData(collection: collection, inscription: inscription)
+                    var contentUpdatedMessage = message
+                    contentUpdatedMessage.content = data.asMessageContent()
+                    insert(message: contentUpdatedMessage)
+                } catch {
+                    insert(message: message)
+                }
+            }
+        } else {
+            insert(message: message)
+        }
+        
         UTXOService.shared.synchronize()
     }
     

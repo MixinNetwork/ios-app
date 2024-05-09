@@ -236,7 +236,7 @@ extension TokenViewController {
     private func reloadToken() {
         let assetId = token.assetID
         DispatchQueue.global().async { [weak self] in
-            guard let token = TokenDAO.shared.tokenItem(with: assetId) else {
+            guard let token = TokenDAO.shared.tokenItem(assetID: assetId) else {
                 return
             }
             DispatchQueue.main.sync {

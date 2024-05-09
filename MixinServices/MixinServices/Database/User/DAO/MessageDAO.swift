@@ -39,8 +39,7 @@ public final class MessageDAO: UserDatabaseDAO {
         su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
         mm.mentions, mm.has_read as hasMentionRead,
         CASE WHEN (SELECT 1 FROM pin_messages WHERE message_id = m.id) IS NULL THEN 0 ELSE 1 END AS pinned,
-        alb.added as isStickerAdded, m.album_id, em.expire_in as expire_in,
-        ii.inscription_hash, ic.name AS inscription_collection_name, ii.sequence AS inscription_sequence, ii.content_type AS inscription_content_type, ii.content_url AS inscription_content_url
+        alb.added as isStickerAdded, m.album_id, em.expire_in as expire_in
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
     LEFT JOIN users u1 ON m.participant_id = u1.user_id
@@ -55,8 +54,6 @@ public final class MessageDAO: UserDatabaseDAO {
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
     LEFT JOIN expired_messages em ON m.id = em.message_id
-    LEFT JOIN inscription_items ii ON ss.inscription_hash = ii.inscription_hash
-    LEFT JOIN inscription_collections ic ON ii.collection_hash = ic.collection_hash
     """
     private static let sqlQueryFirstNMessages = """
     \(sqlQueryFullMessage)

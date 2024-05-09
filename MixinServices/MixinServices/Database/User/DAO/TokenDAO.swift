@@ -18,7 +18,7 @@ public final class TokenDAO: UserDatabaseDAO {
         FROM tokens t
             LEFT JOIN chains c ON t.chain_id = c.chain_id
             LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
-        WHERE IFNULL(t.collection_hash,'') = ''
+        WHERE t.collection_hash IS NULL
         """
         
         static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, t.rowid DESC"
@@ -29,10 +29,6 @@ public final class TokenDAO: UserDatabaseDAO {
     public static let shared = TokenDAO()
     
     public static let tokensDidChangeNotification = NSNotification.Name("one.mixin.services.TokenDAO.TokensDidChange")
-    
-    public func tokenExists(kernelAssetID: String) -> Bool {
-        db.recordExists(in: Token.self, where: Token.column(of: .kernelAssetID) == kernelAssetID)
-    }
     
     public func tokenExists(assetID: String) -> Bool {
         db.recordExists(in: Token.self, where: Token.column(of: .assetID) == assetID)
@@ -54,7 +50,7 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "SELECT chain_id FROM tokens WHERE asset_id = ?", arguments: [assetID])
     }
     
-    public func tokenItem(with assetID: String) -> TokenItem? {
+    public func tokenItem(assetID: String) -> TokenItem? {
         db.select(with: SQL.selectWithAssetID, arguments: [assetID])
     }
     
@@ -64,7 +60,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func tokens(limit: Int, after assetId: String?) -> [Token] {
-        var sql = "SELECT * FROM tokens WHERE IFNULL(collection_hash,'') = ''"
+        var sql = "SELECT * FROM tokens WHERE collection_hash IS NULL"
         if let assetId {
             sql += " AND ROWID > IFNULL((SELECT ROWID FROM tokens WHERE asset_id = '\(assetId)'), 0)"
         }
@@ -92,7 +88,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func allAssetIDs() -> [String] {
-        db.select(with: "SELECT asset_id FROM tokens WHERE IFNULL(collection_hash,'') = ''")
+        db.select(with: "SELECT asset_id FROM tokens WHERE collection_hash IS NULL")
     }
     
     public func allTokens() -> [TokenItem] {
@@ -108,7 +104,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func defaultTransferToken() -> TokenItem? {
-        if let id = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !id.isEmpty, let token = tokenItem(with: id), token.decimalBalance > 0 {
+        if let id = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !id.isEmpty, let token = tokenItem(assetID: id), token.decimalBalance > 0 {
             return token
         } else {
             let sql = "\(SQL.selector) AND te.balance > 0 ORDER BY \(SQL.order) LIMIT 1"
@@ -130,7 +126,7 @@ public final class TokenDAO: UserDatabaseDAO {
             SELECT t.asset_id, ifnull(te.balance,'0') AS balance, t.chain_id, t.symbol, t.name, t.icon_url
             FROM tokens t
                 LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
-            WHERE IFNULL(t.collection_hash,'') = ''
+            WHERE t.collection_hash IS NULL
         """
         if !ids.isEmpty {
             query.append(literal: " AND t.asset_id IN \(ids)")

@@ -30,7 +30,7 @@ final class WalletSearchRecommendationViewController: WalletSearchTableViewContr
         
         queue.async { [weak self] in
             let history = AppGroupUserDefaults.User.assetSearchHistory
-                .compactMap(TokenDAO.shared.tokenItem(with:))
+                .compactMap(TokenDAO.shared.tokenItem(assetID:))
             let trending = TopAssetsDAO.shared.getAssets()
             DispatchQueue.main.sync {
                 guard let self = self else {
@@ -168,7 +168,7 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
                     }
                 }
                 
-                if let token = TokenDAO.shared.tokenItem(with: item.assetId) {
+                if let token = TokenDAO.shared.tokenItem(assetID: item.assetId) {
                     pushTokenViewController(with: token)
                 } else {
                     let chainID = item.chainId

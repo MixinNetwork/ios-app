@@ -12,6 +12,17 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		521AEF542BEA03C200F48884 /* Web3TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */; };
+		521AEF582BEA044800F48884 /* Web3TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521AEF572BEA044800F48884 /* Web3TransactionCell.xib */; };
+		52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */; };
+		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
+		52589AE52BEA52910081C2BF /* Web3TokenHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */; };
+		5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */; };
+		5292D6932BEB910F00734F14 /* Web3TransactionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */; };
+		5292D6982BEB911900734F14 /* Web3TransactionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */; };
+		52C8859F2BEB4D570094AB7A /* Web3HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */; };
+		52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */; };
+		52DE7B4F2BEB7C940060A364 /* RowListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -704,6 +715,7 @@
 		9414A7832BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */; };
 		9414A7882BE78D8700FA35EB /* DecimalAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */; };
 		9414A78A2BE7911200FA35EB /* WithdrawInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */; };
+		9414A84A2BE9BF4600FA35EB /* Web3TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */; };
 		9415D4A32BCBEF6800C78A75 /* Web3DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */; };
 		9415D4A42BCBEF6800C78A75 /* Web3DepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */; };
 		9416231A29BEEFB800E540B9 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 9416231929BEEFB800E540B9 /* OrderedCollections */; };
@@ -1243,6 +1255,17 @@
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
+		521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionCell.swift; sourceTree = "<group>"; };
+		521AEF572BEA044800F48884 /* Web3TransactionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionCell.xib; sourceTree = "<group>"; };
+		52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TokenHeaderView.xib; sourceTree = "<group>"; };
+		52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTextAttachment.swift; sourceTree = "<group>"; };
+		52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenHeaderView.swift; sourceTree = "<group>"; };
+		5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Localize.swift"; sourceTree = "<group>"; };
+		5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionHeaderView.xib; sourceTree = "<group>"; };
+		5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionHeaderView.swift; sourceTree = "<group>"; };
+		52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3HeaderView.swift; sourceTree = "<group>"; };
+		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
+		52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowListViewController.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -1943,6 +1966,7 @@
 		9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferInputAmountViewController.swift; sourceTree = "<group>"; };
 		9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalAccumulator.swift; sourceTree = "<group>"; };
 		9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawInputAmountViewController.swift; sourceTree = "<group>"; };
+		9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenViewController.swift; sourceTree = "<group>"; };
 		9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DepositViewController.swift; sourceTree = "<group>"; };
 		9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3DepositView.xib; sourceTree = "<group>"; };
 		9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusRecorder.swift; sourceTree = "<group>"; };
@@ -2562,6 +2586,31 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		521AEF522BEA039700F48884 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */,
+				946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */,
+				9401A6062BDAA74A00679686 /* Web3AccountCell.xib */,
+				9401A6052BDAA74A00679686 /* Web3AccountCell.swift */,
+				521AEF572BEA044800F48884 /* Web3TransactionCell.xib */,
+				521AEF532BEA03C200F48884 /* Web3TransactionCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		52589ADC2BEA50A60081C2BF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				52589ADD2BEA50C60081C2BF /* Web3TokenHeaderView.xib */,
+				52589AE42BEA52910081C2BF /* Web3TokenHeaderView.swift */,
+				5292D6922BEB910F00734F14 /* Web3TransactionHeaderView.xib */,
+				5292D6972BEB911900734F14 /* Web3TransactionHeaderView.swift */,
+				52C8859E2BEB4D570094AB7A /* Web3HeaderView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		5E5CA7832674AC4100C1E113 /* ScreenLock */ = {
 			isa = PBXGroup;
 			children = (
@@ -2907,6 +2956,7 @@
 				7B26D1CD219EEB5A00AE113A /* Views */,
 				94E619B72645BA7400A38049 /* Web */,
 				7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */,
+				52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */,
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
 				7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */,
 				7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */,
@@ -2941,6 +2991,7 @@
 				94980FC62A5D653A0051AE6D /* IntroViewController.swift */,
 				941D3BF92A7912C700538504 /* QRCodeView.xib */,
 				941D3BF82A7912C700538504 /* QRCodeViewController.swift */,
+				52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -3183,6 +3234,7 @@
 				946575972BC8684D00C4C4F4 /* Web3DappProposer.swift */,
 				9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */,
 				942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */,
+				5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -3389,13 +3441,13 @@
 		94ED3EF32990DB8D003BC236 /* Web3 */ = {
 			isa = PBXGroup;
 			children = (
+				521AEF522BEA039700F48884 /* Cells */,
+				52589ADC2BEA50A60081C2BF /* Views */,
 				948E276929D2A518002BFCE1 /* Model */,
 				94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */,
 				94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */,
 				9419794E2BA47620002BA19F /* Web3SignViewController.swift */,
 				94D3087F2BA73F810017494C /* Web3TransferViewController.swift */,
-				946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */,
-				946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */,
 				946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */,
 				943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */,
 				9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */,
@@ -3408,10 +3460,10 @@
 				9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */,
 				94350E372BCFE8C5007283B7 /* DecimalButton.swift */,
 				9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */,
-				9401A6062BDAA74A00679686 /* Web3AccountCell.xib */,
-				9401A6052BDAA74A00679686 /* Web3AccountCell.swift */,
 				9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */,
 				9401A5F92BDA899900679686 /* Web3SendingDestinationViewController.swift */,
+				9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */,
+				52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -4674,6 +4726,7 @@
 				7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
+				5292D6932BEB910F00734F14 /* Web3TransactionHeaderView.xib in Resources */,
 				9401A6012BDA91F900679686 /* Web3SendingDestinationHeaderView.xib in Resources */,
 				948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
@@ -4755,6 +4808,7 @@
 				943BC6632BCD1FF4003FA778 /* Web3BrowserView.xib in Resources */,
 				7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
+				52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				94B13FC32B5ED5F9001333BE /* ExploreSearchView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
@@ -4866,6 +4920,7 @@
 				94CF1F2C2BA1BB9800BC52C1 /* Web3AccountLockedHeaderView.xib in Resources */,
 				7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
+				521AEF582BEA044800F48884 /* Web3TransactionCell.xib in Resources */,
 				948E6CB628AF95CC00DFF5DF /* IntroView.xib in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
@@ -5127,6 +5182,7 @@
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
+				52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,
 				7BDFAE902559008800296F8B /* WalletSearchViewController.swift in Sources */,
@@ -5149,6 +5205,7 @@
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */,
+				52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
@@ -5263,6 +5320,7 @@
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				DF7FAA85247D332F00B0164A /* AddressTransactionsViewController.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
+				521AEF542BEA03C200F48884 /* Web3TransactionCell.swift in Sources */,
 				944C61FF2B6C033500C7DF06 /* EditAddressPreviewViewController.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
@@ -5279,6 +5337,7 @@
 				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
+				9414A84A2BE9BF4600FA35EB /* Web3TokenViewController.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7BEED890246D0C3D00387EAE /* CallAdapter.swift in Sources */,
@@ -5311,6 +5370,7 @@
 				7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */,
 				7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */,
 				ABE865BE23F2455800C0167D /* AuthorizationScope.swift in Sources */,
+				52C8859F2BEB4D570094AB7A /* Web3HeaderView.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
@@ -5358,6 +5418,7 @@
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
 				94F952622AE623B50025B995 /* TokenSelectorViewController.swift in Sources */,
 				94ECCCAB261A029F004E9E2A /* Window.swift in Sources */,
+				5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
@@ -5546,6 +5607,7 @@
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,
 				7B34A19F22C0E73D00665F41 /* GalleryVideoView.swift in Sources */,
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
+				5292D6982BEB911900734F14 /* Web3TransactionHeaderView.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
 				94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */,
 				7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */,
@@ -5575,6 +5637,7 @@
 				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
 				7B3CDA6424FFDD1D003A3E80 /* FavoriteStickerCell.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
+				52DE7B4F2BEB7C940060A364 /* RowListViewController.swift in Sources */,
 				7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
 				7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */,
@@ -5964,6 +6027,7 @@
 				7B9F8110222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
+				52589AE52BEA52910081C2BF /* Web3TokenHeaderView.swift in Sources */,
 				94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */,
 				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
 				7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */,

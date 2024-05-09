@@ -1,32 +1,20 @@
 import UIKit
 import MixinServices
 
-final class TokenTableHeaderView: InfiniteTopView {
+final class Web3TokenHeaderView: Web3HeaderView {
     
-    @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountTextView: UITextView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
-    @IBOutlet weak var tokenInfoButton: UIButton!
-    @IBOutlet weak var transferActionView: TransferActionView!
-    @IBOutlet weak var transactionsHeaderView: UIView!
-    @IBOutlet weak var filterButton: UIButton!
     
-    @IBOutlet weak var assetIconViewWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var infoStackViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var infoStackViewTrailingConstraint: NSLayoutConstraint!
-    
-    private var token: TokenItem?
+    private var token: Web3Token?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         amountTextView.textContainerInset = .zero
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let sizeToFit = CGSize(width: size.width, height: UIView.layoutFittingExpandedSize.height)
-        let layoutSize = systemLayoutSizeFitting(sizeToFit)
-        return CGSize(width: size.width, height: layoutSize.height)
+        amountTextView.textContainer.lineFragmentPadding = 0
+        actionStackView.addArrangedSubview(UIView())
+        actionStackView.addArrangedSubview(UIView())
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -36,18 +24,13 @@ final class TokenTableHeaderView: InfiniteTopView {
         }
     }
     
-    func render(token: TokenItem) {
-        assetIconView.setIcon(token: token)
-        let amount: String
-        if token.balance == "0" {
-            amount = "0\(currentDecimalSeparator)00"
-            fiatMoneyValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
-        } else {
-            amount = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? ""
-            fiatMoneyValueLabel.text = token.localizedFiatMoneyBalance
-        }
+    func render(token: Web3Token) {
+        assetIconView.setIcon(web3Token: token)
+        
+        let amount = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? ""
         let attributedAmount = attributedString(amount: amount, symbol: token.symbol)
         amountTextView.attributedText = attributedAmount
+        fiatMoneyValueLabel.text = token.localizedFiatMoneyBalance
         
         let range = NSRange(location: 0, length: attributedAmount.length)
         var lineCount = 0

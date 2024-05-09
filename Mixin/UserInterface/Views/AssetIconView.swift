@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class AssetIconView: UIView {
+final class AssetIconView: UIView {
     
     @IBInspectable var chainIconWidth: CGFloat = 10
     @IBInspectable var chainIconOutlineWidth: CGFloat = 2
@@ -11,7 +11,7 @@ class AssetIconView: UIView {
     let chainImageView = UIImageView()
     let shadowOffset: CGFloat = 5
     
-    private var isChainIconHidden = false {
+    var isChainIconHidden = false {
         didSet {
             chainBackgroundView.isHidden = isChainIconHidden
             chainImageView.isHidden = isChainIconHidden
@@ -50,6 +50,26 @@ class AssetIconView: UIView {
         chainImageView.image = nil
     }
     
+    func setIcon(web3Transaction transaction: Web3Transaction) {
+        switch Web3Transaction.TransactionType(rawValue: transaction.operationType) {
+        case .send:
+            iconImageView.image = R.image.wallet.snapshot_withdrawal()
+            isChainIconHidden = true
+        case .receive:
+            iconImageView.image = R.image.wallet.snapshot_deposit()
+            isChainIconHidden = true
+        default:
+            isChainIconHidden = false
+            if let app = transaction.appMetadata {
+                iconImageView.sd_setImage(with: URL(string: app.iconURL))
+                chainImageView.sd_setImage(with: URL(string: transaction.fee.iconURL))
+            } else {
+                iconImageView.image = nil
+                chainImageView.image = nil
+            }
+        }
+    }
+    
     func setIcon(asset: AssetItem) {
         let url = URL(string: asset.iconUrl)
         iconImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
@@ -75,7 +95,7 @@ class AssetIconView: UIView {
     
     func setIcon(web3Token token: Web3Token) {
         if let url = URL(string: token.iconURL) {
-            iconImageView.sd_setImage(with: URL(string: token.iconURL),
+            iconImageView.sd_setImage(with: url,
                                       placeholderImage: nil,
                                       context: assetIconContext)
         } else {

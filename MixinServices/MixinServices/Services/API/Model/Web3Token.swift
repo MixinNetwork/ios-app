@@ -3,7 +3,7 @@ import Foundation
 public class Web3Token: Codable {
     
     enum CodingKeys: String, CodingKey {
-        case id = "id"
+        case fungibleID = "fungible_id"
         case name = "name"
         case symbol = "symbol"
         case iconURL = "icon_url"
@@ -17,7 +17,7 @@ public class Web3Token: Codable {
         case decimalValuePower = "decimals"
     }
     
-    public let id: String
+    public let fungibleID: String
     public let name: String
     public let symbol: String
     public let iconURL: String

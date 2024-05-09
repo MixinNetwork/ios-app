@@ -16,6 +16,17 @@ public final class Web3API {
         request(method: .get, path: "/accounts/" + address, completion: completion)
     }
     
+    public static func transactions(
+        address: String,
+        chainID: String,
+        fungibleID: String,
+        limit: Int = 100,
+        completion: @escaping (MixinAPI.Result<[Web3Transaction]>) -> Void
+    ) {
+        let path = "/transactions/\(address)?chain_id=\(chainID)&fungible_id=\(fungibleID)&limit=\(limit)"
+        request(method: .get, path: path, completion: completion)
+    }
+    
 }
 
 extension Web3API {

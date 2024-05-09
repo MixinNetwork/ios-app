@@ -160,7 +160,7 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
         } else {
             DispatchQueue.global().async { [weak self] in
                 if let inscriptionHash = item.inscriptionHash {
-                    guard let inscription = InscriptionDAO.shared.inscriptionItem(with: inscriptionHash) else {
+                    guard let inscription = InscriptionDAO.shared.partialInscriptionItem(with: inscriptionHash) else {
                         return
                     }
                     // TODO: Preview

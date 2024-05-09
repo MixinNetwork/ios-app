@@ -30,7 +30,7 @@ extension MessageItem {
             return (snapshotAmount ?? "0") + " " + (tokenSymbol ?? "")
         } else if category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
             if let inscription {
-                return "\(inscription.name) #\(inscription.sequence)"
+                return "\(inscription.collectionName) #\(inscription.sequence)"
             } else {
                 return ""
             }

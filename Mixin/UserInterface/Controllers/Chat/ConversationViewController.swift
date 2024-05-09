@@ -862,8 +862,12 @@ class ConversationViewController: UIViewController {
                 }
             } else if message.category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
                 conversationInputViewController.dismiss()
-                let inscription = InscriptionViewController(message: message)
-                navigationController?.pushViewController(inscription, animated: true)
+                guard let snapshotID = message.snapshotId else {
+                    return
+                }
+                let isMine = message.userId != myUserId
+                let preview = InscriptionViewController(source: .message(messageID: message.messageId, snapshotID: snapshotID), inscription: message.inscription, isMine: false)
+                navigationController?.pushViewController(preview, animated: true)
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 conversationInputViewController.dismiss()
                 openAppCard(appCard: appCard, sendUserId: message.userId)

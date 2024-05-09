@@ -123,12 +123,7 @@ public final class MessageItem {
         return extra.isShareable ?? true
     }()
     
-    public lazy var inscription: InscriptionData? = {
-        guard category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue, let data = content?.data(using: .utf8) else {
-            return nil
-        }
-        return try? JSONDecoder.default.decode(InscriptionData.self, from: data)
-    }()
+    public lazy var inscription = InscriptionItem(messageContent: content)
     
     public private(set) lazy var formattedSnapshotMemo: String? = {
         guard let memo = snapshotMemo else {

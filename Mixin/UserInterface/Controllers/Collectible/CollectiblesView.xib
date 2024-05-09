@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CollectiblesViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="q3X-vD-KBB" id="qqd-0L-Z0t"/>
+                <outlet property="collectionViewLayout" destination="oyq-su-z6K" id="SN4-UC-EXC"/>
                 <outlet property="view" destination="iN0-l3-epB" id="jrz-J0-WJc"/>
             </connections>
         </placeholder>
@@ -69,7 +70,7 @@
                         <constraint firstItem="wM1-ot-yCR" firstAttribute="leading" secondItem="jml-mB-d6l" secondAttribute="leading" constant="20" id="t0E-jA-kUB"/>
                     </constraints>
                 </view>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="q3X-vD-KBB">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="q3X-vD-KBB">
                     <rect key="frame" x="0.0" y="105" width="393" height="747"/>
                     <color key="backgroundColor" name="background"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="oyq-su-z6K" customClass="LeftAlignedCollectionViewFlowLayout" customModule="Mixin" customModuleProvider="target">

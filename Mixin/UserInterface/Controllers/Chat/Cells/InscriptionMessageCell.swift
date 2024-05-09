@@ -30,12 +30,12 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
             snapshotContentLeadingConstraint.constant = viewModel.leadingConstant
             snapshotContentTrailingConstraint.constant = viewModel.trailingConstant
             if let inscription = viewModel.message.inscription {
-                if inscription.contentType.starts(with: "image/"), let url = URL(string: inscription.contentURL) {
+                if let url = inscription.imageContentURL {
                     inscriptionContentView.imageView.sd_setImage(with: url)
                 } else {
                     inscriptionContentView.imageView.image = R.image.inscription_Intaglio()
                 }
-                inscriptionContentView.nameLabel.text = inscription.name
+                inscriptionContentView.nameLabel.text = inscription.collectionName
                 inscriptionContentView.sequenceLabel.text = "#\(inscription.sequence)"
                 inscriptionContentView.hashView.content = inscription.inscriptionHash
             }

@@ -1274,18 +1274,9 @@ extension ReceiveMessageService {
         if let inscriptionHash = snapshot.inscriptionHash, !inscriptionHash.isEmpty {
             Task.detached {
                 do {
-                    let inscription = try await InscriptionAPI.inscription(inscriptionHash: inscriptionHash)
-                    InscriptionDAO.shared.save(inscription: inscription)
-                    let collection: InscriptionCollection
-                    if let c = InscriptionDAO.shared.collection(hash: inscription.collectionHash) {
-                        collection = c
-                    } else {
-                        collection = try await InscriptionAPI.collection(collectionHash: inscription.collectionHash)
-                        InscriptionDAO.shared.save(collection: collection)
-                    }
-                    let data = InscriptionData(collection: collection, inscription: inscription)
+                    let inscription = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
                     var contentUpdatedMessage = message
-                    contentUpdatedMessage.content = data.asMessageContent()
+                    contentUpdatedMessage.content = inscription.asMessageContent()
                     insert(message: contentUpdatedMessage)
                 } catch {
                     insert(message: message)

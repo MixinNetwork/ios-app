@@ -57,6 +57,10 @@ extension SafeSnapshotDAO {
         return count ?? 0
     }
     
+    public func inscriptionHash(snapshotID id: String) -> String? {
+        db.select(with: "SELECT inscription_hash FROM safe_snapshots WHERE snapshot_id=?", arguments: [id])
+    }
+    
     public func snapshots(
         assetId: String? = nil,
         offset: Offset? = nil,

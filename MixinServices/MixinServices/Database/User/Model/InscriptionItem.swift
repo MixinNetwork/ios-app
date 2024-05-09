@@ -1,35 +1,89 @@
 import Foundation
-import GRDB
 
-public final class InscriptionItem: Inscription {
+public struct InscriptionItem: InscriptionContent {
     
-    enum JoinedQueryCodingKeys: String, CodingKey {
-        case collectionName = "collection_name"
-        case collectionIconURL = "collection_icon_url"
-        
-        case tokenName = "token_name"
-        case tokenSymbol = "token_symbol"
-        case tokenIconURL = "token_icon_url"
+    public let collectionHash: String
+    public let collectionName: String
+    public let collectionIconURL: String
+    public let inscriptionHash: String
+    public let sequence: UInt64
+    public let contentType: String
+    public let contentURL: String
+    
+    init(collection: InscriptionCollection, inscription: Inscription) {
+        collectionHash      = collection.collectionHash
+        collectionName      = collection.name
+        collectionIconURL   = collection.iconURL
+        inscriptionHash = inscription.inscriptionHash
+        sequence        = inscription.sequence
+        contentType     = inscription.contentType
+        contentURL      = inscription.contentURL
     }
     
-    public var collectionName: String?
-    public var collectionIconURL: String?
+    init(
+        collectionHash: String, collectionName: String,
+        collectionIconURL: String, inscriptionHash: String,
+        sequence: UInt64, contentType: String, contentURL: String
+    ) {
+        self.collectionHash = collectionHash
+        self.collectionName = collectionName
+        self.collectionIconURL = collectionIconURL
+        self.inscriptionHash = inscriptionHash
+        self.sequence = sequence
+        self.contentType = contentType
+        self.contentURL = contentURL
+    }
     
-    public let tokenName: String
-    public let tokenSymbol: String
-    public let tokenIconURL: String
+}
+
+extension InscriptionItem: Codable {
     
-    required init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: JoinedQueryCodingKeys.self)
-        
-        self.collectionName = try container.decodeIfPresent(String.self, forKey: .collectionName)
-        self.collectionIconURL = try container.decodeIfPresent(String.self, forKey: .collectionIconURL)
-        
-        self.tokenName = try container.decode(String.self, forKey: .tokenName)
-        self.tokenSymbol = try container.decode(String.self, forKey: .tokenSymbol)
-        self.tokenIconURL = try container.decode(String.self, forKey: .tokenIconURL)
-        
-        try super.init(from: decoder)
+    enum CodingKeys: String, CodingKey {
+        case collectionHash = "collection_hash"
+        case collectionName = "name"
+        case collectionIconURL = "icon_url"
+        case inscriptionHash = "inscription_hash"
+        case sequence
+        case contentType = "content_type"
+        case contentURL = "content_url"
+    }
+    
+}
+
+extension InscriptionItem: InstanceInitializable {
+    
+    init?(messageContent: String?) {
+        guard let data = messageContent?.data(using: .utf8) else {
+            return nil
+        }
+        guard let instance = try? JSONDecoder.default.decode(Self.self, from: data) else {
+            return nil
+        }
+        self.init(instance: instance)
+    }
+    
+    public func asMessageContent() -> String? {
+        guard let data = try? JSONEncoder.default.encode(self) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+    
+}
+
+extension InscriptionItem {
+    
+    public static func retrieve(inscriptionHash: String) async throws -> InscriptionItem {
+        let inscription = try await InscriptionAPI.inscription(inscriptionHash: inscriptionHash)
+        InscriptionDAO.shared.save(inscription: inscription)
+        let collection: InscriptionCollection
+        if let c = InscriptionDAO.shared.collection(hash: inscription.collectionHash) {
+            collection = c
+        } else {
+            collection = try await InscriptionAPI.collection(collectionHash: inscription.collectionHash)
+            InscriptionDAO.shared.save(collection: collection)
+        }
+        return InscriptionItem(collection: collection, inscription: inscription)
     }
     
 }

@@ -3,12 +3,34 @@ import MixinServices
 
 final class InscriptionViewController: UIViewController {
     
-    private let backgroundView = UIVisualEffectView(effect: .darkBlur)
-    private let tableView = UITableView()
-    private let message: MessageItem
+    enum Source {
+        case message(messageID: String, snapshotID: String)
+        case collectible(inscriptionHash: String)
+    }
     
-    init(message: MessageItem) {
-        self.message = message
+    private enum Row {
+        case content
+        case action
+        case hash
+        case id
+        case collection
+    }
+    
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var tableView: UITableView!
+    
+    private let source: Source
+    private let isMine: Bool // FIXME: Better determination
+    
+    private lazy var traceID = UUID().uuidString.lowercased()
+    
+    private var inscription: InscriptionItem?
+    private var rows: [Row] = [.content]
+    
+    init(source: Source, inscription: InscriptionItem?, isMine: Bool) {
+        self.source = source
+        self.inscription = inscription
+        self.isMine = isMine
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -18,18 +40,73 @@ final class InscriptionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .clear
-        view.addSubview(backgroundView)
-        backgroundView.snp.makeEdgesEqualToSuperview()
-        backgroundView.contentView.addSubview(tableView)
-        tableView.snp.makeEdgesEqualToSuperview()
-        tableView.backgroundColor = .clear
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 61
-        tableView.separatorStyle = .none
         tableView.register(R.nib.inscriptionContentCell)
+        tableView.register(R.nib.inscriptionActionCell)
+        tableView.register(R.nib.inscriptionHashCell)
+        tableView.register(R.nib.authenticationPreviewCompactInfoCell)
         tableView.dataSource = self
-        tableView.delegate = self
+        reloadData()
+        if inscription == nil {
+            switch source {
+            case .message(let messageID, let snapshotID):
+                DispatchQueue.global().async {
+                    guard let hash = SafeSnapshotDAO.shared.inscriptionHash(snapshotID: snapshotID) else {
+                        return
+                    }
+                    self.reloadInscription(hash: hash, messageID: messageID)
+                }
+            case .collectible(let hash):
+                self.reloadInscription(hash: hash, messageID: nil)
+            }
+        }
+    }
+    
+    @IBAction func goBack(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func reloadData() {
+        if inscription == nil {
+            rows = [.content]
+        } else {
+            if isMine {
+                rows = [.content, .action, .hash, .id, .collection]
+            } else {
+                rows = [.content, .hash, .id, .collection]
+            }
+        }
+        tableView.reloadData()
+        if let url = inscription?.imageContentURL {
+            backgroundImageView.sd_setImage(with: url)
+        }
+    }
+    
+    private func reloadInscription(hash: String, messageID: String?) {
+        Task { [weak self] in
+            do {
+                let inscription: InscriptionItem
+                if let item = InscriptionDAO.shared.inscriptionItem(with: hash) {
+                    inscription = item
+                } else {
+                    inscription = try await InscriptionItem.retrieve(inscriptionHash: hash)
+                }
+                if let messageID, let content = inscription.asMessageContent() {
+                    MessageDAO.shared.update(content: content, forMessageWith: messageID)
+                }
+                await MainActor.run {
+                    guard let self else {
+                        return
+                    }
+                    self.inscription = inscription
+                    self.reloadData()
+                }
+            } catch {
+                Logger.general.debug(category: "Inscription", message: "\(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self?.reloadInscription(hash: hash, messageID: messageID)
+                }
+            }
+        }
     }
     
 }
@@ -37,17 +114,71 @@ final class InscriptionViewController: UIViewController {
 extension InscriptionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        rows.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_content, for: indexPath)!
-        return cell
+        let row = rows[indexPath.row]
+        switch row {
+        case .content:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_content, for: indexPath)!
+            if let inscription {
+                cell.placeholderImageView.isHidden = true
+                cell.contentImageView.isHidden = false
+                cell.contentImageView.sd_setImage(with: inscription.imageContentURL)
+            } else {
+                cell.placeholderImageView.isHidden = false
+                cell.contentImageView.isHidden = true
+            }
+            return cell
+        case .action:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_action, for: indexPath)!
+            cell.delegate = self
+            return cell
+        case .hash:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_hash, for: indexPath)!
+            if let inscription {
+                cell.hashPatternView.content = inscription.inscriptionHash
+                cell.hashLabel.text = inscription.inscriptionHash
+            }
+            return cell
+        case .id:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.captionLabel.text = "ID"
+            if let inscription {
+                cell.setContent("\(inscription.sequence)", labelContent: nil)
+            }
+            cell.backgroundColor = .clear
+            return cell
+        case .collection:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.captionLabel.text = "COLLECTION"
+            if let inscription {
+                cell.setContent("\(inscription.collectionName)", labelContent: nil)
+            }
+            cell.backgroundColor = .clear
+            return cell
+        }
     }
     
 }
 
-extension InscriptionViewController: UITableViewDelegate {
+extension InscriptionViewController: InscriptionActionCellDelegate {
     
+    func inscriptionActionCellRequestToSend(_ cell: InscriptionActionCell) {
+        guard let hash = inscription?.inscriptionHash, let token = TokenDAO.shared.nonFungibleToken(inscriptionHash: hash) else {
+            return
+        }
+        let fiatMoneyAmount = token.decimalBalance * token.decimalUSDPrice * Currency.current.decimalRate
+        let payment = Payment(traceID: traceID,
+                              token: token,
+                              tokenAmount: token.decimalBalance,
+                              fiatMoneyAmount: fiatMoneyAmount,
+                              memo: "")
+    }
+    
+    func inscriptionActionCellRequestToShare(_ cell: InscriptionActionCell) {
+        
+    }
     
 }

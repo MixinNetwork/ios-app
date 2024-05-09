@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, InscriptionContent {
     
     public enum CodingKeys: String, CodingKey {
         case inscriptionHash = "inscription_hash"

@@ -77,7 +77,11 @@ extension Payment {
                 let outputCollectionResult: OutputCollectingResult
                 if let inscriptionHash = inscription {
                     do {
-                        item = try await inscriptionItem(hash: inscriptionHash)
+                        if let i = InscriptionDAO.shared.inscriptionItem(with: inscriptionHash) {
+                            item = i
+                        } else {
+                            item = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
+                        }
                         let result = UTXOService.shared.inscriptionOutput(hash: inscriptionHash)
                         switch result {
                         case .success(let collection):
@@ -302,28 +306,6 @@ extension Payment {
             }
         }
         return .passed(issues)
-    }
-    
-    private func inscriptionItem(hash: String) async throws -> InscriptionItem {
-        let inscriptionItem: InscriptionItem
-        if let item = InscriptionDAO.shared.inscriptionItem(with: hash) {
-            inscriptionItem = item
-        } else {
-            let inscription = try await InscriptionAPI.inscription(inscriptionHash: hash)
-            guard let item = InscriptionDAO.shared.saveAndFetch(inscription: inscription) else {
-                throw InscriptionError.missingLocalItem
-            }
-            inscriptionItem = item
-        }
-        
-        if inscriptionItem.collectionName == nil || inscriptionItem.collectionIconURL == nil {
-            let collection = try await InscriptionAPI.collection(collectionHash: inscriptionItem.collectionHash)
-            InscriptionDAO.shared.save(collection: collection)
-            inscriptionItem.collectionName = collection.name
-            inscriptionItem.collectionIconURL = collection.iconURL
-        }
-        
-        return inscriptionItem
     }
     
 }

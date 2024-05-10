@@ -136,7 +136,7 @@ extension Message {
     }
     
     public static func createMessage(snapshot: SafeSnapshot, data: BlazeMessageData) -> Message {
-        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_SNAPSHOT : .SYSTEM_SAFE_INSCRIPTION
+        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_INSCRIPTION : .SYSTEM_SAFE_SNAPSHOT
         return createMessage(messageId: data.messageId,
                              conversationId: data.conversationId,
                              userId: data.userId,
@@ -148,7 +148,7 @@ extension Message {
     }
     
     public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
-        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_SNAPSHOT : .SYSTEM_SAFE_INSCRIPTION
+        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_INSCRIPTION : .SYSTEM_SAFE_SNAPSHOT
         return createMessage(messageId: UUID().uuidString.lowercased(),
                              conversationId: conversationID,
                              userId: myUserId,

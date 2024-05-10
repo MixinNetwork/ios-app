@@ -74,6 +74,11 @@ public final class UTXOService {
                         }
                     }
                     
+                    for hash in outputs.compactMap(\.inscriptionHash) {
+                        let job = RefreshInscirptionJob(inscriptionHash: hash, messageID: nil)
+                        ConcurrentJobQueue.shared.addJob(job: job)
+                    }
+                    
                     OutputDAO.shared.insertOrIgnore(outputs: outputs) { db in
                         let kernelAssetIDs = Set(outputs.map(\.asset))
                         for kernelAssetID in kernelAssetIDs {

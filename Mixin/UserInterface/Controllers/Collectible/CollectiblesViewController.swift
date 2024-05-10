@@ -24,24 +24,7 @@ final class CollectiblesViewController: UIViewController {
         collectionView.register(R.nib.collectibleCell)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.reloadData()
-        DispatchQueue.global().async {
-            let partials = InscriptionDAO.shared.allPartialInscriptions()
-            let items: [Item] = partials.map { partial in
-                if let data = partial.asInscriptionItem() {
-                    .full(data)
-                } else {
-                    .hash(partial.inscriptionHash)
-                }
-            }
-            DispatchQueue.main.async {
-                self.items = items
-                self.collectionView.reloadData()
-                self.collectionView.checkEmpty(dataCount: items.count,
-                                               text: R.string.localizable.no_collectibles(),
-                                               photo: R.image.emptyIndicator.ic_shared_media()!)
-            }
-        }
+        reloadData()
     }
     
     override func viewWillLayoutSubviews() {
@@ -60,6 +43,26 @@ final class CollectiblesViewController: UIViewController {
     
     @IBAction func scanQRCode(_ sender: Any) {
         UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+    }
+    
+    private func reloadData() {
+        DispatchQueue.global().async {
+            let partials = InscriptionDAO.shared.allPartialInscriptions()
+            let items: [Item] = partials.map { partial in
+                if let data = partial.asInscriptionItem() {
+                    .full(data)
+                } else {
+                    .hash(partial.inscriptionHash)
+                }
+            }
+            DispatchQueue.main.async {
+                self.items = items
+                self.collectionView.reloadData()
+                self.collectionView.checkEmpty(dataCount: items.count,
+                                               text: R.string.localizable.no_collectibles(),
+                                               photo: R.image.emptyIndicator.ic_shared_media()!)
+            }
+        }
     }
     
 }
@@ -105,6 +108,14 @@ extension CollectiblesViewController: UICollectionViewDelegate {
                                       isMine: true)
         }
         navigationController?.pushViewController(preview, animated: true)
+    }
+    
+}
+
+extension CollectiblesViewController: HomeTabBarControllerChild {
+    
+    func viewControllerDidSwitchToFront() {
+        reloadData()
     }
     
 }

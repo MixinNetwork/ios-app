@@ -42,6 +42,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "голосовой вызов отменен";
 "alert_key_contact_audio_call_message" = "приглашает вас на голосовой вызов";
 "alert_key_contact_audio_message" = "отправил вам аудио";
+"alert_key_contact_collectible_message" = "sent you an inscription";
 "alert_key_contact_contact_message" = "отправил вам контакт";
 "alert_key_contact_data_message" = "отправил вам файл";
 "alert_key_contact_image_message" = "отправил вам фото";
@@ -212,8 +213,10 @@
 "clock_skew_hint" = "Пожалуйста, продолжайте использовать снова после исправления. «Настройки» > «Основные» > «Дата и время» > «Включить автоматическую установку»";
 "close" = "Закрыть";
 "closing_balance" = "Closing Balance";
+"collectible" = "Collectible";
 "collectible_token_id" = "#%@";
 "collectibles" = "Collectibles";
+"collection" = "Collection";
 "combine_and_forward" = "Объединить и вперед";
 "compress_database" = "Сжать базу данных";
 "compressed" = "Сжатый";
@@ -249,6 +252,7 @@
 "contact_title" = "Контакты";
 "contacts" = "КОНТАКТЫ";
 "content_audio" = "[Аудио]";
+"content_collection" = "[Collectible]";
 "content_contact" = "[Контакт]";
 "content_deposit" = "[Депозит]";
 "content_fee" = "[Комиссия]";
@@ -474,6 +478,7 @@
 "group_participant_add_limit" = "Вы не можете добавить этого участника, потому что за раз можно добавить не более 50 человек.";
 "group_qr_code_prompt" = "Отсканируйте QR-код, чтобы присоединиться к этой группе";
 "groups_in_common" = "Общие группы";
+"hash" = "HASH";
 "help" = "Помощь";
 "help_center" = "Центр помощи";
 "hidden_assets" = "Скрытые активы";
@@ -485,6 +490,7 @@
 "hour_count" = "%d часы";
 "how_are_you" = "Привет, как дела?";
 "i_am_good" = "Я в порядке.";
+"id" = "ID";
 "image" = "изображение";
 "immediately" = "Немедленно";
 "in_connecting" = "Подключение...";

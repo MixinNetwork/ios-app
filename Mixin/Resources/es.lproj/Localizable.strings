@@ -42,6 +42,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "llamada de voz cancelada";
 "alert_key_contact_audio_call_message" = "te invita a una llamada de voz";
 "alert_key_contact_audio_message" = "te ha enviado un audio";
+"alert_key_contact_collectible_message" = "sent you an inscription";
 "alert_key_contact_contact_message" = "te ha enviado un contacto";
 "alert_key_contact_data_message" = "te ha enviado un archivo";
 "alert_key_contact_image_message" = "te ha enviado una foto";
@@ -212,8 +213,10 @@
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
 "closing_balance" = "Closing Balance";
+"collectible" = "Collectible";
 "collectible_token_id" = "#%@";
 "collectibles" = "Collectibles";
+"collection" = "Collection";
 "combine_and_forward" = "Combinar y avanzar";
 "compress_database" = "Comprimir base de datos";
 "compressed" = "Comprimido";
@@ -249,6 +252,7 @@
 "contact_title" = "Contactos";
 "contacts" = "CONTACTOS";
 "content_audio" = "[Audio]";
+"content_collection" = "[Collectible]";
 "content_contact" = "[Contacto]";
 "content_deposit" = "[Depósito]";
 "content_fee" = "[Tarifa]";
@@ -474,6 +478,7 @@
 "group_participant_add_limit" = "No puede añadir a este participante porque solo puede añadir hasta 50 a la vez.";
 "group_qr_code_prompt" = "Escanea el código QR para unirte a este grupo";
 "groups_in_common" = "Grupos en común";
+"hash" = "HASH";
 "help" = "Ayuda";
 "help_center" = "Centro de ayuda";
 "hidden_assets" = "Activos ocultos";
@@ -485,6 +490,7 @@
 "hour_count" = "%d Horas";
 "how_are_you" = "¿Hola, cómo estás?";
 "i_am_good" = "Estoy bien.";
+"id" = "ID";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
 "in_connecting" = "Conectando...";

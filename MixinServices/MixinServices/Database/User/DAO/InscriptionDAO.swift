@@ -11,13 +11,17 @@ public final class InscriptionDAO: UserDatabaseDAO {
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
             ORDER BY i.updated_at DESC
         """
-        static let selectWithInscriptionHash = "\(SQL.selector) WHERE o.inscription_hash = ?"
     }
     
     public static let shared = InscriptionDAO()
     
+    public func inscription(hash: String) -> Inscription? {
+        db.select(where: Inscription.column(of: .inscriptionHash) == hash)
+    }
+    
     public func partialInscriptionItem(with inscriptionHash: String) -> PartialInscriptionItem? {
-        db.select(with: SQL.selectWithInscriptionHash, arguments: [inscriptionHash])
+        let sql = "\(SQL.selector) WHERE o.inscription_hash = ?"
+        return db.select(with: sql, arguments: [inscriptionHash])
     }
     
     public func inscriptionItem(with inscriptionHash: String) -> InscriptionItem? {

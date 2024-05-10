@@ -42,6 +42,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "キャンセル";
 "alert_key_contact_audio_call_message" = "グループ通話に招待されました";
 "alert_key_contact_audio_message" = "音声メッセージが届きました";
+"alert_key_contact_collectible_message" = "sent you an inscription";
 "alert_key_contact_contact_message" = "連絡先が届きました";
 "alert_key_contact_data_message" = "ファイルが届きました";
 "alert_key_contact_image_message" = "画像が届きました";
@@ -212,8 +213,10 @@
 "clock_skew_hint" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
 "close" = "閉じる";
 "closing_balance" = "Closing Balance";
+"collectible" = "Collectible";
 "collectible_token_id" = "#%@";
 "collectibles" = "Collectibles";
+"collection" = "Collection";
 "combine_and_forward" = "まとめて転送";
 "compress_database" = "データの圧縮";
 "compressed" = "圧縮しました";
@@ -249,6 +252,7 @@
 "contact_title" = "連絡先";
 "contacts" = "連絡先";
 "content_audio" = "[音声メッセージ]";
+"content_collection" = "[Collectible]";
 "content_contact" = "[連絡先]";
 "content_deposit" = "[入金]";
 "content_fee" = "[手数料]";
@@ -474,6 +478,7 @@
 "group_participant_add_limit" = "一度に追加できるメンバーは最大50人です";
 "group_qr_code_prompt" = "QRコードをスキャンしてこのグループに参加";
 "groups_in_common" = "共通のグループ";
+"hash" = "HASH";
 "help" = "ヘルプ";
 "help_center" = "ヘルプセンター";
 "hidden_assets" = "非表示資産";
@@ -485,6 +490,7 @@
 "hour_count" = "%d時間";
 "how_are_you" = "こんにちは、調子はどうですか";
 "i_am_good" = "いい気分";
+"id" = "ID";
 "image" = "画像";
 "immediately" = "すぐに";
 "in_connecting" = "接続中...";

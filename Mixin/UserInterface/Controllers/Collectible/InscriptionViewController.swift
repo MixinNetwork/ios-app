@@ -53,10 +53,20 @@ final class InscriptionViewController: UIViewController {
                     guard let hash = SafeSnapshotDAO.shared.inscriptionHash(snapshotID: snapshotID) else {
                         return
                     }
-                    self.reloadInscription(hash: hash, messageID: messageID)
+                    let job = RefreshInscirptionJob(inscriptionHash: hash, messageID: messageID)
+                    NotificationCenter.default.addObserver(self,
+                                                           selector: #selector(self.reloadFromNotification(_:)),
+                                                           name: RefreshInscirptionJob.didFinishedNotification,
+                                                           object: job)
+                    ConcurrentJobQueue.shared.addJob(job: job)
                 }
             case .collectible(let hash):
-                self.reloadInscription(hash: hash, messageID: nil)
+                let job = RefreshInscirptionJob(inscriptionHash: hash, messageID: nil)
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(reloadFromNotification(_:)),
+                                                       name: RefreshInscirptionJob.didFinishedNotification,
+                                                       object: job)
+                ConcurrentJobQueue.shared.addJob(job: job)
             }
         }
     }
@@ -65,12 +75,21 @@ final class InscriptionViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @objc private func reloadFromNotification(_ notification: Notification) {
+        guard let inscription = notification.userInfo?[RefreshInscirptionJob.dataUserInfoKey] as? InscriptionItem else {
+            return
+        }
+        self.inscription = inscription
+        reloadData()
+    }
+    
     private func reloadData() {
         if inscription == nil {
             rows = [.content]
         } else {
             if isMine {
-                rows = [.content, .action, .hash, .id, .collection]
+                // TODO: Add `.action` for inscriptions occupied by myself
+                rows = [.content, .hash, .id, .collection]
             } else {
                 rows = [.content, .hash, .id, .collection]
             }
@@ -78,34 +97,6 @@ final class InscriptionViewController: UIViewController {
         tableView.reloadData()
         if let url = inscription?.imageContentURL {
             backgroundImageView.sd_setImage(with: url)
-        }
-    }
-    
-    private func reloadInscription(hash: String, messageID: String?) {
-        Task { [weak self] in
-            do {
-                let inscription: InscriptionItem
-                if let item = InscriptionDAO.shared.inscriptionItem(with: hash) {
-                    inscription = item
-                } else {
-                    inscription = try await InscriptionItem.retrieve(inscriptionHash: hash)
-                }
-                if let messageID, let content = inscription.asMessageContent() {
-                    MessageDAO.shared.update(content: content, forMessageWith: messageID)
-                }
-                await MainActor.run {
-                    guard let self else {
-                        return
-                    }
-                    self.inscription = inscription
-                    self.reloadData()
-                }
-            } catch {
-                Logger.general.debug(category: "Inscription", message: "\(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    self?.reloadInscription(hash: hash, messageID: messageID)
-                }
-            }
         }
     }
     
@@ -144,18 +135,20 @@ extension InscriptionViewController: UITableViewDataSource {
             return cell
         case .id:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = "ID"
+            cell.captionLabel.text = R.string.localizable.id().uppercased()
             if let inscription {
                 cell.setContent("\(inscription.sequence)", labelContent: nil)
             }
+            cell.contentTextView.textColor = .white
             cell.backgroundColor = .clear
             return cell
         case .collection:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = "COLLECTION"
+            cell.captionLabel.text = R.string.localizable.collection().uppercased()
             if let inscription {
                 cell.setContent("\(inscription.collectionName)", labelContent: nil)
             }
+            cell.contentTextView.textColor = .white
             cell.backgroundColor = .clear
             return cell
         }

@@ -42,6 +42,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 "alert_key_contact_audio_message" = "sent you an audio";
+"alert_key_contact_collectible_message" = "sent you an inscription";
 "alert_key_contact_contact_message" = "sent you a contact";
 "alert_key_contact_data_message" = "sent you a file";
 "alert_key_contact_image_message" = "sent you a photo";
@@ -212,8 +213,10 @@
 "clock_skew_hint" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically";
 "close" = "Close";
 "closing_balance" = "Closing Balance";
+"collectible" = "Collectible";
 "collectible_token_id" = "#%@";
 "collectibles" = "Collectibles";
+"collection" = "Collection";
 "combine_and_forward" = "Combine and forward";
 "compress_database" = "Compress Database";
 "compressed" = "Compressed";
@@ -249,6 +252,7 @@
 "contact_title" = "Contacts";
 "contacts" = "CONTACTS";
 "content_audio" = "[Audio]";
+"content_collection" = "[Collectible]";
 "content_contact" = "[Contact]";
 "content_deposit" = "[Deposit]";
 "content_fee" = "[Fee]";
@@ -474,6 +478,7 @@
 "group_participant_add_limit" = "You can’t add this participant because only add up to 50 at a time.";
 "group_qr_code_prompt" = "Scan the QR Code to join this group";
 "groups_in_common" = "Groups in Common";
+"hash" = "HASH";
 "help" = "Help";
 "help_center" = "Help center";
 "hidden_assets" = "Hidden Assets";
@@ -485,6 +490,7 @@
 "hour_count" = "%d Hours";
 "how_are_you" = "Hi, how are you?";
 "i_am_good" = "I’m good.";
+"id" = "ID";
 "image" = "image";
 "immediately" = "Immediately";
 "in_connecting" = "Connecting...";

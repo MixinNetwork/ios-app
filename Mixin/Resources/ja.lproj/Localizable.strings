@@ -252,7 +252,7 @@
 "contact_title" = "連絡先";
 "contacts" = "連絡先";
 "content_audio" = "[音声メッセージ]";
-"content_collection" = "[Collectible]";
+"content_collectible" = "[Collectible]";
 "content_contact" = "[連絡先]";
 "content_deposit" = "[入金]";
 "content_fee" = "[手数料]";

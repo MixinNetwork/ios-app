@@ -252,7 +252,7 @@
 "contact_title" = "Контакты";
 "contacts" = "КОНТАКТЫ";
 "content_audio" = "[Аудио]";
-"content_collection" = "[Collectible]";
+"content_collectible" = "[Collectible]";
 "content_contact" = "[Контакт]";
 "content_deposit" = "[Депозит]";
 "content_fee" = "[Комиссия]";

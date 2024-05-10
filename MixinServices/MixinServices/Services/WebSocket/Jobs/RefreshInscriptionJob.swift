@@ -1,6 +1,6 @@
 import Foundation
 
-public final class RefreshInscirptionJob: AsynchronousJob {
+public final class RefreshInscriptionJob: AsynchronousJob {
     
     public static let didFinishedNotification = Notification.Name("one.mixin.service.RefreshInscirption")
     public static let dataUserInfoKey = "d"
@@ -26,6 +26,7 @@ public final class RefreshInscirptionJob: AsynchronousJob {
             NotificationCenter.default.post(onMainThread: Self.didFinishedNotification,
                                             object: self,
                                             userInfo: [Self.dataUserInfoKey: item])
+            self.finishJob()
         }
         return true
     }

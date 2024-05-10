@@ -9,22 +9,23 @@ public final class TokenDAO: UserDatabaseDAO {
     
     private enum SQL {
         
-        static let selector = """
-        SELECT t.asset_id, t.kernel_asset_id, t.symbol, t.name, t.icon_url, t.price_btc, t.price_usd,
-            t.chain_id, t.change_usd, t.change_btc, t.dust, t.confirmations, t.asset_key,
-            t.collection_hash, c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
-            c.threshold AS chain_threshold, c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility,
-            ifnull(te.balance,'0') AS balance, ifnull(te.hidden,FALSE) AS hidden
-        FROM tokens t
-            LEFT JOIN chains c ON t.chain_id = c.chain_id
-            LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
+        static let inscriptionTokenSelector = """
+            SELECT t.asset_id, t.kernel_asset_id, t.symbol, t.name, t.icon_url, t.price_btc, t.price_usd,
+                t.chain_id, t.change_usd, t.change_btc, t.dust, t.confirmations, t.asset_key,
+                t.collection_hash, c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
+                c.threshold AS chain_threshold, c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility,
+                ifnull(te.balance,'0') AS balance, ifnull(te.hidden,FALSE) AS hidden
+            FROM tokens t
+                LEFT JOIN chains c ON t.chain_id = c.chain_id
+                LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
         
-        static let fungibleSelector = selector + "\nWHERE t.collection_hash IS NULL"
+        static let tokenSelector = inscriptionTokenSelector + "\nWHERE t.collection_hash IS NULL"
         
         static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, t.rowid DESC"
         
-        static let selectWithAssetID = "\(SQL.fungibleSelector) AND t.asset_id = ?"
+        static let selectWithAssetID = "\(SQL.tokenSelector) AND t.asset_id = ?"
+        
     }
     
     public static let shared = TokenDAO()
@@ -57,17 +58,17 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public func tokenItems(with ids: [String]) -> [TokenItem] {
         let ids = ids.joined(separator: "','")
-        return db.select(with: "\(SQL.fungibleSelector) AND t.asset_id IN ('\(ids)')")
+        return db.select(with: "\(SQL.tokenSelector) AND t.asset_id IN ('\(ids)')")
     }
     
-    public func nonFungibleToken(inscriptionHash: String) -> TokenItem? {
+    public func inscriptionToken(inscriptionHash: String) -> TokenItem? {
         try! db.read { (db) -> TokenItem? in
             let outputSQL = "SELECT * FROM outputs WHERE inscription_hash = ? AND state = 'unspent' LIMIT 1"
             let output = try Output.fetchOne(db, sql: outputSQL, arguments: [inscriptionHash])
             guard let output else {
                 return nil
             }
-            let tokenSQL = SQL.selector + "\nWHERE t.kernel_asset_id = ?"
+            let tokenSQL = SQL.inscriptionTokenSelector + "\nWHERE t.kernel_asset_id = ?"
             guard let token = try TokenItem.fetchOne(db, sql: tokenSQL, arguments: [output.asset]) else {
                 return nil
             }
@@ -91,7 +92,7 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public func search(keyword: String, sortResult: Bool, limit: Int?) -> [TokenItem] {
         var sql = """
-        \(SQL.fungibleSelector)
+        \(SQL.tokenSelector)
         AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
         """
         if sortResult {
@@ -108,28 +109,28 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func allTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.fungibleSelector) ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.tokenSelector) ORDER BY \(SQL.order)")
     }
     
     public func hiddenTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.fungibleSelector) AND ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.tokenSelector) AND ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
     public func notHiddenTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.fungibleSelector) AND ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.tokenSelector) AND ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
     }
     
     public func defaultTransferToken() -> TokenItem? {
         if let id = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !id.isEmpty, let token = tokenItem(assetID: id), token.decimalBalance > 0 {
             return token
         } else {
-            let sql = "\(SQL.fungibleSelector) AND te.balance > 0 ORDER BY \(SQL.order) LIMIT 1"
+            let sql = "\(SQL.tokenSelector) AND te.balance > 0 ORDER BY \(SQL.order) LIMIT 1"
             return UserDatabase.current.select(with: sql)
         }
     }
     
     public func positiveBalancedTokens(chainIDs: [String] = []) -> [TokenItem] {
-        var sql = "\(SQL.fungibleSelector) AND te.balance > 0"
+        var sql = "\(SQL.tokenSelector) AND te.balance > 0"
         if !chainIDs.isEmpty {
             sql += " AND t.chain_id IN ('\(chainIDs.joined(separator: "','"))')"
         }

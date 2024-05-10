@@ -53,18 +53,18 @@ final class InscriptionViewController: UIViewController {
                     guard let hash = SafeSnapshotDAO.shared.inscriptionHash(snapshotID: snapshotID) else {
                         return
                     }
-                    let job = RefreshInscirptionJob(inscriptionHash: hash, messageID: messageID)
+                    let job = RefreshInscriptionJob(inscriptionHash: hash, messageID: messageID)
                     NotificationCenter.default.addObserver(self,
                                                            selector: #selector(self.reloadFromNotification(_:)),
-                                                           name: RefreshInscirptionJob.didFinishedNotification,
+                                                           name: RefreshInscriptionJob.didFinishedNotification,
                                                            object: job)
                     ConcurrentJobQueue.shared.addJob(job: job)
                 }
             case .collectible(let hash):
-                let job = RefreshInscirptionJob(inscriptionHash: hash, messageID: nil)
+                let job = RefreshInscriptionJob(inscriptionHash: hash, messageID: nil)
                 NotificationCenter.default.addObserver(self,
                                                        selector: #selector(reloadFromNotification(_:)),
-                                                       name: RefreshInscirptionJob.didFinishedNotification,
+                                                       name: RefreshInscriptionJob.didFinishedNotification,
                                                        object: job)
                 ConcurrentJobQueue.shared.addJob(job: job)
             }
@@ -76,7 +76,7 @@ final class InscriptionViewController: UIViewController {
     }
     
     @objc private func reloadFromNotification(_ notification: Notification) {
-        guard let inscription = notification.userInfo?[RefreshInscirptionJob.dataUserInfoKey] as? InscriptionItem else {
+        guard let inscription = notification.userInfo?[RefreshInscriptionJob.dataUserInfoKey] as? InscriptionItem else {
             return
         }
         self.inscription = inscription
@@ -159,7 +159,7 @@ extension InscriptionViewController: UITableViewDataSource {
 extension InscriptionViewController: InscriptionActionCellDelegate {
     
     func inscriptionActionCellRequestToSend(_ cell: InscriptionActionCell) {
-        guard let hash = inscription?.inscriptionHash, let token = TokenDAO.shared.nonFungibleToken(inscriptionHash: hash) else {
+        guard let hash = inscription?.inscriptionHash, let token = TokenDAO.shared.inscriptionToken(inscriptionHash: hash) else {
             return
         }
         let fiatMoneyAmount = token.decimalBalance * token.decimalUSDPrice * Currency.current.decimalRate

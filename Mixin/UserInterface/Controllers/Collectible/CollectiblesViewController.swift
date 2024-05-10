@@ -4,8 +4,19 @@ import MixinServices
 final class CollectiblesViewController: UIViewController {
     
     private enum Item {
+        
         case hash(String)
         case full(InscriptionItem)
+        
+        var inscriptionHash: String {
+            switch self {
+            case .hash(let hash):
+                hash
+            case .full(let item):
+                item.inscriptionHash
+            }
+        }
+        
     }
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -24,6 +35,10 @@ final class CollectiblesViewController: UIViewController {
         collectionView.register(R.nib.collectibleCell)
         collectionView.dataSource = self
         collectionView.delegate = self
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.reloadItem(_:)),
+                                               name: RefreshInscriptionJob.didFinishedNotification,
+                                               object: nil)
         reloadData()
     }
     
@@ -43,6 +58,17 @@ final class CollectiblesViewController: UIViewController {
     
     @IBAction func scanQRCode(_ sender: Any) {
         UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+    }
+    
+    @objc private func reloadItem(_ notification: Notification) {
+        guard let item = notification.userInfo?[RefreshInscriptionJob.dataUserInfoKey] as? InscriptionItem else {
+            return
+        }
+        if let index = items.firstIndex(where: { $0.inscriptionHash == item.inscriptionHash }) {
+            items[index] = .full(item)
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
     
     private func reloadData() {
@@ -78,11 +104,18 @@ extension CollectiblesViewController: UICollectionViewDataSource {
         let item = items[indexPath.item]
         switch item {
         case .hash:
-            // Placeholder is set in `prepareForReuse`
-            break
+            cell.contentImageView.image = R.image.inscription_intaglio()
+            cell.contentImageView.contentMode = .center
+            cell.titleLabel.text = ""
+            cell.subtitleLabel.text = ""
         case .full(let data):
-            cell.contentImageView.sd_setImage(with: data.imageContentURL) { _, _, _, _ in
+            if let url = data.imageContentURL {
+                cell.contentImageView.image = nil
                 cell.contentImageView.contentMode = .scaleAspectFill
+                cell.contentImageView.sd_setImage(with: url)
+            } else {
+                cell.contentImageView.image = R.image.inscription_intaglio()
+                cell.contentImageView.contentMode = .center
             }
             cell.titleLabel.text = data.collectionName
             cell.subtitleLabel.text = "#\(data.sequence)"
@@ -103,7 +136,7 @@ extension CollectiblesViewController: UICollectionViewDelegate {
                                       inscription: item,
                                       isMine: true)
         case .hash(let hash):
-            InscriptionViewController(source: .collectible(inscriptionHash: hash), 
+            InscriptionViewController(source: .collectible(inscriptionHash: hash),
                                       inscription: nil,
                                       isMine: true)
         }

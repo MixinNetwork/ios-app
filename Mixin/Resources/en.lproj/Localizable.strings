@@ -252,7 +252,7 @@
 "contact_title" = "Contacts";
 "contacts" = "CONTACTS";
 "content_audio" = "[Audio]";
-"content_collection" = "[Collectible]";
+"content_collectible" = "[Collectible]";
 "content_contact" = "[Contact]";
 "content_deposit" = "[Deposit]";
 "content_fee" = "[Fee]";

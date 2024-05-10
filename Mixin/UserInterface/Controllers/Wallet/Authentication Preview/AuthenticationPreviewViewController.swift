@@ -307,7 +307,7 @@ extension AuthenticationPreviewViewController {
             case .receiver:
                 R.string.localizable.receiver()
             case .collectible:
-                "Collectible"       // FIX ME
+                R.string.localizable.collectible()
             }
         }
         

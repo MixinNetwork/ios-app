@@ -135,7 +135,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
             } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
                 contentLabel.text = R.string.localizable.content_transfer()
             } else if category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
-                contentLabel.text = R.string.localizable.content_collection()
+                contentLabel.text = R.string.localizable.content_collectible()
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 contentLabel.text = (item.appButtons?.map({ (appButton) -> String in
                     return "[\(appButton.label)]"

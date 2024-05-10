@@ -14,7 +14,7 @@
             <rect key="frame" x="0.0" y="0.0" width="260" height="112"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wVK-Rb-DXg">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wVK-Rb-DXg">
                     <rect key="frame" x="0.0" y="0.0" width="112" height="112"/>
                     <color key="backgroundColor" name="button_background_disabled"/>
                     <constraints>

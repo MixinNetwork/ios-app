@@ -75,7 +75,7 @@ public final class UTXOService {
                     }
                     
                     for hash in outputs.compactMap(\.inscriptionHash) {
-                        let job = RefreshInscirptionJob(inscriptionHash: hash, messageID: nil)
+                        let job = RefreshInscriptionJob(inscriptionHash: hash, messageID: nil)
                         ConcurrentJobQueue.shared.addJob(job: job)
                     }
                     

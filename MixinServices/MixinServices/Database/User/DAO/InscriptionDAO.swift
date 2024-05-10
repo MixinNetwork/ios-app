@@ -4,13 +4,16 @@ import GRDB
 public final class InscriptionDAO: UserDatabaseDAO {
     
     private enum SQL {
+        
         static let selector = """
-            SELECT c.collection_hash, c.name, c.icon_url, i.inscription_hash, i.sequence, i.content_type, i.content_url
-            FROM (SELECT inscription_hash FROM outputs WHERE state = 'unspent' AND inscription_hash IS NOT NULL) o
+            SELECT c.collection_hash, c.name, c.icon_url, o.inscription_hash, i.sequence, i.content_type, i.content_url
+            FROM outputs o
                 LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
-            ORDER BY i.updated_at DESC
+            WHERE o.state = 'unspent' AND o.inscription_hash IS NOT NULL
+            ORDER BY o.sequence ASC
         """
+        
     }
     
     public static let shared = InscriptionDAO()

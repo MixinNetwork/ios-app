@@ -15,9 +15,8 @@ final class CollectibleCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         contentImageView.sd_cancelCurrentImageLoad()
-        contentImageView.image = R.image.inscription_Intaglio()
-        contentImageView.contentMode = .center
     }
     
 }

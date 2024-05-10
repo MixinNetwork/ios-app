@@ -252,7 +252,7 @@
 "contact_title" = "联系人";
 "contacts" = "联系人";
 "content_audio" = "[语音]";
-"content_collection" = "[藏品]";
+"content_collectible" = "[藏品]";
 "content_contact" = "[联系人]";
 "content_deposit" = "充值";
 "content_fee" = "[手续费]";
@@ -478,7 +478,7 @@
 "group_participant_add_limit" = "不能再添加成员，一次最多添加 50 个。";
 "group_qr_code_prompt" = "扫描二维码加入群组";
 "groups_in_common" = "共同群组";
-"hash" = "HASH";
+"hash" = "哈希";
 "help" = "帮助";
 "help_center" = "帮助中心";
 "hidden_assets" = "隐藏的资产";

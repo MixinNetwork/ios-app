@@ -43,7 +43,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                     imageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
                 } else {
                     imageView.backgroundColor = R.color.sticker_button_background_disabled()
-                    imageView.image = R.image.inscription_Intaglio()
+                    imageView.image = R.image.inscription_intaglio()
                 }
             }
         } else {

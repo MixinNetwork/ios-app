@@ -749,7 +749,6 @@ public final class UserDatabase: Database {
                 """,
                 
                 "CREATE INDEX IF NOT EXISTS `index_outputs_inscription_hash` ON `outputs` (`inscription_hash`) WHERE `inscription_hash` IS NOT NULL",
-                "CREATE INDEX IF NOT EXISTS `index_tokens_collection_hash` ON `tokens` (`collection_hash`)",
             ]
             for sql in sqls {
                 try db.execute(sql: sql)

@@ -1272,6 +1272,7 @@ extension ReceiveMessageService {
         }
         
         if let inscriptionHash = snapshot.inscriptionHash, !inscriptionHash.isEmpty {
+            let semaphore = DispatchSemaphore(value: 0)
             Task.detached {
                 do {
                     let inscription = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
@@ -1281,7 +1282,9 @@ extension ReceiveMessageService {
                 } catch {
                     insert(message: message)
                 }
+                semaphore.signal()
             }
+            semaphore.wait()
         } else {
             insert(message: message)
         }

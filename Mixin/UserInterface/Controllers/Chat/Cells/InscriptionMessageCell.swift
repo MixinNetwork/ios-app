@@ -29,15 +29,21 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? InscriptionMessageViewModel {
             snapshotContentLeadingConstraint.constant = viewModel.leadingConstant
             snapshotContentTrailingConstraint.constant = viewModel.trailingConstant
+            inscriptionContentView.imageView.image = R.image.inscription_intaglio()
+            inscriptionContentView.imageView.contentMode = .center
             if let inscription = viewModel.message.inscription {
                 if let url = inscription.imageContentURL {
+                    inscriptionContentView.imageView.image = nil
                     inscriptionContentView.imageView.sd_setImage(with: url)
-                } else {
-                    inscriptionContentView.imageView.image = R.image.inscription_Intaglio()
+                    inscriptionContentView.imageView.contentMode = .scaleAspectFill
                 }
                 inscriptionContentView.nameLabel.text = inscription.collectionName
                 inscriptionContentView.sequenceLabel.text = "#\(inscription.sequence)"
                 inscriptionContentView.hashView.content = inscription.inscriptionHash
+            } else {
+                inscriptionContentView.nameLabel.text = ""
+                inscriptionContentView.sequenceLabel.text = ""
+                inscriptionContentView.hashView.content = nil
             }
         }
     }

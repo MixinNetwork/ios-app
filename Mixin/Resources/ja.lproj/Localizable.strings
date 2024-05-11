@@ -499,6 +499,7 @@
 "incoming_voice_call" = "着信";
 "info" = "プロフィール";
 "initializing" = "初期化中...";
+"inscription_hash" = "Inscription Hash";
 "insufficient_balance" = "残高が不足しています";
 "insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
 "insufficient_transaction_fee" = "取引手数料が不足しています";

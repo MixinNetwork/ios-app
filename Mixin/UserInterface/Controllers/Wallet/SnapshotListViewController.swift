@@ -155,23 +155,27 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
             return
         }
         if let token = tokens[item.assetID] {
-            let viewController = SnapshotViewController.instance(token: token, snapshot: item)
+            let viewController = SnapshotViewController.instance(token: token, snapshot: item, inscription: nil)
             navigationController?.pushViewController(viewController, animated: true)
         } else {
             DispatchQueue.global().async { [weak self] in
-                if let inscriptionHash = item.inscriptionHash {
-                    guard let inscription = InscriptionDAO.shared.partialInscriptionItem(with: inscriptionHash) else {
-                        return
-                    }
-                    // TODO: Preview
+                let token: TokenItem?
+                let inscriptionItem: InscriptionItem?
+                if let hash = item.inscriptionHash {
+                    token = TokenDAO.shared.inscriptionToken(inscriptionHash: hash)
+                    inscriptionItem = InscriptionDAO.shared.inscriptionItem(with: hash)
                 } else {
-                    guard let token = TokenDAO.shared.tokenItem(assetID: item.assetID) else {
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        let viewController = SnapshotViewController.instance(token: token, snapshot: item)
-                        self?.navigationController?.pushViewController(viewController, animated: true)
-                    }
+                    token = TokenDAO.shared.tokenItem(assetID: item.assetID)
+                    inscriptionItem = nil
+                }
+                guard let token else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    let viewController = SnapshotViewController.instance(token: token,
+                                                                         snapshot: item,
+                                                                         inscription: inscriptionItem)
+                    self?.navigationController?.pushViewController(viewController, animated: true)
                 }
             }
         }

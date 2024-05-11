@@ -1,6 +1,6 @@
 import Foundation
 
-public struct InscriptionItem: InscriptionContent {
+public struct InscriptionItem {
     
     public let collectionHash: String
     public let collectionName: String
@@ -9,6 +9,14 @@ public struct InscriptionItem: InscriptionContent {
     public let sequence: UInt64
     public let contentType: String
     public let contentURL: String
+    
+    public var collectionSequenceRepresentation: String {
+        collectionName + " " + sequenceRepresentation
+    }
+    
+    public var sequenceRepresentation: String {
+        "#\(sequence)"
+    }
     
     init(collection: InscriptionCollection, inscription: Inscription) {
         collectionHash      = collection.collectionHash
@@ -67,6 +75,18 @@ extension InscriptionItem: InstanceInitializable {
             return nil
         }
         return String(data: data, encoding: .utf8)
+    }
+    
+}
+
+extension InscriptionItem: InscriptionContent {
+    
+    public var inscriptionContentType: String? {
+        contentType
+    }
+    
+    public var inscriptionContentURL: String? {
+        contentURL
     }
     
 }

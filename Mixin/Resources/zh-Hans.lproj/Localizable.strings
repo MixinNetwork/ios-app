@@ -499,6 +499,7 @@
 "incoming_voice_call" = "语音通话来电";
 "info" = "信息";
 "initializing" = "初始化...";
+"inscription_hash" = "藏品哈希";
 "insufficient_balance" = "余额不足";
 "insufficient_gas" = "您的账户中没有足够的 %@ 来支付网络费用";
 "insufficient_transaction_fee" = "手续费不足";

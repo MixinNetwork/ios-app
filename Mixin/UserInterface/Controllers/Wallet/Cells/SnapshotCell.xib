@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -108,6 +108,7 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="amountLabel" destination="3Eq-Iz-C6X" id="lic-rB-TNz"/>
+                <outlet property="contentStackView" destination="mI8-4d-1QY" id="wtE-nn-Uor"/>
                 <outlet property="iconImageView" destination="dvX-OJ-H0b" id="eeu-vd-xVw"/>
                 <outlet property="pendingDepositProgressConstraint" destination="S35-bw-lYC" id="0kT-sJ-2Zw"/>
                 <outlet property="pendingDepositProgressView" destination="uZv-Qf-jhM" id="IS2-2s-rtZ"/>

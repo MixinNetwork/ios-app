@@ -100,7 +100,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="lDV-0o-0g6">
                             <rect key="frame" x="20" y="14" width="316" height="44"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hm4-se-0DS" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hm4-se-0DS" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="1" width="42" height="42"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
@@ -108,7 +108,7 @@
                                         <constraint firstAttribute="width" secondItem="hm4-se-0DS" secondAttribute="height" id="gpU-12-KN5"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                        <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
                                             <real key="value" value="14"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>

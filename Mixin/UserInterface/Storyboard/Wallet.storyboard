@@ -545,7 +545,7 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="-4" translatesAutoresizingMaskIntoConstraints="NO" id="X9m-wq-bBJ">
                                             <rect key="frame" x="20" y="18" width="374" height="146"/>
                                             <subviews>
-                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0iU-Qh-8sq" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0iU-Qh-8sq" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="152" y="0.0" width="70" height="70"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -562,10 +562,10 @@
                                                         <constraint firstAttribute="width" secondItem="0iU-Qh-8sq" secondAttribute="height" id="IOf-7I-OaN"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
                                                             <real key="value" value="18"/>
                                                         </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="chainIconOutlineWidth">
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="badgeOutlineWidth">
                                                             <real key="value" value="2"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
@@ -1231,7 +1231,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J5J-Cq-feN">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="403.66666666666669"/>
                                         <subviews>
-                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ELa-pY-h5O" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ELa-pY-h5O" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="172" y="12" width="70" height="70"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="70" id="C6U-7t-8fC" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -1247,10 +1247,10 @@
                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                         <integer key="value" value="35"/>
                                                     </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
                                                         <real key="value" value="18"/>
                                                     </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="chainIconOutlineWidth">
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="badgeOutlineWidth">
                                                         <real key="value" value="2"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>

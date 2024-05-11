@@ -9,6 +9,7 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: UILabel!
@@ -16,6 +17,8 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     
     weak var delegate: SnapshotCellDelegate?
+    
+    private var inscriptionIconView: InscriptionIconView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -52,6 +55,24 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
             }
             amountLabel.textColor = R.color.text_tertiary()!
         default:
+            if snapshot.isInscription {
+                let inscriptionIconView: InscriptionIconView
+                if let view = self.inscriptionIconView {
+                    view.isHidden = false
+                    inscriptionIconView = view
+                } else {
+                    inscriptionIconView = InscriptionIconView()
+                    contentStackView.addArrangedSubview(inscriptionIconView)
+                    inscriptionIconView.snp.makeConstraints { make in
+                        make.width.height.equalTo(40).priority(.almostRequired)
+                    }
+                }
+                inscriptionIconView.url = snapshot.inscriptionImageContentURL
+                self.inscriptionIconView = inscriptionIconView
+            } else {
+                self.inscriptionIconView?.isHidden = true
+            }
+            
             if let deposit = snapshot.deposit {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
@@ -76,8 +97,15 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
                 amountLabel.textColor = .walletGreen
             }
         }
-        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
-        symbolLabel.text = token?.symbol ?? snapshot.tokenSymbol
+        if snapshot.isInscription {
+            let amount: Decimal = snapshot.decimalAmount > 0 ? 1 : -1
+            amountLabel.text = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .always)
+            symbolLabel.isHidden = true
+        } else {
+            amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
+            symbolLabel.isHidden = false
+            symbolLabel.text = token?.symbol ?? snapshot.tokenSymbol
+        }
     }
     
     private func setTitle(_ title: String?) {
@@ -88,6 +116,48 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
             titleLabel.text = notApplicable
             titleLabel.textColor = R.color.text_tertiary()!
         }
+    }
+    
+}
+
+extension SnapshotCell {
+    
+    private class InscriptionIconView: UIView {
+        
+        var url: URL? {
+            didSet {
+                if let url {
+                    imageView.sd_setImage(with: url)
+                } else if let placeholder = R.image.inscription_intaglio()?.cgImage {
+                    imageView.image = UIImage(cgImage: placeholder, scale: 0.6, orientation: .up)
+                }
+            }
+        }
+        
+        private let imageView = UIImageView()
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            loadSubview()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            loadSubview()
+        }
+        
+        func prepareForReuse() {
+            imageView.sd_cancelCurrentImageLoad()
+        }
+        
+        private func loadSubview() {
+            backgroundColor = .secondaryBackground
+            layer.cornerRadius = 12
+            layer.masksToBounds = true
+            addSubview(imageView)
+            imageView.snp.makeEdgesEqualToSuperview()
+        }
+        
     }
     
 }

@@ -8,7 +8,7 @@ final class Web3AmountChangeCell: UITableViewCell {
     @IBOutlet weak var tokenStackView: UIStackView!
     @IBOutlet weak var tokenAmountLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
     override func awakeFromNib() {

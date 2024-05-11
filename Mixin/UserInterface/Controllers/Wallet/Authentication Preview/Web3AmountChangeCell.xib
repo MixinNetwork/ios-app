@@ -52,7 +52,7 @@
                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold12"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
-                                    <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DEC-tR-7B4" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DEC-tR-7B4" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="232" y="6.6666666666666643" width="32" height="32"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>

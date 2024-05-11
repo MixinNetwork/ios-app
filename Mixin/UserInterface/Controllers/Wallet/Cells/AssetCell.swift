@@ -9,7 +9,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         .foregroundColor: UIColor.text
     ]
     
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var balanceLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var changeLabel: InsetLabel!

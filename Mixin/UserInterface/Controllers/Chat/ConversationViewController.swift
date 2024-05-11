@@ -856,7 +856,7 @@ class ConversationViewController: UIViewController {
                         return
                     }
                     DispatchQueue.main.async {
-                        let viewController = SnapshotViewController.instance(token: token, snapshot: snapshot)
+                        let viewController = SnapshotViewController.instance(token: token, snapshot: snapshot, inscription: nil)
                         self?.navigationController?.pushViewController(viewController, animated: true)
                     }
                 }

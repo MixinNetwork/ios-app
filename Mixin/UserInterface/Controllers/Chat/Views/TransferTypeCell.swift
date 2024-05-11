@@ -3,7 +3,7 @@ import MixinServices
 
 class TransferTypeCell: UITableViewCell {
     
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var checkmarkView: UIImageView!

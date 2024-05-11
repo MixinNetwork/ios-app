@@ -95,7 +95,7 @@ class QRCodeViewController: UIViewController {
                 make.trailing.bottom.equalTo(avatarImageView)
             }
         case .asset(let asset):
-            let iconView = AssetIconView()
+            let iconView = BadgeIconView()
             centerContentWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
                 make.center.equalToSuperview()

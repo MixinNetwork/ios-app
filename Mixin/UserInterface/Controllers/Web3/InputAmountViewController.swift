@@ -8,7 +8,7 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var calculatedValueLabel: UILabel!
     @IBOutlet weak var insufficientBalanceLabel: UILabel!
-    @IBOutlet weak var tokenIconView: AssetIconView!
+    @IBOutlet weak var tokenIconView: BadgeIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var tokenBalanceLabel: UILabel!
     @IBOutlet weak var inputMaxValueButton: UIButton!

@@ -3,7 +3,7 @@ import MixinServices
 
 class Web3TransactionCell: ModernSelectedBackgroundCell {
     
-    @IBOutlet weak var iconView: AssetIconView!
+    @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var amountLabel1: UILabel!

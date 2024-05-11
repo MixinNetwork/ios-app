@@ -150,7 +150,7 @@ extension CollectiblesViewController: UICollectionViewDataSource {
             cell.titleLabel.text = ""
             cell.subtitleLabel.text = ""
         case .full(let data):
-            if let url = data.imageContentURL {
+            if let url = data.inscriptionImageContentURL {
                 cell.contentImageView.image = nil
                 cell.contentImageView.contentMode = .scaleAspectFill
                 cell.contentImageView.sd_setImage(with: url)
@@ -159,7 +159,7 @@ extension CollectiblesViewController: UICollectionViewDataSource {
                 cell.contentImageView.contentMode = .center
             }
             cell.titleLabel.text = data.collectionName
-            cell.subtitleLabel.text = "#\(data.sequence)"
+            cell.subtitleLabel.text = data.sequenceRepresentation
         }
         return cell
     }

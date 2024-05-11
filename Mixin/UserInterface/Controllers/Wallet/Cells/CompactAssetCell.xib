@@ -20,7 +20,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="F5k-EN-gLg">
                         <rect key="frame" x="20" y="1" width="374" height="72"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H1b-lm-ev9" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H1b-lm-ev9" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="14" width="44" height="44"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>

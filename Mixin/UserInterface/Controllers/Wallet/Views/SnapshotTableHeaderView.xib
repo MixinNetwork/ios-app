@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,9 +17,9 @@
             <connections>
                 <outlet property="amountLabel" destination="P9h-ae-m2f" id="wUX-5g-uy0"/>
                 <outlet property="amountStackView" destination="KPp-KY-UgW" id="qea-5h-nwo"/>
-                <outlet property="assetIconView" destination="rqn-Iq-NhJ" id="EXd-VY-3as"/>
                 <outlet property="fiatMoneyValueLabel" destination="DWF-GB-gKf" id="Kam-Tx-M1u"/>
                 <outlet property="headerContentStackView" destination="u3L-Nc-1Cs" id="rrC-h1-wiq"/>
+                <outlet property="iconView" destination="rqn-Iq-NhJ" id="EXd-VY-3as"/>
                 <outlet property="symbolLabel" destination="Z0P-cq-qAP" id="Wfj-mv-oH3"/>
             </connections>
         </placeholder>
@@ -31,7 +31,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="-4" translatesAutoresizingMaskIntoConstraints="NO" id="u3L-Nc-1Cs">
                     <rect key="frame" x="20" y="18" width="353" height="146"/>
                     <subviews>
-                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rqn-Iq-NhJ" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rqn-Iq-NhJ" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="141.66666666666666" y="0.0" width="70" height="70"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
@@ -48,10 +48,10 @@
                                 </constraint>
                             </constraints>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
                                     <real key="value" value="18"/>
                                 </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconOutlineWidth">
+                                <userDefinedRuntimeAttribute type="number" keyPath="badgeOutlineWidth">
                                     <real key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
@@ -64,7 +64,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="KPp-KY-UgW">
-                            <rect key="frame" x="88" y="80" width="177" height="55.666666666666657"/>
+                            <rect key="frame" x="59.333333333333329" y="80" width="234.66666666666669" height="55.666666666666657"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Rn-vU-k45">
                                     <rect key="frame" x="0.0" y="6" width="3" height="49.666666666666664"/>
@@ -74,14 +74,14 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P9h-ae-m2f">
-                                    <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
+                                    <rect key="frame" x="7" y="6" width="200" height="49.666666666666664"/>
                                     <gestureRecognizers/>
                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
                                     <color key="textColor" red="0.16078431369999999" green="0.74509803919999995" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z0P-cq-qAP" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
+                                    <rect key="frame" x="211" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>

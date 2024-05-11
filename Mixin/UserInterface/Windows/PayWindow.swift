@@ -27,7 +27,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var memoPlaceView: UIView!
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var successView: UIView!
     @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var paySuccessImageView: UIImageView!

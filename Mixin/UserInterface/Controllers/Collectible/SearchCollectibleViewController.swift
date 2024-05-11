@@ -117,7 +117,7 @@ extension SearchCollectibleViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.collectible, for: indexPath)!
         let item = searchResults[indexPath.item]
-        if let url = item.imageContentURL {
+        if let url = item.inscriptionImageContentURL {
             cell.contentImageView.image = nil
             cell.contentImageView.contentMode = .scaleAspectFill
             cell.contentImageView.sd_setImage(with: url)
@@ -126,7 +126,7 @@ extension SearchCollectibleViewController: UICollectionViewDataSource {
             cell.contentImageView.contentMode = .center
         }
         cell.titleLabel.text = item.collectionName
-        cell.subtitleLabel.text = "#\(item.sequence)"
+        cell.subtitleLabel.text = item.sequenceRepresentation
         return cell
     }
     

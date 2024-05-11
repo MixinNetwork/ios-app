@@ -61,7 +61,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         if let inscription = operation.inscription {
             rows = [
-                .info(caption: .collectible, content: "\(inscription.collectionName ?? "") #\(inscription.sequence)")
+                .info(caption: .collectible, content: inscription.collectionSequenceRepresentation),
             ]
         } else {
             rows = [

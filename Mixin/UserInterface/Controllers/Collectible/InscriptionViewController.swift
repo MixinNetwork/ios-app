@@ -95,7 +95,7 @@ final class InscriptionViewController: UIViewController {
             }
         }
         tableView.reloadData()
-        if let url = inscription?.imageContentURL {
+        if let url = inscription?.inscriptionImageContentURL {
             backgroundImageView.sd_setImage(with: url)
         }
     }
@@ -116,7 +116,7 @@ extension InscriptionViewController: UITableViewDataSource {
             if let inscription {
                 cell.placeholderImageView.isHidden = true
                 cell.contentImageView.isHidden = false
-                cell.contentImageView.sd_setImage(with: inscription.imageContentURL)
+                cell.contentImageView.sd_setImage(with: inscription.inscriptionImageContentURL)
             } else {
                 cell.placeholderImageView.isHidden = false
                 cell.contentImageView.isHidden = true

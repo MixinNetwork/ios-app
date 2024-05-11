@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, InscriptionContent {
+public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
     public enum CodingKeys: String, CodingKey {
         case inscriptionHash = "inscription_hash"
@@ -46,5 +46,17 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
 extension Inscription: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "inscription_items"
+    
+}
+
+extension Inscription: InscriptionContent {
+    
+    public var inscriptionContentType: String? {
+        contentType
+    }
+    
+    public var inscriptionContentURL: String? {
+        contentURL
+    }
     
 }

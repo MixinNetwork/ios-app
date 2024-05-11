@@ -9,7 +9,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     @IBOutlet weak var subtitleLabel: UILabel!
     
     private weak var imageView: UIImageView?
-    private weak var assetIconView: AssetIconView?
+    private weak var assetIconView: BadgeIconView?
     private weak var progressView: AuthenticationProgressView?
     
     override func awakeFromNib() {
@@ -38,16 +38,16 @@ final class AuthenticationPreviewHeaderView: UIView {
     }
     
     func setIcon(token: TokenItem) {
-        let iconView: AssetIconView
+        let iconView: BadgeIconView
         if let view = self.assetIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
         } else {
             for iconView in iconWrapperView.subviews {
                 iconView.removeFromSuperview()
             }
-            iconView = AssetIconView()
-            iconView.chainIconWidth = 23
-            iconView.chainIconOutlineWidth = 0
+            iconView = BadgeIconView()
+            iconView.badgeIconDiameter = 23
+            iconView.badgeOutlineWidth = 0
             iconWrapperView.addSubview(iconView)
             iconView.snp.makeEdgesEqualToSuperview()
             self.assetIconView = iconView

@@ -32,13 +32,13 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
             inscriptionContentView.imageView.image = R.image.inscription_intaglio()
             inscriptionContentView.imageView.contentMode = .center
             if let inscription = viewModel.message.inscription {
-                if let url = inscription.imageContentURL {
+                if let url = inscription.inscriptionImageContentURL {
                     inscriptionContentView.imageView.image = nil
                     inscriptionContentView.imageView.sd_setImage(with: url)
                     inscriptionContentView.imageView.contentMode = .scaleAspectFill
                 }
                 inscriptionContentView.nameLabel.text = inscription.collectionName
-                inscriptionContentView.sequenceLabel.text = "#\(inscription.sequence)"
+                inscriptionContentView.sequenceLabel.text = inscription.sequenceRepresentation
                 inscriptionContentView.hashView.content = inscription.inscriptionHash
             } else {
                 inscriptionContentView.nameLabel.text = ""

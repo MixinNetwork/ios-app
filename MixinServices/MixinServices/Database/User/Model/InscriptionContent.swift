@@ -1,17 +1,21 @@
 import Foundation
 
 public protocol InscriptionContent {
-    var contentType: String { get }
-    var contentURL: String { get }
+    var inscriptionContentType: String? { get }
+    var inscriptionContentURL: String? { get }
 }
 
 public extension InscriptionContent {
     
-    public var imageContentURL: URL? {
-        guard contentType.starts(with: "image/") else {
+    public var inscriptionImageContentURL: URL? {
+        guard
+            let type = inscriptionContentType,
+            type.starts(with: "image/"),
+            let string = inscriptionContentURL
+        else {
             return nil
         }
-        return URL(string: contentURL)
+        return URL(string: string)
     }
     
 }

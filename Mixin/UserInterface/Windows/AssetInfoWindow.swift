@@ -3,7 +3,7 @@ import MixinServices
 
 class AssetInfoWindow: BottomSheetView {
 
-    @IBOutlet weak var assetView: AssetIconView!
+    @IBOutlet weak var assetView: BadgeIconView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var chainLabel: UILabel!

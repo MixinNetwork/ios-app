@@ -53,7 +53,8 @@ final class InscriptionViewController: UIViewController {
                     guard let hash = SafeSnapshotDAO.shared.inscriptionHash(snapshotID: snapshotID) else {
                         return
                     }
-                    let job = RefreshInscriptionJob(inscriptionHash: hash, messageID: messageID)
+                    let job = RefreshInscriptionJob(inscriptionHash: hash)
+                    job.messageID = messageID
                     NotificationCenter.default.addObserver(self,
                                                            selector: #selector(self.reloadFromNotification(_:)),
                                                            name: RefreshInscriptionJob.didFinishedNotification,
@@ -61,7 +62,7 @@ final class InscriptionViewController: UIViewController {
                     ConcurrentJobQueue.shared.addJob(job: job)
                 }
             case .collectible(let hash):
-                let job = RefreshInscriptionJob(inscriptionHash: hash, messageID: nil)
+                let job = RefreshInscriptionJob(inscriptionHash: hash)
                 NotificationCenter.default.addObserver(self,
                                                        selector: #selector(reloadFromNotification(_:)),
                                                        name: RefreshInscriptionJob.didFinishedNotification,
@@ -76,7 +77,7 @@ final class InscriptionViewController: UIViewController {
     }
     
     @objc private func reloadFromNotification(_ notification: Notification) {
-        guard let inscription = notification.userInfo?[RefreshInscriptionJob.dataUserInfoKey] as? InscriptionItem else {
+        guard let inscription = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.item] as? InscriptionItem else {
             return
         }
         self.inscription = inscription

@@ -127,9 +127,10 @@ extension SnapshotCell {
         var url: URL? {
             didSet {
                 if let url {
+                    imageView.image = nil
                     imageView.sd_setImage(with: url)
-                } else if let placeholder = R.image.inscription_intaglio()?.cgImage {
-                    imageView.image = UIImage(cgImage: placeholder, scale: 0.6, orientation: .up)
+                } else {
+                    imageView.image = R.image.inscription_intaglio()
                 }
             }
         }
@@ -146,16 +147,25 @@ extension SnapshotCell {
             loadSubview()
         }
         
+        override func layoutSubviews() {
+            if url == nil {
+                imageView.frame.size = CGSize(width: bounds.width / 2, height: bounds.height / 2)
+            } else {
+                imageView.frame.size = CGSize(width: bounds.width, height: bounds.height)
+            }
+            imageView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+        }
+        
         func prepareForReuse() {
             imageView.sd_cancelCurrentImageLoad()
         }
         
         private func loadSubview() {
-            backgroundColor = .secondaryBackground
+            backgroundColor = R.color.sticker_button_background_disabled()
             layer.cornerRadius = 12
             layer.masksToBounds = true
+            imageView.contentMode = .scaleAspectFill
             addSubview(imageView)
-            imageView.snp.makeEdgesEqualToSuperview()
         }
         
     }

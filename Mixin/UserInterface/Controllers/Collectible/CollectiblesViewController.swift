@@ -102,7 +102,7 @@ final class CollectiblesViewController: UIViewController {
     }
     
     @objc private func reloadItem(_ notification: Notification) {
-        guard let item = notification.userInfo?[RefreshInscriptionJob.dataUserInfoKey] as? InscriptionItem else {
+        guard let item = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.item] as? InscriptionItem else {
             return
         }
         if let index = items.firstIndex(where: { $0.inscriptionHash == item.inscriptionHash }) {

@@ -2,15 +2,20 @@ import Foundation
 
 public final class RefreshInscriptionJob: AsynchronousJob {
     
+    public enum UserInfoKey {
+        public static let item = "i"
+        public static let snapshotID = "s"
+    }
+    
     public static let didFinishedNotification = Notification.Name("one.mixin.service.RefreshInscirption")
-    public static let dataUserInfoKey = "d"
+    
+    public var messageID: String?
+    public var snapshotID: String?
     
     private let inscriptionHash: String
-    private let messageID: String?
     
-    public init(inscriptionHash: String, messageID: String?) {
+    public init(inscriptionHash: String) {
         self.inscriptionHash = inscriptionHash
-        self.messageID = messageID
     }
     
     override public func getJobId() -> String {
@@ -18,14 +23,18 @@ public final class RefreshInscriptionJob: AsynchronousJob {
     }
     
     public override func execute() -> Bool {
-        Task.detached { [inscriptionHash, messageID] in
+        Task.detached { [inscriptionHash, messageID, snapshotID] in
             let item = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
             if let messageID, let content = item.asMessageContent() {
                 MessageDAO.shared.update(content: content, forMessageWith: messageID)
             }
+            var userInfo: [String: Any] = [Self.UserInfoKey.item: item]
+            if let snapshotID {
+                userInfo[Self.UserInfoKey.snapshotID] = snapshotID
+            }
             NotificationCenter.default.post(onMainThread: Self.didFinishedNotification,
                                             object: self,
-                                            userInfo: [Self.dataUserInfoKey: item])
+                                            userInfo: userInfo)
             self.finishJob()
         }
         return true

@@ -44,7 +44,11 @@ final class SnapshotViewController: RowListViewController {
         amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         if snapshot.isInscription {
-            iconView.setIcon(content: snapshot)
+            if let inscription {
+                iconView.setIcon(content: inscription)
+            } else {
+                iconView.setIcon(content: snapshot)
+            }
             let amount: Decimal = snapshot.decimalAmount > 0 ? 1 : -1
             amountLabel.text = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .always)
             symbolLabel.text = nil
@@ -73,7 +77,17 @@ final class SnapshotViewController: RowListViewController {
         
         reloadData()
         updateTableViewContentInsetBottom()
-        if !snapshot.isInscription {
+        if let hash = snapshot.inscriptionHash {
+            if inscription == nil {
+                let job = RefreshInscriptionJob(inscriptionHash: hash)
+                job.snapshotID = snapshot.id
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(reloadInscription(_:)),
+                                                       name: RefreshInscriptionJob.didFinishedNotification,
+                                                       object: job)
+                ConcurrentJobQueue.shared.addJob(job: job)
+            }
+        } else {
             AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self] (result) in
                 guard let self = self else {
                     return
@@ -120,7 +134,16 @@ final class SnapshotViewController: RowListViewController {
         }
     }
     
-    @objc func backToAsset(_ recognizer: UITapGestureRecognizer) {
+    @IBAction func longPressAmountAction(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        becomeFirstResponder()
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
+        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
+    }
+    
+    @objc private func backToAsset(_ recognizer: UITapGestureRecognizer) {
         guard let viewControllers = navigationController?.viewControllers else {
             return
         }
@@ -136,21 +159,21 @@ final class SnapshotViewController: RowListViewController {
         }
     }
     
+    @objc private func reloadInscription(_ notification: Notification) {
+        guard let item = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.item] as? InscriptionItem else {
+            return
+        }
+        self.inscription = item
+        iconView.setIcon(content: item)
+        reloadData()
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         action == #selector(copy(_:))
     }
     
     override func copy(_ sender: Any?) {
         UIPasteboard.general.string = snapshot.amount
-    }
-    
-    @IBAction func longPressAmountAction(_ recognizer: UILongPressGestureRecognizer) {
-        guard recognizer.state == .began else {
-            return
-        }
-        becomeFirstResponder()
-        AppDelegate.current.mainWindow.addDismissMenuResponder()
-        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     
 }

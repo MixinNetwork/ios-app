@@ -849,25 +849,26 @@ class ConversationViewController: UIViewController {
                         self?.navigationController?.pushViewController(LegacyTransactionViewController.instance(asset: asset, snapshot: snapshot), animated: true)
                     }
                 }
-            } else if message.category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
+            } else if message.category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue || message.category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
                 conversationInputViewController.dismiss()
                 DispatchQueue.global().async { [weak self] in
-                    guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let token = TokenDAO.shared.tokenItem(assetID: assetId), let snapshot = SafeSnapshotDAO.shared.snapshotItem(id: snapshotId) else {
+                    guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let snapshot = SafeSnapshotDAO.shared.snapshotItem(id: snapshotId) else {
+                        return
+                    }
+                    let token: TokenItem?
+                    if let inscriptionHash = snapshot.inscriptionHash {
+                        token = TokenDAO.shared.inscriptionToken(inscriptionHash: inscriptionHash)
+                    } else {
+                        token = TokenDAO.shared.tokenItem(assetID: assetId)
+                    }
+                    guard let token else {
                         return
                     }
                     DispatchQueue.main.async {
-                        let viewController = SnapshotViewController.instance(token: token, snapshot: snapshot, inscription: nil)
+                        let viewController = SnapshotViewController.instance(token: token, snapshot: snapshot, messageID: message.messageId, inscription: message.inscription)
                         self?.navigationController?.pushViewController(viewController, animated: true)
                     }
                 }
-            } else if message.category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
-                conversationInputViewController.dismiss()
-                guard let snapshotID = message.snapshotId else {
-                    return
-                }
-                let isMine = message.userId != myUserId
-                let preview = InscriptionViewController(source: .message(messageID: message.messageId, snapshotID: snapshotID), inscription: message.inscription, isMine: false)
-                navigationController?.pushViewController(preview, animated: true)
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 conversationInputViewController.dismiss()
                 openAppCard(appCard: appCard, sendUserId: message.userId)

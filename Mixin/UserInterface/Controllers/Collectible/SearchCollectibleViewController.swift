@@ -137,9 +137,7 @@ extension SearchCollectibleViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let item = searchResults[indexPath.item]
-        let preview = InscriptionViewController(source: .collectible(inscriptionHash: item.inscriptionHash),
-                                                inscription: item,
-                                                isMine: true)
+        let preview = InscriptionViewController(inscription: item, isMine: true)
         navigationController?.pushViewController(preview, animated: true)
     }
     

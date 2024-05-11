@@ -1280,6 +1280,10 @@ extension ReceiveMessageService {
                     contentUpdatedMessage.content = inscription.asMessageContent()
                     insert(message: contentUpdatedMessage)
                 } catch {
+                    let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
+                    job.messageID = message.messageId
+                    job.snapshotID = snapshot.id
+                    ConcurrentJobQueue.shared.addJob(job: job)
                     insert(message: message)
                 }
                 semaphore.signal()

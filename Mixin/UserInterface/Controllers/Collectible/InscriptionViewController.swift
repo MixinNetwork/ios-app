@@ -3,11 +3,6 @@ import MixinServices
 
 final class InscriptionViewController: UIViewController {
     
-    enum Source {
-        case message(messageID: String, snapshotID: String)
-        case collectible(inscriptionHash: String)
-    }
-    
     private enum Row {
         case content
         case action
@@ -19,7 +14,7 @@ final class InscriptionViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
-    private let source: Source
+    private let inscriptionHash: String
     private let isMine: Bool // FIXME: Better determination
     
     private lazy var traceID = UUID().uuidString.lowercased()
@@ -27,8 +22,15 @@ final class InscriptionViewController: UIViewController {
     private var inscription: InscriptionItem?
     private var rows: [Row] = [.content]
     
-    init(source: Source, inscription: InscriptionItem?, isMine: Bool) {
-        self.source = source
+    init(inscriptionHash: String, isMine: Bool) {
+        self.inscriptionHash = inscriptionHash
+        self.inscription = nil
+        self.isMine = isMine
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(inscription: InscriptionItem, isMine: Bool) {
+        self.inscriptionHash = inscription.inscriptionHash
         self.inscription = inscription
         self.isMine = isMine
         super.init(nibName: nil, bundle: nil)
@@ -47,28 +49,12 @@ final class InscriptionViewController: UIViewController {
         tableView.dataSource = self
         reloadData()
         if inscription == nil {
-            switch source {
-            case .message(let messageID, let snapshotID):
-                DispatchQueue.global().async {
-                    guard let hash = SafeSnapshotDAO.shared.inscriptionHash(snapshotID: snapshotID) else {
-                        return
-                    }
-                    let job = RefreshInscriptionJob(inscriptionHash: hash)
-                    job.messageID = messageID
-                    NotificationCenter.default.addObserver(self,
-                                                           selector: #selector(self.reloadFromNotification(_:)),
-                                                           name: RefreshInscriptionJob.didFinishedNotification,
-                                                           object: job)
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                }
-            case .collectible(let hash):
-                let job = RefreshInscriptionJob(inscriptionHash: hash)
-                NotificationCenter.default.addObserver(self,
-                                                       selector: #selector(reloadFromNotification(_:)),
-                                                       name: RefreshInscriptionJob.didFinishedNotification,
-                                                       object: job)
-                ConcurrentJobQueue.shared.addJob(job: job)
-            }
+            let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(reloadFromNotification(_:)),
+                                                   name: RefreshInscriptionJob.didFinishedNotification,
+                                                   object: job)
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     

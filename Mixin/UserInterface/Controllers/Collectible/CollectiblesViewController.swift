@@ -173,13 +173,9 @@ extension CollectiblesViewController: UICollectionViewDelegate {
         let item = items[indexPath.item]
         let preview = switch item {
         case .full(let item):
-            InscriptionViewController(source: .collectible(inscriptionHash: item.inscriptionHash),
-                                      inscription: item,
-                                      isMine: true)
+            InscriptionViewController(inscription: item, isMine: true)
         case .hash(let hash):
-            InscriptionViewController(source: .collectible(inscriptionHash: hash),
-                                      inscription: nil,
-                                      isMine: true)
+            InscriptionViewController(inscriptionHash: hash, isMine: true)
         }
         navigationController?.pushViewController(preview, animated: true)
     }

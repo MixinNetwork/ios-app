@@ -10,13 +10,16 @@ final class SnapshotViewController: RowListViewController {
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
+    private let messageID: String?
+    
     private var token: TokenItem
     private var snapshot: SafeSnapshotItem
     private var inscription: InscriptionItem?
     
-    init(token: TokenItem, snapshot: SafeSnapshotItem, inscription: InscriptionItem?) {
+    init(token: TokenItem, snapshot: SafeSnapshotItem, messageID: String?, inscription: InscriptionItem?) {
         self.token = token
         self.snapshot = snapshot
+        self.messageID = messageID
         self.inscription = inscription
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .custom
@@ -30,9 +33,10 @@ final class SnapshotViewController: RowListViewController {
     class func instance(
         token: TokenItem,
         snapshot: SafeSnapshotItem,
+        messageID: String?,
         inscription: InscriptionItem?
     ) -> UIViewController {
-        let snapshot = SnapshotViewController(token: token, snapshot: snapshot, inscription: inscription)
+        let snapshot = SnapshotViewController(token: token, snapshot: snapshot, messageID: messageID, inscription: inscription)
         let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
         return container
     }
@@ -80,6 +84,7 @@ final class SnapshotViewController: RowListViewController {
         if let hash = snapshot.inscriptionHash {
             if inscription == nil {
                 let job = RefreshInscriptionJob(inscriptionHash: hash)
+                job.messageID = messageID
                 job.snapshotID = snapshot.id
                 NotificationCenter.default.addObserver(self,
                                                        selector: #selector(reloadInscription(_:)),

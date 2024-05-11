@@ -23,6 +23,10 @@ final class CollectiblesViewController: UIViewController {
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
     
     private let interitemSpacing: CGFloat = 15
+    private let hiddenSearchTopMargin: CGFloat = -28
+    
+    private weak var searchViewController: UIViewController?
+    private weak var searchViewCenterYConstraint: NSLayoutConstraint?
     
     private var items: [Item] = []
     private var lastLayoutWidth: CGFloat?
@@ -60,6 +64,43 @@ final class CollectiblesViewController: UIViewController {
         UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
     }
     
+    @IBAction func searchCollectibles(_ sender: Any) {
+        let searchViewController = SearchCollectibleViewController()
+        addChild(searchViewController)
+        searchViewController.view.alpha = 0
+        view.addSubview(searchViewController.view)
+        searchViewController.view.snp.makeConstraints { make in
+            make.size.centerX.equalToSuperview()
+        }
+        let searchViewCenterYConstraint = searchViewController.view.centerYAnchor
+            .constraint(equalTo: view.centerYAnchor, constant: hiddenSearchTopMargin)
+        searchViewCenterYConstraint.isActive = true
+        searchViewController.didMove(toParent: self)
+        view.layoutIfNeeded()
+        searchViewCenterYConstraint.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+            searchViewController.view.alpha = 1
+        }
+        self.searchViewController = searchViewController
+        self.searchViewCenterYConstraint = searchViewCenterYConstraint
+    }
+    
+    func cancelSearching() {
+        guard let searchViewController, let searchViewCenterYConstraint else {
+            return
+        }
+        searchViewCenterYConstraint.constant = hiddenSearchTopMargin
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+            searchViewController.view.alpha = 0
+        } completion: { _ in
+            searchViewController.willMove(toParent: nil)
+            searchViewController.view.removeFromSuperview()
+            searchViewController.removeFromParent()
+        }
+    }
+    
     @objc private func reloadItem(_ notification: Notification) {
         guard let item = notification.userInfo?[RefreshInscriptionJob.dataUserInfoKey] as? InscriptionItem else {
             return
@@ -86,7 +127,7 @@ final class CollectiblesViewController: UIViewController {
                 self.collectionView.reloadData()
                 self.collectionView.checkEmpty(dataCount: items.count,
                                                text: R.string.localizable.no_collectibles(),
-                                               photo: R.image.emptyIndicator.ic_shared_media()!)
+                                               photo: R.image.inscription_relief()!)
             }
         }
     }

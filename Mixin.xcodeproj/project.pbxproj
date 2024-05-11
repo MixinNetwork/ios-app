@@ -736,6 +736,8 @@
 		941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D3BF82A7912C700538504 /* QRCodeViewController.swift */; };
 		941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941D3BF92A7912C700538504 /* QRCodeView.xib */; };
 		941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */; };
+		94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */; };
+		94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94227D6D2BEF242200430CAE /* SearchCollectibleView.xib */; };
 		9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9427D51425E0D31100B1EF0E /* MusicInfoView.xib */; };
@@ -2003,6 +2005,8 @@
 		941D3BF82A7912C700538504 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		941D3BF92A7912C700538504 /* QRCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRCodeView.xib; sourceTree = "<group>"; };
 		941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertModifier.swift; sourceTree = "<group>"; };
+		94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectibleViewController.swift; sourceTree = "<group>"; };
+		94227D6D2BEF242200430CAE /* SearchCollectibleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCollectibleView.xib; sourceTree = "<group>"; };
 		9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountDeactivatedHintView.xib; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9427D51425E0D31100B1EF0E /* MusicInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicInfoView.xib; sourceTree = "<group>"; };
@@ -3282,6 +3286,8 @@
 				94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */,
 				943BC6792BCE9A17003FA778 /* CollectiblesView.xib */,
 				943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */,
+				94227D6D2BEF242200430CAE /* SearchCollectibleView.xib */,
+				94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */,
 				94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */,
 				94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */,
 				94CD47152BECACED00A3DE10 /* InscriptionActionCell.xib */,
@@ -4933,6 +4939,7 @@
 				94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				944C610F2B6AB7F600C7DF06 /* PaymentFeeCell.xib in Resources */,
+				94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */,
 				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
@@ -5552,6 +5559,7 @@
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
 				944C61F32B6BF97B00C7DF06 /* PaymentUserGroupCell.swift in Sources */,
+				94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */,
 				7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */,
 				946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */,
 				7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */,

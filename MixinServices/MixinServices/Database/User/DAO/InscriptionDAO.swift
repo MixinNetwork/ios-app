@@ -11,8 +11,9 @@ public final class InscriptionDAO: UserDatabaseDAO {
                 LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
             WHERE o.state = 'unspent' AND o.inscription_hash IS NOT NULL
-            ORDER BY o.sequence ASC
         """
+        
+        static let order = "\nORDER BY o.sequence ASC"
         
     }
     
@@ -23,7 +24,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
     }
     
     public func partialInscriptionItem(with inscriptionHash: String) -> PartialInscriptionItem? {
-        let sql = "\(SQL.selector) WHERE o.inscription_hash = ?"
+        let sql = SQL.selector + " AND o.inscription_hash = ?" + SQL.order
         return db.select(with: sql, arguments: [inscriptionHash])
     }
     
@@ -32,11 +33,15 @@ public final class InscriptionDAO: UserDatabaseDAO {
     }
     
     public func allPartialInscriptions() -> [PartialInscriptionItem] {
-        db.select(with: SQL.selector)
+        db.select(with: SQL.selector + SQL.order)
     }
     
-    public func search(keyword: String, limit: Int?) -> [InscriptionItem] {
-        return []
+    public func search(keyword: String) -> [InscriptionItem] {
+        let sql = SQL.selector + " AND c.name LIKE ? ESCAPE '/'" + SQL.order
+        let partials: [PartialInscriptionItem] = db.select(with: sql, arguments: ["%\(keyword.sqlEscaped)%"])
+        return partials.compactMap {
+            $0.asInscriptionItem()
+        }
     }
     
     public func inscriptionExists(inscriptionHash: String) -> Bool {

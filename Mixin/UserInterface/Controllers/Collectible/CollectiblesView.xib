@@ -35,10 +35,21 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="KJl-nn-p91">
-                            <rect key="frame" x="339" y="0.0" width="44" height="44"/>
+                            <rect key="frame" x="285" y="0.0" width="98" height="44"/>
                             <subviews>
-                                <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OzR-dd-zjy">
+                                <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vjH-X6-KCp">
                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="vjH-X6-KCp" secondAttribute="height" id="CAk-Bo-yMU"/>
+                                    </constraints>
+                                    <color key="tintColor" name="icon_tint"/>
+                                    <state key="normal" image="ic_title_search"/>
+                                    <connections>
+                                        <action selector="searchCollectibles:" destination="-1" eventType="touchUpInside" id="Hfh-Hd-1KO"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OzR-dd-zjy">
+                                    <rect key="frame" x="54" y="0.0" width="44" height="44"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="OzR-dd-zjy" secondAttribute="height" id="5b2-Of-VaJ"/>
                                     </constraints>
@@ -47,14 +58,6 @@
                                     <connections>
                                         <action selector="scanQRCode:" destination="-1" eventType="touchUpInside" id="Tms-9z-Y0I"/>
                                     </connections>
-                                </button>
-                                <button hidden="YES" opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vjH-X6-KCp">
-                                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="vjH-X6-KCp" secondAttribute="height" id="CAk-Bo-yMU"/>
-                                    </constraints>
-                                    <color key="tintColor" name="icon_tint"/>
-                                    <state key="normal" image="ic_sticker_setting"/>
                                 </button>
                             </subviews>
                         </stackView>
@@ -97,7 +100,7 @@
     </objects>
     <resources>
         <image name="ic_app_category_scan" width="24" height="24"/>
-        <image name="ic_sticker_setting" width="24" height="24"/>
+        <image name="ic_title_search" width="28" height="28"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

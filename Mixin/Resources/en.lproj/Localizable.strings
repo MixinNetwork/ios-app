@@ -844,7 +844,7 @@
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
 "search_placeholder_dapp" = "Name, URL";
-"search_placeholder_inscription" = "Search name";
+"search_placeholder_inscription" = "Name";
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_related_message" = "%d related message";
 "search_related_message_count" = "%d related messages";

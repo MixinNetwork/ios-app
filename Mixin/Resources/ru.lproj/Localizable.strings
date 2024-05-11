@@ -844,7 +844,7 @@
 "search_placeholder_asset" = "Имя, Символ";
 "search_placeholder_contact" = "Mixin ID, имя, номер телефона";
 "search_placeholder_dapp" = "Name, URL";
-"search_placeholder_inscription" = "Search name";
+"search_placeholder_inscription" = "Name";
 "search_placeholder_number" = "Найдите Mixin ID или номер телефона: ";
 "search_related_message" = "%d связанное сообщение";
 "search_related_message_count" = "%d похожие сообщения";

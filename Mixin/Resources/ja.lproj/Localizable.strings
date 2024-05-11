@@ -844,7 +844,7 @@
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_contact" = "Mixin ID, 名前, 電話番号";
 "search_placeholder_dapp" = "Name, URL";
-"search_placeholder_inscription" = "Search name";
+"search_placeholder_inscription" = "Name";
 "search_placeholder_number" = "Mixin ID または電話番号を検索";
 "search_related_message" = "%d個の関連するメッセージ";
 "search_related_message_count" = "%d個の関連するメッセージ";

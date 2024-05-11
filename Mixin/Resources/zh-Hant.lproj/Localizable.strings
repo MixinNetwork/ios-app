@@ -844,7 +844,7 @@
 "search_placeholder_asset" = "名稱, 符號";
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
 "search_placeholder_dapp" = "名稱, URL";
-"search_placeholder_inscription" = "搜尋名稱";
+"search_placeholder_inscription" = "名稱";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";
 "search_related_message" = "%d 條相關的訊息";
 "search_related_message_count" = "%d 條相關的訊息";

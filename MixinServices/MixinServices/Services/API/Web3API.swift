@@ -33,9 +33,18 @@ extension Web3API {
     
     private static let host = "https://web3-api.mixin.one"
     
+    private static let session: Alamofire.Session = {
+        let config: URLSessionConfiguration = .default
+        config.timeoutIntervalForRequest = 10
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        let redirector = Redirector(behavior: .doNotFollow)
+        let session = Alamofire.Session(configuration: config, redirectHandler: redirector)
+        return session
+    }()
+    
     private static var botPublicKey: Data?
     
-    private class RouteSigningInterceptor: RequestInterceptor {
+    private class Web3SigningInterceptor: RequestInterceptor {
         
         private let method: HTTPMethod
         private let path: String
@@ -111,9 +120,13 @@ extension Web3API {
         with parameters: Parameters? = nil,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
-        let interceptor = RouteSigningInterceptor(method: method, path: path)
+        let interceptor = Web3SigningInterceptor(method: method, path: path)
         let url = Self.host + path
-        let dataRequest = AF.request(url, method: method, parameters: parameters, encoder: .json, interceptor: interceptor)
+        let dataRequest = session.request(url,
+                                          method: method,
+                                          parameters: parameters,
+                                          encoder: .json,
+                                          interceptor: interceptor)
         return request(dataRequest, completion: completion)
     }
     
@@ -124,9 +137,13 @@ extension Web3API {
         with parameters: [String: Any]? = nil,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
-        let interceptor = RouteSigningInterceptor(method: method, path: path)
+        let interceptor = Web3SigningInterceptor(method: method, path: path)
         let url = Self.host + path
-        let dataRequest = AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, interceptor: interceptor)
+        let dataRequest = session.request(url,
+                                          method: method,
+                                          parameters: parameters,
+                                          encoding: JSONEncoding.default,
+                                          interceptor: interceptor)
         return request(dataRequest, completion: completion)
     }
     

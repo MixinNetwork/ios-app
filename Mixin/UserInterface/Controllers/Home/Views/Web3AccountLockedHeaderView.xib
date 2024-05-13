@@ -18,16 +18,16 @@
                     <rect key="frame" x="252" y="24" width="106" height="100"/>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ehP-7X-dWj">
-                    <rect key="frame" x="40" y="30" width="313" height="104"/>
+                    <rect key="frame" x="40" y="30" width="313" height="86"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEy-s1-g0J">
-                            <rect key="frame" x="0.0" y="0.0" width="313" height="50"/>
+                            <rect key="frame" x="0.0" y="0.0" width="313" height="32"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G9S-fD-GbL">
-                            <rect key="frame" x="0.0" y="54" width="313" height="50"/>
+                            <rect key="frame" x="0.0" y="36" width="313" height="50"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -35,7 +35,7 @@
                     </subviews>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x4d-dE-d0e">
-                    <rect key="frame" x="26" y="75" width="26" height="43"/>
+                    <rect key="frame" x="26" y="118" width="26" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                     <inset key="contentEdgeInsets" minX="13" minY="13" maxX="13" maxY="13"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -44,6 +44,7 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="x4d-dE-d0e" secondAttribute="trailing" priority="999" constant="26" id="067-5m-aGx"/>
+                <constraint firstItem="x4d-dE-d0e" firstAttribute="top" secondItem="ehP-7X-dWj" secondAttribute="bottom" constant="2" id="2vY-Pi-teE"/>
                 <constraint firstAttribute="bottom" secondItem="FU9-iJ-USd" secondAttribute="bottom" constant="10" id="3hQ-OE-Kst"/>
                 <constraint firstAttribute="trailing" secondItem="FU9-iJ-USd" secondAttribute="trailing" constant="35" id="Apu-Nw-D3R"/>
                 <constraint firstItem="x4d-dE-d0e" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="26" id="HVP-TM-oDp"/>

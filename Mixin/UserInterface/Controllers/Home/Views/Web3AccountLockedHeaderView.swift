@@ -8,11 +8,10 @@ final class Web3AccountLockedHeaderView: UIView {
     @IBOutlet weak var button: UIButton!
     
     private let backgroundLayer = CAGradientLayer()
-    private let addressPrefixCount = 8
-    private let addressSuffixCount = 6
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         backgroundLayer.locations = [0, 1]
         backgroundLayer.startPoint = CGPoint(x: 0.25, y: 0.5)
         backgroundLayer.endPoint = CGPoint(x: 0.75, y: 0.5)
@@ -37,11 +36,13 @@ final class Web3AccountLockedHeaderView: UIView {
     func showUnlockAccount(chain: Web3Chain) {
         iconImageView.image = icon(of: chain)
         
-        topLabel.font = .systemFont(ofSize: 18, weight: .medium)
+        topLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .medium),
+                         adjustForContentSize: true)
         topLabel.textColor = R.color.text()
         topLabel.text = R.string.localizable.web3_account_network(chain.name)
         
-        bottomLabel.font = .systemFont(ofSize: 14)
+        bottomLabel.setFont(scaledFor: .systemFont(ofSize: 14),
+                            adjustForContentSize: true)
         bottomLabel.textColor = R.color.text_tertiary()
         bottomLabel.text = R.string.localizable.access_dapps_defi_projects()
         

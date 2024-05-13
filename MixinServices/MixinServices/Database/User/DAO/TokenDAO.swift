@@ -9,7 +9,7 @@ public final class TokenDAO: UserDatabaseDAO {
     
     private enum SQL {
         
-        static let inscriptionTokenSelector = """
+        static let columns = """
             SELECT t.asset_id, t.kernel_asset_id, t.symbol, t.name, t.icon_url, t.price_btc, t.price_usd,
                 t.chain_id, t.change_usd, t.change_btc, t.dust, t.confirmations, t.asset_key,
                 t.collection_hash, c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
@@ -20,7 +20,7 @@ public final class TokenDAO: UserDatabaseDAO {
                 LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
         
-        static let tokenSelector = inscriptionTokenSelector + "\nWHERE t.collection_hash IS NULL"
+        static let tokenSelector = columns + "\nWHERE t.collection_hash IS NULL"
         
         static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, t.rowid DESC"
         
@@ -68,7 +68,7 @@ public final class TokenDAO: UserDatabaseDAO {
             guard let output else {
                 return nil
             }
-            let tokenSQL = SQL.inscriptionTokenSelector + "\nWHERE t.kernel_asset_id = ?"
+            let tokenSQL = SQL.columns + "\nWHERE t.kernel_asset_id = ?"
             guard let token = try TokenItem.fetchOne(db, sql: tokenSQL, arguments: [output.asset]) else {
                 return nil
             }

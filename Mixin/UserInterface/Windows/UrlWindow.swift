@@ -1101,7 +1101,7 @@ extension UrlWindow {
     
     private static func syncToken(assetID: String, hud: Hud) -> TokenItem? {
         var token: TokenItem
-        if let localToken = TokenDAO.shared.tokenItem(with: assetID) {
+        if let localToken = TokenDAO.shared.tokenItem(assetID: assetID) {
             token = localToken
         } else {
             switch SafeAPI.assets(id: assetID) {

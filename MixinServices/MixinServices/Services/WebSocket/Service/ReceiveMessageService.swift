@@ -1140,20 +1140,20 @@ extension ReceiveMessageService {
             return
         }
 
-        switch data.category {
-        case MessageCategory.SYSTEM_CONVERSATION.rawValue:
+        switch MessageCategory(rawValue: data.category) {
+        case .SYSTEM_CONVERSATION:
             messageDispatchQueue.sync {
                 processSystemConversationMessage(data: data)
             }
-        case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
+        case .SYSTEM_ACCOUNT_SNAPSHOT:
             processSystemSnapshotMessage(data: data)
-        case MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue:
+        case .SYSTEM_SAFE_SNAPSHOT, .SYSTEM_SAFE_INSCRIPTION:
             processSafeSnapshotMessage(data: data)
-        case MessageCategory.SYSTEM_SESSION.rawValue:
+        case .SYSTEM_SESSION:
             processSystemSessionMessage(data: data)
-        case MessageCategory.SYSTEM_USER.rawValue:
+        case .SYSTEM_USER:
             processSystemUserMessage(data: data)
-        case MessageCategory.SYSTEM_CIRCLE.rawValue:
+        case .SYSTEM_CIRCLE:
             processSystemCircleMessage(data: data)
         default:
             break
@@ -1238,7 +1238,7 @@ extension ReceiveMessageService {
         }
         checkUser(userId: snapshot.opponentID, tryAgain: true)
         let chainId: String?
-        if let token = TokenDAO.shared.tokenItem(with: snapshot.assetID) {
+        if let token = TokenDAO.shared.tokenItem(assetID: snapshot.assetID) {
             chainId = token.chainID
         } else if case let .success(token) = SafeAPI.assets(id: snapshot.assetID) {
             TokenDAO.shared.save(assets: [token])
@@ -1251,7 +1251,7 @@ extension ReceiveMessageService {
         }
         
         let depositHash: String?
-        if let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
+        if snapshot.type == SnapshotType.deposit.rawValue, let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
             depositHash = json["deposit_hash"] as? String
         } else {
             depositHash = nil
@@ -1262,8 +1262,37 @@ extension ReceiveMessageService {
                 try SafeSnapshotDAO.shared.deletePendingSnapshots(depositHash: hash, db: db)
             }
         }
+        
         let message = Message.createMessage(snapshot: snapshot, data: data)
-        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
+        func insert(message: Message) {
+            MessageDAO.shared.insertMessage(message: message,
+                                            messageSource: data.source,
+                                            silentNotification: data.silentNotification,
+                                            expireIn: data.expireIn)
+        }
+        
+        if let inscriptionHash = snapshot.inscriptionHash, !inscriptionHash.isEmpty {
+            let semaphore = DispatchSemaphore(value: 0)
+            Task.detached {
+                do {
+                    let inscription = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
+                    var contentUpdatedMessage = message
+                    contentUpdatedMessage.content = inscription.asMessageContent()
+                    insert(message: contentUpdatedMessage)
+                } catch {
+                    let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
+                    job.messageID = message.messageId
+                    job.snapshotID = snapshot.id
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                    insert(message: message)
+                }
+                semaphore.signal()
+            }
+            semaphore.wait()
+        } else {
+            insert(message: message)
+        }
+        
         UTXOService.shared.synchronize()
     }
     

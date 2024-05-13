@@ -141,6 +141,8 @@ class MessageViewModelFactory {
                 viewModel = TransferMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue {
                 viewModel = SnapshotMessageViewModel(message: message)
+            } else if message.category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
+                viewModel = InscriptionMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
                 viewModel = SystemMessageViewModel(message: message)
             } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {

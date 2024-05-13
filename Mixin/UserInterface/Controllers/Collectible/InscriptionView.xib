@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InscriptionViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="backgroundImageView" destination="rTB-vE-icW" id="wTm-1y-ARR"/>
+                <outlet property="tableView" destination="g7v-1Y-KQp" id="UxT-Cr-9to"/>
+                <outlet property="view" destination="iN0-l3-epB" id="5DP-Ii-MNw"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rTB-vE-icW">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <color key="backgroundColor" name="background"/>
+                </imageView>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IOQ-7n-TWb">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="sDz-we-Mok">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <blurEffect style="dark"/>
+                </visualEffectView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Hb-AS-iUq">
+                    <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RLe-tU-Nhp">
+                            <rect key="frame" x="10" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="RLe-tU-Nhp" secondAttribute="height" id="bB8-gq-FWd"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" image="ic_title_back"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="goBack:" destination="-1" eventType="touchUpInside" id="Gj7-wc-lRA"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="RLe-tU-Nhp" secondAttribute="bottom" id="3Cb-Tn-Kar"/>
+                        <constraint firstItem="RLe-tU-Nhp" firstAttribute="leading" secondItem="6Hb-AS-iUq" secondAttribute="leading" constant="10" id="EG4-VN-4ky"/>
+                        <constraint firstAttribute="height" constant="44" id="SX6-2U-BvL"/>
+                        <constraint firstItem="RLe-tU-Nhp" firstAttribute="top" secondItem="6Hb-AS-iUq" secondAttribute="top" id="lCA-iG-3kt"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="61" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="g7v-1Y-KQp">
+                    <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="6Hb-AS-iUq" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="6nC-64-LBp"/>
+                <constraint firstItem="IOQ-7n-TWb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="AMH-ZO-wiv"/>
+                <constraint firstAttribute="bottom" secondItem="rTB-vE-icW" secondAttribute="bottom" id="Cf2-pW-wzc"/>
+                <constraint firstItem="g7v-1Y-KQp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EwX-ZF-eZc"/>
+                <constraint firstItem="g7v-1Y-KQp" firstAttribute="top" secondItem="6Hb-AS-iUq" secondAttribute="bottom" id="EwZ-Ie-qpc"/>
+                <constraint firstAttribute="bottom" secondItem="IOQ-7n-TWb" secondAttribute="bottom" id="Gdu-ZT-zqX"/>
+                <constraint firstAttribute="trailing" secondItem="IOQ-7n-TWb" secondAttribute="trailing" id="JqR-J0-tDC"/>
+                <constraint firstAttribute="trailing" secondItem="rTB-vE-icW" secondAttribute="trailing" id="Mjz-ew-zht"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="6Hb-AS-iUq" secondAttribute="trailing" id="NYs-i8-1ME"/>
+                <constraint firstAttribute="bottom" secondItem="g7v-1Y-KQp" secondAttribute="bottom" id="RFJ-BP-C1h"/>
+                <constraint firstItem="rTB-vE-icW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="VfR-Id-P1N"/>
+                <constraint firstItem="IOQ-7n-TWb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="b8a-3A-RCH"/>
+                <constraint firstItem="6Hb-AS-iUq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bdJ-QN-hXK"/>
+                <constraint firstItem="rTB-vE-icW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="c7a-pQ-1Ch"/>
+                <constraint firstAttribute="trailing" secondItem="g7v-1Y-KQp" secondAttribute="trailing" id="u1i-4c-BSX"/>
+            </constraints>
+            <point key="canvasLocation" x="136.64122137404578" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_title_back" width="9" height="17"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

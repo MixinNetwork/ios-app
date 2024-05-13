@@ -22,7 +22,7 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="AMOUNT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U7S-Hg-QNA">
                                 <rect key="frame" x="0.0" y="0.0" width="264" height="17"/>
-                                <color key="backgroundColor" name="background"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="text_quaternary"/>
                                 <nil key="highlightedColor"/>
@@ -39,7 +39,7 @@
                         </subviews>
                     </stackView>
                 </subviews>
-                <color key="backgroundColor" name="background"/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="qWs-aZ-BSJ" secondAttribute="trailing" constant="28" id="I72-yj-SFu"/>
                     <constraint firstItem="qWs-aZ-BSJ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="28" id="Jad-0z-kxa"/>
@@ -47,6 +47,7 @@
                     <constraint firstAttribute="bottom" secondItem="qWs-aZ-BSJ" secondAttribute="bottom" constant="10" id="ud1-BB-diq"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="captionLabel" destination="U7S-Hg-QNA" id="mzL-YT-DdL"/>
                 <outlet property="contentTextView" destination="GE0-TW-ZhQ" id="pBd-Wi-eR9"/>

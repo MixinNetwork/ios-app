@@ -9,8 +9,33 @@ struct Payment {
     let fiatMoneyAmount: Decimal
     let memo: String
     
+    private let inscriptionContext: InscriptionContext?
+    
+    init(traceID: String, token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String) {
+        self.traceID = traceID
+        self.token = token
+        self.tokenAmount = tokenAmount
+        self.fiatMoneyAmount = fiatMoneyAmount
+        self.memo = memo
+        self.inscriptionContext = nil
+    }
+    
+    init?(traceID: String, output: Output, item: InscriptionItem) {
+        guard let hash = output.inscriptionHash, let token = TokenDAO.shared.inscriptionToken(inscriptionHash: hash) else {
+            return nil
+        }
+        let fiatMoneyAmount = token.decimalBalance * token.decimalUSDPrice * Currency.current.decimalRate
+        self.traceID = traceID
+        self.token = token
+        self.tokenAmount = token.decimalBalance
+        self.fiatMoneyAmount = fiatMoneyAmount
+        self.memo = ""
+        self.inscriptionContext = InscriptionContext(output: output, item: item)
+    }
+    
 }
 
+// MARK: - Transfer
 extension Payment {
     
     enum TransferDestination {
@@ -30,6 +55,11 @@ extension Payment {
             }
         }
         
+    }
+    
+    private struct InscriptionContext {
+        let output: Output
+        let item: InscriptionItem
     }
     
     func checkPreconditions(
@@ -71,8 +101,21 @@ extension Payment {
                     onFailure(reason)
                 }
             case .passed(let issues):
-                let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
-                switch result {
+                let item: InscriptionItem?
+                let outputCollectionResult: OutputCollectingResult
+                if let inscriptionContext {
+                    item = inscriptionContext.item
+                    if let collection = UTXOService.OutputCollection(output: inscriptionContext.output) {
+                        outputCollectionResult = .success(collection)
+                    } else {
+                        outputCollectionResult = .failure(.description("Invalid Amount"))
+                    }
+                } else {
+                    item = nil
+                    outputCollectionResult = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
+                }
+                
+                switch outputCollectionResult {
                 case .success(let collection):
                     let operation = TransferPaymentOperation(traceID: traceID,
                                                              spendingOutputs: collection,
@@ -80,7 +123,8 @@ extension Payment {
                                                              token: token,
                                                              amount: tokenAmount,
                                                              memo: memo,
-                                                             reference: reference)
+                                                             reference: reference,
+                                                             inscription: item)
                     await MainActor.run {
                         onSuccess(operation, issues)
                     }
@@ -95,6 +139,7 @@ extension Payment {
     
 }
 
+// MARK: - Withdraw
 extension Payment {
     
     enum WithdrawalDestination {
@@ -213,11 +258,22 @@ extension Payment {
     
 }
 
+// MARK: - Private works
 extension Payment {
     
     enum OutputCollectingResult {
         case success(UTXOService.OutputCollection)
         case failure(PaymentPreconditionFailureReason)
+    }
+    
+    enum InscriptionError: Error, LocalizedError {
+        
+        case missingLocalItem
+        
+        var errorDescription: String? {
+            "Missing Inscription"
+        }
+        
     }
     
     private func collectOutputs(

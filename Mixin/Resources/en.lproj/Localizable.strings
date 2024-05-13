@@ -42,6 +42,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 "alert_key_contact_audio_message" = "sent you an audio";
+"alert_key_contact_collectible_message" = "sent you an inscription";
 "alert_key_contact_contact_message" = "sent you a contact";
 "alert_key_contact_data_message" = "sent you a file";
 "alert_key_contact_image_message" = "sent you a photo";
@@ -212,7 +213,10 @@
 "clock_skew_hint" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically";
 "close" = "Close";
 "closing_balance" = "Closing Balance";
+"collectible" = "Collectible";
 "collectible_token_id" = "#%@";
+"collectibles" = "Collectibles";
+"collection" = "Collection";
 "combine_and_forward" = "Combine and forward";
 "compress_database" = "Compress Database";
 "compressed" = "Compressed";
@@ -248,6 +252,7 @@
 "contact_title" = "Contacts";
 "contacts" = "CONTACTS";
 "content_audio" = "[Audio]";
+"content_collectible" = "[Collectible]";
 "content_contact" = "[Contact]";
 "content_deposit" = "[Deposit]";
 "content_fee" = "[Fee]";
@@ -473,6 +478,7 @@
 "group_participant_add_limit" = "You can’t add this participant because only add up to 50 at a time.";
 "group_qr_code_prompt" = "Scan the QR Code to join this group";
 "groups_in_common" = "Groups in Common";
+"hash" = "HASH";
 "help" = "Help";
 "help_center" = "Help center";
 "hidden_assets" = "Hidden Assets";
@@ -484,6 +490,7 @@
 "hour_count" = "%d Hours";
 "how_are_you" = "Hi, how are you?";
 "i_am_good" = "I’m good.";
+"id" = "ID";
 "image" = "image";
 "immediately" = "Immediately";
 "in_connecting" = "Connecting...";
@@ -492,6 +499,7 @@
 "incoming_voice_call" = "Incoming voice call";
 "info" = "Info";
 "initializing" = "Initializing...";
+"inscription_hash" = "Inscription Hash";
 "insufficient_balance" = "Insufficient balance";
 "insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
 "insufficient_transaction_fee" = "Insufficient transaction fee";
@@ -625,6 +633,7 @@
 "no_authorizations" = "NO AUTHORIZATIONS";
 "no_blocked_users" = "No blocked users";
 "no_bots" = "NO BOTS";
+"no_collectibles" = "NO COLLECTIBLES";
 "no_contacts" = "NO CONTACTS";
 "no_files" = "NO FILES";
 "no_hidden_assets" = "No hidden assets";
@@ -835,6 +844,7 @@
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_contact" = "Mixin ID, Name, Phone number";
 "search_placeholder_dapp" = "Name, URL";
+"search_placeholder_inscription" = "Name";
 "search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_related_message" = "%d related message";
 "search_related_message_count" = "%d related messages";

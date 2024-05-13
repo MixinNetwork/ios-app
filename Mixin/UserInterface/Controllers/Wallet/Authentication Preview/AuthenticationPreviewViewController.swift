@@ -280,6 +280,7 @@ extension AuthenticationPreviewViewController {
         case account
         case sender
         case receiver
+        case collectible
         
         var rawValue: String {
             switch self {
@@ -305,6 +306,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.sender()
             case .receiver:
                 R.string.localizable.receiver()
+            case .collectible:
+                R.string.localizable.collectible()
             }
         }
         

@@ -4,7 +4,7 @@ import MixinServices
 final class TokenTableHeaderView: InfiniteTopView {
     
     @IBOutlet weak var infoStackView: UIStackView!
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var amountTextView: UITextView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     @IBOutlet weak var tokenInfoButton: UIButton!

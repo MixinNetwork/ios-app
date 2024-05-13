@@ -82,6 +82,7 @@ class SafeSnapshotListViewController: UIViewController {
         
         reloadData(with: .createdAt)
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishedNotification, object: nil)
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -154,18 +155,25 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
         guard let id = dataSource.itemIdentifier(for: indexPath), let item = items[id] else {
             return
         }
-        if let token = tokens[item.assetID] {
-            let viewController = SnapshotViewController.instance(token: token, snapshot: item)
-            navigationController?.pushViewController(viewController, animated: true)
-        } else {
-            DispatchQueue.global().async { [weak self] in
-                guard let token = TokenDAO.shared.tokenItem(with: item.assetID) else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    let viewController = SnapshotViewController.instance(token: token, snapshot: item)
-                    self?.navigationController?.pushViewController(viewController, animated: true)
-                }
+        DispatchQueue.global().async { [weak self] in
+            let token: TokenItem?
+            let inscriptionItem: InscriptionItem?
+            if let hash = item.inscriptionHash {
+                token = TokenDAO.shared.inscriptionToken(inscriptionHash: hash)
+                inscriptionItem = InscriptionDAO.shared.inscriptionItem(with: hash)
+            } else {
+                token = TokenDAO.shared.tokenItem(assetID: item.assetID)
+                inscriptionItem = nil
+            }
+            guard let token else {
+                return
+            }
+            DispatchQueue.main.async {
+                let viewController = SnapshotViewController.instance(token: token,
+                                                                     snapshot: item,
+                                                                     messageID: nil,
+                                                                     inscription: inscriptionItem)
+                self?.navigationController?.pushViewController(viewController, animated: true)
             }
         }
     }
@@ -176,6 +184,7 @@ extension SafeSnapshotListViewController {
     
     @objc private func snapshotsDidSave(_ notification: Notification) {
         if let snapshots = notification.userInfo?[SafeSnapshotDAO.snapshotsUserInfoKey] as? [SafeSnapshot], snapshots.count == 1 {
+            // If there's only 1 item is saved, reduce db access by reloading it in place
             let snapshot = snapshots[0]
             let isSnapshotAssociated = switch displayFilter {
             case .token(let id):
@@ -192,7 +201,6 @@ extension SafeSnapshotListViewController {
                 return
             }
             if items[snapshot.id] != nil {
-                // If there's only 1 item is saved, reduce db access by reloading it in place
                 let operation = ReloadSingleItemOperation(viewController: self, snapshotID: snapshots[0].id)
                 queue.addOperation(operation)
                 return
@@ -213,6 +221,30 @@ extension SafeSnapshotListViewController {
                                                filter: displayFilter,
                                                sort: sort)
         queue.addOperation(operation)
+    }
+    
+    @objc private func inscriptionDidRefresh(_ notification: Notification) {
+        guard let snapshotID = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.snapshotID] as? String else {
+            return
+        }
+        let isSnapshotAssociated = switch displayFilter {
+        case .token(let id):
+            snapshotID == id
+        case .user(let id):
+            snapshotID == id
+        case let .address(assetID, address):
+            false
+        case nil:
+            true
+        }
+        if !isSnapshotAssociated {
+            // The snapshot will never show in this view, no need to load
+            return
+        }
+        if items[snapshotID] != nil {
+            let operation = ReloadSingleItemOperation(viewController: self, snapshotID: snapshotID)
+            queue.addOperation(operation)
+        }
     }
     
     private func loadPreviousPage() {

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectible" id="3m1-TU-Czg" customClass="CollectibleCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="216"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Jz8-6n-8f9">
+                <rect key="frame" x="0.0" y="0.0" width="160" height="216"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yac-gm-Gc7">
+                        <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
+                        <color key="backgroundColor" name="sticker_button_background_disabled"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="yac-gm-Gc7" secondAttribute="height" id="TmE-Cj-QuN"/>
+                        </constraints>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="u11-Qz-Sc0">
+                        <rect key="frame" x="10" y="170" width="140" height="38"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="awL-RS-CnQ">
+                                <rect key="frame" x="0.0" y="0.0" width="140" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hrq-2z-gik">
+                                <rect key="frame" x="0.0" y="2" width="140" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="pin_tips_background"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="u11-Qz-Sc0" secondAttribute="trailing" constant="10" id="5Hk-TG-xns"/>
+                    <constraint firstAttribute="trailing" secondItem="yac-gm-Gc7" secondAttribute="trailing" id="69f-YH-UrT"/>
+                    <constraint firstItem="u11-Qz-Sc0" firstAttribute="leading" secondItem="Jz8-6n-8f9" secondAttribute="leading" constant="10" id="EdK-eM-Lrg"/>
+                    <constraint firstItem="u11-Qz-Sc0" firstAttribute="top" secondItem="yac-gm-Gc7" secondAttribute="bottom" constant="10" id="Wt8-3V-nz3"/>
+                    <constraint firstItem="yac-gm-Gc7" firstAttribute="leading" secondItem="Jz8-6n-8f9" secondAttribute="leading" id="dba-qp-ZHt"/>
+                    <constraint firstAttribute="bottom" secondItem="u11-Qz-Sc0" secondAttribute="bottom" constant="8" id="gnZ-22-t8o"/>
+                    <constraint firstItem="yac-gm-Gc7" firstAttribute="top" secondItem="Jz8-6n-8f9" secondAttribute="top" id="h57-A9-mm6"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" name="background"/>
+            <connections>
+                <outlet property="contentImageView" destination="yac-gm-Gc7" id="y0e-6D-a7N"/>
+                <outlet property="subtitleLabel" destination="hrq-2z-gik" id="QLN-Pr-a0i"/>
+                <outlet property="titleLabel" destination="awL-RS-CnQ" id="GXh-ih-gfo"/>
+            </connections>
+            <point key="canvasLocation" x="-137.40458015267174" y="-98.591549295774655"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="pin_tips_background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="sticker_button_background_disabled">
+            <color red="0.92549019607843142" green="0.92549019607843142" blue="0.92549019607843142" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

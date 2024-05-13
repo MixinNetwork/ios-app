@@ -374,7 +374,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         tokenSelectorView.button.isUserInteractionEnabled = false
         DispatchQueue.global().async { [weak self] in
             let token: TokenItem
-            if let id = self?.token?.assetID, let selected = TokenDAO.shared.tokenItem(with: id) {
+            if let id = self?.token?.assetID, let selected = TokenDAO.shared.tokenItem(assetID: id) {
                 token = selected
             } else if let `default` = TokenDAO.shared.defaultTransferToken() {
                 token = `default`

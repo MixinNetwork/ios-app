@@ -4,18 +4,23 @@ import MixinServices
 final class SnapshotViewController: RowListViewController {
     
     @IBOutlet weak var headerContentStackView: UIStackView!
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var amountStackView: UIStackView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
+    private let messageID: String?
+    
     private var token: TokenItem
     private var snapshot: SafeSnapshotItem
+    private var inscription: InscriptionItem?
     
-    init(token: TokenItem, snapshot: SafeSnapshotItem) {
+    init(token: TokenItem, snapshot: SafeSnapshotItem, messageID: String?, inscription: InscriptionItem?) {
         self.token = token
         self.snapshot = snapshot
+        self.messageID = messageID
+        self.inscription = inscription
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .custom
         self.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
@@ -25,8 +30,13 @@ final class SnapshotViewController: RowListViewController {
         fatalError("Storyboard is not supported")
     }
     
-    class func instance(token: TokenItem, snapshot: SafeSnapshotItem) -> UIViewController {
-        let snapshot = SnapshotViewController(token: token, snapshot: snapshot)
+    class func instance(
+        token: TokenItem,
+        snapshot: SafeSnapshotItem,
+        messageID: String?,
+        inscription: InscriptionItem?
+    ) -> UIViewController {
+        let snapshot = SnapshotViewController(token: token, snapshot: snapshot, messageID: messageID, inscription: inscription)
         let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
         return container
     }
@@ -35,9 +45,24 @@ final class SnapshotViewController: RowListViewController {
         super.viewDidLoad()
         tableHeaderView = R.nib.snapshotTableHeaderView(withOwner: self)
         tableView.tableHeaderView = tableHeaderView
+        amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
-        assetIconView.setIcon(token: token)
-        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
+        if snapshot.isInscription {
+            if let inscription {
+                iconView.setIcon(content: inscription)
+            } else {
+                iconView.setIcon(content: snapshot)
+            }
+            let amount: Decimal = snapshot.decimalAmount > 0 ? 1 : -1
+            amountLabel.text = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .always)
+            symbolLabel.text = nil
+            fiatMoneyValueLabel.text = nil
+        } else {
+            iconView.setIcon(token: token)
+            amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
+            symbolLabel.text = token.symbol
+            fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + fiatMoneyValue(usdPrice: token.decimalUSDPrice)) + "\n "
+        }
         if snapshot.type == SnapshotType.pendingDeposit.rawValue {
             amountLabel.textColor = .walletGray
         } else {
@@ -47,23 +72,44 @@ final class SnapshotViewController: RowListViewController {
                 amountLabel.textColor = .walletGreen
             }
         }
-        amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
-        fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + fiatMoneyValue(usdPrice: token.decimalUSDPrice)) + "\n "
-        symbolLabel.text = token.symbol
         if ScreenHeight.current >= .extraLong {
-            assetIconView.chainIconWidth = 28
-            assetIconView.chainIconOutlineWidth = 4
+            iconView.badgeIconDiameter = 28
+            iconView.badgeOutlineWidth = 4
             headerContentStackView.spacing = 2
         }
         layoutTableHeaderView()
         
         reloadData()
         updateTableViewContentInsetBottom()
-        reloadPrices()
+        if let hash = snapshot.inscriptionHash {
+            if inscription == nil {
+                let job = RefreshInscriptionJob(inscriptionHash: hash)
+                job.messageID = messageID
+                job.snapshotID = snapshot.id
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(reloadInscription(_:)),
+                                                       name: RefreshInscriptionJob.didFinishedNotification,
+                                                       object: job)
+                ConcurrentJobQueue.shared.addJob(job: job)
+            }
+        } else {
+            AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self] (result) in
+                guard let self = self else {
+                    return
+                }
+                switch result {
+                case var .success(ticker):
+                    let nowValue = Currency.current.symbol + self.fiatMoneyValue(usdPrice: self.token.decimalUSDPrice)
+                    let thenValue = token.decimalUSDPrice > 0 ? Currency.current.symbol + self.fiatMoneyValue(usdPrice: ticker.decimalUSDPrice) : R.string.localizable.na()
+                    self.fiatMoneyValueLabel.text = R.string.localizable.value_now(nowValue) + "\n" + R.string.localizable.value_then(thenValue)
+                case .failure:
+                    break
+                }
+            }
+            iconView.isUserInteractionEnabled = true
+            iconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
+        }
         reloadSnapshotIfNeeded()
-        
-        assetIconView.isUserInteractionEnabled = true
-        assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -93,7 +139,16 @@ final class SnapshotViewController: RowListViewController {
         }
     }
     
-    @objc func backToAsset(_ recognizer: UITapGestureRecognizer) {
+    @IBAction func longPressAmountAction(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        becomeFirstResponder()
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
+        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
+    }
+    
+    @objc private func backToAsset(_ recognizer: UITapGestureRecognizer) {
         guard let viewControllers = navigationController?.viewControllers else {
             return
         }
@@ -109,6 +164,15 @@ final class SnapshotViewController: RowListViewController {
         }
     }
     
+    @objc private func reloadInscription(_ notification: Notification) {
+        guard let item = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.item] as? InscriptionItem else {
+            return
+        }
+        self.inscription = item
+        iconView.setIcon(content: item)
+        reloadData()
+    }
+    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         action == #selector(copy(_:))
     }
@@ -117,34 +181,28 @@ final class SnapshotViewController: RowListViewController {
         UIPasteboard.general.string = snapshot.amount
     }
     
-    @IBAction func longPressAmountAction(_ recognizer: UILongPressGestureRecognizer) {
-        guard recognizer.state == .began else {
-            return
-        }
-        becomeFirstResponder()
-        AppDelegate.current.mainWindow.addDismissMenuResponder()
-        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
-    }
-    
 }
 
 extension SnapshotViewController {
     
     enum SnapshotKey: RowKey {
         
-        case id
+        case transactionID
         case transactionHash
         case from
         case to
         case depositHash
         case withdrawalHash
+        case inscriptionHash
+        case collectionName
+        case id
         case depositProgress
         case createdAt
         case memo
         
         var localized: String {
             switch self {
-            case .id:
+            case .transactionID:
                 return R.string.localizable.transaction_id()
             case .transactionHash:
                 return R.string.localizable.transaction_hash()
@@ -156,6 +214,12 @@ extension SnapshotViewController {
                 return R.string.localizable.deposit_hash()
             case .withdrawalHash:
                 return R.string.localizable.withdrawal_hash()
+            case .inscriptionHash:
+                return R.string.localizable.inscription_hash()
+            case .collectionName:
+                return R.string.localizable.collection()
+            case .id:
+                return R.string.localizable.id()
             case .depositProgress:
                 return R.string.localizable.status()
             case .createdAt:
@@ -167,8 +231,9 @@ extension SnapshotViewController {
         
         var allowsCopy: Bool {
             switch self {
-            case .id, .transactionHash, .memo, .from,
-                    .to, .depositHash, .withdrawalHash:
+            case .transactionID, .transactionHash,
+                    .memo, .from, .to, .depositHash,
+                    .withdrawalHash, .inscriptionHash:
                 true
             default:
                 false
@@ -188,22 +253,6 @@ extension SnapshotViewController {
 }
 
 extension SnapshotViewController {
-    
-    private func reloadPrices() {
-        AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self](result) in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case var .success(ticker):
-                let nowValue = Currency.current.symbol + self.fiatMoneyValue(usdPrice: self.token.decimalUSDPrice)
-                let thenValue = token.decimalUSDPrice > 0 ? Currency.current.symbol + self.fiatMoneyValue(usdPrice: ticker.decimalUSDPrice) : R.string.localizable.na()
-                self.fiatMoneyValueLabel.text = R.string.localizable.value_now(nowValue) + "\n" + R.string.localizable.value_then(thenValue)
-            case .failure:
-                break
-            }
-        }
-    }
     
     private func reloadSnapshotIfNeeded() {
         let type = SafeSnapshot.SnapshotType(rawValue: snapshot.type)
@@ -277,7 +326,7 @@ extension SnapshotViewController {
                 rows.append(SnapshotRow(key: .depositProgress, value: value))
             }
         } else {
-            rows.append(SnapshotRow(key: .id, value: snapshot.id))
+            rows.append(SnapshotRow(key: .transactionID, value: snapshot.id))
             rows.append(SnapshotRow(key: .transactionHash, value: snapshot.transactionHash))
         }
         
@@ -316,6 +365,13 @@ extension SnapshotViewController {
             }
             rows.append(SnapshotRow(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
         } else {
+            if let inscriptionHash = snapshot.inscriptionHash {
+                rows.append(SnapshotRow(key: .inscriptionHash, value: inscriptionHash))
+                if let inscription = inscription {
+                    rows.append(SnapshotRow(key: .collectionName, value: inscription.collectionName))
+                    rows.append(SnapshotRow(key: .id, value: inscription.sequenceRepresentation))
+                }
+            }
             let style: Row.Style
             let opponentName: String
             if let name = snapshot.opponentFullname {

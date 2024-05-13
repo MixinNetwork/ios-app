@@ -42,6 +42,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "llamada de voz cancelada";
 "alert_key_contact_audio_call_message" = "te invita a una llamada de voz";
 "alert_key_contact_audio_message" = "te ha enviado un audio";
+"alert_key_contact_collectible_message" = "sent you an inscription";
 "alert_key_contact_contact_message" = "te ha enviado un contacto";
 "alert_key_contact_data_message" = "te ha enviado un archivo";
 "alert_key_contact_image_message" = "te ha enviado una foto";
@@ -212,7 +213,10 @@
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
 "closing_balance" = "Closing Balance";
+"collectible" = "Collectible";
 "collectible_token_id" = "#%@";
+"collectibles" = "Collectibles";
+"collection" = "Collection";
 "combine_and_forward" = "Combinar y avanzar";
 "compress_database" = "Comprimir base de datos";
 "compressed" = "Comprimido";
@@ -248,6 +252,7 @@
 "contact_title" = "Contactos";
 "contacts" = "CONTACTOS";
 "content_audio" = "[Audio]";
+"content_collectible" = "[Collectible]";
 "content_contact" = "[Contacto]";
 "content_deposit" = "[Depósito]";
 "content_fee" = "[Tarifa]";
@@ -473,6 +478,7 @@
 "group_participant_add_limit" = "No puede añadir a este participante porque solo puede añadir hasta 50 a la vez.";
 "group_qr_code_prompt" = "Escanea el código QR para unirte a este grupo";
 "groups_in_common" = "Grupos en común";
+"hash" = "HASH";
 "help" = "Ayuda";
 "help_center" = "Centro de ayuda";
 "hidden_assets" = "Activos ocultos";
@@ -484,6 +490,7 @@
 "hour_count" = "%d Horas";
 "how_are_you" = "¿Hola, cómo estás?";
 "i_am_good" = "Estoy bien.";
+"id" = "ID";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
 "in_connecting" = "Conectando...";
@@ -492,6 +499,7 @@
 "incoming_voice_call" = "Llamada de voz entrante";
 "info" = "Información";
 "initializing" = "Inicializando...";
+"inscription_hash" = "Inscription Hash";
 "insufficient_balance" = "Insufficient balance";
 "insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
 "insufficient_transaction_fee" = "Tarifa de transacción insuficiente";
@@ -625,6 +633,7 @@
 "no_authorizations" = "SIN AUTORIZACIONES";
 "no_blocked_users" = "Sin usuarios bloqueados";
 "no_bots" = "SIN BOTS";
+"no_collectibles" = "NO COLLECTIBLES";
 "no_contacts" = "SIN CONTACTOS";
 "no_files" = "SIN ARCHIVOS";
 "no_hidden_assets" = "Sin activos ocultos";
@@ -835,6 +844,7 @@
 "search_placeholder_asset" = "Nombre, Símbolo";
 "search_placeholder_contact" = "Mixin ID, nombre, número de teléfono";
 "search_placeholder_dapp" = "Name, URL";
+"search_placeholder_inscription" = "Name";
 "search_placeholder_number" = "Buscar Mixin ID o número de teléfono: ";
 "search_related_message" = "%d mensaje relacionado";
 "search_related_message_count" = "%d mensajes relacionados";

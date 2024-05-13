@@ -8,7 +8,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         case nameWithBalance
     }
     
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var changeLabel: InsetLabel!

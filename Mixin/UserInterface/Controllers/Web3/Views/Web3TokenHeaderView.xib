@@ -22,7 +22,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="kAZ-pc-VB8">
                     <rect key="frame" x="20" y="14" width="353" height="51"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jNj-El-Ol9" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jNj-El-Ol9" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="51" height="51"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
@@ -30,7 +30,7 @@
                                 <constraint firstAttribute="width" constant="51" id="cjO-i5-wmB"/>
                             </constraints>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="chainIconWidth">
+                                <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
                                     <real key="value" value="13"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>

@@ -5,6 +5,13 @@ public final class OutputDAO: UserDatabaseDAO {
     
     public static let shared = OutputDAO()
     
+    public static let didSignOutputNotification = Notification.Name("one.mixin.service.OutputDAO.DidSign")
+    public static let outputIDsUserInfoKey = "o"
+    
+    public func getOutput(inscriptionHash: String) -> Output? {
+        db.select(with: "SELECT * FROM outputs WHERE inscription_hash = ? LIMIT 1", arguments: [inscriptionHash])
+    }
+    
     public func latestOutputSequence() -> Int? {
         db.select(with: "SELECT sequence FROM outputs ORDER BY sequence DESC LIMIT 1")
     }
@@ -14,11 +21,11 @@ public final class OutputDAO: UserDatabaseDAO {
     }
     
     public func unspentOutputs(asset: String, limit: Int) -> [Output] {
-        db.select(with: "SELECT * FROM outputs WHERE state = 'unspent' AND asset = ? ORDER BY sequence ASC LIMIT ?", arguments: [asset, limit])
+        db.select(with: "SELECT * FROM outputs WHERE state = 'unspent' AND asset = ? AND inscription_hash IS NULL ORDER BY sequence ASC LIMIT ?", arguments: [asset, limit])
     }
     
     public func unspentOutputs(asset: String, after sequence: Int?, limit: Int, db: GRDB.Database) throws -> [Output] {
-        var sql = "SELECT * FROM outputs WHERE state = 'unspent' AND asset = :asset"
+        var sql = "SELECT * FROM outputs WHERE state = 'unspent' AND asset = :asset AND inscription_hash IS NULL"
         var arguments: [String: DatabaseValueConvertible] = ["asset": asset]
         
         if let sequence {
@@ -33,7 +40,7 @@ public final class OutputDAO: UserDatabaseDAO {
     }
     
     public func outputs(asset: String?, before outputID: String?, limit: Int) -> [Output] {
-        var sql = "SELECT * FROM outputs"
+        var sql = "SELECT * FROM outputs WHERE inscription_hash IS NULL"
         
         var conditions: [String] = []
         var arguments: [String: any DatabaseValueConvertible] = ["limit": limit]
@@ -46,7 +53,7 @@ public final class OutputDAO: UserDatabaseDAO {
             arguments["id"] = outputID
         }
         if !conditions.isEmpty {
-            sql += " WHERE \(conditions.joined(separator: " AND "))"
+            sql += " AND \(conditions.joined(separator: " AND "))"
         }
         
         sql += " ORDER BY rowid DESC LIMIT :limit"
@@ -66,6 +73,13 @@ public final class OutputDAO: UserDatabaseDAO {
             let sql = "UPDATE outputs SET state = 'signed' WHERE output_id IN ('\(ids)')"
             try db.execute(sql: sql)
             try change(db)
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Self.didSignOutputNotification,
+                                                    object: self,
+                                                    userInfo: [Self.outputIDsUserInfoKey: ids])
+                }
+            }
         }
     }
     

@@ -3,7 +3,7 @@ import MixinServices
 
 class AssetComboBoxView: ComboBoxView {
     
-    let iconView = AssetIconView()
+    let iconView = BadgeIconView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

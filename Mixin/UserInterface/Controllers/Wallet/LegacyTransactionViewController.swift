@@ -6,7 +6,7 @@ class LegacyTransactionViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: InfiniteTopView!
     @IBOutlet weak var headerContentStackView: UIStackView!
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var amountStackView: UIStackView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
@@ -40,8 +40,8 @@ class LegacyTransactionViewController: UIViewController {
         fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd)) + "\n "
         symbolLabel.text = snapshot.assetSymbol
         if ScreenHeight.current >= .extraLong {
-            assetIconView.chainIconWidth = 28
-            assetIconView.chainIconOutlineWidth = 4
+            assetIconView.badgeIconDiameter = 28
+            assetIconView.badgeOutlineWidth = 4
             headerContentStackView.spacing = 2
         }
         layoutTableHeaderView()

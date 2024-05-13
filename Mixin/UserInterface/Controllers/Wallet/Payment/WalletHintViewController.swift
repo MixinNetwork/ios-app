@@ -10,7 +10,7 @@ final class WalletHintViewController: UIViewController {
     
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var tokenIconView: AssetIconView!
+    @IBOutlet weak var tokenIconView: BadgeIconView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var realizeButton: RoundedButton!
     @IBOutlet weak var contactSupportButton: UIButton!

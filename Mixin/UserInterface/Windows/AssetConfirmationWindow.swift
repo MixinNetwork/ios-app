@@ -7,7 +7,7 @@ class AssetConfirmationWindow: BottomSheetView {
     @IBOutlet weak var tipsLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var amountExchangeLabel: UILabel!
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var confirmButton: RoundedButton!
     @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var memoPlaceView: UIView!

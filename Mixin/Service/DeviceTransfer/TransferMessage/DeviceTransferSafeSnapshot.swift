@@ -16,6 +16,7 @@ struct DeviceTransferSafeSnapshot {
     let confirmations: Int?
     let openingBalance: String?
     let closingBalance: String?
+    let inscriptionHash: String?
     let deposit: SafeSnapshot.Deposit?
     let withdrawal: SafeSnapshot.Withdrawal?
     
@@ -33,6 +34,7 @@ struct DeviceTransferSafeSnapshot {
         confirmations = safeSnapshot.confirmations
         openingBalance = safeSnapshot.openingBalance
         closingBalance = safeSnapshot.closingBalance
+        inscriptionHash = safeSnapshot.inscriptionHash
         deposit = safeSnapshot.deposit
         withdrawal = safeSnapshot.withdrawal
     }
@@ -50,7 +52,8 @@ struct DeviceTransferSafeSnapshot {
                      traceID: traceID,
                      confirmations: confirmations,
                      openingBalance: openingBalance,
-                     closingBalance: closingBalance,
+                     closingBalance: closingBalance, 
+                     inscriptionHash: inscriptionHash,
                      deposit: deposit,
                      withdrawal: withdrawal)
     }
@@ -73,6 +76,7 @@ extension DeviceTransferSafeSnapshot: DeviceTransferRecord {
         case confirmations
         case openingBalance = "opening_balance"
         case closingBalance = "closing_balance"
+        case inscriptionHash = "inscription_hash"
         case deposit
         case withdrawal
     }

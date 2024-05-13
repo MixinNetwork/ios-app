@@ -9,7 +9,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var memoTextView: PlaceholderTextView!
     @IBOutlet weak var memoScanButton: UIButton!
     @IBOutlet weak var saveButton: RoundedButton!
-    @IBOutlet weak var assetView: AssetIconView!
+    @IBOutlet weak var assetView: BadgeIconView!
     @IBOutlet weak var memoHintWrapperView: UIView!
     @IBOutlet weak var memoHintTextView: UITextView!
     @IBOutlet weak var continueWrapperView: UIView!
@@ -69,8 +69,8 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         memoTextView.textContainerInset = .zero
         memoTextView.textContainer.lineFragmentPadding = 0
         if ScreenHeight.current >= .extraLong {
-            assetView.chainIconWidth = 28
-            assetView.chainIconOutlineWidth = 4
+            assetView.badgeIconDiameter = 28
+            assetView.badgeOutlineWidth = 4
         }
         assetView.setIcon(token: asset)
         memoTextView.placeholder = asset.memoLabel

@@ -74,6 +74,11 @@ public final class UTXOService {
                         }
                     }
                     
+                    for hash in outputs.compactMap(\.inscriptionHash) {
+                        let job = RefreshInscriptionJob(inscriptionHash: hash)
+                        ConcurrentJobQueue.shared.addJob(job: job)
+                    }
+                    
                     OutputDAO.shared.insertOrIgnore(outputs: outputs) { db in
                         let kernelAssetIDs = Set(outputs.map(\.asset))
                         for kernelAssetID in kernelAssetIDs {
@@ -219,6 +224,15 @@ extension UTXOService {
         init(outputs: [Output], amount: Decimal) {
             self.outputs = outputs
             self.lastOutput = outputs.last!
+            self.amount = amount
+        }
+        
+        public init?(output: Output) {
+            guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+                return nil
+            }
+            self.outputs = [output]
+            self.lastOutput = output
             self.amount = amount
         }
         

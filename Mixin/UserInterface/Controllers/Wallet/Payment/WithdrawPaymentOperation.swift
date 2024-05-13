@@ -208,6 +208,7 @@ struct WithdrawPaymentOperation {
                                               transactionHash: signedWithdrawal.hash,
                                               createdAt: now,
                                               traceID: traceID,
+                                              inscriptionHash: nil,
                                               withdrawal: .init(hash: "", receiver: address.destination))
         if let feeOutputs, let feeTx {
             guard let feeResponse = verifyResponses.first(where: { $0.requestID == feeTraceID }) else {
@@ -232,7 +233,8 @@ struct WithdrawPaymentOperation {
                                            memo: emptyMemo,
                                            transactionHash: signedFee.hash,
                                            createdAt: now,
-                                           traceID: feeTraceID)
+                                           traceID: feeTraceID, 
+                                           inscriptionHash: nil)
             broadcastRequests = [
                 TransactionRequest(id: traceID, raw: signedWithdrawal.raw),
                 TransactionRequest(id: feeTraceID, raw: signedFee.raw)

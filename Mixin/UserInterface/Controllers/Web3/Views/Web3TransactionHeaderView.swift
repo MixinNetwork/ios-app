@@ -3,7 +3,7 @@ import MixinServices
 
 final class Web3TransactionHeaderView: InfiniteTopView {
     
-    @IBOutlet weak var iconView: AssetIconView!
+    @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var titleLabel: InsetLabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     

@@ -27,6 +27,7 @@ struct TransferPaymentOperation {
     let amount: Decimal
     let memo: String
     let reference: String?
+    let inscription: InscriptionItem?
     
     func start(pin: String) async throws {
         let destination = self.destination
@@ -34,7 +35,7 @@ struct TransferPaymentOperation {
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
         let amount = Token.amountString(from: amount)
-        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID)")
+        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), inscription: \(inscription?.inscriptionHash ?? "(null)")")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
         Logger.general.info(category: "Transfer", message: "SpendKey ready")
@@ -169,7 +170,8 @@ struct TransferPaymentOperation {
                                     memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
                                     transactionHash: signedTx.hash,
                                     createdAt: now,
-                                    traceID: traceID)
+                                    traceID: traceID, 
+                                    inscriptionHash: inscription?.inscriptionHash)
         let trace: Trace?
         switch destination {
         case .user, .multisig:
@@ -202,7 +204,7 @@ struct TransferPaymentOperation {
                     if opponent.isCreatedByMessenger {
                         let receiverID = opponent.userId
                         let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
-                        let message = Message.createMessage(snapshot: snapshot, conversationID: conversationID, createdAt: now)
+                        let message = Message.createMessage(snapshot: snapshot, inscription: inscription, conversationID: conversationID, createdAt: now)
                         try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
                         if try !Conversation.exists(db, key: conversationID) {
                             let conversation = Conversation.createConversation(conversationId: conversationID,

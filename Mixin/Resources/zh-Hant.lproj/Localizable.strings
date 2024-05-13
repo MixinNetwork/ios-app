@@ -42,6 +42,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "對方已取消語音通話";
 "alert_key_contact_audio_call_message" = "發起了語音通話";
 "alert_key_contact_audio_message" = "傳送一條語音";
+"alert_key_contact_collectible_message" = "傳送一個藏品";
 "alert_key_contact_contact_message" = "分享了一個聯絡人";
 "alert_key_contact_data_message" = "傳送一個檔案";
 "alert_key_contact_image_message" = "傳送一張照片";
@@ -212,7 +213,10 @@
 "clock_skew_hint" = "請校正後再繼續使用，設定 > 一般 > 日期與時間 > 自動設定";
 "close" = "關閉";
 "closing_balance" = "期末餘額";
+"collectible" = "藏品";
 "collectible_token_id" = "#%@";
+"collectibles" = "藏品";
+"collection" = "合集";
 "combine_and_forward" = "合併轉發";
 "compress_database" = "壓縮資料庫";
 "compressed" = "已壓縮";
@@ -248,6 +252,7 @@
 "contact_title" = "聯絡人";
 "contacts" = "聯絡人";
 "content_audio" = "[語音]";
+"content_collectible" = "[藏品]";
 "content_contact" = "[聯絡人]";
 "content_deposit" = "充值";
 "content_fee" = "[手續費]";
@@ -473,6 +478,7 @@
 "group_participant_add_limit" = "不能再新增成員，一次最多新增 50 個。";
 "group_qr_code_prompt" = "掃描二維碼加入群組";
 "groups_in_common" = "共同群組";
+"hash" = "雜湊";
 "help" = "幫助";
 "help_center" = "幫助中心";
 "hidden_assets" = "隱藏的資產";
@@ -485,6 +491,7 @@
 "how_are_you" = "嗨，你好嗎？";
 "i_am_good" = "我很好。";
 "image" = "圖片";
+"id" = "ID";
 "immediately" = "立刻";
 "in_connecting" = "正在連線...";
 "include_files" = "包括檔案";
@@ -492,6 +499,7 @@
 "incoming_voice_call" = "語音通話來電";
 "info" = "資訊";
 "initializing" = "初始化...";
+"inscription_hash" = "藏品雜湊";
 "insufficient_balance" = "餘額不足";
 "insufficient_gas" = "您的賬戶中沒有足夠的 %@ 來支付網路費用";
 "insufficient_transaction_fee" = "手續費不足";
@@ -625,6 +633,7 @@
 "no_authorizations" = "沒有授權任何機器人";
 "no_blocked_users" = "沒有封鎖任何人";
 "no_bots" = "沒有機器人";
+"no_collectibles" = "沒有藏品";
 "no_contacts" = "沒有聯絡人";
 "no_files" = "沒有檔案";
 "no_hidden_assets" = "沒有隱藏的資產";
@@ -835,6 +844,7 @@
 "search_placeholder_asset" = "名稱, 符號";
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
 "search_placeholder_dapp" = "名稱, URL";
+"search_placeholder_inscription" = "名稱";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";
 "search_related_message" = "%d 條相關的訊息";
 "search_related_message_count" = "%d 條相關的訊息";

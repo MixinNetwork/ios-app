@@ -12,7 +12,7 @@ final class DepositFieldView: UIView, XibDesignable {
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var qrCodeView: ModernQRCodeView!
     @IBOutlet weak var centerWrapperView: UIView!
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var shadowView: SeparatorShadowView!
     
     @IBOutlet weak var qrCodeWidthConstraint: NSLayoutConstraint!

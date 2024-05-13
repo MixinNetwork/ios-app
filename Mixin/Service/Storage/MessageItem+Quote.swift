@@ -28,6 +28,12 @@ extension MessageItem {
             return R.string.localizable.location()
         } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
             return (snapshotAmount ?? "0") + " " + (tokenSymbol ?? "")
+        } else if category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
+            if let inscription {
+                return inscription.collectionSequenceRepresentation
+            } else {
+                return ""
+            }
         } else if category.hasSuffix("_CONTACT") {
             return sharedUserIdentityNumber ?? ""
         } else if category.hasSuffix("_TRANSCRIPT") {

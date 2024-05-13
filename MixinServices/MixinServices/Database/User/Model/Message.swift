@@ -136,25 +136,33 @@ extension Message {
     }
     
     public static func createMessage(snapshot: SafeSnapshot, data: BlazeMessageData) -> Message {
-        createMessage(messageId: data.messageId,
-                      conversationId: data.conversationId,
-                      userId: data.userId,
-                      category: data.category,
-                      status: MessageStatus.DELIVERED.rawValue,
-                      action: snapshot.type,
-                      snapshotId: snapshot.id,
-                      createdAt: data.createdAt)
+        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_INSCRIPTION : .SYSTEM_SAFE_SNAPSHOT
+        return createMessage(messageId: data.messageId,
+                             conversationId: data.conversationId,
+                             userId: data.userId,
+                             category: category.rawValue,
+                             status: MessageStatus.DELIVERED.rawValue,
+                             action: snapshot.type,
+                             snapshotId: snapshot.id,
+                             createdAt: data.createdAt)
     }
     
-    public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
-        createMessage(messageId: UUID().uuidString.lowercased(),
-                      conversationId: conversationID,
-                      userId: myUserId,
-                      category: MessageCategory.SYSTEM_SAFE_SNAPSHOT.rawValue,
-                      status: MessageStatus.DELIVERED.rawValue,
-                      action: snapshot.type,
-                      snapshotId: snapshot.id,
-                      createdAt: createdAt)
+    public static func createMessage(
+        snapshot: SafeSnapshot,
+        inscription: InscriptionItem?,
+        conversationID: String,
+        createdAt: String
+    ) -> Message {
+        let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_INSCRIPTION : .SYSTEM_SAFE_SNAPSHOT
+        return createMessage(messageId: UUID().uuidString.lowercased(),
+                             conversationId: conversationID,
+                             userId: myUserId,
+                             category: category.rawValue,
+                             content: inscription?.asMessageContent(),
+                             status: MessageStatus.DELIVERED.rawValue,
+                             action: snapshot.type,
+                             snapshotId: snapshot.id,
+                             createdAt: createdAt)
     }
     
     public static func createMessage(textMessage plainText: String, data: BlazeMessageData) -> Message {
@@ -335,6 +343,7 @@ public enum MessageCategory: String, Decodable {
     case SYSTEM_CONVERSATION
     case SYSTEM_ACCOUNT_SNAPSHOT
     case SYSTEM_SAFE_SNAPSHOT
+    case SYSTEM_SAFE_INSCRIPTION
     case SYSTEM_SESSION
     case SYSTEM_USER
     case SYSTEM_CIRCLE

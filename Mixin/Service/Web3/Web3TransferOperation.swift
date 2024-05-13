@@ -55,7 +55,7 @@ class Web3TransferOperation {
     ) throws {
         assert(!Thread.isMainThread)
         let chainToken: TokenItem?
-        if let token = TokenDAO.shared.tokenItem(with: chain.mixinChainID) {
+        if let token = TokenDAO.shared.tokenItem(assetID: chain.mixinChainID) {
             chainToken = token
         } else {
             let token = try SafeAPI.assets(id: chain.mixinChainID).get()

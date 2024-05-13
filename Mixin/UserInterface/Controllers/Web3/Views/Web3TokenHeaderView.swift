@@ -3,7 +3,7 @@ import MixinServices
 
 final class Web3TokenHeaderView: Web3HeaderView {
     
-    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var amountTextView: UITextView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     

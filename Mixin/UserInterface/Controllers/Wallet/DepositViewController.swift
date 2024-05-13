@@ -161,7 +161,7 @@ extension DepositViewController: UICollectionViewDelegate {
             }
             
             let token: TokenItem
-            if let localToken = TokenDAO.shared.tokenItem(with: id) {
+            if let localToken = TokenDAO.shared.tokenItem(assetID: id) {
                 token = localToken
             } else {
                 await MainActor.run { [weak self] in

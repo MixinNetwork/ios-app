@@ -115,3 +115,35 @@ class AppCardBubbleImageSet: GeneralBubbleImageSet {
     }
     
 }
+
+final class NoTailLightBubbleImageSet: GeneralBubbleImageSet {
+    
+    override class var left: UIImage {
+        R.image.ic_chat_bubble_left()!
+    }
+    
+    override class var leftTail: UIImage {
+        R.image.ic_chat_bubble_left()!
+    }
+    
+    override class var right: UIImage {
+        R.image.ic_chat_bubble_right_white()!
+    }
+    
+    override class var rightTail: UIImage {
+        R.image.ic_chat_bubble_right_white()!
+    }
+    
+    override class var leftTailHighlight: UIImage {
+        R.image.ic_chat_bubble_left_highlight()!
+    }
+    
+    override class var rightHighlight: UIImage {
+        R.image.ic_chat_bubble_right_white_highlight()!
+    }
+    
+    override class var rightTailHighlight: UIImage {
+        R.image.ic_chat_bubble_right_white_highlight()!
+    }
+    
+}

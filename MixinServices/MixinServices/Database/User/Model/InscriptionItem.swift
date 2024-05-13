@@ -44,9 +44,9 @@ public struct InscriptionItem {
     
 }
 
-extension InscriptionItem: Codable {
+extension InscriptionItem: Codable, MixinFetchableRecord {
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case collectionHash = "collection_hash"
         case collectionName = "name"
         case collectionIconURL = "icon_url"

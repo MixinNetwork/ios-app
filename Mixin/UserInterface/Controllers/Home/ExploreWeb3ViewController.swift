@@ -195,7 +195,7 @@ final class ExploreWeb3ViewController: UIViewController {
             case .failure(.httpTransport(.explicitlyCancelled)):
                 break
             case .failure(let error):
-                Logger.web3.debug(category: "Explore", message: "\(error)")
+                Logger.web3.error(category: "Explore", message: "\(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     self?.reloadAccount(address: address)
                 }

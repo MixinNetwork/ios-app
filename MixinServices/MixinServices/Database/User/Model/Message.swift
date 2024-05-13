@@ -147,12 +147,18 @@ extension Message {
                              createdAt: data.createdAt)
     }
     
-    public static func createMessage(snapshot: SafeSnapshot, conversationID: String, createdAt: String) -> Message {
+    public static func createMessage(
+        snapshot: SafeSnapshot,
+        inscription: InscriptionItem?,
+        conversationID: String,
+        createdAt: String
+    ) -> Message {
         let category: MessageCategory = snapshot.isInscription ? .SYSTEM_SAFE_INSCRIPTION : .SYSTEM_SAFE_SNAPSHOT
         return createMessage(messageId: UUID().uuidString.lowercased(),
                              conversationId: conversationID,
                              userId: myUserId,
                              category: category.rawValue,
+                             content: inscription?.asMessageContent(),
                              status: MessageStatus.DELIVERED.rawValue,
                              action: snapshot.type,
                              snapshotId: snapshot.id,

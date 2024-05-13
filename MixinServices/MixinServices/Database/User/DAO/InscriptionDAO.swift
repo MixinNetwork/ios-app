@@ -6,7 +6,12 @@ public final class InscriptionDAO: UserDatabaseDAO {
     private enum SQL {
         
         static let selector = """
-            SELECT c.collection_hash, c.name, c.icon_url, o.inscription_hash, i.sequence, i.content_type, i.content_url
+            SELECT o.*, c.collection_hash AS \(InscriptionOutput.CodingKeys.collectionHash.rawValue),
+                c.name AS \(InscriptionOutput.CodingKeys.collectionName.rawValue),
+                c.icon_url AS \(InscriptionOutput.CodingKeys.collectionIconURL.rawValue),
+                i.sequence AS \(InscriptionOutput.CodingKeys.inscriptionSequence.rawValue),
+                i.content_type AS \(InscriptionOutput.CodingKeys.inscriptionContentType.rawValue),
+                i.content_url AS \(InscriptionOutput.CodingKeys.inscriptionContentURL.rawValue)
             FROM outputs o
                 LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
@@ -23,29 +28,26 @@ public final class InscriptionDAO: UserDatabaseDAO {
         db.select(where: Inscription.column(of: .inscriptionHash) == hash)
     }
     
-    public func partialInscriptionItem(with inscriptionHash: String) -> PartialInscriptionItem? {
-        let sql = SQL.selector + " AND o.inscription_hash = ?" + SQL.order
+    public func inscriptionItem(with inscriptionHash: String) -> InscriptionItem? {
+        let sql = """
+            SELECT o.inscription_hash, c.collection_hash, c.name,
+                c.icon_url, i.sequence, i.content_type, i.content_url
+            FROM outputs o
+                LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
+                LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
+            WHERE o.state = 'unspent' AND o.inscription_hash = ?
+            LIMIT 1
+        """
         return db.select(with: sql, arguments: [inscriptionHash])
     }
     
-    public func inscriptionItem(with inscriptionHash: String) -> InscriptionItem? {
-        partialInscriptionItem(with: inscriptionHash)?.asInscriptionItem()
-    }
-    
-    public func allPartialInscriptions() -> [PartialInscriptionItem] {
+    public func allInscriptionOutputs() -> [InscriptionOutput] {
         db.select(with: SQL.selector + SQL.order)
     }
     
-    public func search(keyword: String) -> [InscriptionItem] {
+    public func search(keyword: String) -> [InscriptionOutput] {
         let sql = SQL.selector + " AND c.name LIKE ? ESCAPE '/'" + SQL.order
-        let partials: [PartialInscriptionItem] = db.select(with: sql, arguments: ["%\(keyword.sqlEscaped)%"])
-        return partials.compactMap {
-            $0.asInscriptionItem()
-        }
-    }
-    
-    public func inscriptionExists(inscriptionHash: String) -> Bool {
-        db.recordExists(in: Inscription.self, where: Inscription.column(of: .inscriptionHash) == inscriptionHash)
+        return db.select(with: sql, arguments: ["%\(keyword.sqlEscaped)%"])
     }
     
     public func save(inscription: Inscription) {

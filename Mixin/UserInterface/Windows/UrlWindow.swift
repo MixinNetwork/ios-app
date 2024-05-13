@@ -934,7 +934,6 @@ extension UrlWindow {
                     payment.checkPreconditions(
                         transferTo: destination,
                         reference: paymentURL.reference,
-                        inscription: paymentURL.inscription,
                         on: homeContainer
                     ) { reason in
                         switch reason {

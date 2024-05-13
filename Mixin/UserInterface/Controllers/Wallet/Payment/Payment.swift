@@ -9,6 +9,30 @@ struct Payment {
     let fiatMoneyAmount: Decimal
     let memo: String
     
+    private let inscriptionContext: InscriptionContext?
+    
+    init(traceID: String, token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String) {
+        self.traceID = traceID
+        self.token = token
+        self.tokenAmount = tokenAmount
+        self.fiatMoneyAmount = fiatMoneyAmount
+        self.memo = memo
+        self.inscriptionContext = nil
+    }
+    
+    init?(traceID: String, output: Output, item: InscriptionItem) {
+        guard let hash = output.inscriptionHash, let token = TokenDAO.shared.inscriptionToken(inscriptionHash: hash) else {
+            return nil
+        }
+        let fiatMoneyAmount = token.decimalBalance * token.decimalUSDPrice * Currency.current.decimalRate
+        self.traceID = traceID
+        self.token = token
+        self.tokenAmount = token.decimalBalance
+        self.fiatMoneyAmount = fiatMoneyAmount
+        self.memo = ""
+        self.inscriptionContext = InscriptionContext(output: output, item: item)
+    }
+    
 }
 
 // MARK: - Transfer
@@ -33,10 +57,14 @@ extension Payment {
         
     }
     
+    private struct InscriptionContext {
+        let output: Output
+        let item: InscriptionItem
+    }
+    
     func checkPreconditions(
         transferTo destination: TransferDestination,
         reference: String?,
-        inscription: String?,
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
         onSuccess: @MainActor @escaping (TransferPaymentOperation, [PaymentPreconditionIssue]) -> Void
@@ -75,25 +103,12 @@ extension Payment {
             case .passed(let issues):
                 let item: InscriptionItem?
                 let outputCollectionResult: OutputCollectingResult
-                if let inscriptionHash = inscription {
-                    do {
-                        if let i = InscriptionDAO.shared.inscriptionItem(with: inscriptionHash) {
-                            item = i
-                        } else {
-                            item = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
-                        }
-                        let result = UTXOService.shared.inscriptionOutput(hash: inscriptionHash)
-                        switch result {
-                        case .success(let collection):
-                            outputCollectionResult = .success(collection)
-                        case .missingOutput:
-                            outputCollectionResult = .failure(.description("Missing Output"))
-                        case .invalidAmount:
-                            outputCollectionResult = .failure(.description("Invalid Amount"))
-                        }
-                    } catch {
-                        item = nil
-                        outputCollectionResult = .failure(.description(error.localizedDescription))
+                if let inscriptionContext {
+                    item = inscriptionContext.item
+                    if let collection = UTXOService.OutputCollection(output: inscriptionContext.output) {
+                        outputCollectionResult = .success(collection)
+                    } else {
+                        outputCollectionResult = .failure(.description("Invalid Amount"))
                     }
                 } else {
                     item = nil

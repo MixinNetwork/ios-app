@@ -7,7 +7,7 @@ protocol InscriptionActionCellDelegate: AnyObject {
 
 final class InscriptionActionCell: UITableViewCell {
     
-    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var sendButton: BusyButton!
     @IBOutlet weak var shareButton: UIButton!
     
     weak var delegate: InscriptionActionCellDelegate?

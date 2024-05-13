@@ -3,7 +3,7 @@ import Foundation
 class InscriptionMessageViewModel: DetailInfoMessageViewModel {
     
     override class var bubbleImageSet: BubbleImageSet.Type {
-        AppCardBubbleImageSet.self
+        NoTailLightBubbleImageSet.self
     }
     
     private(set) var leadingConstant: CGFloat = 0

@@ -1,14 +1,17 @@
 import UIKit
 import MixinServices
 
-class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
+final class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
     
-    private var asset: TokenItem!
+    var onSelect: ((UserItem) -> Void)?
     
-    class func instance(asset: TokenItem) -> UIViewController {
-        let vc = TransferReceiverViewController()
-        vc.asset = asset
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.send_to_title())
+    init() {
+        let nib = R.nib.peerView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func catalog(users: [UserItem]) -> (titles: [String], models: [UserItem]) {
@@ -28,17 +31,8 @@ class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let navigationController = navigationController else {
-            return
-        }
         let user = self.user(at: indexPath)
-        let transfer = TransferOutViewController.instance(token: asset, to: .contact(user))
-        var viewControllers = navigationController.viewControllers
-        if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
-            viewControllers.remove(at: index)
-        }
-        viewControllers.append(transfer)
-        navigationController.setViewControllers(viewControllers, animated: true)
+        onSelect?(user)
     }
     
 }

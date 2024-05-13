@@ -14,25 +14,17 @@ final class InscriptionViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
-    private let inscriptionHash: String
-    private let isMine: Bool // FIXME: Better determination
+    private var inscriptionOutput: InscriptionOutput
+    private var rows: [Row] = [.content]
     
     private lazy var traceID = UUID().uuidString.lowercased()
     
-    private var inscription: InscriptionItem?
-    private var rows: [Row] = [.content]
-    
-    init(inscriptionHash: String, isMine: Bool) {
-        self.inscriptionHash = inscriptionHash
-        self.inscription = nil
-        self.isMine = isMine
-        super.init(nibName: nil, bundle: nil)
+    private var inscription: InscriptionItem? {
+        inscriptionOutput.inscription
     }
     
-    init(inscription: InscriptionItem, isMine: Bool) {
-        self.inscriptionHash = inscription.inscriptionHash
-        self.inscription = inscription
-        self.isMine = isMine
+    init(output: InscriptionOutput) {
+        self.inscriptionOutput = output
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,7 +41,7 @@ final class InscriptionViewController: UIViewController {
         tableView.dataSource = self
         reloadData()
         if inscription == nil {
-            let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
+            let job = RefreshInscriptionJob(inscriptionHash: inscriptionOutput.inscriptionHash)
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(reloadFromNotification(_:)),
                                                    name: RefreshInscriptionJob.didFinishedNotification,
@@ -66,20 +58,15 @@ final class InscriptionViewController: UIViewController {
         guard let inscription = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.item] as? InscriptionItem else {
             return
         }
-        self.inscription = inscription
+        inscriptionOutput = inscriptionOutput.replacing(inscription: inscription)
         reloadData()
     }
     
     private func reloadData() {
         if inscription == nil {
-            rows = [.content]
+            rows = [.content, .action, .hash]
         } else {
-            if isMine {
-                // TODO: Add `.action` for inscriptions occupied by myself
-                rows = [.content, .hash, .id, .collection]
-            } else {
-                rows = [.content, .hash, .id, .collection]
-            }
+            rows = [.content, .action, .hash, .id, .collection]
         }
         tableView.reloadData()
         if let url = inscription?.inscriptionImageContentURL {
@@ -115,10 +102,8 @@ extension InscriptionViewController: UITableViewDataSource {
             return cell
         case .hash:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_hash, for: indexPath)!
-            if let inscription {
-                cell.hashPatternView.content = inscription.inscriptionHash
-                cell.hashLabel.text = inscription.inscriptionHash
-            }
+            cell.hashPatternView.content = inscriptionOutput.inscriptionHash
+            cell.hashLabel.text = inscriptionOutput.inscriptionHash
             return cell
         case .id:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
@@ -146,15 +131,44 @@ extension InscriptionViewController: UITableViewDataSource {
 extension InscriptionViewController: InscriptionActionCellDelegate {
     
     func inscriptionActionCellRequestToSend(_ cell: InscriptionActionCell) {
-        guard let hash = inscription?.inscriptionHash, let token = TokenDAO.shared.inscriptionToken(inscriptionHash: hash) else {
+        guard
+            let navigationController,
+            let item = inscription,
+            let payment = Payment(traceID: traceID, output: inscriptionOutput.output, item: item)
+        else {
             return
         }
-        let fiatMoneyAmount = token.decimalBalance * token.decimalUSDPrice * Currency.current.decimalRate
-        let payment = Payment(traceID: traceID,
-                              token: token,
-                              tokenAmount: token.decimalBalance,
-                              fiatMoneyAmount: fiatMoneyAmount,
-                              memo: "")
+        let selector = TransferReceiverViewController()
+        let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.send_to_title())
+        selector.onSelect = { (user) in
+            cell.sendButton.isBusy = true
+            payment.checkPreconditions(transferTo: .user(user),
+                                       reference: nil,
+                                       on: navigationController)
+            { reason in
+                cell.sendButton.isBusy = false
+                switch reason {
+                case .userCancelled:
+                    break
+                case .description(let message):
+                    showAutoHiddenHud(style: .error, text: message)
+                }
+            } onSuccess: { operation, issues in
+                cell.sendButton.isBusy = false
+                let preview = TransferPreviewViewController(issues: issues,
+                                                            operation: operation,
+                                                            amountDisplay: .byToken,
+                                                            tokenAmount: payment.tokenAmount,
+                                                            fiatMoneyAmount: payment.fiatMoneyAmount,
+                                                            redirection: nil)
+                navigationController.present(preview, animated: true) {
+                    if navigationController.viewControllers.last == container {
+                        navigationController.popViewController(animated: false)
+                    }
+                }
+            }
+        }
+        navigationController.pushViewController(container, animated: true)
     }
     
     func inscriptionActionCellRequestToShare(_ cell: InscriptionActionCell) {

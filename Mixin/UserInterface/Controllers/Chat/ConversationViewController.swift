@@ -857,6 +857,7 @@ class ConversationViewController: UIViewController {
                     }
                     let token: TokenItem?
                     if let inscriptionHash = snapshot.inscriptionHash {
+                        // `TokenDAO.tokenItem(assetID:)` only returns token without `collection_hash`
                         token = TokenDAO.shared.inscriptionToken(inscriptionHash: inscriptionHash)
                     } else {
                         token = TokenDAO.shared.tokenItem(assetID: assetId)
@@ -1924,7 +1925,7 @@ extension ConversationViewController {
             if message.mediaStatus == MediaStatus.DONE.rawValue {
                 actions.insert(.forward, at: 0)
             }
-        } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT"].contains(category) {
+        } else if ["SYSTEM_ACCOUNT_SNAPSHOT", "SYSTEM_SAFE_SNAPSHOT", "SYSTEM_SAFE_INSCRIPTION"].contains(category) {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
             actions = [.forward, .reply, .delete]

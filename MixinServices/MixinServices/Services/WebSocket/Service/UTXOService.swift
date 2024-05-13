@@ -227,6 +227,15 @@ extension UTXOService {
             self.amount = amount
         }
         
+        public init?(output: Output) {
+            guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+                return nil
+            }
+            self.outputs = [output]
+            self.lastOutput = output
+            self.amount = amount
+        }
+        
         public func encodeAsInputData() throws -> Data {
             let inputs = outputs.map { (utxo) in
                 Input(index: utxo.outputIndex, hash: utxo.transactionHash, amount: utxo.amount)
@@ -245,12 +254,6 @@ extension UTXOService {
         case success(OutputCollection)
         case insufficientBalance
         case maxSpendingCountExceeded
-    }
-    
-    public enum InscriptionCollectingResult {
-        case success(OutputCollection)
-        case missingOutput
-        case invalidAmount
     }
     
     public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
@@ -300,17 +303,6 @@ extension UTXOService {
         }
         
         return OutputCollection(outputs: outputs, amount: amount)
-    }
-    
-    public func inscriptionOutput(hash: String) -> InscriptionCollectingResult {
-        guard let output = OutputDAO.shared.getOutput(inscriptionHash: hash) else {
-            return .missingOutput
-        }
-        guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
-            return .invalidAmount
-        }
-        let collection = OutputCollection(outputs: [output], amount: amount)
-        return .success(collection)
     }
     
 }

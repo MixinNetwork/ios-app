@@ -12,7 +12,7 @@ final class SearchCollectibleViewController: UIViewController {
     private let initDataOperation = BlockOperation()
     
     private var lastLayoutWidth: CGFloat?
-    private var searchResults: [InscriptionItem] = []
+    private var searchResults: [InscriptionOutput] = []
     private var lastKeyword: String?
     
     init() {
@@ -54,9 +54,15 @@ final class SearchCollectibleViewController: UIViewController {
         }
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // Cancel on navigation pops
+        (parent as? CollectiblesViewController)?.cancelSearching(animated: false)
+    }
+    
     @IBAction func cancelSearching(_ sender: Any) {
         searchBoxView.textField.resignFirstResponder()
-        (parent as? CollectiblesViewController)?.cancelSearching()
+        (parent as? CollectiblesViewController)?.cancelSearching(animated: true)
     }
     
     @objc private func searchKeyword(_ sender: Any) {
@@ -98,7 +104,7 @@ final class SearchCollectibleViewController: UIViewController {
         }
     }
     
-    private func reloadData(with searchResults: [InscriptionItem]) {
+    private func reloadData(with searchResults: [InscriptionOutput]) {
         self.searchResults = searchResults
         collectionView.reloadData()
         collectionView.checkEmpty(dataCount: searchResults.count,
@@ -117,16 +123,7 @@ extension SearchCollectibleViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.collectible, for: indexPath)!
         let item = searchResults[indexPath.item]
-        if let url = item.inscriptionImageContentURL {
-            cell.contentImageView.image = nil
-            cell.contentImageView.contentMode = .scaleAspectFill
-            cell.contentImageView.sd_setImage(with: url)
-        } else {
-            cell.contentImageView.image = R.image.inscription_intaglio()
-            cell.contentImageView.contentMode = .center
-        }
-        cell.titleLabel.text = item.collectionName
-        cell.subtitleLabel.text = item.sequenceRepresentation
+        cell.render(item: item)
         return cell
     }
     
@@ -137,7 +134,7 @@ extension SearchCollectibleViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let item = searchResults[indexPath.item]
-        let preview = InscriptionViewController(inscription: item, isMine: true)
+        let preview = InscriptionViewController(output: item)
         navigationController?.pushViewController(preview, animated: true)
     }
     

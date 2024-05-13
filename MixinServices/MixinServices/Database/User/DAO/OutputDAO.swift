@@ -5,6 +5,9 @@ public final class OutputDAO: UserDatabaseDAO {
     
     public static let shared = OutputDAO()
     
+    public static let didSignOutputNotification = Notification.Name("one.mixin.service.OutputDAO.DidSign")
+    public static let outputIDsUserInfoKey = "o"
+    
     public func getOutput(inscriptionHash: String) -> Output? {
         db.select(with: "SELECT * FROM outputs WHERE inscription_hash = ? LIMIT 1", arguments: [inscriptionHash])
     }
@@ -70,6 +73,13 @@ public final class OutputDAO: UserDatabaseDAO {
             let sql = "UPDATE outputs SET state = 'signed' WHERE output_id IN ('\(ids)')"
             try db.execute(sql: sql)
             try change(db)
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Self.didSignOutputNotification,
+                                                    object: self,
+                                                    userInfo: [Self.outputIDsUserInfoKey: ids])
+                }
+            }
         }
     }
     

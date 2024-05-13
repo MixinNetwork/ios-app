@@ -219,15 +219,28 @@ extension TokenViewController: SnapshotCellDelegate {
 extension TokenViewController {
     
     private func send() {
+        guard let navigationController else {
+            return
+        }
         let token = self.token
         let selector = SendingDestinationSelectorViewController(destinations: [.address, .contact]) { destination in
             switch destination {
             case .address:
                 let address = AddressViewController.instance(token: token)
-                self.navigationController?.pushViewController(address, animated: true)
+                navigationController.pushViewController(address, animated: true)
             case .contact:
-                let receiver = TransferReceiverViewController.instance(asset: token)
-                self.navigationController?.pushViewController(receiver, animated: true)
+                let selector = TransferReceiverViewController()
+                let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.send_to_title())
+                selector.onSelect = { (user) in
+                    let transfer = TransferOutViewController.instance(token: token, to: .contact(user))
+                    var viewControllers = navigationController.viewControllers
+                    if let index = viewControllers.lastIndex(where: { $0 == container }) {
+                        viewControllers.remove(at: index)
+                    }
+                    viewControllers.append(transfer)
+                    navigationController.setViewControllers(viewControllers, animated: true)
+                }
+                navigationController.pushViewController(container, animated: true)
             }
         }
         present(selector, animated: true, completion: nil)

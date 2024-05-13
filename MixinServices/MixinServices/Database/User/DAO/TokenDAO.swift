@@ -63,7 +63,7 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public func inscriptionToken(inscriptionHash: String) -> TokenItem? {
         try! db.read { (db) -> TokenItem? in
-            let outputSQL = "SELECT * FROM outputs WHERE inscription_hash = ? AND state = 'unspent' LIMIT 1"
+            let outputSQL = "SELECT * FROM outputs WHERE inscription_hash = ? LIMIT 1"
             let output = try Output.fetchOne(db, sql: outputSQL, arguments: [inscriptionHash])
             guard let output else {
                 return nil

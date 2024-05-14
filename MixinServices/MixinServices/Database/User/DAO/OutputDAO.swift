@@ -6,6 +6,7 @@ public final class OutputDAO: UserDatabaseDAO {
     public static let shared = OutputDAO()
     
     public static let didSignOutputNotification = Notification.Name("one.mixin.service.OutputDAO.DidSign")
+    public static let didInsertInscriptionOutputsNotification = Notification.Name("one.mixin.service.OutputDAO.DidInsertInscriptions")
     public static let outputIDsUserInfoKey = "o"
     
     public func getOutput(inscriptionHash: String) -> Output? {
@@ -64,6 +65,13 @@ public final class OutputDAO: UserDatabaseDAO {
         db.write { db in
             try outputs.insert(db, onConflict: .ignore)
             try work?(db)
+            if outputs.contains(where: { $0.inscriptionHash != nil }) {
+                db.afterNextTransaction { _ in
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Self.didInsertInscriptionOutputsNotification, object: self)
+                    }
+                }
+            }
         }
     }
     
@@ -73,6 +81,7 @@ public final class OutputDAO: UserDatabaseDAO {
             let sql = "UPDATE outputs SET state = 'signed' WHERE output_id IN ('\(ids)')"
             try db.execute(sql: sql)
             try change(db)
+            // TODO: Too many notifications, just to update collectibles
             db.afterNextTransaction { _ in
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: Self.didSignOutputNotification,

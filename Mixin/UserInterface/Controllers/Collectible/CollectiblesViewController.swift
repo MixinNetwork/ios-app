@@ -31,6 +31,10 @@ final class CollectiblesViewController: UIViewController {
                                                selector: #selector(reloadData),
                                                name: OutputDAO.didSignOutputNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadData),
+                                               name: OutputDAO.didInsertInscriptionOutputsNotification,
+                                               object: nil)
         reloadData()
     }
     

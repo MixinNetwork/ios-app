@@ -136,6 +136,7 @@
                 <outlet property="amountTextView" destination="a0F-Jd-v8J" id="QvB-M7-Urx"/>
                 <outlet property="assetIconView" destination="AVb-73-vxa" id="6rv-Y4-IGj"/>
                 <outlet property="assetIconViewWidthConstraint" destination="FNg-tE-ncG" id="qbX-kz-IzD"/>
+                <outlet property="disclosureImageView" destination="OxT-dB-pAZ" id="aAE-Ok-I0C"/>
                 <outlet property="fiatMoneyValueLabel" destination="uEW-7j-4tK" id="sOv-dn-PQp"/>
                 <outlet property="filterButton" destination="CQy-iv-8gQ" id="AEi-pt-QXH"/>
                 <outlet property="infoStackView" destination="e0h-uc-lcp" id="mZd-lp-Jpc"/>

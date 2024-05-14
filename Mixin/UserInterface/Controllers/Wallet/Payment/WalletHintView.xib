@@ -17,7 +17,6 @@
                 <outlet property="descriptionLabel" destination="kFK-GC-UxK" id="jKK-sU-pfg"/>
                 <outlet property="realizeButton" destination="TfT-lo-8tq" id="XqE-PY-yFh"/>
                 <outlet property="titleLabel" destination="uWA-RV-lox" id="FwI-1h-MTr"/>
-                <outlet property="tokenIconView" destination="HbI-cG-P07" id="cYP-ry-Nah"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -27,7 +26,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="spt-1n-snC">
-                    <rect key="frame" x="30" y="70" width="333" height="341.33333333333331"/>
+                    <rect key="frame" x="30" y="70.000000000000014" width="333" height="239.33333333333337"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Withdrawal Suspended" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uWA-RV-lox">
                             <rect key="frame" x="69.333333333333329" y="0.0" width="194.33333333333337" height="21.666666666666668"/>
@@ -38,30 +37,14 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HbI-cG-P07" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="131.66666666666666" y="53.666666666666671" width="70" height="70"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="HbI-cG-P07" secondAttribute="height" id="gKn-Xo-vLh"/>
-                                <constraint firstAttribute="width" constant="70" id="xsn-cA-kDt"/>
-                            </constraints>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
-                                    <real key="value" value="18"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="badgeOutlineWidth">
-                                    <real key="value" value="2"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="提现已暂停，可能的原因是因为节点故障、区块链网络硬分叉或者拥堵，请耐心等候并稍后重试" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kFK-GC-UxK">
-                            <rect key="frame" x="2.3333333333333428" y="155.66666666666666" width="328.66666666666663" height="33.666666666666657"/>
+                            <rect key="frame" x="2.3333333333333428" y="53.666666666666671" width="328.66666666666663" height="33.666666666666671"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TfT-lo-8tq" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="114.66666666666666" y="221.33333333333331" width="104" height="44"/>
+                            <rect key="frame" x="114.66666666666666" y="119.33333333333334" width="104" height="44"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="32" minY="12" maxX="32" maxY="12"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -76,7 +59,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o0I-GC-OWw">
-                            <rect key="frame" x="104" y="297.33333333333331" width="125" height="44"/>
+                            <rect key="frame" x="104" y="195.33333333333331" width="125" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="YBw-av-jjP"/>
                             </constraints>

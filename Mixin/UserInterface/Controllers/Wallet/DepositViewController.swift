@@ -282,9 +282,7 @@ extension DepositViewController {
                         guard isAddressChanged, let container = UIApplication.homeContainerViewController else {
                             return
                         }
-                        let hint = WalletHintViewController(token: token)
-                        hint.setTitle(R.string.localizable.depost_address_updated(token.symbol),
-                                      description: R.string.localizable.depost_address_updated_description(token.symbol))
+                        let hint = WalletHintViewController(content: .addressUpdated(token))
                         hint.delegate = self
                         container.present(hint, animated: true)
                     }

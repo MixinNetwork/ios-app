@@ -5,9 +5,9 @@ public struct InscriptionOutput {
     public let output: Output
     public let inscription: InscriptionItem?
     
-    public var inscriptionHash: String! {
+    public var inscriptionHash: String {
         // Nullability is ensured by SQL
-        output.inscriptionHash
+        output.inscriptionHash!
     }
     
     public func replacing(inscription: InscriptionItem) -> InscriptionOutput {

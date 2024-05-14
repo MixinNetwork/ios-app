@@ -178,10 +178,7 @@ struct NoPendingTransactionPrecondition: PaymentPrecondition {
                     delegation.completion = {
                         continuation.resume(with: .success(.failed(.userCancelled)))
                     }
-                    let hint = WalletHintViewController(token: token)
-                    hint.setTitle(R.string.localizable.waiting_transaction(),
-                                  description: R.string.localizable.waiting_transaction_description())
-                    hint.contactSupportButton.alpha = 0
+                    let hint = WalletHintViewController(content: .waitingTransaction)
                     hint.delegate = delegation
                     UIApplication.homeContainerViewController?.present(hint, animated: true)
                     ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())

@@ -696,7 +696,7 @@
 		94062C592AE8C61700ADAE87 /* SnapshotTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */; };
 		94062C5D2AE8CA7600ADAE87 /* SnapshotColumnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */; };
 		94062C622AE8CA9100ADAE87 /* SnapshotColumnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */; };
-		94062C642AE8CB1200ADAE87 /* SnapshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */; };
+		94062C642AE8CB1200ADAE87 /* SafeSnapshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */; };
 		9406978725E7F30800E7FDA0 /* PlaylistSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */; };
 		940764C129B1E31F00B779A6 /* Web3TransactionPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C029B1E31F00B779A6 /* Web3TransactionPreview.swift */; };
 		940764C329B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */; };
@@ -1967,7 +1967,7 @@
 		94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotTableHeaderView.xib; sourceTree = "<group>"; };
 		94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotColumnCell.xib; sourceTree = "<group>"; };
 		94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotColumnCell.swift; sourceTree = "<group>"; };
-		94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotViewController.swift; sourceTree = "<group>"; };
+		94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeSnapshotViewController.swift; sourceTree = "<group>"; };
 		9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistSlider.swift; sourceTree = "<group>"; };
 		940764C029B1E31F00B779A6 /* Web3TransactionPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionPreview.swift; sourceTree = "<group>"; };
 		940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectDecodedSigningRequest.swift; sourceTree = "<group>"; };
@@ -4255,7 +4255,7 @@
 				DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */,
 				94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
-				94062C632AE8CB1200ADAE87 /* SnapshotViewController.swift */,
+				94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */,
 				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
 				94317D052AFBE57200FDC9C9 /* MemoCell.swift */,
 				94317D062AFBE57200FDC9C9 /* MemoCell.xib */,
@@ -5694,7 +5694,7 @@
 				7B37B16123ED480000590215 /* GalleryTransitionFromQuotingMessageCellView.swift in Sources */,
 				7B369210233B4FC6007321A7 /* SharedMediaMediaViewController.swift in Sources */,
 				7B836C7E1FD17D6100529754 /* DetailInfoMessageViewModel.swift in Sources */,
-				94062C642AE8CB1200ADAE87 /* SnapshotViewController.swift in Sources */,
+				94062C642AE8CB1200ADAE87 /* SafeSnapshotViewController.swift in Sources */,
 				7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */,
 				7B015F51241FA4EC0004A563 /* SearchResultAnnotationView.swift in Sources */,
 				E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */,

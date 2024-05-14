@@ -468,9 +468,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
             } catch MixinAPIResponseError.withdrawSuspended {
                 await MainActor.run {
-                    let suspended = WalletHintViewController(token: token)
-                    suspended.setTitle(R.string.localizable.withdrawal_suspended(token.symbol),
-                                       description: R.string.localizable.withdrawal_suspended_description(token.symbol))
+                    let suspended = WalletHintViewController(content: .withdrawSuspended(token))
                     suspended.delegate = self
                     present(suspended, animated: true)
                 }

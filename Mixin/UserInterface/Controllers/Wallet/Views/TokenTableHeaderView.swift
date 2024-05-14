@@ -7,6 +7,7 @@ final class TokenTableHeaderView: InfiniteTopView {
     @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var amountTextView: UITextView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
+    @IBOutlet weak var disclosureImageView: UIImageView!
     @IBOutlet weak var tokenInfoButton: UIButton!
     @IBOutlet weak var transferActionView: TransferActionView!
     @IBOutlet weak var transactionsHeaderView: UIView!
@@ -61,6 +62,14 @@ final class TokenTableHeaderView: InfiniteTopView {
             let linebreak = NSAttributedString(string: "\n")
             attributedAmount.insert(linebreak, at: attributedAmount.length - minGlyphCountOfLastLine)
             amountTextView.attributedText = attributedAmount
+        }
+        
+        if token.collectionHash == nil {
+            disclosureImageView.isHidden = false
+            tokenInfoButton.isEnabled = true
+        } else {
+            disclosureImageView.isHidden = true
+            tokenInfoButton.isEnabled = false
         }
         self.token = token
     }

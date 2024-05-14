@@ -3,9 +3,10 @@ import MixinServices
 
 final class BadgeIconView: UIView {
     
-    private enum Corner {
+    private enum Corner: Equatable {
         case round
         case radius(CGFloat)
+        case hexagon
     }
     
     @IBInspectable var badgeIconDiameter: CGFloat = 10
@@ -17,7 +18,9 @@ final class BadgeIconView: UIView {
     
     private var corner: Corner = .round {
         didSet {
-            setNeedsLayout()
+            if corner != oldValue {
+                setNeedsLayout()
+            }
         }
     }
     
@@ -44,18 +47,34 @@ final class BadgeIconView: UIView {
         switch corner {
         case .round:
             iconImageView.layer.cornerRadius = iconImageView.bounds.width / 2
+            iconImageView.mask = nil
         case .radius(let radius):
             iconImageView.layer.cornerRadius = radius
+            iconImageView.mask = nil
+        case .hexagon:
+            iconImageView.layer.cornerRadius = 0
+            let iconMask: UIView
+            if let mask = iconImageView.mask {
+                iconMask = mask
+            } else {
+                let mask = UIImageView(image: R.image.collection_token_mask())
+                mask.contentMode = .scaleAspectFit
+                iconImageView.mask = mask
+                iconMask = mask
+            }
+            iconMask.frame = iconImageView.bounds
         }
-        let chainBackgroundDiameter = badgeIconDiameter + badgeOutlineWidth
-        badgeBackgroundView.frame = CGRect(x: 0,
-                                           y: bounds.height - chainBackgroundDiameter,
-                                           width: chainBackgroundDiameter,
-                                           height: chainBackgroundDiameter)
-        badgeBackgroundView.layer.cornerRadius = chainBackgroundDiameter / 2
-        badgeImageView.bounds = CGRect(x: 0, y: 0, width: badgeIconDiameter, height: badgeIconDiameter)
-        badgeImageView.center = badgeBackgroundView.center
-        badgeImageView.layer.cornerRadius = badgeImageView.bounds.width / 2
+        if !isBadgeHidden {
+            let chainBackgroundDiameter = badgeIconDiameter + badgeOutlineWidth
+            badgeBackgroundView.frame = CGRect(x: 0,
+                                               y: bounds.height - chainBackgroundDiameter,
+                                               width: chainBackgroundDiameter,
+                                               height: chainBackgroundDiameter)
+            badgeBackgroundView.layer.cornerRadius = chainBackgroundDiameter / 2
+            badgeImageView.bounds = CGRect(x: 0, y: 0, width: badgeIconDiameter, height: badgeIconDiameter)
+            badgeImageView.center = badgeBackgroundView.center
+            badgeImageView.layer.cornerRadius = badgeImageView.bounds.width / 2
+        }
     }
     
     func prepareForReuse() {
@@ -83,17 +102,18 @@ final class BadgeIconView: UIView {
                 badgeImageView.image = nil
             }
         }
+        corner = .round
     }
     
     func setIcon(content: InscriptionContent) {
         isBadgeHidden = true
-        corner = .radius(12)
         iconImageView.backgroundColor = .secondaryBackground
         if let url = content.inscriptionImageContentURL {
             iconImageView.sd_setImage(with: url)
         } else {
             iconImageView.image = R.image.inscription_intaglio()
         }
+        corner = .radius(12)
     }
     
     func setIcon(asset: AssetItem) {
@@ -105,17 +125,20 @@ final class BadgeIconView: UIView {
         } else {
             isBadgeHidden = true
         }
+        corner = .round
     }
     
     func setIcon(token: TokenItem) {
         iconImageView.sd_setImage(with: URL(string: token.iconURL),
                                   placeholderImage: nil,
                                   context: assetIconContext)
-        if let str = token.chain?.iconUrl, let url = URL(string: str) {
+        if token.collectionHash == nil, let str = token.chain?.iconUrl, let url = URL(string: str) {
             badgeImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
             isBadgeHidden = false
+            corner = .round
         } else {
             isBadgeHidden = true
+            corner = .hexagon
         }
     }
     
@@ -133,6 +156,7 @@ final class BadgeIconView: UIView {
         } else {
             isBadgeHidden = true
         }
+        corner = .round
     }
     
     private func prepare() {

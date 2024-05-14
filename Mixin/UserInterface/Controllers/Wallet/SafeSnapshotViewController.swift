@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class SnapshotViewController: RowListViewController {
+final class SafeSnapshotViewController: RowListViewController {
     
     @IBOutlet weak var headerContentStackView: UIStackView!
     @IBOutlet weak var iconView: BadgeIconView!
@@ -36,7 +36,7 @@ final class SnapshotViewController: RowListViewController {
         messageID: String?,
         inscription: InscriptionItem?
     ) -> UIViewController {
-        let snapshot = SnapshotViewController(token: token, snapshot: snapshot, messageID: messageID, inscription: inscription)
+        let snapshot = SafeSnapshotViewController(token: token, snapshot: snapshot, messageID: messageID, inscription: inscription)
         let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
         return container
     }
@@ -183,7 +183,7 @@ final class SnapshotViewController: RowListViewController {
     
 }
 
-extension SnapshotViewController {
+extension SafeSnapshotViewController {
     
     enum SnapshotKey: RowKey {
         
@@ -252,7 +252,7 @@ extension SnapshotViewController {
     
 }
 
-extension SnapshotViewController {
+extension SafeSnapshotViewController {
     
     private func reloadSnapshotIfNeeded() {
         let type = SafeSnapshot.SnapshotType(rawValue: snapshot.type)

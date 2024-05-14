@@ -21,13 +21,16 @@ struct Payment {
     }
     
     init?(traceID: String, output: Output, item: InscriptionItem) {
-        guard let hash = output.inscriptionHash, let token = TokenDAO.shared.inscriptionToken(inscriptionHash: hash) else {
+        guard
+            let token = TokenDAO.shared.tokenItem(kernelAssetID: output.asset),
+            let amount = Decimal(string: output.amount, locale: .enUSPOSIX)
+        else {
             return nil
         }
-        let fiatMoneyAmount = token.decimalBalance * token.decimalUSDPrice * Currency.current.decimalRate
+        let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
         self.traceID = traceID
         self.token = token
-        self.tokenAmount = token.decimalBalance
+        self.tokenAmount = amount
         self.fiatMoneyAmount = fiatMoneyAmount
         self.memo = ""
         self.inscriptionContext = InscriptionContext(output: output, item: item)
@@ -73,20 +76,29 @@ extension Payment {
             let preconditions: [PaymentPrecondition]
             switch destination {
             case let .user(opponent):
-                preconditions = [
-                    NoPendingTransactionPrecondition(token: token),
-                    AlreadyPaidPrecondition(traceID: traceID),
-                    DuplicationPrecondition(operation: .transfer(opponent),
-                                            token: token,
-                                            tokenAmount: tokenAmount,
-                                            fiatMoneyAmount: fiatMoneyAmount,
-                                            memo: memo),
-                    LargeAmountPrecondition(token: token,
-                                            tokenAmount: tokenAmount,
-                                            fiatMoneyAmount: fiatMoneyAmount),
-                    OpponentIsContactPrecondition(opponent: opponent),
-                    ReferenceValidityPrecondition(reference: reference),
-                ]
+                if inscriptionContext == nil {
+                    preconditions = [
+                        NoPendingTransactionPrecondition(token: token),
+                        AlreadyPaidPrecondition(traceID: traceID),
+                        DuplicationPrecondition(operation: .transfer(opponent),
+                                                token: token,
+                                                tokenAmount: tokenAmount,
+                                                fiatMoneyAmount: fiatMoneyAmount,
+                                                memo: memo),
+                        LargeAmountPrecondition(token: token,
+                                                tokenAmount: tokenAmount,
+                                                fiatMoneyAmount: fiatMoneyAmount),
+                        OpponentIsContactPrecondition(opponent: opponent),
+                        ReferenceValidityPrecondition(reference: reference),
+                    ]
+                } else {
+                    preconditions = [
+                        NoPendingTransactionPrecondition(token: token),
+                        AlreadyPaidPrecondition(traceID: traceID),
+                        OpponentIsContactPrecondition(opponent: opponent),
+                        ReferenceValidityPrecondition(reference: reference),
+                    ]
+                }
             case .multisig, .mainnet:
                 preconditions = [
                     NoPendingTransactionPrecondition(token: token),

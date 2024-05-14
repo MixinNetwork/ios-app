@@ -172,7 +172,9 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
     }
     
     func inscriptionActionCellRequestToShare(_ cell: InscriptionActionCell) {
-        
+        let link = "https://mixin.space/inscriptions/\(inscriptionOutput.inscriptionHash)"
+        let picker = MessageReceiverViewController.instance(content: .text(link))
+        navigationController?.pushViewController(picker, animated: true)
     }
     
 }

@@ -9,7 +9,7 @@ public final class TokenDAO: UserDatabaseDAO {
     
     private enum SQL {
         
-        static let tokenSelector = """
+        static let selector = """
             SELECT t.asset_id, t.kernel_asset_id, t.symbol, t.name, t.icon_url, t.price_btc, t.price_usd,
                 t.chain_id, t.change_usd, t.change_btc, t.dust, t.confirmations, t.asset_key,
                 t.collection_hash, c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
@@ -22,7 +22,7 @@ public final class TokenDAO: UserDatabaseDAO {
         
         static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, t.rowid DESC"
         
-        static let selectWithAssetID = "\(SQL.tokenSelector) WHERE t.asset_id = ?"
+        static let selectWithAssetID = "\(SQL.selector) WHERE t.asset_id = ?"
         
     }
     
@@ -55,19 +55,19 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func tokenItem(kernelAssetID: String) -> TokenItem? {
-        let sql = "\(SQL.tokenSelector) WHERE t.kernel_asset_id = ?"
+        let sql = "\(SQL.selector) WHERE t.kernel_asset_id = ?"
         return db.select(with: sql, arguments: [kernelAssetID])
     }
     
     public func tokenItems(with ids: [String]) -> [TokenItem] {
         let ids = ids.joined(separator: "','")
-        return db.select(with: "\(SQL.tokenSelector) WHERE t.asset_id IN ('\(ids)')")
+        return db.select(with: "\(SQL.selector) WHERE t.asset_id IN ('\(ids)')")
     }
     
     public func tokens(limit: Int, after assetId: String?) -> [Token] {
-        var sql = "SELECT * FROM tokens WHERE collection_hash IS NULL"
+        var sql = "SELECT * FROM tokens"
         if let assetId {
-            sql += " AND ROWID > IFNULL((SELECT ROWID FROM tokens WHERE asset_id = '\(assetId)'), 0)"
+            sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM tokens WHERE asset_id = '\(assetId)'), 0)"
         }
         sql += " ORDER BY ROWID LIMIT ?"
         return db.select(with: sql, arguments: [limit])
@@ -80,7 +80,7 @@ public final class TokenDAO: UserDatabaseDAO {
     
     public func search(keyword: String, sortResult: Bool, limit: Int?) -> [TokenItem] {
         var sql = """
-        \(SQL.tokenSelector)
+        \(SQL.selector)
         WHERE (t.name LIKE :keyword OR t.symbol LIKE :keyword)
         """
         if sortResult {
@@ -93,32 +93,32 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func allAssetIDs() -> [String] {
-        db.select(with: "SELECT asset_id FROM tokens WHERE collection_hash IS NULL")
+        db.select(with: "SELECT asset_id FROM tokens")
     }
     
     public func allTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.tokenSelector) ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) ORDER BY \(SQL.order)")
     }
     
     public func hiddenTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.tokenSelector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
     public func notHiddenTokens() -> [TokenItem] {
-        db.select(with: "\(SQL.tokenSelector) WHERE ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
     }
     
     public func defaultTransferToken() -> TokenItem? {
         if let id = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !id.isEmpty, let token = tokenItem(assetID: id), token.decimalBalance > 0 {
             return token
         } else {
-            let sql = "\(SQL.tokenSelector) WHERE te.balance > 0 ORDER BY \(SQL.order) LIMIT 1"
+            let sql = "\(SQL.selector) WHERE te.balance > 0 ORDER BY \(SQL.order) LIMIT 1"
             return UserDatabase.current.select(with: sql)
         }
     }
     
     public func positiveBalancedTokens(chainIDs: [String] = []) -> [TokenItem] {
-        var sql = "\(SQL.tokenSelector) WHERE te.balance > 0"
+        var sql = "\(SQL.selector) WHERE te.balance > 0"
         if !chainIDs.isEmpty {
             sql += " AND t.chain_id IN ('\(chainIDs.joined(separator: "','"))')"
         }
@@ -131,10 +131,9 @@ public final class TokenDAO: UserDatabaseDAO {
             SELECT t.asset_id, ifnull(te.balance,'0') AS balance, t.chain_id, t.symbol, t.name, t.icon_url
             FROM tokens t
                 LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
-            WHERE t.collection_hash IS NULL
         """
         if !ids.isEmpty {
-            query.append(literal: " AND t.asset_id IN \(ids)")
+            query.append(literal: "\nWHERE t.asset_id IN \(ids)")
         }
         return try! db.read { (db: GRDB.Database) -> [AppToken] in
             let (sql, arguments) = try query.build(db)

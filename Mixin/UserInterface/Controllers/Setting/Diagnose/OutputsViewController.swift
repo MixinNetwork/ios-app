@@ -9,6 +9,7 @@ final class OutputsViewController: UITableViewController {
     private var outputs: [Output] = []
     private var isLoading = false
     private var didLoadEarliestOutput = false
+    private var hud: Hud?
     
     init(token: TokenItem?) {
         self.token = token
@@ -69,6 +70,21 @@ final class OutputsViewController: UITableViewController {
         return UISwipeActionsConfiguration(actions: [copyAction])
     }
     
+    @objc private func tokenOutputsDidSync(_ notification: Notification) {
+        if let hud {
+            if let error = notification.userInfo?[SyncTokenOutputsJob.errorUserInfoKey] as? Error {
+                hud.set(style: .error, text: error.localizedDescription)
+            } else {
+                hud.set(style: .notification, text: R.string.localizable.done())
+            }
+            hud.scheduleAutoHidden()
+        }
+        self.outputs = []
+        self.tableView.reloadData()
+        self.didLoadEarliestOutput = false
+        self.loadMoreOutputsIfNeeded()
+    }
+    
     private func loadMoreOutputsIfNeeded() {
         guard !isLoading && !didLoadEarliestOutput else {
             return
@@ -98,28 +114,22 @@ extension OutputsViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        self.hud = hud
         DispatchQueue.global().async {
             if let token = self.token {
                 OutputDAO.shared.deleteAll(kernelAssetID: token.kernelAssetID) {
-                    UTXOService.shared.synchronize(assetID: token.assetID, kernelAssetID: token.kernelAssetID) { error in
-                        DispatchQueue.main.async {
-                            if let error {
-                                hud.set(style: .error, text: error.localizedDescription)
-                            } else {
-                                hud.set(style: .notification, text: R.string.localizable.done())
-                            }
-                            hud.scheduleAutoHidden()
-                            self.outputs = []
-                            self.tableView.reloadData()
-                            self.didLoadEarliestOutput = false
-                            self.loadMoreOutputsIfNeeded()
-                        }
-                    }
+                    let job = SyncTokenOutputsJob(assetID: token.assetID, kernelAssetID: token.kernelAssetID)
+                    NotificationCenter.default.addObserver(self,
+                                                           selector: #selector(self.tokenOutputsDidSync(_:)),
+                                                           name: SyncTokenOutputsJob.didFinishNotification,
+                                                           object: job)
+                    ConcurrentJobQueue.shared.addJob(job: job)
                 }
             } else {
                 OutputDAO.shared.deleteAll() {
                     DispatchQueue.main.async {
-                        UTXOService.shared.synchronize()
+                        let job = SyncOutputsJob()
+                        ConcurrentJobQueue.shared.addJob(job: job)
                         hud.set(style: .notification, text: R.string.localizable.done())
                         hud.scheduleAutoHidden()
                         self.navigationController?.popViewController(animated: true)

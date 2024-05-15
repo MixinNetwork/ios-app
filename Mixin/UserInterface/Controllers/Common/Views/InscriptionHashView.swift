@@ -5,6 +5,7 @@ final class InscriptionHashView: UIView {
     
     @IBInspectable var barWidth: CGFloat = 5
     @IBInspectable var barHeight: CGFloat = 16
+    @IBInspectable var barCornerRadius: CGFloat = 1
     @IBInspectable var spacing: CGFloat = 3
     
     override var intrinsicContentSize: CGSize {
@@ -54,6 +55,8 @@ final class InscriptionHashView: UIView {
         for (index, barLayer) in barLayers.enumerated() {
             let x = CGFloat(index) * (barWidth + spacing)
             barLayer.frame = CGRect(x: x, y: 0, width: barWidth, height: barHeight)
+            barLayer.cornerRadius = barCornerRadius
+            barLayer.masksToBounds = true
             layer.addSublayer(barLayer)
         }
         let contentWidth = CGFloat(barLayers.count) * barWidth + CGFloat(barLayers.count - 1) * spacing

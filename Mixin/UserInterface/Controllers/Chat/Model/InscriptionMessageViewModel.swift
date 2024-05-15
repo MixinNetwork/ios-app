@@ -18,7 +18,7 @@ class InscriptionMessageViewModel: DetailInfoMessageViewModel {
             trailingConstant = -9
         }
         super.layout(width: width, style: style)
-        let contentWidth: CGFloat = 260
+        let contentWidth: CGFloat = 271
         let contentHeight: CGFloat = 116
         let fullnameHeight: CGFloat = style.contains(.fullname) ? fullnameFrame.height : 0
         let x: CGFloat

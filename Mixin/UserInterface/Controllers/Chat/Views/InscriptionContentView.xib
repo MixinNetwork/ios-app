@@ -41,24 +41,24 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Jwh-y5-zRK">
-                            <rect key="frame" x="0.0" y="58" width="126" height="6"/>
+                            <rect key="frame" x="0.0" y="58" width="126" height="8"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" alignment="center" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="f7s-FG-7iQ">
-                            <rect key="frame" x="0.0" y="68" width="126" height="22"/>
+                            <rect key="frame" x="0.0" y="70" width="126" height="20"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="psk-HU-cAB" customClass="InscriptionHashView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="3" width="93" height="16"/>
+                                    <rect key="frame" x="0.0" y="2" width="93" height="16"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="16" id="Dc5-lt-pkH"/>
                                     </constraints>
                                 </view>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="P27-F3-ltH">
-                                    <rect key="frame" x="104" y="0.0" width="22" height="22"/>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="P27-F3-ltH">
+                                    <rect key="frame" x="104" y="0.0" width="22" height="20"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="22" id="DAz-93-Hsf"/>
-                                        <constraint firstAttribute="width" secondItem="P27-F3-ltH" secondAttribute="height" id="wLh-7y-gex"/>
+                                        <constraint firstAttribute="height" constant="20" id="f1k-Gz-gsH"/>
                                     </constraints>
                                 </imageView>
                             </subviews>

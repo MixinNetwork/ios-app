@@ -33,6 +33,7 @@ public final class MessageDAO: UserDatabaseDAO {
         u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl, u.app_id as appId,
         u1.full_name as participantFullName, u1.user_id as participantUserId,
         COALESCE(a.icon_url, t.icon_url) AS token_icon, COALESCE(a.name, t.name) AS token_name, COALESCE(a.symbol, t.symbol) AS token_symbol,
+        t.collection_hash AS token_collection_hash,
         COALESCE(s.amount, ss.amount) AS snapshot_amount, COALESCE(s.asset_id, ss.asset_id) AS snapshot_asset_id, COALESCE(s.type, ss.type) AS snapshot_type, COALESCE(s.memo, ss.memo) AS snapshot_memo,
         st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, st.asset_type as assetType, alb.category as assetCategory,
         m.action as actionName, m.shared_user_id as sharedUserId,

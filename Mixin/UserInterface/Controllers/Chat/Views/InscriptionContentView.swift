@@ -13,6 +13,12 @@ final class InscriptionContentView: UIView {
         imageView.layer.cornerRadius = 5
         imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         imageView.layer.masksToBounds = true
+        iconView.mask = UIImageView(image: R.image.collection_token_mask())
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        iconView.mask?.frame = iconView.bounds
     }
     
     func prepareForReuse() {

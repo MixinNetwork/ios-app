@@ -34,6 +34,11 @@ class SnapshotMessageCell: DetailInfoMessageCell {
             if let string = viewModel.message.tokenIcon {
                 snapshotContentView.tokenIconImageView.sd_setImage(with: URL(string: string), placeholderImage: nil, context: assetIconContext)
             }
+            if viewModel.message.tokenCollectionHash == nil {
+                snapshotContentView.tokenIconCorner = .round
+            } else {
+                snapshotContentView.tokenIconCorner = .hexagon
+            }
             if let name = viewModel.message.tokenName, let symbol = viewModel.message.tokenSymbol {
                 snapshotContentView.tokenNameLabel.text = name + " (" + symbol + ")"
             } else {

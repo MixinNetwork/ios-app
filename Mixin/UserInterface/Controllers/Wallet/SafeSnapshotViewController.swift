@@ -106,9 +106,9 @@ final class SafeSnapshotViewController: RowListViewController {
                     break
                 }
             }
-            iconView.isUserInteractionEnabled = true
-            iconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
         }
+        iconView.isUserInteractionEnabled = true
+        iconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(revealToken(_:))))
         reloadSnapshotIfNeeded()
     }
     
@@ -148,7 +148,7 @@ final class SafeSnapshotViewController: RowListViewController {
         UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     
-    @objc private func backToAsset(_ recognizer: UITapGestureRecognizer) {
+    @objc private func revealToken(_ recognizer: UITapGestureRecognizer) {
         guard let viewControllers = navigationController?.viewControllers else {
             return
         }

@@ -40,10 +40,13 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
                 inscriptionContentView.nameLabel.text = inscription.collectionName
                 inscriptionContentView.sequenceLabel.text = inscription.sequenceRepresentation
                 inscriptionContentView.hashView.content = inscription.inscriptionHash
+                inscriptionContentView.iconView.sd_setImage(with: URL(string: inscription.collectionIconURL))
+                inscriptionContentView.iconView.alpha = 1
             } else {
                 inscriptionContentView.nameLabel.text = ""
                 inscriptionContentView.sequenceLabel.text = ""
                 inscriptionContentView.hashView.content = nil
+                inscriptionContentView.iconView.alpha = 0
             }
         }
     }

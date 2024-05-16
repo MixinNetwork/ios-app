@@ -1275,7 +1275,7 @@ extension ReceiveMessageService {
             let semaphore = DispatchSemaphore(value: 0)
             Task.detached(priority: .high) {
                 do {
-                    let inscription = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
+                    let inscription = try await InscriptionItem.fetchAndSave(inscriptionHash: inscriptionHash)
                     var contentUpdatedMessage = message
                     contentUpdatedMessage.content = inscription.asMessageContent()
                     insert(message: contentUpdatedMessage)

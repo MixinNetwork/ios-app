@@ -144,7 +144,8 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                                object: nil)
             ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             fetchAvailableAssets()
-            UTXOService.shared.synchronize()
+            let job = SyncOutputsJob()
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
         
         amountTextField.adjustsFontForContentSizeCategory = true

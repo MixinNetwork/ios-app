@@ -40,6 +40,7 @@ public final class MessageItem {
     public var tokenIcon: String?
     public var tokenName: String?
     public var tokenSymbol: String?
+    public var tokenCollectionHash: String?
     public var snapshotAmount: String?
     public var snapshotAssetId: String?
     public var snapshotType: String?
@@ -254,6 +255,7 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case tokenIcon = "token_icon"
         case tokenName = "token_name"
         case tokenSymbol = "token_symbol"
+        case tokenCollectionHash = "token_collection_hash"
         case snapshotAmount = "snapshot_amount"
         case snapshotAssetId = "snapshot_asset_id"
         case snapshotType = "snapshot_type"

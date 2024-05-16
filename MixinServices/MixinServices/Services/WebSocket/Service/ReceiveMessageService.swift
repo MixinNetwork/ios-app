@@ -1273,9 +1273,9 @@ extension ReceiveMessageService {
         
         if let inscriptionHash = snapshot.inscriptionHash, !inscriptionHash.isEmpty {
             let semaphore = DispatchSemaphore(value: 0)
-            Task.detached {
+            Task.detached(priority: .high) {
                 do {
-                    let inscription = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
+                    let inscription = try await InscriptionItem.fetchAndSave(inscriptionHash: inscriptionHash)
                     var contentUpdatedMessage = message
                     contentUpdatedMessage.content = inscription.asMessageContent()
                     insert(message: contentUpdatedMessage)
@@ -1293,7 +1293,8 @@ extension ReceiveMessageService {
             insert(message: message)
         }
         
-        UTXOService.shared.synchronize()
+        let job = SyncOutputsJob()
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     private func processSystemSessionMessage(data: BlazeMessageData) {

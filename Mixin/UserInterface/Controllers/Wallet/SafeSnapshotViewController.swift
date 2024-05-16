@@ -92,6 +92,7 @@ final class SafeSnapshotViewController: RowListViewController {
                                                        object: job)
                 ConcurrentJobQueue.shared.addJob(job: job)
             }
+            iconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(revealInscription(_:))))
         } else {
             AssetAPI.ticker(asset: snapshot.assetID, offset: snapshot.createdAt) { [weak self] (result) in
                 guard let self = self else {
@@ -106,8 +107,7 @@ final class SafeSnapshotViewController: RowListViewController {
                     break
                 }
             }
-            iconView.isUserInteractionEnabled = true
-            iconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
+            iconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(revealToken(_:))))
         }
         reloadSnapshotIfNeeded()
     }
@@ -148,7 +148,7 @@ final class SafeSnapshotViewController: RowListViewController {
         UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     
-    @objc private func backToAsset(_ recognizer: UITapGestureRecognizer) {
+    @objc private func revealToken(_ recognizer: UITapGestureRecognizer) {
         guard let viewControllers = navigationController?.viewControllers else {
             return
         }
@@ -162,6 +162,19 @@ final class SafeSnapshotViewController: RowListViewController {
             let viewController = TokenViewController.instance(token: token)
             navigationController?.pushViewController(viewController, animated: true)
         }
+    }
+    
+    @objc private func revealInscription(_ recognizer: UITapGestureRecognizer) {
+        guard let inscription else {
+            return
+        }
+        let preview: InscriptionViewController
+        if let output = InscriptionDAO.shared.inscriptionOutput(inscriptionHash: inscription.inscriptionHash) {
+            preview = InscriptionViewController(output: output)
+        } else {
+            preview = InscriptionViewController(inscription: inscription)
+        }
+        navigationController?.pushViewController(preview, animated: true)
     }
     
     @objc private func reloadInscription(_ notification: Notification) {

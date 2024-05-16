@@ -24,7 +24,7 @@ public final class RefreshInscriptionJob: AsynchronousJob {
     
     public override func execute() -> Bool {
         Task.detached { [inscriptionHash, messageID, snapshotID] in
-            let item = try await InscriptionItem.retrieve(inscriptionHash: inscriptionHash)
+            let item = try await InscriptionItem.fetchAndSave(inscriptionHash: inscriptionHash)
             if let messageID, let content = item.asMessageContent() {
                 MessageDAO.shared.update(content: content, forMessageWith: messageID)
             }

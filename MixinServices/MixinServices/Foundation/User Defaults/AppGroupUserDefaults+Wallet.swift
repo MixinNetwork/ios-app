@@ -15,6 +15,11 @@ extension AppGroupUserDefaults {
             case withdrawnAddressIds = "withdrawn_asset_ids"
             
             case currencyCode = "currency_code"
+            
+            // When user receives an output with `inscription_hash` with previous versions,
+            // the hash will not be saved due to lack of related processing logic
+            // Those outputs must be synced again to see if there's a hash
+            case inscriptionOutputsReloaded = "inscription_outputs_reloaded"
         }
         
         @Default(namespace: .wallet, key: Key.lastPinVerifiedDate, defaultValue: nil)
@@ -37,6 +42,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.currencyCode, defaultValue: nil)
         public static var currencyCode: String?
+        
+        @Default(namespace: .wallet, key: Key.inscriptionOutputsReloaded, defaultValue: false)
+        public static var areInscriptionOutputsReloaded: Bool
         
         internal static func migrate() {
             lastPinVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

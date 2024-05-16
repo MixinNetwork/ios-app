@@ -126,6 +126,8 @@ class HomeViewController: UIViewController {
             if SpotlightManager.isAvailable {
                 SpotlightManager.shared.indexIfNeeded()
             }
+            let job = SyncOutputsJob()
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
         if WalletConnectService.isAvailable {
@@ -157,7 +159,6 @@ class HomeViewController: UIViewController {
             }))
             present(alert, animated: true, completion: nil)
         }
-        UTXOService.shared.synchronize()
         if let account = LoginManager.shared.account, !account.hasSafe {
             let register = RegisterToSafeViewController()
             let authentication = AuthenticationViewController(intent: register)

@@ -93,23 +93,11 @@ extension InscriptionItem: InscriptionContent {
 
 extension InscriptionItem {
     
-    public static func retrieve(inscriptionHash: String) async throws -> InscriptionItem {
-        let inscription: Inscription
-        if let i = InscriptionDAO.shared.inscription(hash: inscriptionHash) {
-            inscription = i
-        } else {
-            inscription = try await InscriptionAPI.inscription(inscriptionHash: inscriptionHash)
-            InscriptionDAO.shared.save(inscription: inscription)
-        }
-        
-        let collection: InscriptionCollection
-        if let c = InscriptionDAO.shared.collection(hash: inscription.collectionHash) {
-            collection = c
-        } else {
-            collection = try await InscriptionAPI.collection(collectionHash: inscription.collectionHash)
-            InscriptionDAO.shared.save(collection: collection)
-        }
-        
+    public static func fetchAndSave(inscriptionHash: String) async throws -> InscriptionItem {
+        let inscription = try await InscriptionAPI.inscription(inscriptionHash: inscriptionHash)
+        InscriptionDAO.shared.save(inscription: inscription)
+        let collection = try await InscriptionAPI.collection(collectionHash: inscription.collectionHash)
+        InscriptionDAO.shared.save(collection: collection)
         return InscriptionItem(collection: collection, inscription: inscription)
     }
     

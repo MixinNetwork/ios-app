@@ -43,14 +43,16 @@ class UrlWindow {
         // payment failures due to inaccurate balance. However, this synchronization lacks ordering
         // guarantees, so the issue still occurs in some circumstances.
         if let payment = SafePaymentURL(url: url) {
-            UTXOService.shared.synchronize()
+            let job = SyncOutputsJob()
+            ConcurrentJobQueue.shared.addJob(job: job)
             checkSafePaymentURL(payment, from: source)
             return true
         } else if let multisig = MultisigURL(url: url) {
             checkMultisig(multisig)
             return true
         } else if let code = CodeURL(url: url) {
-            UTXOService.shared.synchronize()
+            let job = SyncOutputsJob()
+            ConcurrentJobQueue.shared.addJob(job: job)
             checkCode(code, from: source, clearNavigationStack: clearNavigationStack)
             return true
         } else if let mixinURL = MixinURL(url: url) {

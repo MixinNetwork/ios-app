@@ -61,9 +61,13 @@ public final class OutputDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: StatementArguments(arguments))
     }
     
-    public func insertOrIgnore(outputs: [Output], alongsideTransaction work: ((GRDB.Database) throws -> Void)?) {
+    public func insert(
+        outputs: [Output],
+        onConflict resolution: GRDB.Database.ConflictResolution,
+        alongsideTransaction work: ((GRDB.Database) throws -> Void)?
+    ) {
         db.write { db in
-            try outputs.insert(db, onConflict: .ignore)
+            try outputs.insert(db, onConflict: resolution)
             try work?(db)
             if outputs.contains(where: { $0.inscriptionHash != nil }) {
                 db.afterNextTransaction { _ in

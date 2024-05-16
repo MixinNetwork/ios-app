@@ -31,7 +31,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="-4" translatesAutoresizingMaskIntoConstraints="NO" id="u3L-Nc-1Cs">
                     <rect key="frame" x="20" y="18" width="353" height="146"/>
                     <subviews>
-                        <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rqn-Iq-NhJ" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
+                        <view contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rqn-Iq-NhJ" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="141.66666666666666" y="0.0" width="70" height="70"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>

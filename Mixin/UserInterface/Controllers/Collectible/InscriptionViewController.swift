@@ -14,17 +14,25 @@ final class InscriptionViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
-    private var inscriptionOutput: InscriptionOutput
-    private var rows: [Row] = [.content]
+    private let inscriptionHash: String
+    private let output: Output?
     
     private lazy var traceID = UUID().uuidString.lowercased()
     
-    private var inscription: InscriptionItem? {
-        inscriptionOutput.inscription
-    }
+    private var rows: [Row] = [.content]
+    private var inscription: InscriptionItem?
     
     init(output: InscriptionOutput) {
-        self.inscriptionOutput = output
+        self.inscriptionHash = output.inscriptionHash
+        self.output = output.output
+        self.inscription = output.inscription
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(inscription: InscriptionItem) {
+        self.inscriptionHash = inscription.inscriptionHash
+        self.output = nil
+        self.inscription = inscription
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -41,7 +49,7 @@ final class InscriptionViewController: UIViewController {
         tableView.dataSource = self
         reloadData()
         if inscription == nil {
-            let job = RefreshInscriptionJob(inscriptionHash: inscriptionOutput.inscriptionHash)
+            let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(reloadFromNotification(_:)),
                                                    name: RefreshInscriptionJob.didFinishedNotification,
@@ -58,7 +66,7 @@ final class InscriptionViewController: UIViewController {
         guard let inscription = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.item] as? InscriptionItem else {
             return
         }
-        inscriptionOutput = inscriptionOutput.replacing(inscription: inscription)
+        self.inscription = inscription
         reloadData()
     }
     
@@ -66,7 +74,11 @@ final class InscriptionViewController: UIViewController {
         if inscription == nil {
             rows = [.content, .action, .hash]
         } else {
-            rows = [.content, .action, .hash, .id, .collection]
+            if output == nil {
+                rows = [.content, .hash, .id, .collection]
+            } else {
+                rows = [.content, .action, .hash, .id, .collection]
+            }
         }
         tableView.reloadData()
         if let url = inscription?.inscriptionImageContentURL {
@@ -102,8 +114,8 @@ extension InscriptionViewController: UITableViewDataSource {
             return cell
         case .hash:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_hash, for: indexPath)!
-            cell.hashPatternView.content = inscriptionOutput.inscriptionHash
-            cell.hashLabel.text = inscriptionOutput.inscriptionHash
+            cell.hashPatternView.content = inscriptionHash
+            cell.hashLabel.text = inscriptionHash
             return cell
         case .id:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
@@ -133,8 +145,9 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
     func inscriptionActionCellRequestToSend(_ cell: InscriptionActionCell) {
         guard
             let navigationController,
+            let output,
             let item = inscription,
-            let payment = Payment(traceID: traceID, output: inscriptionOutput.output, item: item)
+            let payment = Payment(traceID: traceID, output: output, item: item)
         else {
             return
         }
@@ -172,7 +185,7 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
     }
     
     func inscriptionActionCellRequestToShare(_ cell: InscriptionActionCell) {
-        let link = "https://mixin.space/inscriptions/\(inscriptionOutput.inscriptionHash)"
+        let link = "https://mixin.space/inscriptions/\(inscriptionHash)"
         let picker = MessageReceiverViewController.instance(content: .text(link))
         navigationController?.pushViewController(picker, animated: true)
     }

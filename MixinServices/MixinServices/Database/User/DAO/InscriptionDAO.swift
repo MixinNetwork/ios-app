@@ -15,7 +15,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
             FROM outputs o
                 LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
-            WHERE o.state = 'unspent' AND o.inscription_hash IS NOT NULL
+            WHERE o.state = 'unspent'
         """
         
         static let order = "\nORDER BY o.sequence ASC"
@@ -41,12 +41,16 @@ public final class InscriptionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [inscriptionHash])
     }
     
+    public func inscriptionOutput(inscriptionHash hash: String) -> InscriptionOutput? {
+        db.select(with: SQL.selector + " AND o.inscription_hash = ?" + SQL.order, arguments: [hash])
+    }
+    
     public func allInscriptionOutputs() -> [InscriptionOutput] {
-        db.select(with: SQL.selector + SQL.order)
+        db.select(with: SQL.selector + " AND o.inscription_hash IS NOT NULL" + SQL.order)
     }
     
     public func search(keyword: String) -> [InscriptionOutput] {
-        let sql = SQL.selector + " AND c.name LIKE ? ESCAPE '/'" + SQL.order
+        let sql = SQL.selector + " AND o.inscription_hash IS NOT NULL AND c.name LIKE ? ESCAPE '/'" + SQL.order
         return db.select(with: sql, arguments: ["%\(keyword.sqlEscaped)%"])
     }
     

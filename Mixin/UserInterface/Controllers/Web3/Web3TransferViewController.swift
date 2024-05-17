@@ -113,13 +113,13 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             if let tokenValue = operation.transactionPreview.decimalValue, tokenValue != 0 {
                 // A non-zero `decimalValue` indicates spending native token
                 let tokenAmount = CurrencyFormatter.localizedString(from: tokenValue, format: .precision, sign: .never)
-                let fiatMoneyValue = tokenValue * operation.chainToken.decimalUSDPrice * Currency.current.decimalRate
+                let fiatMoneyValue = tokenValue * operation.feeToken.decimalUSDPrice * Currency.current.decimalRate
                 let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
                 rows = [
                     .web3Amount(caption: R.string.localizable.estimated_balance_change(),
                                 tokenAmount: tokenAmount,
                                 fiatMoneyAmount: fiatMoneyAmount,
-                                token: operation.chainToken)
+                                token: operation.feeToken)
                 ]
             } else {
                 rows = [
@@ -225,7 +225,7 @@ extension Web3TransferViewController {
             return
         }
         let decimalFee = decimalWeiFee * .wei
-        let cost = decimalFee * operation.chainToken.decimalUSDPrice * Currency.current.decimalRate
+        let cost = decimalFee * operation.feeToken.decimalUSDPrice * Currency.current.decimalRate
         let feeValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
         let feeCost = if cost >= 0.01 {
             CurrencyFormatter.localizedString(from: cost, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
@@ -233,7 +233,7 @@ extension Web3TransferViewController {
             "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         }
         let row: Row = .amount(caption: .fee,
-                               token: feeValue + " " + operation.chain.feeSymbol,
+                               token: feeValue + " " + operation.feeToken.symbol,
                                fiatMoney: feeCost,
                                display: .byToken,
                                boldPrimaryAmount: false)

@@ -83,7 +83,7 @@ final class Web3TokenViewController: UIViewController {
     }
     
     @objc private func send(_ sender: Any) {
-        guard let chainID = token.mixinChainID, let chain = Web3Chain.chain(mixinChainID: chainID) else {
+        guard let chain = Web3Chain.chain(web3ChainID: token.chainID) else {
             return
         }
         let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)

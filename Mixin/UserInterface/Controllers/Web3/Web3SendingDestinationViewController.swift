@@ -9,6 +9,10 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
         case clear
     }
     
+    private enum Destination {
+        case myMixinWallet(_ mixinChainID: String)
+    }
+    
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var placeholderLabel: UILabel!
     @IBOutlet weak var inputActionButton: UIButton!
@@ -19,6 +23,7 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
     
     private let payment: Web3SendingTokenPayment
+    private let destinations: [Destination]
     private let tableView = UITableView()
     
     private weak var tableHeaderView: UIView?
@@ -48,6 +53,11 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
     
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
+        if let chainID = payment.chain.mixinChainID {
+            self.destinations = [.myMixinWallet(chainID)]
+        } else {
+            self.destinations = []
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -133,8 +143,9 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
                           duration: 0.25,
                           options: .transitionCrossDissolve,
                           animations: tableView.reloadData)
+        let hideFixedDestinations = isTextViewEditing || destinations.isEmpty
         UIView.animate(withDuration: 0.25) {
-            let alpha: CGFloat = isTextViewEditing ? 0 : 1
+            let alpha: CGFloat = hideFixedDestinations ? 0 : 1
             self.segmentsCollectionView.alpha = alpha
             self.separatorLineView.alpha = alpha
         }
@@ -222,14 +233,18 @@ extension Web3SendingDestinationViewController: UICollectionViewDataSource {
 extension Web3SendingDestinationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        isTextViewEditing ? 0 : 1
+        isTextViewEditing ? 0 : destinations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_account, for: indexPath)!
-        cell.iconImageView.image = R.image.mixin_wallet()
-        cell.titleLabel.text = R.string.localizable.to_mixin_wallet()
-        cell.subtitleLabel.text = R.string.localizable.contact_mixin_id(myIdentityNumber)
+        let destination = destinations[indexPath.row]
+        switch destination {
+        case .myMixinWallet:
+            cell.iconImageView.image = R.image.mixin_wallet()
+            cell.titleLabel.text = R.string.localizable.to_mixin_wallet()
+            cell.subtitleLabel.text = R.string.localizable.contact_mixin_id(myIdentityNumber)
+        }
         return cell
     }
     
@@ -251,11 +266,10 @@ extension Web3SendingDestinationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch indexPath.row {
-        case 0:
-            sendToMyMixinWallet()
-        default:
-            break
+        let destination = destinations[indexPath.row]
+        switch destination {
+        case .myMixinWallet(let chainID):
+            sendToMyMixinWallet(chainID: chainID)
         }
     }
     
@@ -267,11 +281,10 @@ extension Web3SendingDestinationViewController {
         case noValidEntry
     }
     
-    private func sendToMyMixinWallet() {
+    private func sendToMyMixinWallet(chainID: String) {
         continueButton?.isBusy = true
         Task { [payment, weak self] in
             do {
-                let chainID = payment.chain.mixinChainID
                 let entries = try await SafeAPI.depositEntries(chainID: chainID)
                 if let entry = entries.first(where: { $0.chainID == chainID && $0.isPrimary }) {
                     let payment = Web3SendingTokenToAddressPayment(

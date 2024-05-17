@@ -96,6 +96,8 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
         segmentsCollectionView.selectItem(at: IndexPath(item: 0, section: 0),
                                           animated: false,
                                           scrollPosition: .left)
+        
+        layoutSubviews(isTextViewEditing: false)
     }
     
     override func layout(for keyboardFrame: CGRect) {

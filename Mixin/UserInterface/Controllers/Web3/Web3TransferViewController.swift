@@ -165,7 +165,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .failure)
             layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
-                                  subtitle: error.localizedDescription,
+                                  subtitle: "\(error)",
                                   style: .destructive)
             tableView.setContentOffset(.zero, animated: true)
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
@@ -180,7 +180,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .failure)
             layoutTableHeaderView(title: R.string.localizable.sending_failed(),
-                                  subtitle: error.localizedDescription)
+                                  subtitle: "\(error)")
             tableView.setContentOffset(.zero, animated: true)
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                      leftAction: #selector(close(_:)),

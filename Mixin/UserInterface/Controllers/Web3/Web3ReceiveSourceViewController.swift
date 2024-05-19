@@ -72,7 +72,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
             let selector = Web3TransferTokenSelectorViewController()
             selector.delegate = self
             present(selector, animated: true)
-            let chainIDs = chains.map(\.mixinChainID)
+            let chainIDs = chains.compactMap(\.mixinChainID)
             DispatchQueue.global().async { [weak selector] in
                 let tokens = TokenDAO.shared.positiveBalancedTokens(chainIDs: chainIDs)
                 DispatchQueue.main.async {

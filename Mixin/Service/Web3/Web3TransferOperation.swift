@@ -7,7 +7,7 @@ import MixinServices
 class Web3TransferOperation {
     
     enum InitError: Error {
-        case noChainToken(String)
+        case noFeeToken(String)
         case invalidAmount(Decimal)
         case invalidReceiver(String)
     }
@@ -34,7 +34,7 @@ class Web3TransferOperation {
     let fromAddress: String
     let transactionPreview: Web3TransactionPreview
     let chain: Web3Chain
-    let chainToken: TokenItem
+    let feeToken: TokenItem
     let canDecodeValue: Bool
     
     fileprivate let client: EthereumHttpClient
@@ -54,21 +54,21 @@ class Web3TransferOperation {
         chain: Web3Chain
     ) throws {
         assert(!Thread.isMainThread)
-        let chainToken: TokenItem?
-        if let token = TokenDAO.shared.tokenItem(assetID: chain.mixinChainID) {
-            chainToken = token
+        let feeToken: TokenItem?
+        if let token = TokenDAO.shared.tokenItem(assetID: chain.feeTokenAssetID) {
+            feeToken = token
         } else {
-            let token = try SafeAPI.assets(id: chain.mixinChainID).get()
-            chainToken = TokenDAO.shared.saveAndFetch(token: token)
+            let token = try SafeAPI.assets(id: chain.feeTokenAssetID).get()
+            feeToken = TokenDAO.shared.saveAndFetch(token: token)
         }
-        guard let chainToken else {
-            throw InitError.noChainToken(chain.mixinChainID)
+        guard let feeToken else {
+            throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
         
         self.fromAddress = fromAddress
         self.transactionPreview = transaction
         self.chain = chain
-        self.chainToken = chainToken
+        self.feeToken = feeToken
         self.client = chain.makeEthereumClient()
         self.canDecodeValue = (transaction.decimalValue ?? 0) != 0
     }
@@ -195,6 +195,7 @@ class Web3TransferOperation {
             Logger.web3.info(category: "TxnRequest", message: "Txn sent")
             await MainActor.run {
                 self.state = .success
+                self.hasTransactionSent = true
             }
         } catch {
             Logger.web3.error(category: "TxnRequest", message: "Failed to send: \(error)")

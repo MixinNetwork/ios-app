@@ -250,7 +250,7 @@ extension ExploreWeb3ViewController: Web3TransferTokenSelectorViewControllerDele
         _ viewController: Web3TransferTokenSelectorViewController,
         didSelectToken token: Web3Token
     ) {
-        guard let address, let chainID = token.mixinChainID, let chain = Web3Chain.chain(mixinChainID: chainID) else {
+        guard let address, let chain = Web3Chain.chain(web3ChainID: token.chainID) else {
             return
         }
         let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)

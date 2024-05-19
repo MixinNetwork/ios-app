@@ -62,17 +62,4 @@ public class Web3Token: Codable {
         return CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
     }()
     
-    public var mixinChainID: String? {
-        switch chainID {
-        case "ethereum":
-            ChainID.ethereum
-        case "polygon":
-            ChainID.polygon
-        case "binance-smart-chain":
-            ChainID.bnbSmartChain
-        default:
-            nil
-        }
-    }
-    
 }

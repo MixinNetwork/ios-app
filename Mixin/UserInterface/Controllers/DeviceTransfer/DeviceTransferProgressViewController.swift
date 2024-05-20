@@ -141,6 +141,7 @@ class DeviceTransferProgressViewController: UIViewController {
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
+            Web3Database.reloadCurrent()
             AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
         case .cloud:
             AppGroupUserDefaults.Account.canRestoreMedia = true
@@ -148,6 +149,7 @@ class DeviceTransferProgressViewController: UIViewController {
             AppGroupUserDefaults.User.needsRebuildDatabase = true
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
+            Web3Database.reloadCurrent()
             OutputDAO.shared.deleteAll()
             AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
         }
@@ -269,6 +271,7 @@ extension DeviceTransferProgressViewController {
                     try? FileManager.default.removeItem(at: localURL)
                 }
                 UserDatabase.reloadCurrent()
+                Web3Database.reloadCurrent()
                 DispatchQueue.main.async {
                     self.transferFailed(hint: R.string.localizable.restore_chat_history_failed())
                 }

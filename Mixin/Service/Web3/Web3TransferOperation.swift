@@ -197,13 +197,19 @@ class Web3TransferOperation {
                 ?? "(null)"
             Logger.web3.info(category: "TxnRequest", message: "Will send tx: \(transactionDescription)")
             let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
-            let localRecord = Web3Transaction(transactionHash: hash,
-                                              chainID: chain.web3ChainID,
-                                              address: transaction.to.toChecksumAddress(),
-                                              rawTransaction: transaction.raw?.hexEncodedString() ?? "",
-                                              nonce: transaction.nonce ?? -1,
-                                              createdAt: Date().toUTCString())
-            Web3DAO.shared.save(transaction: localRecord)
+            if let nonce = transaction.nonce {
+                let localRecord = Web3Transaction(transactionHash: hash,
+                                                  chainID: chain.web3ChainID,
+                                                  address: transaction.to.toChecksumAddress(),
+                                                  rawTransaction: transaction.raw?.hexEncodedString() ?? "",
+                                                  nonce: nonce,
+                                                  createdAt: Date().toUTCString())
+                Web3DAO.shared.save(transaction: localRecord)
+                Logger.web3.info(category: "TxnRequest", message: "Local record saved with nonce: \(nonce)")
+            } else {
+                // This should never happened since a nil valued nonce fails RLP encoding
+                Logger.web3.error(category: "TxnRequest", message: "Found nil nonce")
+            }
             Logger.web3.info(category: "TxnRequest", message: "Will respond hash: \(hash)")
             try await respond(hash: hash)
             Logger.web3.info(category: "TxnRequest", message: "Txn sent")

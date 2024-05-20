@@ -9,7 +9,7 @@ final class Web3TokenViewController: UIViewController {
     private let address: String
     private let token: Web3Token
     
-    private var transactions: [Web3Transaction]?
+    private var transactions: [Web3AccountTransaction]?
     
     init(address: String, chains: [Web3Chain], token: Web3Token) {
         self.address = address

@@ -4,9 +4,9 @@ import MixinServices
 final class Web3TransactionViewController: RowListViewController {
     
     private let token: Web3Token
-    private let transaction: Web3Transaction
+    private let transaction: Web3AccountTransaction
     
-    init(token: Web3Token, transaction: Web3Transaction) {
+    init(token: Web3Token, transaction: Web3AccountTransaction) {
         self.token = token
         self.transaction = transaction
         super.init(nibName: nil, bundle: nil)
@@ -18,7 +18,7 @@ final class Web3TransactionViewController: RowListViewController {
         fatalError("Storyboard is not supported")
     }
     
-    class func instance(web3Token token: Web3Token, transaction: Web3Transaction) -> UIViewController {
+    class func instance(web3Token token: Web3Token, transaction: Web3AccountTransaction) -> UIViewController {
         let snapshot = Web3TransactionViewController(token: token, transaction: transaction)
         let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
         return container

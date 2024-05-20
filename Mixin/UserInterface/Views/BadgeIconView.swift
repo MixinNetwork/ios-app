@@ -84,8 +84,8 @@ final class BadgeIconView: UIView {
         badgeImageView.image = nil
     }
     
-    func setIcon(web3Transaction transaction: Web3Transaction) {
-        switch Web3Transaction.TransactionType(rawValue: transaction.operationType) {
+    func setIcon(web3Transaction transaction: Web3AccountTransaction) {
+        switch Web3AccountTransaction.TransactionType(rawValue: transaction.operationType) {
         case .send:
             iconImageView.image = R.image.wallet.snapshot_withdrawal()
             isBadgeHidden = true

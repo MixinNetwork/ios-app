@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Web3Transaction {
+public struct Web3AccountTransaction {
     
     public let id: String
     public let transactionHash: String
@@ -16,7 +16,7 @@ public struct Web3Transaction {
     
 }
 
-extension Web3Transaction: Decodable {
+extension Web3AccountTransaction: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -34,7 +34,7 @@ extension Web3Transaction: Decodable {
     
 }
 
-extension Web3Transaction {
+extension Web3AccountTransaction {
     
     public enum TransactionType: String {
         case receive

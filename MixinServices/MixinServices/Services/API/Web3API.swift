@@ -21,7 +21,7 @@ public final class Web3API {
         chainID: String,
         fungibleID: String,
         limit: Int = 100,
-        completion: @escaping (MixinAPI.Result<[Web3Transaction]>) -> Void
+        completion: @escaping (MixinAPI.Result<[Web3AccountTransaction]>) -> Void
     ) {
         let path = "/transactions/\(address)?chain_id=\(chainID)&fungible_id=\(fungibleID)&limit=\(limit)"
         request(method: .get, path: path, completion: completion)

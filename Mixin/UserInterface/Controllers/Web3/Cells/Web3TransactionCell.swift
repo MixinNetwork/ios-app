@@ -17,7 +17,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
         iconView.prepareForReuse()
     }
     
-    func render(transaction: Web3Transaction) {
+    func render(transaction: Web3AccountTransaction) {
         iconView.setIcon(web3Transaction: transaction)
         titleLabel.text = transaction.localizedTransactionType
         
@@ -25,9 +25,9 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
             hide(amountLabel1, symbolLabel1, amountLabel2, symbolLabel2, priceLabel)
             subtitleLabel.text = ""
         }
-        let isConfirmed = transaction.status == Web3Transaction.Status.confirmed.rawValue
+        let isConfirmed = transaction.status == Web3AccountTransaction.Status.confirmed.rawValue
         
-        switch Web3Transaction.TransactionType(rawValue: transaction.operationType) {
+        switch Web3AccountTransaction.TransactionType(rawValue: transaction.operationType) {
         case .receive:
             if let transfer = transaction.transfers.first {
                 hide(amountLabel2, symbolLabel2)
@@ -64,10 +64,10 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
             }
         case .trade:
             let inTransfer = transaction.transfers.first { transfer in
-                transfer.direction == Web3Transaction.Web3Transfer.Direction.in.rawValue
+                transfer.direction == Web3AccountTransaction.Web3Transfer.Direction.in.rawValue
             }
             let outTransfer = transaction.transfers.first { transfer in
-                transfer.direction == Web3Transaction.Web3Transfer.Direction.out.rawValue
+                transfer.direction == Web3AccountTransaction.Web3Transfer.Direction.out.rawValue
             }
             if let inTransfer, let outTransfer {
                 hide(priceLabel)

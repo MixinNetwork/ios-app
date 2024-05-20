@@ -25,7 +25,19 @@ final class GroupsInCommonViewController: UIViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.register(R.nib.groupInCommonCell)
-        reloadData()
+        DispatchQueue.global().async {
+            let groupsInCommon = ConversationDAO.shared.groupsInCommon(userId: self.userId)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.groupsInCommon = groupsInCommon
+                self.tableView.reloadData()
+                self.tableView.checkEmpty(dataCount: groupsInCommon.count,
+                                          text: R.string.localizable.no_results(),
+                                          photo: R.image.emptyIndicator.ic_search_result()!)
+            }
+        }
     }
     
 }
@@ -58,26 +70,6 @@ extension GroupsInCommonViewController: UITableViewDataSource, UITableViewDelega
             DispatchQueue.main.async {
                 let vc = ConversationViewController.instance(conversation: conversation)
                 self?.navigationController?.pushViewController(vc, animated: true)
-            }
-        }
-    }
-    
-}
-
-extension GroupsInCommonViewController {
-    
-    private func reloadData() {
-        DispatchQueue.global().async {
-            let groupsInCommon = ConversationDAO.shared.groupsInCommon(userId: self.userId)
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.groupsInCommon = groupsInCommon
-                self.tableView.reloadData()
-                self.tableView.checkEmpty(dataCount: groupsInCommon.count,
-                                          text: R.string.localizable.no_results(),
-                                          photo: R.image.emptyIndicator.ic_search_result()!)
             }
         }
     }

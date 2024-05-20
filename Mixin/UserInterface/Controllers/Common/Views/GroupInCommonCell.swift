@@ -7,9 +7,12 @@ class GroupInCommonCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
     
-    var groupInCommon: GroupInCommon! {
+    var groupInCommon: GroupInCommon? {
         didSet {
-            avatarView.setGroupImage(with: groupInCommon.iconUrl)
+            guard let groupInCommon else {
+                return
+            }
+            avatarView.setGroupImage(with: groupInCommon.iconURL ?? "")
             nameLabel.text = groupInCommon.name
             countLabel.text = R.string.localizable.title_participants_count(groupInCommon.participantsCount)
         }

@@ -1,4 +1,5 @@
 import UIKit
+import LinkPresentation
 import MixinServices
 
 final class InscriptionViewController: UIViewController {
@@ -186,8 +187,56 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
     
     func inscriptionActionCellRequestToShare(_ cell: InscriptionActionCell) {
         let link = "https://mixin.space/inscriptions/\(inscriptionHash)"
-        let picker = MessageReceiverViewController.instance(content: .text(link))
-        navigationController?.pushViewController(picker, animated: true)
+        let activity: UIActivityViewController
+        if let url = URL(string: link) {
+            let item = ActivityItem(url: url,
+                                    image: backgroundImageView.image,
+                                    title: inscription?.collectionSequenceRepresentation)
+            activity = UIActivityViewController(activityItems: [item], applicationActivities: nil)
+        } else {
+            activity = UIActivityViewController(activityItems: [link], applicationActivities: nil)
+        }
+        present(activity, animated: true)
+    }
+    
+}
+
+extension InscriptionViewController {
+    
+    private class ActivityItem: NSObject, UIActivityItemSource {
+        
+        private let url: URL
+        private let image: UIImage?
+        private let title: String?
+        
+        init(url: URL, image: UIImage?, title: String?) {
+            self.url = url
+            self.image = image
+            self.title = title
+            super.init()
+        }
+        
+        func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+            url
+        }
+        
+        func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+            url
+        }
+        
+        func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+            let meta = LPLinkMetadata()
+            if let image {
+                meta.imageProvider = NSItemProvider(object: image)
+            }
+            if let title {
+                meta.title = title
+            } else {
+                meta.title = url.absoluteString
+            }
+            return meta
+        }
+        
     }
     
 }

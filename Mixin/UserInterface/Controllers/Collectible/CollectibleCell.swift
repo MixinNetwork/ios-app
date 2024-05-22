@@ -31,7 +31,6 @@ final class CollectibleCell: UICollectionViewCell {
     
     func render(item: InscriptionOutput) {
         if let url = item.inscription?.inscriptionImageContentURL {
-            contentImageView.image = nil
             contentImageView.contentMode = .scaleAspectFill
             contentImageView.sd_setImage(with: url)
         } else {

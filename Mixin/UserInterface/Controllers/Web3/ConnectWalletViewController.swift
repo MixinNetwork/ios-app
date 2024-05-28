@@ -101,7 +101,17 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                                                   action: #selector(self.close(_:)))
                 }
             } catch {
-                Logger.web3.error(category: "Connect", message: "Failed to approve: \(error)")
+                var requiredChains: Set<String> = []
+                var requiredMethods: Set<String> = []
+                var requiredEvents: Set<String> = []
+                for namespace in proposal.requiredNamespaces.values {
+                    if let chains = namespace.chains {
+                        requiredChains.formUnion(chains.map(\.absoluteString))
+                    }
+                    requiredMethods.formUnion(namespace.methods)
+                    requiredEvents.formUnion(namespace.events)
+                }
+                Logger.web3.error(category: "Connect", message: "Failed to approve: \(error), required chains: \(requiredChains), methods: \(requiredMethods), events: \(requiredEvents)")
                 await MainActor.run {
                     self.canDismissInteractively = true
                     self.tableHeaderView.setIcon(progress: .failure)

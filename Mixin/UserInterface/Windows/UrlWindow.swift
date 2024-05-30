@@ -909,7 +909,15 @@ extension UrlWindow {
                 guard let items = syncUsers(userIds: [id], hud: hud) else {
                     return
                 }
-                destination = .user(items[0])
+                if let item = items.first {
+                    destination = .user(item)
+                } else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
             case let .multisig(threshold, ids):
                 guard let users = syncUsersInOrder(userIDs: ids, hud: hud) else {
                     return

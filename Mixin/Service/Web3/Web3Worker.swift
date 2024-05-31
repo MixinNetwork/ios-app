@@ -5,7 +5,8 @@ import MixinServices
 
 final class Web3Worker {
     
-    private var chain: Web3Chain
+    private var evmChain: Web3Chain
+    private var solanaChain: Web3Chain
     
     private weak var webView: WKWebView?
     
@@ -14,9 +15,10 @@ final class Web3Worker {
                          host: webView?.url?.host ?? "(no host)")
     }
     
-    init(webView: WKWebView, chain: Web3Chain) {
+    init(webView: WKWebView, evmChain: Web3Chain, solanaChain: Web3Chain) {
         self.webView = webView
-        self.chain = chain
+        self.evmChain = evmChain
+        self.solanaChain = solanaChain
     }
     
     func handleRequest(json: [String: Any]) {
@@ -32,8 +34,6 @@ final class Web3Worker {
             requestAccounts(json: json, to: request)
         case .signTransaction:
             signTransaction(json: json, to: request)
-        case .signRawTransaction:
-            break
         case .signMessage:
             if let data = messageData(json: json) {
                 signMessage(data: data, to: request)
@@ -67,7 +67,7 @@ final class Web3Worker {
                 send(error: "Unsupported Chain", to: request)
                 return
             }
-            guard let chain = Web3Chain.evmChains.first(where: { $0.id == chainID }) else {
+            guard let chain = Web3Chain.evmChain(chainID: chainID) else {
                 showAutoHiddenHud(style: .error, text: "Chain not supported")
                 send(error: "Unknown Chain", to: request)
                 return
@@ -81,7 +81,7 @@ final class Web3Worker {
             var config = {
                 ethereum: {
                     address: "\(address)",
-                    chainId: \(chain.id),
+                    chainId: \(chainID),
                     rpcUrl: "\(chain.rpcServerURL)"
                 }
             };
@@ -89,18 +89,29 @@ final class Web3Worker {
             """
             webView?.evaluateJavaScript(setConfig)
             
-            let emitChange = "mixinwallet.ethereum.emitChainChanged(\"\("0x" + String(chain.id, radix: 16))\");"
+            let hexChainID = "0x" + String(chainID, radix: 16)
+            let emitChange = "mixinwallet.ethereum.emitChainChanged(\"\(hexChainID)\");"
             webView?.evaluateJavaScript(emitChange)
             
             sendNull(to: request)
-            self.chain = chain
+            self.evmChain = chain
+        case .signRawTransaction:
+            signRawTransaction(json: json, to: request)
+        case .signIn:
+            signIn(json: json, to: request)
         default:
             send(error: "Unsupported method", to: request)
         }
     }
     
     private func requestAccounts(json: [String: Any], to request: Request) {
-        guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) else {
+        let address: String? = switch request.network {
+        case .ethereum:
+            PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
+        case .solana:
+            PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress)
+        }
+        guard let address else {
             send(error: "Account Locked", to: request)
             return
         }
@@ -120,13 +131,14 @@ final class Web3Worker {
             address: address,
             proposer: currentProposer,
             humanReadableMessage: humanReadable,
-            signable: signable
+            signable: signable,
+            chain: evmChain
         ) { signature in
             try await self.send(result: signature, to: request)
         } rejectWith: {
             self.send(error: "User Rejected", to: request)
         }
-        let sign = Web3SignViewController(operation: operation, chainName: chain.name)
+        let sign = Web3SignViewController(operation: operation, chainName: evmChain.name)
         Web3PopupCoordinator.enqueue(popup: .request(sign))
     }
     
@@ -143,13 +155,14 @@ final class Web3Worker {
                 address: address,
                 proposer: currentProposer,
                 humanReadableMessage: humanReadable,
-                signable: signable
+                signable: signable,
+                chain: evmChain
             ) { signature in
                 try await self.send(result: signature, to: request)
             } rejectWith: {
                 self.send(error: "User Rejected", to: request)
             }
-            let sign = Web3SignViewController(operation: operation, chainName: chain.name)
+            let sign = Web3SignViewController(operation: operation, chainName: evmChain.name)
             Web3PopupCoordinator.enqueue(popup: .request(sign))
         } catch {
             Logger.web3.error(category: "Web3Worker", message: "\(error)")
@@ -158,23 +171,69 @@ final class Web3Worker {
     }
     
     private func signTransaction(json: [String: Any], to request: Request) {
-        guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) else {
-            send(error: "Account Locked", to: request)
-            return
-        }
         guard let object = json["object"] as? [String: Any] else {
             send(error: "Invalid Data", to: request)
             return
         }
-        DispatchQueue.global().async { [chain, proposer=currentProposer] in
+        guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) else {
+            send(error: "Account Locked", to: request)
+            return
+        }
+        DispatchQueue.global().async { [evmChain, proposer=currentProposer] in
             do {
-                let preview = try Web3TransactionPreview(json: object)
-                let operation = try Web3TransferWithBrowserWalletOperation(
+                let preview = try EVMTransactionPreview(json: object)
+                let operation = try EVMTransferWithBrowserWalletOperation(
                     fromAddress: address,
                     transaction: preview,
-                    chain: chain
+                    chain: evmChain
                 ) { hash in
                     try await self.send(result: hash, to: request)
+                } rejectWith: {
+                    self.send(error: "User Rejected", to: request)
+                }
+                DispatchQueue.main.async {
+                    let transfer = Web3TransferViewController(operation: operation, proposer: .dapp(proposer))
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.send(error: "\(error)", to: request)
+                }
+            }
+        }
+    }
+    
+    private func signIn(json: [String: Any], to request: Request) {
+        guard
+            let object = json["object"] as? [String: Any],
+            let data = object["raw"] as? [String: Any]
+        else {
+            send(error: "Invalid Data", to: request)
+            return
+        }
+    }
+    
+    private func signRawTransaction(json: [String: Any], to request: Request) {
+        guard
+            let object = json["object"] as? [String: Any],
+            let raw = object["raw"] as? String,
+            let transaction = Solana.Transaction(rawTransaction: raw)
+        else {
+            send(error: "Invalid Data", to: request)
+            return
+        }
+        guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) else {
+            send(error: "Account Locked", to: request)
+            return
+        }
+        DispatchQueue.global().async { [solanaChain, proposer=currentProposer] in
+            do {
+                let operation = try SolanaTransferWithBrowserWalletOperation(
+                    fromAddress: address,
+                    transaction: transaction,
+                    chain: solanaChain
+                ) { signature in
+                    try await self.send(result: signature, to: request)
                 } rejectWith: {
                     self.send(error: "User Rejected", to: request)
                 }
@@ -233,7 +292,7 @@ extension Web3Worker {
     
     private enum DAppMethod: String, Decodable, CaseIterable {
         
-        case signRawTransaction
+        // EVM
         case signTransaction
         case signMessage
         case signTypedMessage
@@ -245,6 +304,10 @@ extension Web3Worker {
         case addEthereumChain
         case switchEthereumChain // legacy compatible
         case switchChain
+        
+        // Solana
+        case signIn
+        case signRawTransaction
         
         init?(value: Any?) {
             guard let rawValue = value as? String else {
@@ -258,6 +321,7 @@ extension Web3Worker {
     private enum ProviderNetwork: String, Decodable {
         
         case ethereum
+        case solana
         
         init?(value: Any?) {
             guard let rawValue = value as? String else {

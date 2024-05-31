@@ -22,7 +22,7 @@ struct Web3PopupCoordinator {
     }
     
     enum Popup {
-        case unlock(UnlockWeb3WalletViewController)
+        case unlock(UnlockWeb3AccountViewController)
         case request(Web3PopupViewController)
         case rejection(title: String, message: String)
     }

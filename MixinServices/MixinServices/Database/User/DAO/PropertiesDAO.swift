@@ -9,6 +9,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case iterator
         case snapshotOffset = "snapshot_offset"
         case evmAddress     = "evm_address"
+        case solanaAddress  = "solana_address"
     }
     
     public enum Change {

@@ -23,7 +23,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
     init(operation: Web3TransferOperation, proposer: Proposer) {
         self.operation = operation
         self.proposer = proposer
-        let warnings: [String] = if operation.canDecodeValue {
+        let warnings: [String] = if operation.canDecodeBalanceChange {
             []
         } else {
             [R.string.localizable.decode_transaction_failed()]
@@ -49,7 +49,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             (trayView as? AuthenticationPreviewDoubleButtonTrayView)?.rightButton
         }
         confirmButton?.isEnabled = false
-        operation.loadGas { [weak self, weak confirmButton] fee in
+        operation.loadFee { [weak self, weak confirmButton] fee in
             self?.reloadFeeRow(with: fee)
             confirmButton?.isEnabled = true
         }
@@ -96,7 +96,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                 }
             }
             
-            let title = if operation.canDecodeValue {
+            let title = if operation.canDecodeBalanceChange {
                 R.string.localizable.web3_transaction_request()
             } else {
                 R.string.localizable.signature_request()
@@ -109,25 +109,29 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             }
             layoutTableHeaderView(title: title, subtitle: subtitle)
             
-            var rows: [Row]
-            if let tokenValue = operation.transactionPreview.decimalValue, tokenValue != 0 {
-                // A non-zero `decimalValue` indicates spending native token
-                let tokenAmount = CurrencyFormatter.localizedString(from: tokenValue, format: .precision, sign: .never)
-                let fiatMoneyValue = tokenValue * operation.feeToken.decimalUSDPrice * Currency.current.decimalRate
-                let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-                rows = [
-                    .web3Amount(caption: R.string.localizable.estimated_balance_change(),
-                                tokenAmount: tokenAmount,
-                                fiatMoneyAmount: fiatMoneyAmount,
-                                token: operation.feeToken)
-                ]
-            } else {
-                rows = [
-                    .web3Message(caption: R.string.localizable.transaction(),
-                                 message: operation.transactionPreview.hexData ?? "")
-                ]
+            var rows: [Row] = [
+                .web3Message(caption: R.string.localizable.estimated_balance_change(),
+                             message: R.string.localizable.loading())
+            ]
+            operation.loadBalanceChange { [weak self] change in
+                guard let self, case .pending = self.operation.state else {
+                    return
+                }
+                let row: Row
+                if let change {
+                    let tokenAmount = CurrencyFormatter.localizedString(from: change.amount, format: .precision, sign: .never)
+                    let fiatMoneyValue = change.amount * change.token.decimalUSDPrice * Currency.current.decimalRate
+                    let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                    row = .web3Amount(caption: R.string.localizable.estimated_balance_change(),
+                                               tokenAmount: tokenAmount,
+                                               fiatMoneyAmount: fiatMoneyAmount,
+                                               token: operation.feeToken)
+                } else {
+                    row = .web3Message(caption: R.string.localizable.transaction(),
+                                       message: operation.rawTransaction)
+                }
+                replaceRow(at: 0, with: row)
             }
-            
             rows.append(
                 .amount(caption: .fee,
                         token: R.string.localizable.calculating(),
@@ -147,8 +151,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                 }
                 rows.append(.info(caption: .sender, content: operation.fromAddress))
             case .web3ToAddress:
-                let receiver = operation.transactionPreview.to.toChecksumAddress()
-                rows.append(.receivingAddress(value: receiver, label: nil))
+                rows.append(.receivingAddress(value: operation.toAddress, label: nil))
                 rows.append(.info(caption: .sender, content: operation.fromAddress))
             }
             
@@ -190,7 +193,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         case .success:
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .success)
-            let subtitle = if operation.canDecodeValue {
+            let subtitle = if operation.canDecodeBalanceChange {
                 R.string.localizable.web3_signing_transaction_success()
             } else {
                 R.string.localizable.web3_signing_data_success()
@@ -219,16 +222,10 @@ extension Web3TransferViewController: Web3PopupViewController {
 
 extension Web3TransferViewController {
     
-    private func reloadFeeRow(with selected: Web3TransferOperation.Fee) {
-        let weiFee = (selected.gasLimit * selected.gasPrice).description
-        guard let decimalWeiFee = Decimal(string: weiFee, locale: .enUSPOSIX) else {
-            return
-        }
-        let decimalFee = decimalWeiFee * .wei
-        let cost = decimalFee * operation.feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let feeValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
-        let feeCost = if cost >= 0.01 {
-            CurrencyFormatter.localizedString(from: cost, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+    private func reloadFeeRow(with fee: Web3TransferOperation.Fee) {
+        let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .networkFee, sign: .never, symbol: nil)
+        let feeCost = if fee.fiatMoney >= 0.01 {
+            CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         } else {
             "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         }

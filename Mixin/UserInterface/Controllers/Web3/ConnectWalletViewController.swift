@@ -6,14 +6,14 @@ import MixinServices
 final class ConnectWalletViewController: AuthenticationPreviewViewController {
     
     private let proposal: WalletConnectSign.Session.Proposal
-    private let chains: [Blockchain]
+    private let chains: [Web3Chain]
     private let events: [String]
     
     private var isProposalApproved = false
     
     init(
         proposal: WalletConnectSign.Session.Proposal,
-        chains: [Blockchain],
+        chains: [Web3Chain],
         events: [String]
     ) {
         self.proposal = proposal
@@ -42,8 +42,10 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         var rows: [Row] = [
             .proposer(name: proposal.proposer.name, host: host),
         ]
-        if let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
-            // TODO: Get account by `self.request` if blockchain other than EVMs is supported
+        if chains.contains(where: { $0.isEVM }), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
+            rows.append(.info(caption: .account, content: account))
+        }
+        if chains.contains(where: { $0.isSolana }), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) {
             rows.append(.info(caption: .account, content: account))
         }
         reloadData(with: rows)
@@ -75,15 +77,26 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [chains, proposal, events] in
             do {
-                let priv = try await TIP.web3WalletPrivateKey(pin: pin)
-                let keyStorage = InPlaceKeyStorage(raw: priv)
-                let address = try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
-                let accounts = chains.compactMap { chain in
-                    WalletConnectUtils.Account(blockchain: chain, address: address)
+                let evmAddress = try await {
+                    let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
+                    let keyStorage = InPlaceKeyStorage(raw: priv)
+                    return try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
+                }()
+                let solanaAddress = try await {
+                    let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
+                    return try Solana.publicKey(seed: priv)
+                }()
+                let accounts: [WalletConnectUtils.Account] = chains.compactMap { chain in
+                    switch chain.category {
+                    case .evm:
+                        WalletConnectUtils.Account(blockchain: chain.caip2, address: evmAddress)
+                    case .solana:
+                        WalletConnectUtils.Account(blockchain: chain.caip2, address: solanaAddress)
+                    }
                 }
                 let methods = WalletConnectSession.Method.allCases.map(\.rawValue)
                 let sessionNamespaces = try AutoNamespaces.build(sessionProposal: proposal,
-                                                                 chains: chains,
+                                                                 chains: chains.map(\.caip2),
                                                                  methods: methods,
                                                                  events: Array(events),
                                                                  accounts: accounts)

@@ -6,71 +6,122 @@ import MixinServices
 
 final class Web3Chain {
     
-    static let `default`: Web3Chain = .ethereum
-    static let all: [Web3Chain] = Array(evmChains)
-    static let evmChains: OrderedSet<Web3Chain> = [
-        .ethereum, .polygon, .bnbSmartChain, arbitrum, .base, .optimism,
-    ]
+    enum Category {
+        case evm(chainID: Int)
+        case solana
+    }
     
-    static let ethereum = Web3Chain(
-        id: 1,
-        web3ChainID: "ethereum",
-        mixinChainID: ChainID.ethereum,
-        feeTokenAssetID: AssetID.eth,
-        name: "Ethereum",
-        failsafeRPCServerURL: URL(string: "https://cloudflare-eth.com")!,
-        caip2: Blockchain("eip155:1")!
-    )
+    let category: Category
+    let web3ChainID: String
+    let mixinChainID: String?
+    let feeTokenAssetID: String
+    let name: String
+    let failsafeRPCServerURL: URL
+    let caip2: Blockchain
     
-    static let polygon = Web3Chain(
-        id: 137,
-        web3ChainID: "polygon",
-        mixinChainID: ChainID.polygon,
-        feeTokenAssetID: AssetID.matic,
-        name: "Polygon",
-        failsafeRPCServerURL: URL(string: "https://polygon-rpc.com")!,
-        caip2: Blockchain("eip155:137")!
-    )
+    private(set) var dapps: [Web3Dapp] = []
     
-    static let bnbSmartChain = Web3Chain(
-        id: 56,
-        web3ChainID: "binance-smart-chain",
-        mixinChainID: ChainID.bnbSmartChain,
-        feeTokenAssetID: AssetID.bnb,
-        name: "BSC",
-        failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!,
-        caip2: Blockchain("eip155:56")!
-    )
+    var isEVM: Bool {
+        switch category {
+        case .evm:
+            true
+        case .solana:
+            false
+        }
+    }
     
-    static let arbitrum = Web3Chain(
-        id: 42161,
-        web3ChainID: "arbitrum",
-        mixinChainID: nil,
-        feeTokenAssetID: AssetID.eth,
-        name: "Arbitrum",
-        failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!,
-        caip2: Blockchain("eip155:42161")!
-    )
+    var isSolana: Bool {
+        switch category {
+        case .evm:
+            false
+        case .solana:
+            true
+        }
+    }
     
-    static let base = Web3Chain(
-        id: 8453,
-        web3ChainID: "base",
-        mixinChainID: nil,
-        feeTokenAssetID: AssetID.eth,
-        name: "Base",
-        failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!,
-        caip2: Blockchain("eip155:8453")!
-    )
+    var rpcServerURL: URL {
+        #if DEBUG
+        // Solana devnet has the same `mixinChainID` with solana mainnet
+        // Use failsafe RPC URL to test with devnet
+        failsafeRPCServerURL
+        #else
+        if let mixinChainID,
+           let string = AppGroupUserDefaults.web3RPCURL[mixinChainID],
+           let url = URL(string: string)
+        {
+            url
+        } else {
+            failsafeRPCServerURL
+        }
+        #endif
+    }
     
-    static let optimism = Web3Chain(
-        id: 10,
-        web3ChainID: "optimism",
-        mixinChainID: nil,
-        feeTokenAssetID: AssetID.eth,
-        name: "Optimism",
-        failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!,
-        caip2: Blockchain("eip155:10")!
-    )
+    private init(
+        category: Category, web3ChainID: String, mixinChainID: String?,
+        feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL,
+        caip2: Blockchain
+    ) {
+        self.category = category
+        self.web3ChainID = web3ChainID
+        self.mixinChainID = mixinChainID
+        self.feeTokenAssetID = feeTokenAssetID
+        self.name = name
+        self.failsafeRPCServerURL = failsafeRPCServerURL
+        self.caip2 = caip2
+    }
+    
+    static func evm(
+        chainID: Int, web3ChainID: String, mixinChainID: String?,
+        feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
+    ) -> Web3Chain {
+        Web3Chain(
+            category: .evm(chainID: chainID),
+            web3ChainID: web3ChainID,
+            mixinChainID: mixinChainID,
+            feeTokenAssetID: feeTokenAssetID,
+            name: name,
+            failsafeRPCServerURL: failsafeRPCServerURL,
+            caip2: Blockchain("eip155:\(chainID)")!
+        )
+    }
+    
+    static func solana(
+        reference: String, web3ChainID: String, mixinChainID: String?,
+        feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
+    ) -> Web3Chain {
+        Web3Chain(
+            category: .solana,
+            web3ChainID: web3ChainID,
+            mixinChainID: mixinChainID,
+            feeTokenAssetID: feeTokenAssetID,
+            name: name,
+            failsafeRPCServerURL: failsafeRPCServerURL,
+            caip2: Blockchain("solana:\(reference)")!
+        )
+    }
+    
+}
+
+// MARK: - Equatable
+extension Web3Chain: Equatable {
+    
+    static func == (lhs: Web3Chain, rhs: Web3Chain) -> Bool {
+        lhs.caip2 == rhs.caip2
+    }
+    
+}
+
+// MARK: - Hashable
+extension Web3Chain: Hashable {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(caip2)
+    }
+    
+}
+
+// MARK: - Search
+extension Web3Chain {
     
     private static let caip2Map: OrderedDictionary<Blockchain, Web3Chain> = {
         all.reduce(into: [:]) { result, chain in
@@ -84,41 +135,6 @@ final class Web3Chain {
         }
     }()
     
-    let id: Int
-    let web3ChainID: String
-    let mixinChainID: String?
-    let feeTokenAssetID: String
-    let name: String
-    let failsafeRPCServerURL: URL
-    let caip2: Blockchain
-    
-    private(set) var dapps: [Web3Dapp] = []
-    
-    var rpcServerURL: URL {
-        if let mixinChainID,
-           let string = AppGroupUserDefaults.web3RPCURL[mixinChainID],
-           let url = URL(string: string)
-        {
-            url
-        } else {
-            failsafeRPCServerURL
-        }
-    }
-    
-    private init(
-        id: Int, web3ChainID: String, mixinChainID: String?,
-        feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL,
-        caip2: Blockchain
-    ) {
-        self.id = id
-        self.web3ChainID = web3ChainID
-        self.mixinChainID = mixinChainID
-        self.feeTokenAssetID = feeTokenAssetID
-        self.name = name
-        self.failsafeRPCServerURL = failsafeRPCServerURL
-        self.caip2 = caip2
-    }
-    
     static func chain(caip2: Blockchain) -> Web3Chain? {
         caip2Map[caip2]
     }
@@ -127,38 +143,122 @@ final class Web3Chain {
         web3ChainIDMap[id]
     }
     
-    func makeEthereumClient() -> EthereumHttpClient {
-        let network: EthereumNetwork = switch self {
-        case .ethereum:
-                .mainnet
-        default:
-                .custom("\(id)")
+    static func evmChain(chainID: Int) -> Web3Chain? {
+        guard let caip2 = Blockchain("eip155:\(chainID)") else {
+            return nil
         }
-        return EthereumHttpClient(url: rpcServerURL, network: network)
-    }
-    
-}
-
-extension Web3Chain: Equatable {
-    
-    static func == (lhs: Web3Chain, rhs: Web3Chain) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-}
-
-extension Web3Chain: Hashable {
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        return chain(caip2: caip2)
     }
     
 }
 
 extension Web3Chain {
     
+    func feeToken() throws -> TokenItem? {
+        if let token = TokenDAO.shared.tokenItem(assetID: feeTokenAssetID) {
+           return token
+        } else {
+            let token = try SafeAPI.assets(id: feeTokenAssetID).get()
+            return TokenDAO.shared.saveAndFetch(token: token)
+        }
+    }
+    
+}
+
+// MARK: - Chains
+extension Web3Chain {
+    
+    static let all = evmChains + solanaChains
+    static let evmChains: [Web3Chain] = [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
+    static let solanaChains: [Web3Chain] = {
+        var all: [Web3Chain] = [.solana]
+#if DEBUG
+        all.append(.solanaDevnet)
+#endif
+        return all
+    }()
+    
+    static let ethereum = Web3Chain.evm(
+        chainID: 1,
+        web3ChainID: "ethereum",
+        mixinChainID: ChainID.ethereum,
+        feeTokenAssetID: AssetID.eth,
+        name: "Ethereum",
+        failsafeRPCServerURL: URL(string: "https://cloudflare-eth.com")!
+    )
+    
+    static let polygon = Web3Chain.evm(
+        chainID: 137,
+        web3ChainID: "polygon",
+        mixinChainID: ChainID.polygon,
+        feeTokenAssetID: AssetID.matic,
+        name: "Polygon",
+        failsafeRPCServerURL: URL(string: "https://polygon-rpc.com")!
+    )
+    
+    static let bnbSmartChain = Web3Chain.evm(
+        chainID: 56,
+        web3ChainID: "binance-smart-chain",
+        mixinChainID: ChainID.bnbSmartChain,
+        feeTokenAssetID: AssetID.bnb,
+        name: "BSC",
+        failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!
+    )
+    
+    static let arbitrum = Web3Chain.evm(
+        chainID: 42161,
+        web3ChainID: "arbitrum",
+        mixinChainID: nil,
+        feeTokenAssetID: AssetID.eth,
+        name: "Arbitrum",
+        failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!
+    )
+    
+    static let base = Web3Chain.evm(
+        chainID: 8453,
+        web3ChainID: "base",
+        mixinChainID: nil,
+        feeTokenAssetID: AssetID.eth,
+        name: "Base",
+        failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!
+    )
+    
+    static let optimism = Web3Chain.evm(
+        chainID: 10,
+        web3ChainID: "optimism",
+        mixinChainID: nil,
+        feeTokenAssetID: AssetID.eth,
+        name: "Optimism",
+        failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
+    )
+    
+    static let solana = Web3Chain.solana(
+        reference: "4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ",
+        web3ChainID: "solana",
+        mixinChainID: ChainID.solana,
+        feeTokenAssetID: AssetID.sol,
+        name: "Solana",
+        failsafeRPCServerURL: URL(string: "https://api.mainnet-beta.solana.com")!
+    )
+    
+#if DEBUG
+    static let solanaDevnet = Web3Chain.solana(
+        reference: "EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+        web3ChainID: "solana",
+        mixinChainID: ChainID.solana,
+        feeTokenAssetID: AssetID.sol,
+        name: "Solana",
+        failsafeRPCServerURL: URL(string: "https://api.devnet.solana.com")!
+    )
+#endif
+    
+}
+
+// MARK: - Dapp Sync
+extension Web3Chain {
+    
     static func synchronize() {
-        ExternalAPI.dapps(queue: .global()) { result in
+        Web3API.dapps(queue: .global()) { result in
             switch result {
             case .success(let updates):
                 Logger.web3.info(category: "Web3Chain", message: "Loaded \(updates.count) updates")

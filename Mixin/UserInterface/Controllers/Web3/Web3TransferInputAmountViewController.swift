@@ -35,7 +35,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
             DispatchQueue.global().async { [payment] in
                 let initError: Error?
                 do {
-                    let operation = try Web3TransferToAddressOperation(payment: payment, decimalAmount: amount)
+                    let operation = try EVMTransferToAddressOperation(payment: payment, decimalAmount: amount)
                     DispatchQueue.main.async {
                         let transfer = Web3TransferViewController(operation: operation, proposer: proposer)
                         transfer.manipulateNavigationStackOnFinished = true

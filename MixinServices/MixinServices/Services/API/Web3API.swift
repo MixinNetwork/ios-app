@@ -1,7 +1,6 @@
 import Foundation
 import Alamofire
 import CryptoKit
-import MixinServices
 
 public final class Web3API {
     
@@ -16,6 +15,10 @@ public final class Web3API {
         request(method: .get, path: "/accounts/" + address, completion: completion)
     }
     
+    public static func dapps(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void) {
+        request(method: .get, path: "/dapps", queue: queue, completion: completion)
+    }
+    
     public static func transactions(
         address: String,
         chainID: String,
@@ -25,6 +28,10 @@ public final class Web3API {
     ) {
         let path = "/transactions/\(address)?chain_id=\(chainID)&fungible_id=\(fungibleID)&limit=\(limit)"
         request(method: .get, path: path, completion: completion)
+    }
+    
+    public static func tokens(address: String, completion: @escaping (MixinAPI.Result<[Web3Token]>) -> Void) {
+        request(method: .get, path: "/tokens?addresses=" + address, completion: completion)
     }
     
 }
@@ -118,6 +125,7 @@ extension Web3API {
         method: HTTPMethod,
         path: String,
         with parameters: Parameters? = nil,
+        queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         let interceptor = Web3SigningInterceptor(method: method, path: path)
@@ -127,7 +135,7 @@ extension Web3API {
                                           parameters: parameters,
                                           encoder: .json,
                                           interceptor: interceptor)
-        return request(dataRequest, completion: completion)
+        return request(dataRequest, queue: queue, completion: completion)
     }
     
     @discardableResult
@@ -135,6 +143,7 @@ extension Web3API {
         method: HTTPMethod,
         path: String,
         with parameters: [String: Any]? = nil,
+        queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         let interceptor = Web3SigningInterceptor(method: method, path: path)
@@ -144,15 +153,16 @@ extension Web3API {
                                           parameters: parameters,
                                           encoding: JSONEncoding.default,
                                           interceptor: interceptor)
-        return request(dataRequest, completion: completion)
+        return request(dataRequest, queue: queue, completion: completion)
     }
     
     private static func request<Response>(
         _ request: DataRequest,
+        queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         request.validate(statusCode: 200...299)
-            .responseDecodable(of: ResponseObject<Response>.self) { response in
+            .responseDecodable(of: ResponseObject<Response>.self, queue: queue) { response in
                 switch response.result {
                 case .success(let response):
                     if let data = response.data {

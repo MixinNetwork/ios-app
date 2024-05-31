@@ -6,3 +6,4 @@
 #import "opusfile.h"
 #import "opusenc.h"
 #import "opusenc_set_bitrate.h"
+#import "solana_rust_sdk.h"

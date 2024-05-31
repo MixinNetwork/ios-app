@@ -75,6 +75,8 @@ final class Web3AccountLockedHeaderView: UIView {
         switch chain {
         case .ethereum:
             R.image.explore.web3_icon_eth()
+        case .solana:
+            R.image.explore.web3_icon_sol()
         default:
             nil
         }

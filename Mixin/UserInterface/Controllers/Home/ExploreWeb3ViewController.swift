@@ -4,7 +4,7 @@ import Alamofire
 import web3
 import MixinServices
 
-final class ExploreWeb3ViewController: UIViewController {
+class ExploreWeb3ViewController: UIViewController {
     
     private let tableView = UITableView()
     private let chains: [Web3Chain]
@@ -36,10 +36,7 @@ final class ExploreWeb3ViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.contentInset.bottom = 10
-        NotificationCenter.default.addObserver(self, selector: #selector(propertiesDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrency), name: Currency.currentCurrencyDidChangeNotification, object: nil)
-        let address: String? = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
-        reloadData(address: address)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -56,17 +53,8 @@ final class ExploreWeb3ViewController: UIViewController {
         reloadAccount(address: address)
     }
     
-    @objc private func propertiesDidUpdate(_ notification: Notification) {
-        guard let change = notification.userInfo?[PropertiesDAO.Key.evmAddress] as? PropertiesDAO.Change else {
-            return
-        }
-        switch change {
-        case .removed:
-            reloadData(address: nil)
-        case .saved(let convertibleAddress):
-            let address = String(convertibleAddress)
-            reloadData(address: address)
-        }
+    @objc func unlockAccount(_ sender: Any) {
+        fatalError("Must override")
     }
     
     @objc private func updateCurrency(_ notification: Notification) {
@@ -74,11 +62,6 @@ final class ExploreWeb3ViewController: UIViewController {
             return
         }
         reloadData(address: address)
-    }
-    
-    @objc private func unlockAccount(_ sender: Any) {
-        let unlock = UnlockWeb3WalletViewController(chains: chains)
-        present(unlock, animated: true)
     }
     
     @objc private func send(_ sender: Any) {
@@ -123,7 +106,7 @@ final class ExploreWeb3ViewController: UIViewController {
         present(sheet, animated: true)
     }
     
-    private func reloadData(address: String?) {
+    func reloadData(address: String?) {
         self.address = address
         if let address {
             let tableHeaderView = R.nib.web3AccountHeaderView(withOwner: nil)!

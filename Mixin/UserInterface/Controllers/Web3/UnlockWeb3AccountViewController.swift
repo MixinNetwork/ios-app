@@ -9,15 +9,18 @@ class UnlockWeb3AccountViewController: AuthenticationPreviewViewController {
     
     private(set) var isUnlocked = false
     
-    private let chains: [Web3Chain]
+    private let category: Web3Chain.Category
     
-    private var subtitle: String {
-        R.string.localizable.unlock_web3_account_description(chains[0].name)
+    private var firstChainName: String {
+        category.chains[0].name
     }
     
-    init(chains: [Web3Chain]) {
-        assert(!chains.isEmpty)
-        self.chains = chains
+    private var subtitle: String {
+        R.string.localizable.unlock_web3_account_description(firstChainName)
+    }
+    
+    init(category: Web3Chain.Category) {
+        self.category = category
         super.init(warnings: [])
     }
     
@@ -31,14 +34,14 @@ class UnlockWeb3AccountViewController: AuthenticationPreviewViewController {
         tableHeaderView.setIcon { imageView in
             imageView.image = R.image.crypto_wallet()
         }
-        layoutTableHeaderView(title: R.string.localizable.unlock_web3_account(chains[0].name), subtitle: subtitle)
+        layoutTableHeaderView(title: R.string.localizable.unlock_web3_account(firstChainName), subtitle: subtitle)
         let tableFooterView = BulletDescriptionView()
         var lines = [
-            R.string.localizable.unlock_web3_account_agreement_1(chains[0].name),
-            R.string.localizable.unlock_web3_account_agreement_2(chains[0].name),
+            R.string.localizable.unlock_web3_account_agreement_1(firstChainName),
+            R.string.localizable.unlock_web3_account_agreement_2(firstChainName),
         ]
-        if chains.count >= 3 {
-            let line = R.string.localizable.unlock_web3_account_agreement_3(chains[0].name, chains[1].name, chains[2].name)
+        if category.chains.count >= 3 {
+            let line = R.string.localizable.unlock_web3_account_agreement_3(category.chains[0].name, category.chains[1].name, category.chains[2].name)
             lines.append(line)
         }
         tableFooterView.setText(preface: R.string.localizable.unlock_web3_account_agreement(), bulletLines: lines)

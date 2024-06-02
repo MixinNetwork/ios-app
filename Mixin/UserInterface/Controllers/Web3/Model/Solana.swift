@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 enum Solana {
     
@@ -22,6 +23,12 @@ enum Solana {
             let publicKey = String(cString: UnsafePointer(key))
             solana_free_string(key)
             return publicKey
+        }
+    }
+    
+    static func isValidPublicKey(string: String) -> Bool {
+        string.withCString { string in
+            solana_is_valid_public_key(string)
         }
     }
     
@@ -61,7 +68,7 @@ extension Solana {
         let rawTransaction: String
         let change: BalanceChange?
         
-        private let pointer: UnsafeMutableRawPointer
+        private let pointer: UnsafeRawPointer
         
         init?(rawTransaction: String) {
             guard let transactionData = Data(base64Encoded: rawTransaction) else {
@@ -73,9 +80,7 @@ extension Solana {
             guard let pointer else {
                 return nil
             }
-            self.rawTransaction = rawTransaction
-            self.pointer = pointer
-            self.change = {
+            let change: BalanceChange? = {
                 var change: UInt64 = 0
                 var mintPtr: UnsafePointer<CChar>?
                 let result = solana_balance_change(pointer, &change, &mintPtr)
@@ -87,6 +92,26 @@ extension Solana {
                 solana_free_string(mintPtr)
                 return BalanceChange(amount: amount, assetKey: mint)
             }()
+            
+            self.rawTransaction = rawTransaction
+            self.change = change
+            self.pointer = pointer
+        }
+        
+        init?(from: String, to: String, amount: Decimal, token: Web3Token) {
+            let lamports = amount * Solana.lamportsPerSOL
+            var transaction: UnsafeRawPointer?
+            let result = from.withCString { from in
+                to.withCString { to in
+                    solana_new_transaction(from, to, 0, &transaction)
+                }
+            }
+            guard result == SolanaErrorCodeSuccess, let transaction else {
+                return nil
+            }
+            self.rawTransaction = ""
+            self.change = BalanceChange(amount: amount, assetKey: token.assetKey) // Really?
+            self.pointer = transaction
         }
         
         deinit {

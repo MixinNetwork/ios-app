@@ -5,7 +5,7 @@ import MixinServices
 final class UnlockEVMAccountViewController: UnlockWeb3AccountViewController {
     
     init() {
-        super.init(chains: Web3Chain.all)
+        super.init(category: .evm)
     }
     
     required init?(coder: NSCoder) {

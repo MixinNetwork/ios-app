@@ -91,7 +91,7 @@ class MixinWebViewController: WebViewController {
                 return nil
             }
             let chain = defaultEVMChain
-            guard case let .evm(chainID) = chain.category else {
+            guard case let .evm(chainID) = chain.specification else {
                 assertionFailure()
                 return nil
             }

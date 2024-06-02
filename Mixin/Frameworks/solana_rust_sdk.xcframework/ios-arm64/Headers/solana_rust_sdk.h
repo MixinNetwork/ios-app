@@ -15,6 +15,8 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeDeserializeTransaction = -7,
   SolanaErrorCodeNotLegacyMessage = -8,
   SolanaErrorCodeNotFound = -9,
+  SolanaErrorCodeInvalidString = -10,
+  SolanaErrorCodeInvalidPublicKey = -11,
 } SolanaErrorCode;
 
 extern const uint64_t SOLANA_LAMPORTS_PER_SOL;
@@ -25,25 +27,32 @@ enum SolanaErrorCode solana_public_key_from_seed(const uint8_t *seed,
                                                  size_t seed_len,
                                                  const char **out);
 
+bool solana_is_valid_public_key(const char *string);
+
 enum SolanaErrorCode solana_sign_message(const uint8_t *seed,
                                          size_t seed_len,
                                          const uint8_t *msg,
                                          size_t msg_len,
                                          const char **out);
 
-void solana_free_transaction(void *txn);
+void solana_free_transaction(const void *txn);
 
-void *solana_deserialize_transaction(const uint8_t *txn, size_t txn_len);
+const void *solana_deserialize_transaction(const uint8_t *txn, size_t txn_len);
 
-enum SolanaErrorCode solana_sign_transaction(void *txn,
+enum SolanaErrorCode solana_sign_transaction(const void *txn,
                                              const uint8_t *recent_blockhash,
                                              size_t recent_blockhash_len,
                                              const uint8_t *seed,
                                              size_t seed_len,
                                              const char **out);
 
-enum SolanaErrorCode solana_calculate_fee(void *txn,
+enum SolanaErrorCode solana_calculate_fee(const void *txn,
                                           uint64_t lamports_per_signature,
                                           uint64_t *out);
 
-enum SolanaErrorCode solana_balance_change(void *txn, uint64_t *change, const char **mint);
+enum SolanaErrorCode solana_balance_change(const void *txn, uint64_t *change, const char **mint);
+
+enum SolanaErrorCode solana_new_transaction(const char *from,
+                                            const char *to,
+                                            uint64_t lamports,
+                                            const void **out);

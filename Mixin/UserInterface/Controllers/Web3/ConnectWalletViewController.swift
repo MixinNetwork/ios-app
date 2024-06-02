@@ -42,10 +42,11 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         var rows: [Row] = [
             .proposer(name: proposal.proposer.name, host: host),
         ]
-        if chains.contains(where: { $0.isEVM }), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
+        let categories = Set(chains.map(\.category))
+        if categories.contains(.evm), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
             rows.append(.info(caption: .account, content: account))
         }
-        if chains.contains(where: { $0.isSolana }), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) {
+        if categories.contains(.solana), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) {
             rows.append(.info(caption: .account, content: account))
         }
         reloadData(with: rows)

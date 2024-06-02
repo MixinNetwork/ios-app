@@ -7,16 +7,15 @@ import MixinServices
 class ExploreWeb3ViewController: UIViewController {
     
     private let tableView = UITableView()
-    private let chains: [Web3Chain]
+    private let category: Web3Chain.Category
     
     private weak var lastAccountRequest: Request?
     
     private var address: String?
     private var tokens: [Web3Token]?
     
-    init(chains: [Web3Chain]) {
-        assert(!chains.isEmpty)
-        self.chains = chains
+    init(category: Web3Chain.Category) {
+        self.category = category
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -78,7 +77,7 @@ class ExploreWeb3ViewController: UIViewController {
         guard let address else {
             return
         }
-        let source = Web3ReceiveSourceViewController(address: address, chains: chains)
+        let source = Web3ReceiveSourceViewController(category: category, address: address)
         let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
         navigationController?.pushViewController(container, animated: true)
     }
@@ -87,7 +86,7 @@ class ExploreWeb3ViewController: UIViewController {
         guard let explore = parent as? ExploreViewController else {
             return
         }
-        let browser = Web3BrowserViewController(chains: chains)
+        let browser = Web3BrowserViewController(category: category)
         explore.presentSearch(with: browser)
     }
     
@@ -95,7 +94,8 @@ class ExploreWeb3ViewController: UIViewController {
         guard let address else {
             return
         }
-        let sheet = UIAlertController(title: R.string.localizable.web3_account_network(chains[0].name),
+        let chainName = category.chains[0].name
+        let sheet = UIAlertController(title: R.string.localizable.web3_account_network(chainName),
                                       message: Address.compactRepresentation(of: address),
                                       preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.copy_address(), style: .default, handler: { _ in
@@ -121,7 +121,7 @@ class ExploreWeb3ViewController: UIViewController {
             reloadAccount(address: address)
         } else {
             let tableHeaderView = R.nib.web3AccountLockedHeaderView(withOwner: nil)!
-            tableHeaderView.showUnlockAccount(chain: chains[0])
+            tableHeaderView.showUnlockAccount(chain: category.chains[0])
             tableHeaderView.button.addTarget(self, action: #selector(unlockAccount(_:)), for: .touchUpInside)
             tableView.tableHeaderView = tableHeaderView
             layoutTableHeaderView()
@@ -143,7 +143,7 @@ class ExploreWeb3ViewController: UIViewController {
     
     private func reloadAccount(address: String) {
         Logger.web3.debug(category: "Explore", message: "Reloading with: \(address)")
-        let chainName = chains[0].name
+        let chainName = category.chains[0].name
         if tokens?.isEmpty ?? true {
             tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
         }
@@ -211,7 +211,7 @@ extension ExploreWeb3ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let address, let token = tokens?[indexPath.row] {
-            let viewController = Web3TokenViewController(address: address, chains: chains, token: token)
+            let viewController = Web3TokenViewController(category: category, address: address, token: token)
             let container = ContainerViewController.instance(viewController: viewController, title: token.name)
             navigationController?.pushViewController(container, animated: true)
         }

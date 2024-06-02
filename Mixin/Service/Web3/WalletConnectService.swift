@@ -195,11 +195,12 @@ extension WalletConnectService {
             let evmAddress: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
             let solanaAddress: String? = PropertiesDAO.shared.value(forKey: .solanaAddress)
             DispatchQueue.main.async {
-                if evmAddress == nil, chains.contains(where: { $0.isEVM }) {
+                let categories = Set(chains.map(\.category))
+                if evmAddress == nil, categories.contains(.evm) {
                     let controller = UnlockEVMAccountViewController()
                     Web3PopupCoordinator.enqueue(popup: .unlock(controller))
-                } 
-                if solanaAddress == nil, chains.contains(where: { $0.isSolana }) {
+                }
+                if solanaAddress == nil, categories.contains(.solana) {
                     let controller = UnlockSolanaAccountViewController()
                     Web3PopupCoordinator.enqueue(popup: .unlock(controller))
                 }

@@ -7,6 +7,8 @@ class SolanaTransferOperation: Web3TransferOperation {
     
     enum InitError: Error {
         case noFeeToken(String)
+        case invalidAmount(Decimal)
+        case buildTransaction
     }
     
     private enum SigningError: Error {
@@ -20,6 +22,7 @@ class SolanaTransferOperation: Web3TransferOperation {
     
     init(
         fromAddress: String,
+        toAddress: String,
         transaction: Solana.Transaction,
         chain: Web3Chain
     ) throws {
@@ -29,7 +32,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         self.transaction = transaction
         self.client = SolanaRPCClient(url: chain.rpcServerURL)
         super.init(fromAddress: fromAddress,
-                   toAddress: "",
+                   toAddress: toAddress,
                    rawTransaction: transaction.rawTransaction,
                    chain: chain,
                    feeToken: feeToken,
@@ -140,7 +143,8 @@ final class SolanaTransferWithWalletConnectOperation: SolanaTransferOperation {
     ) throws {
         self.session = session
         self.request = request
-        try super.init(fromAddress: fromAddress,
+        try super.init(fromAddress: fromAddress, 
+                       toAddress: "", // FIXME: Decode txn
                        transaction: transaction,
                        chain: chain)
     }
@@ -177,7 +181,10 @@ final class SolanaTransferWithBrowserWalletOperation: SolanaTransferOperation {
     ) throws {
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl
-        try super.init(fromAddress: fromAddress, transaction: transaction, chain: chain)
+        try super.init(fromAddress: fromAddress,
+                       toAddress: "", // FIXME: Decode txn
+                       transaction: transaction,
+                       chain: chain)
     }
     
     override func respond(signature: String) async throws {
@@ -186,6 +193,37 @@ final class SolanaTransferWithBrowserWalletOperation: SolanaTransferOperation {
     
     override func reject() {
         rejectImpl?()
+    }
+    
+}
+
+final class SolanaTransferToAddressOperation: SolanaTransferOperation {
+    
+    init(payment: Web3SendingTokenToAddressPayment, decimalAmount: Decimal) throws {
+        let decimalAmountNumber = decimalAmount as NSDecimalNumber
+        let amount = decimalAmountNumber.multiplying(byPowerOf10: payment.token.decimalValuePower)
+        guard amount == amount.rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart) else {
+            throw InitError.invalidAmount(decimalAmount)
+        }
+        let transaction = Solana.Transaction(from: payment.fromAddress,
+                                             to: payment.toAddress,
+                                             amount: decimalAmount,
+                                             token: payment.token)
+        guard let transaction else {
+            throw InitError.buildTransaction
+        }
+        try super.init(fromAddress: payment.fromAddress,
+                       toAddress: payment.toAddress,
+                       transaction: transaction,
+                       chain: payment.chain)
+    }
+    
+    override func respond(signature: String) async throws {
+        
+    }
+    
+    override func reject() {
+        
     }
     
 }

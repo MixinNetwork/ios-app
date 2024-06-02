@@ -45,7 +45,7 @@ class EVMTransferOperation: Web3TransferOperation {
             case .ethereum:
                     .mainnet
             default:
-                switch chain.category {
+                switch chain.specification {
                 case let .evm(id):
                         .custom("\(id)")
                 default:

@@ -4,7 +4,7 @@ import MixinServices
 final class ExploreEVMViewController: ExploreWeb3ViewController {
     
     init() {
-        super.init(chains: Web3Chain.evmChains)
+        super.init(category: .evm)
     }
     
     required init?(coder: NSCoder) {

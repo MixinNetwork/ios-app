@@ -4,7 +4,7 @@ import MixinServices
 final class ExploreSolanaViewController: ExploreWeb3ViewController {
     
     init() {
-        super.init(chains: Web3Chain.solanaChains)
+        super.init(category: .solana)
     }
     
     required init?(coder: NSCoder) {

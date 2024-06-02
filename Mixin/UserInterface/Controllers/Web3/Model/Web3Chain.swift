@@ -6,12 +6,33 @@ import MixinServices
 
 final class Web3Chain {
     
-    enum Category {
+    enum Category: CaseIterable {
+        
+        case evm
+        case solana
+        
+        var chains: [Web3Chain] {
+            switch self {
+            case .evm:
+                return [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
+            case .solana:
+                var all: [Web3Chain] = [.solana]
+        #if DEBUG
+                all.append(.solanaDevnet)
+        #endif
+                return all
+            }
+        }
+        
+    }
+    
+    enum CategorySpecification {
         case evm(chainID: Int)
         case solana
     }
     
     let category: Category
+    let specification: CategorySpecification
     let web3ChainID: String
     let mixinChainID: String?
     let feeTokenAssetID: String
@@ -20,24 +41,6 @@ final class Web3Chain {
     let caip2: Blockchain
     
     private(set) var dapps: [Web3Dapp] = []
-    
-    var isEVM: Bool {
-        switch category {
-        case .evm:
-            true
-        case .solana:
-            false
-        }
-    }
-    
-    var isSolana: Bool {
-        switch category {
-        case .evm:
-            false
-        case .solana:
-            true
-        }
-    }
     
     var rpcServerURL: URL {
         #if DEBUG
@@ -57,11 +60,19 @@ final class Web3Chain {
     }
     
     private init(
-        category: Category, web3ChainID: String, mixinChainID: String?,
-        feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL,
-        caip2: Blockchain
+        specification: CategorySpecification, web3ChainID: String,
+        mixinChainID: String?, feeTokenAssetID: String, name: String,
+        failsafeRPCServerURL: URL, caip2: Blockchain
     ) {
+        let category: Category = switch specification {
+        case .evm(let chainID):
+                .evm
+        case .solana:
+                .solana
+        }
+        
         self.category = category
+        self.specification = specification
         self.web3ChainID = web3ChainID
         self.mixinChainID = mixinChainID
         self.feeTokenAssetID = feeTokenAssetID
@@ -75,7 +86,7 @@ final class Web3Chain {
         feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
     ) -> Web3Chain {
         Web3Chain(
-            category: .evm(chainID: chainID),
+            specification: .evm(chainID: chainID),
             web3ChainID: web3ChainID,
             mixinChainID: mixinChainID,
             feeTokenAssetID: feeTokenAssetID,
@@ -90,7 +101,7 @@ final class Web3Chain {
         feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
     ) -> Web3Chain {
         Web3Chain(
-            category: .solana,
+            specification: .solana,
             web3ChainID: web3ChainID,
             mixinChainID: mixinChainID,
             feeTokenAssetID: feeTokenAssetID,
@@ -168,15 +179,9 @@ extension Web3Chain {
 // MARK: - Chains
 extension Web3Chain {
     
-    static let all = evmChains + solanaChains
-    static let evmChains: [Web3Chain] = [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
-    static let solanaChains: [Web3Chain] = {
-        var all: [Web3Chain] = [.solana]
-#if DEBUG
-        all.append(.solanaDevnet)
-#endif
-        return all
-    }()
+    static let all = Category.allCases.reduce(into: []) { results, category in
+        results.append(contentsOf: category.chains)
+    }
     
     static let ethereum = Web3Chain.evm(
         chainID: 1,

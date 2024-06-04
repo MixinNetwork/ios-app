@@ -104,39 +104,49 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         reloadData(state: operation.state)
         
         Task { [operation, weak self] in
-            let change = try await operation.loadBalanceChange()
-            await MainActor.run {
-                let row: Row
-                switch change {
-                case let .decodingFailed(rawTransaction):
-                    row = .web3Message(caption: R.string.localizable.transaction(),
-                                       message: rawTransaction)
-                case let .detailed(token, amount):
-                    let tokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never)
-                    let fiatMoneyValue = amount * token.decimalUSDPrice * Currency.current.decimalRate
-                    let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-                    row = .web3Amount(caption: R.string.localizable.estimated_balance_change(),
-                                      tokenAmount: tokenAmount,
-                                      fiatMoneyAmount: fiatMoneyAmount,
-                                      token: token)
-                }
-                self?.replaceRow(at: 0, with: row)
-            }
-            if let fee = try await operation.loadFee() {
+            do {
+                let change = try await operation.loadBalanceChange()
                 await MainActor.run {
-                    let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .networkFee, sign: .never, symbol: nil)
-                    let feeCost = if fee.fiatMoney >= 0.01 {
-                        CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-                    } else {
-                        "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                    let row: Row
+                    switch change {
+                    case let .decodingFailed(rawTransaction):
+                        row = .web3Message(caption: R.string.localizable.transaction(),
+                                           message: rawTransaction)
+                    case let .detailed(token, amount):
+                        let tokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never)
+                        let fiatMoneyValue = amount * token.decimalUSDPrice * Currency.current.decimalRate
+                        let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                        row = .web3Amount(caption: R.string.localizable.estimated_balance_change(),
+                                          tokenAmount: tokenAmount,
+                                          fiatMoneyAmount: fiatMoneyAmount,
+                                          token: token)
                     }
-                    let row: Row = .amount(caption: .fee,
-                                           token: feeValue + " " + operation.feeToken.symbol,
-                                           fiatMoney: feeCost,
-                                           display: .byToken,
-                                           boldPrimaryAmount: false)
-                    self?.replaceRow(at: 1, with: row)
+                    self?.replaceRow(at: 0, with: row)
                 }
+            } catch {
+                Logger.web3.error(category: "Web3TransferView", message: "Load bal change: \(error)")
+            }
+            do {
+                if let fee = try await operation.loadFee() {
+                    await MainActor.run {
+                        let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .networkFee, sign: .never, symbol: nil)
+                        let feeCost = if fee.fiatMoney >= 0.01 {
+                            CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                        } else {
+                            "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                        }
+                        let row: Row = .amount(caption: .fee,
+                                               token: feeValue + " " + operation.feeToken.symbol,
+                                               fiatMoney: feeCost,
+                                               display: .byToken,
+                                               boldPrimaryAmount: false)
+                        self?.replaceRow(at: 1, with: row)
+                    }
+                } else {
+                    Logger.web3.info(category: "Web3TransferView", message: "Unable to load fee")
+                }
+            } catch {
+                Logger.web3.error(category: "Web3TransferView", message: "Load fee: \(error)")
             }
         }
     }

@@ -29,6 +29,7 @@ class SolanaTransferOperation: Web3TransferOperation {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
         self.client = SolanaRPCClient(url: chain.rpcServerURL)
+        Logger.web3.info(category: "SolanaTransfer", message: "Using RPC: \(chain.rpcServerURL)")
         super.init(fromAddress: fromAddress,
                    toAddress: toAddress,
                    chain: chain,
@@ -72,10 +73,6 @@ class SolanaTransferOperation: Web3TransferOperation {
         await MainActor.run {
             self.state = .sending
         }
-        try await self.send(signedTransaction: signedTransaction)
-    }
-    
-    private func send(signedTransaction: String) async throws {
         do {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
             let signature = try await client.sendTransaction(signedTransaction: signedTransaction)

@@ -8,73 +8,93 @@ struct SolanaRPCClient {
         let lamportsPerSignature: UInt64
     }
     
+    struct ResponseError: Error, Decodable, CustomStringConvertible {
+        
+        let code: Int
+        let message: String
+        
+        var description: String {
+            "SolanaRPCError: \(code), message: \(message)"
+        }
+        
+    }
+    
+    struct Response<Result: Decodable>: Decodable {
+        
+        let result: Result?
+        let error: ResponseError?
+        
+        func getResult() throws -> Result {
+            if let error = error {
+                throw error
+            } else if let result {
+                return result
+            } else {
+                throw APIError.invalidResponse
+            }
+        }
+        
+    }
+    
+    enum APIError: Error {
+        case invalidResponse
+    }
+    
     let url: URL
     
     // `pubkey` should be a base58 encoded string
     func accountExists(pubkey: String) async throws -> Bool {
         
-        struct Response: Decodable {
-            
-            struct Result: Decodable { }
-            
-            let result: Result?
-            
-        }
+        struct Result: Decodable { }
         
-        let response: Response = try await post(
+        let response: Response<Result> = try await post(
             method: "getAccountInfo",
             params: [pubkey]
         )
-        return response.result != nil
+        if let error = response.error {
+            throw error
+        } else {
+            return response.result != nil
+        }
     }
     
     func getRecentBlockhash() async throws -> RecentBlockhash {
         
-        struct Response: Decodable {
+        struct Result: Decodable {
             
-            struct Result: Decodable {
+            struct Value: Decodable {
                 
-                struct Value: Decodable {
-                    
-                    struct FeeCalculator: Decodable {
-                        let lamportsPerSignature: UInt64
-                    }
-                    
-                    let blockhash: String
-                    let feeCalculator: FeeCalculator
-                    
+                struct FeeCalculator: Decodable {
+                    let lamportsPerSignature: UInt64
                 }
                 
-                let value: Value
+                let blockhash: String
+                let feeCalculator: FeeCalculator
                 
             }
             
-            let result: Result
+            let value: Value
+            
         }
         
-        let response: Response = try await post(
+        let response: Response<Result> = try await post(
             method: "getRecentBlockhash",
-            params: nil
+            params: [["commitment": "confirmed"]]
         )
-        let value = response.result.value
+        let value = try response.getResult().value
         return RecentBlockhash(blockhash: value.blockhash,
                                lamportsPerSignature: value.feeCalculator.lamportsPerSignature)
     }
     
     func sendTransaction(signedTransaction: String) async throws -> String {
-        
-        struct Response: Decodable {
-            let result: String
-        }
-        
-        let response: Response = try await post(
+        let response: Response<String> = try await post(
             method: "sendTransaction",
             params: [
                 signedTransaction,
                 ["encoding": "base64"]
             ]
         )
-        return response.result
+        return try response.getResult()
     }
     
     private func post<Response: Decodable>(

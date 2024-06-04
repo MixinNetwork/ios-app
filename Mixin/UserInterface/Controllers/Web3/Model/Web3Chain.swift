@@ -14,13 +14,9 @@ final class Web3Chain {
         var chains: [Web3Chain] {
             switch self {
             case .evm:
-                return [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
+                [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
             case .solana:
-                var all: [Web3Chain] = [.solana]
-        #if DEBUG
-                all.append(.solanaDevnet)
-        #endif
-                return all
+                [.solana]
             }
         }
         
@@ -43,11 +39,6 @@ final class Web3Chain {
     private(set) var dapps: [Web3Dapp] = []
     
     var rpcServerURL: URL {
-        #if DEBUG
-        // Solana devnet has the same `mixinChainID` with solana mainnet
-        // Use failsafe RPC URL to test with devnet
-        failsafeRPCServerURL
-        #else
         if let mixinChainID,
            let string = AppGroupUserDefaults.web3RPCURL[mixinChainID],
            let url = URL(string: string)
@@ -56,7 +47,6 @@ final class Web3Chain {
         } else {
             failsafeRPCServerURL
         }
-        #endif
     }
     
     private init(

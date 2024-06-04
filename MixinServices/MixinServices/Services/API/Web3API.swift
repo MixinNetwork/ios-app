@@ -30,8 +30,8 @@ public final class Web3API {
         request(method: .get, path: path, completion: completion)
     }
     
-    public static func tokens(address: String, completion: @escaping (MixinAPI.Result<[Web3Token]>) -> Void) {
-        request(method: .get, path: "/tokens?addresses=" + address, completion: completion)
+    public static func tokens(address: String) async throws -> [Web3Token] {
+        try await request(method: .get, path: "/tokens?addresses=" + address)
     }
     
 }
@@ -136,6 +136,26 @@ extension Web3API {
                                           encoder: .json,
                                           interceptor: interceptor)
         return request(dataRequest, queue: queue, completion: completion)
+    }
+    
+    private static func request<Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        with parameters: [String: Any]? = nil
+    ) async throws -> Response {
+        let interceptor = Web3SigningInterceptor(method: method, path: path)
+        let url = Self.host + path
+        let dataRequest = session.request(
+            url,
+            method: method,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            interceptor: interceptor
+        ).serializingDecodable(
+            Response.self,
+            decoder: JSONDecoder.default
+        )
+        return try await dataRequest.value
     }
     
     @discardableResult

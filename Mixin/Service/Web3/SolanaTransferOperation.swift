@@ -17,96 +17,62 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
     }
     
-    let transaction: Solana.Transaction
     let client: SolanaRPCClient
     
     init(
         fromAddress: String,
         toAddress: String,
-        transaction: Solana.Transaction,
-        chain: Web3Chain
+        chain: Web3Chain,
+        canDecodeBalanceChange: Bool
     ) throws {
         guard let feeToken = try chain.feeToken() else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
-        self.transaction = transaction
         self.client = SolanaRPCClient(url: chain.rpcServerURL)
         super.init(fromAddress: fromAddress,
                    toAddress: toAddress,
-                   rawTransaction: transaction.rawTransaction,
                    chain: chain,
                    feeToken: feeToken,
-                   canDecodeBalanceChange: transaction.change != nil)
-    }
-    
-    override func loadFee(completion: @escaping (Fee) -> Void) {
-        Task {
-            do {
-                let lamportsPerSignature = try await client.getRecentBlockhash().lamportsPerSignature
-                guard let tokenCount = transaction.fee(lamportsPerSignature: lamportsPerSignature) else {
-                    return
-                }
-                let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-                let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
-                await MainActor.run {
-                    completion(fee)
-                }
-            } catch {
-                Logger.web3.debug(category: "SolanaTransfer", message: "Load fee: \(error)")
-            }
-        }
-    }
-    
-    override func loadBalanceChange(completion: @escaping (BalanceChange?) -> Void) {
-        guard let change = transaction.change else {
-            completion(nil)
-            return
-        }
-        Web3API.tokens(address: change.assetKey) { result in
-            switch result {
-            case .success(let tokens):
-                if let token = tokens.first {
-                    completion(BalanceChange(token: token, amount: change.amount))
-                } else {
-                    fallthrough
-                }
-            case .failure:
-                completion(nil)
-            }
-        }
-    }
-    
-    override func start(with pin: String) {
-        state = .signing
-        Task.detached { [client, transaction] in
-            let signedTransaction: String
-            do {
-                Logger.web3.info(category: "SolanaTransfer", message: "Start")
-                let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
-                let recentBlockhash = try await client.getRecentBlockhash().blockhash
-                Logger.web3.info(category: "SolanaTransfer", message: "Using blockhash: \(recentBlockhash)")
-                guard let blockhash = Data(base58EncodedString: recentBlockhash) else {
-                    throw SigningError.invalidBlockhash
-                }
-                Logger.web3.info(category: "SolanaTransfer", message: "Will sign")
-                signedTransaction = try transaction.sign(withPrivateKeyFrom: priv, recentBlockhash: blockhash)
-            } catch {
-                Logger.web3.error(category: "SolanaTransfer", message: "Failed to sign: \(error)")
-                await MainActor.run {
-                    self.state = .signingFailed(error)
-                }
-                return
-            }
-            Logger.web3.info(category: "SolanaTransfer", message: "Will send")
-            await MainActor.run {
-                self.state = .sending
-            }
-            try await self.send(signedTransaction: signedTransaction)
-        }
+                   canDecodeBalanceChange: canDecodeBalanceChange)
     }
     
     func respond(signature: String) async throws {
         assertionFailure("Must override")
+    }
+    
+    func fee(for transaction: Solana.Transaction) async throws -> Fee? {
+        let lamportsPerSignature = try await client.getRecentBlockhash().lamportsPerSignature
+        guard let tokenCount = transaction.fee(lamportsPerSignature: lamportsPerSignature) else {
+            return nil
+        }
+        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        return fee
+    }
+    
+    func signAndSend(transaction: Solana.Transaction, with pin: String) async throws {
+        let signedTransaction: String
+        do {
+            Logger.web3.info(category: "SolanaTransfer", message: "Start")
+            let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
+            let recentBlockhash = try await client.getRecentBlockhash().blockhash
+            Logger.web3.info(category: "SolanaTransfer", message: "Using blockhash: \(recentBlockhash)")
+            guard let blockhash = Data(base58EncodedString: recentBlockhash) else {
+                throw SigningError.invalidBlockhash
+            }
+            Logger.web3.info(category: "SolanaTransfer", message: "Will sign")
+            signedTransaction = try transaction.sign(withPrivateKeyFrom: priv, recentBlockhash: blockhash)
+        } catch {
+            Logger.web3.error(category: "SolanaTransfer", message: "Failed to sign: \(error)")
+            await MainActor.run {
+                self.state = .signingFailed(error)
+            }
+            return
+        }
+        await MainActor.run {
+            self.state = .sending
+        }
+        try await self.send(signedTransaction: signedTransaction)
     }
     
     private func send(signedTransaction: String) async throws {
@@ -114,7 +80,7 @@ class SolanaTransferOperation: Web3TransferOperation {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
             let signature = try await client.sendTransaction(signedTransaction: signedTransaction)
             try await respond(signature: signature)
-            Logger.web3.info(category: "SolanaTransfer", message: "Txn sent")
+            Logger.web3.info(category: "SolanaTransfer", message: "Txn sent, sig: \(signature)")
             await MainActor.run {
                 self.state = .success
                 self.hasTransactionSent = true
@@ -129,23 +95,64 @@ class SolanaTransferOperation: Web3TransferOperation {
     
 }
 
-final class SolanaTransferWithWalletConnectOperation: SolanaTransferOperation {
+class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
+    
+    fileprivate let transaction: Solana.Transaction
+    
+    init(
+        transaction: Solana.Transaction,
+        fromAddress: String,
+        toAddress: String,
+        chain: Web3Chain
+    ) throws {
+        self.transaction = transaction
+        try super.init(fromAddress: fromAddress,
+                       toAddress: toAddress,
+                       chain: chain,
+                       canDecodeBalanceChange: transaction.change != nil)
+        self.state = .ready
+    }
+    
+    override func loadBalanceChange() async throws -> BalanceChange {
+        if let change = transaction.change,
+           let token = try await Web3API.tokens(address: change.assetKey).first
+        {
+            .detailed(token: token, amount: change.amount)
+        } else {
+            .decodingFailed(rawTransaction: transaction.rawTransaction)
+        }
+    }
+    
+    override func loadFee() async throws -> Fee? {
+        try await fee(for: transaction)
+    }
+    
+    override func start(with pin: String) {
+        state = .signing
+        Task.detached { [transaction] in
+            try await self.signAndSend(transaction: transaction, with: pin)
+        }
+    }
+    
+}
+
+final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolanaTransferOperation {
     
     let session: WalletConnectSession
     let request: WalletConnectSign.Request
     
     init(
-        fromAddress: String,
         transaction: Solana.Transaction,
+        fromAddress: String,
         chain: Web3Chain,
         session: WalletConnectSession,
         request: WalletConnectSign.Request
     ) throws {
         self.session = session
         self.request = request
-        try super.init(fromAddress: fromAddress, 
+        try super.init(transaction: transaction,
+                       fromAddress: fromAddress,
                        toAddress: "", // FIXME: Decode txn
-                       transaction: transaction,
                        chain: chain)
     }
     
@@ -167,23 +174,23 @@ final class SolanaTransferWithWalletConnectOperation: SolanaTransferOperation {
     
 }
 
-final class SolanaTransferWithBrowserWalletOperation: SolanaTransferOperation {
+final class SolanaTransferWithBrowserWalletOperation: ArbitraryTransactionSolanaTransferOperation {
     
     private let respondImpl: ((String) async throws -> Void)?
     private let rejectImpl: (() -> Void)?
     
     init(
-        fromAddress: String,
         transaction: Solana.Transaction,
+        fromAddress: String,
         chain: Web3Chain,
         respondWith respondImpl: @escaping ((String) async throws -> Void),
         rejectWith rejectImpl: @escaping (() -> Void)
     ) throws {
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl
-        try super.init(fromAddress: fromAddress,
-                       toAddress: "", // FIXME: Decode txn
-                       transaction: transaction,
+        try super.init(transaction: transaction, 
+                       fromAddress: fromAddress,
+                       toAddress: "",
                        chain: chain)
     }
     
@@ -199,23 +206,58 @@ final class SolanaTransferWithBrowserWalletOperation: SolanaTransferOperation {
 
 final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     
+    private let payment: Web3SendingTokenToAddressPayment
+    private let decimalAmount: Decimal
+    private let amount: UInt64
+    
+    private var transaction: Solana.Transaction?
+    
     init(payment: Web3SendingTokenToAddressPayment, decimalAmount: Decimal) throws {
         let decimalAmountNumber = decimalAmount as NSDecimalNumber
         let amount = decimalAmountNumber.multiplying(byPowerOf10: payment.token.decimalValuePower)
         guard amount == amount.rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart) else {
             throw InitError.invalidAmount(decimalAmount)
         }
-        let transaction = Solana.Transaction(from: payment.fromAddress,
-                                             to: payment.toAddress,
-                                             amount: decimalAmount,
-                                             token: payment.token)
-        guard let transaction else {
-            throw InitError.buildTransaction
-        }
+        self.payment = payment
+        self.decimalAmount = decimalAmount
+        self.amount = amount.uint64Value
         try super.init(fromAddress: payment.fromAddress,
                        toAddress: payment.toAddress,
-                       transaction: transaction,
-                       chain: payment.chain)
+                       chain: payment.chain,
+                       canDecodeBalanceChange: true)
+    }
+    
+    override func loadBalanceChange() async throws -> BalanceChange {
+        .detailed(token: payment.token, amount: decimalAmount)
+    }
+    
+    override func loadFee() async throws -> Fee? {
+        let ata = try Solana.tokenAssociatedAccount(owner: payment.toAddress, mint: payment.token.assetKey)
+        let receiverAccountExists = try await client.accountExists(pubkey: ata)
+        let transaction = try Solana.Transaction(
+            from: payment.fromAddress,
+            to: payment.toAddress,
+            createAssociatedTokenAccountForReceiver: !receiverAccountExists,
+            amount: amount,
+            token: payment.token, 
+            change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
+        )
+        await MainActor.run {
+            self.transaction = transaction
+            self.state = .ready
+        }
+        return try await fee(for: transaction)
+    }
+    
+    override func start(with pin: String) {
+        guard let transaction else {
+            assertionFailure("This should happen. Check when `state` becomes `ready`")
+            return
+        }
+        state = .signing
+        Task.detached { [transaction] in
+            try await self.signAndSend(transaction: transaction, with: pin)
+        }
     }
     
     override func respond(signature: String) async throws {

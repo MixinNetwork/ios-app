@@ -13,6 +13,11 @@ class EVMTransferOperation: Web3TransferOperation {
         case notEVMChain(String)
     }
     
+    fileprivate enum BalanceChangeDerivation {
+        case fromTransactionPreview
+        case arbitrary(BalanceChange)
+    }
+    
     private struct EVMFee {
         let gasLimit: BigUInt
         let gasPrice: BigUInt // Wei
@@ -20,7 +25,7 @@ class EVMTransferOperation: Web3TransferOperation {
     
     private enum RequestError: Error {
         case mismatchedAddress
-        case invalidFee
+        case invalidFee(String)
     }
     
     let transactionPreview: EVMTransactionPreview
@@ -30,14 +35,15 @@ class EVMTransferOperation: Web3TransferOperation {
     fileprivate var transaction: EthereumTransaction?
     fileprivate var account: EthereumAccount?
     
-    private let balanceChange: BalanceChange?
+    private let balanceChange: BalanceChange
     
     private var evmFee: EVMFee?
     
     fileprivate init(
         fromAddress: String,
         transaction: EVMTransactionPreview,
-        chain: Web3Chain
+        chain: Web3Chain,
+        balanceChange balanceChangeDerivation: BalanceChangeDerivation
     ) throws {
         assert(!Thread.isMainThread)
         let client = try {
@@ -57,83 +63,84 @@ class EVMTransferOperation: Web3TransferOperation {
         guard let feeToken = try chain.feeToken() else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
-        let balanceChange: BalanceChange?
-        if let amount = transaction.decimalValue, amount != 0 {
-            balanceChange = BalanceChange(token: feeToken, amount: amount)
-        } else {
-            balanceChange = nil
+        let balanceChange: BalanceChange = switch balanceChangeDerivation {
+        case .fromTransactionPreview:
+            if let amount = transaction.decimalValue, amount != 0 {
+                .detailed(token: feeToken, amount: amount)
+            } else {
+                .decodingFailed(rawTransaction: transaction.hexData ?? "")
+            }
+        case .arbitrary(let change):
+            change
         }
-        
+        let canDecodeBalanceChange = switch balanceChange {
+        case .decodingFailed:
+            false
+        case .detailed:
+            true
+        }
         self.transactionPreview = transaction
         self.client = client
         self.balanceChange = balanceChange
         
         super.init(fromAddress: fromAddress,
                    toAddress: transaction.to.toChecksumAddress(),
-                   rawTransaction: transaction.hexData ?? "",
                    chain: chain,
                    feeToken: feeToken,
-                   canDecodeBalanceChange: balanceChange != nil)
+                   canDecodeBalanceChange: canDecodeBalanceChange)
     }
     
-    override func loadFee(completion: @escaping (Fee) -> Void) {
-        Task { [fromAddress, client, transactionPreview, feeToken, weak self] in
-            do {
-                let dappGasLimit = transactionPreview.gas
-                let transaction = EthereumTransaction(from: EthereumAddress(fromAddress),
-                                                      to: transactionPreview.to,
-                                                      value: transactionPreview.value ?? 0,
-                                                      data: transactionPreview.data,
-                                                      nonce: nil,
-                                                      gasPrice: nil,
-                                                      gasLimit: nil,
-                                                      chainId: nil)
-                let rpcGasLimit = try await client.eth_estimateGas(transaction)
-                let gasLimit: BigUInt = {
-                    let value = if let dappGasLimit {
-                        max(dappGasLimit, rpcGasLimit)
-                    } else {
-                        rpcGasLimit
-                    }
-                    return value + value / 2 // 1.5x gasLimit
-                }()
-                var gasPrice = try await client.eth_gasPrice()
-                gasPrice += gasPrice / 5 // 1.2x gasPrice
-                
-                let weiFee = (gasLimit * gasPrice).description
-                guard let decimalWeiFee = Decimal(string: weiFee, locale: .enUSPOSIX) else {
-                    return
-                }
-                let tokenCount = decimalWeiFee * .wei
-                let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-                let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
-                Logger.web3.info(category: "TxnRequest", message: "Using limit: \(gasLimit.description), price: \(gasPrice.description)")
-                await MainActor.run {
-                    guard let self else {
-                        return
-                    }
-                    self.evmFee = EVMFee(gasLimit: gasLimit, gasPrice: gasPrice)
-                    completion(fee)
-                }
-            } catch {
-                Logger.web3.info(category: "TxnRequest", message: "Failed to load gas: \(error)")
-                try await Task.sleep(nanoseconds: 3 * NSEC_PER_SEC)
-                self?.loadFee(completion: completion)
+    override func loadBalanceChange() async throws -> BalanceChange {
+        balanceChange
+    }
+    
+    override func loadFee() async throws -> Fee? {
+        let dappGasLimit = transactionPreview.gas
+        let transaction = EthereumTransaction(from: EthereumAddress(fromAddress),
+                                              to: transactionPreview.to,
+                                              value: transactionPreview.value ?? 0,
+                                              data: transactionPreview.data,
+                                              nonce: nil,
+                                              gasPrice: nil,
+                                              gasLimit: nil,
+                                              chainId: nil)
+        let rpcGasLimit = try await client.eth_estimateGas(transaction)
+        let gasLimit: BigUInt = {
+            let value = if let dappGasLimit {
+                max(dappGasLimit, rpcGasLimit)
+            } else {
+                rpcGasLimit
             }
+            return value + value / 2 // 1.5x gasLimit
+        }()
+        var gasPrice = try await client.eth_gasPrice()
+        gasPrice += gasPrice / 5 // 1.2x gasPrice
+        Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(gasLimit.description), price: \(gasPrice.description)")
+        
+        let weiFee = (gasLimit * gasPrice).description
+        guard let decimalWeiFee = Decimal(string: weiFee, locale: .enUSPOSIX) else {
+            throw RequestError.invalidFee(weiFee)
         }
-    }
-    
-    override func loadBalanceChange(completion: @escaping (BalanceChange?) -> Void) {
-        completion(balanceChange)
+        let tokenCount = decimalWeiFee * .wei
+        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(gasLimit.description), price: \(gasPrice.description)")
+        let evmFee = EVMFee(gasLimit: gasLimit, gasPrice: gasPrice)
+        await MainActor.run {
+            self.evmFee = evmFee
+            self.state = .ready
+        }
+        return fee
     }
     
     override func start(with pin: String) {
         guard let fee = evmFee else {
+            assertionFailure("Missing fee, call `start(with:)` only after fee is arrived")
             return
         }
         state = .signing
         Task.detached { [chain, client, transactionPreview] in
-            Logger.web3.info(category: "TxnRequest", message: "Will sign")
+            Logger.web3.info(category: "EVMTransfer", message: "Will sign")
             let account: EthereumAccount
             let transaction: EthereumTransaction
             do {
@@ -153,14 +160,14 @@ class EVMTransferOperation: Web3TransferOperation {
                                                   gasLimit: fee.gasLimit,
                                                   chainId: -1)
             } catch {
-                Logger.web3.error(category: "TxnRequest", message: "Failed to sign: \(error)")
+                Logger.web3.error(category: "EVMTransfer", message: "Failed to sign: \(error)")
                 await MainActor.run {
                     self.state = .signingFailed(error)
                 }
                 return
             }
             
-            Logger.web3.info(category: "TxnRequest", message: "Will send")
+            Logger.web3.info(category: "EVMTransfer", message: "Will send")
             await MainActor.run {
                 self.state = .sending
             }
@@ -177,9 +184,9 @@ class EVMTransferOperation: Web3TransferOperation {
             return
         }
         state = .sending
-        Logger.web3.info(category: "TxnRequest", message: "Will resend")
+        Logger.web3.info(category: "EVMTransfer", message: "Will resend")
         Task.detached {
-            Logger.web3.info(category: "TxnRequest", message: "Will resend")
+            Logger.web3.info(category: "EVMTransfer", message: "Will resend")
             await self.send(transaction: transaction, with: account)
         }
     }
@@ -189,17 +196,17 @@ class EVMTransferOperation: Web3TransferOperation {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation
                 ?? "(null)"
-            Logger.web3.info(category: "TxnRequest", message: "Will send tx: \(transactionDescription)")
+            Logger.web3.info(category: "EVMTransfer", message: "Will send tx: \(transactionDescription)")
             let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
             Logger.web3.info(category: "TxnRequest", message: "Will respond hash: \(hash)")
             try await respond(hash: hash)
-            Logger.web3.info(category: "TxnRequest", message: "Txn sent")
+            Logger.web3.info(category: "EVMTransfer", message: "Txn sent")
             await MainActor.run {
                 self.state = .success
                 self.hasTransactionSent = true
             }
         } catch {
-            Logger.web3.error(category: "TxnRequest", message: "Failed to send: \(error)")
+            Logger.web3.error(category: "EVMTransfer", message: "Failed to send: \(error)")
             await MainActor.run {
                 self.state = .sendingFailed(error)
             }
@@ -224,7 +231,8 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
         self.request = request
         try super.init(fromAddress: fromAddress,
                        transaction: transaction,
-                       chain: chain)
+                       chain: chain,
+                       balanceChange: .fromTransactionPreview)
     }
     
     override func respond(hash: String) async throws {
@@ -261,7 +269,8 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
         self.rejectImpl = rejectImpl
         try super.init(fromAddress: fromAddress,
                        transaction: transaction,
-                       chain: chain)
+                       chain: chain,
+                       balanceChange: .fromTransactionPreview)
     }
     
     override func respond(hash: String) async throws {
@@ -315,9 +324,11 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 decimalValue: nil // TODO: Better preview with decimal value
             )
         }
+        let change: BalanceChange = .detailed(token: payment.token, amount: decimalAmount)
         try super.init(fromAddress: payment.fromAddress,
                        transaction: transaction,
-                       chain: payment.chain)
+                       chain: payment.chain,
+                       balanceChange: .arbitrary(change))
     }
     
     override func respond(hash: String) async throws {

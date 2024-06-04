@@ -3,8 +3,14 @@ import MixinServices
 
 class Web3TransferOperation {
     
+    struct Fee {
+        let token: Decimal
+        let fiatMoney: Decimal
+    }
+    
     enum State {
-        case pending
+        case loading
+        case ready
         case signing
         case signingFailed(Error)
         case sending
@@ -12,46 +18,38 @@ class Web3TransferOperation {
         case success
     }
     
-    struct Fee {
-        let token: Decimal
-        let fiatMoney: Decimal
-    }
-    
-    struct BalanceChange {
-        let token: Web3TransferableToken
-        let amount: Decimal
+    enum BalanceChange {
+        case decodingFailed(rawTransaction: String)
+        case detailed(token: Web3TransferableToken, amount: Decimal)
     }
     
     let fromAddress: String
     let toAddress: String
-    let rawTransaction: String
     let chain: Web3Chain
     let feeToken: TokenItem
     let canDecodeBalanceChange: Bool
     
     @Published
-    var state: State = .pending
+    var state: State = .loading
     var hasTransactionSent = false
     
     init(
-        fromAddress: String, toAddress: String, rawTransaction: String,
-        chain: Web3Chain, feeToken: TokenItem, canDecodeBalanceChange: Bool
+        fromAddress: String, toAddress: String, chain: Web3Chain,
+        feeToken: TokenItem, canDecodeBalanceChange: Bool
     ) {
         self.fromAddress = fromAddress
         self.toAddress = toAddress
-        self.rawTransaction = rawTransaction
         self.chain = chain
         self.feeToken = feeToken
         self.canDecodeBalanceChange = canDecodeBalanceChange
     }
     
-    @MainActor
-    func loadFee(completion: @escaping (Fee) -> Void) {
-        
+    func loadBalanceChange() async throws -> BalanceChange {
+        fatalError("Must override")
     }
     
-    func loadBalanceChange(completion: @escaping (BalanceChange?) -> Void) {
-        
+    func loadFee() async throws -> Fee? {
+        fatalError("Must override")
     }
     
     func start(with pin: String) {

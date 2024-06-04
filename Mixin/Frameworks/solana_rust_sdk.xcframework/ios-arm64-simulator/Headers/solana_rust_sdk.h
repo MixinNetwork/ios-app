@@ -17,6 +17,7 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeNotFound = -9,
   SolanaErrorCodeInvalidString = -10,
   SolanaErrorCodeInvalidPublicKey = -11,
+  SolanaErrorCodeBuildSPLInstruction = -12,
 } SolanaErrorCode;
 
 extern const uint64_t SOLANA_LAMPORTS_PER_SOL;
@@ -52,7 +53,18 @@ enum SolanaErrorCode solana_calculate_fee(const void *txn,
 
 enum SolanaErrorCode solana_balance_change(const void *txn, uint64_t *change, const char **mint);
 
-enum SolanaErrorCode solana_new_transaction(const char *from,
-                                            const char *to,
-                                            uint64_t lamports,
-                                            const void **out);
+enum SolanaErrorCode solana_new_sol_transaction(const char *from,
+                                                const char *to,
+                                                uint64_t lamports,
+                                                const void **out);
+
+enum SolanaErrorCode solana_associated_token_account(const char *owner,
+                                                     const char *mint,
+                                                     const char **out);
+
+enum SolanaErrorCode solana_new_spl_transaction(const char *from,
+                                                const char *to,
+                                                bool create_to_ata,
+                                                const char *mint,
+                                                uint64_t amount,
+                                                const void **out);

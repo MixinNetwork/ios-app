@@ -229,8 +229,8 @@ final class Web3Worker {
         DispatchQueue.global().async { [solanaChain, proposer=currentProposer] in
             do {
                 let operation = try SolanaTransferWithBrowserWalletOperation(
-                    fromAddress: address,
                     transaction: transaction,
+                    fromAddress: address,
                     chain: solanaChain
                 ) { signature in
                     try await self.send(result: signature, to: request)

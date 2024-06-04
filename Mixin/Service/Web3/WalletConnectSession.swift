@@ -195,8 +195,8 @@ extension WalletConnectSession {
                     throw Error.noAccount
                 }
                 let operation = try SolanaTransferWithWalletConnectOperation(
+                    transaction: transaction, 
                     fromAddress: address,
-                    transaction: transaction,
                     chain: chain,
                     session: self,
                     request: request

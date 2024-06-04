@@ -10,6 +10,24 @@ struct SolanaRPCClient {
     
     let url: URL
     
+    // `pubkey` should be a base58 encoded string
+    func accountExists(pubkey: String) async throws -> Bool {
+        
+        struct Response: Decodable {
+            
+            struct Result: Decodable { }
+            
+            let result: Result?
+            
+        }
+        
+        let response: Response = try await post(
+            method: "getAccountInfo",
+            params: [pubkey]
+        )
+        return response.result != nil
+    }
+    
     func getRecentBlockhash() async throws -> RecentBlockhash {
         
         struct Response: Decodable {
@@ -84,7 +102,7 @@ struct SolanaRPCClient {
             Response.self,
             decoder: JSONDecoder.default
         )
-        return try await request.result.get()
+        return try await request.value
     }
     
 }

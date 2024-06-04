@@ -54,6 +54,24 @@ enum Solana {
         }
     }
     
+    static func tokenAssociatedAccount(owner: String, mint: String) throws -> String {
+        try owner.withCString { owner in
+            try mint.withCString { mint in
+                var accountPtr: UnsafePointer<CChar>?
+                let result = solana_associated_token_account(owner, mint, &accountPtr)
+                guard result == SolanaErrorCodeSuccess else {
+                    throw Error.code(result)
+                }
+                guard let accountPtr else {
+                    throw Error.nullResult
+                }
+                let account = String(cString: UnsafePointer(accountPtr))
+                solana_free_string(accountPtr)
+                return account
+            }
+        }
+    }
+    
 }
 
 extension Solana {
@@ -98,19 +116,41 @@ extension Solana {
             self.pointer = pointer
         }
         
-        init?(from: String, to: String, amount: Decimal, token: Web3Token) {
-            let lamports = amount * Solana.lamportsPerSOL
+        init(
+            from: String,
+            to: String,
+            createAssociatedTokenAccountForReceiver: Bool,
+            amount: UInt64,
+            token: Web3Token,
+            change: BalanceChange
+        ) throws {
+            let isSendingSOL = token.chainID == Web3Token.ChainID.solana
+                && (token.assetKey == Web3Token.AssetKey.sol || token.assetKey == Web3Token.AssetKey.wrappedSOL)
             var transaction: UnsafeRawPointer?
             let result = from.withCString { from in
                 to.withCString { to in
-                    solana_new_transaction(from, to, 0, &transaction)
+                    if isSendingSOL {
+                        solana_new_sol_transaction(from, to, amount, &transaction)
+                    } else {
+                        token.assetKey.withCString { mint in
+                            solana_new_spl_transaction(from, 
+                                                       to,
+                                                       createAssociatedTokenAccountForReceiver,
+                                                       mint,
+                                                       amount,
+                                                       &transaction)
+                        }
+                    }
                 }
             }
-            guard result == SolanaErrorCodeSuccess, let transaction else {
-                return nil
+            guard result == SolanaErrorCodeSuccess else {
+                throw Error.code(result)
+            }
+            guard let transaction else {
+                throw Error.nullResult
             }
             self.rawTransaction = ""
-            self.change = BalanceChange(amount: amount, assetKey: token.assetKey) // Really?
+            self.change = change
             self.pointer = transaction
         }
         

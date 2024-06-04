@@ -1004,7 +1004,7 @@
 		94EE1DC72B721E4800C32DD4 /* MultisigPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1DC62B721E4800C32DD4 /* MultisigPreviewViewController.swift */; };
 		94F209D52C06C1A300550060 /* SolanaTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209D42C06C1A300550060 /* SolanaTransferOperation.swift */; };
 		94F209DA2C06C1CE00550060 /* EVMTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */; };
-		94F209DC2C06F23A00550060 /* SolanaRPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209DB2C06F23A00550060 /* SolanaRPC.swift */; };
+		94F209DC2C06F23A00550060 /* SolanaRPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */; };
 		94F209E52C070DEA00550060 /* solana_rust_sdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */; };
 		94F209E62C070DEA00550060 /* solana_rust_sdk.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
@@ -2273,7 +2273,7 @@
 		94EE1DC62B721E4800C32DD4 /* MultisigPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigPreviewViewController.swift; sourceTree = "<group>"; };
 		94F209D42C06C1A300550060 /* SolanaTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaTransferOperation.swift; sourceTree = "<group>"; };
 		94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVMTransferOperation.swift; sourceTree = "<group>"; };
-		94F209DB2C06F23A00550060 /* SolanaRPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaRPC.swift; sourceTree = "<group>"; };
+		94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaRPCClient.swift; sourceTree = "<group>"; };
 		94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = solana_rust_sdk.xcframework; sourceTree = "<group>"; };
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
 		94F952572AE616F40025B995 /* TransferOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOutViewController.swift; sourceTree = "<group>"; };
@@ -3420,7 +3420,7 @@
 				9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */,
 				9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */,
 				94838A432C02ADFB005B6A27 /* Solana.swift */,
-				94F209DB2C06F23A00550060 /* SolanaRPC.swift */,
+				94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6084,7 +6084,7 @@
 				E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */,
 				94571E0925CC48AE001980DA /* AudioSession.swift in Sources */,
 				94C886122BA2D5460039F723 /* ConnectWalletViewController.swift in Sources */,
-				94F209DC2C06F23A00550060 /* SolanaRPC.swift in Sources */,
+				94F209DC2C06F23A00550060 /* SolanaRPCClient.swift in Sources */,
 				94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,

@@ -45,17 +45,20 @@ struct SolanaRPCClient {
     // `pubkey` should be a base58 encoded string
     func accountExists(pubkey: String) async throws -> Bool {
         
-        struct Result: Decodable { }
+        struct Result: Codable {
+            
+            struct Value: Codable { }
+            
+            let value: Value?
+            
+        }
         
         let response: Response<Result> = try await post(
             method: "getAccountInfo",
             params: [pubkey]
         )
-        if let error = response.error {
-            throw error
-        } else {
-            return response.result != nil
-        }
+        let value = try response.getResult().value
+        return value != nil
     }
     
     func getRecentBlockhash() async throws -> RecentBlockhash {
@@ -79,7 +82,7 @@ struct SolanaRPCClient {
         
         let response: Response<Result> = try await post(
             method: "getRecentBlockhash",
-            params: [["commitment": "confirmed"]]
+            params: nil
         )
         let value = try response.getResult().value
         return RecentBlockhash(blockhash: value.blockhash,

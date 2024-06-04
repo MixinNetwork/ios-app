@@ -55,7 +55,7 @@ final class Web3Chain {
         failsafeRPCServerURL: URL, caip2: Blockchain
     ) {
         let category: Category = switch specification {
-        case .evm(let chainID):
+        case .evm:
                 .evm
         case .solana:
                 .solana

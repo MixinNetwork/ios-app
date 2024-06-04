@@ -35,6 +35,7 @@ class EVMTransferOperation: Web3TransferOperation {
     fileprivate var transaction: EthereumTransaction?
     fileprivate var account: EthereumAccount?
     
+    private let chainID: Int
     private let balanceChange: BalanceChange
     
     private var evmFee: EVMFee?
@@ -46,20 +47,15 @@ class EVMTransferOperation: Web3TransferOperation {
         balanceChange balanceChangeDerivation: BalanceChangeDerivation
     ) throws {
         assert(!Thread.isMainThread)
-        let client = try {
-            let network: EthereumNetwork = switch chain {
-            case .ethereum:
-                    .mainnet
-            default:
-                switch chain.specification {
-                case let .evm(id):
-                        .custom("\(id)")
-                default:
-                    throw InitError.notEVMChain(chain.name)
-                }
-            }
-            return EthereumHttpClient(url: chain.rpcServerURL, network: network)
-        }()
+        let chainID: Int
+        let client: EthereumHttpClient
+        switch chain.specification {
+        case let .evm(id):
+            chainID = id
+            client = EthereumHttpClient(url: chain.rpcServerURL, network: .custom("\(id)"))
+        default:
+            throw InitError.notEVMChain(chain.name)
+        }
         guard let feeToken = try chain.feeToken() else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
@@ -81,13 +77,15 @@ class EVMTransferOperation: Web3TransferOperation {
         }
         self.transactionPreview = transaction
         self.client = client
+        self.chainID = chainID
         self.balanceChange = balanceChange
         
         super.init(fromAddress: fromAddress,
                    toAddress: transaction.to.toChecksumAddress(),
                    chain: chain,
                    feeToken: feeToken,
-                   canDecodeBalanceChange: canDecodeBalanceChange)
+                   canDecodeBalanceChange: canDecodeBalanceChange, 
+                   isResendingTransactionAvailable: true)
     }
     
     override func loadBalanceChange() async throws -> BalanceChange {
@@ -139,7 +137,7 @@ class EVMTransferOperation: Web3TransferOperation {
             return
         }
         state = .signing
-        Task.detached { [chain, client, transactionPreview] in
+        Task.detached { [chainID, client, transactionPreview] in
             Logger.web3.info(category: "EVMTransfer", message: "Will sign")
             let account: EthereumAccount
             let transaction: EthereumTransaction
@@ -158,7 +156,7 @@ class EVMTransferOperation: Web3TransferOperation {
                                                   nonce: nonce,
                                                   gasPrice: fee.gasPrice,
                                                   gasLimit: fee.gasLimit,
-                                                  chainId: -1)
+                                                  chainId: chainID)
             } catch {
                 Logger.web3.error(category: "EVMTransfer", message: "Failed to sign: \(error)")
                 await MainActor.run {
@@ -179,7 +177,7 @@ class EVMTransferOperation: Web3TransferOperation {
         assertionFailure("Must override")
     }
     
-    override func resendTransaction(_ sender: Any) {
+    override func resendTransaction() {
         guard let transaction, let account else {
             return
         }
@@ -206,7 +204,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 self.hasTransactionSent = true
             }
         } catch {
-            Logger.web3.error(category: "EVMTransfer", message: "Failed to send: \(error)")
+            Logger.web3.error(category: "EVMTransfer", message: "Send: \(error)")
             await MainActor.run {
                 self.state = .sendingFailed(error)
             }

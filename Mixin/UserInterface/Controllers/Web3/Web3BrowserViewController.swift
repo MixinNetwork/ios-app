@@ -66,7 +66,7 @@ final class Web3BrowserViewController: UIViewController {
             return
         }
         quickAccess = QuickAccessSearchResult(keyword: keyword)
-        var dapps: OrderedSet<Web3Dapp> = category.chains.reduce(into: []) { results, chain in
+        let dapps: OrderedSet<Web3Dapp> = category.chains.reduce(into: []) { results, chain in
             results.formUnion(chain.dapps)
         }
         searchResults = dapps.filter { dapp in

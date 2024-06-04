@@ -124,7 +124,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                     self?.replaceRow(at: 0, with: row)
                 }
             } catch {
-                Logger.web3.error(category: "Web3TransferView", message: "Load bal change: \(error)")
+                Logger.web3.error(category: "Web3TransferView", message: "Load bal. change: \(error)")
             }
             do {
                 if let fee = try await operation.loadFee() {
@@ -176,6 +176,14 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         }
     }
     
+    @objc func resendTransaction(_ sender: Any) {
+        if operation.isResendingTransactionAvailable {
+            operation.resendTransaction()
+        } else {
+            confirm(sender)
+        }
+    }
+    
     private func reloadData(state: Web3TransferOperation.State) {
         var confirmButton: UIButton? {
             (trayView as? AuthenticationPreviewDoubleButtonTrayView)?.rightButton
@@ -216,7 +224,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                      leftAction: #selector(close(_:)),
                                      rightTitle: R.string.localizable.retry(),
-                                     rightAction: #selector(operation.resendTransaction(_:)),
+                                     rightAction: #selector(resendTransaction(_:)),
                                      animation: .vertical)
         case .success:
             canDismissInteractively = true

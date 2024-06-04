@@ -34,7 +34,8 @@ class SolanaTransferOperation: Web3TransferOperation {
                    toAddress: toAddress,
                    chain: chain,
                    feeToken: feeToken,
-                   canDecodeBalanceChange: canDecodeBalanceChange)
+                   canDecodeBalanceChange: canDecodeBalanceChange,
+                   isResendingTransactionAvailable: false)
     }
     
     func respond(signature: String) async throws {
@@ -248,7 +249,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     
     override func start(with pin: String) {
         guard let transaction else {
-            assertionFailure("This should happen. Check when `state` becomes `ready`")
+            assertionFailure("This shouldn't happen. Check when `state` becomes `ready`")
             return
         }
         state = .signing

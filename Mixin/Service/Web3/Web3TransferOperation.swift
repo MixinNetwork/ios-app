@@ -28,6 +28,7 @@ class Web3TransferOperation {
     let chain: Web3Chain
     let feeToken: TokenItem
     let canDecodeBalanceChange: Bool
+    let isResendingTransactionAvailable: Bool
     
     @Published
     var state: State = .loading
@@ -35,13 +36,15 @@ class Web3TransferOperation {
     
     init(
         fromAddress: String, toAddress: String, chain: Web3Chain,
-        feeToken: TokenItem, canDecodeBalanceChange: Bool
+        feeToken: TokenItem, canDecodeBalanceChange: Bool,
+        isResendingTransactionAvailable: Bool
     ) {
         self.fromAddress = fromAddress
         self.toAddress = toAddress
         self.chain = chain
         self.feeToken = feeToken
         self.canDecodeBalanceChange = canDecodeBalanceChange
+        self.isResendingTransactionAvailable = isResendingTransactionAvailable
     }
     
     func loadBalanceChange() async throws -> BalanceChange {
@@ -68,8 +71,8 @@ class Web3TransferOperation {
         reject()
     }
     
-    @objc func resendTransaction(_ sender: Any) {
-        assertionFailure("Must override")
+    func resendTransaction() {
+        
     }
     
 }

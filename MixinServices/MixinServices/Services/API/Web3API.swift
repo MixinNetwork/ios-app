@@ -152,10 +152,17 @@ extension Web3API {
             encoding: JSONEncoding.default,
             interceptor: interceptor
         ).serializingDecodable(
-            Response.self,
+            ResponseObject<Response>.self,
             decoder: JSONDecoder.default
         )
-        return try await dataRequest.value
+        let value = try await dataRequest.value
+        if let data = value.data {
+            return data
+        } else if let error = value.error {
+            throw error
+        } else {
+            throw MixinAPIError.emptyResponse
+        }
     }
     
     @discardableResult

@@ -5,6 +5,7 @@ import Foundation
 // See https://github.com/bitcoin/bitcoin/blob/306ccd4927a2efe325c8d84be1bdb79edeb29b04/src/base58.cpp
 // Permanent https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp
 
+fileprivate let pszBase58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 fileprivate let mapBase58: [Int] = [
     -1,-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,
     -1,-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,
@@ -65,6 +66,48 @@ extension Data {
         
         self.init(count: zeroes + length)
         replaceSubrange(zeroes..<zeroes + length, with: buffer[size - length..<size])
+    }
+    
+    public func base58EncodedString() -> String {
+        var zeroes = 0
+        var length = 0
+        var input = self
+        while input.count > 0 && input[input.startIndex] == 0 {
+            input.removeFirst()
+            zeroes += 1
+        }
+        
+        let size = input.count * 138 / 100 + 1
+        var b58 = [UInt8](repeating: 0, count: size)
+        
+        while input.count > 0 {
+            var carry = Int(input[input.startIndex])
+            var i = 0
+            for it in stride(from: b58.endIndex - 1, through: b58.startIndex, by: -1) {
+                carry += 256 * Int(b58[it])
+                b58[it] = UInt8(carry % 58)
+                carry /= 58
+                guard carry != 0 || i < length else {
+                    break
+                }
+                i += 1
+            }
+            assert(carry == 0)
+            length = i
+            input.removeFirst()
+        }
+        
+        var it = b58.index(b58.startIndex, offsetBy: size - length - 1)
+        while it != b58.endIndex && b58[it] == 0 {
+            it = b58.index(after: it)
+        }
+        
+        var str = String(repeating: "1", count: zeroes)
+        while it != b58.endIndex {
+            str.append(pszBase58[pszBase58.index(pszBase58.startIndex, offsetBy: Int(b58[it]))])
+            it = b58.index(after: it)
+        }
+        return str
     }
     
 }

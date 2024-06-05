@@ -205,7 +205,21 @@ final class Web3SignWithBrowserWalletOperation: Web3SignOperation {
     
     override func send(signature: String) async {
         do {
-            try await sendImpl?(signature)
+            switch chain.category {
+            case .evm:
+                try await sendImpl?(signature)
+            case .solana:
+                guard case let .raw(signedMessage) = signable else {
+                    throw SigningError.invalidSignable
+                }
+                let output: [String: Any] = [
+                    "account": ["publicKey": address],
+                    "signedMessage": signedMessage.base58EncodedString(),
+                    "signature": signature
+                ]
+                let json = try JSONSerialization.data(withJSONObject: output)
+                try await sendImpl?(json.hexEncodedString())
+            }
             Logger.web3.info(category: "Sign", message: "Signature sent")
             await MainActor.run {
                 self.state = .success

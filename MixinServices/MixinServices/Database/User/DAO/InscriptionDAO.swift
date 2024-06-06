@@ -18,7 +18,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
             WHERE o.state = 'unspent'
         """
         
-        static let order = "\nORDER BY o.sequence ASC"
+        static let order = "\nORDER BY o.sequence DESC"
         
     }
     
@@ -42,7 +42,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
     }
     
     public func inscriptionOutput(inscriptionHash hash: String) -> InscriptionOutput? {
-        db.select(with: SQL.selector + " AND o.inscription_hash = ?" + SQL.order, arguments: [hash])
+        db.select(with: SQL.selector + " AND o.inscription_hash = ?", arguments: [hash])
     }
     
     public func allInscriptionOutputs() -> [InscriptionOutput] {

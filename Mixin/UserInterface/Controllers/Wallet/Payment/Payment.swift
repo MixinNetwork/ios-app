@@ -27,6 +27,11 @@ struct Payment {
         else {
             return nil
         }
+        
+        self.init(traceID: traceID, amount: amount, token: token, output: output, item: item)
+    }
+    
+    init(traceID: String, amount: Decimal, token: TokenItem, output: Output, item: InscriptionItem) {
         let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
         self.traceID = traceID
         self.token = token

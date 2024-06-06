@@ -13,13 +13,9 @@ struct SafePaymentURL {
         case mainnet(String)
     }
     
-    struct Request {
-        let asset: String
-        let amount: Decimal
-    }
-    
     let address: Address
-    let request: Request?
+    let asset: String?
+    let amount: Decimal?
     let memo: String
     let trace: String
     let redirection: URL?
@@ -89,18 +85,16 @@ struct SafePaymentURL {
             decimalAmount = nil
         }
         
-        let request: Request?
-        switch (asset, decimalAmount) {
-        case let (.some(asset), .some(decimalAmount)):
-            request = Request(asset: asset, amount: decimalAmount)
-        case (.none, .none):
-            request = nil
-        case (.some, .none):
-            Logger.general.warn(category: "SafePayment", message: "Invalid args: amount is null")
-            return nil
-        case (.none, .some):
-            Logger.general.warn(category: "SafePayment", message: "Invalid args: asset is null")
-            return nil
+        let inscription: String?
+        if let hash = queries["inscription"] {
+            if hash.count == 64 {
+                inscription = hash
+            } else {
+                Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")
+                return nil
+            }
+        } else {
+            inscription = nil
         }
         
         let trace: String
@@ -124,25 +118,30 @@ struct SafePaymentURL {
             redirection = nil
         }
         
-        let inscription: String?
-        if let hash = queries["inscription"] {
-            if hash.count == 64 {
-                inscription = hash
-            } else {
-                Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")
-                return nil
-            }
-        } else {
-            inscription = nil
+        switch (asset, decimalAmount, inscription) {
+        case (.none, .some, .none):
+            Logger.general.warn(category: "SafePayment", message: "Invalid args: asset is null")
+            return nil
+        default:
+            break
         }
         
         self.address = address
-        self.request = request
+        self.asset = asset
+        self.amount = decimalAmount
         self.memo = queries["memo"] ?? ""
         self.trace = trace
         self.redirection = redirection
         self.reference = queries["reference"]
         self.inscription = inscription
+    }
+    
+}
+
+extension SafePaymentURL {
+    
+    var isPreviewTransaction: Bool {
+        (asset != nil && amount != nil) || inscription != nil
     }
     
 }

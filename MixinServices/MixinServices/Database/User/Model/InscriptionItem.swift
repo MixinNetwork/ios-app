@@ -18,7 +18,7 @@ public struct InscriptionItem {
         "#\(sequence)"
     }
     
-    init(collection: InscriptionCollection, inscription: Inscription) {
+    public init(collection: InscriptionCollection, inscription: Inscription) {
         collectionHash      = collection.collectionHash
         collectionName      = collection.name
         collectionIconURL   = collection.iconURL

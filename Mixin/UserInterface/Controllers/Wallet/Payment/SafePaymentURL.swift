@@ -13,6 +13,12 @@ struct SafePaymentURL {
         case mainnet(String)
     }
     
+    enum Request {
+        case prefilled(assetID: String, amount: Decimal)
+        case inscription(hash: String)
+        case notDetermined(assetID: String?, amount: Decimal?)
+    }
+    
     let address: Address
     let asset: String?
     let amount: Decimal?
@@ -21,6 +27,16 @@ struct SafePaymentURL {
     let redirection: URL?
     let reference: String?
     let inscription: String?
+    
+    var request: Request {
+        if let inscription {
+            .inscription(hash: inscription)
+        } else if let asset, let amount {
+            .prefilled(assetID: asset, amount: amount)
+        } else {
+            .notDetermined(assetID: asset, amount: amount)
+        }
+    }
     
     init?(url: URL) {
         guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
@@ -118,14 +134,6 @@ struct SafePaymentURL {
             redirection = nil
         }
         
-        switch (asset, decimalAmount, inscription) {
-        case (.none, .some, .none):
-            Logger.general.warn(category: "SafePayment", message: "Invalid args: asset is null")
-            return nil
-        default:
-            break
-        }
-        
         self.address = address
         self.asset = asset
         self.amount = decimalAmount
@@ -134,14 +142,6 @@ struct SafePaymentURL {
         self.redirection = redirection
         self.reference = queries["reference"]
         self.inscription = inscription
-    }
-    
-}
-
-extension SafePaymentURL {
-    
-    var isPreviewTransaction: Bool {
-        (asset != nil && amount != nil) || inscription != nil
     }
     
 }

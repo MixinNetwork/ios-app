@@ -62,6 +62,11 @@ public final class InscriptionDAO: UserDatabaseDAO {
 
 extension InscriptionDAO {
     
+    public func collectionExists(hash: String) -> Bool {
+        db.recordExists(in: InscriptionCollection.self,
+                        where: InscriptionCollection.column(of: .collectionHash) == hash)
+    }
+    
     public func collection(hash: String) -> InscriptionCollection? {
         db.select(where: InscriptionCollection.column(of: .collectionHash) == hash)
     }

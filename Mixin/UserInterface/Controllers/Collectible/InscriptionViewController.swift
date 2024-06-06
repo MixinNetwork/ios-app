@@ -148,10 +148,12 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
             let navigationController,
             let output,
             let item = inscription,
-            let payment = Payment(traceID: traceID, output: output, item: item)
+            let token = TokenDAO.shared.tokenItem(kernelAssetID: output.asset),
+            let amount = Decimal(string: output.amount, locale: .enUSPOSIX)
         else {
             return
         }
+        let payment = Payment(traceID: traceID, amount: amount, token: token, output: output, item: item)
         let selector = TransferReceiverViewController()
         let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.send_to_title())
         selector.onSelect = { (user) in

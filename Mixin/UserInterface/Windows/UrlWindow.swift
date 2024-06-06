@@ -930,43 +930,10 @@ extension UrlWindow {
             case let .mainnet(address):
                 destination = .mainnet(address)
             }
-            if let request = paymentURL.request {
-                guard let token = syncToken(assetID: request.asset, hud: hud) else {
-                    return
-                }
-                let fiatMoneyAmount = request.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
-                DispatchQueue.main.async {
-                    let payment = Payment(traceID: paymentURL.trace,
-                                          token: token,
-                                          tokenAmount: request.amount,
-                                          fiatMoneyAmount: fiatMoneyAmount,
-                                          memo: paymentURL.memo)
-                    payment.checkPreconditions(
-                        transferTo: destination,
-                        reference: paymentURL.reference,
-                        on: homeContainer
-                    ) { reason in
-                        switch reason {
-                        case .userCancelled:
-                            hud.hide()
-                        case .description(let message):
-                            hud.set(style: .error, text: message)
-                            hud.scheduleAutoHidden()
-                        }
-                    } onSuccess: { (operation, issues) in
-                        hud.hide()
-                        let redirection = source.isExternal ? paymentURL.redirection : nil
-                        let preview = TransferPreviewViewController(issues: issues,
-                                                                    operation: operation,
-                                                                    amountDisplay: .byToken,
-                                                                    tokenAmount: request.amount,
-                                                                    fiatMoneyAmount: fiatMoneyAmount,
-                                                                    redirection: redirection)
-                        preview.manipulateNavigationStackOnFinished = false
-                        homeContainer.present(preview, animated: true)
-                    }
-                }
-            } else {
+            
+            let payment: Payment
+            switch paymentURL.request {
+            case .notDetermined:
                 DispatchQueue.main.async {
                     let transfer: UIViewController
                     switch destination {
@@ -982,6 +949,70 @@ extension UrlWindow {
                     hud.hide()
                     UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
                 }
+                return
+            case let .inscription(hash):
+                guard let (output, inscriptionItem) = syncInscriptionOutput(inscriptionHash: hash, hud: hud) else {
+                    return
+                }
+                guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+                    Logger.general.error(category: "UrlWindow", message: "Invalid output amount: \(output.amount)")
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: "Invalid Output")
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                guard let assetID = TokenDAO.shared.assetID(ofAssetWith: output.asset) else {
+                    Logger.general.warn(category: "UrlWindow", message: "Missing output asset: \(output.asset)")
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: "Missing Asset")
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                    return
+                }
+                payment = Payment(traceID: paymentURL.trace,
+                                  amount: amount,
+                                  token: token,
+                                  output: output,
+                                  item: inscriptionItem)
+            case let .prefilled(assetID, amount):
+                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                    return
+                }
+                let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
+                payment = Payment(traceID: paymentURL.trace,
+                                  token: token,
+                                  tokenAmount: amount,
+                                  fiatMoneyAmount: fiatMoneyAmount,
+                                  memo: paymentURL.memo)
+            }
+            
+            payment.checkPreconditions(
+                transferTo: destination,
+                reference: paymentURL.reference,
+                on: homeContainer
+            ) { reason in
+                switch reason {
+                case .userCancelled:
+                    hud.hide()
+                case .description(let message):
+                    hud.set(style: .error, text: message)
+                    hud.scheduleAutoHidden()
+                }
+            } onSuccess: { (operation, issues) in
+                hud.hide()
+                let redirection = source.isExternal ? paymentURL.redirection : nil
+                let preview = TransferPreviewViewController(issues: issues,
+                                                            operation: operation,
+                                                            amountDisplay: .byToken,
+                                                            tokenAmount: payment.tokenAmount,
+                                                            fiatMoneyAmount: payment.fiatMoneyAmount,
+                                                            redirection: redirection)
+                preview.manipulateNavigationStackOnFinished = false
+                homeContainer.present(preview, animated: true)
             }
         }
     }
@@ -1150,6 +1181,51 @@ extension UrlWindow {
             return TokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
         } else {
             return token
+        }
+    }
+    
+    private static func syncInscriptionOutput(inscriptionHash: String, hud: Hud) -> (Output, InscriptionItem)? {
+        guard let inscriptionOutput = InscriptionDAO.shared.inscriptionOutput(inscriptionHash: inscriptionHash) else {
+            Logger.general.error(category: "UrlWindow", message: "Missing output transferring inscription: \(inscriptionHash)")
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: R.string.localizable.not_found())
+                hud.scheduleAutoHidden()
+            }
+            return nil
+        }
+        if let item = inscriptionOutput.inscription {
+            return (inscriptionOutput.output, item)
+        }
+        
+        func report(error: MixinAPIError) {
+            Logger.general.error(category: "UrlWindow", message: "Sync Inscription Failed, hash: \(inscriptionHash), error: \(error)")
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
+        }
+        
+        switch InscriptionAPI.inscription(inscriptionHash: inscriptionHash) {
+        case let .success(inscription):
+            InscriptionDAO.shared.save(inscription: inscription)
+            let collection: InscriptionCollection
+            if let c = InscriptionDAO.shared.collection(hash: inscription.collectionHash) {
+                collection = c
+            } else {
+                switch InscriptionAPI.collection(collectionHash: inscription.collectionHash) {
+                case let .success(c):
+                    InscriptionDAO.shared.save(collection: c)
+                    collection = c
+                case let .failure(error):
+                    report(error: error)
+                    return nil
+                }
+            }
+            let item = InscriptionItem(collection: collection, inscription: inscription)
+            return (inscriptionOutput.output, item)
+        case let .failure(error):
+            report(error: error)
+            return nil
         }
     }
     

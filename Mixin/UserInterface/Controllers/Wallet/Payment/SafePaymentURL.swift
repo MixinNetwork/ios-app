@@ -13,18 +13,30 @@ struct SafePaymentURL {
         case mainnet(String)
     }
     
-    struct Request {
-        let asset: String
-        let amount: Decimal
+    enum Request {
+        case prefilled(assetID: String, amount: Decimal)
+        case inscription(hash: String)
+        case notDetermined(assetID: String?, amount: Decimal?)
     }
     
     let address: Address
-    let request: Request?
+    let asset: String?
+    let amount: Decimal?
     let memo: String
     let trace: String
     let redirection: URL?
     let reference: String?
     let inscription: String?
+    
+    var request: Request {
+        if let inscription {
+            .inscription(hash: inscription)
+        } else if let asset, let amount {
+            .prefilled(assetID: asset, amount: amount)
+        } else {
+            .notDetermined(assetID: asset, amount: amount)
+        }
+    }
     
     init?(url: URL) {
         guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
@@ -89,18 +101,16 @@ struct SafePaymentURL {
             decimalAmount = nil
         }
         
-        let request: Request?
-        switch (asset, decimalAmount) {
-        case let (.some(asset), .some(decimalAmount)):
-            request = Request(asset: asset, amount: decimalAmount)
-        case (.none, .none):
-            request = nil
-        case (.some, .none):
-            Logger.general.warn(category: "SafePayment", message: "Invalid args: amount is null")
-            return nil
-        case (.none, .some):
-            Logger.general.warn(category: "SafePayment", message: "Invalid args: asset is null")
-            return nil
+        let inscription: String?
+        if let hash = queries["inscription"] {
+            if hash.count == 64 {
+                inscription = hash
+            } else {
+                Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")
+                return nil
+            }
+        } else {
+            inscription = nil
         }
         
         let trace: String
@@ -124,20 +134,9 @@ struct SafePaymentURL {
             redirection = nil
         }
         
-        let inscription: String?
-        if let hash = queries["inscription"] {
-            if hash.count == 32 {
-                inscription = hash
-            } else {
-                Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")
-                return nil
-            }
-        } else {
-            inscription = nil
-        }
-        
         self.address = address
-        self.request = request
+        self.asset = asset
+        self.amount = decimalAmount
         self.memo = queries["memo"] ?? ""
         self.trace = trace
         self.redirection = redirection

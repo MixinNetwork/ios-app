@@ -20,13 +20,7 @@ struct Payment {
         self.inscriptionContext = nil
     }
     
-    init?(traceID: String, output: Output, item: InscriptionItem) {
-        guard
-            let token = TokenDAO.shared.tokenItem(kernelAssetID: output.asset),
-            let amount = Decimal(string: output.amount, locale: .enUSPOSIX)
-        else {
-            return nil
-        }
+    init(traceID: String, amount: Decimal, token: TokenItem, output: Output, item: InscriptionItem) {
         let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
         self.traceID = traceID
         self.token = token

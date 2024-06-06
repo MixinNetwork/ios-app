@@ -12,7 +12,7 @@ extension MixinAPIResponseError: LocalizedError {
         case .forbidden:
             return R.string.localizable.access_denied()
         case .notFound:
-            return R.string.localizable.not_found()
+            return R.string.localizable.error_not_found()
         case Self.tooManyRequests:
             return R.string.localizable.error_too_many_request()
             

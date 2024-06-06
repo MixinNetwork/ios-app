@@ -933,14 +933,14 @@ extension UrlWindow {
             
             if paymentURL.isPreviewTransaction {
                 var inscriptionOutput: InscriptionOutput?
-                let assetId: String
+                let tokenAssetId: String
                 let tokenAmount: Decimal
                 
                 if let transactionHash = paymentURL.inscription {
                     guard let inscription = syncInscription(inscriptionHash: transactionHash, hud: hud) else {
                         return
                     }
-                    guard let outputAmount = Decimal(string: inscription.output.amount, locale: .enUSPOSIX), let asset = TokenDAO.shared.assetID(ofAssetWith: inscription.output.asset) else {
+                    guard inscription.inscription != nil, let outputAmount = Decimal(string: inscription.output.amount, locale: .enUSPOSIX), let assetId = TokenDAO.shared.assetID(ofAssetWith: inscription.output.asset) else {
                         DispatchQueue.main.async {
                             hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                             hud.scheduleAutoHidden()
@@ -948,14 +948,14 @@ extension UrlWindow {
                         return
                     }
                     inscriptionOutput = inscription
-                    assetId = asset
+                    tokenAssetId = assetId
                     tokenAmount = outputAmount
                 } else {
-                    assetId = paymentURL.asset!
+                    tokenAssetId = paymentURL.asset!
                     tokenAmount = paymentURL.amount!
                 }
                 
-                guard let token = syncToken(assetID: assetId, hud: hud) else {
+                guard let token = syncToken(assetID: tokenAssetId, hud: hud) else {
                     return
                 }
                 let fiatMoneyAmount = tokenAmount * token.decimalUSDPrice * Decimal(Currency.current.rate)

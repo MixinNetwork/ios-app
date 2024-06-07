@@ -108,6 +108,7 @@ class ExploreWeb3ViewController: UIViewController {
     
     func reloadData(address: String?) {
         self.address = address
+        let chain = category.chains[0]
         if let address {
             let tableHeaderView = R.nib.web3AccountHeaderView(withOwner: nil)!
             tableHeaderView.addTarget(self,
@@ -116,12 +117,13 @@ class ExploreWeb3ViewController: UIViewController {
                                       browse: #selector(browse(_:)),
                                       more: #selector(more(_:)))
             tableHeaderView.disableSendButton()
+            tableHeaderView.setNetworkName(chain.name)
             tableView.tableHeaderView = tableHeaderView
             layoutTableHeaderView()
             reloadAccount(address: address)
         } else {
             let tableHeaderView = R.nib.web3AccountLockedHeaderView(withOwner: nil)!
-            tableHeaderView.showUnlockAccount(chain: category.chains[0])
+            tableHeaderView.showUnlockAccount(chain: chain)
             tableHeaderView.button.addTarget(self, action: #selector(unlockAccount(_:)), for: .touchUpInside)
             tableView.tableHeaderView = tableHeaderView
             layoutTableHeaderView()
@@ -143,7 +145,6 @@ class ExploreWeb3ViewController: UIViewController {
     
     private func reloadAccount(address: String) {
         Logger.web3.debug(category: "Explore", message: "Reloading with: \(address)")
-        let chainName = category.chains[0].name
         if tokens?.isEmpty ?? true {
             tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
         }
@@ -154,7 +155,6 @@ class ExploreWeb3ViewController: UIViewController {
                 self.tokens = account.tokens
                 self.tableView.reloadData()
                 if let headerView = self.tableView.tableHeaderView as? Web3AccountHeaderView {
-                    headerView.setNetworkName(chainName)
                     headerView.amountLabel.text = account.localizedFiatMoneyBalance
                     headerView.enableSendButton()
                 }

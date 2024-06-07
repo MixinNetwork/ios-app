@@ -977,6 +977,7 @@ extension UrlWindow {
                                   amount: amount,
                                   token: token,
                                   output: output,
+                                  memo: paymentURL.memo,
                                   item: inscriptionItem)
             case let .prefilled(assetID, amount):
                 guard let token = syncToken(assetID: assetID, hud: hud) else {

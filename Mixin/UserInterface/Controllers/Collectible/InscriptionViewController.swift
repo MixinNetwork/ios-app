@@ -153,7 +153,7 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
         else {
             return
         }
-        let payment = Payment(traceID: traceID, amount: amount, token: token, output: output, item: item)
+        let payment = Payment(traceID: traceID, amount: amount, token: token, output: output, memo: "", item: item)
         let selector = TransferReceiverViewController()
         let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.send_to_title())
         selector.onSelect = { (user) in

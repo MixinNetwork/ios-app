@@ -20,13 +20,13 @@ struct Payment {
         self.inscriptionContext = nil
     }
     
-    init(traceID: String, amount: Decimal, token: TokenItem, output: Output, item: InscriptionItem) {
+    init(traceID: String, amount: Decimal, token: TokenItem, output: Output, memo: String, item: InscriptionItem) {
         let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
         self.traceID = traceID
         self.token = token
         self.tokenAmount = amount
         self.fiatMoneyAmount = fiatMoneyAmount
-        self.memo = ""
+        self.memo = memo
         self.inscriptionContext = InscriptionContext(output: output, item: item)
     }
     

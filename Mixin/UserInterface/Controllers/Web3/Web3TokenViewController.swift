@@ -52,7 +52,13 @@ final class Web3TokenViewController: UIViewController {
     }
     
     private func loadTransactions() {
-        Web3API.transactions(address: address, chainID: token.chainID, fungibleID: token.fungibleID) { result in
+        let tokenID: Web3API.TokenID = switch token.chainID {
+        case Web3Token.ChainID.solana:
+                .assetKey(token.assetKey)
+        default:
+                .fungibleID(token.fungibleID)
+        }
+        Web3API.transactions(address: address, chainID: token.chainID, tokenID: tokenID) { result in
             switch result {
             case .success(let transactions):
                 self.transactions = transactions

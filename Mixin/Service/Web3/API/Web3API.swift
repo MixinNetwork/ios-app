@@ -12,6 +12,11 @@ final class Web3API {
         case calculateAgreement
     }
     
+    enum TokenID {
+        case fungibleID(String)
+        case assetKey(String)
+    }
+    
     static func account(address: String, completion: @escaping (MixinAPI.Result<Web3Account>) -> Void) -> Request {
         request(method: .get, path: "/accounts/" + address, completion: completion)
     }
@@ -23,11 +28,17 @@ final class Web3API {
     static func transactions(
         address: String,
         chainID: String,
-        fungibleID: String,
+        tokenID: TokenID,
         limit: Int = 100,
         completion: @escaping (MixinAPI.Result<[Web3Transaction]>) -> Void
     ) {
-        let path = "/transactions/\(address)?chain_id=\(chainID)&fungible_id=\(fungibleID)&limit=\(limit)"
+        var path = "/transactions/\(address)?chain_id=\(chainID)&limit=\(limit)"
+        switch tokenID {
+        case .fungibleID(let id):
+            path += "&fungible_id=\(id)"
+        case .assetKey(let key):
+            path += "&asset_key=\(key)"
+        }
         request(method: .get, path: path, completion: completion)
     }
     

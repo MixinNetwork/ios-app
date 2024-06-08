@@ -40,8 +40,10 @@ class UnlockWeb3AccountViewController: AuthenticationPreviewViewController {
             R.string.localizable.unlock_web3_account_agreement_1(firstChainName),
             R.string.localizable.unlock_web3_account_agreement_2(firstChainName),
         ]
-        if category.chains.count >= 3 {
-            let line = R.string.localizable.unlock_web3_account_agreement_3(category.chains[0].name, category.chains[1].name, category.chains[2].name)
+        if category == .evm {
+            let chains = category.chains
+            assert(chains.count >= 3)
+            let line = R.string.localizable.unlock_web3_account_agreement_3(chains[0].name, chains[1].name, chains[2].name)
             lines.append(line)
         }
         tableFooterView.setText(preface: R.string.localizable.unlock_web3_account_agreement(), bulletLines: lines)

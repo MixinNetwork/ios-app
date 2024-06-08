@@ -18,7 +18,13 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeInvalidString = -10,
   SolanaErrorCodeInvalidPublicKey = -11,
   SolanaErrorCodeBuildSPLInstruction = -12,
+  SolanaErrorCodeTransactionToString = -13,
 } SolanaErrorCode;
+
+typedef struct SolanaPriorityFee {
+  uint64_t price;
+  uint32_t limit;
+} SolanaPriorityFee;
 
 extern const uint64_t SOLANA_LAMPORTS_PER_SOL;
 
@@ -38,6 +44,8 @@ enum SolanaErrorCode solana_sign_message(const uint8_t *seed,
 
 void solana_free_transaction(const void *txn);
 
+enum SolanaErrorCode solana_base64_encode_transaction(const void *txn, const char **out);
+
 const void *solana_deserialize_transaction(const uint8_t *txn, size_t txn_len);
 
 enum SolanaErrorCode solana_sign_transaction(const void *txn,
@@ -56,6 +64,7 @@ enum SolanaErrorCode solana_balance_change(const void *txn, uint64_t *change, co
 enum SolanaErrorCode solana_new_sol_transaction(const char *from,
                                                 const char *to,
                                                 uint64_t lamports,
+                                                const struct SolanaPriorityFee *priority_fee,
                                                 const void **out);
 
 enum SolanaErrorCode solana_associated_token_account(const char *owner,
@@ -67,4 +76,5 @@ enum SolanaErrorCode solana_new_spl_transaction(const char *from,
                                                 bool create_to_ata,
                                                 const char *mint,
                                                 uint64_t amount,
+                                                const struct SolanaPriorityFee *priority_fee,
                                                 const void **out);

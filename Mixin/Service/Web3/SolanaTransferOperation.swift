@@ -19,7 +19,7 @@ class SolanaTransferOperation: Web3TransferOperation {
     
     let client: SolanaRPCClient
     
-    init(
+    fileprivate init(
         fromAddress: String,
         toAddress: String,
         chain: Web3Chain,
@@ -208,7 +208,8 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     private let decimalAmount: Decimal
     private let amount: UInt64
     
-    private var transaction: Solana.Transaction?
+    private var createAssociatedTokenAccountForReceiver: Bool?
+    private var priorityFee: PriorityFee?
     
     init(payment: Web3SendingTokenToAddressPayment, decimalAmount: Decimal) throws {
         let decimalAmountNumber = decimalAmount as NSDecimalNumber
@@ -232,28 +233,41 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     override func loadFee() async throws -> Fee? {
         let ata = try Solana.tokenAssociatedAccount(owner: payment.toAddress, mint: payment.token.assetKey)
         let receiverAccountExists = try await client.accountExists(pubkey: ata)
+        let createAccount = !receiverAccountExists
         let transaction = try Solana.Transaction(
             from: payment.fromAddress,
             to: payment.toAddress,
-            createAssociatedTokenAccountForReceiver: !receiverAccountExists,
+            createAssociatedTokenAccountForReceiver: createAccount,
             amount: amount,
-            token: payment.token, 
+            priorityFee: nil,
+            token: payment.token,
             change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
         )
+        let priorityFee = try await Web3API.priorityFee(transaction: transaction.rawTransaction)
         await MainActor.run {
-            self.transaction = transaction
+            self.createAssociatedTokenAccountForReceiver = createAccount
+            self.priorityFee = priorityFee
             self.state = .ready
         }
         return try await fee(for: transaction)
     }
     
     override func start(with pin: String) {
-        guard let transaction else {
+        guard let createAccount = createAssociatedTokenAccountForReceiver, let priorityFee else {
             assertionFailure("This shouldn't happen. Check when `state` becomes `ready`")
             return
         }
         state = .signing
-        Task.detached { [transaction] in
+        Task.detached { [payment, amount, decimalAmount, priorityFee] in
+            let transaction = try Solana.Transaction(
+                from: payment.fromAddress,
+                to: payment.toAddress,
+                createAssociatedTokenAccountForReceiver: createAccount,
+                amount: amount, 
+                priorityFee: priorityFee,
+                token: payment.token,
+                change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
+            )
             try await self.signAndSend(transaction: transaction, with: pin)
         }
     }

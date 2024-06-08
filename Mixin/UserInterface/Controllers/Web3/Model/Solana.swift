@@ -12,17 +12,9 @@ enum Solana {
     
     static func publicKey(seed: Data) throws -> String {
         try seed.withUnsafeBytes { seed in
-            var key: UnsafePointer<CChar>?
-            let result = solana_public_key_from_seed(seed.baseAddress, seed.count, &key)
-            guard result == SolanaErrorCodeSuccess else {
-                throw Error.code(result)
+            try withSolanaStringPointer { key in
+                solana_public_key_from_seed(seed.baseAddress, seed.count, &key)
             }
-            guard let key else {
-                throw Error.nullResult
-            }
-            let publicKey = String(cString: UnsafePointer(key))
-            solana_free_string(key)
-            return publicKey
         }
     }
     
@@ -35,21 +27,13 @@ enum Solana {
     static func sign(message: Data, withPrivateKeyFrom seed: Data) throws -> String {
         try message.withUnsafeBytes { message in
             try seed.withUnsafeBytes { seed in
-                var signaturePtr: UnsafePointer<CChar>?
-                let result = solana_sign_message(seed.baseAddress,
-                                                 seed.count,
-                                                 message.baseAddress,
-                                                 message.count,
-                                                 &signaturePtr)
-                guard result == SolanaErrorCodeSuccess else {
-                    throw Error.code(result)
+                try withSolanaStringPointer { signature in
+                    solana_sign_message(seed.baseAddress,
+                                        seed.count,
+                                        message.baseAddress,
+                                        message.count,
+                                        &signature)
                 }
-                guard let signaturePtr else {
-                    throw Error.nullResult
-                }
-                let signature = String(cString: UnsafePointer(signaturePtr))
-                solana_free_string(signaturePtr)
-                return signature
             }
         }
     }
@@ -57,18 +41,37 @@ enum Solana {
     static func tokenAssociatedAccount(owner: String, mint: String) throws -> String {
         try owner.withCString { owner in
             try mint.withCString { mint in
-                var accountPtr: UnsafePointer<CChar>?
-                let result = solana_associated_token_account(owner, mint, &accountPtr)
-                guard result == SolanaErrorCodeSuccess else {
-                    throw Error.code(result)
+                try withSolanaStringPointer { account in
+                    solana_associated_token_account(owner, mint, &account)
                 }
-                guard let accountPtr else {
-                    throw Error.nullResult
-                }
-                let account = String(cString: UnsafePointer(accountPtr))
-                solana_free_string(accountPtr)
-                return account
             }
+        }
+    }
+    
+    fileprivate static func withSolanaStringPointer(_ assignment: (inout UnsafePointer<CChar>?) -> SolanaErrorCode) throws -> String {
+        var pointer: UnsafePointer<CChar>?
+        let result = assignment(&pointer)
+        guard result == SolanaErrorCodeSuccess else {
+            throw Error.code(result)
+        }
+        guard let pointer else {
+            throw Error.nullResult
+        }
+        let string = String(cString: UnsafePointer(pointer))
+        solana_free_string(pointer)
+        return string
+    }
+    
+    fileprivate static func withOptionalUnsafePointer<T, Result>(
+        to value: T?,
+        _ body: (UnsafePointer<T>?) throws -> Result
+    ) rethrows -> Result {
+        if let value {
+            try withUnsafePointer(to: value) { pointer in
+                try body(pointer)
+            }
+        } else {
+            try body(nil)
         }
     }
     
@@ -119,26 +122,29 @@ extension Solana {
         init(
             from: String,
             to: String,
-            createAssociatedTokenAccountForReceiver: Bool,
+            createAssociatedTokenAccountForReceiver createAccount: Bool,
             amount: UInt64,
+            priorityFee: PriorityFee?,
             token: Web3Token,
             change: BalanceChange
         ) throws {
             let isSendingSOL = token.chainID == Web3Token.ChainID.solana
                 && (token.assetKey == Web3Token.AssetKey.sol || token.assetKey == Web3Token.AssetKey.wrappedSOL)
+            let solanaPriorityFee: SolanaPriorityFee? = if let fee = priorityFee {
+                SolanaPriorityFee(price: fee.unitPrice, limit: fee.unitLimit)
+            } else {
+                nil
+            }
             var transaction: UnsafeRawPointer?
             let result = from.withCString { from in
                 to.withCString { to in
-                    if isSendingSOL {
-                        solana_new_sol_transaction(from, to, amount, &transaction)
-                    } else {
-                        token.assetKey.withCString { mint in
-                            solana_new_spl_transaction(from, 
-                                                       to,
-                                                       createAssociatedTokenAccountForReceiver,
-                                                       mint,
-                                                       amount,
-                                                       &transaction)
+                    withOptionalUnsafePointer(to: solanaPriorityFee) { priorityFee in
+                        if isSendingSOL {
+                            solana_new_sol_transaction(from, to, amount, priorityFee, &transaction)
+                        } else {
+                            token.assetKey.withCString { mint in
+                                solana_new_spl_transaction(from, to, createAccount, mint, amount, priorityFee, &transaction)
+                            }
                         }
                     }
                 }
@@ -149,7 +155,11 @@ extension Solana {
             guard let transaction else {
                 throw Error.nullResult
             }
-            self.rawTransaction = ""
+            let rawTransaction = try withSolanaStringPointer { rawTransaction in
+                solana_base64_encode_transaction(transaction, &rawTransaction)
+            }
+            
+            self.rawTransaction = rawTransaction
             self.change = change
             self.pointer = transaction
         }
@@ -161,22 +171,14 @@ extension Solana {
         func sign(withPrivateKeyFrom seed: Data, recentBlockhash: Data) throws -> String {
             try recentBlockhash.withUnsafeBytes { recentBlockhash in
                 try seed.withUnsafeBytes { seed in
-                    var signaturePtr: UnsafePointer<CChar>?
-                    let result = solana_sign_transaction(pointer,
-                                                         recentBlockhash.baseAddress,
-                                                         recentBlockhash.count,
-                                                         seed.baseAddress,
-                                                         seed.count,
-                                                         &signaturePtr)
-                    guard result == SolanaErrorCodeSuccess else {
-                        throw Error.code(result)
+                    try withSolanaStringPointer { signature in
+                        solana_sign_transaction(pointer,
+                                                recentBlockhash.baseAddress,
+                                                recentBlockhash.count,
+                                                seed.baseAddress,
+                                                seed.count,
+                                                &signature)
                     }
-                    guard let signaturePtr else {
-                        throw Error.nullResult
-                    }
-                    let signature = String(cString: UnsafePointer(signaturePtr))
-                    solana_free_string(signaturePtr)
-                    return signature
                 }
             }
         }

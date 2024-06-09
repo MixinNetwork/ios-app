@@ -52,7 +52,7 @@ class Web3SignOperation {
             Logger.web3.info(category: "Sign", message: "Will sign")
             let signature: String
             do {
-                switch chain.category {
+                switch chain.kind {
                 case .evm:
                     let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
                     let keyStorage = InPlaceKeyStorage(raw: priv)
@@ -149,7 +149,7 @@ final class Web3SignWithWalletConnectOperation: Web3SignOperation {
     
     override func send(signature: String) async {
         do {
-            let response = switch chain.category {
+            let response = switch chain.kind {
             case .evm:
                 RPCResult.response(AnyCodable(signature))
             case .solana:
@@ -205,7 +205,7 @@ final class Web3SignWithBrowserWalletOperation: Web3SignOperation {
     
     override func send(signature: String) async {
         do {
-            switch chain.category {
+            switch chain.kind {
             case .evm:
                 try await sendImpl?(signature)
             case .solana:

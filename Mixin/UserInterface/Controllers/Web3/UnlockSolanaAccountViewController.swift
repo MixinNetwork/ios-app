@@ -4,7 +4,7 @@ import MixinServices
 final class UnlockSolanaAccountViewController: UnlockWeb3AccountViewController {
     
     init() {
-        super.init(category: .solana)
+        super.init(kind: .solana)
     }
     
     required init?(coder: NSCoder) {

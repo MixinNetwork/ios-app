@@ -6,7 +6,7 @@ import MixinServices
 
 final class Web3Chain {
     
-    enum Category: CaseIterable {
+    enum Kind: CaseIterable {
         
         case evm
         case solana
@@ -22,13 +22,13 @@ final class Web3Chain {
         
     }
     
-    enum CategorySpecification {
+    enum KindSpecification {
         case evm(chainID: Int)
         case solana
     }
     
-    let category: Category
-    let specification: CategorySpecification
+    let kind: Kind
+    let specification: KindSpecification
     let web3ChainID: String
     let mixinChainID: String?
     let feeTokenAssetID: String
@@ -50,18 +50,18 @@ final class Web3Chain {
     }
     
     private init(
-        specification: CategorySpecification, web3ChainID: String,
+        specification: KindSpecification, web3ChainID: String,
         mixinChainID: String?, feeTokenAssetID: String, name: String,
         failsafeRPCServerURL: URL, caip2: Blockchain
     ) {
-        let category: Category = switch specification {
+        let kind: Kind = switch specification {
         case .evm:
                 .evm
         case .solana:
                 .solana
         }
         
-        self.category = category
+        self.kind = kind
         self.specification = specification
         self.web3ChainID = web3ChainID
         self.mixinChainID = mixinChainID
@@ -169,8 +169,8 @@ extension Web3Chain {
 // MARK: - Chains
 extension Web3Chain {
     
-    static let all = Category.allCases.reduce(into: []) { results, category in
-        results.append(contentsOf: category.chains)
+    static let all = Kind.allCases.reduce(into: []) { results, kind in
+        results.append(contentsOf: kind.chains)
     }
     
     static let ethereum = Web3Chain.evm(

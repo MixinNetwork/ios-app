@@ -8,11 +8,11 @@ final class Web3DepositViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var decorationImageView: UIImageView!
     
-    private let category: Web3Chain.Category
+    private let kind: Web3Chain.Kind
     private let address: String
     
-    init(category: Web3Chain.Category, address: String) {
-        self.category = category
+    init(kind: Web3Chain.Kind, address: String) {
+        self.kind = kind
         self.address = address
         let nib = R.nib.web3DepositView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -27,7 +27,7 @@ final class Web3DepositViewController: UIViewController {
         qrCodeView.setContent(address, size: qrCodeView.frame.size)
         qrCodeView.setDefaultCornerCurve()
         addressLabel.text = address
-        switch category {
+        switch kind {
         case .evm:
             iconImageView.image = R.image.web3_deposit_evm()!
             descriptionLabel.text = R.string.localizable.web3_deposit_description_evm()

@@ -9,18 +9,18 @@ class UnlockWeb3AccountViewController: AuthenticationPreviewViewController {
     
     private(set) var isUnlocked = false
     
-    private let category: Web3Chain.Category
+    private let kind: Web3Chain.Kind
     
     private var firstChainName: String {
-        category.chains[0].name
+        kind.chains[0].name
     }
     
     private var subtitle: String {
         R.string.localizable.unlock_web3_account_description(firstChainName)
     }
     
-    init(category: Web3Chain.Category) {
-        self.category = category
+    init(kind: Web3Chain.Kind) {
+        self.kind = kind
         super.init(warnings: [])
     }
     
@@ -40,8 +40,8 @@ class UnlockWeb3AccountViewController: AuthenticationPreviewViewController {
             R.string.localizable.unlock_web3_account_agreement_1(firstChainName),
             R.string.localizable.unlock_web3_account_agreement_2(firstChainName),
         ]
-        if category == .evm {
-            let chains = category.chains
+        if kind == .evm {
+            let chains = kind.chains
             assert(chains.count >= 3)
             let line = R.string.localizable.unlock_web3_account_agreement_3(chains[0].name, chains[1].name, chains[2].name)
             lines.append(line)

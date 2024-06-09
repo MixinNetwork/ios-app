@@ -234,7 +234,7 @@ extension WalletConnectSession {
             guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let address: String? = switch chain.category {
+            let address: String? = switch chain.kind {
             case .evm:
                 PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
             case .solana:

@@ -42,11 +42,11 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         var rows: [Row] = [
             .proposer(name: proposal.proposer.name, host: host),
         ]
-        let categories = Set(chains.map(\.category))
-        if categories.contains(.evm), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
+        let kinds = Set(chains.map(\.kind))
+        if kinds.contains(.evm), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
             rows.append(.info(caption: .account, content: account))
         }
-        if categories.contains(.solana), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) {
+        if kinds.contains(.solana), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) {
             rows.append(.info(caption: .account, content: account))
         }
         reloadData(with: rows)
@@ -88,7 +88,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                     return try Solana.publicKey(seed: priv)
                 }()
                 let accounts: [WalletConnectUtils.Account] = chains.compactMap { chain in
-                    switch chain.category {
+                    switch chain.kind {
                     case .evm:
                         WalletConnectUtils.Account(blockchain: chain.caip2, address: evmAddress)
                     case .solana:

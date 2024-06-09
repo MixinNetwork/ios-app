@@ -124,7 +124,7 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
     
     @objc private func continueWithAddress(_ sender: Any) {
         let address: String?
-        switch payment.chain.category {
+        switch payment.chain.kind {
         case .evm:
             let ethereumAddress = EthereumAddress(textView.text)
             if textView.text.count != 42 || ethereumAddress.asNumber() == nil {

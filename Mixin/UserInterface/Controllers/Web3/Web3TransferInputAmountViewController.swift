@@ -35,7 +35,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
             DispatchQueue.global().async { [payment] in
                 let initError: Error?
                 do {
-                    let operation = switch payment.chain.category {
+                    let operation = switch payment.chain.kind {
                     case .evm:
                         try EVMTransferToAddressOperation(payment: payment, decimalAmount: amount)
                     case .solana:

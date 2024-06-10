@@ -1008,7 +1008,6 @@
 		94F209DA2C06C1CE00550060 /* EVMTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */; };
 		94F209DC2C06F23A00550060 /* SolanaRPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */; };
 		94F209E52C070DEA00550060 /* solana_rust_sdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */; };
-		94F209E62C070DEA00550060 /* solana_rust_sdk.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
 		94F952582AE616F40025B995 /* TransferOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952572AE616F40025B995 /* TransferOutViewController.swift */; };
 		94F9525D2AE6174A0025B995 /* TransferOutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F9525C2AE6174A0025B995 /* TransferOutView.xib */; };
@@ -1251,7 +1250,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				94F209E62C070DEA00550060 /* solana_rust_sdk.xcframework in Embed Frameworks */,
 				94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";

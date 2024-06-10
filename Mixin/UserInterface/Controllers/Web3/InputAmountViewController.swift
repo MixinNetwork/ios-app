@@ -13,7 +13,10 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var tokenBalanceLabel: UILabel!
     @IBOutlet weak var inputMaxValueButton: UIButton!
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
+    @IBOutlet weak var deleteBackwardsButton: HighlightableButton!
     @IBOutlet weak var reviewButton: RoundedButton!
+    
+    @IBOutlet var decimalButtons: [DecimalButton]!
     
     var token: Web3TransferableToken {
         fatalError("Must override")
@@ -60,8 +63,67 @@ class InputAmountViewController: UIViewController {
         amountStackView.setCustomSpacing(2, after: amountLabel)
         amountLabel.font = .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
         inputMaxValueButton.setTitle(R.string.localizable.max().uppercased(), for: .normal)
+        decimalButtons.sort(by: { $0.value < $1.value })
         decimalSeparatorButton.setTitle(Locale.current.decimalSeparator ?? ".", for: .normal)
         reloadViews(inputAmount: accumulator.decimal)
+    }
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        guard let key = presses.first?.key else {
+            super.pressesBegan(presses, with: event)
+            return
+        }
+        if let value = Int(key.charactersIgnoringModifiers) {
+            if value >= 0 && value < decimalButtons.count {
+                let button = decimalButtons[value]
+                button.isHighlighted = true
+            } else {
+                super.pressesBegan(presses, with: event)
+            }
+        } else if #available(iOS 13.4, *) {
+            switch Key(keyCode: key.keyCode) {
+            case .backspace:
+                deleteBackwardsButton.isHighlighted = true
+            case .decimalSeparator:
+                decimalSeparatorButton.isHighlighted = true
+            case .enter:
+                break
+            default:
+                super.pressesBegan(presses, with: event)
+            }
+        } else {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+    
+    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        for button in decimalButtons + [decimalSeparatorButton, deleteBackwardsButton] {
+            button?.isHighlighted = false
+        }
+        guard let key = presses.first?.key else {
+            super.pressesEnded(presses, with: event)
+            return
+        }
+        if let value = UInt8(key.charactersIgnoringModifiers) {
+            if value >= 0 && value < decimalButtons.count {
+                accumulator.append(value: value)
+            } else {
+                super.pressesEnded(presses, with: event)
+            }
+        } else if #available(iOS 13.4, *) {
+            switch Key(keyCode: key.keyCode) {
+            case .backspace:
+                accumulator.deleteBackwards()
+            case .decimalSeparator:
+                accumulator.appendDecimalSeparator()
+            case .enter:
+                review(presses)
+            default:
+                super.pressesEnded(presses, with: event)
+            }
+        } else {
+            super.pressesEnded(presses, with: event)
+        }
     }
     
     @IBAction func toggleAmountIntent(_ sender: Any) {
@@ -100,6 +162,32 @@ class InputAmountViewController: UIViewController {
     }
     
     @IBAction func review(_ sender: Any) {
+        
+    }
+    
+}
+
+extension InputAmountViewController {
+    
+    @available(iOS 13.4, *)
+    private enum Key {
+        
+        case backspace
+        case decimalSeparator
+        case enter
+        
+        init?(keyCode: UIKeyboardHIDUsage) {
+            switch keyCode {
+            case .keyboardDeleteOrBackspace:
+                self = .backspace
+            case .keyboardPeriod, .keyboardComma, .keypadPeriod:
+                self = .decimalSeparator
+            case .keyboardReturn, .keyboardReturnOrEnter, .keypadEnter:
+                self = .enter
+            default:
+                return nil
+            }
+        }
         
     }
     

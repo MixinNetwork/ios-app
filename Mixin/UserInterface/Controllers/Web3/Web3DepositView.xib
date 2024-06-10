@@ -3,7 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,6 +12,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Web3DepositViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="addressLabel" destination="8bi-oD-oV7" id="Bes-Br-0yw"/>
+                <outlet property="decorationImageView" destination="BmN-jq-Zqz" id="7dP-ab-t2w"/>
+                <outlet property="descriptionLabel" destination="q7e-pY-hAo" id="e0e-Mc-agt"/>
+                <outlet property="iconImageView" destination="T19-f2-6Be" id="bs4-38-ijt"/>
                 <outlet property="qrCodeView" destination="blk-o1-vbb" id="WB4-8Y-epP"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -30,7 +33,7 @@
                         <constraint firstAttribute="width" secondItem="blk-o1-vbb" secondAttribute="height" id="ddq-m5-YkT"/>
                     </constraints>
                 </view>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="web3_deposit_icon" translatesAutoresizingMaskIntoConstraints="NO" id="T19-f2-6Be">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="62" placeholderIntrinsicHeight="62" translatesAutoresizingMaskIntoConstraints="NO" id="T19-f2-6Be">
                     <rect key="frame" x="165.66666666666666" y="178" width="62" height="62"/>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="K1h-w9-1ph">
@@ -71,7 +74,7 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="web3_deposit_deco" translatesAutoresizingMaskIntoConstraints="NO" id="BmN-jq-Zqz">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="319" placeholderIntrinsicHeight="24" translatesAutoresizingMaskIntoConstraints="NO" id="BmN-jq-Zqz">
                             <rect key="frame" x="0.0" y="16" width="319" height="24"/>
                         </imageView>
                     </subviews>
@@ -95,8 +98,6 @@
         </view>
     </objects>
     <resources>
-        <image name="web3_deposit_deco" width="52" height="24"/>
-        <image name="web3_deposit_icon" width="62" height="62"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

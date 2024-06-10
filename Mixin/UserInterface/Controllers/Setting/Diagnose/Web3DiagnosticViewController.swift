@@ -5,7 +5,7 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: "Lock Account", accessory: .none),
+            SettingsRow(title: "Lock Accounts", accessory: .none),
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Disconnect All Dapps", accessory: .disclosure),
@@ -27,6 +27,7 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
         case (0, 0):
             DispatchQueue.global().async {
                 PropertiesDAO.shared.removeValue(forKey: .evmAddress)
+                PropertiesDAO.shared.removeValue(forKey: .solanaAddress)
             }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
         case (1, 0):

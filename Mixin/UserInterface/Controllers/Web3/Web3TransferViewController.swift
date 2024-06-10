@@ -23,7 +23,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
     init(operation: Web3TransferOperation, proposer: Proposer) {
         self.operation = operation
         self.proposer = proposer
-        let warnings: [String] = if operation.canDecodeValue {
+        let warnings: [String] = if operation.canDecodeBalanceChange {
             []
         } else {
             [R.string.localizable.decode_transaction_failed()]
@@ -36,22 +36,118 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
     }
     
     deinit {
-        Logger.web3.info(category: "TxnRequest", message: "\(self) deinited")
+        Logger.web3.info(category: "Web3TransferView", message: "\(self) deinited")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableHeaderView.setIcon { imageView in
+            if let operation = operation as? Web3TransferWithWalletConnectOperation {
+                imageView.sd_setImage(with: operation.session.iconURL)
+            } else {
+                switch proposer {
+                case .dapp:
+                    imageView.image = R.image.unknown_session()
+                case .web3ToMixinWallet, .web3ToAddress:
+                    imageView.image = R.image.web3_sign_transfer()
+                }
+            }
+        }
+        
+        let title = if operation.canDecodeBalanceChange {
+            R.string.localizable.web3_transaction_request()
+        } else {
+            R.string.localizable.signature_request()
+        }
+        let subtitle = switch proposer {
+        case .dapp:
+            R.string.localizable.web3_ensure_trust()
+        case .web3ToMixinWallet, .web3ToAddress:
+            R.string.localizable.web3_request_from_mixin()
+        }
+        layoutTableHeaderView(title: title, subtitle: subtitle)
+        
+        var rows: [Row] = [
+            .web3Message(caption: R.string.localizable.estimated_balance_change(),
+                         message: R.string.localizable.loading())
+        ]
+        rows.append(
+            .amount(caption: .fee,
+                    token: R.string.localizable.calculating(),
+                    fiatMoney: R.string.localizable.calculating(),
+                    display: .byToken,
+                    boldPrimaryAmount: false)
+        )
+        
+        switch proposer {
+        case .dapp(let proposer):
+            rows.append(.proposer(name: proposer.name, host: proposer.host))
+            rows.append(.info(caption: .account, content: operation.fromAddress))
+        case .web3ToMixinWallet:
+            if let account = LoginManager.shared.account {
+                let me = UserItem.createUser(from: account)
+                rows.append(.receivers([me], threshold: nil))
+            }
+            rows.append(.info(caption: .sender, content: operation.fromAddress))
+        case .web3ToAddress:
+            rows.append(.receivingAddress(value: operation.toAddress, label: nil))
+            rows.append(.info(caption: .sender, content: operation.fromAddress))
+        }
+        
+        rows.append(.info(caption: .network, content: operation.chain.name))
+        reloadData(with: rows)
+        
         stateObserver = operation.$state.sink { [weak self] state in
             self?.reloadData(state: state)
         }
-        reloadData(state: .pending)
-        var confirmButton: UIButton? {
-            (trayView as? AuthenticationPreviewDoubleButtonTrayView)?.rightButton
-        }
-        confirmButton?.isEnabled = false
-        operation.loadGas { [weak self, weak confirmButton] fee in
-            self?.reloadFeeRow(with: fee)
-            confirmButton?.isEnabled = true
+        reloadData(state: operation.state)
+        
+        Task { [operation, weak self] in
+            do {
+                let change = try await operation.loadBalanceChange()
+                await MainActor.run {
+                    let row: Row
+                    switch change {
+                    case let .decodingFailed(rawTransaction):
+                        row = .web3Message(caption: R.string.localizable.transaction(),
+                                           message: rawTransaction)
+                    case let .detailed(token, amount):
+                        let tokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never)
+                        let fiatMoneyValue = amount * token.decimalUSDPrice * Currency.current.decimalRate
+                        let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                        row = .web3Amount(caption: R.string.localizable.estimated_balance_change(),
+                                          tokenAmount: tokenAmount,
+                                          fiatMoneyAmount: fiatMoneyAmount,
+                                          token: token)
+                    }
+                    self?.replaceRow(at: 0, with: row)
+                }
+            } catch {
+                Logger.web3.error(category: "Web3TransferView", message: "Load bal. change: \(error)")
+            }
+            do {
+                if let fee = try await operation.loadFee() {
+                    await MainActor.run {
+                        let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .networkFee, sign: .never, symbol: nil)
+                        let feeCost = if fee.fiatMoney >= 0.01 {
+                            CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                        } else {
+                            "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                        }
+                        let row: Row = .amount(caption: .fee,
+                                               token: feeValue + " " + operation.feeToken.symbol,
+                                               fiatMoney: feeCost,
+                                               display: .byToken,
+                                               boldPrimaryAmount: false)
+                        self?.replaceRow(at: 1, with: row)
+                    }
+                } else {
+                    Logger.web3.info(category: "Web3TransferView", message: "Unable to load fee")
+                }
+            } catch {
+                Logger.web3.error(category: "Web3TransferView", message: "Load fee: \(error)")
+            }
         }
     }
     
@@ -80,81 +176,24 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         }
     }
     
+    @objc func resendTransaction(_ sender: Any) {
+        if operation.isResendingTransactionAvailable {
+            operation.resendTransaction()
+        } else {
+            confirm(sender)
+        }
+    }
+    
     private func reloadData(state: Web3TransferOperation.State) {
+        var confirmButton: UIButton? {
+            (trayView as? AuthenticationPreviewDoubleButtonTrayView)?.rightButton
+        }
+        
         switch state {
-        case .pending:
-            tableHeaderView.setIcon { imageView in
-                if let operation = operation as? Web3TransferWithWalletConnectOperation {
-                    imageView.sd_setImage(with: operation.session.iconURL)
-                } else {
-                    switch proposer {
-                    case .dapp:
-                        imageView.image = R.image.unknown_session()
-                    case .web3ToMixinWallet, .web3ToAddress:
-                        imageView.image = R.image.web3_sign_transfer()
-                    }
-                }
-            }
-            
-            let title = if operation.canDecodeValue {
-                R.string.localizable.web3_transaction_request()
-            } else {
-                R.string.localizable.signature_request()
-            }
-            let subtitle = switch proposer {
-            case .dapp:
-                R.string.localizable.web3_ensure_trust()
-            case .web3ToMixinWallet, .web3ToAddress:
-                R.string.localizable.web3_request_from_mixin()
-            }
-            layoutTableHeaderView(title: title, subtitle: subtitle)
-            
-            var rows: [Row]
-            if let tokenValue = operation.transactionPreview.decimalValue, tokenValue != 0 {
-                // A non-zero `decimalValue` indicates spending native token
-                let tokenAmount = CurrencyFormatter.localizedString(from: tokenValue, format: .precision, sign: .never)
-                let fiatMoneyValue = tokenValue * operation.feeToken.decimalUSDPrice * Currency.current.decimalRate
-                let fiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-                rows = [
-                    .web3Amount(caption: R.string.localizable.estimated_balance_change(),
-                                tokenAmount: tokenAmount,
-                                fiatMoneyAmount: fiatMoneyAmount,
-                                token: operation.feeToken)
-                ]
-            } else {
-                rows = [
-                    .web3Message(caption: R.string.localizable.transaction(),
-                                 message: operation.transactionPreview.hexData ?? "")
-                ]
-            }
-            
-            rows.append(
-                .amount(caption: .fee,
-                        token: R.string.localizable.calculating(),
-                        fiatMoney: R.string.localizable.calculating(),
-                        display: .byToken,
-                        boldPrimaryAmount: false)
-            )
-            
-            switch proposer {
-            case .dapp(let proposer):
-                rows.append(.proposer(name: proposer.name, host: proposer.host))
-                rows.append(.info(caption: .account, content: operation.fromAddress))
-            case .web3ToMixinWallet:
-                if let account = LoginManager.shared.account {
-                    let me = UserItem.createUser(from: account)
-                    rows.append(.receivers([me], threshold: nil))
-                }
-                rows.append(.info(caption: .sender, content: operation.fromAddress))
-            case .web3ToAddress:
-                let receiver = operation.transactionPreview.to.toChecksumAddress()
-                rows.append(.receivingAddress(value: receiver, label: nil))
-                rows.append(.info(caption: .sender, content: operation.fromAddress))
-            }
-            
-            rows.append(.info(caption: .network, content: operation.chain.name))
-            
-            reloadData(with: rows)
+        case .loading:
+            confirmButton?.isEnabled = false
+        case .ready:
+            confirmButton?.isEnabled = true
         case .signing:
             canDismissInteractively = false
             tableHeaderView.setIcon(progress: .busy)
@@ -185,12 +224,12 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                      leftAction: #selector(close(_:)),
                                      rightTitle: R.string.localizable.retry(),
-                                     rightAction: #selector(operation.resendTransaction(_:)),
+                                     rightAction: #selector(resendTransaction(_:)),
                                      animation: .vertical)
         case .success:
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .success)
-            let subtitle = if operation.canDecodeValue {
+            let subtitle = if operation.canDecodeBalanceChange {
                 R.string.localizable.web3_signing_transaction_success()
             } else {
                 R.string.localizable.web3_signing_data_success()
@@ -213,31 +252,6 @@ extension Web3TransferViewController: Web3PopupViewController {
     
     func reject() {
         operation.reject()
-    }
-    
-}
-
-extension Web3TransferViewController {
-    
-    private func reloadFeeRow(with selected: Web3TransferOperation.Fee) {
-        let weiFee = (selected.gasLimit * selected.gasPrice).description
-        guard let decimalWeiFee = Decimal(string: weiFee, locale: .enUSPOSIX) else {
-            return
-        }
-        let decimalFee = decimalWeiFee * .wei
-        let cost = decimalFee * operation.feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let feeValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
-        let feeCost = if cost >= 0.01 {
-            CurrencyFormatter.localizedString(from: cost, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-        } else {
-            "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-        }
-        let row: Row = .amount(caption: .fee,
-                               token: feeValue + " " + operation.feeToken.symbol,
-                               fiatMoney: feeCost,
-                               display: .byToken,
-                               boldPrimaryAmount: false)
-        replaceRow(at: 1, with: row)
     }
     
 }

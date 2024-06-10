@@ -679,10 +679,7 @@
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
 		9401A56F2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */; };
-		9401A5772BD960B400679686 /* ExternalAPI+Web3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5762BD960B400679686 /* ExternalAPI+Web3.swift */; };
 		9401A57C2BD960F600679686 /* Web3Chain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A57B2BD960F600679686 /* Web3Chain.swift */; };
-		9401A5832BD961A300679686 /* Web3Dapp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5822BD961A300679686 /* Web3Dapp.swift */; };
-		9401A58B2BD964FE00679686 /* Web3ChainUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A58A2BD964FE00679686 /* Web3ChainUpdate.swift */; };
 		9401A5FA2BDA899900679686 /* Web3SendingDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5F92BDA899900679686 /* Web3SendingDestinationViewController.swift */; };
 		9401A5FF2BDA8B5300679686 /* Web3SendingPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */; };
 		9401A6012BDA91F900679686 /* Web3SendingDestinationHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */; };
@@ -698,7 +695,7 @@
 		94062C622AE8CA9100ADAE87 /* SnapshotColumnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */; };
 		94062C642AE8CB1200ADAE87 /* SafeSnapshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */; };
 		9406978725E7F30800E7FDA0 /* PlaylistSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */; };
-		940764C129B1E31F00B779A6 /* Web3TransactionPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C029B1E31F00B779A6 /* Web3TransactionPreview.swift */; };
+		940764C129B1E31F00B779A6 /* EVMTransactionPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C029B1E31F00B779A6 /* EVMTransactionPreview.swift */; };
 		940764C329B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */; };
 		940764C529B26B0B00B779A6 /* PropertyListEncoder+Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C429B26B0B00B779A6 /* PropertyListEncoder+Global.swift */; };
 		940764C729B26EF300B779A6 /* AuthenticationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C629B26EF300B779A6 /* AuthenticationIntent.swift */; };
@@ -727,6 +724,10 @@
 		941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */; };
 		9419374525DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374425DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift */; };
 		9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */; };
+		941952492BFF5E6D0046DE50 /* ExploreEVMViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941952482BFF5E6D0046DE50 /* ExploreEVMViewController.swift */; };
+		9419524E2BFF60430046DE50 /* ExploreSolanaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419524D2BFF60430046DE50 /* ExploreSolanaViewController.swift */; };
+		941952742BFF68460046DE50 /* UnlockEVMAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941952732BFF68460046DE50 /* UnlockEVMAccountViewController.swift */; };
+		941952792BFF6B3D0046DE50 /* UnlockSolanaAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941952782BFF6B3D0046DE50 /* UnlockSolanaAccountViewController.swift */; };
 		9419794F2BA47620002BA19F /* Web3SignViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419794E2BA47620002BA19F /* Web3SignViewController.swift */; };
 		941979552BA47782002BA19F /* Web3MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941979542BA47782002BA19F /* Web3MessageCell.xib */; };
 		941979562BA47782002BA19F /* Web3MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941979532BA47782002BA19F /* Web3MessageCell.swift */; };
@@ -850,7 +851,7 @@
 		946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */; };
 		946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
-		94720ED129C1A9850070C7C1 /* TIP+BIP44.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94720ED029C1A9850070C7C1 /* TIP+BIP44.swift */; };
+		94720ED129C1A9850070C7C1 /* TIP+Web3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94720ED029C1A9850070C7C1 /* TIP+Web3.swift */; };
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
 		9473F8282AE51097004E5739 /* RegisterToSafeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */; };
 		94787E182A7C071E00BB0124 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = 94787E172A7C071E00BB0124 /* QRCode */; };
@@ -875,6 +876,7 @@
 		9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 9481C03B2A49A9AA0009DAF8 /* Starscream */; };
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
+		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
 		94881FA82AD035C300CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA72AD035C300CA7A29 /* RswiftLibrary */; };
 		94881FAA2AD035CC00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA92AD035CC00CA7A29 /* RswiftLibrary */; };
 		94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FAB2AD035ED00CA7A29 /* RswiftLibrary */; };
@@ -936,6 +938,8 @@
 		94C886122BA2D5460039F723 /* ConnectWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */; };
 		94C886B52BA469800039F723 /* SnapshotFilterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C886B42BA469800039F723 /* SnapshotFilterView.xib */; };
 		94C886C22BA46E000039F723 /* SnapshotFilterConditionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C886C02BA46E000039F723 /* SnapshotFilterConditionCell.xib */; };
+		94C8C4842C11A1A100993027 /* Web3API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C4832C11A1A100993027 /* Web3API.swift */; };
+		94C8C49D2C11A29C00993027 /* PriorityFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C49C2C11A29C00993027 /* PriorityFee.swift */; };
 		94C958DB2ACFEF5F00C1412F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 94C958DA2ACFEF5F00C1412F /* FirebaseAnalytics */; };
 		94C958DD2ACFEF5F00C1412F /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 94C958DC2ACFEF5F00C1412F /* FirebaseCrashlytics */; };
 		94C958DF2ACFEF5F00C1412F /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 94C958DE2ACFEF5F00C1412F /* FirebasePerformance */; };
@@ -961,7 +965,7 @@
 		94D0FF7E2BEB7F9100E3947F /* InscriptionContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */; };
 		94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
-		94D308682BA54E220017494C /* UnlockWeb3WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */; };
+		94D308682BA54E220017494C /* UnlockWeb3AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308672BA54E220017494C /* UnlockWeb3AccountViewController.swift */; };
 		94D308772BA72C8F0017494C /* Web3AmountChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */; };
 		94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */; };
 		94D308802BA73F810017494C /* Web3TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3087F2BA73F810017494C /* Web3TransferViewController.swift */; };
@@ -1000,6 +1004,11 @@
 		94EE1ABE2B4851E600BE9AD1 /* WithdrawableAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */; };
 		94EE1C012B4C647500BE9AD1 /* CodeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1C002B4C647500BE9AD1 /* CodeURL.swift */; };
 		94EE1DC72B721E4800C32DD4 /* MultisigPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1DC62B721E4800C32DD4 /* MultisigPreviewViewController.swift */; };
+		94F209D52C06C1A300550060 /* SolanaTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209D42C06C1A300550060 /* SolanaTransferOperation.swift */; };
+		94F209DA2C06C1CE00550060 /* EVMTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */; };
+		94F209DC2C06F23A00550060 /* SolanaRPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */; };
+		94F209E52C070DEA00550060 /* solana_rust_sdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */; };
+		94F209E62C070DEA00550060 /* solana_rust_sdk.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
 		94F952582AE616F40025B995 /* TransferOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952572AE616F40025B995 /* TransferOutViewController.swift */; };
 		94F9525D2AE6174A0025B995 /* TransferOutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F9525C2AE6174A0025B995 /* TransferOutView.xib */; };
@@ -1242,6 +1251,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				94F209E62C070DEA00550060 /* solana_rust_sdk.xcframework in Embed Frameworks */,
 				94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -1950,10 +1960,7 @@
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferTokenSelectorViewController.swift; sourceTree = "<group>"; };
-		9401A5762BD960B400679686 /* ExternalAPI+Web3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExternalAPI+Web3.swift"; sourceTree = "<group>"; };
 		9401A57B2BD960F600679686 /* Web3Chain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3Chain.swift; sourceTree = "<group>"; };
-		9401A5822BD961A300679686 /* Web3Dapp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3Dapp.swift; sourceTree = "<group>"; };
-		9401A58A2BD964FE00679686 /* Web3ChainUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ChainUpdate.swift; sourceTree = "<group>"; };
 		9401A5F92BDA899900679686 /* Web3SendingDestinationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SendingDestinationViewController.swift; sourceTree = "<group>"; };
 		9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SendingPayment.swift; sourceTree = "<group>"; };
 		9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3SendingDestinationHeaderView.xib; sourceTree = "<group>"; };
@@ -1969,7 +1976,7 @@
 		94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotColumnCell.swift; sourceTree = "<group>"; };
 		94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeSnapshotViewController.swift; sourceTree = "<group>"; };
 		9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistSlider.swift; sourceTree = "<group>"; };
-		940764C029B1E31F00B779A6 /* Web3TransactionPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionPreview.swift; sourceTree = "<group>"; };
+		940764C029B1E31F00B779A6 /* EVMTransactionPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVMTransactionPreview.swift; sourceTree = "<group>"; };
 		940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectDecodedSigningRequest.swift; sourceTree = "<group>"; };
 		940764C429B26B0B00B779A6 /* PropertyListEncoder+Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PropertyListEncoder+Global.swift"; sourceTree = "<group>"; };
 		940764C629B26EF300B779A6 /* AuthenticationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationIntent.swift; sourceTree = "<group>"; };
@@ -1996,6 +2003,10 @@
 		941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionClientPriority.swift; sourceTree = "<group>"; };
 		9419374425DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistWaveView.swift; sourceTree = "<group>"; };
 		9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconSaver.swift; sourceTree = "<group>"; };
+		941952482BFF5E6D0046DE50 /* ExploreEVMViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreEVMViewController.swift; sourceTree = "<group>"; };
+		9419524D2BFF60430046DE50 /* ExploreSolanaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSolanaViewController.swift; sourceTree = "<group>"; };
+		941952732BFF68460046DE50 /* UnlockEVMAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockEVMAccountViewController.swift; sourceTree = "<group>"; };
+		941952782BFF6B3D0046DE50 /* UnlockSolanaAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockSolanaAccountViewController.swift; sourceTree = "<group>"; };
 		9419794E2BA47620002BA19F /* Web3SignViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SignViewController.swift; sourceTree = "<group>"; };
 		941979532BA47782002BA19F /* Web3MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3MessageCell.swift; sourceTree = "<group>"; };
 		941979542BA47782002BA19F /* Web3MessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3MessageCell.xib; sourceTree = "<group>"; };
@@ -2120,7 +2131,7 @@
 		946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverRawTransactionJob.swift; sourceTree = "<group>"; };
 		946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationProgressView.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
-		94720ED029C1A9850070C7C1 /* TIP+BIP44.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIP+BIP44.swift"; sourceTree = "<group>"; };
+		94720ED029C1A9850070C7C1 /* TIP+Web3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIP+Web3.swift"; sourceTree = "<group>"; };
 		94739A5326258F8200E8914D /* Custom-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Custom-acknowledgements.plist"; sourceTree = "<group>"; };
 		9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterToSafeViewController.swift; sourceTree = "<group>"; };
 		947B36A825DEB72A00146111 /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
@@ -2143,6 +2154,7 @@
 		94812DD926E082C400213F79 /* mixin_condensed.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin_condensed.otf; sourceTree = "<group>"; };
 		948374802A5D49110011A2CA /* PopupSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSelectorViewController.swift; sourceTree = "<group>"; };
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
+		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
@@ -2201,6 +2213,8 @@
 		94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectWalletViewController.swift; sourceTree = "<group>"; };
 		94C886B42BA469800039F723 /* SnapshotFilterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotFilterView.xib; sourceTree = "<group>"; };
 		94C886C02BA46E000039F723 /* SnapshotFilterConditionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotFilterConditionCell.xib; sourceTree = "<group>"; };
+		94C8C4832C11A1A100993027 /* Web3API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3API.swift; sourceTree = "<group>"; };
+		94C8C49C2C11A29C00993027 /* PriorityFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityFee.swift; sourceTree = "<group>"; };
 		94CD47142BECACED00A3DE10 /* InscriptionActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionActionCell.swift; sourceTree = "<group>"; };
 		94CD47152BECACED00A3DE10 /* InscriptionActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionActionCell.xib; sourceTree = "<group>"; };
 		94CD471B2BECAE9D00A3DE10 /* InscriptionHashCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionHashCell.swift; sourceTree = "<group>"; };
@@ -2223,7 +2237,7 @@
 		94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentCell.swift; sourceTree = "<group>"; };
 		94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionContentCell.xib; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
-		94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockWeb3WalletViewController.swift; sourceTree = "<group>"; };
+		94D308672BA54E220017494C /* UnlockWeb3AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockWeb3AccountViewController.swift; sourceTree = "<group>"; };
 		94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AmountChangeCell.swift; sourceTree = "<group>"; };
 		94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AmountChangeCell.xib; sourceTree = "<group>"; };
 		94D3087F2BA73F810017494C /* Web3TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferViewController.swift; sourceTree = "<group>"; };
@@ -2261,6 +2275,10 @@
 		94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawableAddress.swift; sourceTree = "<group>"; };
 		94EE1C002B4C647500BE9AD1 /* CodeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeURL.swift; sourceTree = "<group>"; };
 		94EE1DC62B721E4800C32DD4 /* MultisigPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigPreviewViewController.swift; sourceTree = "<group>"; };
+		94F209D42C06C1A300550060 /* SolanaTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaTransferOperation.swift; sourceTree = "<group>"; };
+		94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVMTransferOperation.swift; sourceTree = "<group>"; };
+		94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaRPCClient.swift; sourceTree = "<group>"; };
+		94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = solana_rust_sdk.xcframework; sourceTree = "<group>"; };
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
 		94F952572AE616F40025B995 /* TransferOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOutViewController.swift; sourceTree = "<group>"; };
 		94F9525C2AE6174A0025B995 /* TransferOutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferOutView.xib; sourceTree = "<group>"; };
@@ -2503,6 +2521,7 @@
 				9416231A29BEEFB800E540B9 /* OrderedCollections in Frameworks */,
 				94C958DD2ACFEF5F00C1412F /* FirebaseCrashlytics in Frameworks */,
 				DFCC4342206B668A006F50BE /* Security.framework in Frameworks */,
+				94F209E52C070DEA00550060 /* solana_rust_sdk.xcframework in Frameworks */,
 				94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */,
 				94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */,
 				9479B7852BBBE589002A2C4F /* web3.swift in Frameworks */,
@@ -2555,6 +2574,7 @@
 		275339881F975D9800DD4C26 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */,
 				94DA83722588E58B006B0F16 /* WebRTC.xcframework */,
 				94E3411E261D827300E2F9D3 /* highlight */,
 				DF5D9F2F1F9C95270036D5FD /* CountryCode */,
@@ -3261,6 +3281,7 @@
 		941F1F5A299CC3B80063FFB6 /* Web3 */ = {
 			isa = PBXGroup;
 			children = (
+				94C8C4A12C11A2A200993027 /* API */,
 				945E864E29C07898000FDA54 /* BIP44 */,
 				942F4728299CDF1800528759 /* URLSessionWebSocketFactory.swift */,
 				942F472A299CDF8100528759 /* Web3SignerFactory.swift */,
@@ -3269,11 +3290,13 @@
 				94E35CA2298B836300ADB40D /* WalletConnectService.swift */,
 				940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */,
 				947C5E5A29B0FE9B00838458 /* WalletConnectSession.swift */,
-				940764C029B1E31F00B779A6 /* Web3TransactionPreview.swift */,
+				940764C029B1E31F00B779A6 /* EVMTransactionPreview.swift */,
 				94E9C0CC2BC6CF7A00D6157C /* Web3Worker.swift */,
 				946575972BC8684D00C4C4F4 /* Web3DappProposer.swift */,
 				9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */,
 				942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */,
+				94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */,
+				94F209D42C06C1A300550060 /* SolanaTransferOperation.swift */,
 				5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */,
 			);
 			path = Web3;
@@ -3319,7 +3342,7 @@
 				945E864F29C078BB000FDA54 /* ExtendedKey.swift */,
 				945E871A29C1929D000FDA54 /* P2PKH.swift */,
 				94FFD9A329C199FD0054DCA7 /* BIP32Tests.swift */,
-				94720ED029C1A9850070C7C1 /* TIP+BIP44.swift */,
+				94720ED029C1A9850070C7C1 /* TIP+Web3.swift */,
 			);
 			path = BIP44;
 			sourceTree = "<group>";
@@ -3401,6 +3424,8 @@
 				9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */,
 				9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */,
 				9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */,
+				94838A432C02ADFB005B6A27 /* Solana.swift */,
+				94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3465,6 +3490,15 @@
 			path = "Authentication Preview";
 			sourceTree = "<group>";
 		};
+		94C8C4A12C11A2A200993027 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				94C8C49C2C11A29C00993027 /* PriorityFee.swift */,
+				94C8C4832C11A1A100993027 /* Web3API.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		94D72C1D27A2938B00E328F0 /* PIN API Test */ = {
 			isa = PBXGroup;
 			children = (
@@ -3505,7 +3539,9 @@
 				521AEF522BEA039700F48884 /* Cells */,
 				52589ADC2BEA50A60081C2BF /* Views */,
 				948E276929D2A518002BFCE1 /* Model */,
-				94D308672BA54E220017494C /* UnlockWeb3WalletViewController.swift */,
+				94D308672BA54E220017494C /* UnlockWeb3AccountViewController.swift */,
+				941952732BFF68460046DE50 /* UnlockEVMAccountViewController.swift */,
+				941952782BFF6B3D0046DE50 /* UnlockSolanaAccountViewController.swift */,
 				94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */,
 				9419794E2BA47620002BA19F /* Web3SignViewController.swift */,
 				94D3087F2BA73F810017494C /* Web3TransferViewController.swift */,
@@ -4057,6 +4093,8 @@
 				94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */,
 				94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */,
 				94CF1F262BA1B74A00BC52C1 /* ExploreWeb3ViewController.swift */,
+				941952482BFF5E6D0046DE50 /* ExploreEVMViewController.swift */,
+				9419524D2BFF60430046DE50 /* ExploreSolanaViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -4306,7 +4344,6 @@
 				DFC0ED0523BB7D4F0091E7AC /* Model */,
 				DFC0ECF023BB610B0091E7AC /* GiphyAPI.swift */,
 				7BC96DE224176B390047471D /* FoursquareAPI.swift */,
-				9401A5762BD960B400679686 /* ExternalAPI+Web3.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -4316,8 +4353,6 @@
 			children = (
 				7BC96DE4241779F70047471D /* ExternalApiError.swift */,
 				DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */,
-				9401A5822BD961A300679686 /* Web3Dapp.swift */,
-				9401A58A2BD964FE00679686 /* Web3ChainUpdate.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5250,6 +5285,7 @@
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */,
 				7C07A17D29D8FDBC00D4835C /* NetworkInterface.swift in Sources */,
+				94F209D52C06C1A300550060 /* SolanaTransferOperation.swift in Sources */,
 				9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */,
 				7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
@@ -5283,6 +5319,7 @@
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
+				941952742BFF68460046DE50 /* UnlockEVMAccountViewController.swift in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
 				94CD47172BECACED00A3DE10 /* InscriptionActionCell.swift in Sources */,
 				94C199732A1CA9430098EDB3 /* DeviceTransferError.swift in Sources */,
@@ -5350,7 +5387,7 @@
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
-				94720ED129C1A9850070C7C1 /* TIP+BIP44.swift in Sources */,
+				94720ED129C1A9850070C7C1 /* TIP+Web3.swift in Sources */,
 				94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
 				943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */,
@@ -5533,6 +5570,7 @@
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
 				7BF196B12411625300CC8325 /* UserInterfaceStyle.swift in Sources */,
 				7C1E798029DAB701006A07A2 /* ChatsViewController.swift in Sources */,
+				941952492BFF5E6D0046DE50 /* ExploreEVMViewController.swift in Sources */,
 				94D308772BA72C8F0017494C /* Web3AmountChangeCell.swift in Sources */,
 				9463783625CD961D0071BCDD /* AudioSessionClient.swift in Sources */,
 				7BC1466D230D12680060FE19 /* CurrencySelectorViewController.swift in Sources */,
@@ -5586,6 +5624,7 @@
 				7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				7C4733A128533EB800ECD293 /* PhoneContactSearchResult.swift in Sources */,
+				94C8C4842C11A1A100993027 /* Web3API.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
 				7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */,
@@ -5635,7 +5674,7 @@
 				941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
-				94D308682BA54E220017494C /* UnlockWeb3WalletViewController.swift in Sources */,
+				94D308682BA54E220017494C /* UnlockWeb3AccountViewController.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
 				7CB227862907CE060034F9FD /* DepositNetworkCell.swift in Sources */,
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
@@ -5686,6 +5725,7 @@
 				7B34A19F22C0E73D00665F41 /* GalleryVideoView.swift in Sources */,
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
 				5292D6982BEB911900734F14 /* Web3TransactionHeaderView.swift in Sources */,
+				94F209DA2C06C1CE00550060 /* EVMTransferOperation.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
 				94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */,
 				7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */,
@@ -5812,6 +5852,7 @@
 				94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */,
+				941952792BFF6B3D0046DE50 /* UnlockSolanaAccountViewController.swift in Sources */,
 				94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				7B57186E24D9375300682D86 /* MixinAPIError+Localization.swift in Sources */,
@@ -5885,7 +5926,6 @@
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
-				9401A5832BD961A300679686 /* Web3Dapp.swift in Sources */,
 				7CC730502745F95D002780F5 /* StickerStore.swift in Sources */,
 				944C62042B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift in Sources */,
 				9455EA0D2AFE5A8500C3FD3C /* WithdrawFeeView.swift in Sources */,
@@ -5904,6 +5944,7 @@
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
 				94658CAB2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift in Sources */,
 				E07E38A123A772CC0005A538 /* CallError.swift in Sources */,
+				94838A442C02ADFB005B6A27 /* Solana.swift in Sources */,
 				E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */,
@@ -5913,7 +5954,6 @@
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
 				7BC14671230D235C0060FE19 /* SelectedCellBackgroundView.swift in Sources */,
 				94CDA7FD2A5DBC2A00F1CDEE /* ComboBoxView.swift in Sources */,
-				9401A5772BD960B400679686 /* ExternalAPI+Web3.swift in Sources */,
 				94149B482A190889003E9E1A /* DeviceTransferRecord.swift in Sources */,
 				7BF196AF24115F9100CC8325 /* LocationMessageViewModel.swift in Sources */,
 				7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */,
@@ -5952,14 +5992,16 @@
 				7B333A8823406AF900FDA848 /* GalleryTransitionFromSharedMediaView.swift in Sources */,
 				7B9C102A245588DA00B2718F /* PhoneNumberSettingViewController.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
+				9419524E2BFF60430046DE50 /* ExploreSolanaViewController.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
 				7BEB97182366CF42002DB190 /* MessageFontSet.swift in Sources */,
-				940764C129B1E31F00B779A6 /* Web3TransactionPreview.swift in Sources */,
+				940764C129B1E31F00B779A6 /* EVMTransactionPreview.swift in Sources */,
 				7B31E566236181C9004F891A /* BubbleImageSet.swift in Sources */,
+				94C8C49D2C11A29C00993027 /* PriorityFee.swift in Sources */,
 				7CEB735829DB272F006FB5B2 /* RestoreChatTableViewCell.swift in Sources */,
 				E0FAE8D223CDC4F4008B056A /* CrashlyticalReporter.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
@@ -6017,7 +6059,6 @@
 				7B81BF2822893F8B00266A77 /* GroupParticipantCell.swift in Sources */,
 				E0B53A6D23B0C4D3008DA9F1 /* MessageItem+Quote.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,
-				9401A58B2BD964FE00679686 /* Web3ChainUpdate.swift in Sources */,
 				DF8CECE91FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift in Sources */,
 				7BFD375624936763006D758F /* GroupCallIndicatorView.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
@@ -6059,6 +6100,7 @@
 				E0BEB778236B0DF8001FE534 /* ProfileMenuItemView.swift in Sources */,
 				94571E0925CC48AE001980DA /* AudioSession.swift in Sources */,
 				94C886122BA2D5460039F723 /* ConnectWalletViewController.swift in Sources */,
+				94F209DC2C06F23A00550060 /* SolanaRPCClient.swift in Sources */,
 				94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,

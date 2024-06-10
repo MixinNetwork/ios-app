@@ -9,7 +9,8 @@ final class ExploreViewController: UIViewController {
     private let hiddenSearchTopMargin: CGFloat = -28
     
     private lazy var exploreBotsViewController = ExploreBotsViewController()
-    private lazy var evmViewController = ExploreWeb3ViewController(chains: Array(Web3Chain.evmChains))
+    private lazy var evmViewController = ExploreEVMViewController()
+    private lazy var solanaViewController = ExploreSolanaViewController()
     
     private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
@@ -168,6 +169,9 @@ extension ExploreViewController: UICollectionViewDelegate {
         case .evm:
             switchToChild(evmViewController)
             evmViewController.reloadAccountIfUnlocked()
+        case .solana:
+            switchToChild(solanaViewController)
+            evmViewController.reloadAccountIfUnlocked()
         }
         AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
     }
@@ -190,6 +194,7 @@ extension ExploreViewController {
         
         case bots
         case evm
+        case solana
         
         var name: String {
             switch self {
@@ -197,6 +202,8 @@ extension ExploreViewController {
                 R.string.localizable.bots_title()
             case .evm:
                 "Ethereum"
+            case .solana:
+                "Solana"
             }
         }
         

@@ -5,15 +5,15 @@ final class Web3TokenViewController: UIViewController {
     
     private let tableView = UITableView()
     
-    private let chains: [Web3Chain]
+    private let kind: Web3Chain.Kind
     private let address: String
     private let token: Web3Token
     
     private var transactions: [Web3Transaction]?
     
-    init(address: String, chains: [Web3Chain], token: Web3Token) {
+    init(kind: Web3Chain.Kind, address: String, token: Web3Token) {
+        self.kind = kind
         self.address = address
-        self.chains = chains
         self.token = token
         super.init(nibName: nil, bundle: nil)
     }
@@ -52,7 +52,13 @@ final class Web3TokenViewController: UIViewController {
     }
     
     private func loadTransactions() {
-        Web3API.transactions(address: address, chainID: token.chainID, fungibleID: token.fungibleID) { result in
+        let tokenID: Web3API.TokenID = switch token.chainID {
+        case Web3Token.ChainID.solana:
+                .assetKey(token.assetKey)
+        default:
+                .fungibleID(token.fungibleID)
+        }
+        Web3API.transactions(address: address, chainID: token.chainID, tokenID: tokenID) { result in
             switch result {
             case .success(let transactions):
                 self.transactions = transactions
@@ -93,7 +99,7 @@ final class Web3TokenViewController: UIViewController {
     }
     
     @objc private func receive(_ sender: Any) {
-        let source = Web3ReceiveSourceViewController(address: address, chains: chains)
+        let source = Web3ReceiveSourceViewController(kind: kind, address: address)
         let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
         navigationController?.pushViewController(container, animated: true)
     }

@@ -3,7 +3,7 @@
     <device id="retina6_0" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,7 +14,8 @@
                 <outlet property="amountLabel" destination="cbS-rU-rOn" id="pJ3-Ma-CBk"/>
                 <outlet property="amountStackView" destination="PQy-wf-KED" id="FKT-ed-AnH"/>
                 <outlet property="calculatedValueLabel" destination="fhQ-Ea-Xwd" id="geq-n6-Vp6"/>
-                <outlet property="decimalSeparatorButton" destination="VAt-Xb-6QC" id="hUS-cI-rSF"/>
+                <outlet property="decimalSeparatorButton" destination="VAt-Xb-6QC" id="0jg-Tb-S92"/>
+                <outlet property="deleteBackwardsButton" destination="pAe-af-HlB" id="nC2-5l-Jnt"/>
                 <outlet property="inputMaxValueButton" destination="uKN-F0-uEU" id="xWy-xv-9pR"/>
                 <outlet property="insufficientBalanceLabel" destination="SaA-gy-pGd" id="Njk-2d-77e"/>
                 <outlet property="reviewButton" destination="W8F-Bv-lIc" id="7Uu-iF-iV6"/>
@@ -22,6 +23,16 @@
                 <outlet property="tokenIconView" destination="hm4-se-0DS" id="4hi-D7-qgC"/>
                 <outlet property="tokenNameLabel" destination="8eP-9g-d3P" id="nyN-Qa-whr"/>
                 <outlet property="view" destination="iN0-l3-epB" id="UIp-eP-7EW"/>
+                <outletCollection property="decimalButtons" destination="Caq-Hm-dJF" collectionClass="NSMutableArray" id="l3T-bH-3kk"/>
+                <outletCollection property="decimalButtons" destination="hIe-aS-MK7" collectionClass="NSMutableArray" id="EpW-uY-vQC"/>
+                <outletCollection property="decimalButtons" destination="a7h-vj-spT" collectionClass="NSMutableArray" id="y4e-AM-JVS"/>
+                <outletCollection property="decimalButtons" destination="BrD-bJ-Z3y" collectionClass="NSMutableArray" id="nuB-jz-F9c"/>
+                <outletCollection property="decimalButtons" destination="HaM-j5-c0T" collectionClass="NSMutableArray" id="KGQ-Df-eFA"/>
+                <outletCollection property="decimalButtons" destination="Eb9-s4-mzN" collectionClass="NSMutableArray" id="Q3v-GR-16r"/>
+                <outletCollection property="decimalButtons" destination="sZs-bC-9da" collectionClass="NSMutableArray" id="76l-zo-VbG"/>
+                <outletCollection property="decimalButtons" destination="tFz-CY-ReE" collectionClass="NSMutableArray" id="wEG-Pn-NEW"/>
+                <outletCollection property="decimalButtons" destination="Bzy-JU-t9J" collectionClass="NSMutableArray" id="4yI-it-3VK"/>
+                <outletCollection property="decimalButtons" destination="LRI-j6-Df6" collectionClass="NSMutableArray" id="6tt-YX-o4b"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

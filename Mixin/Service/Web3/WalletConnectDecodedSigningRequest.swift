@@ -22,7 +22,7 @@ struct WalletConnectDecodedSigningRequest {
     let signable: Signable
     let humanReadable: String
     
-    static func personalSign(request: WalletConnectSign.Request) throws -> WalletConnectDecodedSigningRequest {
+    static func ethPersonalSign(request: WalletConnectSign.Request) throws -> WalletConnectDecodedSigningRequest {
         guard let chain = Web3Chain.chain(caip2: request.chainId) else {
             throw Error.chainNotSupported
         }
@@ -45,7 +45,7 @@ struct WalletConnectDecodedSigningRequest {
                                                   humanReadable: humanReadable)
     }
     
-    static func signTypedData(request: WalletConnectSign.Request) throws -> WalletConnectDecodedSigningRequest {
+    static func ethSignTypedData(request: WalletConnectSign.Request) throws -> WalletConnectDecodedSigningRequest {
         guard let chain = Web3Chain.chain(caip2: request.chainId) else {
             throw Error.chainNotSupported
         }
@@ -67,6 +67,28 @@ struct WalletConnectDecodedSigningRequest {
                                                   address: address,
                                                   signable: .typed(typedData),
                                                   humanReadable: humanReadable)
+    }
+    
+    static func solanaSignMessage(request: WalletConnectSign.Request) throws -> WalletConnectDecodedSigningRequest {
+        guard let chain = Web3Chain.chain(caip2: request.chainId) else {
+            throw Error.chainNotSupported
+        }
+        let params = try request.params.get([String: String].self)
+        guard
+            params.count == 2,
+            let message = params["message"],
+            let pubkey = params["pubkey"]
+        else {
+            throw Error.invalidParameters
+        }
+        guard let messageData = Data(base58EncodedString: message) else {
+            throw Error.utf8Encoding
+        }
+        return WalletConnectDecodedSigningRequest(raw: request,
+                                                  chain: chain,
+                                                  address: pubkey,
+                                                  signable: .raw(messageData),
+                                                  humanReadable: message)
     }
     
 }

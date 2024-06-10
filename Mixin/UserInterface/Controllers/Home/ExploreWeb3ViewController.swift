@@ -4,19 +4,18 @@ import Alamofire
 import web3
 import MixinServices
 
-final class ExploreWeb3ViewController: UIViewController {
+class ExploreWeb3ViewController: UIViewController {
     
     private let tableView = UITableView()
-    private let chains: [Web3Chain]
+    private let kind: Web3Chain.Kind
     
     private weak var lastAccountRequest: Request?
     
     private var address: String?
     private var tokens: [Web3Token]?
     
-    init(chains: [Web3Chain]) {
-        assert(!chains.isEmpty)
-        self.chains = chains
+    init(kind: Web3Chain.Kind) {
+        self.kind = kind
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,10 +35,7 @@ final class ExploreWeb3ViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.contentInset.bottom = 10
-        NotificationCenter.default.addObserver(self, selector: #selector(propertiesDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrency), name: Currency.currentCurrencyDidChangeNotification, object: nil)
-        let address: String? = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
-        reloadData(address: address)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -56,17 +52,8 @@ final class ExploreWeb3ViewController: UIViewController {
         reloadAccount(address: address)
     }
     
-    @objc private func propertiesDidUpdate(_ notification: Notification) {
-        guard let change = notification.userInfo?[PropertiesDAO.Key.evmAddress] as? PropertiesDAO.Change else {
-            return
-        }
-        switch change {
-        case .removed:
-            reloadData(address: nil)
-        case .saved(let convertibleAddress):
-            let address = String(convertibleAddress)
-            reloadData(address: address)
-        }
+    @objc func unlockAccount(_ sender: Any) {
+        fatalError("Must override")
     }
     
     @objc private func updateCurrency(_ notification: Notification) {
@@ -74,11 +61,6 @@ final class ExploreWeb3ViewController: UIViewController {
             return
         }
         reloadData(address: address)
-    }
-    
-    @objc private func unlockAccount(_ sender: Any) {
-        let unlock = UnlockWeb3WalletViewController(chains: chains)
-        present(unlock, animated: true)
     }
     
     @objc private func send(_ sender: Any) {
@@ -95,7 +77,7 @@ final class ExploreWeb3ViewController: UIViewController {
         guard let address else {
             return
         }
-        let source = Web3ReceiveSourceViewController(address: address, chains: chains)
+        let source = Web3ReceiveSourceViewController(kind: kind, address: address)
         let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
         navigationController?.pushViewController(container, animated: true)
     }
@@ -104,7 +86,7 @@ final class ExploreWeb3ViewController: UIViewController {
         guard let explore = parent as? ExploreViewController else {
             return
         }
-        let browser = Web3BrowserViewController(chains: chains)
+        let browser = Web3BrowserViewController(kind: kind)
         explore.presentSearch(with: browser)
     }
     
@@ -112,7 +94,8 @@ final class ExploreWeb3ViewController: UIViewController {
         guard let address else {
             return
         }
-        let sheet = UIAlertController(title: R.string.localizable.web3_account_network(chains[0].name),
+        let chainName = kind.chains[0].name
+        let sheet = UIAlertController(title: R.string.localizable.web3_account_network(chainName),
                                       message: Address.compactRepresentation(of: address),
                                       preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.copy_address(), style: .default, handler: { _ in
@@ -123,8 +106,9 @@ final class ExploreWeb3ViewController: UIViewController {
         present(sheet, animated: true)
     }
     
-    private func reloadData(address: String?) {
+    func reloadData(address: String?) {
         self.address = address
+        let chain = kind.chains[0]
         if let address {
             let tableHeaderView = R.nib.web3AccountHeaderView(withOwner: nil)!
             tableHeaderView.addTarget(self,
@@ -133,12 +117,13 @@ final class ExploreWeb3ViewController: UIViewController {
                                       browse: #selector(browse(_:)),
                                       more: #selector(more(_:)))
             tableHeaderView.disableSendButton()
+            tableHeaderView.setNetworkName(chain.name)
             tableView.tableHeaderView = tableHeaderView
             layoutTableHeaderView()
             reloadAccount(address: address)
         } else {
             let tableHeaderView = R.nib.web3AccountLockedHeaderView(withOwner: nil)!
-            tableHeaderView.showUnlockAccount(chain: chains[0])
+            tableHeaderView.showUnlockAccount(chain: chain)
             tableHeaderView.button.addTarget(self, action: #selector(unlockAccount(_:)), for: .touchUpInside)
             tableView.tableHeaderView = tableHeaderView
             layoutTableHeaderView()
@@ -160,7 +145,6 @@ final class ExploreWeb3ViewController: UIViewController {
     
     private func reloadAccount(address: String) {
         Logger.web3.debug(category: "Explore", message: "Reloading with: \(address)")
-        let chainName = chains[0].name
         if tokens?.isEmpty ?? true {
             tableView.tableFooterView = R.nib.loadingIndicatorTableFooterView(withOwner: nil)!
         }
@@ -171,7 +155,6 @@ final class ExploreWeb3ViewController: UIViewController {
                 self.tokens = account.tokens
                 self.tableView.reloadData()
                 if let headerView = self.tableView.tableHeaderView as? Web3AccountHeaderView {
-                    headerView.setNetworkName(chainName)
                     headerView.amountLabel.text = account.localizedFiatMoneyBalance
                     headerView.enableSendButton()
                 }
@@ -228,7 +211,7 @@ extension ExploreWeb3ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let address, let token = tokens?[indexPath.row] {
-            let viewController = Web3TokenViewController(address: address, chains: chains, token: token)
+            let viewController = Web3TokenViewController(kind: kind, address: address, token: token)
             let container = ContainerViewController.instance(viewController: viewController, title: token.name)
             navigationController?.pushViewController(container, animated: true)
         }

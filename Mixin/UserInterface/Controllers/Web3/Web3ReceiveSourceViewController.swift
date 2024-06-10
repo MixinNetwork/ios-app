@@ -8,14 +8,13 @@ final class Web3ReceiveSourceViewController: UIViewController {
         case address = 1
     }
     
+    private let kind: Web3Chain.Kind
     private let address: String
-    private let chains: [Web3Chain]
     private let tableView = UITableView()
     
-    init(address: String, chains: [Web3Chain]) {
-        assert(!chains.isEmpty)
+    init(kind: Web3Chain.Kind, address: String) {
+        self.kind = kind
         self.address = address
-        self.chains = chains
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -72,7 +71,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
             let selector = Web3TransferTokenSelectorViewController()
             selector.delegate = self
             present(selector, animated: true)
-            let chainIDs = chains.compactMap(\.mixinChainID)
+            let chainIDs = kind.chains.compactMap(\.mixinChainID)
             DispatchQueue.global().async { [weak selector] in
                 let tokens = TokenDAO.shared.positiveBalancedTokens(chainIDs: chainIDs)
                 DispatchQueue.main.async {
@@ -80,7 +79,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
                 }
             }
         case .address:
-            let deposit = Web3DepositViewController(address: address)
+            let deposit = Web3DepositViewController(kind: kind, address: address)
             let container = ContainerViewController.instance(viewController: deposit, title: R.string.localizable.receive())
             navigationController?.pushViewController(container, animated: true)
         }
@@ -91,7 +90,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
 extension Web3ReceiveSourceViewController: Web3TransferTokenSelectorViewControllerDelegate {
     
     func web3TransferTokenSelectorViewController(_ viewController: Web3TransferTokenSelectorViewController, didSelectToken token: TokenItem) {
-        guard let chain = chains.first(where: { $0.mixinChainID == token.chainID }) else {
+        guard let chain = kind.chains.first(where: { $0.mixinChainID == token.chainID }) else {
             return
         }
         let input = WithdrawInputAmountViewController(tokenItem: token,

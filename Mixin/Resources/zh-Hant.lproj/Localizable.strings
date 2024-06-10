@@ -1129,7 +1129,8 @@
 "web3_account" = "賬戶";
 "web3_account_connected" = "連線成功";
 "web3_account_network" = "%@ 賬戶";
-"web3_deposit_description" = "使用此地址在 Ethereum、Polygon、BSC 網路上接收代幣";
+"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base、Arbitrum、Optimism 網路上接收代幣";
+"web3_deposit_description_solana" = "使用此地址在 Solana 網路上接收代幣";
 "web3_ensure_trust" = "請確保您信任此應用程式。";
 "web3_message_request" = "訊息簽名";
 "web3_no_asset" = "沒有資產";

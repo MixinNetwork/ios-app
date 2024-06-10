@@ -8,6 +8,12 @@ final class DecimalButton: UIControl {
         }
     }
     
+    override var isHighlighted: Bool {
+        didSet {
+            button.isHighlighted = isHighlighted
+        }
+    }
+    
     private let button = HighlightableButton(type: .custom)
     
     override init(frame: CGRect) {

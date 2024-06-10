@@ -192,14 +192,20 @@ extension WalletConnectService {
                 return
             }
             
-            let account: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
+            let evmAddress: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
+            let solanaAddress: String? = PropertiesDAO.shared.value(forKey: .solanaAddress)
+            let kinds = Set(chains.map(\.kind))
             DispatchQueue.main.async {
-                if account == nil {
-                    let controller = UnlockWeb3WalletViewController(chains: chains)
+                if evmAddress == nil, kinds.contains(.evm) {
+                    let controller = UnlockEVMAccountViewController()
+                    Web3PopupCoordinator.enqueue(popup: .unlock(controller))
+                }
+                if solanaAddress == nil, kinds.contains(.solana) {
+                    let controller = UnlockSolanaAccountViewController()
                     Web3PopupCoordinator.enqueue(popup: .unlock(controller))
                 }
                 let connectWallet = ConnectWalletViewController(proposal: proposal,
-                                                                chains: chains.map(\.caip2),
+                                                                chains: chains,
                                                                 events: Array(events))
                 Web3PopupCoordinator.enqueue(popup: .request(connectWallet))
             }

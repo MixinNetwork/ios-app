@@ -2,6 +2,15 @@ import Foundation
 
 public class Web3Token: Codable {
     
+    public enum AssetKey {
+        public static let sol = "11111111111111111111111111111111"
+        public static let wrappedSOL = "So11111111111111111111111111111111111111112"
+    }
+    
+    public enum ChainID {
+        public static let solana = "solana"
+    }
+    
     enum CodingKeys: String, CodingKey {
         case fungibleID = "fungible_id"
         case name = "name"

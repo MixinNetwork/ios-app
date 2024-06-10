@@ -123,20 +123,34 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
     }
     
     @objc private func continueWithAddress(_ sender: Any) {
-        let address = EthereumAddress(textView.text)
-        let invalidAddress = textView.text.count != 42 || address.asNumber() == nil
-        if invalidAddress {
-            invalidAddressLabel.isHidden = false
-            continueButton?.isEnabled = false
-        } else {
+        let address: String?
+        switch payment.chain.kind {
+        case .evm:
+            let ethereumAddress = EthereumAddress(textView.text)
+            if textView.text.count != 42 || ethereumAddress.asNumber() == nil {
+                address = nil
+            } else {
+                address = ethereumAddress.toChecksumAddress()
+            }
+        case .solana:
+            if Solana.isValidPublicKey(string: textView.text) {
+                address = textView.text
+            } else {
+                address = nil
+            }
+        }
+        if let address {
             let payment = Web3SendingTokenToAddressPayment(
                 payment: payment,
                 to: .arbitrary,
-                address: address.toChecksumAddress()
+                address: address
             )
             let input = Web3TransferInputAmountViewController(payment: payment)
             let container = ContainerViewController.instance(viewController: input, title: R.string.localizable.send())
             navigationController?.pushViewController(container, animated: true)
+        } else {
+            invalidAddressLabel.isHidden = false
+            continueButton?.isEnabled = false
         }
     }
     

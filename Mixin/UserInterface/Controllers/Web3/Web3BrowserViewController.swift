@@ -8,15 +8,14 @@ final class Web3BrowserViewController: UIViewController {
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     
-    private let chains: [Web3Chain]
+    private let kind: Web3Chain.Kind
     
     private var quickAccess: QuickAccessSearchResult?
     private var searchResults: [Web3Dapp] = []
     private var lastKeyword: String?
     
-    init(chains: [Web3Chain]) {
-        assert(!chains.isEmpty)
-        self.chains = chains
+    init(kind: Web3Chain.Kind) {
+        self.kind = kind
         let nib = R.nib.exploreSearchView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -67,7 +66,7 @@ final class Web3BrowserViewController: UIViewController {
             return
         }
         quickAccess = QuickAccessSearchResult(keyword: keyword)
-        var dapps: OrderedSet<Web3Dapp> = chains.reduce(into: []) { results, chain in
+        let dapps: OrderedSet<Web3Dapp> = kind.chains.reduce(into: []) { results, chain in
             results.formUnion(chain.dapps)
         }
         searchResults = dapps.filter { dapp in

@@ -3,7 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -124,14 +124,14 @@
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
-                <outlet property="amountLabel1" destination="9wc-0W-dbP" id="H6U-cu-Sep"/>
-                <outlet property="amountLabel2" destination="6zH-Jt-8Sj" id="iYv-SU-fby"/>
                 <outlet property="iconView" destination="M0a-6Y-JY7" id="BRX-SI-pMf"/>
+                <outlet property="lowerAmountLabel" destination="6zH-Jt-8Sj" id="iYv-SU-fby"/>
+                <outlet property="lowerSymbolLabel" destination="q4u-zw-iq5" id="abc-xJ-U6g"/>
                 <outlet property="priceLabel" destination="uEe-Gc-1oq" id="22p-6d-7Zn"/>
                 <outlet property="subtitleLabel" destination="qev-qQ-E3O" id="6Rc-Kd-JWf"/>
-                <outlet property="symbolLabel1" destination="pYv-na-IOC" id="qCy-hR-zJo"/>
-                <outlet property="symbolLabel2" destination="q4u-zw-iq5" id="abc-xJ-U6g"/>
                 <outlet property="titleLabel" destination="K4S-S9-DoU" id="2ff-Y9-WdJ"/>
+                <outlet property="upperAmountLabel" destination="9wc-0W-dbP" id="H6U-cu-Sep"/>
+                <outlet property="upperSymbolLabel" destination="pYv-na-IOC" id="qCy-hR-zJo"/>
             </connections>
             <point key="canvasLocation" x="139" y="155"/>
         </tableViewCell>

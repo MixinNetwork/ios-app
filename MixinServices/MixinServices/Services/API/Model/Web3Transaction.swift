@@ -9,7 +9,7 @@ public struct Web3Transaction {
     public let sender: String
     public let receiver: String
     public let fee: Fee
-    public let transfers: [Web3Transfer]
+    public let transfers: [Transfer]
     public let approvals: [Approval]
     public let appMetadata: AppMetadata?
     public let createdAt: String
@@ -63,12 +63,6 @@ extension Web3Transaction {
     
     public struct AppMetadata: Decodable {
         
-        public let name: String
-        public let iconURL: String
-        public let contractAddress: String
-        public let methodID: String
-        public let methodName: String
-        
         enum CodingKeys: String, CodingKey {
             case name = "name"
             case iconURL = "icon_url"
@@ -76,6 +70,12 @@ extension Web3Transaction {
             case methodID = "method_id"
             case methodName = "method_name"
         }
+        
+        public let name: String
+        public let iconURL: String
+        public let contractAddress: String
+        public let methodID: String
+        public let methodName: String
         
     }
     
@@ -119,7 +119,7 @@ extension Web3Transaction {
         
     }
     
-    public class Web3Transfer: Decodable {
+    public class Transfer: Decodable {
         
         public enum Direction: String {
             case `in`

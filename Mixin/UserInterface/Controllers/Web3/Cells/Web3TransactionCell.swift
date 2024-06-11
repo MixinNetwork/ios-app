@@ -6,10 +6,10 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var amountLabel1: UILabel!
-    @IBOutlet weak var symbolLabel1: UILabel!
-    @IBOutlet weak var amountLabel2: UILabel!
-    @IBOutlet weak var symbolLabel2: UILabel!
+    @IBOutlet weak var upperAmountLabel: UILabel!
+    @IBOutlet weak var upperSymbolLabel: UILabel!
+    @IBOutlet weak var lowerAmountLabel: UILabel!
+    @IBOutlet weak var lowerSymbolLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     
     override func prepareForReuse() {
@@ -22,7 +22,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
         titleLabel.text = transaction.localizedTransactionType
         
         func renderAsDefault() {
-            hide(amountLabel1, symbolLabel1, amountLabel2, symbolLabel2, priceLabel)
+            hide(upperAmountLabel, upperSymbolLabel, lowerAmountLabel, lowerSymbolLabel, priceLabel)
             subtitleLabel.text = ""
         }
         let isConfirmed = transaction.status == Web3Transaction.Status.confirmed.rawValue
@@ -30,57 +30,57 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
         switch Web3Transaction.TransactionType(rawValue: transaction.operationType) {
         case .receive:
             if let transfer = transaction.transfers.first {
-                hide(amountLabel2, symbolLabel2)
-                show(amountLabel1, symbolLabel1, priceLabel)
+                hide(lowerAmountLabel, lowerSymbolLabel)
+                show(upperAmountLabel, upperSymbolLabel, priceLabel)
                 
-                amountLabel1.text = CurrencyFormatter.localizedString(from: transfer.amount, format: .precision, sign: .always)
-                symbolLabel1.text = transfer.symbol
+                upperAmountLabel.text = CurrencyFormatter.localizedString(from: transfer.amount, format: .precision, sign: .always)
+                upperSymbolLabel.text = transfer.symbol
                 priceLabel.text = if transfer.decimalUSDPrice.isZero {
                     R.string.localizable.na()
                 } else {
                     transfer.localizedFiatMoneyAmount
                 }
-                amountLabel1.textColor = isConfirmed ? .walletGreen : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? .walletGreen : .walletGray
                 subtitleLabel.text = Address.compactRepresentation(of: transaction.sender)
             } else {
                 renderAsDefault()
             }
         case .send:
             if let transfer = transaction.transfers.first {
-                hide(amountLabel2, symbolLabel2)
-                show(amountLabel1, symbolLabel1, priceLabel)
+                hide(lowerAmountLabel, lowerSymbolLabel)
+                show(upperAmountLabel, upperSymbolLabel, priceLabel)
                 
-                amountLabel1.text = CurrencyFormatter.localizedString(from: "-\(transfer.amount)", format: .precision, sign: .never)
-                symbolLabel1.text = transfer.symbol
+                upperAmountLabel.text = CurrencyFormatter.localizedString(from: -transfer.decimalAmount, format: .precision, sign: .always)
+                upperSymbolLabel.text = transfer.symbol
                 priceLabel.text = if transfer.decimalUSDPrice.isZero {
                     R.string.localizable.na()
                 } else {
                     transfer.localizedFiatMoneyAmount
                 }
-                amountLabel1.textColor = isConfirmed ? .walletRed : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? .walletRed : .walletGray
                 subtitleLabel.text = Address.compactRepresentation(of: transaction.receiver)
             } else {
                 renderAsDefault()
             }
         case .trade:
             let inTransfer = transaction.transfers.first { transfer in
-                transfer.direction == Web3Transaction.Web3Transfer.Direction.in.rawValue
+                transfer.direction == Web3Transaction.Transfer.Direction.in.rawValue
             }
             let outTransfer = transaction.transfers.first { transfer in
-                transfer.direction == Web3Transaction.Web3Transfer.Direction.out.rawValue
+                transfer.direction == Web3Transaction.Transfer.Direction.out.rawValue
             }
             if let inTransfer, let outTransfer {
                 hide(priceLabel)
-                show(amountLabel1, symbolLabel1, amountLabel2, symbolLabel2)
+                show(upperAmountLabel, upperSymbolLabel, lowerAmountLabel, lowerSymbolLabel)
                 
                 subtitleLabel.text = "\(inTransfer.symbol) -> \(outTransfer.symbol)"
-                amountLabel1.text = CurrencyFormatter.localizedString(from: inTransfer.amount, format: .precision, sign: .always)
-                symbolLabel1.text = inTransfer.symbol
-                amountLabel1.textColor = isConfirmed ? .walletGreen : .walletGray
+                upperAmountLabel.text = CurrencyFormatter.localizedString(from: inTransfer.amount, format: .precision, sign: .always)
+                upperSymbolLabel.text = inTransfer.symbol
+                upperAmountLabel.textColor = isConfirmed ? .walletGreen : .walletGray
                 
-                amountLabel2.text = CurrencyFormatter.localizedString(from: "-\(outTransfer.amount)", format: .precision, sign: .always)
-                symbolLabel2.text = outTransfer.symbol
-                amountLabel2.textColor = isConfirmed ? .walletRed : .walletGray
+                lowerAmountLabel.text = CurrencyFormatter.localizedString(from: -outTransfer.decimalAmount, format: .precision, sign: .always)
+                lowerSymbolLabel.text = outTransfer.symbol
+                lowerAmountLabel.textColor = isConfirmed ? .walletRed : .walletGray
             } else {
                 renderAsDefault()
             }

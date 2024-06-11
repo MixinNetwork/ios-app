@@ -19,6 +19,7 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeInvalidPublicKey = -11,
   SolanaErrorCodeBuildSPLInstruction = -12,
   SolanaErrorCodeTransactionToString = -13,
+  SolanaErrorCodeNotOnCurve = -14,
 } SolanaErrorCode;
 
 typedef struct SolanaPriorityFee {

@@ -20,10 +20,10 @@ final class Web3TransactionHeaderView: InfiniteTopView {
             }
         case .trade:
             let inTransfer = transaction.transfers.first { transfer in
-                transfer.direction == Web3Transaction.Web3Transfer.Direction.in.rawValue
+                transfer.direction == Web3Transaction.Transfer.Direction.in.rawValue
             }
             let outTransfer = transaction.transfers.first { transfer in
-                transfer.direction == Web3Transaction.Web3Transfer.Direction.out.rawValue
+                transfer.direction == Web3Transaction.Transfer.Direction.out.rawValue
             }
             if let inTransfer, let outTransfer {
                 let inAmountLocalized = CurrencyFormatter.localizedString(from: inTransfer.amount, format: .precision, sign: .never) ?? inTransfer.amount

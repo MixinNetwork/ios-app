@@ -86,12 +86,18 @@ extension Web3TransactionViewController {
     }
     
     private func reloadData() {
+        let createdAt: String
+        if let date = ISO8601DateFormatter.default.date(from: transaction.createdAt) {
+            createdAt = DateFormatter.dateFull.string(from: date)
+        } else {
+            createdAt = transaction.createdAt
+        }
         rows = [
             TransactionRow(key: .id, value: transaction.id),
             TransactionRow(key: .transactionHash, value: transaction.transactionHash),
             TransactionRow(key: .from, value: transaction.sender),
             TransactionRow(key: .to, value: transaction.receiver),
-            TransactionRow(key: .date, value: DateFormatter.dateFull.string(from: transaction.createdAt.toUTCDate())),
+            TransactionRow(key: .date, value: createdAt),
             TransactionRow(key: .status, value: transaction.status.capitalized),
         ]
         tableView.reloadData()

@@ -218,7 +218,7 @@ class HomeViewController: UIViewController {
             let vc = EmergencyContactViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
         case .initializePIN:
-            UIApplication.homeContainerViewController?.homeTabBarController.showWallet()
+            UIApplication.homeContainerViewController?.homeTabBarController.switchTo(child: .wallet)
         case .migrateToTIP:
             let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
             present(tip, animated: true)

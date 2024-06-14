@@ -185,7 +185,7 @@ extension WalletConnectSession {
                     let transaction: String
                 }
                 let raw = try request.params.get(RequestParams.self).transaction
-                guard let transaction = Solana.Transaction(rawTransaction: raw) else {
+                guard let transaction = Solana.Transaction(string: raw, encoding: .base64) else {
                     throw Error.invalidParameters
                 }
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {

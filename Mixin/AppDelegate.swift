@@ -361,7 +361,7 @@ extension AppDelegate {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
-        homeContainer.homeTabBarController.showWallet()
+        homeContainer.homeTabBarController.switchTo(child: .wallet)
     }
     
     private func showMyQrCode() {

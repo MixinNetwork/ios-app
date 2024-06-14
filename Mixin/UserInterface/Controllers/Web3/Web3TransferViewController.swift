@@ -16,11 +16,11 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
     var manipulateNavigationStackOnFinished = false
     
     private let operation: Web3TransferOperation
-    private let proposer: Proposer
+    private let proposer: Proposer?
     
     private var stateObserver: AnyCancellable?
     
-    init(operation: Web3TransferOperation, proposer: Proposer) {
+    init(operation: Web3TransferOperation, proposer: Proposer?) {
         self.operation = operation
         self.proposer = proposer
         let warnings: [String] = if operation.canDecodeBalanceChange {
@@ -47,7 +47,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                 imageView.sd_setImage(with: operation.session.iconURL)
             } else {
                 switch proposer {
-                case .dapp:
+                case .dapp, .none:
                     imageView.image = R.image.unknown_session()
                 case .web3ToMixinWallet, .web3ToAddress:
                     imageView.image = R.image.web3_sign_transfer()
@@ -61,7 +61,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
             R.string.localizable.signature_request()
         }
         let subtitle = switch proposer {
-        case .dapp:
+        case .dapp, .none:
             R.string.localizable.web3_ensure_trust()
         case .web3ToMixinWallet, .web3ToAddress:
             R.string.localizable.web3_request_from_mixin()
@@ -93,6 +93,8 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         case .web3ToAddress:
             rows.append(.receivingAddress(value: operation.toAddress, label: nil))
             rows.append(.info(caption: .sender, content: operation.fromAddress))
+        case .none:
+            break
         }
         
         rows.append(.info(caption: .network, content: operation.chain.name))

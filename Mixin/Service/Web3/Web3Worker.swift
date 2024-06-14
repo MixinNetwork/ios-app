@@ -348,7 +348,7 @@ final class Web3Worker {
         guard
             let object = json["object"] as? [String: Any],
             let raw = object["raw"] as? String,
-            let transaction = Solana.Transaction(rawTransaction: raw)
+            let transaction = Solana.Transaction(string: raw, encoding: .base64)
         else {
             send(error: "Invalid Data", to: request)
             return

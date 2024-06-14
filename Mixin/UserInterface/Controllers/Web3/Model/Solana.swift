@@ -86,13 +86,24 @@ extension Solana {
     
     final class Transaction {
         
+        enum Encoding {
+            case base64
+            case base64URL
+        }
+        
         let rawTransaction: String
         let change: BalanceChange?
         
         private let pointer: UnsafeRawPointer
         
-        init?(rawTransaction: String) {
-            guard let transactionData = Data(base64Encoded: rawTransaction) else {
+        init?(string: String, encoding: Encoding) {
+            let transactionData = switch encoding {
+            case .base64:
+                Data(base64Encoded: string)
+            case .base64URL:
+                Data(base64URLEncoded: string)
+            }
+            guard let transactionData else {
                 return nil
             }
             let pointer = transactionData.withUnsafeBytes { data in
@@ -101,21 +112,14 @@ extension Solana {
             guard let pointer else {
                 return nil
             }
-            let change: BalanceChange? = {
-                var change: UInt64 = 0
-                var mintPtr: UnsafePointer<CChar>?
-                let result = solana_balance_change(pointer, &change, &mintPtr)
-                guard result == SolanaErrorCodeSuccess, let mintPtr else {
-                    return nil
-                }
-                let amount = Decimal(change) / Solana.lamportsPerSOL
-                let mint = String(cString: UnsafePointer(mintPtr))
-                solana_free_string(mintPtr)
-                return BalanceChange(amount: amount, assetKey: mint)
-            }()
             
-            self.rawTransaction = rawTransaction
-            self.change = change
+            self.rawTransaction = switch encoding {
+            case .base64:
+                string
+            case .base64URL:
+                transactionData.base64EncodedString()
+            }
+            self.change = nil
             self.pointer = pointer
         }
         

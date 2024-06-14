@@ -540,6 +540,7 @@
 "light" = "Light";
 "line_busy" = "Line busy";
 "line_busy_remote" = "Line busy";
+"link" = "Link";
 "link_desktop" = "Link Desktop";
 "link_desktop_description" = "Link Mixin Messenger Desktop by QR code";
 "link_recognition_failure" = "Link recognition failure";

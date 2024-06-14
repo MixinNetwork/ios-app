@@ -540,6 +540,7 @@
 "light" = "淺色";
 "line_busy" = "忙線未接聽";
 "line_busy_remote" = "對方忙";
+"link" = "連結";
 "link_desktop" = "連結桌面端";
 "link_desktop_description" = "透過二維碼連結桌面端";
 "link_recognition_failure" = "連結識別失敗";

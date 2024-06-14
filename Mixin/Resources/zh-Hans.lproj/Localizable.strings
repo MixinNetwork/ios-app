@@ -540,6 +540,7 @@
 "light" = "浅色";
 "line_busy" = "忙线未接听";
 "line_busy_remote" = "对方忙";
+"link" = "链接";
 "link_desktop" = "链接桌面端";
 "link_desktop_description" = "通过二维码链接桌面端";
 "link_recognition_failure" = "链接识别失败";

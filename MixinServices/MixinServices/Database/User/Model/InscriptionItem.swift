@@ -19,7 +19,7 @@ public struct InscriptionItem {
     }
     
     public var shareLink: String {
-        "https://mixin.space/inscriptions/\(inscriptionHash)"
+        "https://inscription.mixin.space/collectibles/\(inscriptionHash)"
     }
     
     public init(collection: InscriptionCollection, inscription: Inscription) {

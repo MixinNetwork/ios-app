@@ -5,6 +5,7 @@ import MixinServices
 
 final class ShareInscriptionViewController: UIViewController {
     
+    @IBOutlet weak var layoutWrapperView: UIView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var contentImageView: UIImageView!
     @IBOutlet weak var collectionNameLabel: UILabel!
@@ -23,13 +24,11 @@ final class ShareInscriptionViewController: UIViewController {
         }
     }
     
-    private let presentationManager = PopupPresentationManager()
-    
     init() {
         let nib = R.nib.shareInscriptionView
         super.init(nibName: nib.name, bundle: nib.bundle)
         modalPresentationStyle = .custom
-        transitioningDelegate = presentationManager
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         overrideUserInterfaceStyle = .dark
     }
     
@@ -39,6 +38,9 @@ final class ShareInscriptionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let view = view as? TouchEventBypassView {
+            view.exception = layoutWrapperView
+        }
         qrCodeView.layer.cornerCurve = .continuous
         qrCodeView.layer.cornerRadius = 7
         qrCodeView.layer.masksToBounds = true

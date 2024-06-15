@@ -7,11 +7,14 @@ final class ShareInscriptionViewController: UIViewController {
     
     @IBOutlet weak var layoutWrapperView: UIView!
     @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var contentImageView: UIImageView!
     @IBOutlet weak var collectionNameLabel: UILabel!
     @IBOutlet weak var collectionSequenceLabel: UILabel!
     @IBOutlet weak var inscriptionHashView: InscriptionHashView!
     @IBOutlet weak var qrCodeView: ModernQRCodeView!
+    @IBOutlet weak var tokenIconBackgroundView: UIView!
+    @IBOutlet weak var tokenIconView: BadgeIconView!
     @IBOutlet weak var actionButtonTrayView: UIView!
     @IBOutlet weak var actionButtonStackView: UIStackView!
     
@@ -23,6 +26,17 @@ final class ShareInscriptionViewController: UIViewController {
             reloadData(with: inscription)
         }
     }
+    
+    var token: TokenItem? {
+        didSet {
+            guard isViewLoaded else {
+                return
+            }
+            reloadData(with: token)
+        }
+    }
+    
+    private let contentViewCornerRadius: CGFloat = 12
     
     init() {
         let nib = R.nib.shareInscriptionView
@@ -41,9 +55,15 @@ final class ShareInscriptionViewController: UIViewController {
         if let view = view as? TouchEventBypassView {
             view.exception = layoutWrapperView
         }
+        contentView.layer.cornerRadius = contentViewCornerRadius
         qrCodeView.layer.cornerCurve = .continuous
         qrCodeView.layer.cornerRadius = 7
         qrCodeView.layer.masksToBounds = true
+        let tokenIconBackgroundMask = UIImageView(image: R.image.collection_token_mask())
+        tokenIconBackgroundMask.frame = tokenIconBackgroundView.bounds
+        tokenIconBackgroundView.mask = tokenIconBackgroundMask
+        tokenIconBackgroundView.layer.borderColor = UIColor.white.cgColor
+        tokenIconBackgroundView.layer.borderWidth = 1
         addActionButton(
             icon: R.image.web.ic_action_share(),
             text: R.string.localizable.share()
@@ -64,6 +84,9 @@ final class ShareInscriptionViewController: UIViewController {
         }
         if let inscription {
             reloadData(with: inscription)
+        }
+        if let token {
+            reloadData(with: token)
         }
     }
     
@@ -101,11 +124,11 @@ final class ShareInscriptionViewController: UIViewController {
     @objc private func savePhoto(_ sender: Any) {
         let canvas = contentView.bounds
         let renderer = UIGraphicsImageRenderer(bounds: canvas)
+        contentView.layer.cornerRadius = 0
         let image = renderer.image { context in
-            context.cgContext.setFillColor(UIColor.black.cgColor)
-            context.fill(canvas)
-            contentView.layer.render(in: context.cgContext)
+            contentView.drawHierarchy(in: canvas, afterScreenUpdates: true)
         }
+        contentView.layer.cornerRadius = contentViewCornerRadius
         PHPhotoLibrary.checkAuthorization { (isAuthorized) in
             guard isAuthorized else {
                 return
@@ -242,9 +265,12 @@ extension ShareInscriptionViewController {
     
     private func reloadData(with inscription: InscriptionItem) {
         if let url = inscription.inscriptionImageContentURL {
+            backgroundImageView.isHidden = false
+            backgroundImageView.sd_setImage(with: url)
             contentImageView.contentMode = .scaleAspectFill
             contentImageView.sd_setImage(with: url)
         } else {
+            backgroundImageView.isHidden = true
             contentImageView.contentMode = .center
             contentImageView.image = R.image.inscription_intaglio()
         }
@@ -252,6 +278,15 @@ extension ShareInscriptionViewController {
         collectionSequenceLabel.text = inscription.sequenceRepresentation
         inscriptionHashView.content = inscription.inscriptionHash
         qrCodeView.setContent(inscription.shareLink, size: CGSize(width: 110, height: 110))
+    }
+    
+    private func reloadData(with token: TokenItem?) {
+        if let token {
+            tokenIconView.isHidden = false
+            tokenIconView.setIcon(token: token)
+        } else {
+            tokenIconView.isHidden = true
+        }
     }
     
 }

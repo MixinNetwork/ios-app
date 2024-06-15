@@ -191,11 +191,16 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
     }
     
     func inscriptionActionCellRequestToShare(_ cell: InscriptionActionCell) {
-        guard let inscription else {
+        guard
+            let inscription,
+            let output,
+            let token = TokenDAO.shared.tokenItem(kernelAssetID: output.asset)
+        else {
             return
         }
         let share = ShareInscriptionViewController()
         share.inscription = inscription
+        share.token = token
         present(share, animated: true)
     }
     

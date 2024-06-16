@@ -18,6 +18,10 @@ public struct InscriptionItem {
         "#\(sequence)"
     }
     
+    public var shareLink: String {
+        "https://inscription.mixin.space/collectibles/\(inscriptionHash)"
+    }
+    
     public init(collection: InscriptionCollection, inscription: Inscription) {
         collectionHash      = collection.collectionHash
         collectionName      = collection.name

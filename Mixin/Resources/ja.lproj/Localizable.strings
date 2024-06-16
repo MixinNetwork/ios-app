@@ -540,6 +540,7 @@
 "light" = "ダーク";
 "line_busy" = "お話中です";
 "line_busy_remote" = "お話中です";
+"link" = "Link";
 "link_desktop" = "Link Desktop";
 "link_desktop_description" = "Link Mixin Messenger Desktop by QR code";
 "link_recognition_failure" = "リンクの認識に失敗しました";

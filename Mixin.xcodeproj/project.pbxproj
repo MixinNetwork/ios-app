@@ -686,6 +686,7 @@
 		9401A6072BDAA74A00679686 /* Web3AccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6052BDAA74A00679686 /* Web3AccountCell.swift */; };
 		9401A6082BDAA74A00679686 /* Web3AccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9401A6062BDAA74A00679686 /* Web3AccountCell.xib */; };
 		9401A6B82BDC771A00679686 /* Web3TransferableToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */; };
+		94031D712C1C5B41007E53BC /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94031D702C1C5B41007E53BC /* SafeURL.swift */; };
 		94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */; };
 		94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */; };
 		94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B94272DC2CF007C1D4A /* IncomingPeerCall.swift */; };
@@ -786,6 +787,7 @@
 		943BC67A2BCE9A17003FA778 /* CollectiblesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC6792BCE9A17003FA778 /* CollectiblesView.xib */; };
 		943BC7022BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
+		944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445065F2C1C5D9700F9C583 /* TIPURL.swift */; };
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
@@ -1967,6 +1969,7 @@
 		9401A6052BDAA74A00679686 /* Web3AccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AccountCell.swift; sourceTree = "<group>"; };
 		9401A6062BDAA74A00679686 /* Web3AccountCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AccountCell.xib; sourceTree = "<group>"; };
 		9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferableToken.swift; sourceTree = "<group>"; };
+		94031D702C1C5B41007E53BC /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
 		94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersManager.swift; sourceTree = "<group>"; };
 		94046B94272DC2CF007C1D4A /* IncomingPeerCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomingPeerCall.swift; sourceTree = "<group>"; };
@@ -2066,6 +2069,7 @@
 		943BC6792BCE9A17003FA778 /* CollectiblesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectiblesView.xib; sourceTree = "<group>"; };
 		943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReceiveSourceViewController.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
+		9445065F2C1C5D9700F9C583 /* TIPURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPURL.swift; sourceTree = "<group>"; };
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
 		94463C52298D690F00E63547 /* AuthenticationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureView.swift; sourceTree = "<group>"; };
@@ -3594,6 +3598,8 @@
 		94F952512AE60CED0025B995 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
+				94031D702C1C5B41007E53BC /* SafeURL.swift */,
+				9445065F2C1C5D9700F9C583 /* TIPURL.swift */,
 				94F952662AE66A700025B995 /* AmountIntent.swift */,
 				940DC5912B075E03009A15D1 /* SafePaymentURL.swift */,
 				94BD7E762B2983CA0004576D /* MultisigURL.swift */,
@@ -5974,6 +5980,7 @@
 				ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */,
 				943B5EAB2B600D77001C1F6E /* AppCell.swift in Sources */,
 				7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */,
+				944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */,
 				942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */,
 				9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
@@ -6078,6 +6085,7 @@
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				7B082D18242CA19F00C5E163 /* MultipleSelectionIntent.swift in Sources */,
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
+				94031D712C1C5B41007E53BC /* SafeURL.swift in Sources */,
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
 				E05D99192390C3CB009F9E8D /* EditFavoriteAppsViewController.swift in Sources */,
 				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,

@@ -7,7 +7,7 @@ protocol HomeTabBarControllerChild {
 
 final class HomeTabBarController: UIViewController {
     
-    private enum ChildID: Int {
+    enum ChildID: Int {
         case chat = 0
         case wallet = 1
         case collectibles = 2
@@ -69,13 +69,12 @@ final class HomeTabBarController: UIViewController {
         }
     }
     
-    func showWallet() {
-        let walletID: ChildID = .wallet
-        guard let index = tabBar.items.firstIndex(where: { $0.id == walletID.rawValue }) else {
+    func switchTo(child: ChildID) {
+        guard let index = tabBar.items.firstIndex(where: { $0.id == child.rawValue }) else {
             return
         }
         tabBar.selectedIndex = index
-        switchToChildAfterValidated(with: walletID)
+        switchToChildAfterValidated(with: child)
     }
     
     private func updateTabBarShadow(resolveColorUsing traitCollection: UITraitCollection) {

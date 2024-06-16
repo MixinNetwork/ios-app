@@ -4,9 +4,6 @@ import TIP
 
 struct SafePaymentURL {
     
-    private static let schemes = ["mixin", "https"]
-    private static let host = "mixin.one"
-    
     enum Address {
         case user(String)
         case multisig(threshold: Int32, userIDs: [String])
@@ -39,13 +36,6 @@ struct SafePaymentURL {
     }
     
     init?(url: URL) {
-        guard let scheme = url.scheme, Self.schemes.contains(scheme) else {
-            return nil
-        }
-        guard url.host == Self.host else {
-            return nil
-        }
-        
         let pathComponents = url.pathComponents
         guard pathComponents.count == 3, pathComponents[1] == "pay" else {
             return nil

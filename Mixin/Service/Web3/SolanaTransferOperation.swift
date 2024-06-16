@@ -132,6 +132,14 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
         }
     }
     
+    override func respond(signature: String) async throws {
+        Logger.web3.info(category: "SolanaTransfer", message: "Respond sig: \(signature)")
+    }
+    
+    override func reject() {
+        Logger.web3.info(category: "SolanaTransfer", message: "Rejected")
+    }
+    
 }
 
 final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolanaTransferOperation {

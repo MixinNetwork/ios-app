@@ -39,22 +39,28 @@ class UrlWindow {
         from source: Source = .other,
         clearNavigationStack: Bool = true
     ) -> Bool {
-        // When a payment is invoked by a URL, the outputs may not in sync, potentially causing
-        // payment failures due to inaccurate balance. However, this synchronization lacks ordering
-        // guarantees, so the issue still occurs in some circumstances.
-        if let payment = SafePaymentURL(url: url) {
-            let job = SyncOutputsJob()
-            ConcurrentJobQueue.shared.addJob(job: job)
-            checkSafePaymentURL(payment, from: source)
-            return true
-        } else if let multisig = MultisigURL(url: url) {
-            checkMultisig(multisig)
-            return true
-        } else if let code = CodeURL(url: url) {
-            let job = SyncOutputsJob()
-            ConcurrentJobQueue.shared.addJob(job: job)
-            checkCode(code, from: source, clearNavigationStack: clearNavigationStack)
-            return true
+        if let object = SafeURL(url: url) {
+            // When a payment is invoked by a URL, the outputs may not in sync, potentially causing
+            // payment failures due to inaccurate balance. However, this synchronization lacks ordering
+            // guarantees, so the issue still occurs in some circumstances.
+            switch object {
+            case .payment(let payment):
+                let job = SyncOutputsJob()
+                ConcurrentJobQueue.shared.addJob(job: job)
+                checkSafePaymentURL(payment, from: source)
+                return true
+            case .multisig(let multisig):
+                checkMultisig(multisig)
+                return true
+            case .code(let code):
+                let job = SyncOutputsJob()
+                ConcurrentJobQueue.shared.addJob(job: job)
+                checkCode(code, from: source, clearNavigationStack: clearNavigationStack)
+                return true
+            case .tip(let tip):
+                checkTIP(tip)
+                return true
+            }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
             switch mixinURL {
@@ -1139,6 +1145,53 @@ extension UrlWindow {
             }
         }
         return true
+    }
+    
+    private static func checkTIP(_ tip: TIPURL) {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: homeContainer.view)
+        switch tip {
+        case .sign(let chain, let action, let raw):
+            switch chain {
+            case .solana:
+                switch action {
+                case .signRawTransaction:
+                    guard let transaction = Solana.Transaction(string: raw, encoding: .base64URL) else {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.scheduleAutoHidden()
+                        return
+                    }
+                    guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) else {
+                        hud.hide()
+                        homeContainer.homeTabBarController.switchTo(child: .explore)
+                        return
+                    }
+                    DispatchQueue.global().async {
+                        do {
+                            let operation = try ArbitraryTransactionSolanaTransferOperation(
+                                transaction: transaction,
+                                fromAddress: address,
+                                toAddress: "",
+                                chain: .solana
+                            )
+                            DispatchQueue.main.async {
+                                hud.hide()
+                                let transfer = Web3TransferViewController(operation: operation, proposer: nil)
+                                Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                            }
+                        } catch {
+                            DispatchQueue.main.async {
+                                hud.set(style: .error, text: error.localizedDescription)
+                                hud.scheduleAutoHidden()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     private static func syncToken(assetID: String, hud: Hud) -> TokenItem? {

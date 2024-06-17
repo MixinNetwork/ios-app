@@ -306,7 +306,7 @@
 "date_format_month" = "MM 月 d 日 E";
 "date_format_week_date" = "yyyy 年 MM 月 d 日 E";
 "declined" = "已拒绝";
-"decode_transaction_failed" = "签名解析失败，无法估计资产变化，注意只给您信任的应用程序签名。";
+"decode_transaction_failed" = "无法估计资产变化，注意只给您信任的应用程序签名。";
 "delete" = "删除";
 "delete_account_detail_hint" = "本地消息和 iCloud 备份不会被自动删除";
 "delete_account_hint" = "删除你的账户和个人照片";

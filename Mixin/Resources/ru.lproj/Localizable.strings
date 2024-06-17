@@ -306,7 +306,7 @@
 "date_format_month" = "EEE, d MMMM";
 "date_format_week_date" = "EEE, d MMMM yyyy";
 "declined" = "Отклоненный";
-"decode_transaction_failed" = "Transaction decoding failed, making it impossible to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
+"decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
 "delete" = "Удалить";
 "delete_account_detail_hint" = "Локальные сообщения и резервные копии iCloud не будут удаляться автоматически";
 "delete_account_hint" = "Удалить информацию об учетной записи и фото профиля";

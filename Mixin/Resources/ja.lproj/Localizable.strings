@@ -306,7 +306,7 @@
 "date_format_month" = "M月d日（E）";
 "date_format_week_date" = "yyyy年MM月d日（E）";
 "declined" = "拒否";
-"decode_transaction_failed" = "Transaction decoding failed, making it impossible to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
+"decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
 "delete" = "削除";
 "delete_account_detail_hint" = "ローカルメッセージとiCloudにバックアップされた内容は削除されません";
 "delete_account_hint" = "アカウント情報とプロフィール画像を削除します";

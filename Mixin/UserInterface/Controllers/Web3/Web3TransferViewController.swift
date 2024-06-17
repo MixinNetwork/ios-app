@@ -60,13 +60,16 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         } else {
             R.string.localizable.signature_request()
         }
-        let subtitle = switch proposer {
+        switch proposer {
         case .dapp, .none:
-            R.string.localizable.web3_ensure_trust()
+            layoutTableHeaderView(title: title,
+                                  subtitle: R.string.localizable.web3_signing_warning(),
+                                  style: .destructive)
         case .web3ToMixinWallet, .web3ToAddress:
-            R.string.localizable.web3_request_from_mixin()
+            layoutTableHeaderView(title: title,
+                                  subtitle: R.string.localizable.web3_request_from_mixin(),
+                                  style: [])
         }
-        layoutTableHeaderView(title: title, subtitle: subtitle)
         
         var rows: [Row] = [
             .web3Message(caption: R.string.localizable.estimated_balance_change(),

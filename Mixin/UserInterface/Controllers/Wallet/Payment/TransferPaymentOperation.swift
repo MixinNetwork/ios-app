@@ -234,18 +234,25 @@ struct TransferPaymentOperation {
                     if opponent.isCreatedByMessenger {
                         let receiverID = opponent.userId
                         let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
-                        let message = if let inscription, case .transfer = inscription.operation {
-                            Message.createMessage(snapshot: snapshot,
-                                                  inscription: inscription.item,
-                                                  conversationID: conversationID,
-                                                  createdAt: now)
+                        let message: Message? = if let inscription {
+                            switch inscription.operation {
+                            case .transfer:
+                                Message.createMessage(snapshot: snapshot,
+                                                      inscription: inscription.item,
+                                                      conversationID: conversationID,
+                                                      createdAt: now)
+                            case .release:
+                                nil
+                            }
                         } else {
                             Message.createMessage(snapshot: snapshot,
                                                   inscription: nil,
                                                   conversationID: conversationID,
                                                   createdAt: now)
                         }
-                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
+                        if let message {
+                            try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
+                        }
                         if try !Conversation.exists(db, key: conversationID) {
                             let conversation = Conversation.createConversation(conversationId: conversationID,
                                                                                category: ConversationCategory.CONTACT.rawValue,

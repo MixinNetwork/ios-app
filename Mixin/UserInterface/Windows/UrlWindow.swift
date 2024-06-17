@@ -1010,6 +1010,7 @@ extension UrlWindow {
                         return
                     }
                 case .none:
+                    // Transfer
                     context = Payment.InscriptionContext(operation: .transfer, output: output, outputAmount: outputAmount, item: inscriptionItem)
                 }
                 guard let token = syncToken(assetID: assetID, hud: hud) else {

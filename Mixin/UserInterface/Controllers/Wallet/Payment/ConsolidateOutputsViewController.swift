@@ -68,8 +68,7 @@ extension ConsolidateOutputsViewController: AuthenticationIntent {
                                                          token: token,
                                                          amount: outputs.amount,
                                                          memo: "",
-                                                         reference: nil, 
-                                                         inscription: nil)
+                                                         reference: nil)
                 try await operation.start(pin: pin)
                 await MainActor.run {
                     completion(.success)

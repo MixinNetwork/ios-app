@@ -42,7 +42,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.register(R.nib.authenticationPreviewInfoCell)
         tableView.register(R.nib.authenticationPreviewCompactInfoCell)
-        tableView.register(R.nib.paymentFeeCell)
+        tableView.register(R.nib.tokenAmountCell)
         tableView.register(R.nib.paymentUserGroupCell)
         tableView.register(R.nib.web3MessageCell)
         tableView.register(R.nib.web3AmountChangeCell)
@@ -185,7 +185,12 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
         case let .info(caption, content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
-            cell.setContent(content, labelContent: nil)
+            cell.setContent(content)
+            return cell
+        case let .boldInfo(caption, content):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.captionLabel.text = caption.rawValue.uppercased()
+            cell.setBoldContent(content)
             return cell
         case let .senders(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
@@ -218,7 +223,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
         case let .mainnetReceiver(address):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
-            cell.setContent(address, labelContent: nil)
+            cell.setContent(address)
             return cell
         case let .web3Message(caption, message):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_message, for: indexPath)!
@@ -238,6 +243,13 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.setPrimaryAmountLabel(usesBoldFont: false)
             cell.disclosureImageView.isHidden = false
             return cell
+        case let .tokenAmount(token, tokenAmount, fiatMoneyAmount):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_amount, for: indexPath)!
+            cell.captionLabel.text = R.string.localizable.token().uppercased()
+            cell.amountLabel.text = tokenAmount
+            cell.secondaryAmountLabel.text = fiatMoneyAmount
+            cell.tokenIconView.setIcon(token: token)
+            return cell
         }
     }
     
@@ -247,6 +259,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
 extension AuthenticationPreviewViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let row = rows[indexPath.row]
         self.tableView(tableView, didSelectRow: row)
     }
@@ -317,6 +330,7 @@ extension AuthenticationPreviewViewController {
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
         case proposer(name: String, host: String)
         case info(caption: Caption, content: String)
+        case boldInfo(caption: Caption, content: String)
         case receivingAddress(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
@@ -324,6 +338,7 @@ extension AuthenticationPreviewViewController {
         case web3Message(caption: String, message: String)
         case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3TransferableToken) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
+        case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
     }
     
     struct TableHeaderViewStyle: OptionSet {

@@ -7,22 +7,16 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
     
     private let operation: TransferPaymentOperation
     private let amountDisplay: AmountIntent
-    private let tokenAmount: Decimal
-    private let fiatMoneyAmount: Decimal
     private let redirection: URL?
     
     init(
         issues: [PaymentPreconditionIssue],
         operation: TransferPaymentOperation,
         amountDisplay: AmountIntent,
-        tokenAmount: Decimal,
-        fiatMoneyAmount: Decimal,
         redirection: URL?
     ) {
         self.operation = operation
         self.amountDisplay = amountDisplay
-        self.tokenAmount = tokenAmount
-        self.fiatMoneyAmount = fiatMoneyAmount
         self.redirection = redirection
         super.init(warnings: issues.map(\.description))
     }
@@ -36,11 +30,11 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         let token = operation.token
         
-        if let inscription = operation.inscription {
+        if let inscription = operation.inscription?.item {
             tableHeaderView.setIcon { imageView in
                 imageView.layer.cornerRadius = 12
-                if inscription.contentType.starts(with: "image/"), let url = URL(string: inscription.contentURL) {
-                    imageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+                if let url = inscription.inscriptionImageContentURL {
+                    imageView.sd_setImage(with: url, placeholderImage: nil)
                 } else {
                     imageView.backgroundColor = R.color.sticker_button_background_disabled()
                     imageView.image = R.image.inscription_intaglio()
@@ -49,20 +43,36 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         } else {
             tableHeaderView.setIcon(token: token)
         }
-        tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
-        tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+        switch operation.inscription?.operation {
+        case .release:
+            tableHeaderView.titleLabel.text = R.string.localizable.inscription_release_confirmation()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.inscription_release_hint()
+        case .transfer, .none:
+            tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+        }
         
         var rows: [Row]
         
+        let tokenAmount: Decimal
+        if let inscription = operation.inscription, case .release = inscription.operation {
+            tokenAmount = inscription.outputAmount
+        } else {
+            tokenAmount = operation.amount
+        }
         let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
+        let fiatMoneyAmount = tokenAmount * operation.token.decimalUSDPrice * Currency.current.decimalRate
         let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
         if let inscription = operation.inscription {
             rows = [
-                .info(caption: .collectible, content: inscription.collectionSequenceRepresentation),
+                .boldInfo(caption: .collectible, content: inscription.item.collectionSequenceRepresentation),
             ]
+            if case .release = inscription.operation {
+                rows.append(.tokenAmount(token: token, tokenAmount: tokenValue, fiatMoneyAmount: fiatMoneyValue))
+            }
         } else {
             rows = [
                 .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
@@ -86,7 +96,12 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             rows.append(.senders([user], threshold: senderThreshold))
         }
         
-        if operation.inscription == nil {
+        switch operation.inscription?.operation {
+        case .transfer:
+            break
+        case .release:
+            rows.append(.info(caption: .fee, content: feeTokenValue))
+        case .none:
             rows.append(contentsOf: [
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
                 .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
@@ -103,8 +118,14 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
-                              subtitle: R.string.localizable.transfer_sending_description())
+        switch operation.inscription?.operation {
+        case .release:
+            layoutTableHeaderView(title: R.string.localizable.inscription_releasing(),
+                                  subtitle: R.string.localizable.inscription_releasing_description())
+        case .transfer, .none:
+            layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
+                                  subtitle: R.string.localizable.transfer_sending_description())
+        }
         replaceTrayView(with: nil, animation: .vertical)
         Task {
             do {
@@ -113,8 +134,14 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
-                    layoutTableHeaderView(title: R.string.localizable.transfer_success(),
-                                          subtitle: R.string.localizable.transfer_sent_description())
+                    switch operation.inscription?.operation {
+                    case .release:
+                        layoutTableHeaderView(title: R.string.localizable.inscription_release_success(),
+                                              subtitle: R.string.localizable.inscription_released_description())
+                    case .transfer, .none:
+                        layoutTableHeaderView(title: R.string.localizable.transfer_success(),
+                                              subtitle: R.string.localizable.transfer_sent_description())
+                    }
                     tableView.setContentOffset(.zero, animated: true)
                     if redirection == nil {
                         loadFinishedTrayView()
@@ -140,8 +167,14 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
-                    layoutTableHeaderView(title: R.string.localizable.transfer_failed(),
-                                          subtitle: errorDescription, 
+                    let title = switch operation.inscription?.operation {
+                    case .release:
+                        R.string.localizable.inscription_release_failed()
+                    case .transfer, .none:
+                        R.string.localizable.transfer_failed()
+                    }
+                    layoutTableHeaderView(title: title,
+                                          subtitle: errorDescription,
                                           style: .destructive)
                     tableView.setContentOffset(.zero, animated: true)
                     switch error {

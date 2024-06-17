@@ -287,8 +287,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 let preview = TransferPreviewViewController(issues: issues,
                                                             operation: operation,
                                                             amountDisplay: amountIntent,
-                                                            tokenAmount: tokenAmount,
-                                                            fiatMoneyAmount: fiatMoneyAmount,
                                                             redirection: nil)
                 self.present(preview, animated: true)
             }
@@ -317,8 +315,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 let preview = TransferPreviewViewController(issues: issues,
                                                             operation: operation,
                                                             amountDisplay: amountIntent,
-                                                            tokenAmount: tokenAmount,
-                                                            fiatMoneyAmount: fiatMoneyAmount,
                                                             redirection: nil)
                 self.present(preview, animated: true)
             }

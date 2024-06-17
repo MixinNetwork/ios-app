@@ -22,7 +22,6 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         super.awakeFromNib()
         contentTextView.textContainerInset = .zero
         contentTextView.textContainer.lineFragmentPadding = 0
-        contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16))
         contentTextView.adjustsFontForContentSizeCategory = true
         contentTextViewSizeObserver = contentTextView.observe(\.contentSize, options: [.new]) { [weak self] textView, _ in
             self?.layoutLabelIfNeeded()
@@ -30,8 +29,15 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         stackViewBottomMargin = stackViewBottomConstraint.constant
     }
     
-    func setContent(_ content: String, labelContent: String?) {
+    func setContent(_ content: String, labelContent: String? = nil) {
         self.labelContent = labelContent
+        contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16))
+        contentTextView.text = content
+    }
+    
+    func setBoldContent(_ content: String) {
+        self.labelContent = nil
+        contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16, weight: .semibold))
         contentTextView.text = content
     }
     

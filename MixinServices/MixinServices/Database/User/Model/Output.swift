@@ -30,6 +30,10 @@ public struct Output {
     public let sequence: Int
     public let inscriptionHash: String?
     
+    public var decimalAmount: Decimal? {
+        Decimal(string: amount, locale: .enUSPOSIX)
+    }
+    
     public init(
         id: String, transactionHash: String, outputIndex: Int, asset: String,
         amount: String, mask: String, keys: [String], receivers: [String],

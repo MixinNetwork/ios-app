@@ -500,6 +500,13 @@
 "info" = "Info";
 "initializing" = "Initializing...";
 "inscription_hash" = "Inscription Hash";
+"inscription_release_confirmation" = "Release Inscription";
+"inscription_release_failed" = "Release Failed";
+"inscription_release_hint" = "Releasing the inscription will immediately provide the corresponding tokens, which can be transferred, traded, or used to mint new inscriptions.";
+"inscription_release_success" = "Release Successful";
+"inscription_released_description" = "The inscription was released successfully. Click to view the tokens.";
+"inscription_releasing" = "Releasing";
+"inscription_releasing_description" = "The inscription is being released, please wait!";
 "insufficient_balance" = "Insufficient balance";
 "insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
 "insufficient_transaction_fee" = "Insufficient transaction fee";
@@ -770,6 +777,7 @@
 "recent_chats" = "CHATS";
 "recent_searches" = "Recent searches";
 "refresh" = "Refresh";
+"release" = "Release";
 "reload" = "Reload";
 "remove_all" = "Remove All";
 "remove_all_floats" = "Remove all floats?";
@@ -994,6 +1002,7 @@
 "to" = "To";
 "to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Today";
+"token" = "Token";
 "total" = "Total";
 "touch_id" = "Touch ID";
 "track_not_found" = "Track not found";

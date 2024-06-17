@@ -91,18 +91,6 @@ struct SafePaymentURL {
             decimalAmount = nil
         }
         
-        let inscription: String?
-        if let hash = queries["inscription"] {
-            if hash.count == 64 {
-                inscription = hash
-            } else {
-                Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")
-                return nil
-            }
-        } else {
-            inscription = nil
-        }
-        
         let trace: String
         if let id = queries["trace"] {
             if UUID.isValidLowercasedUUIDString(id) {
@@ -122,6 +110,18 @@ struct SafePaymentURL {
             redirection = URL(dataRepresentation: data, relativeTo: nil)
         } else {
             redirection = nil
+        }
+        
+        let inscription: String?
+        if let hash = queries["inscription"] {
+            if hash.count == 64 {
+                inscription = hash
+            } else {
+                Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")
+                return nil
+            }
+        } else {
+            inscription = nil
         }
         
         self.address = address

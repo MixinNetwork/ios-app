@@ -799,8 +799,8 @@
 		944C61022B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C61002B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib */; };
 		944C61072B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61052B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift */; };
 		944C61082B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C61062B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib */; };
-		944C610E2B6AB7F600C7DF06 /* PaymentFeeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C610C2B6AB7F600C7DF06 /* PaymentFeeCell.swift */; };
-		944C610F2B6AB7F600C7DF06 /* PaymentFeeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C610D2B6AB7F600C7DF06 /* PaymentFeeCell.xib */; };
+		944C610E2B6AB7F600C7DF06 /* TokenAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C610C2B6AB7F600C7DF06 /* TokenAmountCell.swift */; };
+		944C610F2B6AB7F600C7DF06 /* TokenAmountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C610D2B6AB7F600C7DF06 /* TokenAmountCell.xib */; };
 		944C61F32B6BF97B00C7DF06 /* PaymentUserGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61F12B6BF97B00C7DF06 /* PaymentUserGroupCell.swift */; };
 		944C61F42B6BF97B00C7DF06 /* PaymentUserGroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C61F22B6BF97B00C7DF06 /* PaymentUserGroupCell.xib */; };
 		944C61F72B6BFAA100C7DF06 /* PaymentUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61F52B6BFAA100C7DF06 /* PaymentUserCell.swift */; };
@@ -2080,8 +2080,8 @@
 		944C61002B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationPreviewInfoCell.xib; sourceTree = "<group>"; };
 		944C61052B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewCompactInfoCell.swift; sourceTree = "<group>"; };
 		944C61062B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationPreviewCompactInfoCell.xib; sourceTree = "<group>"; };
-		944C610C2B6AB7F600C7DF06 /* PaymentFeeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFeeCell.swift; sourceTree = "<group>"; };
-		944C610D2B6AB7F600C7DF06 /* PaymentFeeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentFeeCell.xib; sourceTree = "<group>"; };
+		944C610C2B6AB7F600C7DF06 /* TokenAmountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAmountCell.swift; sourceTree = "<group>"; };
+		944C610D2B6AB7F600C7DF06 /* TokenAmountCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenAmountCell.xib; sourceTree = "<group>"; };
 		944C61F12B6BF97B00C7DF06 /* PaymentUserGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentUserGroupCell.swift; sourceTree = "<group>"; };
 		944C61F22B6BF97B00C7DF06 /* PaymentUserGroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentUserGroupCell.xib; sourceTree = "<group>"; };
 		944C61F52B6BFAA100C7DF06 /* PaymentUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentUserCell.swift; sourceTree = "<group>"; };
@@ -3478,8 +3478,8 @@
 				944C60FF2B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.swift */,
 				944C61062B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib */,
 				944C61052B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift */,
-				944C610D2B6AB7F600C7DF06 /* PaymentFeeCell.xib */,
-				944C610C2B6AB7F600C7DF06 /* PaymentFeeCell.swift */,
+				944C610D2B6AB7F600C7DF06 /* TokenAmountCell.xib */,
+				944C610C2B6AB7F600C7DF06 /* TokenAmountCell.swift */,
 				944C61F62B6BFAA100C7DF06 /* PaymentUserCell.xib */,
 				944C61F52B6BFAA100C7DF06 /* PaymentUserCell.swift */,
 				944C61F22B6BF97B00C7DF06 /* PaymentUserGroupCell.xib */,
@@ -4984,7 +4984,7 @@
 				94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				9412AF4D2C1AEAE00083ABB3 /* ShareInscriptionView.xib in Resources */,
-				944C610F2B6AB7F600C7DF06 /* PaymentFeeCell.xib in Resources */,
+				944C610F2B6AB7F600C7DF06 /* TokenAmountCell.xib in Resources */,
 				94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */,
@@ -5348,7 +5348,7 @@
 				7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */,
 				5EBD8CD1267B37D20026A248 /* ScreenLockViewController.swift in Sources */,
 				7BDBDE5F22327698006220DF /* LegacyTransferTypeViewController.swift in Sources */,
-				944C610E2B6AB7F600C7DF06 /* PaymentFeeCell.swift in Sources */,
+				944C610E2B6AB7F600C7DF06 /* TokenAmountCell.swift in Sources */,
 				7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */,
 				DF1A9A801FF25DB600A95188 /* RequestInAppNotificationJob.swift in Sources */,
 				7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */,

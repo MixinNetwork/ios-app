@@ -960,7 +960,7 @@ extension UrlWindow {
                 guard let (output, inscriptionItem) = syncInscriptionOutput(inscriptionHash: hash, hud: hud) else {
                     return
                 }
-                guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+                guard let outputAmount = output.decimalAmount else {
                     Logger.general.error(category: "UrlWindow", message: "Invalid output amount: \(output.amount)")
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: "Invalid Output")
@@ -976,15 +976,49 @@ extension UrlWindow {
                     }
                     return
                 }
+                let context: Payment.InscriptionContext
+                switch paymentURL.amount {
+                case .some(let amount):
+                    if amount == outputAmount {
+                        // Transfer
+                        context = .init(operation: .transfer, output: output, outputAmount: outputAmount, item: inscriptionItem)
+                    } else if amount > 0 && amount < outputAmount {
+                        // Release
+                        guard let asset = paymentURL.asset, asset == assetID else {
+                            Logger.general.warn(category: "UrlWindow", message: "Mismatched asset: \(paymentURL.asset ?? "(null)") \(assetID)")
+                            DispatchQueue.main.async {
+                                hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                                hud.scheduleAutoHidden()
+                            }
+                            return
+                        }
+                        guard case let .user(item) = destination, item.relationship == Relationship.ME.rawValue else {
+                            Logger.general.warn(category: "UrlWindow", message: "Releasing to others")
+                            DispatchQueue.main.async {
+                                hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                                hud.scheduleAutoHidden()
+                            }
+                            return
+                        }
+                        context = .release(amount: .half, output: output, outputAmount: outputAmount, item: inscriptionItem)
+                    } else {
+                        Logger.general.error(category: "UrlWindow", message: "Invalid amount from URL: \(amount)")
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                    }
+                case .none:
+                    context = Payment.InscriptionContext(operation: .transfer, output: output, outputAmount: outputAmount, item: inscriptionItem)
+                }
                 guard let token = syncToken(assetID: assetID, hud: hud) else {
                     return
                 }
-                payment = Payment(traceID: paymentURL.trace,
-                                  amount: amount,
-                                  token: token,
-                                  output: output,
-                                  memo: paymentURL.memo,
-                                  item: inscriptionItem)
+                payment = .inscription(traceID: paymentURL.trace,
+                                       token: token,
+                                       memo: paymentURL.memo,
+                                       context: context)
             case let .prefilled(assetID, amount):
                 guard let token = syncToken(assetID: assetID, hud: hud) else {
                     return
@@ -1015,8 +1049,6 @@ extension UrlWindow {
                 let preview = TransferPreviewViewController(issues: issues,
                                                             operation: operation,
                                                             amountDisplay: .byToken,
-                                                            tokenAmount: payment.tokenAmount,
-                                                            fiatMoneyAmount: payment.fiatMoneyAmount,
                                                             redirection: redirection)
                 preview.manipulateNavigationStackOnFinished = false
                 homeContainer.present(preview, animated: true)

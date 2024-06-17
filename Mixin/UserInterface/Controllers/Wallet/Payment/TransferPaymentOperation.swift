@@ -27,7 +27,37 @@ struct TransferPaymentOperation {
     let amount: Decimal
     let memo: String
     let reference: String?
-    let inscription: InscriptionItem?
+    let inscription: Payment.InscriptionContext?
+    
+    init(
+        traceID: String, spendingOutputs: UTXOService.OutputCollection, 
+        destination: Payment.TransferDestination, token: TokenItem,
+        amount: Decimal, memo: String, reference: String?
+    ) {
+        self.traceID = traceID
+        self.spendingOutputs = spendingOutputs
+        self.destination = destination
+        self.token = token
+        self.amount = amount
+        self.memo = memo
+        self.reference = reference
+        self.inscription = nil
+    }
+    
+    init(
+        traceID: String, spendingOutputs: UTXOService.OutputCollection,
+        destination: Payment.TransferDestination, token: TokenItem,
+        memo: String, reference: String?, inscription: Payment.InscriptionContext
+    ) {
+        self.traceID = traceID
+        self.spendingOutputs = spendingOutputs
+        self.destination = destination
+        self.token = token
+        self.amount = inscription.transferAmount
+        self.memo = memo
+        self.reference = reference
+        self.inscription = inscription
+    }
     
     func start(pin: String) async throws {
         let destination = self.destination
@@ -35,7 +65,7 @@ struct TransferPaymentOperation {
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
         let amount = Token.amountString(from: amount)
-        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), inscription: \(inscription?.inscriptionHash ?? "(null)")")
+        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), inscription: \(inscription?.description ?? "(null)")")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
         Logger.general.info(category: "Transfer", message: "SpendKey ready")
@@ -51,7 +81,7 @@ struct TransferPaymentOperation {
         switch destination {
         case let .user(opponent):
             ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: [opponent.userId], senderIDs: [senderID], traceID: traceID)
-            isConsolidation = opponent.userId == myUserId
+            isConsolidation = inscription == nil && opponent.userId == myUserId
         case let .multisig(_, receivers):
             ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: receivers.map(\.userId), senderIDs: [senderID], traceID: traceID)
             isConsolidation = false
@@ -171,7 +201,7 @@ struct TransferPaymentOperation {
                                     transactionHash: signedTx.hash,
                                     createdAt: now,
                                     traceID: traceID, 
-                                    inscriptionHash: inscription?.inscriptionHash)
+                                    inscriptionHash: inscription?.item.inscriptionHash)
         let trace: Trace?
         switch destination {
         case .user, .multisig:
@@ -204,7 +234,17 @@ struct TransferPaymentOperation {
                     if opponent.isCreatedByMessenger {
                         let receiverID = opponent.userId
                         let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
-                        let message = Message.createMessage(snapshot: snapshot, inscription: inscription, conversationID: conversationID, createdAt: now)
+                        let message = if let inscription, case .transfer = inscription.operation {
+                            Message.createMessage(snapshot: snapshot,
+                                                  inscription: inscription.item,
+                                                  conversationID: conversationID,
+                                                  createdAt: now)
+                        } else {
+                            Message.createMessage(snapshot: snapshot,
+                                                  inscription: nil,
+                                                  conversationID: conversationID,
+                                                  createdAt: now)
+                        }
                         try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
                         if try !Conversation.exists(db, key: conversationID) {
                             let conversation = Conversation.createConversation(conversationId: conversationID,

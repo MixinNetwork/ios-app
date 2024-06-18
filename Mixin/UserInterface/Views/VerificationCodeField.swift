@@ -13,7 +13,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     var enablesReturnKeyAutomatically: Bool = true
     var keyboardType: UIKeyboardType = {
         // Crash confirmed with UIKeyboardTypeNumberPad on macOS 12.3
-        if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+        if ProcessInfo.processInfo.isiOSAppOnMac {
             return .default
         } else {
             return .numberPad
@@ -21,7 +21,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     }()
     var textContentType: UITextContentType! = {
         // Crash confirmed with UITextContentTypeOneTimeCode on macOS 12.3
-        if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+        if ProcessInfo.processInfo.isiOSAppOnMac {
             return nil
         } else {
             return .oneTimeCode

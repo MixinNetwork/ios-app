@@ -7,7 +7,7 @@ import MixinServices
 // According to documentation of CXProvider:
 // A VoIP app should create only one instance of CXProvider and store it for use globally
 fileprivate let cxProvider: CXProvider = {
-    let config = CXProviderConfiguration(localizedName: Bundle.main.displayName)
+    let config = CXProviderConfiguration()
     config.ringtoneSound = R.file.callCaf.filename
     config.iconTemplateImageData = R.image.call.ic_mixin()?.pngData()
     config.maximumCallGroups = 1

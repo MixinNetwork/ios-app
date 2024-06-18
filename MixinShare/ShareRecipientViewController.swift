@@ -514,11 +514,13 @@ extension ShareRecipientViewController {
         let recipientHandle = INPersonHandle(value: conversation.conversationId, type: .unknown)
         let recipient = INPerson(personHandle: recipientHandle, nameComponents: nil, displayName: conversation.name, image: nil, contactIdentifier: nil, customIdentifier: conversation.conversationId)
         let messageIntent = INSendMessageIntent(recipients: [recipient],
-                                                    content: nil,
-                                                    speakableGroupName: INSpeakableString(spokenPhrase: conversation.name),
-                                                    conversationIdentifier: conversation.conversationId,
-                                                    serviceName: nil,
-                                                    sender: nil)
+                                                outgoingMessageType: .unknown,
+                                                content: nil,
+                                                speakableGroupName: INSpeakableString(spokenPhrase: conversation.name),
+                                                conversationIdentifier: conversation.conversationId,
+                                                serviceName: nil,
+                                                sender: nil,
+                                                attachments: nil)
         if let imageData = avatarImage?.pngData() {
             messageIntent.setImage(INImage(imageData: imageData), forParameterNamed: \.speakableGroupName)
         }

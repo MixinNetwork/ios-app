@@ -58,26 +58,15 @@ public protocol HexEncodable: Sequence where Self.Element == UInt8 {
 extension HexEncodable {
     
     public func hexEncodedString() -> String {
-        if #available(iOS 14.0, *) {
-            return String(unsafeUninitializedCapacity: 2 * self.count) { (buffer) -> Int in
-                var p = buffer.baseAddress!
-                for byte in self {
-                    let (high, low) = byte.quotientAndRemainder(dividingBy: 16)
-                    p[0] = utf8HexDigits[Int(high)]
-                    p[1] = utf8HexDigits[Int(low)]
-                    p += 2
-                }
-                return 2 * self.count
-            }
-        } else {
-            var chars: [unichar] = []
-            chars.reserveCapacity(2 * self.count)
+        String(unsafeUninitializedCapacity: 2 * self.count) { (buffer) -> Int in
+            var p = buffer.baseAddress!
             for byte in self {
-                let (high, low) = byte.hexEncodedUnichars()
-                chars.append(high)
-                chars.append(low)
+                let (high, low) = byte.quotientAndRemainder(dividingBy: 16)
+                p[0] = utf8HexDigits[Int(high)]
+                p[1] = utf8HexDigits[Int(low)]
+                p += 2
             }
-            return String(utf16CodeUnits: chars, count: chars.count)
+            return 2 * self.count
         }
     }
     

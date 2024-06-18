@@ -332,12 +332,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func showPhotosAction(_ sender: Any) {
-        let status: PHAuthorizationStatus
-        if #available(iOS 14.0, *) {
-            status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        } else {
-            status = PHPhotoLibrary.authorizationStatus()
-        }
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         handlePhotoAuthorizationStatus(status)
     }
     

@@ -79,7 +79,8 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
             completionHandler([])
             return
         }
-        completionHandler([.alert, .sound])
+        // TODO: Show notification muted messages with `list` only?
+        completionHandler([.list, .banner, .sound])
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             center.removeNotifications(withIdentifiers: [notification.request.identifier])
         }

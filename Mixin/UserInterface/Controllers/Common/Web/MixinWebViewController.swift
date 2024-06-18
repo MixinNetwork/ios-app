@@ -48,7 +48,6 @@ class MixinWebViewController: WebViewController {
         config.dataDetectorTypes = .all
         config.preferences = WKPreferences()
         config.preferences.minimumFontSize = 12
-        config.preferences.javaScriptEnabled = true
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = .video
         config.preferences.javaScriptCanOpenWindowsAutomatically = true

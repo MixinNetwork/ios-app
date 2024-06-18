@@ -80,7 +80,7 @@ class InputAmountViewController: UIViewController {
             } else {
                 super.pressesBegan(presses, with: event)
             }
-        } else if #available(iOS 13.4, *) {
+        } else {
             switch Key(keyCode: key.keyCode) {
             case .backspace:
                 deleteBackwardsButton.isHighlighted = true
@@ -91,8 +91,6 @@ class InputAmountViewController: UIViewController {
             default:
                 super.pressesBegan(presses, with: event)
             }
-        } else {
-            super.pressesBegan(presses, with: event)
         }
     }
     
@@ -110,7 +108,7 @@ class InputAmountViewController: UIViewController {
             } else {
                 super.pressesEnded(presses, with: event)
             }
-        } else if #available(iOS 13.4, *) {
+        } else {
             switch Key(keyCode: key.keyCode) {
             case .backspace:
                 accumulator.deleteBackwards()
@@ -121,8 +119,6 @@ class InputAmountViewController: UIViewController {
             default:
                 super.pressesEnded(presses, with: event)
             }
-        } else {
-            super.pressesEnded(presses, with: event)
         }
     }
     

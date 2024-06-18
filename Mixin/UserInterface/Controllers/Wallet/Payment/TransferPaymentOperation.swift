@@ -229,7 +229,12 @@ struct TransferPaymentOperation {
                                                       lastOutput: spendingOutputs.lastOutput)
                     try output.save(db)
                 } else {
-                    try SafeSnapshotDAO.shared.save(snapshot: snapshot, db: db)
+                    switch inscription?.operation {
+                    case .transfer, .none:
+                        try SafeSnapshotDAO.shared.save(snapshot: snapshot, db: db)
+                    case .release:
+                        break
+                    }
                     try trace?.save(db)
                     if opponent.isCreatedByMessenger {
                         let receiverID = opponent.userId

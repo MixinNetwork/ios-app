@@ -903,6 +903,7 @@
 "sending_withdrawal_request" = "正在傳送提現";
 "session_not_found" = "沒有對應的連線";
 "set" = "設定";
+"set_as_avatar" = "設定為頭像";
 "set_disappearing_message_time_to" = "%1$@將限時訊息設定為 %2$@";
 "set_emergency_create_successfully" = "設定緊急聯絡人成功";
 "set_new_pin" = "設定新的 PIN";

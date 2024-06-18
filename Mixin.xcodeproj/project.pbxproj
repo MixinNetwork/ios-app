@@ -824,6 +824,7 @@
 		9459693928B28FF8006F5421 /* TIPActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693728B28FF8006F5421 /* TIPActionViewController.swift */; };
 		9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9459693828B28FF8006F5421 /* TIPActionView.xib */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D867A2C21754A0066C61D /* CGSize+Constants.swift */; };
 		945E865029C078BB000FDA54 /* ExtendedKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E864F29C078BB000FDA54 /* ExtendedKey.swift */; };
 		945E865229C078E7000FDA54 /* RIPEMD160.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E865129C078E7000FDA54 /* RIPEMD160.swift */; };
 		945E871B29C1929D000FDA54 /* P2PKH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E871A29C1929D000FDA54 /* P2PKH.swift */; };
@@ -2105,6 +2106,7 @@
 		9459693728B28FF8006F5421 /* TIPActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPActionViewController.swift; sourceTree = "<group>"; };
 		9459693828B28FF8006F5421 /* TIPActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPActionView.xib; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		945D867A2C21754A0066C61D /* CGSize+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Constants.swift"; sourceTree = "<group>"; };
 		945E864F29C078BB000FDA54 /* ExtendedKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedKey.swift; sourceTree = "<group>"; };
 		945E865129C078E7000FDA54 /* RIPEMD160.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RIPEMD160.swift; sourceTree = "<group>"; };
 		945E871A29C1929D000FDA54 /* P2PKH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = P2PKH.swift; sourceTree = "<group>"; };
@@ -3897,6 +3899,7 @@
 				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,
 				7C651D8E29F68277003331A4 /* MixinBot.swift */,
+				945D867A2C21754A0066C61D /* CGSize+Constants.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -5640,6 +5643,7 @@
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
 				7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */,
+				945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */,
 				7B35AF7A228AA61400E8101D /* MessagesWithGroupSearchResult.swift in Sources */,
 				DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */,
 				7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */,

@@ -903,6 +903,7 @@
 "sending_withdrawal_request" = "正在发送提现";
 "session_not_found" = "没有对应的连接";
 "set" = "设置";
+"set_as_avatar" = "设置为头像";
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
 "set_emergency_create_successfully" = "设置紧急联系人成功";
 "set_new_pin" = "设置新的 PIN";

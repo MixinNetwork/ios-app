@@ -68,6 +68,9 @@ final class InscriptionViewController: UIViewController {
     
     @IBAction func showMoreMenu(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if backgroundImageView.image != nil {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.set_as_avatar(), style: .default, handler: setAsAvatar(_:)))
+        }
         sheet.addAction(UIAlertAction(title: R.string.localizable.release(), style: .destructive, handler: releaseInscription(_:)))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
         present(sheet, animated: true)
@@ -95,6 +98,17 @@ final class InscriptionViewController: UIViewController {
         if let url = inscription?.inscriptionImageContentURL {
             backgroundImageView.sd_setImage(with: url)
         }
+    }
+    
+    private func setAsAvatar(_ action: UIAlertAction) {
+        guard let image = backgroundImageView.image else {
+            return
+        }
+        let cropController = ImageCropViewController()
+        cropController.load(image: image)
+        cropController.delegate = self
+        cropController.modalPresentationStyle = .fullScreen
+        present(cropController, animated: true)
     }
     
     private func releaseInscription(_ action: UIAlertAction) {
@@ -241,6 +255,29 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
         share.inscription = inscription
         share.token = token
         present(share, animated: true)
+    }
+    
+}
+
+extension InscriptionViewController: ImageCropViewControllerDelegate {
+    
+    func imageCropViewController(_ controller: ImageCropViewController, didCropImage croppedImage: UIImage) {
+        guard let navigationController, let avatarBase64 = croppedImage.imageByScaling(to: .avatar)?.base64 else {
+            alert(R.string.localizable.failed_to_compose_avatar())
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: navigationController.view)
+        AccountAPI.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
+            switch result {
+            case let .success(account):
+                LoginManager.shared.setAccount(account)
+                hud.set(style: .notification, text: R.string.localizable.changed())
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+            }
+            hud.scheduleAutoHidden()
+        })
     }
     
 }

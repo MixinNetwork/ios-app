@@ -903,6 +903,7 @@
 "sending_withdrawal_request" = "Sending Withdrawal Request";
 "session_not_found" = "Session not found";
 "set" = "Establecer";
+"set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "%1$@ ha establecido el tiempo de desaparición del mensaje a %2$@";
 "set_emergency_create_successfully" = "Se ha establecido el contacto de emergencia con éxito";
 "set_new_pin" = "Establecer un nuevo PIN";

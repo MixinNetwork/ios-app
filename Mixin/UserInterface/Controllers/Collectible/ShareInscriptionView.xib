@@ -33,18 +33,18 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMf-Ii-eQE">
-                    <rect key="frame" x="30" y="97.333333333333314" width="315" height="642.33333333333348"/>
+                    <rect key="frame" x="30" y="97" width="315" height="643"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sY3-v3-cDe">
-                            <rect key="frame" x="0.0" y="0.0" width="315" height="525.33333333333337"/>
+                            <rect key="frame" x="0.0" y="0.0" width="315" height="526"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gmg-p2-tag">
-                                    <rect key="frame" x="0.0" y="0.0" width="315" height="525.33333333333337"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="315" height="526"/>
                                 </imageView>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1eI-B1-6W8">
-                                    <rect key="frame" x="0.0" y="0.0" width="315" height="525.33333333333337"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="315" height="526"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Su1-W7-sOW">
-                                        <rect key="frame" x="0.0" y="0.0" width="315" height="525.33333333333337"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="315" height="526"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="epa-Nh-X5B">
@@ -85,7 +85,7 @@
                                                                 <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="2" right="0.0"/>
                                                                 <userDefinedRuntimeAttributes>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="barWidth">
-                                                                        <real key="value" value="7"/>
+                                                                        <real key="value" value="8"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="barHeight">
                                                                         <real key="value" value="24"/>
@@ -236,7 +236,7 @@
                             </connections>
                         </button>
                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BdN-Mg-u4A">
-                            <rect key="frame" x="0.0" y="537.33333333333326" width="315" height="105"/>
+                            <rect key="frame" x="0.0" y="538" width="315" height="105"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="9HB-ir-1Bl">
                                 <rect key="frame" x="0.0" y="0.0" width="315" height="105"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

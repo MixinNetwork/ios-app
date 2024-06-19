@@ -140,6 +140,7 @@ final class InscriptionViewController: UIViewController {
                                                         operation: operation,
                                                         amountDisplay: .byToken,
                                                         redirection: nil)
+            preview.manipulateNavigationStackOnFinished = false
             navigationController.present(preview, animated: true)
         }
     }

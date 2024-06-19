@@ -45,8 +45,8 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         }
         switch operation.inscription?.operation {
         case .release:
-            tableHeaderView.titleLabel.text = R.string.localizable.inscription_release_confirmation()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.inscription_release_hint()
+            tableHeaderView.titleLabel.text = R.string.localizable.collectible_release_confirmation()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.collectible_release_hint()
         case .transfer, .none:
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
             tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
@@ -120,8 +120,8 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         tableHeaderView.setIcon(progress: .busy)
         switch operation.inscription?.operation {
         case .release:
-            layoutTableHeaderView(title: R.string.localizable.inscription_releasing(),
-                                  subtitle: R.string.localizable.inscription_releasing_description())
+            layoutTableHeaderView(title: R.string.localizable.collectible_releasing(),
+                                  subtitle: R.string.localizable.collectible_releasing_description())
         case .transfer, .none:
             layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
                                   subtitle: R.string.localizable.transfer_sending_description())
@@ -136,8 +136,8 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                     tableHeaderView.setIcon(progress: .success)
                     switch operation.inscription?.operation {
                     case .release:
-                        layoutTableHeaderView(title: R.string.localizable.inscription_release_success(),
-                                              subtitle: R.string.localizable.inscription_released_description())
+                        layoutTableHeaderView(title: R.string.localizable.collectible_release_success(),
+                                              subtitle: R.string.localizable.collectible_released_description())
                     case .transfer, .none:
                         layoutTableHeaderView(title: R.string.localizable.transfer_success(),
                                               subtitle: R.string.localizable.transfer_sent_description())
@@ -169,7 +169,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                     tableHeaderView.setIcon(progress: .failure)
                     let title = switch operation.inscription?.operation {
                     case .release:
-                        R.string.localizable.inscription_release_failed()
+                        R.string.localizable.collectible_release_failed()
                     case .transfer, .none:
                         R.string.localizable.transfer_failed()
                     }

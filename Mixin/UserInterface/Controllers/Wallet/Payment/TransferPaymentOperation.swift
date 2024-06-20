@@ -270,7 +270,6 @@ struct TransferPaymentOperation {
             try trace?.save(db)
             switch destination {
             case .user(let opponent):
-                let message: Message?
                 let saveSnapshot: Bool
                 switch behavior {
                 case .consolidation:

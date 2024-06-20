@@ -11,7 +11,7 @@ final class PinSettingsViewController: SettingsTableViewController {
         ]),
     ])
     
-    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.pay_with(BiometryType.payment.localizedName),
+    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.pay_with_biometry_type(BiometryType.payment.localizedName),
                                                       accessory: .switch(isOn: AppGroupUserDefaults.Wallet.payWithBiometricAuthentication))
     private lazy var pinIntervalRow = SettingsRow(title: R.string.localizable.pay_with_pin_interval(),
                                                   accessory: .disclosure)

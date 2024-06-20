@@ -228,7 +228,7 @@ extension SafeSnapshotViewController {
             case .withdrawalHash:
                 return R.string.localizable.withdrawal_hash()
             case .inscriptionHash:
-                return R.string.localizable.inscription_hash()
+                return R.string.localizable.collectible_hash()
             case .collectionName:
                 return R.string.localizable.collection()
             case .id:

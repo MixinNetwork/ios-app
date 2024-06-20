@@ -62,13 +62,12 @@ extension ConsolidateOutputsViewController: AuthenticationIntent {
                 }
                 let me = UserItem.createUser(from: account)
                 let outputs = UTXOService.shared.collectConsolidationOutputs(kernelAssetID: token.kernelAssetID)
-                let operation = TransferPaymentOperation(traceID: traceID,
-                                                         spendingOutputs: outputs,
-                                                         destination: .user(me),
-                                                         token: token,
-                                                         amount: outputs.amount,
-                                                         memo: "",
-                                                         reference: nil)
+                let operation = TransferPaymentOperation.consolidation(
+                    traceID: traceID,
+                    outputs: outputs,
+                    destination: .user(me),
+                    token: token
+                )
                 try await operation.start(pin: pin)
                 await MainActor.run {
                     completion(.success)

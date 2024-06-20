@@ -221,28 +221,37 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             return
         }
         var viewControllers = navigation.viewControllers
-        switch operation.destination {
-        case let .user(opponent):
-            if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
-                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
-                    viewControllers.removeLast()
-                }
+        if let context = inscriptionContext, case .release = context.operation {
+            if viewControllers.last is InscriptionViewController {
+                viewControllers.removeLast()
+                navigation.setViewControllers(viewControllers, animated: false)
             } else {
-                if opponent.isCreatedByMessenger {
-                    while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                return
+            }
+        } else {
+            switch operation.destination {
+            case let .user(opponent):
+                if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
+                    while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
                         viewControllers.removeLast()
                     }
-                    viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
-                } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
+                } else {
+                    if opponent.isCreatedByMessenger {
+                        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                            viewControllers.removeLast()
+                        }
+                        viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+                    } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
+                        viewControllers.removeLast()
+                    }
+                }
+                navigation.setViewControllers(viewControllers, animated: false)
+            case .multisig, .mainnet:
+                if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
                     viewControllers.removeLast()
                 }
+                navigation.setViewControllers(viewControllers, animated: false)
             }
-            navigation.setViewControllers(viewControllers, animated: false)
-        case .multisig, .mainnet:
-            if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
-                viewControllers.removeLast()
-            }
-            navigation.setViewControllers(viewControllers, animated: false)
         }
     }
     

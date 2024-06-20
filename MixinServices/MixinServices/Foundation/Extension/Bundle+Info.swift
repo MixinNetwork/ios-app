@@ -14,8 +14,4 @@ public extension Bundle {
         return infoDictionary?["CFBundleName"] as? String ?? ""
     }
     
-    var displayName: String {
-        return localizedInfoDictionary?["CFBundleDisplayName"] as? String ?? ""
-    }
-    
 }

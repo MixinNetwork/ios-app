@@ -122,8 +122,7 @@ class LocationPickerViewController: LocationViewController {
     }
     
     private var isAuthorized: Bool {
-        let status = CLLocationManager.authorizationStatus()
-        return status == .authorizedWhenInUse || status == .authorizedAlways
+        [.authorizedWhenInUse, .authorizedAlways].contains(locationManager.authorizationStatus)
     }
     
     private var sectionHeaderOnMaskTopContentOffset: CGPoint {
@@ -199,7 +198,7 @@ class LocationPickerViewController: LocationViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if CLLocationManager.authorizationStatus() == .notDetermined {
+        if locationManager.authorizationStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
         }
     }
@@ -449,7 +448,7 @@ extension LocationPickerViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch CLLocationManager.authorizationStatus() {
+        switch locationManager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             if let wasAuthorized = permissionWasAuthorized, !wasAuthorized {
                 if let location = userPickedLocation {

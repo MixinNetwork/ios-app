@@ -10,13 +10,6 @@ class StickerManagerViewController: UICollectionViewController {
     private var stickers = [StickerItem]()
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
-    private var gifTypeIdentifier: String {
-        if #available(iOS 14.0, *) {
-            return UTType.gif.identifier
-        } else {
-            return kUTTypeGIF as String
-        }
-    }
     
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
@@ -184,12 +177,7 @@ extension StickerManagerViewController: PHPickerViewControllerDelegate {
 extension StickerManagerViewController {
     
     private func handleAddStickerAction() {
-        let status: PHAuthorizationStatus
-        if #available(iOS 14.0, *) {
-            status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        } else {
-            status = PHPhotoLibrary.authorizationStatus()
-        }
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         handlePhotoAuthorizationStatus(status)
     }
     
@@ -217,17 +205,15 @@ extension StickerManagerViewController {
     
     private func showAuthorizationLimitedAlert() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        if #available(iOS 14, *) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.pick_from_library(), style: .default, handler: { _ in
-                var config = PHPickerConfiguration(photoLibrary: .shared())
-                config.preferredAssetRepresentationMode = .current
-                config.selectionLimit = 1
-                config.filter = .images
-                let picker = PHPickerViewController(configuration: config)
-                picker.delegate = self
-                self.present(picker, animated: true, completion: nil)
-            }))
-        }
+        sheet.addAction(UIAlertAction(title: R.string.localizable.pick_from_library(), style: .default, handler: { _ in
+            var config = PHPickerConfiguration(photoLibrary: .shared())
+            config.preferredAssetRepresentationMode = .current
+            config.selectionLimit = 1
+            config.filter = .images
+            let picker = PHPickerViewController(configuration: config)
+            picker.delegate = self
+            self.present(picker, animated: true, completion: nil)
+        }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.change_settings(), style: .default, handler: { _ in
             UIApplication.openAppSettings()
         }))
@@ -251,8 +237,8 @@ extension StickerManagerViewController {
                 showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
             }
         }
-        if itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier) {
-            itemProvider.loadFileRepresentation(forTypeIdentifier: gifTypeIdentifier) { [weak self] (source, error) in
+        if itemProvider.hasItemConformingToTypeIdentifier(UTType.gif.identifier) {
+            itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.gif.identifier) { [weak self] (source, error) in
                 hideHud()
                 guard
                     let source = source,

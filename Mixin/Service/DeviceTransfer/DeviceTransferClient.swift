@@ -95,7 +95,7 @@ final class DeviceTransferClient {
     
     private func stop(reason: DeviceTransferClosedReason) {
         assert(queue.isCurrent)
-        Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(reason) Processed: \(processedCount) Total: \(totalCount)")
+        Logger.general.info(category: "DeviceTransferClient", message: "Stop: \(reason) Processed: \(processedCount) Total: \(totalCount ?? -1)")
         DispatchQueue.main.sync {
             self.statisticsTimer?.invalidate()
         }

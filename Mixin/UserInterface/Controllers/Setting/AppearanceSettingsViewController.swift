@@ -4,13 +4,6 @@ import MixinServices
 class AppearanceSettingsViewController: SettingsTableViewController {
     
     private let currencyRow = SettingsRow(title: R.string.localizable.currency(), accessory: .disclosure)
-    private let isLanguageAvailable: Bool = {
-        if #available(iOS 14.0, *) {
-            return true
-        } else {
-            return false
-        }
-    }()
     
     private lazy var userInterfaceStyleRow = SettingsRow(title: R.string.localizable.interface_style(), accessory: .disclosure)
     private lazy var languageRow = SettingsRow(title: R.string.localizable.language(),
@@ -28,6 +21,7 @@ class AppearanceSettingsViewController: SettingsTableViewController {
     }
     
     private lazy var dataSource = SettingsDataSource(sections: [
+        SettingsSection(rows: [languageRow]),
         SettingsSection(rows: [currencyRow]),
         SettingsSection(rows: [chatBackgroundRow, chatTextSizeRow])
     ])
@@ -41,9 +35,6 @@ class AppearanceSettingsViewController: SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateCurrencySubtitle()
-        if isLanguageAvailable {
-            dataSource.insertSection(SettingsSection(rows: [languageRow]), at: 0, animation: .none)
-        }
         updateUserInterfaceStyleSubtitle()
         dataSource.insertSection(SettingsSection(rows: [userInterfaceStyleRow]), at: 0, animation: .none)
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrencySubtitle), name: Currency.currentCurrencyDidChangeNotification, object: nil)
@@ -62,21 +53,9 @@ extension AppearanceSettingsViewController: UITableViewDelegate {
         case 0:
             pickUserInterfaceStyle()
         case 1:
-            if isLanguageAvailable {
-                pickLanguage()
-            } else {
-                pickCurrency()
-            }
+            pickLanguage()
         case 2:
-            if isLanguageAvailable {
-                pickCurrency()
-            } else {
-                if indexPath.row == 0 {
-                    changeChatBackground()
-                } else {
-                    changeChatTextSize()
-                }
-            }
+            pickCurrency()
         case 3:
             if indexPath.row == 0 {
                 changeChatBackground()

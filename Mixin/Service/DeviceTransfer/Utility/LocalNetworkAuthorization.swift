@@ -10,12 +10,6 @@ class LocalNetworkAuthorization: NSObject {
     
     public func requestAuthorization(completion: @escaping (Bool) -> Void) {
         Logger.general.info(category: "LocalNetworkAuthorization", message: "RequestAuthorization")
-        
-        guard #available(iOS 14, *) else {
-            completion(true)
-            return
-        }
-        
         assert(self.completion == nil && self.browser == nil && self.netService == nil, "Previous request is still pending")
         self.completion = completion
         

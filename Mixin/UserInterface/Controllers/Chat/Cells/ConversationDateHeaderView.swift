@@ -10,9 +10,7 @@ class ConversationDateHeaderView: UITableViewHeaderFooterView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        if #available(iOS 14.0, *) {
-            backgroundConfiguration = UIBackgroundConfiguration.clear()
-        }
+        backgroundConfiguration = .clear()
         updateFontSize()
     }
     

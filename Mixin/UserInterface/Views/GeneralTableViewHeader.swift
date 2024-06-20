@@ -29,15 +29,11 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         }
         labelTopConstraint = label.topAnchor.constraint(equalTo: topAnchor)
         labelTopConstraint.isActive = true
-        if #available(iOS 14.0, *) {
-            backgroundConfiguration = {
-                var config: UIBackgroundConfiguration = .listPlainHeaderFooter()
-                config.backgroundColor = .background
-                return config
-            }()
-        } else {
-            contentView.backgroundColor = .background
-        }
+        backgroundConfiguration = {
+            var config: UIBackgroundConfiguration = .listPlainHeaderFooter()
+            config.backgroundColor = .background
+            return config
+        }()
     }
     
 }

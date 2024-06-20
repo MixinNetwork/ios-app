@@ -103,8 +103,8 @@ class LocationMessageCell: ImageMessageCell {
     }
     
     private func reloadMapImage() {
-        // MKMapSnapshotter not working on macOS 11.6 (disguised as iOS 14.7)
-        if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+        if ProcessInfo.processInfo.isiOSAppOnMac {
+            // MKMapSnapshotter not working on macOS 11.6 (disguised as iOS 14.7)
             mapImageView.image = R.image.conversation.bg_message_location()
             annotationView.isHidden = true
             return

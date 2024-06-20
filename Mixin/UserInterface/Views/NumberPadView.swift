@@ -73,11 +73,7 @@ class NumberPadView: UIView, XibDesignable {
     
     private func prepare() {
         loadXib()
-        if #available(iOS 14.0, *) {
-            backgroundColor = R.color.keyboard_background_14()
-        } else {
-            backgroundColor = R.color.keyboard_background_13()
-        }
+        backgroundColor = R.color.keyboard_background_14()
         switch TIP.status {
         case .ready:
             tipView.isHidden = false

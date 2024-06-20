@@ -297,14 +297,10 @@ extension CacheableAssetLoader {
             let data: Data
             do {
                 try assetFileHandle.seek(toOffset: offset)
-                if #available(iOS 13.4, *) {
-                    if let d = try assetFileHandle.read(upToCount: length) {
-                        data = d
-                    } else {
-                        throw Error.readsNothing
-                    }
+                if let d = try assetFileHandle.read(upToCount: length) {
+                    data = d
                 } else {
-                    data = assetFileHandle.readData(ofLength: length)
+                    throw Error.readsNothing
                 }
             } catch {
                 Logger.general.debug(category: "CacheableAssetLoader", message: "Failed to read local data: \(error)")

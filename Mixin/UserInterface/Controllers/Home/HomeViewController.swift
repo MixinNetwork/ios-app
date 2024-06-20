@@ -708,9 +708,14 @@ extension HomeViewController {
             && AppGroupUserDefaults.User.hasPerformedTransfer
             && -firstLaunchDate.timeIntervalSinceNow > sevenDays
         if shouldRequestReview {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                SKStoreReviewController.requestReview()
-            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                let scene = UIApplication.shared.connectedScenes.lazy
+                    .compactMap({ $0 as? UIWindowScene })
+                    .first(where: { $0.activationState == .foregroundActive })
+                if let scene {
+                    SKStoreReviewController.requestReview(in: scene)
+                }
+            }
         }
         HomeViewController.hasTriedToRequestReview = true
     }

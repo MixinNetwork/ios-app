@@ -83,9 +83,6 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
     }
     
     @IBAction func pickFromLibrary(_ sender: Any) {
-        guard #available(iOS 14, *) else {
-            return
-        }
         var config = PHPickerConfiguration(photoLibrary: .shared())
         config.preferredAssetRepresentationMode = .current
         config.selectionLimit = 1
@@ -96,11 +93,9 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
     
     @IBAction func managePhotoAuthorization(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        if #available(iOS 14, *) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.select_more_photos(), style: .default, handler: { _ in
-                PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: self)
-            }))
-        }
+        sheet.addAction(UIAlertAction(title: R.string.localizable.select_more_photos(), style: .default, handler: { _ in
+            PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: self)
+        }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.change_settings(), style: .default, handler: { _ in
             UIApplication.openAppSettings()
         }))

@@ -166,12 +166,7 @@ extension SpotlightManager {
         guard let name = user.fullName else {
             return nil
         }
-        let attributes: CSSearchableItemAttributeSet
-        if #available(iOS 14.0, *) {
-            attributes = CSSearchableItemAttributeSet(contentType: .text)
-        } else {
-            attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
-        }
+        let attributes = CSSearchableItemAttributeSet(contentType: .text)
         attributes.title = name
         attributes.keywords = [name]
         if let biography = user.biography {

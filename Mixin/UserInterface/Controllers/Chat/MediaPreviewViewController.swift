@@ -25,22 +25,6 @@ final class MediaPreviewViewController: UIViewController {
     private var playerObservation: NSKeyValueObservation?
     private var seekToZeroBeforePlay = false
     
-    private var movieTypeIdentifier: String {
-        if #available(iOS 14.0, *) {
-            return UTType.movie.identifier
-        } else {
-            return kUTTypeMovie as String
-        }
-    }
-    
-    private var gifTypeIdentifier: String {
-        if #available(iOS 14.0, *) {
-            return UTType.gif.identifier
-        } else {
-            return kUTTypeGIF as String
-        }
-    }
-    
     private lazy var videoThumbnailMaskLayer: CALayer = {
         let layer = CALayer()
         layer.backgroundColor = UIColor.white.cgColor
@@ -185,16 +169,16 @@ final class MediaPreviewViewController: UIViewController {
     }
     
     func canLoad(itemProvider: NSItemProvider) -> Bool {
-        itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier)
-            || itemProvider.hasItemConformingToTypeIdentifier(movieTypeIdentifier)
+        itemProvider.hasItemConformingToTypeIdentifier(UTType.gif.identifier)
+            || itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier)
             || itemProvider.canLoadObject(ofClass: UIImage.self)
     }
     
     func load(itemProvider: NSItemProvider) {
         loadViewIfNeeded()
         activityIndicator.startAnimating()
-        if itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier) {
-            copyFile(from: itemProvider, identifier: gifTypeIdentifier) { _ in
+        if itemProvider.hasItemConformingToTypeIdentifier(UTType.gif.identifier) {
+            copyFile(from: itemProvider, identifier: UTType.gif.identifier) { _ in
                 FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ExtensionName.gif.withDot)
             } completion: { [weak self] url in
                 guard let image = SDAnimatedImage(contentsOfFile: url.path) else {
@@ -213,12 +197,12 @@ final class MediaPreviewViewController: UIViewController {
                     self.view.layoutIfNeeded()
                 }
             }
-        } else if itemProvider.hasItemConformingToTypeIdentifier(movieTypeIdentifier) {
+        } else if itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
             // A video file in temp directory or with no extension name is not playable
             guard let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return
             }
-            copyFile(from: itemProvider, identifier: movieTypeIdentifier) { source in
+            copyFile(from: itemProvider, identifier: UTType.movie.identifier) { source in
                 document.appendingPathComponent(UUID().uuidString).appendingPathExtension(source.pathExtension)
             } completion: { [weak self] url in
                 let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url)

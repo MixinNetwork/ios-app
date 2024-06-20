@@ -220,7 +220,7 @@
 "collectible_release_failed" = "分解失敗";
 "collectible_release_hint" = "分解藏品可以立刻獲得相應的代幣，代幣可轉賬、交易或重新鑄造藏品。";
 "collectible_release_success" = "分解成功";
-"collectible_released_description" = "藏品分解成功，點選檢視代幣。";
+"collectible_released_description" = "藏品分解成功。";
 "collectible_releasing" = "分解中";
 "collectible_releasing_description" = "正在分解藏品，請稍候。";
 "collectible_token_id" = "#%@";

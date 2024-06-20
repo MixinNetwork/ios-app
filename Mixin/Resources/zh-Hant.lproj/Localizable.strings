@@ -500,6 +500,13 @@
 "info" = "資訊";
 "initializing" = "初始化...";
 "inscription_hash" = "藏品雜湊";
+"inscription_release_confirmation" = "分解收藏品";
+"inscription_release_failed" = "分解失敗";
+"inscription_release_hint" = "分解收藏品可以立刻獲得相應的代幣，代幣可轉賬、交易或重新鑄造收藏品。";
+"inscription_release_success" = "分解成功";
+"inscription_released_description" = "收藏品分解成功，點選檢視代幣。";
+"inscription_releasing" = "分解中";
+"inscription_releasing_description" = "銘文正在分解中，請稍候！";
 "insufficient_balance" = "餘額不足";
 "insufficient_gas" = "您的賬戶中沒有足夠的 %@ 來支付網路費用";
 "insufficient_transaction_fee" = "手續費不足";
@@ -770,6 +777,7 @@
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜尋";
 "refresh" = "重新整理";
+"release" = "分解";
 "reload" = "重新載入";
 "remove_all" = "全部刪除";
 "remove_all_floats" = "確定刪除全部浮窗？";
@@ -895,6 +903,7 @@
 "sending_withdrawal_request" = "正在傳送提現";
 "session_not_found" = "沒有對應的連線";
 "set" = "設定";
+"set_as_avatar" = "設定為頭像";
 "set_disappearing_message_time_to" = "%1$@將限時訊息設定為 %2$@";
 "set_emergency_create_successfully" = "設定緊急聯絡人成功";
 "set_new_pin" = "設定新的 PIN";
@@ -994,6 +1003,7 @@
 "to" = "至";
 "to_mixin_wallet" = "劃轉到 Mixin 錢包";
 "today" = "今天";
+"token" = "代幣";
 "total" = "共計";
 "touch_id" = "指紋";
 "track_not_found" = "Track 無效";

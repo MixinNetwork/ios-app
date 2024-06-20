@@ -500,6 +500,13 @@
 "info" = "プロフィール";
 "initializing" = "初期化中...";
 "inscription_hash" = "Inscription Hash";
+"inscription_release_confirmation" = "Release Inscription";
+"inscription_release_failed" = "Release Failed";
+"inscription_release_hint" = "Releasing the inscription will immediately provide the corresponding tokens, which can be transferred, traded, or used to mint new inscriptions.";
+"inscription_release_success" = "Release Successful";
+"inscription_released_description" = "The inscription was released successfully. Click to view the tokens.";
+"inscription_releasing" = "Releasing";
+"inscription_releasing_description" = "The inscription is being released, please wait!";
 "insufficient_balance" = "残高が不足しています";
 "insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
 "insufficient_transaction_fee" = "取引手数料が不足しています";
@@ -770,6 +777,7 @@
 "recent_chats" = "チャット";
 "recent_searches" = "最近の検索";
 "refresh" = "更新";
+"release" = "Release";
 "reload" = "リロード";
 "remove_all" = "全部クリア";
 "remove_all_floats" = "Floatを全部クリアしますか？";
@@ -895,6 +903,7 @@
 "sending_withdrawal_request" = "Sending Withdrawal Request";
 "session_not_found" = "Session not found";
 "set" = "設定";
+"set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "1$sは、消えるメッセージの有効時間を%@に設定しました。";
 "set_emergency_create_successfully" = "Set emergency contact successfully";
 "set_new_pin" = "新しいPINコードを設定";
@@ -994,6 +1003,7 @@
 "to" = "宛先";
 "to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "今日";
+"token" = "Token";
 "total" = "Total";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";

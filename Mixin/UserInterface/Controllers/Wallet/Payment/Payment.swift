@@ -11,23 +11,31 @@ struct Payment {
     
     private let inscriptionContext: InscriptionContext?
     
-    init(traceID: String, token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String) {
+    init(
+        traceID: String, token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal,
+        memo: String, inscriptionContext: InscriptionContext? = nil
+    ) {
         self.traceID = traceID
         self.token = token
         self.tokenAmount = tokenAmount
         self.fiatMoneyAmount = fiatMoneyAmount
         self.memo = memo
-        self.inscriptionContext = nil
+        self.inscriptionContext = inscriptionContext
     }
     
-    init(traceID: String, amount: Decimal, token: TokenItem, output: Output, memo: String, item: InscriptionItem) {
-        let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
-        self.traceID = traceID
-        self.token = token
-        self.tokenAmount = amount
-        self.fiatMoneyAmount = fiatMoneyAmount
-        self.memo = memo
-        self.inscriptionContext = InscriptionContext(output: output, item: item)
+    static func inscription(
+        traceID: String,
+        token: TokenItem,
+        memo: String,
+        context: InscriptionContext
+    ) -> Payment {
+        let fiatMoneyAmount = context.transferAmount * token.decimalUSDPrice * Currency.current.decimalRate
+        return Payment(traceID: traceID,
+                       token: token,
+                       tokenAmount: context.transferAmount,
+                       fiatMoneyAmount: fiatMoneyAmount,
+                       memo: memo,
+                       inscriptionContext: context)
     }
     
 }
@@ -54,9 +62,93 @@ extension Payment {
         
     }
     
-    private struct InscriptionContext {
+    struct InscriptionContext: CustomStringConvertible {
+        
+        enum Operation: CustomStringConvertible {
+            
+            case transfer
+            
+            // When a user releases an inscription, the operation being performed is essentially a transfer of
+            // corresponding tokens, with the transfer amount being less than the `outputAmount`. In this context,
+            // the `amount` refers to the actual amount being transferred, while the remaining tokens are
+            // returned to the user's wallet as change.
+            case release(amount: Decimal)
+            
+            var description: String {
+                switch self {
+                case .transfer:
+                    "transfer"
+                case .release(let amount):
+                    "release \(amount)"
+                }
+            }
+            
+        }
+        
+        enum ReleasingAmount {
+            case half
+            case arbitrary(Decimal)
+        }
+        
+        let operation: Operation
         let output: Output
+        let outputAmount: Decimal
         let item: InscriptionItem
+        
+        var description: String {
+            "<InscriptionContext op: \(operation), item: \(item.inscriptionHash), output: \(outputAmount)>"
+        }
+        
+        var transferAmount: Decimal {
+            switch operation {
+            case .transfer:
+                outputAmount
+            case .release(let amount):
+                amount
+            }
+        }
+        
+        init(operation: Payment.InscriptionContext.Operation, output: Output, outputAmount: Decimal, item: InscriptionItem) {
+            self.operation = operation
+            self.output = output
+            self.outputAmount = outputAmount
+            self.item = item
+        }
+        
+        init?(operation: Payment.InscriptionContext.Operation, output: Output, item: InscriptionItem) {
+            guard let outputAmount = output.decimalAmount else {
+                return nil
+            }
+            self.init(operation: operation, output: output, outputAmount: outputAmount, item: item)
+        }
+        
+        static func release(amount: ReleasingAmount, output: Output, outputAmount: Decimal, item: InscriptionItem) -> InscriptionContext {
+            let releaseAmount: Decimal
+            switch amount {
+            case .half:
+                // For outputs with an `inscription_hash`, it is stipulated that their `amount` must always be greater than 1.
+                // However, the convention does not specify the value of the decimal places. If the decimal places reach
+                // their maximum, for instance, 1.00000001, performing division on it will cause an overflow of decimal places.
+                // Therefore, only the integeral part is used for division in this case.
+                let outputAmountNumber = outputAmount as NSDecimalNumber
+                let integralPart = outputAmountNumber.rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
+                releaseAmount = (integralPart as Decimal) / 2
+            case .arbitrary(let amount):
+                releaseAmount = amount
+            }
+            return InscriptionContext(operation: .release(amount: releaseAmount),
+                                      output: output,
+                                      outputAmount: outputAmount,
+                                      item: item)
+        }
+        
+        static func release(amount: ReleasingAmount, output: Output, item: InscriptionItem) -> InscriptionContext? {
+            guard let outputAmount = output.decimalAmount else {
+                return nil
+            }
+            return release(amount: amount, output: output, outputAmount: outputAmount, item: item)
+        }
+        
     }
     
     func checkPreconditions(
@@ -67,10 +159,23 @@ extension Payment {
         onSuccess: @MainActor @escaping (TransferPaymentOperation, [PaymentPreconditionIssue]) -> Void
     ) {
         Task {
-            let preconditions: [PaymentPrecondition]
+            var preconditions: [PaymentPrecondition]
             switch destination {
             case let .user(opponent):
-                if inscriptionContext == nil {
+                if let context = inscriptionContext {
+                    preconditions = [
+                        NoPendingTransactionPrecondition(token: token),
+                        AlreadyPaidPrecondition(traceID: traceID),
+                    ]
+                    switch context.operation {
+                    case .release:
+                        // Transfer to myself, checking relationship makes no sense
+                        break
+                    case .transfer:
+                        preconditions.append(OpponentIsContactPrecondition(opponent: opponent))
+                    }
+                    preconditions.append(ReferenceValidityPrecondition(reference: reference))
+                } else {
                     preconditions = [
                         NoPendingTransactionPrecondition(token: token),
                         AlreadyPaidPrecondition(traceID: traceID),
@@ -82,13 +187,6 @@ extension Payment {
                         LargeAmountPrecondition(token: token,
                                                 tokenAmount: tokenAmount,
                                                 fiatMoneyAmount: fiatMoneyAmount),
-                        OpponentIsContactPrecondition(opponent: opponent),
-                        ReferenceValidityPrecondition(reference: reference),
-                    ]
-                } else {
-                    preconditions = [
-                        NoPendingTransactionPrecondition(token: token),
-                        AlreadyPaidPrecondition(traceID: traceID),
                         OpponentIsContactPrecondition(opponent: opponent),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
@@ -107,30 +205,36 @@ extension Payment {
                     onFailure(reason)
                 }
             case .passed(let issues):
-                let item: InscriptionItem?
                 let outputCollectionResult: OutputCollectingResult
                 if let inscriptionContext {
-                    item = inscriptionContext.item
                     if let collection = UTXOService.OutputCollection(output: inscriptionContext.output) {
                         outputCollectionResult = .success(collection)
                     } else {
                         outputCollectionResult = .failure(.description("Invalid Amount"))
                     }
                 } else {
-                    item = nil
                     outputCollectionResult = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
                 }
                 
                 switch outputCollectionResult {
                 case .success(let collection):
-                    let operation = TransferPaymentOperation(traceID: traceID,
-                                                             spendingOutputs: collection,
-                                                             destination: destination,
-                                                             token: token,
-                                                             amount: tokenAmount,
-                                                             memo: memo,
-                                                             reference: reference,
-                                                             inscription: item)
+                    let operation = if let context = inscriptionContext {
+                        TransferPaymentOperation(traceID: traceID,
+                                                 spendingOutputs: collection,
+                                                 destination: destination,
+                                                 token: token,
+                                                 memo: memo,
+                                                 reference: reference,
+                                                 inscription: context)
+                    } else {
+                        TransferPaymentOperation(traceID: traceID,
+                                                 spendingOutputs: collection,
+                                                 destination: destination,
+                                                 token: token,
+                                                 amount: tokenAmount,
+                                                 memo: memo,
+                                                 reference: reference)
+                    }
                     await MainActor.run {
                         onSuccess(operation, issues)
                     }

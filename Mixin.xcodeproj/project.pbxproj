@@ -799,8 +799,8 @@
 		944C61022B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C61002B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib */; };
 		944C61072B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61052B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift */; };
 		944C61082B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C61062B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib */; };
-		944C610E2B6AB7F600C7DF06 /* PaymentFeeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C610C2B6AB7F600C7DF06 /* PaymentFeeCell.swift */; };
-		944C610F2B6AB7F600C7DF06 /* PaymentFeeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C610D2B6AB7F600C7DF06 /* PaymentFeeCell.xib */; };
+		944C610E2B6AB7F600C7DF06 /* TokenAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C610C2B6AB7F600C7DF06 /* TokenAmountCell.swift */; };
+		944C610F2B6AB7F600C7DF06 /* TokenAmountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C610D2B6AB7F600C7DF06 /* TokenAmountCell.xib */; };
 		944C61F32B6BF97B00C7DF06 /* PaymentUserGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61F12B6BF97B00C7DF06 /* PaymentUserGroupCell.swift */; };
 		944C61F42B6BF97B00C7DF06 /* PaymentUserGroupCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C61F22B6BF97B00C7DF06 /* PaymentUserGroupCell.xib */; };
 		944C61F72B6BFAA100C7DF06 /* PaymentUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61F52B6BFAA100C7DF06 /* PaymentUserCell.swift */; };
@@ -824,6 +824,7 @@
 		9459693928B28FF8006F5421 /* TIPActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693728B28FF8006F5421 /* TIPActionViewController.swift */; };
 		9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9459693828B28FF8006F5421 /* TIPActionView.xib */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D867A2C21754A0066C61D /* CGSize+Constants.swift */; };
 		945E865029C078BB000FDA54 /* ExtendedKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E864F29C078BB000FDA54 /* ExtendedKey.swift */; };
 		945E865229C078E7000FDA54 /* RIPEMD160.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E865129C078E7000FDA54 /* RIPEMD160.swift */; };
 		945E871B29C1929D000FDA54 /* P2PKH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E871A29C1929D000FDA54 /* P2PKH.swift */; };
@@ -2080,8 +2081,8 @@
 		944C61002B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationPreviewInfoCell.xib; sourceTree = "<group>"; };
 		944C61052B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewCompactInfoCell.swift; sourceTree = "<group>"; };
 		944C61062B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationPreviewCompactInfoCell.xib; sourceTree = "<group>"; };
-		944C610C2B6AB7F600C7DF06 /* PaymentFeeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFeeCell.swift; sourceTree = "<group>"; };
-		944C610D2B6AB7F600C7DF06 /* PaymentFeeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentFeeCell.xib; sourceTree = "<group>"; };
+		944C610C2B6AB7F600C7DF06 /* TokenAmountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAmountCell.swift; sourceTree = "<group>"; };
+		944C610D2B6AB7F600C7DF06 /* TokenAmountCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenAmountCell.xib; sourceTree = "<group>"; };
 		944C61F12B6BF97B00C7DF06 /* PaymentUserGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentUserGroupCell.swift; sourceTree = "<group>"; };
 		944C61F22B6BF97B00C7DF06 /* PaymentUserGroupCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentUserGroupCell.xib; sourceTree = "<group>"; };
 		944C61F52B6BFAA100C7DF06 /* PaymentUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentUserCell.swift; sourceTree = "<group>"; };
@@ -2105,6 +2106,7 @@
 		9459693728B28FF8006F5421 /* TIPActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPActionViewController.swift; sourceTree = "<group>"; };
 		9459693828B28FF8006F5421 /* TIPActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPActionView.xib; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		945D867A2C21754A0066C61D /* CGSize+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Constants.swift"; sourceTree = "<group>"; };
 		945E864F29C078BB000FDA54 /* ExtendedKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedKey.swift; sourceTree = "<group>"; };
 		945E865129C078E7000FDA54 /* RIPEMD160.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RIPEMD160.swift; sourceTree = "<group>"; };
 		945E871A29C1929D000FDA54 /* P2PKH.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = P2PKH.swift; sourceTree = "<group>"; };
@@ -3478,8 +3480,8 @@
 				944C60FF2B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.swift */,
 				944C61062B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib */,
 				944C61052B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift */,
-				944C610D2B6AB7F600C7DF06 /* PaymentFeeCell.xib */,
-				944C610C2B6AB7F600C7DF06 /* PaymentFeeCell.swift */,
+				944C610D2B6AB7F600C7DF06 /* TokenAmountCell.xib */,
+				944C610C2B6AB7F600C7DF06 /* TokenAmountCell.swift */,
 				944C61F62B6BFAA100C7DF06 /* PaymentUserCell.xib */,
 				944C61F52B6BFAA100C7DF06 /* PaymentUserCell.swift */,
 				944C61F22B6BF97B00C7DF06 /* PaymentUserGroupCell.xib */,
@@ -3897,6 +3899,7 @@
 				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,
 				7C651D8E29F68277003331A4 /* MixinBot.swift */,
+				945D867A2C21754A0066C61D /* CGSize+Constants.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -4984,7 +4987,7 @@
 				94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				9412AF4D2C1AEAE00083ABB3 /* ShareInscriptionView.xib in Resources */,
-				944C610F2B6AB7F600C7DF06 /* PaymentFeeCell.xib in Resources */,
+				944C610F2B6AB7F600C7DF06 /* TokenAmountCell.xib in Resources */,
 				94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */,
@@ -5348,7 +5351,7 @@
 				7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */,
 				5EBD8CD1267B37D20026A248 /* ScreenLockViewController.swift in Sources */,
 				7BDBDE5F22327698006220DF /* LegacyTransferTypeViewController.swift in Sources */,
-				944C610E2B6AB7F600C7DF06 /* PaymentFeeCell.swift in Sources */,
+				944C610E2B6AB7F600C7DF06 /* TokenAmountCell.swift in Sources */,
 				7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */,
 				DF1A9A801FF25DB600A95188 /* RequestInAppNotificationJob.swift in Sources */,
 				7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */,
@@ -5640,6 +5643,7 @@
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
 				7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */,
+				945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */,
 				7B35AF7A228AA61400E8101D /* MessagesWithGroupSearchResult.swift in Sources */,
 				DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */,
 				7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */,

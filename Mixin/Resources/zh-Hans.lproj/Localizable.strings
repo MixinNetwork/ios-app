@@ -500,6 +500,13 @@
 "info" = "信息";
 "initializing" = "初始化...";
 "inscription_hash" = "藏品哈希";
+"inscription_release_confirmation" = "分解收藏品";
+"inscription_release_failed" = "分解失败";
+"inscription_release_hint" = "分解收藏品可以立刻获得相应的代币，代币可转账、交易或重新铸造收藏品。";
+"inscription_release_success" = "分解成功";
+"inscription_released_description" = "收藏品分解成功，点击查看代币。";
+"inscription_releasing" = "分解中";
+"inscription_releasing_description" = "铭文正在分解中，请稍候！";
 "insufficient_balance" = "余额不足";
 "insufficient_gas" = "您的账户中没有足够的 %@ 来支付网络费用";
 "insufficient_transaction_fee" = "手续费不足";
@@ -770,6 +777,7 @@
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜索";
 "refresh" = "刷新";
+"release" = "分解";
 "reload" = "重新载入";
 "remove_all" = "全部删除";
 "remove_all_floats" = "确定删除全部浮窗？";
@@ -895,6 +903,7 @@
 "sending_withdrawal_request" = "正在发送提现";
 "session_not_found" = "没有对应的连接";
 "set" = "设置";
+"set_as_avatar" = "设置为头像";
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
 "set_emergency_create_successfully" = "设置紧急联系人成功";
 "set_new_pin" = "设置新的 PIN";
@@ -994,6 +1003,7 @@
 "to" = "至";
 "to_mixin_wallet" = "划转到 Mixin 钱包";
 "today" = "今天";
+"token" = "代币";
 "total" = "共计";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";

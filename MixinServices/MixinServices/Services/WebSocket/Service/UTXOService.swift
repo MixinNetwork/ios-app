@@ -22,7 +22,7 @@ public final class UTXOService {
             let outputs = try OutputDAO.shared.unspentOutputs(asset: kernelAssetID, after: sequence, limit: limit, db: db)
             Logger.general.debug(category: "UTXO", message: "Read \(outputs.count) outputs for amount calculation")
             for output in outputs {
-                if let amount = Decimal(string: output.amount, locale: .enUSPOSIX) {
+                if let amount = output.decimalAmount {
                     totalAmount += amount
                 } else {
                     Logger.general.error(category: "UTXO", message: "Invalid amount: \(output.amount), id: \(output.id)")
@@ -74,7 +74,7 @@ extension UTXOService {
         }
         
         public init?(output: Output) {
-            guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+            guard let amount = output.decimalAmount else {
                 return nil
             }
             self.outputs = [output]
@@ -139,7 +139,7 @@ extension UTXOService {
         
         var amount: Decimal = 0
         let outputs = unspentOutputs.compactMap { output in
-            if let outputAmount = Decimal(string: output.amount, locale: .enUSPOSIX) {
+            if let outputAmount = output.decimalAmount {
                 amount += outputAmount
                 return output
             } else {

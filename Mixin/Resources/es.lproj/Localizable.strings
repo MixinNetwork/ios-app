@@ -1116,6 +1116,8 @@
 "videos" = "Vídeos";
 "view_authorization" = "Ver autorización";
 "view_emergency_contact" = "Ver contacto de emergencia";
+"view_on_explorer" = "View on Explorer";
+"view_on_marketplace" = "View on Marketplace";
 "view_wallet" = "Ver Cartera";
 "voice_call_cancelled" = "llamada de voz cancelada";
 "voice_call_has_been_declined" = "La llamada de voz ha sido rechazada";

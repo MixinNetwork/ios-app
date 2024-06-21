@@ -1116,6 +1116,8 @@
 "videos" = "Видео";
 "view_authorization" = "Просмотр авторизации";
 "view_emergency_contact" = "Посмотреть экстренный контакт";
+"view_on_explorer" = "View on Explorer";
+"view_on_marketplace" = "View on Marketplace";
 "view_wallet" = "Посмотреть кошелек";
 "voice_call_cancelled" = "голосовой вызов отменен";
 "voice_call_has_been_declined" = "Голосовой вызов был отклонен";

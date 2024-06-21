@@ -1116,6 +1116,8 @@
 "videos" = "视频";
 "view_authorization" = "查看授权";
 "view_emergency_contact" = "查看紧急联系人";
+"view_on_explorer" = "在浏览器查看";
+"view_on_marketplace" = "在市场查看";
 "view_wallet" = "查看钱包";
 "voice_call_cancelled" = "对方已取消语音通话";
 "voice_call_has_been_declined" = "已拒绝通话";

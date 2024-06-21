@@ -1116,6 +1116,8 @@
 "videos" = "影片";
 "view_authorization" = "檢視授權";
 "view_emergency_contact" = "檢視緊急聯絡人";
+"view_on_explorer" = "在瀏覽器檢視";
+"view_on_marketplace" = "在市場檢視";
 "view_wallet" = "檢視錢包";
 "voice_call_cancelled" = "對方已取消語音通話";
 "voice_call_has_been_declined" = "已拒絕通話";

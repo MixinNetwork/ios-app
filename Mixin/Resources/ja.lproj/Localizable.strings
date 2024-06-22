@@ -86,6 +86,7 @@
 "allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
 "allow_bot_send_messages" = "Allow bot to send messages represent of you.";
 "allow_manual_report_message" = "メッセージ単位の報告を許可";
+"alphabetical" = "Alphabetical";
 "amount" = "数量";
 "anonymous_number" = "匿名番号";
 "app_card_shareable_false" = "このカードを共有することはできません";
@@ -226,6 +227,7 @@
 "collectible_token_id" = "#%@";
 "collectibles" = "Collectibles";
 "collection" = "Collection";
+"collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
 "compress_database" = "データの圧縮";
 "compressed" = "圧縮しました";
@@ -780,6 +782,7 @@
 "receive_money" = "仮想通貨を受け取る";
 "receiver" = "受取人";
 "receivers" = "受取人";
+"recent" = "Recent";
 "recent_chats" = "チャット";
 "recent_searches" = "最近の検索";
 "refresh" = "更新";

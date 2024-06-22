@@ -13,6 +13,8 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
         case occupiedAt = "occupied_at"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case traits
+        case owner
     }
     
     public let inscriptionHash: String
@@ -24,22 +26,8 @@ public class Inscription: Codable, DatabaseColumnConvertible, MixinFetchableReco
     public let occupiedAt: String?
     public let createdAt: String
     public let updatedAt: String
-    
-    init(
-        inscriptionHash: String, collectionHash: String, sequence: UInt64,
-        contentType: String, contentURL: String, occupiedBy: String?,
-        occupiedAt: String?, createdAt: String, updatedAt: String
-    ) {
-        self.inscriptionHash = inscriptionHash
-        self.collectionHash = collectionHash
-        self.sequence = sequence
-        self.contentType = contentType
-        self.contentURL = contentURL
-        self.occupiedBy = occupiedBy
-        self.occupiedAt = occupiedAt
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-    }
+    public let traits: String?
+    public let owner: String?
     
 }
 

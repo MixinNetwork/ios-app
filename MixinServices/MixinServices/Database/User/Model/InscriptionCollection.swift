@@ -11,21 +11,7 @@ public struct InscriptionCollection {
     public let iconURL: String
     public let createdAt: String
     public let updatedAt: String
-    
-    init(
-        collectionHash: String, supply: String, unit: String,
-        symbol: String, name: String, iconURL: String,
-        createdAt: String, updatedAt: String
-    ) {
-        self.collectionHash = collectionHash
-        self.supply = supply
-        self.unit = unit
-        self.symbol = symbol
-        self.name = name
-        self.iconURL = iconURL
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-    }
+    public let description: String?
     
 }
 
@@ -40,6 +26,7 @@ extension InscriptionCollection: Codable, DatabaseColumnConvertible, MixinFetcha
         case iconURL = "icon_url"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case description
     }
     
 }

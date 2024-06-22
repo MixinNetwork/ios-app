@@ -86,6 +86,7 @@
 "allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
 "allow_bot_send_messages" = "Allow bot to send messages represent of you.";
 "allow_manual_report_message" = "Allow Manual Report Message";
+"alphabetical" = "Alphabetical";
 "amount" = "Amount";
 "anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "The card has been set to not allow sharing";
@@ -226,6 +227,7 @@
 "collectible_token_id" = "#%@";
 "collectibles" = "Collectibles";
 "collection" = "Collection";
+"collection_collected" = "%d collected";
 "combine_and_forward" = "Combine and forward";
 "compress_database" = "Compress Database";
 "compressed" = "Compressed";
@@ -780,6 +782,7 @@
 "receive_money" = "Receive Money";
 "receiver" = "Receiver";
 "receivers" = "Receivers";
+"recent" = "Recent";
 "recent_chats" = "CHATS";
 "recent_searches" = "Recent searches";
 "refresh" = "Refresh";

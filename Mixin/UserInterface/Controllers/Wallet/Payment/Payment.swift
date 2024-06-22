@@ -219,21 +219,25 @@ extension Payment {
                 switch outputCollectionResult {
                 case .success(let collection):
                     let operation = if let context = inscriptionContext {
-                        TransferPaymentOperation(traceID: traceID,
-                                                 spendingOutputs: collection,
-                                                 destination: destination,
-                                                 token: token,
-                                                 memo: memo,
-                                                 reference: reference,
-                                                 inscription: context)
+                        TransferPaymentOperation.inscription(
+                            traceID: traceID,
+                            spendingOutputs: collection,
+                            destination: destination,
+                            token: token,
+                            memo: memo,
+                            reference: reference,
+                            context: context
+                        )
                     } else {
-                        TransferPaymentOperation(traceID: traceID,
-                                                 spendingOutputs: collection,
-                                                 destination: destination,
-                                                 token: token,
-                                                 amount: tokenAmount,
-                                                 memo: memo,
-                                                 reference: reference)
+                        TransferPaymentOperation.transfer(
+                            traceID: traceID,
+                            spendingOutputs: collection,
+                            destination: destination,
+                            token: token,
+                            amount: tokenAmount,
+                            memo: memo,
+                            reference: reference
+                        )
                     }
                     await MainActor.run {
                         onSuccess(operation, issues)

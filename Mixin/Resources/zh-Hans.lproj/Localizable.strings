@@ -86,6 +86,7 @@
 "allow_bot_manage_circles" = "允许机器人添加、修改和删除你所有的圈子。";
 "allow_bot_send_messages" = "允许机器人代表你发消息。";
 "allow_manual_report_message" = "允许手动上报消息";
+"alphabetical" = "按字母顺序";
 "amount" = "金额";
 "anonymous_number" = "匿名号码";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
@@ -226,6 +227,7 @@
 "collectible_token_id" = "#%@";
 "collectibles" = "藏品";
 "collection" = "合集";
+"collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合并转发";
 "compress_database" = "压缩数据库";
 "compressed" = "已压缩";
@@ -780,6 +782,7 @@
 "receive_money" = "我的收款码";
 "receiver" = "至";
 "receivers" = "交易接收人";
+"recent" = "最近";
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜索";
 "refresh" = "刷新";
@@ -1116,6 +1119,8 @@
 "videos" = "视频";
 "view_authorization" = "查看授权";
 "view_emergency_contact" = "查看紧急联系人";
+"view_on_explorer" = "在浏览器查看";
+"view_on_marketplace" = "在市场查看";
 "view_wallet" = "查看钱包";
 "voice_call_cancelled" = "对方已取消语音通话";
 "voice_call_has_been_declined" = "已拒绝通话";

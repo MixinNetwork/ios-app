@@ -86,6 +86,7 @@
 "allow_bot_manage_circles" = "Permite que el bot añada, modifique y elimine tus círculos.";
 "allow_bot_send_messages" = "Permita que el bot envíe mensajes que lo representen.";
 "allow_manual_report_message" = "Permitir mensaje de informe manual";
+"alphabetical" = "Alphabetical";
 "amount" = "Cantidad";
 "anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "La tarjeta se ha configurado para no permitir compartir";
@@ -226,6 +227,7 @@
 "collectible_token_id" = "#%@";
 "collectibles" = "Collectibles";
 "collection" = "Collection";
+"collection_collected" = "%d collected";
 "combine_and_forward" = "Combinar y avanzar";
 "compress_database" = "Comprimir base de datos";
 "compressed" = "Comprimido";
@@ -780,6 +782,7 @@
 "receive_money" = "Recibir dinero";
 "receiver" = "Receptor";
 "receivers" = "Receptores";
+"recent" = "Recent";
 "recent_chats" = "CHATS";
 "recent_searches" = "Búsquedas recientes";
 "refresh" = "Actualizar";
@@ -1116,6 +1119,8 @@
 "videos" = "Vídeos";
 "view_authorization" = "Ver autorización";
 "view_emergency_contact" = "Ver contacto de emergencia";
+"view_on_explorer" = "View on Explorer";
+"view_on_marketplace" = "View on Marketplace";
 "view_wallet" = "Ver Cartera";
 "voice_call_cancelled" = "llamada de voz cancelada";
 "voice_call_has_been_declined" = "La llamada de voz ha sido rechazada";

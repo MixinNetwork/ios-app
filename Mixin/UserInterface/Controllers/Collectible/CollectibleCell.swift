@@ -46,4 +46,16 @@ final class CollectibleCell: UICollectionViewCell {
         }
     }
     
+    func render(collection: InscriptionCollectionPreview) {
+        if let url = URL(string: collection.iconURL) {
+            contentImageView.contentMode = .scaleAspectFill
+            contentImageView.sd_setImage(with: url)
+        } else {
+            contentImageView.image = R.image.inscription_intaglio()
+            contentImageView.contentMode = .center
+        }
+        titleLabel.text = collection.name
+        subtitleLabel.text = "\(collection.inscriptionCount)"
+    }
+    
 }

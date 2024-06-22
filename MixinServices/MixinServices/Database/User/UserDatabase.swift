@@ -756,6 +756,21 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("inscription_2") { db in
+            let itemColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(inscription_items)").map(\.name)
+            if !itemColumns.contains("traits") {
+                try db.execute(sql: "ALTER TABLE `inscription_items` ADD COLUMN `traits` TEXT")
+            }
+            if !itemColumns.contains("owner") {
+                try db.execute(sql: "ALTER TABLE `inscription_items` ADD COLUMN `owner` TEXT")
+            }
+            
+            let collectionColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(inscription_collections)").map(\.name)
+            if !collectionColumns.contains("description") {
+                try db.execute(sql: "ALTER TABLE `inscription_collections` ADD COLUMN `description` TEXT")
+            }
+        }
+        
         return migrator
     }
     

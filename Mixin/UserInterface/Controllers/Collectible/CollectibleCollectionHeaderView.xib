@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectible_collection" id="VEG-Sx-aRa" customClass="CollectibleCollectionHeaderView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="195"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Zd-5z-sRk">
+                    <rect key="frame" x="0.0" y="184" width="393" height="6"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="6" id="iXd-GQ-OjF"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gcp-aa-Dp7">
+                    <rect key="frame" x="28" y="2" width="337" height="174"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AUI-tL-2U0" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="137.66666666666666" y="0.0" width="62" height="58"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="58" id="GLK-xX-vKm"/>
+                                <constraint firstAttribute="width" constant="62" id="d8n-xr-pCW"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aI5-sB-DGN">
+                            <rect key="frame" x="143.66666666666666" y="58" width="50" height="50"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                            <color key="textColor" name="text_secondary"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" verticalCompressionResistancePriority="500" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nlc-UZ-TYA">
+                            <rect key="frame" x="143.66666666666666" y="108" width="50" height="50"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <color key="textColor" name="text_quaternary"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNa-nv-wIi">
+                            <rect key="frame" x="143.66666666666666" y="158" width="50" height="16"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_tertiary"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="7Zd-5z-sRk" secondAttribute="trailing" id="BKs-mY-r6c"/>
+                <constraint firstAttribute="trailing" secondItem="gcp-aa-Dp7" secondAttribute="trailing" constant="28" id="HTr-uH-Mc1"/>
+                <constraint firstAttribute="bottom" secondItem="7Zd-5z-sRk" secondAttribute="bottom" constant="5" id="QpS-Yp-qKd"/>
+                <constraint firstItem="gcp-aa-Dp7" firstAttribute="leading" secondItem="VEG-Sx-aRa" secondAttribute="leading" constant="28" id="bms-Q0-X9f"/>
+                <constraint firstItem="7Zd-5z-sRk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gcp-aa-Dp7" secondAttribute="bottom" constant="8" id="fVH-r7-TI5"/>
+                <constraint firstItem="7Zd-5z-sRk" firstAttribute="leading" secondItem="VEG-Sx-aRa" secondAttribute="leading" id="jIb-v8-DJH"/>
+                <constraint firstItem="gcp-aa-Dp7" firstAttribute="top" secondItem="VEG-Sx-aRa" secondAttribute="top" constant="2" id="zor-WP-Hwf"/>
+            </constraints>
+            <connections>
+                <outlet property="contentStackView" destination="gcp-aa-Dp7" id="lIM-ps-fyz"/>
+                <outlet property="countLabel" destination="Nlc-UZ-TYA" id="M1O-1H-qBC"/>
+                <outlet property="descriptionLabel" destination="gNa-nv-wIi" id="Y3X-5J-cii"/>
+                <outlet property="nameLabel" destination="aI5-sB-DGN" id="VQL-tI-oyk"/>
+                <outlet property="tokenIconView" destination="AUI-tL-2U0" id="fN4-XA-8AG"/>
+            </connections>
+            <point key="canvasLocation" x="289.3129770992366" y="-85.563380281690144"/>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_secondary">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

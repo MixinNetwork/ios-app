@@ -1,4 +1,6 @@
 import UIKit
+import Photos
+import SafariServices
 import MixinServices
 
 final class InscriptionViewController: UIViewController {
@@ -70,7 +72,12 @@ final class InscriptionViewController: UIViewController {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if backgroundImageView.image != nil {
             sheet.addAction(UIAlertAction(title: R.string.localizable.set_as_avatar(), style: .default, handler: setAsAvatar(_:)))
+            sheet.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: saveToLibrary(_:)))
         }
+        if output != nil {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_explorer(), style: .default, handler: viewOnExplorer(_:)))
+        }
+        sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_marketplace(), style: .default, handler: viewOnMarketplace(_:)))
         sheet.addAction(UIAlertAction(title: R.string.localizable.release(), style: .destructive, handler: releaseInscription(_:)))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
         present(sheet, animated: true)
@@ -111,6 +118,34 @@ final class InscriptionViewController: UIViewController {
         present(cropController, animated: true)
     }
     
+    private func saveToLibrary(_ action: UIAlertAction) {
+        guard let image = backgroundImageView.image else {
+            return
+        }
+        PHPhotoLibrary.checkAuthorization { (authorized) in
+            if authorized {
+                PHPhotoLibrary.saveImageToLibrary(image: image)
+            }
+        }
+    }
+    
+    private func viewOnExplorer(_ action: UIAlertAction) {
+        guard
+            let hash = output?.transactionHash,
+            let url = URL(string: "https://viewblock.io/mixin/tx/\(hash)")
+        else {
+            return
+        }
+        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: self)
+    }
+    
+    private func viewOnMarketplace(_ action: UIAlertAction) {
+        guard let url = URL(string: "https://rune.fan/items/\(inscriptionHash)") else {
+            return
+        }
+        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: self)
+    }
+    
     private func releaseInscription(_ action: UIAlertAction) {
         guard
             let navigationController,
@@ -140,7 +175,6 @@ final class InscriptionViewController: UIViewController {
                                                         operation: operation,
                                                         amountDisplay: .byToken,
                                                         redirection: nil)
-            preview.manipulateNavigationStackOnFinished = false
             navigationController.present(preview, animated: true)
         }
     }

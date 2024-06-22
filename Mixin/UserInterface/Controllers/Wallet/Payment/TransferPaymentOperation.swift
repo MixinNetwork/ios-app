@@ -20,6 +20,26 @@ struct TransferPaymentOperation {
         
     }
     
+    enum Behavior: CustomStringConvertible {
+        
+        case transfer
+        case consolidation
+        case inscription(Payment.InscriptionContext)
+        
+        var description: String {
+            switch self {
+            case .transfer:
+                "transfer"
+            case .consolidation:
+                "consolidation"
+            case .inscription(let context):
+                context.description
+            }
+        }
+        
+    }
+    
+    let behavior: Behavior
     let traceID: String
     let spendingOutputs: UTXOService.OutputCollection
     let destination: Payment.TransferDestination
@@ -27,13 +47,13 @@ struct TransferPaymentOperation {
     let amount: Decimal
     let memo: String
     let reference: String?
-    let inscription: Payment.InscriptionContext?
     
-    init(
-        traceID: String, spendingOutputs: UTXOService.OutputCollection, 
-        destination: Payment.TransferDestination, token: TokenItem,
-        amount: Decimal, memo: String, reference: String?
+    private init(
+        behavior: Behavior, traceID: String, spendingOutputs: UTXOService.OutputCollection,
+        destination: Payment.TransferDestination, token: TokenItem, amount: Decimal,
+        memo: String, reference: String?
     ) {
+        self.behavior = behavior
         self.traceID = traceID
         self.spendingOutputs = spendingOutputs
         self.destination = destination
@@ -41,22 +61,50 @@ struct TransferPaymentOperation {
         self.amount = amount
         self.memo = memo
         self.reference = reference
-        self.inscription = nil
     }
     
-    init(
+    static func transfer(
         traceID: String, spendingOutputs: UTXOService.OutputCollection,
         destination: Payment.TransferDestination, token: TokenItem,
-        memo: String, reference: String?, inscription: Payment.InscriptionContext
-    ) {
-        self.traceID = traceID
-        self.spendingOutputs = spendingOutputs
-        self.destination = destination
-        self.token = token
-        self.amount = inscription.transferAmount
-        self.memo = memo
-        self.reference = reference
-        self.inscription = inscription
+        amount: Decimal, memo: String, reference: String?
+    ) -> TransferPaymentOperation {
+        TransferPaymentOperation(behavior: .transfer,
+                                 traceID: traceID,
+                                 spendingOutputs: spendingOutputs,
+                                 destination: destination,
+                                 token: token,
+                                 amount: amount,
+                                 memo: memo,
+                                 reference: reference)
+    }
+    
+    static func inscription(
+        traceID: String, spendingOutputs: UTXOService.OutputCollection,
+        destination: Payment.TransferDestination, token: TokenItem,
+        memo: String, reference: String?, context: Payment.InscriptionContext
+    ) -> TransferPaymentOperation {
+        TransferPaymentOperation(behavior: .inscription(context),
+                                 traceID: traceID,
+                                 spendingOutputs: spendingOutputs,
+                                 destination: destination,
+                                 token: token,
+                                 amount: context.transferAmount,
+                                 memo: memo,
+                                 reference: reference)
+    }
+    
+    static func consolidation(
+        traceID: String, outputs: UTXOService.OutputCollection,
+        destination: Payment.TransferDestination, token: TokenItem
+    ) -> TransferPaymentOperation {
+        TransferPaymentOperation(behavior: .consolidation,
+                                 traceID: traceID,
+                                 spendingOutputs: outputs,
+                                 destination: destination,
+                                 token: token,
+                                 amount: outputs.amount,
+                                 memo: "",
+                                 reference: nil)
     }
     
     func start(pin: String) async throws {
@@ -65,7 +113,7 @@ struct TransferPaymentOperation {
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
         let amount = Token.amountString(from: amount)
-        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), inscription: \(inscription?.description ?? "(null)")")
+        Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), behavior: \(behavior.description)")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
         Logger.general.info(category: "Transfer", message: "SpendKey ready")
@@ -77,17 +125,13 @@ struct TransferPaymentOperation {
         let outputKeys = try spendingOutputs.encodedKeys()
         
         let ghostKeyRequests: [GhostKeyRequest]
-        let isConsolidation: Bool
         switch destination {
         case let .user(opponent):
             ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: [opponent.userId], senderIDs: [senderID], traceID: traceID)
-            isConsolidation = inscription == nil && opponent.userId == myUserId
         case let .multisig(_, receivers):
             ghostKeyRequests = GhostKeyRequest.contactTransfer(receiverIDs: receivers.map(\.userId), senderIDs: [senderID], traceID: traceID)
-            isConsolidation = false
         case .mainnet:
             ghostKeyRequests = GhostKeyRequest.mainnetAddressTransfer(senderID: senderID, traceID: traceID)
-            isConsolidation = false
         }
         let ghostKeys = try await SafeAPI.ghostKeys(requests: ghostKeyRequests)
         
@@ -99,7 +143,7 @@ struct TransferPaymentOperation {
         let changeKeys = changeGhostKey.keys.joined(separator: ",")
         let changeMask = changeGhostKey.mask
         
-        Logger.general.info(category: "Transfer", message: "GhostKeys ready, isConsolidation: \(isConsolidation)")
+        Logger.general.info(category: "Transfer", message: "GhostKeys ready")
         
         var error: NSError?
         let tx: String
@@ -192,6 +236,12 @@ struct TransferPaymentOperation {
                                             state: .unspent,
                                             type: .transfer,
                                             createdAt: now)
+        let snapshotInscriptionHash: String? = switch behavior {
+        case .inscription(let context):
+            context.item.inscriptionHash
+        case .consolidation, .transfer:
+            nil
+        }
         let snapshot = SafeSnapshot(type: .snapshot,
                                     assetID: token.assetID,
                                     amount: "-" + amount,
@@ -201,7 +251,7 @@ struct TransferPaymentOperation {
                                     transactionHash: signedTx.hash,
                                     createdAt: now,
                                     traceID: traceID, 
-                                    inscriptionHash: inscription?.item.inscriptionHash)
+                                    inscriptionHash: snapshotInscriptionHash)
         let trace: Trace?
         switch destination {
         case .user, .multisig:
@@ -217,9 +267,12 @@ struct TransferPaymentOperation {
         }
         OutputDAO.shared.signOutputs(with: spendingOutputIDs) { db in
             try changeOutput?.save(db)
+            try trace?.save(db)
             switch destination {
             case .user(let opponent):
-                if isConsolidation {
+                let saveSnapshot: Bool
+                switch behavior {
+                case .consolidation:
                     let output = Output.consolidation(hash: signedTx.hash,
                                                       asset: kernelAssetID,
                                                       amount: amount,
@@ -228,36 +281,33 @@ struct TransferPaymentOperation {
                                                       createdAt: now,
                                                       lastOutput: spendingOutputs.lastOutput)
                     try output.save(db)
-                } else {
-                    switch inscription?.operation {
-                    case .transfer, .none:
-                        try SafeSnapshotDAO.shared.save(snapshot: snapshot, db: db)
+                    saveSnapshot = false
+                case .inscription(let context):
+                    switch context.operation {
+                    case .transfer:
+                        saveSnapshot = true
                     case .release:
-                        break
+                        saveSnapshot = false
                     }
-                    try trace?.save(db)
+                case .transfer:
+                    saveSnapshot = true
+                }
+                if saveSnapshot {
+                    try SafeSnapshotDAO.shared.save(snapshot: snapshot, db: db)
                     if opponent.isCreatedByMessenger {
                         let receiverID = opponent.userId
                         let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
-                        let message: Message? = if let inscription {
-                            switch inscription.operation {
-                            case .transfer:
-                                Message.createMessage(snapshot: snapshot,
-                                                      inscription: inscription.item,
-                                                      conversationID: conversationID,
-                                                      createdAt: now)
-                            case .release:
-                                nil
-                            }
-                        } else {
-                            Message.createMessage(snapshot: snapshot,
-                                                  inscription: nil,
-                                                  conversationID: conversationID,
-                                                  createdAt: now)
+                        let inscriptionItem: InscriptionItem? = switch behavior {
+                        case .transfer, .consolidation:
+                            nil
+                        case .inscription(let context):
+                            context.item
                         }
-                        if let message {
-                            try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
-                        }
+                        let message: Message = .createMessage(snapshot: snapshot,
+                                                              inscription: inscriptionItem,
+                                                              conversationID: conversationID,
+                                                              createdAt: now)
+                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
                         if try !Conversation.exists(db, key: conversationID) {
                             let conversation = Conversation.createConversation(conversationId: conversationID,
                                                                                category: ConversationCategory.CONTACT.rawValue,
@@ -273,7 +323,6 @@ struct TransferPaymentOperation {
                 }
             case .multisig, .mainnet:
                 try SafeSnapshotDAO.shared.save(snapshot: snapshot, db: db)
-                try trace?.save(db)
             }
             try rawTransaction.save(db)
             try UTXOService.shared.updateBalance(assetID: token.assetID, kernelAssetID: kernelAssetID, db: db)
@@ -298,9 +347,12 @@ struct TransferPaymentOperation {
         RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID])
         Logger.general.info(category: "Transfer", message: "RawTx signed")
         
-        if !isConsolidation {
+        switch behavior {
+        case .transfer:
             AppGroupUserDefaults.User.hasPerformedTransfer = true
             AppGroupUserDefaults.Wallet.defaultTransferAssetId = token.assetID
+        case .consolidation, .inscription:
+            break
         }
     }
     

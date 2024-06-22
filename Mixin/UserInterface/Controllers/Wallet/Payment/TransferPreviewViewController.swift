@@ -9,6 +9,15 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
     private let amountDisplay: AmountIntent
     private let redirection: URL?
     
+    private var inscriptionContext: Payment.InscriptionContext? {
+        switch operation.behavior {
+        case .transfer, .consolidation:
+            nil
+        case .inscription(let context):
+            context
+        }
+    }
+    
     init(
         issues: [PaymentPreconditionIssue],
         operation: TransferPaymentOperation,
@@ -30,20 +39,21 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         let token = operation.token
         
-        if let inscription = operation.inscription?.item {
+        switch operation.behavior {
+        case .transfer, .consolidation:
+            tableHeaderView.setIcon(token: token)
+        case .inscription(let context):
             tableHeaderView.setIcon { imageView in
                 imageView.layer.cornerRadius = 12
-                if let url = inscription.inscriptionImageContentURL {
+                if let url = context.item.inscriptionImageContentURL {
                     imageView.sd_setImage(with: url, placeholderImage: nil)
                 } else {
                     imageView.backgroundColor = R.color.sticker_button_background_disabled()
                     imageView.image = R.image.inscription_intaglio()
                 }
             }
-        } else {
-            tableHeaderView.setIcon(token: token)
         }
-        switch operation.inscription?.operation {
+        switch inscriptionContext?.operation {
         case .release:
             tableHeaderView.titleLabel.text = R.string.localizable.collectible_release_confirmation()
             tableHeaderView.subtitleLabel.text = R.string.localizable.collectible_release_hint()
@@ -55,8 +65,8 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         var rows: [Row]
         
         let tokenAmount: Decimal
-        if let inscription = operation.inscription, case .release = inscription.operation {
-            tokenAmount = inscription.outputAmount
+        if let context = inscriptionContext, case .release = context.operation {
+            tokenAmount = context.outputAmount
         } else {
             tokenAmount = operation.amount
         }
@@ -66,11 +76,11 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
-        if let inscription = operation.inscription {
+        if let context = inscriptionContext {
             rows = [
-                .boldInfo(caption: .collectible, content: inscription.item.collectionSequenceRepresentation),
+                .boldInfo(caption: .collectible, content: context.item.collectionSequenceRepresentation),
             ]
-            if case .release = inscription.operation {
+            if case .release = context.operation {
                 rows.append(.tokenAmount(token: token, tokenAmount: tokenValue, fiatMoneyAmount: fiatMoneyValue))
             }
         } else {
@@ -96,7 +106,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             rows.append(.senders([user], threshold: senderThreshold))
         }
         
-        switch operation.inscription?.operation {
+        switch inscriptionContext?.operation {
         case .transfer:
             break
         case .release:
@@ -118,7 +128,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        switch operation.inscription?.operation {
+        switch inscriptionContext?.operation {
         case .release:
             layoutTableHeaderView(title: R.string.localizable.collectible_releasing(),
                                   subtitle: R.string.localizable.collectible_releasing_description())
@@ -134,7 +144,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
-                    switch operation.inscription?.operation {
+                    switch inscriptionContext?.operation {
                     case .release:
                         layoutTableHeaderView(title: R.string.localizable.collectible_release_success(),
                                               subtitle: R.string.localizable.collectible_released_description())
@@ -167,7 +177,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
-                    let title = switch operation.inscription?.operation {
+                    let title = switch inscriptionContext?.operation {
                     case .release:
                         R.string.localizable.collectible_release_failed()
                     case .transfer, .none:
@@ -211,28 +221,37 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             return
         }
         var viewControllers = navigation.viewControllers
-        switch operation.destination {
-        case let .user(opponent):
-            if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
-                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
-                    viewControllers.removeLast()
-                }
+        if let context = inscriptionContext, case .release = context.operation {
+            if viewControllers.last is InscriptionViewController {
+                viewControllers.removeLast()
+                navigation.setViewControllers(viewControllers, animated: false)
             } else {
-                if opponent.isCreatedByMessenger {
-                    while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                return
+            }
+        } else {
+            switch operation.destination {
+            case let .user(opponent):
+                if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
+                    while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
                         viewControllers.removeLast()
                     }
-                    viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
-                } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
+                } else {
+                    if opponent.isCreatedByMessenger {
+                        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                            viewControllers.removeLast()
+                        }
+                        viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+                    } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
+                        viewControllers.removeLast()
+                    }
+                }
+                navigation.setViewControllers(viewControllers, animated: false)
+            case .multisig, .mainnet:
+                if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
                     viewControllers.removeLast()
                 }
+                navigation.setViewControllers(viewControllers, animated: false)
             }
-            navigation.setViewControllers(viewControllers, animated: false)
-        case .multisig, .mainnet:
-            if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
-                viewControllers.removeLast()
-            }
-            navigation.setViewControllers(viewControllers, animated: false)
         }
     }
     

@@ -122,17 +122,11 @@ final class InscriptionViewController: UIViewController {
         guard let image = backgroundImageView.image else {
             return
         }
-        PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAsset(from: image)
-        }, completionHandler: { (success, error) in
-            DispatchQueue.main.async {
-                if success {
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.photo_saved())
-                } else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_photo())
-                }
+        PHPhotoLibrary.checkAuthorization { (authorized) in
+            if authorized {
+                PHPhotoLibrary.saveImageToLibrary(image: image)
             }
-        })
+        }
     }
     
     private func viewOnExplorer(_ action: UIAlertAction) {

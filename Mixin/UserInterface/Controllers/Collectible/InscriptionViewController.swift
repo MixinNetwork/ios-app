@@ -136,7 +136,8 @@ final class InscriptionViewController: UIViewController {
         else {
             return
         }
-        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: self)
+        let safari = SFSafariViewController(url: url)
+        present(safari, animated: true)
     }
     
     private func viewOnMarketplace(_ action: UIAlertAction) {

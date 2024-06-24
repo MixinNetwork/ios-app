@@ -10,6 +10,8 @@ public struct Output {
         case spent
     }
     
+    private static let unconfirmedSequence = 0
+    
     public let id: String
     public let transactionHash: String
     public let outputIndex: Int
@@ -32,6 +34,10 @@ public struct Output {
     
     public var decimalAmount: Decimal? {
         Decimal(string: amount, locale: .enUSPOSIX)
+    }
+    
+    public var isConfirmed: Bool {
+        sequence != Self.unconfirmedSequence
     }
     
     public init(
@@ -80,7 +86,7 @@ public struct Output {
                   signedBy: "",
                   signedAt: "",
                   spentAt: "",
-                  sequence: 0,
+                  sequence: Self.unconfirmedSequence,
                   inscriptionHash: nil)
     }
     
@@ -105,7 +111,7 @@ public struct Output {
                signedBy: "",
                signedAt: "",
                spentAt: "",
-               sequence: 0,
+               sequence: Self.unconfirmedSequence,
                inscriptionHash: nil)
     }
     

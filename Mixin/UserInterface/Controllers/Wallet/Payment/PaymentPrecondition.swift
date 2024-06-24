@@ -172,10 +172,10 @@ struct NoPendingTransactionPrecondition: PaymentPrecondition {
     func check() async -> PaymentPreconditionCheckingResult {
         let count = RawTransactionDAO.shared.unspentRawTransactionCount(types: [.transfer, .withdrawal])
         if count > 0 {
-            let delegation = UserRealizedDelegation()
+            let delegation = WalletHintViewController.UserRealizedDelegation()
             return await withCheckedContinuation { continuation in
                 DispatchQueue.main.async {
-                    delegation.completion = {
+                    delegation.onRealize = {
                         continuation.resume(with: .success(.failed(.userCancelled)))
                     }
                     let hint = WalletHintViewController(content: .waitingTransaction)
@@ -187,20 +187,6 @@ struct NoPendingTransactionPrecondition: PaymentPrecondition {
         } else {
             return .passed([])
         }
-    }
-    
-    private class UserRealizedDelegation: WalletHintViewControllerDelegate {
-        
-        var completion: (() -> Void)?
-        
-        func walletHintViewControllerDidRealize(_ controller: WalletHintViewController) {
-            completion?()
-        }
-        
-        func walletHintViewControllerWantsContactSupport(_ controller: WalletHintViewController) {
-            
-        }
-        
     }
     
 }

@@ -100,6 +100,7 @@ extension UTXOService {
         case success(OutputCollection)
         case insufficientBalance
         case maxSpendingCountExceeded
+        case outputNotConfirmed
     }
     
     public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
@@ -108,6 +109,9 @@ extension UTXOService {
         let hasMoreUnspentOutput = unspentOutputs.count > maxSpendingOutputsCount
         if hasMoreUnspentOutput {
             unspentOutputs.removeLast()
+        }
+        if unspentOutputs.contains(where: { !$0.isConfirmed }) {
+            return .outputNotConfirmed
         }
         
         var outputs: [Output] = []

@@ -65,6 +65,9 @@ extension AppGroupUserDefaults {
             case chatFontSize = "chat_font_size"
             case useSystemFont = "use_system_font"
             case exploreSegmentIndex = "explore_segment_index"
+            
+            case collectibleContent = "collectible_content"
+            case collectibleOrdering = "collectible_order"
         }
         
         public static let version = 32
@@ -255,6 +258,12 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.exploreSegmentIndex, defaultValue: 0)
         public static var exploreSegmentIndex: Int
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.collectibleContent, defaultValue: .item)
+        public static var collectibleContent: CollectibleDisplayContent
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.collectibleOrdering, defaultValue: .recent)
+        public static var collectibleOrdering: CollectibleDisplayOrdering
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

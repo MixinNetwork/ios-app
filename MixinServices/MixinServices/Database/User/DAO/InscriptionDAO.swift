@@ -3,22 +3,6 @@ import GRDB
 
 public final class InscriptionDAO: UserDatabaseDAO {
     
-    public enum Ordering {
-        
-        case recent
-        case alphabetical
-        
-        var sql: String {
-            switch self {
-            case .recent:
-                InscriptionDAO.SQL.sequenceOrder
-            case .alphabetical:
-                InscriptionDAO.SQL.nameOrder
-            }
-        }
-        
-    }
-    
     private enum SQL {
         
         static let selector = """
@@ -36,6 +20,15 @@ public final class InscriptionDAO: UserDatabaseDAO {
         
         static let sequenceOrder = "\nORDER BY o.sequence DESC"
         static let nameOrder = "\nORDER BY c.name ASC, o.sequence DESC"
+        
+        static func ordering(from ordering: CollectibleDisplayOrdering) -> String {
+            switch ordering {
+            case .recent:
+                sequenceOrder
+            case .alphabetical:
+                nameOrder
+            }
+        }
         
     }
     
@@ -63,7 +56,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
         db.select(with: SQL.selector + " AND o.inscription_hash = ?", arguments: [hash])
     }
     
-    public func allInscriptionOutputs(collectionHash: String? = nil, sortedBy order: Ordering) -> [InscriptionOutput] {
+    public func allInscriptionOutputs(collectionHash: String? = nil, sortedBy order: CollectibleDisplayOrdering) -> [InscriptionOutput] {
         var sql = SQL.selector + " AND o.inscription_hash IS NOT NULL"
         let arguments: StatementArguments
         if let collectionHash {
@@ -72,7 +65,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
         } else {
             arguments = StatementArguments()
         }
-        sql += order.sql
+        sql += SQL.ordering(from: order)
         return db.select(with: sql, arguments: arguments)
     }
     
@@ -89,7 +82,7 @@ public final class InscriptionDAO: UserDatabaseDAO {
 
 extension InscriptionDAO {
     
-    public func allCollections(sortedBy order: Ordering) -> [InscriptionCollectionPreview] {
+    public func allCollections(sortedBy order: CollectibleDisplayOrdering) -> [InscriptionCollectionPreview] {
         let sql = """
             SELECT c.collection_hash, c.name, c.icon_url, c.description,
                 count(i.inscription_hash) AS inscription_count, o.asset
@@ -99,7 +92,7 @@ extension InscriptionDAO {
             WHERE o.state = 'unspent'
             GROUP BY c.collection_hash
         """
-        return db.select(with: sql + order.sql)
+        return db.select(with: sql + SQL.ordering(from: order))
     }
     
     public func collectionExists(hash: String) -> Bool {

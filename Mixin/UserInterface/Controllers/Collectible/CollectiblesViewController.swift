@@ -3,11 +3,6 @@ import MixinServices
 
 final class CollectiblesViewController: UIViewController {
     
-    private enum Content {
-        case item
-        case collection
-    }
-    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var contentSwitchWrapperView: UIView!
@@ -22,10 +17,10 @@ final class CollectiblesViewController: UIViewController {
     private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
     
+    private var order = AppGroupUserDefaults.User.collectibleOrdering
+    private var content = AppGroupUserDefaults.User.collectibleContent
     private var items: [InscriptionOutput] = []
     private var collections: [InscriptionCollectionPreview] = []
-    private var order: InscriptionDAO.Ordering = .recent
-    private var content: Content = .item
     private var lastLayoutWidth: CGFloat?
     
     override func viewDidLoad() {
@@ -34,7 +29,8 @@ final class CollectiblesViewController: UIViewController {
         contentSwitchWrapperView.layer.cornerRadius = 19
         contentSwitchWrapperView.layer.borderWidth = 1
         contentSwitchWrapperView.layer.masksToBounds = true
-        showItemButton.isHighlighted = true
+        updateContentSelection()
+        updateOrderingSelection()
         sortButton.layer.cornerRadius = 19
         sortButton.layer.borderWidth = 1
         sortButton.layer.masksToBounds = true
@@ -129,15 +125,17 @@ final class CollectiblesViewController: UIViewController {
     }
     
     @IBAction func showItems(_ sender: Any) {
-        itemImageView.tintColor = R.color.theme()!
-        collectionImageView.tintColor = R.color.icon_tint()!
-        show(content: .item)
+        content = .item
+        AppGroupUserDefaults.User.collectibleContent = .item
+        updateContentSelection()
+        reloadData()
     }
     
     @IBAction func showCollections(_ sender: Any) {
-        itemImageView.tintColor = R.color.icon_tint()!
-        collectionImageView.tintColor = R.color.theme()!
-        show(content: .collection)
+        content = .collection
+        AppGroupUserDefaults.User.collectibleContent = .collection
+        updateContentSelection()
+        reloadData()
     }
     
     func cancelSearching(animated: Bool) {
@@ -216,19 +214,10 @@ final class CollectiblesViewController: UIViewController {
         }
     }
     
-    private func show(content: Content) {
-        self.content = content
-        reloadData()
-    }
-    
-    private func sort(by order: InscriptionDAO.Ordering) {
+    private func sort(by order: CollectibleDisplayOrdering) {
         self.order = order
-        switch order {
-        case .recent:
-            sortButton.setTitle(R.string.localizable.recent(), for: .normal)
-        case .alphabetical:
-            sortButton.setTitle(R.string.localizable.alphabetical(), for: .normal)
-        }
+        AppGroupUserDefaults.User.collectibleOrdering = order
+        updateOrderingSelection()
         reloadData()
     }
     
@@ -238,6 +227,26 @@ final class CollectiblesViewController: UIViewController {
             .resolvedColor(with: traitCollection)
             .cgColor
         sortButton.updateColors()
+    }
+    
+    private func updateContentSelection() {
+        switch content {
+        case .item:
+            itemImageView.tintColor = R.color.theme()!
+            collectionImageView.tintColor = R.color.icon_tint()!
+        case .collection:
+            itemImageView.tintColor = R.color.icon_tint()!
+            collectionImageView.tintColor = R.color.theme()!
+        }
+    }
+    
+    private func updateOrderingSelection() {
+        switch order {
+        case .recent:
+            sortButton.setTitle(R.string.localizable.recent(), for: .normal)
+        case .alphabetical:
+            sortButton.setTitle(R.string.localizable.alphabetical(), for: .normal)
+        }
     }
     
 }

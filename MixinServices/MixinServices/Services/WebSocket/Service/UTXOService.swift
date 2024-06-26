@@ -110,15 +110,15 @@ extension UTXOService {
         if hasMoreUnspentOutput {
             unspentOutputs.removeLast()
         }
-        if unspentOutputs.contains(where: { !$0.isConfirmed }) {
-            return .outputNotConfirmed
-        }
         
         var outputs: [Output] = []
         var outputsAmount: Decimal = 0
         outputs.reserveCapacity(unspentOutputs.count)
         while outputsAmount < amount, !unspentOutputs.isEmpty {
             let spending = unspentOutputs.removeFirst()
+            if !spending.isConfirmed {
+                return .outputNotConfirmed
+            }
             outputs.append(spending)
             if let spendingAmount = Decimal(string: spending.amount, locale: .enUSPOSIX) {
                 outputsAmount += spendingAmount

@@ -35,15 +35,12 @@ public final class SyncOutputsJob: AsynchronousJob {
             var outputs: [Output] = []
             
             var sequence: Int?
-            let conflictResolution: GRDB.Database.ConflictResolution
-            if AppGroupUserDefaults.Wallet.areInscriptionOutputsReloaded {
+            if AppGroupUserDefaults.Wallet.areOutputSequencesReloaded {
                 sequence = OutputDAO.shared.latestOutputSequence()
-                conflictResolution = .ignore
                 Logger.general.info(category: "SyncOutputs", message: "Load from sequence: \(sequence)")
             } else {
                 sequence = nil
-                conflictResolution = .replace
-                Logger.general.info(category: "SyncOutputs", message: "Reload for inscriptions")
+                Logger.general.info(category: "SyncOutputs", message: "Reload for sequences")
             }
             do {
                 repeat {
@@ -86,7 +83,7 @@ public final class SyncOutputsJob: AsynchronousJob {
                         ConcurrentJobQueue.shared.addJob(job: job)
                     }
                     
-                    OutputDAO.shared.insert(outputs: outputs, onConflict: conflictResolution) { db in
+                    OutputDAO.shared.insertOrReplace(outputs: outputs, onConflict: .replaceIfNotSigned) { db in
                         let kernelAssetIDs = Set(outputs.map(\.asset))
                         for kernelAssetID in kernelAssetIDs {
                             if let assetID = assetIDs[kernelAssetID] {
@@ -101,7 +98,7 @@ public final class SyncOutputsJob: AsynchronousJob {
                     Logger.general.info(category: "SyncOutputs", message: "Saved \(outputs.count) outputs")
                     sequence = lastOutput.sequence
                 } while outputs.count >= limit && LoginManager.shared.isLoggedIn
-                AppGroupUserDefaults.Wallet.areInscriptionOutputsReloaded = true
+                AppGroupUserDefaults.Wallet.areOutputSequencesReloaded = true
                 Logger.general.info(category: "SyncOutputs", message: "All outputs are synced")
             } catch MixinAPIResponseError.unauthorized {
                 Logger.general.error(category: "SyncOutputs", message: "Unauthorized, stop syncing")

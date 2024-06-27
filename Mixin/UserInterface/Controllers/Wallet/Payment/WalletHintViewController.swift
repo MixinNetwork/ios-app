@@ -8,6 +8,20 @@ protocol WalletHintViewControllerDelegate: AnyObject {
 
 final class WalletHintViewController: UIViewController {
     
+    class UserRealizedDelegation: WalletHintViewControllerDelegate {
+        
+        var onRealize: (() -> Void)?
+        
+        func walletHintViewControllerDidRealize(_ controller: WalletHintViewController) {
+            onRealize?()
+        }
+        
+        func walletHintViewControllerWantsContactSupport(_ controller: WalletHintViewController) {
+            
+        }
+        
+    }
+    
     enum Content {
         case addressUpdated(TokenItem)
         case withdrawSuspended(TokenItem)

@@ -16,10 +16,11 @@ extension AppGroupUserDefaults {
             
             case currencyCode = "currency_code"
             
-            // When user receives an output with `inscription_hash` with previous versions,
-            // the hash will not be saved due to lack of related processing logic
-            // Those outputs must be synced again to see if there's a hash
-            case inscriptionOutputsReloaded = "inscription_outputs_reloaded"
+            /*
+             The new transfer process requires using Outputs with a non-zero `sequence`. For locally created Outputs, the `sequence` is always zero, so there will be many unusable outputs in the database when user upgrades to this version, necessitating a full refresh. This flag is used to indicate whether the full refresh has been completed.
+             Additionally, there was previously a variable called `inscriptionOutputsReloaded` used to indicate the result of a full refresh after adding the inscription_hash to Outputs. Since the update to `sequence` now requires another full refresh, this previous flag is no longer relevant (as only one refresh is needed), and thus it has been removed.
+             */
+            case outputSequencesReloaded = "output_sequences_reloaded"
         }
         
         @Default(namespace: .wallet, key: Key.lastPinVerifiedDate, defaultValue: nil)
@@ -43,8 +44,8 @@ extension AppGroupUserDefaults {
         @Default(namespace: .wallet, key: Key.currencyCode, defaultValue: nil)
         public static var currencyCode: String?
         
-        @Default(namespace: .wallet, key: Key.inscriptionOutputsReloaded, defaultValue: false)
-        public static var areInscriptionOutputsReloaded: Bool
+        @Default(namespace: .wallet, key: Key.outputSequencesReloaded, defaultValue: false)
+        public static var areOutputSequencesReloaded: Bool
         
         internal static func migrate() {
             lastPinVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

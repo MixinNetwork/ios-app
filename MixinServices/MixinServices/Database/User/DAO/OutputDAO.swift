@@ -3,6 +3,11 @@ import GRDB
 
 public final class OutputDAO: UserDatabaseDAO {
     
+    public enum ConflictResolution {
+        case alwaysReplace
+        case replaceIfNotSigned
+    }
+    
     public static let shared = OutputDAO()
     
     public static let didSignOutputNotification = Notification.Name("one.mixin.service.OutputDAO.DidSign")
@@ -22,7 +27,16 @@ public final class OutputDAO: UserDatabaseDAO {
     }
     
     public func unspentOutputs(asset: String, limit: Int) -> [Output] {
-        db.select(with: "SELECT * FROM outputs WHERE state = 'unspent' AND asset = ? AND inscription_hash IS NULL ORDER BY sequence ASC LIMIT ?", arguments: [asset, limit])
+        let sql = """
+            SELECT *
+            FROM outputs
+            WHERE state = 'unspent' 
+                AND asset = ?
+                AND inscription_hash IS NULL
+            ORDER BY (CASE WHEN sequence == 0 THEN 0 ELSE 1 END) DESC, sequence ASC
+            LIMIT ?
+        """
+        return db.select(with: sql, arguments: [asset, limit])
     }
     
     public func unspentOutputs(asset: String, after sequence: Int?, limit: Int, db: GRDB.Database) throws -> [Output] {
@@ -61,15 +75,30 @@ public final class OutputDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: StatementArguments(arguments))
     }
     
-    public func insert(
+    public func insertOrReplace(
         outputs: [Output],
-        onConflict resolution: GRDB.Database.ConflictResolution,
+        onConflict resolution: ConflictResolution,
         alongsideTransaction work: ((GRDB.Database) throws -> Void)?
     ) {
         db.write { db in
-            try outputs.insert(db, onConflict: resolution)
+            let outputsToSave: [Output]
+            switch resolution {
+            case .alwaysReplace:
+                outputsToSave = outputs
+            case .replaceIfNotSigned:
+                let signedOutputIDs: Set<String> = try {
+                    let query: GRDB.SQL = "SELECT output_id FROM outputs WHERE output_id IN \(outputs.map(\.id)) AND state = 'signed'"
+                    let (sql, arguments) = try query.build(db)
+                    let ids = try String.fetchAll(db, sql: sql, arguments: arguments)
+                    return Set(ids)
+                }()
+                outputsToSave = outputs.filter { output in
+                    !signedOutputIDs.contains(output.id)
+                }
+            }
+            try outputsToSave.save(db)
             try work?(db)
-            if outputs.contains(where: { $0.inscriptionHash != nil }) {
+            if outputsToSave.contains(where: { $0.inscriptionHash != nil }) {
                 db.afterNextTransaction { _ in
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: Self.didInsertInscriptionOutputsNotification, object: self)

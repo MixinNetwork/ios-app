@@ -63,8 +63,8 @@ public final class SyncTokenOutputsJob: AsynchronousJob {
                     guard let lastOutput = outputs.last else {
                         break
                     }
-                    OutputDAO.shared.insert(outputs: outputs, onConflict: .replace) { db in
-                        try UTXOService.shared.updateBalance(assetID: assetID, 
+                    OutputDAO.shared.insertOrReplace(outputs: outputs, onConflict: .alwaysReplace) { db in
+                        try UTXOService.shared.updateBalance(assetID: assetID,
                                                              kernelAssetID: kernelAssetID,
                                                              db: db)
                     }

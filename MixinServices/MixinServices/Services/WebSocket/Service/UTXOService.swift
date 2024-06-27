@@ -100,6 +100,7 @@ extension UTXOService {
         case success(OutputCollection)
         case insufficientBalance
         case maxSpendingCountExceeded
+        case outputNotConfirmed
     }
     
     public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
@@ -115,6 +116,9 @@ extension UTXOService {
         outputs.reserveCapacity(unspentOutputs.count)
         while outputsAmount < amount, !unspentOutputs.isEmpty {
             let spending = unspentOutputs.removeFirst()
+            if !spending.isConfirmed {
+                return .outputNotConfirmed
+            }
             outputs.append(spending)
             if let spendingAmount = Decimal(string: spending.amount, locale: .enUSPOSIX) {
                 outputsAmount += spendingAmount

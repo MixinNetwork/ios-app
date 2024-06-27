@@ -55,7 +55,7 @@ final class SafeSnapshotViewController: RowListViewController {
                 switch inscription.inscriptionContent {
                 case .image, .none:
                     break
-                case .text(let url):
+                case let .text(collectionIconURL, textContentURL):
                     let dimension = round(iconViewDimensionConstraint.constant / 70 * 40)
                     let textContentView = TextInscriptionContentView(iconDimension: dimension, spacing: 4)
                     textContentView.label.numberOfLines = 1
@@ -68,7 +68,8 @@ final class SafeSnapshotViewController: RowListViewController {
                         make.bottom.lessThanOrEqualTo(iconView).offset(-8)
                         make.centerY.equalTo(iconView)
                     }
-                    textContentView.reloadData(with: url)
+                    textContentView.reloadData(collectionIconURL: collectionIconURL,
+                                               textContentURL: textContentURL)
                 }
             } else {
                 iconView.setIcon(content: snapshot)

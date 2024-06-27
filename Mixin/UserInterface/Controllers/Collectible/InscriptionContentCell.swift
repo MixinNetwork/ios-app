@@ -9,11 +9,14 @@ final class InscriptionContentCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        textContentView?.isHidden = true
+        if let textContentView {
+            textContentView.prepareForReuse()
+            textContentView.isHidden = true
+        }
         contentImageView.sd_cancelCurrentImageLoad()
     }
     
-    func setTextContent(with url: URL) {
+    func setTextContent(collectionIconURL: URL, textContentURL: URL) {
         let textContentView: TextInscriptionContentView
         if let view = self.textContentView {
             view.isHidden = false
@@ -34,7 +37,8 @@ final class InscriptionContentCell: UITableViewCell {
                 make.centerY.equalTo(contentImageView)
             }
         }
-        textContentView.reloadData(with: url)
+        textContentView.reloadData(collectionIconURL: collectionIconURL,
+                                   textContentURL: textContentURL)
     }
     
 }

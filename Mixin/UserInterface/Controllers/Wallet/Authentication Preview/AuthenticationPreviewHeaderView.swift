@@ -11,6 +11,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     private weak var imageView: UIImageView?
     private weak var assetIconView: BadgeIconView?
     private weak var progressView: AuthenticationProgressView?
+    private weak var textContentView: TextInscriptionContentView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -69,6 +70,46 @@ final class AuthenticationPreviewHeaderView: UIView {
             self.progressView = progressView
         }
         progressView.setProgress(progress)
+    }
+    
+    func setIcon(collectionIconURL: URL, textContentURL: URL) {
+        let imageView: UIImageView
+        if let view = self.imageView, view.isDescendant(of: iconWrapperView) {
+            imageView = view
+            imageView.sd_cancelCurrentImageLoad()
+        } else {
+            imageView = UIImageView()
+            imageView.layer.cornerRadius = 12
+            imageView.layer.masksToBounds = true
+            iconWrapperView.addSubview(imageView)
+            imageView.snp.makeEdgesEqualToSuperview()
+            self.imageView = imageView
+        }
+        imageView.image = R.image.collectible_text_background()
+        
+        let textContentView: TextInscriptionContentView
+        if let view = self.textContentView, view.isDescendant(of: iconWrapperView) {
+            textContentView = view
+            textContentView.prepareForReuse()
+        } else {
+            textContentView = TextInscriptionContentView(iconDimension: 40, spacing: 4)
+            textContentView.label.numberOfLines = 1
+            textContentView.label.font = .systemFont(ofSize: 8, weight: .semibold)
+            iconWrapperView.addSubview(textContentView)
+            textContentView.snp.makeConstraints { make in
+                let inset = UIEdgeInsets(top: 8, left: 6, bottom: 8, right: 6)
+                make.edges.equalToSuperview().inset(inset)
+            }
+            self.textContentView = textContentView
+        }
+        textContentView.reloadData(collectionIconURL: collectionIconURL,
+                                   textContentURL: textContentURL)
+        
+        for view in iconWrapperView.subviews {
+            if view != imageView && view != textContentView {
+                view.removeFromSuperview()
+            }
+        }
     }
     
 }

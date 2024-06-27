@@ -127,11 +127,11 @@ extension SnapshotCell {
         var content: InscriptionContent? {
             didSet {
                 switch content {
-                case .image(let url):
+                case let .image(url):
                     imageView.contentMode = .scaleAspectFill
                     imageView.sd_setImage(with: url)
                     textContentView?.isHidden = true
-                case .text(let url):
+                case let .text(collectionIconURL, textContentURL):
                     imageView.contentMode = .scaleToFill
                     imageView.image = R.image.collectible_text_background()
                     let contentView: TextInscriptionContentView
@@ -148,7 +148,8 @@ extension SnapshotCell {
                             make.edges.equalToSuperview().inset(inset)
                         }
                     }
-                    contentView.reloadData(with: url)
+                    contentView.reloadData(collectionIconURL: collectionIconURL,
+                                           textContentURL: textContentURL)
                 case .none:
                     imageView.contentMode = .scaleAspectFit
                     imageView.image = R.image.inscription_intaglio()
@@ -182,6 +183,7 @@ extension SnapshotCell {
         
         func prepareForReuse() {
             imageView.sd_cancelCurrentImageLoad()
+            textContentView?.prepareForReuse()
         }
         
         private func loadSubview() {

@@ -13,12 +13,14 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
             u.full_name AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentFullname.rawValue),
             u.avatar_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentAvatarURL.rawValue),
             ii.content_type AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionContentType.rawValue),
-            ii.content_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionContentURL.rawValue)
+            ii.content_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionContentURL.rawValue),
+            ic.icon_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionCollectionIconURL.rawValue)
         FROM safe_snapshots s
             LEFT JOIN tokens t ON s.asset_id = t.asset_id
             LEFT JOIN users u ON s.opponent_id = u.user_id
             LEFT JOIN inscription_items ii ON s.inscription_hash = ii.inscription_hash
-    
+            LEFT JOIN inscription_collections ic ON ii.collection_hash = ic.collection_hash
+        
     """
     private static let queryWithIDSQL = querySQL + "WHERE s.snapshot_id = ?"
     

@@ -37,14 +37,3 @@ extension Inscription: TableRecord, PersistableRecord {
     
 }
 
-extension Inscription: InscriptionContentProvider {
-    
-    public var inscriptionContentType: String? {
-        contentType
-    }
-    
-    public var inscriptionContentURL: String? {
-        contentURL
-    }
-    
-}

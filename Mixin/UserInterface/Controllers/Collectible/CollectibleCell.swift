@@ -22,6 +22,7 @@ final class CollectibleCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         contentImageView.sd_cancelCurrentImageLoad()
+        textContentView?.prepareForReuse()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -37,7 +38,7 @@ final class CollectibleCell: UICollectionViewCell {
             contentImageView.contentMode = .scaleAspectFill
             contentImageView.sd_setImage(with: url)
             textContentView?.isHidden = true
-        case let .text(url):
+        case let .text(collectionIconURL, textContentURL):
             contentImageView.contentMode = .scaleToFill
             contentImageView.image = R.image.collectible_text_background()
             let textContentView: TextInscriptionContentView
@@ -50,14 +51,23 @@ final class CollectibleCell: UICollectionViewCell {
                 textContentView.label.font = .systemFont(ofSize: 14, weight: .semibold)
                 self.textContentView = textContentView
                 contentView.addSubview(textContentView)
+                
+                let topGuide = UILayoutGuide()
+                contentView.addLayoutGuide(topGuide)
+                topGuide.snp.makeConstraints { make in
+                    make.top.leading.trailing.equalTo(contentImageView)
+                    make.height.equalTo(contentImageView).multipliedBy(37.0 / 160.0)
+                }
+                
                 textContentView.snp.makeConstraints { make in
-                    make.top.equalTo(contentImageView).offset(36)
+                    make.top.equalTo(topGuide.snp.bottom)
                     make.leading.equalTo(contentImageView).offset(24)
                     make.trailing.equalTo(contentImageView).offset(-24)
-                    make.bottom.lessThanOrEqualTo(contentImageView).offset(-36)
+                    make.bottom.lessThanOrEqualTo(contentImageView)
                 }
             }
-            textContentView.reloadData(with: url)
+            textContentView.reloadData(collectionIconURL: collectionIconURL,
+                                       textContentURL: textContentURL)
         case .none:
             contentImageView.contentMode = .center
             contentImageView.image = R.image.inscription_intaglio()

@@ -32,11 +32,11 @@ final class InscriptionContentView: UIView {
     func reloadData(with inscription: InscriptionItem?) {
         if let inscription {
             switch inscription.inscriptionContent {
-            case .image(let url):
+            case let .image(url):
                 imageView.contentMode = .scaleAspectFill
                 imageView.sd_setImage(with: url)
                 textContentView?.isHidden = true
-            case .text(let url):
+            case let .text(collectionIconURL, textContentURL):
                 imageView.contentMode = .scaleToFill
                 imageView.image = R.image.collectible_text_background()
                 let textContentView: TextInscriptionContentView
@@ -55,7 +55,8 @@ final class InscriptionContentView: UIView {
                         make.trailing.equalTo(imageView).offset(-10)
                     }
                 }
-                textContentView.reloadData(with: url)
+                textContentView.reloadData(collectionIconURL: collectionIconURL,
+                                           textContentURL: textContentURL)
             case .none:
                 imageView.contentMode = .center
                 imageView.image = R.image.inscription_intaglio()

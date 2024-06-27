@@ -9,6 +9,7 @@ public final class SafeSnapshotItem: SafeSnapshot, InscriptionContentProvider {
         case opponentAvatarURL = "opponent_avatar_url"
         case inscriptionContentType = "inscription_content_type"
         case inscriptionContentURL = "inscription_content_url"
+        case inscriptionCollectionIconURL = "inscription_collection_icon"
     }
     
     public let tokenSymbol: String?
@@ -19,6 +20,7 @@ public final class SafeSnapshotItem: SafeSnapshot, InscriptionContentProvider {
     
     public let inscriptionContentType: String?
     public let inscriptionContentURL: String?
+    public var inscriptionCollectionIconURL: String?
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: JoinedQueryCodingKeys.self)
@@ -31,6 +33,7 @@ public final class SafeSnapshotItem: SafeSnapshot, InscriptionContentProvider {
         
         self.inscriptionContentType = try container.decodeIfPresent(String.self, forKey: .inscriptionContentType)
         self.inscriptionContentURL = try container.decodeIfPresent(String.self, forKey: .inscriptionContentURL)
+        self.inscriptionCollectionIconURL = try container.decodeIfPresent(String.self, forKey: .inscriptionCollectionIconURL)
         
         try super.init(from: decoder)
     }

@@ -265,14 +265,14 @@ extension ShareInscriptionViewController {
     
     private func reloadData(with inscription: InscriptionItem) {
         switch inscription.inscriptionContent {
-        case .image(let url):
+        case let .image(url):
             backgroundImageView.isHidden = false
             backgroundImageView.sd_setImage(with: url)
             contentImageView.contentMode = .scaleAspectFill
             contentImageView.sd_setImage(with: url)
-        case .text(let url):
+        case let .text(collectionIconURL, textContentURL):
             backgroundImageView.isHidden = false
-            backgroundImageView.image = R.image.collectible_text()
+            backgroundImageView.sd_setImage(with: collectionIconURL)
             contentImageView.contentMode = .scaleToFill
             contentImageView.image = R.image.collectible_text_background()
             let textContentView = TextInscriptionContentView(iconDimension: 100, spacing: 10)
@@ -282,11 +282,14 @@ extension ShareInscriptionViewController {
             textContentView.label.minimumScaleFactor = 24 / 12
             contentView.addSubview(textContentView)
             textContentView.snp.makeConstraints { make in
-                let inset = UIEdgeInsets(top: 40, left: 30, bottom: 40, right: 30)
-                make.edges.greaterThanOrEqualTo(contentImageView).inset(inset)
-                make.center.equalTo(contentImageView)
+                make.top.greaterThanOrEqualTo(contentImageView).offset(40)
+                make.leading.equalTo(contentImageView).offset(30)
+                make.trailing.equalTo(contentImageView).offset(-30)
+                make.bottom.lessThanOrEqualTo(contentImageView).offset(-40)
+                make.centerY.equalTo(contentImageView)
             }
-            textContentView.reloadData(with: url)
+            textContentView.reloadData(collectionIconURL: collectionIconURL,
+                                       textContentURL: textContentURL)
         case .none:
             backgroundImageView.isHidden = true
             contentImageView.contentMode = .center

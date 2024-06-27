@@ -85,6 +85,10 @@ extension InscriptionItem: InstanceInitializable {
 
 extension InscriptionItem: InscriptionContentProvider {
     
+    public var inscriptionCollectionIconURL: String? {
+        collectionIconURL
+    }
+    
     public var inscriptionContentType: String? {
         contentType
     }

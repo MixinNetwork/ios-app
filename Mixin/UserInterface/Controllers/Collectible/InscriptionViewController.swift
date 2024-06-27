@@ -71,9 +71,14 @@ final class InscriptionViewController: UIViewController {
     
     @IBAction func showMoreMenu(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        if backgroundImageView.image != nil {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.set_as_avatar(), style: .default, handler: setAsAvatar(_:)))
-            sheet.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: saveToLibrary(_:)))
+        switch inscription?.inscriptionContent {
+        case .image:
+            if backgroundImageView.image != nil {
+                sheet.addAction(UIAlertAction(title: R.string.localizable.set_as_avatar(), style: .default, handler: setAsAvatar(_:)))
+                sheet.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: saveToLibrary(_:)))
+            }
+        case .text, .none:
+            break
         }
         if output != nil {
             sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_explorer(), style: .default, handler: viewOnExplorer(_:)))
@@ -104,11 +109,12 @@ final class InscriptionViewController: UIViewController {
         }
         tableView.reloadData()
         switch inscription?.inscriptionContent {
-        case .image(let url):
+        case let .image(url):
             backgroundImageView.sd_setImage(with: url)
-        case .text(let url):
-            backgroundImageView.image = R.image.collectible_text_background()
+        case let .text(collectionIconURL, _):
+            backgroundImageView.sd_setImage(with: collectionIconURL)
         case nil:
+            backgroundImageView.sd_cancelCurrentImageLoad()
             backgroundImageView.image = nil
         }
     }
@@ -206,10 +212,11 @@ extension InscriptionViewController: UITableViewDataSource {
                 case .image(let url):
                     cell.contentImageView.contentMode = .scaleAspectFill
                     cell.contentImageView.sd_setImage(with: url)
-                case .text(let url):
+                case let .text(collectionIconURL, textContentURL):
                     cell.contentImageView.contentMode = .scaleToFill
                     cell.contentImageView.image = R.image.collectible_text_background()
-                    cell.setTextContent(with: url)
+                    cell.setTextContent(collectionIconURL: collectionIconURL,
+                                        textContentURL: textContentURL)
                 }
             } else {
                 cell.placeholderImageView.isHidden = false

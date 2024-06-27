@@ -43,23 +43,17 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         case .transfer, .consolidation:
             tableHeaderView.setIcon(token: token)
         case .inscription(let context):
-            tableHeaderView.setIcon { imageView in
-                imageView.layer.cornerRadius = 12
-                switch context.item.inscriptionContent {
-                case .image(let url):
+            switch context.item.inscriptionContent {
+            case let .image(url):
+                tableHeaderView.setIcon { imageView in
+                    imageView.layer.cornerRadius = 12
                     imageView.sd_setImage(with: url, placeholderImage: nil)
-                case .text(let url):
-                    imageView.image = R.image.collectible_text_background()
-                    let textContentView = TextInscriptionContentView(iconDimension: 40, spacing: 4)
-                    textContentView.label.numberOfLines = 1
-                    textContentView.label.font = .systemFont(ofSize: 8, weight: .semibold)
-                    tableHeaderView.addSubview(textContentView)
-                    textContentView.snp.makeConstraints { make in
-                        let inset = UIEdgeInsets(top: 8, left: 6, bottom: 8, right: 6)
-                        make.edges.equalTo(imageView).inset(inset)
-                    }
-                    textContentView.reloadData(with: url)
-                case .none:
+                }
+            case let .text(collectionIconURL, textContentURL):
+                tableHeaderView.setIcon(collectionIconURL: collectionIconURL, textContentURL: textContentURL)
+            case .none:
+                tableHeaderView.setIcon { imageView in
+                    imageView.layer.cornerRadius = 12
                     imageView.backgroundColor = R.color.sticker_button_background_disabled()
                     imageView.image = R.image.inscription_intaglio()
                 }

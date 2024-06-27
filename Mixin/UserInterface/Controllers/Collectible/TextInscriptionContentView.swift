@@ -8,6 +8,8 @@ final class TextInscriptionContentView: UIView {
     private let iconDimension: CGFloat
     private let spacing: CGFloat
     private let imageView = UIImageView()
+    private let imageMaskView = UIImageView(image: R.image.collection_token_mask())
+    private var lastTextContentURL: URL?
     
     private weak var textContentRequest: Request?
     
@@ -25,19 +27,35 @@ final class TextInscriptionContentView: UIView {
         loadSubviews()
     }
     
-    func reloadData(with url: URL) {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageMaskView.frame = imageView.bounds
+    }
+    
+    func prepareForReuse() {
+        imageView.sd_cancelCurrentImageLoad()
         textContentRequest?.cancel()
-        label.text = nil
-        textContentRequest = InscriptionContentSession
-            .request(url)
-            .responseString() { [weak label] response in
-                switch response.result {
-                case let .success(content):
-                    label?.text = content
-                case .failure:
-                    break
+    }
+    
+    func reloadData(collectionIconURL: URL, textContentURL: URL) {
+        imageView.sd_setImage(with: collectionIconURL)
+        if textContentURL != lastTextContentURL {
+            label.text = nil
+            textContentRequest = InscriptionContentSession
+                .request(textContentURL)
+                .responseString() { [weak self] response in
+                    switch response.result {
+                    case let .success(content):
+                        guard let self else {
+                            return
+                        }
+                        self.lastTextContentURL = textContentURL
+                        self.label.text = content
+                    case .failure:
+                        break
+                    }
                 }
-            }
+        }
     }
     
     private func loadSubviews() {
@@ -47,7 +65,10 @@ final class TextInscriptionContentView: UIView {
             make.width.height.equalTo(iconDimension)
         }
         imageView.contentMode = .scaleAspectFit
-        imageView.image = R.image.collectible_text()
+        
+        imageMaskView.contentMode = .scaleAspectFit
+        imageMaskView.frame = imageView.bounds
+        imageView.mask = imageMaskView
         
         label.textAlignment = .center
         label.textColor = UIColor(displayP3RgbValue: 0xFFA724)

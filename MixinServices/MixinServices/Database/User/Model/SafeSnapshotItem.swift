@@ -1,6 +1,6 @@
 import Foundation
 
-public final class SafeSnapshotItem: SafeSnapshot, InscriptionContent {
+public final class SafeSnapshotItem: SafeSnapshot, InscriptionContentProvider {
     
     enum JoinedQueryCodingKeys: String, CodingKey {
         case tokenSymbol = "token_symbol"

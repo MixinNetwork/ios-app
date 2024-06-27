@@ -10,6 +10,8 @@ final class SafeSnapshotViewController: RowListViewController {
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
+    @IBOutlet weak var iconViewDimensionConstraint: ScreenHeightCompatibleLayoutConstraint!
+    
     private let messageID: String?
     
     private var token: TokenItem
@@ -50,6 +52,24 @@ final class SafeSnapshotViewController: RowListViewController {
         if snapshot.isInscription {
             if let inscription {
                 iconView.setIcon(content: inscription)
+                switch inscription.inscriptionContent {
+                case .image, .none:
+                    break
+                case .text(let url):
+                    let dimension = round(iconViewDimensionConstraint.constant / 70 * 40)
+                    let textContentView = TextInscriptionContentView(iconDimension: dimension, spacing: 4)
+                    textContentView.label.numberOfLines = 1
+                    textContentView.label.font = .systemFont(ofSize: 8, weight: .semibold)
+                    tableHeaderView.addSubview(textContentView)
+                    textContentView.snp.makeConstraints { make in
+                        make.top.greaterThanOrEqualTo(iconView).offset(8)
+                        make.leading.equalTo(iconView).offset(15)
+                        make.trailing.equalTo(iconView).offset(-15)
+                        make.bottom.lessThanOrEqualTo(iconView).offset(-8)
+                        make.centerY.equalTo(iconView)
+                    }
+                    textContentView.reloadData(with: url)
+                }
             } else {
                 iconView.setIcon(content: snapshot)
             }

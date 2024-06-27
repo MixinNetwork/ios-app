@@ -277,6 +277,7 @@
 "content_sticker" = "[Sticker]";
 "content_transcript" = "[Transcript]";
 "content_transfer" = "[Transfer]";
+"content_type" = "Content Type";
 "content_unknown" = "[Unknown]";
 "content_video" = "[Video]";
 "content_voice" = "[Voice call]";

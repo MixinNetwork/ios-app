@@ -277,6 +277,7 @@
 "content_sticker" = "[Pegatina]";
 "content_transcript" = "[Transcripción]";
 "content_transfer" = "[Transferir]";
+"content_type" = "Content Type";
 "content_unknown" = "[Desconocido]";
 "content_video" = "[Video]";
 "content_voice" = "[Llamada de voz]";

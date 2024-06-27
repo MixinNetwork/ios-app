@@ -277,6 +277,7 @@
 "content_sticker" = "[貼紙]";
 "content_transcript" = "[聊天記錄]";
 "content_transfer" = "[轉賬]";
+"content_type" = "內容型別";
 "content_unknown" = "[未知]";
 "content_video" = "[影片]";
 "content_voice" = "[語音電話]";

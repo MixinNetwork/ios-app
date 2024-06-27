@@ -277,6 +277,7 @@
 "content_sticker" = "[Наклейка]";
 "content_transcript" = "[Расшифровка]";
 "content_transfer" = "[Передача]";
+"content_type" = "Content Type";
 "content_unknown" = "[Неизвестный]";
 "content_video" = "[Видео]";
 "content_voice" = "[Голосовой вызов]";

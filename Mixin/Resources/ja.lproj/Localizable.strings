@@ -277,6 +277,7 @@
 "content_sticker" = "[スタンプ]";
 "content_transcript" = "[メッセージ履歴]";
 "content_transfer" = "[送金]";
+"content_type" = "Content Type";
 "content_unknown" = "不明";
 "content_video" = "[動画]";
 "content_voice" = "[音声通話]";

@@ -37,7 +37,7 @@ extension Inscription: TableRecord, PersistableRecord {
     
 }
 
-extension Inscription: InscriptionContent {
+extension Inscription: InscriptionContentProvider {
     
     public var inscriptionContentType: String? {
         contentType

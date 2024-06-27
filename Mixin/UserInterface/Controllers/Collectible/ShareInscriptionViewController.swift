@@ -264,12 +264,30 @@ extension ShareInscriptionViewController {
     }
     
     private func reloadData(with inscription: InscriptionItem) {
-        if let url = inscription.inscriptionImageContentURL {
+        switch inscription.inscriptionContent {
+        case .image(let url):
             backgroundImageView.isHidden = false
             backgroundImageView.sd_setImage(with: url)
             contentImageView.contentMode = .scaleAspectFill
             contentImageView.sd_setImage(with: url)
-        } else {
+        case .text(let url):
+            backgroundImageView.isHidden = false
+            backgroundImageView.image = R.image.collectible_text()
+            contentImageView.contentMode = .scaleToFill
+            contentImageView.image = R.image.collectible_text_background()
+            let textContentView = TextInscriptionContentView(iconDimension: 100, spacing: 10)
+            textContentView.label.numberOfLines = 10
+            textContentView.label.font = .systemFont(ofSize: 24, weight: .semibold)
+            textContentView.label.adjustsFontSizeToFitWidth = true
+            textContentView.label.minimumScaleFactor = 24 / 12
+            contentView.addSubview(textContentView)
+            textContentView.snp.makeConstraints { make in
+                let inset = UIEdgeInsets(top: 40, left: 30, bottom: 40, right: 30)
+                make.edges.greaterThanOrEqualTo(contentImageView).inset(inset)
+                make.center.equalTo(contentImageView)
+            }
+            textContentView.reloadData(with: url)
+        case .none:
             backgroundImageView.isHidden = true
             contentImageView.contentMode = .center
             contentImageView.image = R.image.inscription_intaglio()

@@ -3,7 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,6 +20,7 @@
                 <outlet property="fiatMoneyValueLabel" destination="DWF-GB-gKf" id="Kam-Tx-M1u"/>
                 <outlet property="headerContentStackView" destination="u3L-Nc-1Cs" id="rrC-h1-wiq"/>
                 <outlet property="iconView" destination="rqn-Iq-NhJ" id="EXd-VY-3as"/>
+                <outlet property="iconViewDimensionConstraint" destination="d04-NQ-2rq" id="Hs5-fS-KRC"/>
                 <outlet property="symbolLabel" destination="Z0P-cq-qAP" id="Wfj-mv-oH3"/>
             </connections>
         </placeholder>

@@ -11,6 +11,7 @@ final class InscriptionViewController: UIViewController {
         case hash
         case id
         case collection
+        case contentType
     }
     
     @IBOutlet weak var backgroundImageView: UIImageView!
@@ -93,17 +94,22 @@ final class InscriptionViewController: UIViewController {
     
     private func reloadData() {
         if inscription == nil {
-            rows = [.content, .action, .hash]
+            rows = [.content, .action, .hash, .contentType]
         } else {
             if output == nil {
-                rows = [.content, .hash, .id, .collection]
+                rows = [.content, .hash, .id, .collection, .contentType]
             } else {
-                rows = [.content, .action, .hash, .id, .collection]
+                rows = [.content, .action, .hash, .id, .collection, .contentType]
             }
         }
         tableView.reloadData()
-        if let url = inscription?.inscriptionImageContentURL {
+        switch inscription?.inscriptionContent {
+        case .image(let url):
             backgroundImageView.sd_setImage(with: url)
+        case .text(let url):
+            backgroundImageView.image = R.image.collectible_text_background()
+        case nil:
+            backgroundImageView.image = nil
         }
     }
     
@@ -193,10 +199,18 @@ extension InscriptionViewController: UITableViewDataSource {
         switch row {
         case .content:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_content, for: indexPath)!
-            if let inscription {
+            if let inscription, let content = inscription.inscriptionContent {
                 cell.placeholderImageView.isHidden = true
                 cell.contentImageView.isHidden = false
-                cell.contentImageView.sd_setImage(with: inscription.inscriptionImageContentURL)
+                switch content {
+                case .image(let url):
+                    cell.contentImageView.contentMode = .scaleAspectFill
+                    cell.contentImageView.sd_setImage(with: url)
+                case .text(let url):
+                    cell.contentImageView.contentMode = .scaleToFill
+                    cell.contentImageView.image = R.image.collectible_text_background()
+                    cell.setTextContent(with: url)
+                }
             } else {
                 cell.placeholderImageView.isHidden = false
                 cell.contentImageView.isHidden = true
@@ -225,6 +239,15 @@ extension InscriptionViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.collection().uppercased()
             if let inscription {
                 cell.setContent("\(inscription.collectionName)")
+            }
+            cell.contentTextView.textColor = .white
+            cell.backgroundColor = .clear
+            return cell
+        case .contentType:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.captionLabel.text = R.string.localizable.content_type().uppercased()
+            if let inscription {
+                cell.setContent("\(inscription.contentType)")
             }
             cell.contentTextView.textColor = .white
             cell.backgroundColor = .clear

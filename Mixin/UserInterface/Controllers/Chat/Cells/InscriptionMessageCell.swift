@@ -4,8 +4,8 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
     
     let inscriptionContentView = R.nib.inscriptionContentView(withOwner: nil)!
     
-    var snapshotContentLeadingConstraint: NSLayoutConstraint!
-    var snapshotContentTrailingConstraint: NSLayoutConstraint!
+    var contentLeadingConstraint: NSLayoutConstraint!
+    var contentTrailingConstraint: NSLayoutConstraint!
     
     override func prepare() {
         super.prepare()
@@ -14,9 +14,9 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
         inscriptionContentView.snp.makeConstraints { make in
             make.top.equalTo(backgroundImageView.snp.top).offset(1)
         }
-        snapshotContentLeadingConstraint = inscriptionContentView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor)
-        snapshotContentTrailingConstraint = inscriptionContentView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor)
-        NSLayoutConstraint.activate([snapshotContentLeadingConstraint, snapshotContentTrailingConstraint])
+        contentLeadingConstraint = inscriptionContentView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor)
+        contentTrailingConstraint = inscriptionContentView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor)
+        NSLayoutConstraint.activate([contentLeadingConstraint, contentTrailingConstraint])
     }
     
     override func prepareForReuse() {
@@ -27,27 +27,9 @@ final class InscriptionMessageCell: DetailInfoMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? InscriptionMessageViewModel {
-            snapshotContentLeadingConstraint.constant = viewModel.leadingConstant
-            snapshotContentTrailingConstraint.constant = viewModel.trailingConstant
-            inscriptionContentView.imageView.image = R.image.inscription_intaglio()
-            inscriptionContentView.imageView.contentMode = .center
-            if let inscription = viewModel.message.inscription {
-                if let url = inscription.inscriptionImageContentURL {
-                    inscriptionContentView.imageView.image = nil
-                    inscriptionContentView.imageView.sd_setImage(with: url)
-                    inscriptionContentView.imageView.contentMode = .scaleAspectFill
-                }
-                inscriptionContentView.nameLabel.text = inscription.collectionName
-                inscriptionContentView.sequenceLabel.text = inscription.sequenceRepresentation
-                inscriptionContentView.hashView.content = inscription.inscriptionHash
-                inscriptionContentView.iconView.sd_setImage(with: URL(string: inscription.collectionIconURL))
-                inscriptionContentView.iconView.alpha = 1
-            } else {
-                inscriptionContentView.nameLabel.text = ""
-                inscriptionContentView.sequenceLabel.text = ""
-                inscriptionContentView.hashView.content = nil
-                inscriptionContentView.iconView.alpha = 0
-            }
+            contentLeadingConstraint.constant = viewModel.leadingConstant
+            contentTrailingConstraint.constant = viewModel.trailingConstant
+            inscriptionContentView.reloadData(with: viewModel.message.inscription)
         }
     }
     

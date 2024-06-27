@@ -686,6 +686,7 @@
 		9401A6072BDAA74A00679686 /* Web3AccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6052BDAA74A00679686 /* Web3AccountCell.swift */; };
 		9401A6082BDAA74A00679686 /* Web3AccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9401A6062BDAA74A00679686 /* Web3AccountCell.xib */; };
 		9401A6B82BDC771A00679686 /* Web3TransferableToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */; };
+		9402A2912C2B7F67006E71FA /* InscriptionContentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */; };
 		94031D712C1C5B41007E53BC /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94031D702C1C5B41007E53BC /* SafeURL.swift */; };
 		94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */; };
 		94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */; };
@@ -817,6 +818,7 @@
 		944ED8D22646535B00C97215 /* WebContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8D12646535B00C97215 /* WebContentView.xib */; };
 		944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */; };
 		945278982626BCD600023A6C /* HighlightableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945278972626BCD600023A6C /* HighlightableButton.swift */; };
+		9452D39F2C2C6E5800A61372 /* TextInscriptionContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9452D39E2C2C6E5800A61372 /* TextInscriptionContentView.swift */; };
 		9455EA082AFE598E00C3FD3C /* WithdrawFeeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */; };
 		9455EA0D2AFE5A8500C3FD3C /* WithdrawFeeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9455EA0C2AFE5A8500C3FD3C /* WithdrawFeeView.swift */; };
 		94571E0925CC48AE001980DA /* AudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94571E0825CC48AE001980DA /* AudioSession.swift */; };
@@ -1974,6 +1976,7 @@
 		9401A6052BDAA74A00679686 /* Web3AccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AccountCell.swift; sourceTree = "<group>"; };
 		9401A6062BDAA74A00679686 /* Web3AccountCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AccountCell.xib; sourceTree = "<group>"; };
 		9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferableToken.swift; sourceTree = "<group>"; };
+		9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentSession.swift; sourceTree = "<group>"; };
 		94031D702C1C5B41007E53BC /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
 		94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersManager.swift; sourceTree = "<group>"; };
@@ -2103,6 +2106,7 @@
 		944ED8D12646535B00C97215 /* WebContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebContentView.xib; sourceTree = "<group>"; };
 		944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPopupViewController.swift; sourceTree = "<group>"; };
 		945278972626BCD600023A6C /* HighlightableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightableButton.swift; sourceTree = "<group>"; };
+		9452D39E2C2C6E5800A61372 /* TextInscriptionContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInscriptionContentView.swift; sourceTree = "<group>"; };
 		9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawFeeView.xib; sourceTree = "<group>"; };
 		9455EA0C2AFE5A8500C3FD3C /* WithdrawFeeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeView.swift; sourceTree = "<group>"; };
 		94571E0825CC48AE001980DA /* AudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSession.swift; sourceTree = "<group>"; };
@@ -3324,6 +3328,7 @@
 				94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */,
 				94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */,
 				9406F58E2C256C7900DDE060 /* CollectiblesSortButton.swift */,
+				9452D39E2C2C6E5800A61372 /* TextInscriptionContentView.swift */,
 				943BC6792BCE9A17003FA778 /* CollectiblesView.xib */,
 				943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */,
 				944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */,
@@ -3341,6 +3346,7 @@
 				52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */,
 				9412AF4C2C1AEAE00083ABB3 /* ShareInscriptionView.xib */,
 				9412AF4B2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift */,
+				9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */,
 			);
 			path = Collectible;
 			sourceTree = "<group>";
@@ -5285,6 +5291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7BF49DD320C3DBAC00A8510E /* CaptchaManager.swift in Sources */,
+				9452D39F2C2C6E5800A61372 /* TextInscriptionContentView.swift in Sources */,
 				94D4E4F82B1753FE00EE04A3 /* ModernQRCodeView.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
@@ -5779,6 +5786,7 @@
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */,
 				7CF5929627979CBB00015495 /* DeleteAccountVerifyPinWindow.swift in Sources */,
+				9402A2912C2B7F67006E71FA /* InscriptionContentSession.swift in Sources */,
 				942F472B299CDF8100528759 /* Web3SignerFactory.swift in Sources */,
 				94062C622AE8CA9100ADAE87 /* SnapshotColumnCell.swift in Sources */,
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,

@@ -105,12 +105,15 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
-    func setIcon(content: InscriptionContent) {
+    func setIcon(content: InscriptionContentProvider) {
         isBadgeHidden = true
         iconImageView.backgroundColor = .secondaryBackground
-        if let url = content.inscriptionImageContentURL {
+        switch content.inscriptionContent {
+        case .image(let url):
             iconImageView.sd_setImage(with: url)
-        } else {
+        case .text(let url):
+            iconImageView.image = R.image.collectible_text_background()
+        case .none:
             iconImageView.image = R.image.inscription_intaglio()
         }
         corner = .radius(12)

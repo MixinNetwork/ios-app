@@ -11,7 +11,7 @@ class DiagnoseViewController: SettingsTableViewController {
             SettingsRow(title: "Enable WebRTC Log", accessory: .switch(isOn: CallService.shared.isWebRTCLogEnabled)),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.clear_unused_cache(), accessory: .disclosure),
+            SettingsRow(title: "Scan Attachments", accessory: .disclosure),
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Expiration Availability", accessory: .none),
@@ -24,6 +24,9 @@ class DiagnoseViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Web3", accessory: .disclosure),
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.clear_unused_cache(), accessory: .disclosure),
         ]),
     ])
     
@@ -87,8 +90,11 @@ extension DiagnoseViewController: UITableViewDelegate {
         case (6, 0):
             let container = ContainerViewController.instance(viewController: Web3DiagnosticViewController(), title: "Web3")
             navigationController?.pushViewController(container, animated: true)
-#if DEBUG
         case (7, 0):
+            InscriptionContentSession.sessionConfiguration.urlCache?.removeAllCachedResponses()
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
+#if DEBUG
+        case (8, 0):
             let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
             navigationController?.pushViewController(container, animated: true)
 #endif

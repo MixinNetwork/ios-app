@@ -83,7 +83,7 @@ extension InscriptionItem: InstanceInitializable {
     
 }
 
-extension InscriptionItem: InscriptionContent {
+extension InscriptionItem: InscriptionContentProvider {
     
     public var inscriptionContentType: String? {
         contentType

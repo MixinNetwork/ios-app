@@ -18,7 +18,7 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     
     weak var delegate: SnapshotCellDelegate?
     
-    private var inscriptionIconView: InscriptionIconView?
+    private weak var inscriptionIconView: InscriptionIconView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -67,7 +67,7 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
                         make.width.height.equalTo(40).priority(.almostRequired)
                     }
                 }
-                inscriptionIconView.url = snapshot.inscriptionImageContentURL
+                inscriptionIconView.content = snapshot.inscriptionContent
                 self.inscriptionIconView = inscriptionIconView
             } else {
                 self.inscriptionIconView?.isHidden = true
@@ -124,18 +124,42 @@ extension SnapshotCell {
     
     private class InscriptionIconView: UIView {
         
-        var url: URL? {
+        var content: InscriptionContent? {
             didSet {
-                if let url {
-                    imageView.image = nil
+                switch content {
+                case .image(let url):
+                    imageView.contentMode = .scaleAspectFill
                     imageView.sd_setImage(with: url)
-                } else {
+                    textContentView?.isHidden = true
+                case .text(let url):
+                    imageView.contentMode = .scaleToFill
+                    imageView.image = R.image.collectible_text_background()
+                    let contentView: TextInscriptionContentView
+                    if let view = self.textContentView {
+                        view.isHidden = false
+                        contentView = view
+                    } else {
+                        contentView = TextInscriptionContentView(iconDimension: 22, spacing: 1)
+                        contentView.label.numberOfLines = 1
+                        contentView.label.font = .systemFont(ofSize: 6, weight: .semibold)
+                        addSubview(contentView)
+                        contentView.snp.makeConstraints { make in
+                            let inset = UIEdgeInsets(top: 4, left: 6, bottom: 5, right: 6)
+                            make.edges.equalToSuperview().inset(inset)
+                        }
+                    }
+                    contentView.reloadData(with: url)
+                case .none:
+                    imageView.contentMode = .scaleAspectFit
                     imageView.image = R.image.inscription_intaglio()
+                    textContentView?.isHidden = true
                 }
             }
         }
         
         private let imageView = UIImageView()
+        
+        private weak var textContentView: TextInscriptionContentView?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -148,7 +172,7 @@ extension SnapshotCell {
         }
         
         override func layoutSubviews() {
-            if url == nil {
+            if content == nil {
                 imageView.frame.size = CGSize(width: bounds.width / 2, height: bounds.height / 2)
             } else {
                 imageView.frame.size = CGSize(width: bounds.width, height: bounds.height)

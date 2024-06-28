@@ -14,6 +14,7 @@ final class CollectibleCollectionHeaderView: UICollectionReusableView {
         contentStackView.setCustomSpacing(8, after: tokenIconView)
         contentStackView.setCustomSpacing(4, after: nameLabel)
         contentStackView.setCustomSpacing(12, after: countLabel)
+        tokenIconView.layer.shadowOpacity = 0
     }
     
     func load(token: TokenItem?, collection: InscriptionCollectionPreview) {

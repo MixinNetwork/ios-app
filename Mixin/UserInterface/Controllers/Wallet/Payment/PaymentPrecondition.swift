@@ -97,11 +97,11 @@ struct DuplicationPrecondition: PaymentPrecondition {
         let trace: Trace? = switch self.operation {
         case .transfer(let opponent):
             TraceDAO.shared.getTrace(assetId: token.assetID,
-                                             amount: Token.amountString(from: tokenAmount),
-                                             opponentId: opponent.userId,
-                                             destination: nil,
-                                             tag: nil,
-                                             createdAt: createdAt)
+                                     amount: Token.amountString(from: tokenAmount),
+                                     opponentId: opponent.userId,
+                                     destination: nil,
+                                     tag: nil,
+                                     createdAt: createdAt)
         case let .withdraw(address):
             TraceDAO.shared.getTrace(assetId: token.assetID,
                                              amount: Token.amountString(from: tokenAmount),
@@ -151,12 +151,12 @@ struct LargeAmountPrecondition: PaymentPrecondition {
     
 }
 
-struct OpponentIsContactPrecondition: PaymentPrecondition {
+struct KnownOpponentPrecondition: PaymentPrecondition {
     
     let opponent: UserItem
     
     func check() async -> PaymentPreconditionCheckingResult {
-        if UserDAO.shared.isUserFriend(id: opponent.userId) {
+        if UserDAO.shared.isUserFriendOrMe(id: opponent.userId) {
             return .passed([])
         } else {
             return .passed([.notContact(opponent: opponent)])

@@ -17,11 +17,12 @@ final class InscriptionViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
+    let inscriptionHash: String
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
     
-    private let inscriptionHash: String
     private let output: Output?
     
     private lazy var traceID = UUID().uuidString.lowercased()

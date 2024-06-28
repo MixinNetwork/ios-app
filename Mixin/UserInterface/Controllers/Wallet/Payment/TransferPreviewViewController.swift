@@ -228,7 +228,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         }
         var viewControllers = navigation.viewControllers
         if let context = inscriptionContext, case .release = context.operation {
-            if viewControllers.last is InscriptionViewController {
+            if let preview = viewControllers.last as? InscriptionViewController, preview.inscriptionHash == context.item.inscriptionHash {
                 viewControllers.removeLast()
                 navigation.setViewControllers(viewControllers, animated: false)
             } else {

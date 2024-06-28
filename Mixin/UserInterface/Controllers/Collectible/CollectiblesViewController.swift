@@ -289,8 +289,7 @@ extension CollectiblesViewController: UICollectionViewDelegate {
         case .collection:
             let collection = collections[indexPath.item]
             let preview = CollectibleCollectionViewController(collection: collection)
-            let container = ContainerViewController.instance(viewController: preview, title: "")
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(preview, animated: true)
         }
     }
     

@@ -111,7 +111,7 @@ final class BadgeIconView: UIView {
         switch content.inscriptionContent {
         case .image(let url):
             iconImageView.sd_setImage(with: url)
-        case .text(let url):
+        case .text:
             iconImageView.image = R.image.collectible_text_background()
         case .none:
             iconImageView.image = R.image.inscription_intaglio()

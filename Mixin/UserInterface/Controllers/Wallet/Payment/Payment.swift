@@ -159,22 +159,16 @@ extension Payment {
         onSuccess: @MainActor @escaping (TransferPaymentOperation, [PaymentPreconditionIssue]) -> Void
     ) {
         Task {
-            var preconditions: [PaymentPrecondition]
+            let preconditions: [PaymentPrecondition]
             switch destination {
             case let .user(opponent):
                 if let context = inscriptionContext {
                     preconditions = [
                         NoPendingTransactionPrecondition(token: token),
                         AlreadyPaidPrecondition(traceID: traceID),
+                        KnownOpponentPrecondition(opponent: opponent),
+                        ReferenceValidityPrecondition(reference: reference),
                     ]
-                    switch context.operation {
-                    case .release:
-                        // Transfer to myself, checking relationship makes no sense
-                        break
-                    case .transfer:
-                        preconditions.append(OpponentIsContactPrecondition(opponent: opponent))
-                    }
-                    preconditions.append(ReferenceValidityPrecondition(reference: reference))
                 } else {
                     preconditions = [
                         NoPendingTransactionPrecondition(token: token),
@@ -187,7 +181,7 @@ extension Payment {
                         LargeAmountPrecondition(token: token,
                                                 tokenAmount: tokenAmount,
                                                 fiatMoneyAmount: fiatMoneyAmount),
-                        OpponentIsContactPrecondition(opponent: opponent),
+                        KnownOpponentPrecondition(opponent: opponent),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
                 }

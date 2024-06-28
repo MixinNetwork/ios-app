@@ -113,7 +113,7 @@
                 <constraint firstItem="0OM-lb-5R8" firstAttribute="leading" secondItem="KFW-NW-lZu" secondAttribute="leading" id="6h9-3Q-3YM"/>
                 <constraint firstItem="u3L-Nc-1Cs" firstAttribute="leading" secondItem="KFW-NW-lZu" secondAttribute="leading" constant="20" id="Hfp-EM-SpU"/>
                 <constraint firstItem="0OM-lb-5R8" firstAttribute="top" secondItem="u3L-Nc-1Cs" secondAttribute="bottom" constant="16" id="OYq-fX-8Na"/>
-                <constraint firstAttribute="trailing" secondItem="u3L-Nc-1Cs" secondAttribute="trailing" constant="20" id="Pnh-RT-FRg"/>
+                <constraint firstAttribute="trailing" secondItem="u3L-Nc-1Cs" secondAttribute="trailing" priority="999" constant="20" id="Pnh-RT-FRg"/>
                 <constraint firstAttribute="bottom" secondItem="0OM-lb-5R8" secondAttribute="bottom" id="s0h-Ae-HY6"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

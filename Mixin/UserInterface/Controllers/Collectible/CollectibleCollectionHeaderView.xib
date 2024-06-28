@@ -22,7 +22,7 @@
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gcp-aa-Dp7">
-                    <rect key="frame" x="28" y="2" width="337" height="174"/>
+                    <rect key="frame" x="28" y="2" width="337" height="158"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AUI-tL-2U0" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="137.66666666666666" y="0.0" width="62" height="58"/>
@@ -44,8 +44,8 @@
                             <color key="textColor" name="text_quaternary"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNa-nv-wIi">
-                            <rect key="frame" x="143.66666666666666" y="158" width="50" height="16"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNa-nv-wIi">
+                            <rect key="frame" x="168.66666666666666" y="158" width="0.0" height="0.0"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" name="text_tertiary"/>
                             <nil key="highlightedColor"/>

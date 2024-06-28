@@ -26,6 +26,8 @@ extension InscriptionOutput: Decodable, DatabaseColumnConvertible, MixinFetchabl
         case inscriptionSequence = "inscription_sequence"
         case inscriptionContentType = "inscription_content_type"
         case inscriptionContentURL = "inscription_content_url"
+        case inscriptionTraits = "inscription_traits"
+        case inscriptionOwner = "inscription_owner"
     }
     
     public init(from decoder: any Decoder) throws {
@@ -45,7 +47,9 @@ extension InscriptionOutput: Decodable, DatabaseColumnConvertible, MixinFetchabl
                             inscriptionHash: inscriptionHash,
                             sequence: inscriptionSequence,
                             contentType: inscriptionContentType,
-                            contentURL: inscriptionContentURL)
+                            contentURL: inscriptionContentURL,
+                            traits: try container.decodeIfPresent(String.self, forKey: .inscriptionTraits),
+                            owner: try container.decodeIfPresent(String.self, forKey: .inscriptionOwner))
         } else {
             nil
         }

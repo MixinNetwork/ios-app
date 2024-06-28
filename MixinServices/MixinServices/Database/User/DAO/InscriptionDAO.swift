@@ -11,7 +11,9 @@ public final class InscriptionDAO: UserDatabaseDAO {
                 c.icon_url AS \(InscriptionOutput.CodingKeys.collectionIconURL.rawValue),
                 i.sequence AS \(InscriptionOutput.CodingKeys.inscriptionSequence.rawValue),
                 i.content_type AS \(InscriptionOutput.CodingKeys.inscriptionContentType.rawValue),
-                i.content_url AS \(InscriptionOutput.CodingKeys.inscriptionContentURL.rawValue)
+                i.content_url AS \(InscriptionOutput.CodingKeys.inscriptionContentURL.rawValue),
+                i.traits AS \(InscriptionOutput.CodingKeys.inscriptionTraits.rawValue),
+                i.owner AS \(InscriptionOutput.CodingKeys.inscriptionOwner.rawValue)
             FROM outputs o
                 LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash

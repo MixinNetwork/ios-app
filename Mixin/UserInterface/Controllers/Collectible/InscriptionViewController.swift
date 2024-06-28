@@ -12,6 +12,8 @@ final class InscriptionViewController: UIViewController {
         case id
         case collection
         case contentType
+        case owner
+        case traits
     }
     
     @IBOutlet weak var backgroundImageView: UIImageView!
@@ -54,6 +56,7 @@ final class InscriptionViewController: UIViewController {
         tableView.register(R.nib.inscriptionActionCell)
         tableView.register(R.nib.inscriptionHashCell)
         tableView.register(R.nib.authenticationPreviewCompactInfoCell)
+        tableView.register(R.nib.inscriptionTraitsCell)
         tableView.dataSource = self
         reloadData()
         if inscription == nil {
@@ -100,12 +103,15 @@ final class InscriptionViewController: UIViewController {
     
     private func reloadData() {
         if inscription == nil {
-            rows = [.content, .action, .hash, .contentType]
+            rows = [.content, .action, .hash, .contentType, .owner]
         } else {
             if output == nil {
-                rows = [.content, .hash, .id, .collection, .contentType]
+                rows = [.content, .hash, .id, .collection, .contentType, .owner]
             } else {
-                rows = [.content, .action, .hash, .id, .collection, .contentType]
+                rows = [.content, .action, .hash, .id, .collection, .contentType, .owner]
+            }
+            if let traits = inscription?.keyValueTraits, !traits.isEmpty {
+                rows.append(.traits)
             }
         }
         tableView.reloadData()
@@ -235,30 +241,23 @@ extension InscriptionViewController: UITableViewDataSource {
             return cell
         case .id:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.id().uppercased()
-            if let inscription {
-                cell.setContent("\(inscription.sequence)")
-            }
-            cell.contentTextView.textColor = .white
-            cell.backgroundColor = .clear
+            cell.setInscriptionInfo(caption: R.string.localizable.id(), content: inscription?.sequence)
             return cell
         case .collection:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.collection().uppercased()
-            if let inscription {
-                cell.setContent("\(inscription.collectionName)")
-            }
-            cell.contentTextView.textColor = .white
-            cell.backgroundColor = .clear
+            cell.setInscriptionInfo(caption: R.string.localizable.collection(), content: inscription?.collectionName)
             return cell
         case .contentType:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.content_type().uppercased()
-            if let inscription {
-                cell.setContent("\(inscription.contentType)")
-            }
-            cell.contentTextView.textColor = .white
-            cell.backgroundColor = .clear
+            cell.setInscriptionInfo(caption: R.string.localizable.content_type(), content: inscription?.contentType)
+            return cell
+        case .owner:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.setInscriptionInfo(caption: R.string.localizable.collectible_owner(), content: inscription?.owner)
+            return cell
+        case .traits:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_traits, for: indexPath)!
+            cell.traits = inscription?.keyValueTraits ?? []
             return cell
         }
     }

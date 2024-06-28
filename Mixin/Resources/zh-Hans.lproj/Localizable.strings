@@ -217,6 +217,7 @@
 "closing_balance" = "期末余额";
 "collectible" = "藏品";
 "collectible_hash" = "藏品哈希";
+"collectible_owner" = "拥有者";
 "collectible_release_confirmation" = "分解藏品";
 "collectible_release_failed" = "分解失败";
 "collectible_release_hint" = "分解藏品可以立刻获得相应的代币，代币可转账、交易或重新铸造藏品。";
@@ -225,6 +226,7 @@
 "collectible_releasing" = "分解中";
 "collectible_releasing_description" = "正在分解藏品，请稍候。";
 "collectible_token_id" = "#%@";
+"collectible_traits" = "属性";
 "collectibles" = "藏品";
 "collection" = "合集";
 "collection_collected" = "已收藏 %d 件";

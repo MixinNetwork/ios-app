@@ -11,16 +11,20 @@ final class InscriptionViewController: UIViewController {
         case hash
         case id
         case collection
+        case contentType
+        case owner
+        case traits
     }
     
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
+    let inscriptionHash: String
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
     
-    private let inscriptionHash: String
     private let output: Output?
     
     private lazy var traceID = UUID().uuidString.lowercased()
@@ -52,6 +56,7 @@ final class InscriptionViewController: UIViewController {
         tableView.register(R.nib.inscriptionActionCell)
         tableView.register(R.nib.inscriptionHashCell)
         tableView.register(R.nib.authenticationPreviewCompactInfoCell)
+        tableView.register(R.nib.inscriptionTraitsCell)
         tableView.dataSource = self
         reloadData()
         if inscription == nil {
@@ -70,15 +75,22 @@ final class InscriptionViewController: UIViewController {
     
     @IBAction func showMoreMenu(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        if backgroundImageView.image != nil {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.set_as_avatar(), style: .default, handler: setAsAvatar(_:)))
-            sheet.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: saveToLibrary(_:)))
+        switch inscription?.inscriptionContent {
+        case .image:
+            if backgroundImageView.image != nil {
+                sheet.addAction(UIAlertAction(title: R.string.localizable.set_as_avatar(), style: .default, handler: setAsAvatar(_:)))
+                sheet.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: saveToLibrary(_:)))
+            }
+        case .text, .none:
+            break
         }
         if output != nil {
             sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_explorer(), style: .default, handler: viewOnExplorer(_:)))
         }
         sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_marketplace(), style: .default, handler: viewOnMarketplace(_:)))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.release(), style: .destructive, handler: releaseInscription(_:)))
+        if output != nil {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.release(), style: .destructive, handler: releaseInscription(_:)))
+        }
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
         present(sheet, animated: true)
     }
@@ -93,17 +105,29 @@ final class InscriptionViewController: UIViewController {
     
     private func reloadData() {
         if inscription == nil {
-            rows = [.content, .action, .hash]
+            rows = [.content, .action, .hash, .contentType]
         } else {
             if output == nil {
-                rows = [.content, .hash, .id, .collection]
+                rows = [.content, .hash, .id, .collection, .contentType]
             } else {
-                rows = [.content, .action, .hash, .id, .collection]
+                rows = [.content, .action, .hash, .id, .collection, .contentType]
             }
         }
+        if let owner = inscription?.owner, !owner.isEmpty {
+            rows.append(.owner)
+        }
+        if let traits = inscription?.nameValueTraits, !traits.isEmpty {
+            rows.append(.traits)
+        }
         tableView.reloadData()
-        if let url = inscription?.inscriptionImageContentURL {
+        switch inscription?.inscriptionContent {
+        case let .image(url):
             backgroundImageView.sd_setImage(with: url)
+        case let .text(collectionIconURL, _):
+            backgroundImageView.sd_setImage(with: collectionIconURL)
+        case nil:
+            backgroundImageView.sd_cancelCurrentImageLoad()
+            backgroundImageView.image = nil
         }
     }
     
@@ -193,10 +217,19 @@ extension InscriptionViewController: UITableViewDataSource {
         switch row {
         case .content:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_content, for: indexPath)!
-            if let inscription {
+            if let inscription, let content = inscription.inscriptionContent {
                 cell.placeholderImageView.isHidden = true
                 cell.contentImageView.isHidden = false
-                cell.contentImageView.sd_setImage(with: inscription.inscriptionImageContentURL)
+                switch content {
+                case .image(let url):
+                    cell.contentImageView.contentMode = .scaleAspectFill
+                    cell.contentImageView.sd_setImage(with: url)
+                case let .text(collectionIconURL, textContentURL):
+                    cell.contentImageView.contentMode = .scaleToFill
+                    cell.contentImageView.image = R.image.collectible_text_background()
+                    cell.setTextContent(collectionIconURL: collectionIconURL,
+                                        textContentURL: textContentURL)
+                }
             } else {
                 cell.placeholderImageView.isHidden = false
                 cell.contentImageView.isHidden = true
@@ -213,21 +246,23 @@ extension InscriptionViewController: UITableViewDataSource {
             return cell
         case .id:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.id().uppercased()
-            if let inscription {
-                cell.setContent("\(inscription.sequence)")
-            }
-            cell.contentTextView.textColor = .white
-            cell.backgroundColor = .clear
+            cell.setInscriptionInfo(caption: R.string.localizable.id(), content: inscription?.sequence)
             return cell
         case .collection:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.collection().uppercased()
-            if let inscription {
-                cell.setContent("\(inscription.collectionName)")
-            }
-            cell.contentTextView.textColor = .white
-            cell.backgroundColor = .clear
+            cell.setInscriptionInfo(caption: R.string.localizable.collection(), content: inscription?.collectionName)
+            return cell
+        case .contentType:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.setInscriptionInfo(caption: R.string.localizable.content_type(), content: inscription?.contentType)
+            return cell
+        case .owner:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.setInscriptionInfo(caption: R.string.localizable.collectible_owner(), content: inscription?.owner)
+            return cell
+        case .traits:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_traits, for: indexPath)!
+            cell.traits = inscription?.nameValueTraits ?? []
             return cell
         }
     }

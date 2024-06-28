@@ -207,16 +207,17 @@
 "circle_title" = "Círculos de %@";
 "circles" = "Círculos";
 "clear" = "Borrar";
+"clear_cache" = "Clear Cache";
 "clear_chat" = "Vaciar la conversación";
 "clear_contact_chat_confirmation" = "¿Borrar chat con %@?";
 "clear_group_chat_confirmation" = "¿Borrar el chat grupal de %@?";
-"clear_unused_cache" = "Borrar caché no utilizado";
 "cleared" = "Borrado";
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
 "closing_balance" = "Closing Balance";
 "collectible" = "Collectible";
 "collectible_hash" = "Collectible Hash";
+"collectible_owner" = "Owner";
 "collectible_release_confirmation" = "Release Collectible";
 "collectible_release_failed" = "Release Failed";
 "collectible_release_hint" = "Releasing the collectible will immediately provide the corresponding tokens, which can be transferred, traded, or used to occupy a collectible.";
@@ -225,6 +226,7 @@
 "collectible_releasing" = "Releasing";
 "collectible_releasing_description" = "The collectible is being released, please wait.";
 "collectible_token_id" = "#%@";
+"collectible_traits" = "Traits";
 "collectibles" = "Collectibles";
 "collection" = "Collection";
 "collection_collected" = "%d collected";
@@ -277,6 +279,7 @@
 "content_sticker" = "[Pegatina]";
 "content_transcript" = "[Transcripción]";
 "content_transfer" = "[Transferir]";
+"content_type" = "Content Type";
 "content_unknown" = "[Desconocido]";
 "content_video" = "[Video]";
 "content_voice" = "[Llamada de voz]";

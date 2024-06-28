@@ -23,6 +23,19 @@ final class CollectibleCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = R.color.background()
+        
+        let backButton = UIButton(type: .system)
+        backButton.setImage(R.image.ic_title_back(), for: .normal)
+        backButton.tintColor = R.color.icon_tint()
+        view.addSubview(backButton)
+        backButton.snp.makeConstraints { make in
+            make.width.height.equalTo(44)
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(view.safeAreaLayoutGuide)
+        }
+        backButton.addTarget(self, action: #selector(goBack(_:)), for: .touchUpInside)
+        
         collectionViewLayout.minimumInteritemSpacing = 15
         collectionViewLayout.minimumLineSpacing = 15
         collectionViewLayout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 0, right: 20)
@@ -31,7 +44,10 @@ final class CollectibleCollectionViewController: UIViewController {
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
         view.addSubview(collectionView)
         collectionView.backgroundColor = R.color.background()
-        collectionView.snp.makeEdgesEqualToSuperview()
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(backButton.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
         self.collectionView = collectionView
         
         collectionView.register(R.nib.collectibleCell)
@@ -86,6 +102,10 @@ final class CollectibleCollectionViewController: UIViewController {
         }
     }
     
+    @objc private func goBack(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
     @objc private func reloadData() {
         DispatchQueue.global().async { [collection, weak self] in
             let token = TokenDAO.shared.tokenItem(kernelAssetID: collection.asset)
@@ -94,9 +114,16 @@ final class CollectibleCollectionViewController: UIViewController {
                 guard let self else {
                     return
                 }
-                self.token = token
-                self.items = items
-                self.collectionView.reloadData()
+                if items.isEmpty, let navigationController = self.navigationController {
+                    let animated = navigationController.viewControllers.last == self
+                    var viewControllers = navigationController.viewControllers
+                    viewControllers.removeAll(where: { $0 == self })
+                    navigationController.setViewControllers(viewControllers, animated: animated)
+                } else {
+                    self.token = token
+                    self.items = items
+                    self.collectionView.reloadData()
+                }
             }
         }
     }

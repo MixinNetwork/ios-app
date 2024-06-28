@@ -49,7 +49,7 @@ final class CollectiblesViewController: UIViewController {
         updateOutlineColors()
         collectionViewLayout.minimumInteritemSpacing = 15
         collectionViewLayout.minimumLineSpacing = 15
-        collectionViewLayout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 0, right: 20)
+        collectionViewLayout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 20, right: 20)
         collectionView.register(R.nib.collectibleCell)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -289,8 +289,7 @@ extension CollectiblesViewController: UICollectionViewDelegate {
         case .collection:
             let collection = collections[indexPath.item]
             let preview = CollectibleCollectionViewController(collection: collection)
-            let container = ContainerViewController.instance(viewController: preview, title: "")
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(preview, animated: true)
         }
     }
     

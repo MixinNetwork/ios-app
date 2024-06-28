@@ -43,11 +43,17 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         case .transfer, .consolidation:
             tableHeaderView.setIcon(token: token)
         case .inscription(let context):
-            tableHeaderView.setIcon { imageView in
-                imageView.layer.cornerRadius = 12
-                if let url = context.item.inscriptionImageContentURL {
+            switch context.item.inscriptionContent {
+            case let .image(url):
+                tableHeaderView.setIcon { imageView in
+                    imageView.layer.cornerRadius = 12
                     imageView.sd_setImage(with: url, placeholderImage: nil)
-                } else {
+                }
+            case let .text(collectionIconURL, textContentURL):
+                tableHeaderView.setIcon(collectionIconURL: collectionIconURL, textContentURL: textContentURL)
+            case .none:
+                tableHeaderView.setIcon { imageView in
+                    imageView.layer.cornerRadius = 12
                     imageView.backgroundColor = R.color.sticker_button_background_disabled()
                     imageView.image = R.image.inscription_intaglio()
                 }
@@ -222,7 +228,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         }
         var viewControllers = navigation.viewControllers
         if let context = inscriptionContext, case .release = context.operation {
-            if viewControllers.last is InscriptionViewController {
+            if let preview = viewControllers.last as? InscriptionViewController, preview.inscriptionHash == context.item.inscriptionHash {
                 viewControllers.removeLast()
                 navigation.setViewControllers(viewControllers, animated: false)
             } else {

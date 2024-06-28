@@ -207,16 +207,17 @@
 "circle_title" = "Круги пользователя %@";
 "circles" = "Круги";
 "clear" = "Очистить";
+"clear_cache" = "Clear Cache";
 "clear_chat" = "Очистить чат";
 "clear_contact_chat_confirmation" = "Очистить чат с %@?";
 "clear_group_chat_confirmation" = "Очистить групповой чат %@?";
-"clear_unused_cache" = "Очистить неиспользуемый кеш";
 "cleared" = "Очищено";
 "clock_skew_hint" = "Пожалуйста, продолжайте использовать снова после исправления. «Настройки» > «Основные» > «Дата и время» > «Включить автоматическую установку»";
 "close" = "Закрыть";
 "closing_balance" = "Closing Balance";
 "collectible" = "Collectible";
 "collectible_hash" = "Collectible Hash";
+"collectible_owner" = "Owner";
 "collectible_release_confirmation" = "Release Collectible";
 "collectible_release_failed" = "Release Failed";
 "collectible_release_hint" = "Releasing the collectible will immediately provide the corresponding tokens, which can be transferred, traded, or used to occupy a collectible.";
@@ -225,6 +226,7 @@
 "collectible_releasing" = "Releasing";
 "collectible_releasing_description" = "The collectible is being released, please wait.";
 "collectible_token_id" = "#%@";
+"collectible_traits" = "Traits";
 "collectibles" = "Collectibles";
 "collection" = "Collection";
 "collection_collected" = "%d collected";
@@ -277,6 +279,7 @@
 "content_sticker" = "[Наклейка]";
 "content_transcript" = "[Расшифровка]";
 "content_transfer" = "[Передача]";
+"content_type" = "Content Type";
 "content_unknown" = "[Неизвестный]";
 "content_video" = "[Видео]";
 "content_voice" = "[Голосовой вызов]";

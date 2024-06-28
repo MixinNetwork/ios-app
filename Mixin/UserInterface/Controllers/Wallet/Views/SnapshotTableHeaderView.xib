@@ -3,7 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,6 +20,7 @@
                 <outlet property="fiatMoneyValueLabel" destination="DWF-GB-gKf" id="Kam-Tx-M1u"/>
                 <outlet property="headerContentStackView" destination="u3L-Nc-1Cs" id="rrC-h1-wiq"/>
                 <outlet property="iconView" destination="rqn-Iq-NhJ" id="EXd-VY-3as"/>
+                <outlet property="iconViewDimensionConstraint" destination="d04-NQ-2rq" id="Hs5-fS-KRC"/>
                 <outlet property="symbolLabel" destination="Z0P-cq-qAP" id="Wfj-mv-oH3"/>
             </connections>
         </placeholder>
@@ -112,7 +113,7 @@
                 <constraint firstItem="0OM-lb-5R8" firstAttribute="leading" secondItem="KFW-NW-lZu" secondAttribute="leading" id="6h9-3Q-3YM"/>
                 <constraint firstItem="u3L-Nc-1Cs" firstAttribute="leading" secondItem="KFW-NW-lZu" secondAttribute="leading" constant="20" id="Hfp-EM-SpU"/>
                 <constraint firstItem="0OM-lb-5R8" firstAttribute="top" secondItem="u3L-Nc-1Cs" secondAttribute="bottom" constant="16" id="OYq-fX-8Na"/>
-                <constraint firstAttribute="trailing" secondItem="u3L-Nc-1Cs" secondAttribute="trailing" constant="20" id="Pnh-RT-FRg"/>
+                <constraint firstAttribute="trailing" secondItem="u3L-Nc-1Cs" secondAttribute="trailing" priority="999" constant="20" id="Pnh-RT-FRg"/>
                 <constraint firstAttribute="bottom" secondItem="0OM-lb-5R8" secondAttribute="bottom" id="s0h-Ae-HY6"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -41,6 +41,18 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         contentTextView.text = content
     }
     
+    func setInscriptionInfo(caption: String, content: Any?) {
+        backgroundColor = .clear
+        captionLabel.textColor = UIColor(displayP3RgbValue: 0x999999)
+        captionLabel.text = caption.uppercased()
+        contentTextView.textColor = .white
+        if let content {
+            setContent("\(content)")
+        } else {
+            setContent("")
+        }
+    }
+    
     private func layoutLabelIfNeeded() {
         guard let labelContent else {
             label?.removeFromSuperview()

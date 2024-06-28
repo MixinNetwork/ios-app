@@ -207,16 +207,17 @@
 "circle_title" = "%@のグループリスト";
 "circles" = "グループリスト";
 "clear" = "削除";
+"clear_cache" = "キャッシュをクリア";
 "clear_chat" = "チャットを削除する";
 "clear_contact_chat_confirmation" = "\"%@\"とチャットを削除しますか?";
 "clear_group_chat_confirmation" = "\"%@\"のグループチャットを削除しますか?";
-"clear_unused_cache" = "データ使用量(キャッシュ)を軽減";
 "cleared" = "クリアずみ";
 "clock_skew_hint" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
 "close" = "閉じる";
 "closing_balance" = "Closing Balance";
 "collectible" = "Collectible";
 "collectible_hash" = "Collectible Hash";
+"collectible_owner" = "Owner";
 "collectible_release_confirmation" = "Release Collectible";
 "collectible_release_failed" = "Release Failed";
 "collectible_release_hint" = "Releasing the collectible will immediately provide the corresponding tokens, which can be transferred, traded, or used to occupy a collectible.";
@@ -225,6 +226,7 @@
 "collectible_releasing" = "Releasing";
 "collectible_releasing_description" = "The collectible is being released, please wait.";
 "collectible_token_id" = "#%@";
+"collectible_traits" = "Traits";
 "collectibles" = "Collectibles";
 "collection" = "Collection";
 "collection_collected" = "%d collected";
@@ -277,6 +279,7 @@
 "content_sticker" = "[スタンプ]";
 "content_transcript" = "[メッセージ履歴]";
 "content_transfer" = "[送金]";
+"content_type" = "Content Type";
 "content_unknown" = "不明";
 "content_video" = "[動画]";
 "content_voice" = "[音声通話]";

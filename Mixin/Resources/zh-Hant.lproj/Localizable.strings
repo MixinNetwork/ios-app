@@ -207,16 +207,17 @@
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
 "clear" = "清理";
+"clear_cache" = "清理快取";
 "clear_chat" = "清除聊天記錄";
 "clear_contact_chat_confirmation" = "清空與\"%@\"的聊天記錄？";
 "clear_group_chat_confirmation" = "清空\"%@\"的聊天記錄？";
-"clear_unused_cache" = "清理快取";
 "cleared" = "已清空";
 "clock_skew_hint" = "請校正後再繼續使用，設定 > 一般 > 日期與時間 > 自動設定";
 "close" = "關閉";
 "closing_balance" = "期末餘額";
 "collectible" = "藏品";
 "collectible_hash" = "藏品雜湊";
+"collectible_owner" = "擁有者";
 "collectible_release_confirmation" = "分解藏品";
 "collectible_release_failed" = "分解失敗";
 "collectible_release_hint" = "分解藏品可以立刻獲得相應的代幣，代幣可轉賬、交易或重新鑄造藏品。";
@@ -225,6 +226,7 @@
 "collectible_releasing" = "分解中";
 "collectible_releasing_description" = "正在分解藏品，請稍候。";
 "collectible_token_id" = "#%@";
+"collectible_traits" = "屬性";
 "collectibles" = "藏品";
 "collection" = "合集";
 "collection_collected" = "已收藏 %d 件";
@@ -277,6 +279,7 @@
 "content_sticker" = "[貼紙]";
 "content_transcript" = "[聊天記錄]";
 "content_transfer" = "[轉賬]";
+"content_type" = "內容型別";
 "content_unknown" = "[未知]";
 "content_video" = "[影片]";
 "content_voice" = "[語音電話]";

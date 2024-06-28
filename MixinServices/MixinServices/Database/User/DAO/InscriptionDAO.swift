@@ -11,7 +11,9 @@ public final class InscriptionDAO: UserDatabaseDAO {
                 c.icon_url AS \(InscriptionOutput.CodingKeys.collectionIconURL.rawValue),
                 i.sequence AS \(InscriptionOutput.CodingKeys.inscriptionSequence.rawValue),
                 i.content_type AS \(InscriptionOutput.CodingKeys.inscriptionContentType.rawValue),
-                i.content_url AS \(InscriptionOutput.CodingKeys.inscriptionContentURL.rawValue)
+                i.content_url AS \(InscriptionOutput.CodingKeys.inscriptionContentURL.rawValue),
+                i.traits AS \(InscriptionOutput.CodingKeys.inscriptionTraits.rawValue),
+                i.owner AS \(InscriptionOutput.CodingKeys.inscriptionOwner.rawValue)
             FROM outputs o
                 LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
@@ -41,12 +43,11 @@ public final class InscriptionDAO: UserDatabaseDAO {
     
     public func inscriptionItem(with inscriptionHash: String) -> InscriptionItem? {
         let sql = """
-            SELECT o.inscription_hash, c.collection_hash, c.name,
+            SELECT i.inscription_hash, c.collection_hash, c.name,
                 c.icon_url, i.sequence, i.content_type, i.content_url
-            FROM outputs o
-                LEFT JOIN inscription_items i ON i.inscription_hash = o.inscription_hash
+            FROM inscription_items i
                 LEFT JOIN inscription_collections c ON i.collection_hash = c.collection_hash
-            WHERE o.state = 'unspent' AND o.inscription_hash = ?
+            WHERE i.inscription_hash = ?
             LIMIT 1
         """
         return db.select(with: sql, arguments: [inscriptionHash])

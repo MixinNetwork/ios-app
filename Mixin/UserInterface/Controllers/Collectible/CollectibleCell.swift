@@ -90,6 +90,7 @@ final class CollectibleCell: UICollectionViewCell {
             contentImageView.image = R.image.inscription_intaglio()
             contentImageView.contentMode = .center
         }
+        textContentView?.isHidden = true
         titleLabel.text = collection.name
         subtitleLabel.text = "\(collection.inscriptionCount)"
     }

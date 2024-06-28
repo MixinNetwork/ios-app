@@ -26,7 +26,7 @@ class DiagnoseViewController: SettingsTableViewController {
             SettingsRow(title: "Web3", accessory: .disclosure),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.clear_unused_cache(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.clear_cache(), accessory: .disclosure),
         ]),
     ])
     
@@ -68,7 +68,7 @@ extension DiagnoseViewController: UITableViewDelegate {
             navigationController?.pushViewController(container, animated: true)
         case (2, 0):
             let container = ContainerViewController.instance(viewController: AttachmentDiagnosticViewController(),
-                                                             title: R.string.localizable.clear_unused_cache())
+                                                             title: R.string.localizable.clear_cache())
             navigationController?.pushViewController(container, animated: true)
         case (3, 0):
             let hud = Hud()

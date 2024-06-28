@@ -2,7 +2,7 @@ import UIKit
 
 final class InscriptionTraitCell: UICollectionViewCell {
     
-    @IBOutlet weak var keyLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
     
     override func awakeFromNib() {

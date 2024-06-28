@@ -23,12 +23,14 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="TYPE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zKJ-Eg-87I">
                                 <rect key="frame" x="0.0" y="0.0" width="30" height="14.333333333333334"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" name="text_tertiary"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VIP" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YHS-Rf-UsB">
                                 <rect key="frame" x="0.0" y="14.33333333333333" width="30" height="17.666666666666671"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
@@ -37,8 +39,10 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </stackView>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="ciI-1t-7sR" secondAttribute="bottom" constant="4" id="11L-85-pRA"/>
                     <constraint firstAttribute="trailing" secondItem="ciI-1t-7sR" secondAttribute="trailing" constant="20" id="NZS-EK-zoE"/>
@@ -46,8 +50,9 @@
                     <constraint firstItem="ciI-1t-7sR" firstAttribute="leading" secondItem="v8s-KT-cKO" secondAttribute="leading" constant="20" id="oOi-C2-DX4"/>
                 </constraints>
             </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="keyLabel" destination="zKJ-Eg-87I" id="jrB-ux-p59"/>
+                <outlet property="nameLabel" destination="zKJ-Eg-87I" id="jrB-ux-p59"/>
                 <outlet property="valueLabel" destination="YHS-Rf-UsB" id="l06-Vl-OWk"/>
             </connections>
             <point key="canvasLocation" x="-38" y="-39"/>

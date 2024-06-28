@@ -12,11 +12,11 @@ public struct InscriptionItem {
     public let traits: String?
     public let owner: String?
     
-    public lazy var keyValueTraits: [KeyValueTrait]? = {
+    public lazy var nameValueTraits: [NameValueTrait]? = {
         guard let traits, let data = traits.data(using: .utf8) else {
             return nil
         }
-        return try? JSONDecoder.default.decode([KeyValueTrait].self, from: data)
+        return try? JSONDecoder.default.decode([NameValueTrait].self, from: data)
     }()
     
     public var collectionSequenceRepresentation: String {
@@ -129,8 +129,8 @@ extension InscriptionItem {
 
 extension InscriptionItem {
     
-    public struct KeyValueTrait: Decodable {
-        public let key: String
+    public struct NameValueTrait: Decodable {
+        public let name: String
         public let value: String
     }
     

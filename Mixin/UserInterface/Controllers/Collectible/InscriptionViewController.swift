@@ -116,7 +116,7 @@ final class InscriptionViewController: UIViewController {
         if let owner = inscription?.owner, !owner.isEmpty {
             rows.append(.owner)
         }
-        if let traits = inscription?.keyValueTraits, !traits.isEmpty {
+        if let traits = inscription?.nameValueTraits, !traits.isEmpty {
             rows.append(.traits)
         }
         tableView.reloadData()
@@ -262,7 +262,7 @@ extension InscriptionViewController: UITableViewDataSource {
             return cell
         case .traits:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_traits, for: indexPath)!
-            cell.traits = inscription?.keyValueTraits ?? []
+            cell.traits = inscription?.nameValueTraits ?? []
             return cell
         }
     }

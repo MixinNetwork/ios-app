@@ -59,6 +59,8 @@ final class TextInscriptionContentView: UIView {
     }
     
     private func loadSubviews() {
+        isUserInteractionEnabled = false
+        
         addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.top.centerX.equalToSuperview()

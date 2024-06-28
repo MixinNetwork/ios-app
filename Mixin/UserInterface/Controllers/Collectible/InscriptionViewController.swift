@@ -88,7 +88,9 @@ final class InscriptionViewController: UIViewController {
             sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_explorer(), style: .default, handler: viewOnExplorer(_:)))
         }
         sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_marketplace(), style: .default, handler: viewOnMarketplace(_:)))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.release(), style: .destructive, handler: releaseInscription(_:)))
+        if output != nil {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.release(), style: .destructive, handler: releaseInscription(_:)))
+        }
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
         present(sheet, animated: true)
     }
@@ -103,16 +105,19 @@ final class InscriptionViewController: UIViewController {
     
     private func reloadData() {
         if inscription == nil {
-            rows = [.content, .action, .hash, .contentType, .owner]
+            rows = [.content, .action, .hash, .contentType]
         } else {
             if output == nil {
-                rows = [.content, .hash, .id, .collection, .contentType, .owner]
+                rows = [.content, .hash, .id, .collection, .contentType]
             } else {
-                rows = [.content, .action, .hash, .id, .collection, .contentType, .owner]
+                rows = [.content, .action, .hash, .id, .collection, .contentType]
             }
-            if let traits = inscription?.keyValueTraits, !traits.isEmpty {
-                rows.append(.traits)
-            }
+        }
+        if let owner = inscription?.owner, !owner.isEmpty {
+            rows.append(.owner)
+        }
+        if let traits = inscription?.keyValueTraits, !traits.isEmpty {
+            rows.append(.traits)
         }
         tableView.reloadData()
         switch inscription?.inscriptionContent {

@@ -207,10 +207,10 @@
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
 "clear" = "清理";
+"clear_cache" = "清理快取";
 "clear_chat" = "清除聊天記錄";
 "clear_contact_chat_confirmation" = "清空與\"%@\"的聊天記錄？";
 "clear_group_chat_confirmation" = "清空\"%@\"的聊天記錄？";
-"clear_unused_cache" = "清理快取";
 "cleared" = "已清空";
 "clock_skew_hint" = "請校正後再繼續使用，設定 > 一般 > 日期與時間 > 自動設定";
 "close" = "關閉";

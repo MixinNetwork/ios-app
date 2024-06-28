@@ -207,10 +207,10 @@
 "circle_title" = "%@'s Circles";
 "circles" = "Circles";
 "clear" = "Clear";
+"clear_cache" = "Clear Cache";
 "clear_chat" = "Clear Chat";
 "clear_contact_chat_confirmation" = "Clear chat with \"%@\"?";
 "clear_group_chat_confirmation" = "Clear \"%@\" group chat?";
-"clear_unused_cache" = "Clear unused cache";
 "cleared" = "Cleared";
 "clock_skew_hint" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically";
 "close" = "Close";

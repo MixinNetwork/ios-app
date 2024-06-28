@@ -207,10 +207,10 @@
 "circle_title" = "%@のグループリスト";
 "circles" = "グループリスト";
 "clear" = "削除";
+"clear_cache" = "キャッシュをクリア";
 "clear_chat" = "チャットを削除する";
 "clear_contact_chat_confirmation" = "\"%@\"とチャットを削除しますか?";
 "clear_group_chat_confirmation" = "\"%@\"のグループチャットを削除しますか?";
-"clear_unused_cache" = "データ使用量(キャッシュ)を軽減";
 "cleared" = "クリアずみ";
 "clock_skew_hint" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
 "close" = "閉じる";

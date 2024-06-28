@@ -207,10 +207,10 @@
 "circle_title" = "Círculos de %@";
 "circles" = "Círculos";
 "clear" = "Borrar";
+"clear_cache" = "Clear Cache";
 "clear_chat" = "Vaciar la conversación";
 "clear_contact_chat_confirmation" = "¿Borrar chat con %@?";
 "clear_group_chat_confirmation" = "¿Borrar el chat grupal de %@?";
-"clear_unused_cache" = "Borrar caché no utilizado";
 "cleared" = "Borrado";
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";

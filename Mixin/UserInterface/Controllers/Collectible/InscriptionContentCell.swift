@@ -26,7 +26,7 @@ final class InscriptionContentCell: UITableViewCell {
             textContentView.label.numberOfLines = 10
             textContentView.label.font = .systemFont(ofSize: 24, weight: .semibold)
             textContentView.label.adjustsFontSizeToFitWidth = true
-            textContentView.label.minimumScaleFactor = 24 / 12
+            textContentView.label.minimumScaleFactor = 12 / 24
             self.textContentView = textContentView
             contentView.addSubview(textContentView)
             textContentView.snp.makeConstraints { make in

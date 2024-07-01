@@ -58,6 +58,7 @@ final class InscriptionViewController: UIViewController {
         tableView.register(R.nib.authenticationPreviewCompactInfoCell)
         tableView.register(R.nib.inscriptionTraitsCell)
         tableView.dataSource = self
+        tableView.delegate = self
         reloadData()
         if inscription == nil {
             let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
@@ -204,6 +205,29 @@ final class InscriptionViewController: UIViewController {
         }
     }
     
+    private func copyingContent(row: Row) -> String? {
+        switch row {
+        case .hash:
+            inscriptionHash
+        case .owner:
+            inscription?.owner
+        default:
+            nil
+        }
+    }
+    
+    private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard 
+            let identifier = configuration.identifier as? NSIndexPath,
+            let cell = tableView.cellForRow(at: identifier as IndexPath)
+        else {
+            return nil
+        }
+        let param = UIPreviewParameters()
+        param.backgroundColor = .clear
+        return UITargetedPreview(view: cell.contentView, parameters: param)
+    }
+    
 }
 
 extension InscriptionViewController: UITableViewDataSource {
@@ -265,6 +289,35 @@ extension InscriptionViewController: UITableViewDataSource {
             cell.traits = inscription?.nameValueTraits ?? []
             return cell
         }
+    }
+    
+}
+
+extension InscriptionViewController: UITableViewDelegate {
+    
+    func tableView(
+        _ tableView: UITableView,
+        contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        guard let content = copyingContent(row: rows[indexPath.row]) else {
+            return nil
+        }
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ in
+            let action = UIAction(title: R.string.localizable.copy(), image: R.image.web.ic_action_copy()) { _ in
+                UIPasteboard.general.string = content
+                showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+            }
+            return UIMenu(title: "", children: [action])
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
+    }
+    
+    func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
     }
     
 }

@@ -496,7 +496,7 @@ extension ShareRecipientViewController {
         }
         
         let expireIn = ConversationDAO.shared.getExpireIn(conversationId: msg.conversationId) ?? 0
-        MessageDAO.shared.insertMessage(message: msg, messageSource: "", expireIn: expireIn)
+        MessageDAO.shared.insertMessage(message: msg, messageSource: MessageDAO.LocalMessageSource.shareExtension, expireIn: expireIn)
 
         if ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix) {
             SendMessageService.shared.sendMessage(message: msg, data: msg.content, immediatelySend: false, expireIn: expireIn)

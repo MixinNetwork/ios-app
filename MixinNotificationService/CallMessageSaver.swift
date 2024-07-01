@@ -21,7 +21,7 @@ extension CallMessageSaver: CallMessageCoordinator {
                                                   category: .WEBRTC_AUDIO_CANCEL,
                                                   mediaDuration: 0,
                                                   status: .DELIVERED)
-            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+            MessageDAO.shared.insertMessage(message: msg, messageSource: MessageDAO.LocalMessageSource.notificationServiceExtension)
         } else {
             let job = Job(pendingWebRTCMessage: data)
             UserDatabase.current.save(job)

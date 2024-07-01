@@ -107,7 +107,7 @@ class PeerCall: Call {
                                                   mediaDuration: duration,
                                                   status: status)
             let expireIn = ConversationDAO.shared.getExpireIn(conversationId: self.conversationId) ?? 0
-            MessageDAO.shared.insertMessage(message: end, messageSource: "PeerCall", expireIn: expireIn)
+            MessageDAO.shared.insertMessage(message: end, messageSource: MessageDAO.LocalMessageSource.peerCall, expireIn: expireIn)
             
             let userInfo: [String: Any] = [
                 Self.UserInfoKey.endedReason: reason,

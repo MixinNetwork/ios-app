@@ -307,7 +307,7 @@ struct TransferPaymentOperation {
                                                               inscription: inscriptionItem,
                                                               conversationID: conversationID,
                                                               createdAt: now)
-                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: "Transfer", silentNotification: false)
+                        try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: MessageDAO.LocalMessageSource.transfer, silentNotification: false)
                         if try !Conversation.exists(db, key: conversationID) {
                             let conversation = Conversation.createConversation(conversationId: conversationID,
                                                                                category: ConversationCategory.CONTACT.rawValue,
@@ -345,6 +345,7 @@ struct TransferPaymentOperation {
         }
         Logger.general.info(category: "Transfer", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID])
+        NotificationCenter.default.post(onMainThread: dismissSearchNotification, object: nil)
         Logger.general.info(category: "Transfer", message: "RawTx signed")
         
         switch behavior {

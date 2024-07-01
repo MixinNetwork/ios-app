@@ -346,6 +346,7 @@ struct WithdrawPaymentOperation {
         }
         Logger.general.info(category: "Withdraw", message: "Will sign raw txs")
         RawTransactionDAO.shared.signRawTransactions(with: broadcastRequestIDs)
+        NotificationCenter.default.post(onMainThread: dismissSearchNotification, object: nil)
         Logger.general.info(category: "Withdraw", message: "RawTx signed")
         if let addressID {
             AppGroupUserDefaults.Wallet.withdrawnAddressIds[addressID] = true

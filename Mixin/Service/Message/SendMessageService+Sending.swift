@@ -128,7 +128,8 @@ extension SendMessageService {
                 if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > maxTextMessageContentLength {
                     msg.content = String(content.prefix(maxTextMessageContentLength))
                 }
-                MessageDAO.shared.insertMessage(message: msg, children: children, messageSource: "", expireIn: expireIn) {
+                MessageDAO.shared.insertMessage(message: msg, children: children, messageSource: MessageDAO.LocalMessageSource.sendMessage, expireIn: expireIn) {
+                    NotificationCenter.default.post(onMainThread: dismissSearchNotification, object: nil)                    
                     if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LOCATION"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
                         SendMessageService.shared.sendMessage(message: msg, data: msg.content, silentNotification: silentNotification, expireIn: expireIn)
                     } else if msg.category.hasSuffix("_IMAGE") {

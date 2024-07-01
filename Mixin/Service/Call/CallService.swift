@@ -151,7 +151,7 @@ class CallService: NSObject {
                                                       category: .WEBRTC_AUDIO_CANCEL,
                                                       mediaDuration: 0,
                                                       status: .DELIVERED)
-                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+                MessageDAO.shared.insertMessage(message: msg, messageSource: MessageDAO.LocalMessageSource.callService)
             } else if !isOffer || !MessageDAO.shared.isExist(messageId: data.messageId) {
                 self.handleIncomingBlazeMessageData(data)
             }
@@ -413,7 +413,7 @@ extension CallService: CallMessageCoordinator {
                                                                  userId: data.userId,
                                                                  category: .KRAKEN_INVITE,
                                                                  createdAt: data.createdAt)
-                    MessageDAO.shared.insertMessage(message: invitation, messageSource: "CallService")
+                    MessageDAO.shared.insertMessage(message: invitation, messageSource: MessageDAO.LocalMessageSource.callService)
                     Logger.call.info(category: "CallService", message: "[\(data.conversationId)] Outdated invitation is saved to db")
                 } else {
                     // TODO: Invitations with LIST_PENDING could be handled more precisely
@@ -1093,7 +1093,7 @@ extension CallService {
                                                                      category: .KRAKEN_INVITE,
                                                                      status: MessageStatus.READ.rawValue,
                                                                      createdAt: data.createdAt)
-                        MessageDAO.shared.insertMessage(message: invitation, messageSource: "CallService")
+                        MessageDAO.shared.insertMessage(message: invitation, messageSource: MessageDAO.LocalMessageSource.callService)
                     }
                 }
             }

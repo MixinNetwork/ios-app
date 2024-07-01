@@ -3,6 +3,16 @@ import GRDB
 
 public final class MessageDAO: UserDatabaseDAO {
     
+    public enum LocalMessageSource {
+        public static let peerCall = "pc"
+        public static let groupCall = "gc"
+        public static let callService = "cs"
+        public static let sendMessage = "sm"
+        public static let transfer = "tr"
+        public static let notificationServiceExtension = "nse"
+        public static let shareExtension = "se"
+    }
+    
     public enum UserInfoKey {
         public static let conversationId = "conv_id"
         public static let message = "msg"

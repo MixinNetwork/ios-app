@@ -4,7 +4,7 @@ import GRDB
 public final class RawTransactionDAO: UserDatabaseDAO {
     
     public static let shared = RawTransactionDAO()
-    
+        
     public func unspentRawTransactionCount(types: Set<RawTransaction.TransactionType>) -> Int {
         let types = types.map({ "\($0.rawValue)" }).joined(separator: ",")
         let count: Int? = db.select(with: "SELECT count(1) FROM raw_transactions WHERE state = 'unspent' AND type IN (\(types))")

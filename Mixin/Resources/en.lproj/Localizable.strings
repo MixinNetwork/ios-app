@@ -1153,7 +1153,7 @@
 "web3_account" = "Account";
 "web3_account_connected" = "Account Connected";
 "web3_account_network" = "%@ Account";
-"web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base, Arbitrum, Optimism networks";
+"web3_deposit_description_evm" = "Use this address for receiving tokens on Blast, Ethereum, Polygon, BSC, Base, Arbitrum, Optimism networks";
 "web3_deposit_description_solana" = "Use this address for receiving tokens on Solana network";
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";

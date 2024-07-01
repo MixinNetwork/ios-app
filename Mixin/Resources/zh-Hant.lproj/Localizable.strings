@@ -226,7 +226,7 @@
 "collectible_releasing" = "分解中";
 "collectible_releasing_description" = "正在分解藏品，請稍候。";
 "collectible_token_id" = "#%@";
-"collectible_traits" = "屬性";
+"collectible_traits" = "特徵";
 "collectibles" = "藏品";
 "collection" = "合集";
 "collection_collected" = "已收藏 %d 件";
@@ -1122,8 +1122,8 @@
 "videos" = "影片";
 "view_authorization" = "檢視授權";
 "view_emergency_contact" = "檢視緊急聯絡人";
-"view_on_explorer" = "在瀏覽器檢視";
-"view_on_marketplace" = "在市場檢視";
+"view_on_explorer" = "在瀏覽器中檢視";
+"view_on_marketplace" = "在市場中檢視";
 "view_wallet" = "檢視錢包";
 "voice_call_cancelled" = "對方已取消語音通話";
 "voice_call_has_been_declined" = "已拒絕通話";
@@ -1153,7 +1153,7 @@
 "web3_account" = "賬戶";
 "web3_account_connected" = "連線成功";
 "web3_account_network" = "%@ 賬戶";
-"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base、Arbitrum、Optimism 網路上接收代幣";
+"web3_deposit_description_evm" = "使用此地址在 Blast、Ethereum、Polygon、BSC、Base、Arbitrum、Optimism 網路上接收代幣";
 "web3_deposit_description_solana" = "使用此地址在 Solana 網路上接收代幣";
 "web3_ensure_trust" = "請確保您信任此應用程式。";
 "web3_message_request" = "訊息簽名";

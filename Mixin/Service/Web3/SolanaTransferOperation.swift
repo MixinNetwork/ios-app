@@ -180,7 +180,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     
 }
 
-final class SolanaTransferWithBrowserWalletOperation: ArbitraryTransactionSolanaTransferOperation {
+final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSolanaTransferOperation {
     
     private let respondImpl: ((String) async throws -> Void)?
     private let rejectImpl: (() -> Void)?
@@ -190,7 +190,7 @@ final class SolanaTransferWithBrowserWalletOperation: ArbitraryTransactionSolana
         fromAddress: String,
         chain: Web3Chain,
         respondWith respondImpl: @escaping ((String) async throws -> Void),
-        rejectWith rejectImpl: @escaping (() -> Void)
+        rejectWith rejectImpl: (() -> Void)? = nil
     ) throws {
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl

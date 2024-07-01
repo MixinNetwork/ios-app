@@ -2573,7 +2573,8 @@ extension ConversationViewController {
     }
     
     private func open(url: URL, app: App? = nil, shareable: Bool? = nil) {
-        guard !UrlWindow.checkUrl(url: url) else {
+        let wrapper = WeakWrapper(object: composer!)
+        guard !UrlWindow.checkUrl(url: url, from: .conversation(wrapper)) else {
             return
         }
         guard !conversationId.isEmpty else {

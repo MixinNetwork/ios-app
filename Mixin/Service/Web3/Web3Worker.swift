@@ -359,7 +359,7 @@ final class Web3Worker {
         }
         DispatchQueue.global().async { [solanaChain, proposer=currentProposer] in
             do {
-                let operation = try SolanaTransferWithBrowserWalletOperation(
+                let operation = try SolanaTransferWithCustomRespondingOperation(
                     transaction: transaction,
                     fromAddress: address,
                     chain: solanaChain

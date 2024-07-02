@@ -12,6 +12,7 @@ class UrlWindow {
         case openURL
         case userActivity
         case webView(MixinWebViewController.Context)
+        case conversation(WeakWrapper<ConversationMessageComposer>)
         case other
         
         var webContext: MixinWebViewController.Context? {
@@ -25,7 +26,7 @@ class UrlWindow {
         
         var isExternal: Bool {
             switch self {
-            case .openURL, .userActivity:
+            case .openURL, .userActivity, .conversation:
                 return true
             case .webView, .other:
                 return false
@@ -58,7 +59,7 @@ class UrlWindow {
                 checkCode(code, from: source, clearNavigationStack: clearNavigationStack)
                 return true
             case .tip(let tip):
-                checkTIP(tip)
+                checkTIP(tip, from: source)
                 return true
             }
         } else if let mixinURL = MixinURL(url: url) {
@@ -575,13 +576,19 @@ class UrlWindow {
             
             case invalidPaymentLink
             case syncTokenFailed
+            case insufficientBalance
+            case insufficientFee
             
             var errorDescription: String? {
                 switch self {
                 case .invalidPaymentLink:
-                    return R.string.localizable.invalid_payment_link()
+                    R.string.localizable.invalid_payment_link()
                 case .syncTokenFailed:
-                    return R.string.localizable.error_connection_timeout()
+                    R.string.localizable.error_connection_timeout()
+                case .insufficientBalance:
+                    R.string.localizable.insufficient_balance()
+                case .insufficientFee:
+                    R.string.localizable.insufficient_transaction_fee()
                 }
             }
             
@@ -606,6 +613,9 @@ class UrlWindow {
                 guard let token = syncToken(assetID: assetID, hud: hud) else {
                     throw Error.syncTokenFailed
                 }
+                guard resolvedAmount <= token.decimalBalance else {
+                    throw Error.insufficientBalance
+                }
                 
                 let response = try await ExternalAPI.checkAddress(assetID: assetID, destination: transfer.destination, tag: nil)
                 guard response.tag.isNilOrEmpty, transfer.destination.lowercased() == response.destination.lowercased() else {
@@ -613,14 +623,26 @@ class UrlWindow {
                 }
                 let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
                 
-                guard let fee = try await SafeAPI.fees(assetID: assetID, destination: address.destination).first else {
+                let fees = try await SafeAPI.fees(assetID: assetID, destination: address.destination)
+                guard !fees.isEmpty else {
                     throw MixinAPIResponseError.withdrawSuspended
                 }
-                guard let feeToken = syncToken(assetID: fee.assetID, hud: hud) else {
-                    throw Error.syncTokenFailed
+                let feeItems: [WithdrawFeeItem] = try fees.lazy.compactMap { fee in
+                    guard let feeToken = syncToken(assetID: fee.assetID, hud: hud) else {
+                        throw Error.syncTokenFailed
+                    }
+                    guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
+                        return nil
+                    }
+                    let isFeeSufficient = if feeToken.assetID == assetID {
+                        (resolvedAmount + feeItem.amount) <= feeToken.decimalBalance
+                    } else {
+                        feeItem.amount <= feeToken.decimalBalance
+                    }
+                    return isFeeSufficient ? feeItem : nil
                 }
-                guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
-                    throw Error.invalidPaymentLink
+                guard let feeItem = feeItems.first else {
+                    throw Error.insufficientFee
                 }
                 
                 let traceID = UUID().uuidString.lowercased()
@@ -968,7 +990,7 @@ extension UrlWindow {
                     }
                     return
                 }
-                guard let assetID = TokenDAO.shared.assetID(ofAssetWith: output.asset) else {
+                guard let assetID = TokenDAO.shared.assetID(kernelAssetID: output.asset) else {
                     Logger.general.warn(category: "UrlWindow", message: "Missing output asset: \(output.asset)")
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: "Missing Asset")
@@ -1180,14 +1202,14 @@ extension UrlWindow {
         return true
     }
     
-    private static func checkTIP(_ tip: TIPURL) {
+    private static func checkTIP(_ tip: TIPURL, from source: Source) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: homeContainer.view)
         switch tip {
-        case .sign(let chain, let action, let raw):
+        case let .sign(requestID, chain, action, raw):
             switch chain {
             case .solana:
                 switch action {
@@ -1198,18 +1220,31 @@ extension UrlWindow {
                         return
                     }
                     guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) else {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.hide()
-                        homeContainer.homeTabBarController.switchTo(child: .explore)
                         return
                     }
                     DispatchQueue.global().async {
                         do {
-                            let operation = try ArbitraryTransactionSolanaTransferOperation(
+                            let operation = try SolanaTransferWithCustomRespondingOperation(
                                 transaction: transaction,
                                 fromAddress: address,
-                                toAddress: "",
                                 chain: .solana
-                            )
+                            ) { signature in
+                                guard let requestID, case let .conversation(composer) = source else {
+                                    return
+                                }
+                                let response = [
+                                    "request_id": requestID,
+                                    "signature": signature,
+                                ]
+                                let jsonData = try? JSONSerialization.data(withJSONObject: response, options: .prettyPrinted)
+                                if let jsonData, let json = String(data: jsonData, encoding: .utf8) {
+                                    await MainActor.run {
+                                        composer.unwrapped?.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                    }
+                                }
+                            }
                             DispatchQueue.main.async {
                                 hud.hide()
                                 let transfer = Web3TransferViewController(operation: operation, proposer: nil)

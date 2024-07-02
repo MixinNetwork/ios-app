@@ -1210,11 +1210,7 @@ extension UrlWindow {
                                 fromAddress: address,
                                 chain: .solana
                             ) { signature in
-                                guard
-                                    let requestID,
-                                    case let .conversation(wrapper) = source,
-                                    let composer = wrapper.unwrapped
-                                else {
+                                guard let requestID, case let .conversation(composer) = source else {
                                     return
                                 }
                                 let response = [
@@ -1223,7 +1219,9 @@ extension UrlWindow {
                                 ]
                                 let jsonData = try? JSONSerialization.data(withJSONObject: response, options: .prettyPrinted)
                                 if let jsonData, let json = String(data: jsonData, encoding: .utf8) {
-                                    composer.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                    await MainActor.run {
+                                        composer.unwrapped?.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                    }
                                 }
                             }
                             DispatchQueue.main.async {

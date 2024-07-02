@@ -18,7 +18,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     }
     
     private var showAdminActions: Bool {
-        return models.count < 256 && hasAdminPrivileges
+        return models.count < maxGroupMemberCount && hasAdminPrivileges
     }
     
     deinit {

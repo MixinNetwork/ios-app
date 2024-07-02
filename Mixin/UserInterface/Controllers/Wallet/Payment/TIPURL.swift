@@ -10,7 +10,7 @@ enum TIPURL {
         case signRawTransaction
     }
     
-    case sign(chain: Chain, action: Action, raw: String)
+    case sign(requestID: String?, chain: Chain, action: Action, raw: String)
     
     init?(url: URL) {
         let pathComponents = url.pathComponents
@@ -41,7 +41,16 @@ enum TIPURL {
             else {
                 return nil
             }
-            self = .sign(chain: chain, action: action, raw: raw)
+            let requestID: String?
+            if let id = queries["request_id"] {
+                guard UUID.isValidLowercasedUUIDString(id) else {
+                    return nil
+                }
+                requestID = id
+            } else {
+                requestID = nil
+            }
+            self = .sign(requestID: requestID, chain: chain, action: action, raw: raw)
         default:
             return nil
         }

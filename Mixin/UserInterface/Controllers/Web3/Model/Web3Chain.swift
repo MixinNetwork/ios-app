@@ -14,7 +14,7 @@ final class Web3Chain {
         var chains: [Web3Chain] {
             switch self {
             case .evm:
-                [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
+                [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism, .blast]
             case .solana:
                 [.solana]
             }
@@ -225,6 +225,15 @@ extension Web3Chain {
         feeTokenAssetID: AssetID.eth,
         name: "Optimism",
         failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
+    )
+    
+    static let blast = Web3Chain.evm(
+        chainID: 81457,
+        web3ChainID: "blast",
+        mixinChainID: nil,
+        feeTokenAssetID: AssetID.eth,
+        name: "Blast",
+        failsafeRPCServerURL: URL(string: "https://rpc.blast.io")!
     )
     
     static let solana = Web3Chain.solana(

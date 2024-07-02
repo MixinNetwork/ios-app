@@ -12,6 +12,7 @@ class UrlWindow {
         case openURL
         case userActivity
         case webView(MixinWebViewController.Context)
+        case conversation(WeakWrapper<ConversationMessageComposer>)
         case other
         
         var webContext: MixinWebViewController.Context? {
@@ -25,7 +26,7 @@ class UrlWindow {
         
         var isExternal: Bool {
             switch self {
-            case .openURL, .userActivity:
+            case .openURL, .userActivity, .conversation:
                 return true
             case .webView, .other:
                 return false
@@ -58,7 +59,7 @@ class UrlWindow {
                 checkCode(code, from: source, clearNavigationStack: clearNavigationStack)
                 return true
             case .tip(let tip):
-                checkTIP(tip)
+                checkTIP(tip, from: source)
                 return true
             }
         } else if let mixinURL = MixinURL(url: url) {
@@ -1180,14 +1181,14 @@ extension UrlWindow {
         return true
     }
     
-    private static func checkTIP(_ tip: TIPURL) {
+    private static func checkTIP(_ tip: TIPURL, from source: Source) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: homeContainer.view)
         switch tip {
-        case .sign(let chain, let action, let raw):
+        case let .sign(requestID, chain, action, raw):
             switch chain {
             case .solana:
                 switch action {
@@ -1198,18 +1199,31 @@ extension UrlWindow {
                         return
                     }
                     guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) else {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.hide()
-                        homeContainer.homeTabBarController.switchTo(child: .explore)
                         return
                     }
                     DispatchQueue.global().async {
                         do {
-                            let operation = try ArbitraryTransactionSolanaTransferOperation(
+                            let operation = try SolanaTransferWithCustomRespondingOperation(
                                 transaction: transaction,
                                 fromAddress: address,
-                                toAddress: "",
                                 chain: .solana
-                            )
+                            ) { signature in
+                                guard let requestID, case let .conversation(composer) = source else {
+                                    return
+                                }
+                                let response = [
+                                    "request_id": requestID,
+                                    "signature": signature,
+                                ]
+                                let jsonData = try? JSONSerialization.data(withJSONObject: response, options: .prettyPrinted)
+                                if let jsonData, let json = String(data: jsonData, encoding: .utf8) {
+                                    await MainActor.run {
+                                        composer.unwrapped?.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                    }
+                                }
+                            }
                             DispatchQueue.main.async {
                                 hud.hide()
                                 let transfer = Web3TransferViewController(operation: operation, proposer: nil)

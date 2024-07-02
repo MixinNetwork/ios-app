@@ -55,24 +55,6 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
             }
             amountLabel.textColor = R.color.text_tertiary()!
         default:
-            if snapshot.isInscription {
-                let inscriptionIconView: InscriptionIconView
-                if let view = self.inscriptionIconView {
-                    view.isHidden = false
-                    inscriptionIconView = view
-                } else {
-                    inscriptionIconView = InscriptionIconView()
-                    contentStackView.addArrangedSubview(inscriptionIconView)
-                    inscriptionIconView.snp.makeConstraints { make in
-                        make.width.height.equalTo(40).priority(.almostRequired)
-                    }
-                }
-                inscriptionIconView.content = snapshot.inscriptionContent
-                self.inscriptionIconView = inscriptionIconView
-            } else {
-                self.inscriptionIconView?.isHidden = true
-            }
-            
             if let deposit = snapshot.deposit {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
@@ -101,10 +83,24 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
             let amount: Decimal = snapshot.decimalAmount > 0 ? 1 : -1
             amountLabel.text = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .always)
             symbolLabel.isHidden = true
+            let inscriptionIconView: InscriptionIconView
+            if let view = self.inscriptionIconView {
+                view.isHidden = false
+                inscriptionIconView = view
+            } else {
+                inscriptionIconView = InscriptionIconView()
+                contentStackView.addArrangedSubview(inscriptionIconView)
+                inscriptionIconView.snp.makeConstraints { make in
+                    make.width.height.equalTo(40).priority(.almostRequired)
+                }
+                self.inscriptionIconView = inscriptionIconView
+            }
+            inscriptionIconView.content = snapshot.inscriptionContent
         } else {
             amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
             symbolLabel.isHidden = false
             symbolLabel.text = token?.symbol ?? snapshot.tokenSymbol
+            inscriptionIconView?.isHidden = true
         }
     }
     
@@ -147,6 +143,7 @@ extension SnapshotCell {
                             let inset = UIEdgeInsets(top: 4, left: 6, bottom: 5, right: 6)
                             make.edges.equalToSuperview().inset(inset)
                         }
+                        self.textContentView = contentView
                     }
                     contentView.reloadData(collectionIconURL: collectionIconURL,
                                            textContentURL: textContentURL)

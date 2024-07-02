@@ -311,7 +311,7 @@ extension SafeSnapshotViewController {
             }
         } else if type == .pending {
             Task { [weak self, assetID=token.assetID, snapshotID=snapshot.id] in
-                guard let chainID = TokenDAO.shared.chainID(ofAssetWith: assetID) else {
+                guard let chainID = TokenDAO.shared.chainID(assetID: assetID) else {
                     return
                 }
                 var pendingDeposits: [SafePendingDeposit] = []

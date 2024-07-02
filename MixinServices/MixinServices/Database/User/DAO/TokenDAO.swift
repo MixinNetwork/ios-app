@@ -42,11 +42,15 @@ public final class TokenDAO: UserDatabaseDAO {
         """)
     }
     
-    public func assetID(ofAssetWith kernelAssetID: String) -> String? {
+    public func assetID(kernelAssetID: String) -> String? {
         db.select(with: "SELECT asset_id FROM tokens WHERE kernel_asset_id = ?", arguments: [kernelAssetID])
     }
     
-    public func chainID(ofAssetWith assetID: String) -> String? {
+    public func assetID(assetKey: String) -> String? {
+        db.select(with: "SELECT asset_id FROM tokens WHERE asset_key = ?", arguments: [assetKey])
+    }
+    
+    public func chainID(assetID: String) -> String? {
         db.select(with: "SELECT chain_id FROM tokens WHERE asset_id = ?", arguments: [assetID])
     }
     

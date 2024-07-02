@@ -57,7 +57,7 @@ public final class SyncOutputsJob: AsynchronousJob {
                     var missingKernelAssetIDs: Set<String> = []
                     for kernelAssetID in outputs.map(\.asset) {
                         if assetIDs[kernelAssetID] == nil, !missingKernelAssetIDs.contains(kernelAssetID) {
-                            if let id = TokenDAO.shared.assetID(ofAssetWith: kernelAssetID) {
+                            if let id = TokenDAO.shared.assetID(kernelAssetID: kernelAssetID) {
                                 assetIDs[kernelAssetID] = id
                             } else {
                                 missingKernelAssetIDs.insert(kernelAssetID)

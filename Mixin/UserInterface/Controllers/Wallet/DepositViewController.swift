@@ -14,7 +14,6 @@ final class DepositViewController: UIViewController {
     private let usdtNetworks: OrderedDictionary<String, String> = [
         AssetID.ethereumUSDT:   "ERC-20",
         AssetID.tronUSDT:       "TRON(TRC-20)",
-        AssetID.eosUSDT:        "EOS",
         AssetID.polygonUSDT:    "Polygon",
         AssetID.bep20USDT:      "BEP-20",
         AssetID.solanaUSDT:     "Solana",

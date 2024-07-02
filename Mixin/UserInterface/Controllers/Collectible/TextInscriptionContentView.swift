@@ -9,6 +9,7 @@ final class TextInscriptionContentView: UIView {
     private let spacing: CGFloat
     private let imageView = UIImageView()
     private let imageMaskView = UIImageView(image: R.image.collection_token_mask())
+    
     private var lastTextContentURL: URL?
     
     private weak var textContentRequest: Request?

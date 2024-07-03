@@ -1,6 +1,6 @@
 import Foundation
 
-public struct InscriptionItem {
+public final class InscriptionItem {
     
     public let collectionHash: String
     public let collectionName: String
@@ -80,7 +80,7 @@ extension InscriptionItem: Codable, MixinFetchableRecord {
 
 extension InscriptionItem: InstanceInitializable {
     
-    init?(messageContent: String?) {
+    convenience init?(messageContent: String?) {
         guard let data = messageContent?.data(using: .utf8) else {
             return nil
         }

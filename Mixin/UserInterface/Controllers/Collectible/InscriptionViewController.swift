@@ -6,14 +6,15 @@ import MixinServices
 final class InscriptionViewController: UIViewController {
     
     private enum Row {
-        case content
+        case content(InscriptionContent?)
         case action
-        case hash
-        case id
-        case collection
-        case contentType
-        case owner
-        case traits
+        case hash(String)
+        case id(UInt64)
+        case collection(String)
+        case contentType(String)
+        case rawOwner(String)
+        case owners([UserItem], threshold: Int32?)
+        case traits([InscriptionItem.NameValueTrait])
     }
     
     @IBOutlet weak var backgroundImageView: UIImageView!
@@ -29,7 +30,7 @@ final class InscriptionViewController: UIViewController {
     
     private lazy var traceID = UUID().uuidString.lowercased()
     
-    private var rows: [Row] = [.content]
+    private var rows: [Row] = [.content(nil)]
     private var inscription: InscriptionItem?
     
     init(output: InscriptionOutput) {
@@ -57,17 +58,16 @@ final class InscriptionViewController: UIViewController {
         tableView.register(R.nib.inscriptionHashCell)
         tableView.register(R.nib.authenticationPreviewCompactInfoCell)
         tableView.register(R.nib.inscriptionTraitsCell)
+        tableView.register(R.nib.paymentUserGroupCell)
         tableView.dataSource = self
         tableView.delegate = self
         reloadData()
-        if inscription == nil {
-            let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(reloadFromNotification(_:)),
-                                                   name: RefreshInscriptionJob.didFinishedNotification,
-                                                   object: job)
-            ConcurrentJobQueue.shared.addJob(job: job)
-        }
+        let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadFromNotification(_:)),
+                                               name: RefreshInscriptionJob.didFinishedNotification,
+                                               object: job)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @IBAction func goBack(_ sender: Any) {
@@ -105,22 +105,39 @@ final class InscriptionViewController: UIViewController {
     }
     
     private func reloadData() {
-        if inscription == nil {
-            rows = [.content, .action, .hash, .contentType]
-        } else {
-            if output == nil {
-                rows = [.content, .hash, .id, .collection, .contentType]
-            } else {
-                rows = [.content, .action, .hash, .id, .collection, .contentType]
+        if let inscription {
+            rows = [.content(inscription.inscriptionContent)]
+            if output != nil {
+                rows.append(.action)
             }
-        }
-        if let owner = inscription?.owner, !owner.isEmpty {
-            rows.append(.owner)
-        }
-        if let traits = inscription?.nameValueTraits, !traits.isEmpty {
-            rows.append(.traits)
+            rows.append(contentsOf: [
+                .hash(inscriptionHash),
+                .id(inscription.sequence),
+                .collection(inscription.collectionName),
+                .contentType(inscription.contentType)
+            ])
+            if let owner = inscription.owner {
+                if let address = MIXAddress(string: owner) {
+                    switch address {
+                    case .user(let userID):
+                        appendOwner(raw: owner, userID: userID)
+                    case .multisig(let threshold, let userIDs):
+                        appendOwner(raw: owner, userIDs: userIDs, threshold: threshold)
+                    case .mainnet(let address):
+                        rows.append(.rawOwner(address))
+                    }
+                } else {
+                    rows.append(.rawOwner(owner))
+                }
+            }
+            if let traits = inscription.nameValueTraits, !traits.isEmpty {
+                rows.append(.traits(traits))
+            }
+        } else {
+            rows = [.content(nil), .hash(inscriptionHash)]
         }
         tableView.reloadData()
+        
         switch inscription?.inscriptionContent {
         case let .image(url):
             backgroundImageView.sd_setImage(with: url)
@@ -205,17 +222,6 @@ final class InscriptionViewController: UIViewController {
         }
     }
     
-    private func copyingContent(row: Row) -> String? {
-        switch row {
-        case .hash:
-            inscriptionHash
-        case .owner:
-            inscription?.owner
-        default:
-            nil
-        }
-    }
-    
     private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         guard 
             let identifier = configuration.identifier as? NSIndexPath,
@@ -226,6 +232,93 @@ final class InscriptionViewController: UIViewController {
         let param = UIPreviewParameters()
         param.backgroundColor = .clear
         return UITargetedPreview(view: cell.contentView, parameters: param)
+    }
+    
+    private func appendOwner(row: Row) {
+        let replacing = rows.enumerated().first(where: { (_, row) in
+            switch row {
+            case .rawOwner, .owners:
+                true
+            default:
+                false
+            }
+        })
+        if let index = replacing?.offset {
+            UIView.performWithoutAnimation {
+                rows[index] = row
+                tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+            }
+        } else {
+            let index: Int
+            switch rows.last {
+            case .traits:
+                index = rows.count - 1
+            case .none:
+                return
+            default:
+                index = rows.count
+            }
+            UIView.performWithoutAnimation {
+                rows.insert(row, at: index)
+                tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .none)
+            }
+        }
+    }
+    
+    private func appendOwner(raw: String, userID: String) {
+        DispatchQueue.global().async { [weak self] in
+            let user: UserItem
+            if let item = UserDAO.shared.getUser(userId: userID) {
+                user = item
+            } else {
+                switch UserAPI.showUser(userId: userID) {
+                case .success(let response):
+                    user = UserItem.createUser(from: response)
+                    UserDAO.shared.updateUsers(users: [response])
+                case .failure:
+                    return
+                }
+            }
+            DispatchQueue.main.async {
+                guard let self, self.inscription?.owner == raw else {
+                    return
+                }
+                self.appendOwner(row: .owners([user], threshold: nil))
+            }
+        }
+    }
+    
+    private func appendOwner(raw: String, userIDs: [String], threshold: Int32) {
+        DispatchQueue.global().async { [weak self] in
+            var users: [String: UserItem] = UserDAO.shared
+                .getUsers(with: userIDs)
+                .reduce(into: [:]) { result, item in
+                    result[item.userId] = item
+                }
+            let missingUserIDs = userIDs.filter { id in
+                users[id] == nil
+            }
+            switch UserAPI.showUsers(userIds: missingUserIDs) {
+            case .success(let responses):
+                UserDAO.shared.updateUsers(users: responses)
+                for response in responses {
+                    let item: UserItem = .createUser(from: response)
+                    users[item.userId] = item
+                }
+            case .failure:
+                return
+            }
+            let items = userIDs.compactMap { id in users[id] }
+            guard items.count == userIDs.count else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let self, self.inscription?.owner == raw else {
+                    return
+                }
+                self.appendOwner(row: .owners(items, threshold: threshold))
+            }
+        }
     }
     
 }
@@ -239,9 +332,9 @@ extension InscriptionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = rows[indexPath.row]
         switch row {
-        case .content:
+        case let .content(content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_content, for: indexPath)!
-            if let inscription, let content = inscription.inscriptionContent {
+            if let content {
                 cell.placeholderImageView.isHidden = true
                 cell.contentImageView.isHidden = false
                 switch content {
@@ -263,30 +356,43 @@ extension InscriptionViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_action, for: indexPath)!
             cell.delegate = self
             return cell
-        case .hash:
+        case let .hash(hash):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_hash, for: indexPath)!
-            cell.hashPatternView.content = inscriptionHash
-            cell.hashLabel.text = inscriptionHash
+            cell.hashPatternView.content = hash
+            cell.hashLabel.text = hash
             return cell
-        case .id:
+        case let .id(sequence):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.setInscriptionInfo(caption: R.string.localizable.id(), content: inscription?.sequence)
+            cell.setInscriptionInfo(caption: R.string.localizable.id(), content: sequence)
             return cell
-        case .collection:
+        case let .collection(name):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.setInscriptionInfo(caption: R.string.localizable.collection(), content: inscription?.collectionName)
+            cell.setInscriptionInfo(caption: R.string.localizable.collection(), content: name)
             return cell
-        case .contentType:
+        case let .contentType(type):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.setInscriptionInfo(caption: R.string.localizable.content_type(), content: inscription?.contentType)
+            cell.setInscriptionInfo(caption: R.string.localizable.content_type(), content: type)
             return cell
-        case .owner:
+        case let .rawOwner(owner):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.setInscriptionInfo(caption: R.string.localizable.collectible_owner(), content: inscription?.owner)
+            cell.setInscriptionInfo(caption: R.string.localizable.collectible_owner(), content: owner)
             return cell
-        case .traits:
+        case let .owners(users, threshold):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
+            cell.overrideUserInterfaceStyle = .dark
+            cell.selectionStyle = .none
+            cell.contentView.backgroundColor = .clear
+            var caption = R.string.localizable.collectible_owner().uppercased()
+            if let threshold, users.count > 1 {
+                caption += "(\(threshold)/\(users.count))"
+            }
+            cell.captionLabel.text = caption
+            cell.captionLabel.textColor = UIColor(displayP3RgbValue: 0x999999)
+            cell.users = users
+            return cell
+        case let .traits(traits):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_traits, for: indexPath)!
-            cell.traits = inscription?.nameValueTraits ?? []
+            cell.traits = traits
             return cell
         }
     }
@@ -300,7 +406,13 @@ extension InscriptionViewController: UITableViewDelegate {
         contextMenuConfigurationForRowAt indexPath: IndexPath,
         point: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard let content = copyingContent(row: rows[indexPath.row]) else {
+        let content: String
+        switch rows[indexPath.row] {
+        case let .hash(hash):
+            content = hash
+        case let .rawOwner(owner):
+            content = owner
+        default:
             return nil
         }
         return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ in

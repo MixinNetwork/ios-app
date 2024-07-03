@@ -906,6 +906,7 @@
 		94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94980FC62A5D653A0051AE6D /* IntroViewController.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
+		94A3E6692C34575600556FBC /* MIXAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3E6682C34575600556FBC /* MIXAddress.swift */; };
 		94A40C472B2781AF0028BC02 /* TransferPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */; };
 		94A709D62B67B0A5007CADAB /* DepositSuspendedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */; };
 		94A72C992C2EBE1E001E8782 /* InscriptionTraitsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A72C982C2EBE1E001E8782 /* InscriptionTraitsCell.xib */; };
@@ -2194,6 +2195,7 @@
 		94980FC62A5D653A0051AE6D /* IntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
+		94A3E6682C34575600556FBC /* MIXAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIXAddress.swift; sourceTree = "<group>"; };
 		94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPaymentOperation.swift; sourceTree = "<group>"; };
 		94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositSuspendedView.xib; sourceTree = "<group>"; };
 		94A72C972C2EBE1E001E8782 /* InscriptionTraitsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionTraitsCell.swift; sourceTree = "<group>"; };
@@ -3633,6 +3635,7 @@
 				94031D702C1C5B41007E53BC /* SafeURL.swift */,
 				9445065F2C1C5D9700F9C583 /* TIPURL.swift */,
 				94F952662AE66A700025B995 /* AmountIntent.swift */,
+				94A3E6682C34575600556FBC /* MIXAddress.swift */,
 				940DC5912B075E03009A15D1 /* SafePaymentURL.swift */,
 				94BD7E762B2983CA0004576D /* MultisigURL.swift */,
 				94EE1C002B4C647500BE9AD1 /* CodeURL.swift */,
@@ -5781,6 +5784,7 @@
 				94F209DA2C06C1CE00550060 /* EVMTransferOperation.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
 				94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */,
+				94A3E6692C34575600556FBC /* MIXAddress.swift in Sources */,
 				7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */,
 				7BE036842337AB36003F4241 /* UserHandleTableHeaderView.swift in Sources */,
 				7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */,

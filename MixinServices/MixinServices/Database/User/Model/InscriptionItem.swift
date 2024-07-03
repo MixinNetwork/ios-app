@@ -28,7 +28,7 @@ public final class InscriptionItem {
     }
     
     public var shareLink: String {
-        "https://inscription.mixin.space/collectibles/\(inscriptionHash)"
+        "https://mixin.one/inscriptions/\(inscriptionHash)"
     }
     
     public init(collection: InscriptionCollection, inscription: Inscription) {
@@ -123,6 +123,30 @@ extension InscriptionItem {
         let collection = try await InscriptionAPI.collection(collectionHash: inscription.collectionHash)
         InscriptionDAO.shared.save(collection: collection)
         return InscriptionItem(collection: collection, inscription: inscription)
+    }
+    
+    public static func fetchAndSave(inscriptionHash: String) -> Result<InscriptionItem, Error> {
+        assert(!Thread.isMainThread)
+        let inscription: Inscription
+        switch InscriptionAPI.inscription(inscriptionHash: inscriptionHash) {
+        case .success(let i):
+            inscription = i
+        case .failure(let error):
+            return .failure(error)
+        }
+        InscriptionDAO.shared.save(inscription: inscription)
+        
+        let collection: InscriptionCollection
+        switch InscriptionAPI.collection(collectionHash: inscription.collectionHash) {
+        case .success(let c):
+            collection = c
+        case .failure(let error):
+            return .failure(error)
+        }
+        InscriptionDAO.shared.save(collection: collection)
+        
+        let item = InscriptionItem(collection: collection, inscription: inscription)
+        return .success(item)
     }
     
 }

@@ -4,8 +4,9 @@ enum SafeURL {
     
     case payment(SafePaymentURL)
     case multisig(MultisigURL)
-    case code(CodeURL)
+    case code(String)
     case tip(TIPURL)
+    case inscription(String)
     
 }
 
@@ -25,12 +26,23 @@ extension SafeURL {
             self = .payment(payment)
         } else if let multisig = MultisigURL(url: url) {
             self = .multisig(multisig)
-        } else if let code = CodeURL(url: url) {
-            self = .code(code)
         } else if let tip = TIPURL(url: url) {
             self = .tip(tip)
         } else {
-            return nil
+            let pathComponents = url.pathComponents
+            if pathComponents.count == 3, pathComponents[1] == "schemes" {
+                let uuid = pathComponents[2]
+                if UUID.isValidLowercasedUUIDString(uuid) {
+                    self = .code(uuid)
+                } else {
+                    return nil
+                }
+            } else if pathComponents.count == 3, pathComponents[1] == "inscriptions" {
+                let hash = pathComponents[2]
+                self = .inscription(hash)
+            } else {
+                return nil
+            }
         }
     }
     

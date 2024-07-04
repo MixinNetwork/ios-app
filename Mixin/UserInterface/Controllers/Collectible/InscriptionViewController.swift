@@ -389,6 +389,7 @@ extension InscriptionViewController: UITableViewDataSource {
             cell.captionLabel.text = caption
             cell.captionLabel.textColor = UIColor(displayP3RgbValue: 0x999999)
             cell.users = users
+            cell.delegate = self
             return cell
         case let .traits(traits):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inscription_traits, for: indexPath)!
@@ -514,6 +515,15 @@ extension InscriptionViewController: ImageCropViewControllerDelegate {
             }
             hud.scheduleAutoHidden()
         })
+    }
+    
+}
+
+extension InscriptionViewController: PaymentUserGroupCellDelegate {
+    
+    func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem) {
+        let profile = UserProfileViewController(user: item)
+        present(profile, animated: true, completion: nil)
     }
     
 }

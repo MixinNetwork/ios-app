@@ -83,8 +83,8 @@ class UrlWindow {
                 result = checkUser(id, clearNavigationStack: clearNavigationStack)
             case .snapshots:
                 result = checkSnapshot(url: url)
-            case let .conversations(conversationId, userId):
-                result = checkConversation(conversationId: conversationId, userId: userId)
+            case let .conversations(conversationId, userId, start):
+                result = checkConversation(conversationId: conversationId, userId: userId, start: start)
             case let .apps(userId):
                 result = checkApp(url: url, userId: userId)
             case let .transfer(id):
@@ -281,7 +281,7 @@ class UrlWindow {
         return true
     }
     
-    class func checkConversation(conversationId: String, userId: String?) -> Bool {
+    class func checkConversation(conversationId: String, userId: String?, start: String?) -> Bool {
         guard !conversationId.isEmpty, UUID(uuidString: conversationId) != nil else {
             return false
         }
@@ -290,9 +290,9 @@ class UrlWindow {
             let pushController = {
                 let viewController: UIViewController?
                 if let user = user {
-                    viewController = ConversationViewController.instance(ownerUser: user)
+                    viewController = ConversationViewController.instance(ownerUser: user, start: start)
                 } else if let conversation = conversation {
-                    viewController = ConversationViewController.instance(conversation: conversation)
+                    viewController = ConversationViewController.instance(conversation: conversation, start: start)
                 } else {
                     viewController = nil
                 }

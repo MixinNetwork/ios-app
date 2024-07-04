@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 enum SafeURL {
     
@@ -39,7 +40,11 @@ extension SafeURL {
                 }
             } else if pathComponents.count == 3, pathComponents[1] == "inscriptions" {
                 let hash = pathComponents[2]
-                self = .inscription(hash)
+                if Inscription.isHashValid(hash) {
+                    self = .inscription(hash)
+                } else {
+                    return nil
+                }
             } else {
                 return nil
             }

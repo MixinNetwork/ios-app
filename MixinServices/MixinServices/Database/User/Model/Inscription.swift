@@ -37,3 +37,14 @@ extension Inscription: TableRecord, PersistableRecord {
     
 }
 
+extension Inscription {
+    
+    public static func isHashValid(_ hash: String) -> Bool {
+        if let data = Data(hexEncodedString: hash) {
+            return data.count == 32
+        } else {
+            return false
+        }
+    }
+    
+}

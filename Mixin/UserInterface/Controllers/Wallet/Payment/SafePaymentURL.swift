@@ -107,7 +107,7 @@ struct SafePaymentURL {
         
         let inscription: String?
         if let hash = queries["inscription"] {
-            if hash.count == 64 {
+            if Inscription.isHashValid(hash) {
                 inscription = hash
             } else {
                 Logger.general.warn(category: "SafePayment", message: "Invalid inscription: \(hash)")

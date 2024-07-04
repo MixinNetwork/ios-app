@@ -320,7 +320,7 @@ extension SearchViewController: UITableViewDelegate {
                 self?.present(profile, animated: true)
             }
         case .asset:
-            pushAssetViewController(asset: assets[indexPath.row].asset)
+            pushTokenViewController(token: assets[indexPath.row].asset)
         case .user:
             pushViewController(keyword: trimmedLowercaseKeyword, result: users[indexPath.row])
         case .group:

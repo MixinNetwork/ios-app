@@ -45,6 +45,7 @@ class HomeViewController: UIViewController {
     private var loadMoreMessageThreshold = 10
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
+    private var isShowingSearch = false
     
     private var bulletinContent: BulletinContent? = nil {
         didSet {
@@ -90,7 +91,7 @@ class HomeViewController: UIViewController {
         }
         updateBulletinView()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
-        searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
+        searchViewController.cancelButton.addTarget(self, action: #selector(cancelSearching(_:)), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .singleLine
@@ -111,6 +112,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateBulletinView), name: TIP.didUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: dismissSearchNotification, object: nil)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
@@ -185,6 +187,7 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func showSearchAction() {
+        isShowingSearch = true
         searchViewController.prepareForReuse()
         searchContainerTopConstraint.constant = 0
         UIView.animate(withDuration: 0.2, animations: {
@@ -351,15 +354,14 @@ class HomeViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
-    @objc func hideSearch() {
-        searchViewController.willHide()
-        searchContainerTopConstraint.constant = searchContainerBeginTopConstant
-        UIView.animate(withDuration: 0.2) {
-            self.navigationBarView.alpha = 1
-            self.searchContainerView.alpha = 0
-            self.view.layoutIfNeeded()
+    @objc func cancelSearching(_ sender: Any) {
+        hideSearch(endEditing: true, animate: true)
+    }
+    
+    @objc private func cancelSearchingSilently(_ notification: Notification) {
+        if isShowingSearch {
+            hideSearch(endEditing: false, animate: false)
         }
-        view.endEditing(true)
     }
     
     @objc private func circleNameDidChange() {
@@ -369,6 +371,25 @@ class HomeViewController: UIViewController {
     func setNeedsRefresh() {
         needRefresh = true
         fetchConversations()
+    }
+    
+    private func hideSearch(endEditing: Bool, animate: Bool) {
+        isShowingSearch = false
+        searchViewController.willHide()
+        searchContainerTopConstraint.constant = searchContainerBeginTopConstant
+        let layout = {
+            self.navigationBarView.alpha = 1
+            self.searchContainerView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
+        if animate {
+            UIView.animate(withDuration: 0.2, animations: layout)
+        } else {
+            layout()
+        }
+        if endEditing {
+            view.endEditing(true)
+        }
     }
     
 }
@@ -463,7 +484,7 @@ extension HomeViewController: UIScrollViewDelegate {
         if tableView.contentOffset.y <= -dragDownThreshold {
             showSearchAction()
         } else {
-            hideSearch()
+            hideSearch(endEditing: true, animate: true)
         }
     }
     

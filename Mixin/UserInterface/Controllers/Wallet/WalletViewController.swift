@@ -36,6 +36,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenExtraDAO.tokenVisibilityDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: UTXOService.balanceDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
         reloadData()
     }
     
@@ -110,8 +111,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         present(sheet, animated: true, completion: nil)
     }
     
-    func dismissSearch() {
-        guard let searchViewController = searchViewController else {
+    @objc func dismissSearch() {
+        guard let searchViewController = searchViewController, searchViewController.parent != nil else {
             return
         }
         UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {

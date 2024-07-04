@@ -51,7 +51,7 @@ class RecentAppsViewController: UIViewController {
     @IBAction func hideSearchAction() {
         let tabBar = UIApplication.homeNavigationController?.topViewController as? HomeTabBarController
         let home = tabBar?.selectedViewController as? HomeViewController
-        home?.hideSearch()
+        home?.cancelSearching(self)
     }
     
     @objc func didChangeRecentlyUsedAppIds() {
@@ -154,7 +154,7 @@ extension RecentAppsViewController: UICollectionViewDelegate {
         parent.searchTextField.resignFirstResponder()
         parent.homeNavigationController?.pushViewController(vc, animated: true)
         vc.transitionCoordinator?.animate(alongsideTransition: nil, completion: { (_) in
-            parent.homeViewController?.hideSearch()
+            parent.homeViewController?.cancelSearching(self)
         })
     }
     

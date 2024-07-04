@@ -40,7 +40,7 @@ final class Web3BrowserViewController: UIViewController {
     
     @IBAction func cancelSearching(_ sender: Any) {
         searchBoxView.textField.resignFirstResponder()
-        (parent as? ExploreViewController)?.cancelSearching()
+        (parent as? ExploreViewController)?.dismissSearch()
     }
     
     @objc private func searchKeyword(_ sender: Any) {

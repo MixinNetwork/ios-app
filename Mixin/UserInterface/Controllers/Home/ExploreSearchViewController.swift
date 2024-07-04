@@ -125,7 +125,7 @@ final class ExploreSearchViewController: UIViewController {
     
     @IBAction func cancelSearching(_ sender: Any) {
         searchBoxView.textField.resignFirstResponder()
-        (parent as? ExploreViewController)?.cancelSearching()
+        (parent as? ExploreViewController)?.dismissSearch()
     }
     
     private func cancelSearchOperations() {

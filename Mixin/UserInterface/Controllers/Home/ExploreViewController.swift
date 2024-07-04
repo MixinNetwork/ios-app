@@ -36,6 +36,7 @@ final class ExploreViewController: UIViewController {
         }
         segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
         collectionView(segmentsCollectionView, didSelectItemAt: indexPath)
+        NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
     }
     
     @IBAction func searchApps(_ sender: Any) {
@@ -113,8 +114,8 @@ final class ExploreViewController: UIViewController {
         }
     }
     
-    func cancelSearching() {
-        guard let searchViewController, let searchViewCenterYConstraint else {
+    @objc func dismissSearch() {
+        guard let searchViewController, let searchViewCenterYConstraint, searchViewController.parent != nil else {
             return
         }
         searchViewCenterYConstraint.constant = hiddenSearchTopMargin

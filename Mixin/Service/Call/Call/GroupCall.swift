@@ -114,7 +114,7 @@ class GroupCall: Call {
                                                               userId: myUserId,
                                                               category: .KRAKEN_CANCEL,
                                                               createdAt: Date().toUTCString())
-                    MessageDAO.shared.insertMessage(message: message, messageSource: "GroupCall")
+                    MessageDAO.shared.insertMessage(message: message, messageSource: MessageDAO.LocalMessageSource.groupCall)
                     let cancel = KrakenRequest(callUUID: self.uuid,
                                                conversationId: self.conversationId,
                                                trackId: self.trackId,
@@ -185,7 +185,7 @@ class GroupCall: Call {
                                                           userId: userId,
                                                           category: .KRAKEN_CANCEL,
                                                           createdAt: createdAt)
-                MessageDAO.shared.insertMessage(message: message, messageSource: "GroupCall")
+                MessageDAO.shared.insertMessage(message: message, messageSource: MessageDAO.LocalMessageSource.groupCall)
             }
         }
     }
@@ -238,7 +238,7 @@ class GroupCall: Call {
                                                       userId: userId,
                                                       category: .KRAKEN_DECLINE,
                                                       createdAt: createdAt)
-            MessageDAO.shared.insertMessage(message: message, messageSource: "GroupCall")
+            MessageDAO.shared.insertMessage(message: message, messageSource: MessageDAO.LocalMessageSource.groupCall)
         }
     }
     

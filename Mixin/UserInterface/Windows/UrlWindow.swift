@@ -61,6 +61,9 @@ class UrlWindow {
             case .tip(let tip):
                 checkTIP(tip, from: source)
                 return true
+            case .inscription(let hash):
+                checkInscription(hash: hash)
+                return true
             }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
@@ -1131,10 +1134,10 @@ extension UrlWindow {
         }
     }
     
-    private static func checkCode(_ code: CodeURL, from source: Source, clearNavigationStack: Bool) {
+    private static func checkCode(_ code: String, from source: Source, clearNavigationStack: Bool) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        SafeAPI.scheme(uuid: code.uuid) { result in
+        SafeAPI.scheme(uuid: code) { result in
             switch result {
             case .success(let scheme):
                 hud.hide()
@@ -1235,6 +1238,43 @@ extension UrlWindow {
                                 hud.scheduleAutoHidden()
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+    
+    private static func checkInscription(hash: String) {
+        guard let navigationController = UIApplication.homeNavigationController else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: navigationController.view)
+        DispatchQueue.global().async { [weak navigationController] in
+            if let output = InscriptionDAO.shared.inscriptionOutput(inscriptionHash: hash) {
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let preview = InscriptionViewController(output: output)
+                    navigationController?.pushViewController(preview, animated: true)
+                }
+            } else if let item = InscriptionDAO.shared.inscriptionItem(with: hash) {
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let preview = InscriptionViewController(inscription: item)
+                    navigationController?.pushViewController(preview, animated: true)
+                }
+            } else {
+                switch InscriptionItem.fetchAndSave(inscriptionHash: hash) {
+                case .success(let item):
+                    DispatchQueue.main.async {
+                        hud.hide()
+                        let preview = InscriptionViewController(inscription: item)
+                        navigationController?.pushViewController(preview, animated: true)
+                    }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
                     }
                 }
             }

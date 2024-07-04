@@ -44,3 +44,5 @@ let maxNumberOfTranscriptChildren = 99
 let notApplicable = "N/A"
 
 let minimumTransferAmount: Decimal = 0.000_000_01
+
+let maxGroupMemberCount = 1024

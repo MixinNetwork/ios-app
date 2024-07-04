@@ -3,8 +3,6 @@ import MixinServices
 
 class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell, UserSearchResult> {
     
-    private let maxMembersCount = 256
-    
     private var conversationId: String? = nil
     private var alreadyInGroupUserIds = Set<String>()
     private var selectedUserIds = Set<String>()
@@ -145,7 +143,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         let user = self.user(at: indexPath)
         if alreadyInGroupUserIds.contains(user.userId) {
             return nil
-        } else if selectedUserIds.count + alreadyInGroupUserIds.count == maxMembersCount {
+        } else if selectedUserIds.count + alreadyInGroupUserIds.count == maxGroupMemberCount {
             showAutoHiddenHud(style: .error, text: R.string.localizable.group_participant_add_full())
             return nil
         } else if selectedUserIds.count == 50 {
@@ -183,7 +181,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     }
     
     private func updateSubtitle() {
-        let subtitle = "\(selectedUsers.count + alreadyInGroupUserIds.count)/\(maxMembersCount)"
+        let subtitle = "\(selectedUsers.count + alreadyInGroupUserIds.count)/\(maxGroupMemberCount)"
         container?.subtitleLabel.text = subtitle
     }
     

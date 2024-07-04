@@ -34,7 +34,10 @@ public struct ExternalTransfer {
     
     public let memo: String?
     
-    public init(string raw: String, assetIDFinder: (String) -> String? = AssetDAO.shared.getAssetIdByAssetKey(_:)) throws {
+    public init(
+        string raw: String,
+        assetIDFinder: (String) -> String? = TokenDAO.shared.assetID(assetKey:)
+    ) throws {
         guard let components = URLComponents(string: raw) else {
             throw TransferLinkError.notTransferLink
         }
@@ -138,11 +141,13 @@ public struct ExternalTransfer {
             self.arbitraryAmount = arbitraryAmount
             self.memo = nil
         } else {
-            guard let assetID = Self.supportedAssetIds[scheme] else {
-                throw TransferLinkError.notTransferLink
+            let assetID: String? = if scheme == "solana", let key = queries["spl-token"] {
+                assetIDFinder(key)
+            } else {
+                Self.supportedAssetIds[scheme]
             }
-            if scheme == "solana", queries["spl-token"] != nil {
-                throw TransferLinkError.invalidFormat
+            guard let assetID else {
+                throw TransferLinkError.assetNotFound
             }
             guard let amount = queries["amount"] ?? queries["tx_amount"], !amount.contains("e") else {
                 throw TransferLinkError.invalidFormat

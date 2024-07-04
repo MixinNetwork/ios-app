@@ -10,8 +10,13 @@ struct SolanaRPCClient {
     
     struct ResponseError: Error, Decodable, CustomStringConvertible {
         
+        struct Data: Decodable {
+            let logs: [String]
+        }
+        
         let code: Int
         let message: String
+        let data: Data
         
         var description: String {
             "SolanaRPCError: \(code), message: \(message)"

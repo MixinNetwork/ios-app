@@ -174,6 +174,7 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
             )
             hud.hide()
             let transfer = Web3TransferViewController(operation: operation, proposer: .web3ToAddress)
+            transfer.manipulateNavigationStackOnFinished = true
             Web3PopupCoordinator.enqueue(popup: .request(transfer))
         } catch {
             hud.set(style: .error, text: error.localizedDescription)

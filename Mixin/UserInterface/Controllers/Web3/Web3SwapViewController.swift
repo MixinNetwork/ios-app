@@ -51,9 +51,12 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
             reloadPayView(with: token)
             payToken = token
         }
-        receiveToken = receiveTokens.first(where: {
-            // FIXME: Not same field
-            $0.address != payToken?.assetKey
+        receiveToken = receiveTokens.first(where: { token in
+            if let payToken {
+                !token.isEqual(to: payToken)
+            } else {
+                true
+            }
         })
         if let token = receiveToken {
             reloadReceiveView(with: token)
@@ -90,6 +93,13 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func changeReceiveToken(_ sender: Any) {
+        let receiveTokens = self.receiveTokens.filter { token in
+            if let payToken {
+                !token.isEqual(to: payToken)
+            } else {
+                true
+            }
+        }
         let selector = Web3TransferTokenSelectorViewController<Web3SwappableToken>()
         selector.onSelected = { token in
             self.receiveToken = token
@@ -163,7 +173,7 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
                 chain: .solana
             )
             hud.hide()
-            let transfer = Web3TransferViewController(operation: operation, proposer: nil)
+            let transfer = Web3TransferViewController(operation: operation, proposer: .web3ToAddress)
             Web3PopupCoordinator.enqueue(popup: .request(transfer))
         } catch {
             hud.set(style: .error, text: error.localizedDescription)

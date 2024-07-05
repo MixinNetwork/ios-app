@@ -27,4 +27,13 @@ public struct Web3SwappableToken: Decodable {
         URL(string: icon)
     }
     
+    public func isEqual(to token: Web3Token) -> Bool {
+        if address == Web3Token.AssetKey.wrappedSOL && token.assetKey == Web3Token.AssetKey.sol {
+            true
+        } else {
+            // XXX: Really?
+            address == token.assetKey
+        }
+    }
+    
 }

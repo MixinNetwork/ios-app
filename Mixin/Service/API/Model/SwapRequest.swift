@@ -22,7 +22,11 @@ struct SwapRequest: Encodable {
             return nil
         }
         self.payer = payAddress
-        self.inputMint = payToken.assetKey
+        self.inputMint = if payToken.assetKey == Web3Token.AssetKey.sol {
+            Web3Token.AssetKey.wrappedSOL
+        } else {
+            payToken.assetKey
+        }
         self.inAmount = inAmount.intValue
         self.outputMint = receiveToken.address
         self.slippage = (slippage * 10000 as NSDecimalNumber).intValue

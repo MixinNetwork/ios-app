@@ -123,6 +123,19 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         checkmarkImageView.isHidden = true
     }
     
+    func render(web3SwappableToken token: Web3SwappableToken) {
+        assetIconView.setIcon(web3SwappableToken: token)
+        nameLabel.text = token.name
+        descriptionLabel.text = nil
+        chainTagLabel.isHidden = true
+        changeLabel.text = R.string.localizable.na() // Just for layout guidance
+        priceLabel.text = nil
+        changeLabel.isHidden = true
+        priceLabel.isHidden = true
+        noValueIndicator.isHidden = false
+        checkmarkImageView.isHidden = true
+    }
+    
     func render(token: TokenItem, isSelected: Bool) {
         assetIconView.setIcon(token: token)
         nameLabel.text = token.name

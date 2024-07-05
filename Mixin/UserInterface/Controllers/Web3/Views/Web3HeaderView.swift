@@ -7,8 +7,6 @@ class Web3HeaderView: UIView {
     
     weak var sendButton: UIButton!
     weak var receiveButton: UIButton!
-    weak var browseButton: UIButton!
-    weak var moreButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,6 +25,12 @@ class Web3HeaderView: UIView {
     }
     
     func addAction(title: String, icon: UIImage) -> UIButton {
+        let (wrapper, button) = makeActionView(title: title, icon: icon)
+        actionStackView.addArrangedSubview(wrapper)
+        return button
+    }
+    
+    func makeActionView(title: String, icon: UIImage) -> (wrapper: UIView, button: UIButton) {
         let wrapper = UIView()
         
         let backgroundImageView = UIImageView(image: R.image.explore.action_tray())
@@ -55,8 +59,7 @@ class Web3HeaderView: UIView {
             make.edges.equalTo(backgroundImageView)
         }
         
-        actionStackView.addArrangedSubview(wrapper)
-        return button
+        return (wrapper, button)
     }
     
 }

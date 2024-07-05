@@ -9,6 +9,10 @@ final class Web3AccountHeaderView: Web3HeaderView {
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var amountLabel: InsetLabel!
     
+    private(set) weak var swapButton: UIButton?
+    private(set) weak var browseButton: UIButton!
+    private(set) weak var moreButton: UIButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         symbolLabel.text = Currency.current.symbol
@@ -35,14 +39,45 @@ final class Web3AccountHeaderView: Web3HeaderView {
         moreButton.addTarget(target, action: more, for: .touchUpInside)
     }
     
+    func addSwapButton(_ target: Any, action: Selector) {
+        guard swapButton == nil else {
+            return
+        }
+        let (wrapper, button) = makeActionView(title: R.string.localizable.swap(),
+                                               icon: R.image.web3_action_swap()!)
+        actionStackView.insertArrangedSubview(wrapper, at: 2)
+        button.addTarget(target, action: action, for: .touchUpInside)
+        swapButton = button
+    }
+    
+    func enableSwapButton() {
+        guard swapButton != nil else {
+            return
+        }
+        enable(wrapper: actionStackView.arrangedSubviews[2])
+    }
+    
+    func disableSwapButton() {
+        guard swapButton != nil else {
+            return
+        }
+        disable(wrapper: actionStackView.arrangedSubviews[2])
+    }
+    
     func enableSendButton() {
-        let wrapper = actionStackView.arrangedSubviews[0]
+        enable(wrapper: actionStackView.arrangedSubviews[0])
+    }
+    
+    func disableSendButton() {
+        disable(wrapper: actionStackView.arrangedSubviews[0])
+    }
+    
+    private func enable(wrapper: UIView) {
         wrapper.alpha = 1
         wrapper.isUserInteractionEnabled = true
     }
     
-    func disableSendButton() {
-        let wrapper = actionStackView.arrangedSubviews[0]
+    private func disable(wrapper: UIView) {
         switch traitCollection.userInterfaceStyle {
         case .dark:
             wrapper.alpha = 0.45

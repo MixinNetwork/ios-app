@@ -704,6 +704,7 @@
 "owner" = "オーナー";
 "participants" = "参加者";
 "participants_count" = "%@人のメンバー";
+"pay" = "Pay";
 "pay_paid" = "この支払いリンクはすでに使用済みです。重複して支払いを行うことはできません。";
 "pay_with_biometry_type" = "%@で支払う";
 "pay_with_pin_interval" = "PINコードの再確認間隔";
@@ -988,6 +989,7 @@
 "successful" = "成功";
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "不審なリンクです";
+"swap" = "Swap";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

@@ -71,4 +71,11 @@ public class Web3Token: Codable {
         return CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
     }()
     
+    public func nativeAmount(decimalAmount: Decimal) -> NSDecimalNumber? {
+        let decimalAmountNumber = decimalAmount as NSDecimalNumber
+        let nativeAmount = decimalAmountNumber.multiplying(byPowerOf10: decimalValuePower)
+        let isNativeAmountIntegral = nativeAmount == nativeAmount.rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
+        return isNativeAmountIntegral ? nativeAmount : nil
+    }
+    
 }

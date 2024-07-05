@@ -704,6 +704,7 @@
 "owner" = "群主";
 "participants" = "成员";
 "participants_count" = "%@ 位群组成员";
+"pay" = "支付";
 "pay_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_with_biometry_type" = "%@支付";
 "pay_with_pin_interval" = "PIN 使用间隔";
@@ -988,6 +989,7 @@
 "successful" = "成功";
 "suspended_deposit" = "%1$@ 充值已暂停，可能的原因是因为使用率太低、节点故障、区块链网络硬分叉或者拥堵，注意已转入的 %2$@ 资产可以继续转账。";
 "suspicious_link" = "可疑链接";
+"swap" = "闪兑";
 "symbol" = "符号";
 "symbol_withdrawal" = "%@ 提现";
 "syncing_and_verifying_tip" = "正在验证并同步密钥分片到 TIP 网络，请保持应用在前台，设置过程中不要强制关闭应用";

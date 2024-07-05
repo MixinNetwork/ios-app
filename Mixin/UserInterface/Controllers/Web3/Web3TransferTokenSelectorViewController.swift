@@ -1,17 +1,12 @@
 import UIKit
 import MixinServices
 
-protocol Web3TransferTokenSelectorViewControllerDelegate: AnyObject {
-    func web3TransferTokenSelectorViewController(_ viewController: Web3TransferTokenSelectorViewController, didSelectToken token: TokenItem)
-    func web3TransferTokenSelectorViewController(_ viewController: Web3TransferTokenSelectorViewController, didSelectToken token: Web3Token)
-}
-
-final class Web3TransferTokenSelectorViewController: PopupSearchableTableViewController {
+final class Web3TransferTokenSelectorViewController<Token: Web3TransferableToken>: PopupSearchableTableViewController, UITableViewDataSource, UITableViewDelegate {
     
-    weak var delegate: Web3TransferTokenSelectorViewControllerDelegate?
+    var onSelected: ((Token) -> Void)?
     
-    private var allTokens: [Web3TransferableToken] = []
-    private var searchResults: [Web3TransferableToken] = []
+    private var allTokens: [Token] = []
+    private var searchResults: [Token] = []
     
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
@@ -35,17 +30,14 @@ final class Web3TransferTokenSelectorViewController: PopupSearchableTableViewCon
         }
     }
     
-    func reload(tokens: [Web3TransferableToken]) {
+    func reload(tokens: [Token]) {
         self.allTokens = tokens
         if isViewLoaded {
             tableView.reloadData()
         }
     }
     
-}
-
-extension Web3TransferTokenSelectorViewController: UITableViewDataSource {
-    
+    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         isSearching ? searchResults.count : allTokens.count
     }
@@ -58,27 +50,19 @@ extension Web3TransferTokenSelectorViewController: UITableViewDataSource {
             cell.render(token: token, style: .nameWithBalance)
         case let token as Web3Token:
             cell.render(web3Token: token)
+        case let token as Web3SwappableToken:
+            cell.render(web3SwappableToken: token)
         default:
             break
         }
         return cell
     }
     
-}
-
-extension Web3TransferTokenSelectorViewController: UITableViewDelegate {
-    
+    // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = isSearching ? searchResults[indexPath.row] : allTokens[indexPath.row]
-        switch token {
-        case let token as TokenItem:
-            delegate?.web3TransferTokenSelectorViewController(self, didSelectToken: token)
-        case let token as Web3Token:
-            delegate?.web3TransferTokenSelectorViewController(self, didSelectToken: token)
-        default:
-            break
-        }
+        onSelected?(token)
         dismiss(animated: true, completion: nil)
     }
     

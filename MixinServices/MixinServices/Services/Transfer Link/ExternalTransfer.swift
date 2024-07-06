@@ -44,6 +44,10 @@ public struct ExternalTransfer {
         guard let scheme = components.scheme, let queryItems = components.queryItems else {
             throw TransferLinkError.notTransferLink
         }
+        guard let schemeAssetID = Self.supportedAssetIds[scheme] else {
+            // Drop schemes which are not listed in `supportedAssetIds`
+            throw TransferLinkError.notTransferLink
+        }
         let queries = queryItems.reduce(into: [:]) { queries, item in
             queries[item.name] = item.value
         }
@@ -144,7 +148,7 @@ public struct ExternalTransfer {
             let assetID: String? = if scheme == "solana", let key = queries["spl-token"] {
                 assetIDFinder(key)
             } else {
-                Self.supportedAssetIds[scheme]
+                schemeAssetID
             }
             guard let assetID else {
                 throw TransferLinkError.assetNotFound

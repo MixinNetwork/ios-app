@@ -871,6 +871,8 @@
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
 		9473F8282AE51097004E5739 /* RegisterToSafeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */; };
 		94787E182A7C071E00BB0124 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = 94787E172A7C071E00BB0124 /* QRCode */; };
+		94793ACF2C3A56A40078ED51 /* QuoteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */; };
+		94793AD12C3A57230078ED51 /* QuoteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94793AD02C3A57230078ED51 /* QuoteResponse.swift */; };
 		9479B7852BBBE589002A2C4F /* web3.swift in Frameworks */ = {isa = PBXBuildFile; productRef = 9479B7842BBBE589002A2C4F /* web3.swift */; };
 		947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36A825DEB72A00146111 /* PlaylistManager.swift */; };
 		947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36AD25DEB75A00146111 /* PlaylistViewController.swift */; };
@@ -2169,6 +2171,8 @@
 		94720ED029C1A9850070C7C1 /* TIP+Web3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIP+Web3.swift"; sourceTree = "<group>"; };
 		94739A5326258F8200E8914D /* Custom-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Custom-acknowledgements.plist"; sourceTree = "<group>"; };
 		9473F8272AE51097004E5739 /* RegisterToSafeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterToSafeViewController.swift; sourceTree = "<group>"; };
+		94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteRequest.swift; sourceTree = "<group>"; };
+		94793AD02C3A57230078ED51 /* QuoteResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteResponse.swift; sourceTree = "<group>"; };
 		947B36A825DEB72A00146111 /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
 		947B36AD25DEB75A00146111 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		947B36B225DEB79100146111 /* PlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistView.xib; sourceTree = "<group>"; };
@@ -4412,6 +4416,8 @@
 			children = (
 				7BC96DE4241779F70047471D /* ExternalApiError.swift */,
 				DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */,
+				94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */,
+				94793AD02C3A57230078ED51 /* QuoteResponse.swift */,
 				945FFC812C3829B00013DC51 /* SwapRequest.swift */,
 				945FFC892C3832230013DC51 /* SwapResponse.swift */,
 			);
@@ -5550,6 +5556,7 @@
 				7B833E9922C4904F0063929D /* AppLoadingIndicatorView.swift in Sources */,
 				7BAB76AA228AABEA009ECB8C /* MessageSearchResult.swift in Sources */,
 				DFD1FBC522FD809700C570D4 /* PhoneContactsSettingViewController.swift in Sources */,
+				94793ACF2C3A56A40078ED51 /* QuoteRequest.swift in Sources */,
 				948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */,
 				7C719E8229D4AB0C00C42E08 /* DeviceTransferTypedRecord.swift in Sources */,
 				7B4CA8BE249B3F840048E46D /* PeerCall.swift in Sources */,
@@ -5589,6 +5596,7 @@
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
+				94793AD12C3A57230078ED51 /* QuoteResponse.swift in Sources */,
 				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
 				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
 				94287EE12B8743E50088DEAD /* MixinAPIResponseError+Localization.swift in Sources */,

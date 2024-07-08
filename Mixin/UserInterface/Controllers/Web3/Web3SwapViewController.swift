@@ -80,6 +80,7 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
             return
         }
         swapButton.isEnabled = payAmount > 0 && payAmount <= payToken.decimalBalance
+        updateReceivingAmount()
     }
     
     @IBAction func changePayToken(_ sender: Any) {
@@ -87,6 +88,7 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
         selector.onSelected = { token in
             self.payToken = token
             self.reloadPayView(with: token)
+            self.updateReceivingAmount()
         }
         selector.reload(tokens: payTokens)
         present(selector, animated: true)
@@ -104,6 +106,7 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
         selector.onSelected = { token in
             self.receiveToken = token
             self.reloadReceiveView(with: token)
+            self.updateReceivingAmount()
         }
         selector.reload(tokens: receiveTokens)
         present(selector, animated: true)
@@ -136,6 +139,44 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
                 self.requestSign(transaction: response.tx)
             case .failure(let error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
+        }
+    }
+    
+    private func updateReceivingAmount() {
+        receiveAmountTextField.text = nil
+        guard
+            let text = payAmountTextField.text,
+            let payAmount = Decimal(string: text),
+            let payToken,
+            let receiveToken
+        else {
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard self?.payAmountTextField.text == text else {
+                return
+            }
+            guard let request = QuoteRequest(pay: payToken, payAmount: payAmount, receive: receiveToken, slippage: 0.01) else {
+                self?.receiveAmountTextField.text = nil
+                return
+            }
+            RouteAPI.quote(request: request) { result in
+                switch result {
+                case .success(let response):
+                    guard
+                        let self,
+                        self.payAmountTextField.text == text,
+                        self.receiveToken?.address == receiveToken.address,
+                        let receiveAmount = Decimal(string: response.outAmount, locale: .enUSPOSIX),
+                        let decimalAmount = receiveToken.decimalAmount(nativeAmount: receiveAmount)
+                    else {
+                        return
+                    }
+                    self.receiveAmountTextField.text = CurrencyFormatter.localizedString(from: decimalAmount as Decimal, format: .precision, sign: .never)
+                case .failure(let error):
+                    Logger.general.debug(category: "Web3Swap", message: error.localizedDescription)
+                }
             }
         }
     }

@@ -27,6 +27,11 @@ final class RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
+    static func quote(request: QuoteRequest, completion: @escaping (MixinAPI.Result<QuoteResponse>) -> Void) {
+        let path = "/web3/quote?inputMint=\(request.inputMint)&outputMint=\(request.outputMint)&amount=\(request.amount)&slippage=\(request.slippage)"
+        Self.request(method: .get, path: path, completion: completion)
+    }
+    
 }
 
 extension RouteAPI {

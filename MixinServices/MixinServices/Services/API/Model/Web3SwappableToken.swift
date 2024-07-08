@@ -16,7 +16,7 @@ public struct Web3SwappableToken: Decodable {
     }
     
     public let address: String
-    public let decimals: Int
+    public let decimals: Int16
     public let name: String
     public let symbol: String
     public let icon: String
@@ -34,6 +34,11 @@ public struct Web3SwappableToken: Decodable {
             // XXX: Really?
             address == token.assetKey
         }
+    }
+    
+    public func decimalAmount(nativeAmount: Decimal) -> NSDecimalNumber? {
+        let nativeAmountNumber = nativeAmount as NSDecimalNumber
+        return nativeAmountNumber.multiplying(byPowerOf10: -decimals)
     }
     
 }

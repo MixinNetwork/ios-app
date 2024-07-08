@@ -50,20 +50,6 @@ final class Web3AccountHeaderView: Web3HeaderView {
         swapButton = button
     }
     
-    func enableSwapButton() {
-        guard swapButton != nil else {
-            return
-        }
-        enable(wrapper: actionStackView.arrangedSubviews[2])
-    }
-    
-    func disableSwapButton() {
-        guard swapButton != nil else {
-            return
-        }
-        disable(wrapper: actionStackView.arrangedSubviews[2])
-    }
-    
     func enableSendButton() {
         enable(wrapper: actionStackView.arrangedSubviews[0])
     }

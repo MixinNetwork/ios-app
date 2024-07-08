@@ -32,12 +32,6 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
         if let headerView = tableView.tableHeaderView as? Web3AccountHeaderView {
             headerView.addSwapButton(self, action: #selector(swap(_:)))
         }
-        updateSwapButton()
-    }
-    
-    override func tokensDidReload() {
-        super.tokensDidReload()
-        updateSwapButton()
     }
     
     @objc private func swap(_ sender: Any) {
@@ -52,16 +46,10 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
             self.present(alert, animated: true)
             return
         }
-        guard
-            let address,
-            let payTokens = tokens,
-            !payTokens.isEmpty,
-            let receiveTokens = swappableTokens,
-            !receiveTokens.isEmpty
-        else {
+        guard let address else {
             return
         }
-        let swap = Web3SwapViewController(address: address, payTokens: payTokens, receiveTokens: receiveTokens)
+        let swap = Web3SwapViewController(address: address, payTokens: tokens, receiveTokens: swappableTokens)
         let container = ContainerViewController.instance(viewController: swap, title: R.string.localizable.swap())
         navigationController?.pushViewController(container, animated: true)
     }
@@ -79,19 +67,6 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
         }
     }
     
-    private func updateSwapButton() {
-        guard let headerView = tableView.tableHeaderView as? Web3AccountHeaderView else {
-            return
-        }
-        let hasPayTokens = !(tokens?.isEmpty ?? true)
-        let hasReceiveTokens = !(swappableTokens?.isEmpty ?? true)
-        if swappingOutdated || (hasPayTokens && hasReceiveTokens) {
-            headerView.enableSwapButton()
-        } else {
-            headerView.disableSwapButton()
-        }
-    }
-    
     private func reloadSwappableTokens() {
         RouteAPI.swappableTokens { [weak self] result in
             switch result {
@@ -101,7 +76,6 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
                 }
                 self.swappingOutdated = false
                 self.swappableTokens = tokens
-                self.updateSwapButton()
             case .failure(.requiresUpdate):
                 self?.swappingOutdated = true
             case .failure(let error):

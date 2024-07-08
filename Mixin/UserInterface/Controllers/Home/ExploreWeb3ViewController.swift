@@ -141,10 +141,6 @@ class ExploreWeb3ViewController: UIViewController {
         }
     }
     
-    func tokensDidReload() {
-        
-    }
-    
     private func layoutTableHeaderView() {
         guard let tableHeaderView = tableView.tableHeaderView else {
             return
@@ -176,7 +172,6 @@ class ExploreWeb3ViewController: UIViewController {
                 } else {
                     nil
                 }
-                self.tokensDidReload()
             case .failure(.requiresUpdate):
                 let alert = UIAlertController(title: R.string.localizable.update_mixin(),
                                               message: R.string.localizable.app_update_tips(Bundle.main.shortVersion),

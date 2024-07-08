@@ -28,10 +28,10 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
     private var payToken: Web3Token?
     private var receiveToken: Web3SwappableToken?
     
-    init(address: String, payTokens: [Web3Token], receiveTokens: [Web3SwappableToken]) {
+    init(address: String, payTokens: [Web3Token]?, receiveTokens: [Web3SwappableToken]?) {
         self.address = address
-        self.payTokens = payTokens
-        self.receiveTokens = receiveTokens
+        self.payTokens = payTokens ?? []
+        self.receiveTokens = receiveTokens ?? []
         let nib = R.nib.web3SwapView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -79,7 +79,9 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
         else {
             return
         }
-        swapButton.isEnabled = payAmount > 0 && payAmount <= payToken.decimalBalance
+        swapButton.isEnabled = payAmount > 0
+            && payAmount <= payToken.decimalBalance
+            && receiveToken != nil
         updateReceivingAmount()
     }
     

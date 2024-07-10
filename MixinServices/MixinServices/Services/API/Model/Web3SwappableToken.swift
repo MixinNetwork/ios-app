@@ -31,7 +31,6 @@ public struct Web3SwappableToken: Decodable {
         if address == Web3Token.AssetKey.wrappedSOL && token.assetKey == Web3Token.AssetKey.sol {
             true
         } else {
-            // XXX: Really?
             address == token.assetKey
         }
     }

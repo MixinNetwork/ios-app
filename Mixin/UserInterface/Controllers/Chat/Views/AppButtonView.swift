@@ -3,8 +3,8 @@ import UIKit
 class AppButtonView: UIView {
     
     static let cornerRadius: CGFloat = 8
-    static let buttonMargin = MessageViewModel.Margin(leading: 5, trailing: 5, top: 1, bottom: 3)
-    static let titleMargin = MessageViewModel.Margin(leading: 16, trailing: 16, top: 10, bottom: 12)
+    static let buttonMargin = MessageViewModel.Margin(leading: 4, trailing: 4, top: 1, bottom: 3)
+    static let titleMargin = MessageViewModel.Margin(leading: 15, trailing: 15, top: 8, bottom: 8)
     
     let button = AppButton()
     

@@ -319,7 +319,7 @@
 		7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A090425481ADB00E8568D /* MinimizedClipIconView.swift */; };
 		7B9A18162428932A00187693 /* PageControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A18152428932A00187693 /* PageControlView.xib */; };
 		7B9A18182428939A00187693 /* PageControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A18172428939A00187693 /* PageControlView.swift */; };
-		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
+		7B9A2BD12023729E00135DA4 /* AppButtonGroupMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupMessageViewModel.swift */; };
 		7B9A9DB322BA6560006765F1 /* EmergencyTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */; };
 		7B9C102A245588DA00B2718F /* PhoneNumberSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */; };
 		7B9C642F2240B62600465A6A /* SolidBackgroundColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */; };
@@ -920,6 +920,8 @@
 		94A72C9A2C2EBE1E001E8782 /* InscriptionTraitsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A72C972C2EBE1E001E8782 /* InscriptionTraitsCell.swift */; };
 		94A72CA52C2EBFF9001E8782 /* InscriptionTraitCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A72CA42C2EBFF9001E8782 /* InscriptionTraitCell.xib */; };
 		94A72CA62C2EBFF9001E8782 /* InscriptionTraitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A72CA32C2EBFF9001E8782 /* InscriptionTraitCell.swift */; };
+		94AC15602C3D77CD0029E1AB /* AppButtonGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AC155F2C3D77CD0029E1AB /* AppButtonGroupView.swift */; };
+		94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */; };
 		94B0B7462BECD4DE00346AF4 /* CollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */; };
 		94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */; };
 		94B13FC22B5ED5F9001333BE /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */; };
@@ -1613,7 +1615,7 @@
 		7B9A090425481ADB00E8568D /* MinimizedClipIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedClipIconView.swift; sourceTree = "<group>"; };
 		7B9A18152428932A00187693 /* PageControlView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageControlView.xib; sourceTree = "<group>"; };
 		7B9A18172428939A00187693 /* PageControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlView.swift; sourceTree = "<group>"; };
-		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
+		7B9A2BD02023729E00135DA4 /* AppButtonGroupMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageViewModel.swift; sourceTree = "<group>"; };
 		7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyTipsViewController.swift; sourceTree = "<group>"; };
 		7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberSettingViewController.swift; sourceTree = "<group>"; };
 		7B9C642E2240B62600465A6A /* SolidBackgroundColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidBackgroundColoredView.swift; sourceTree = "<group>"; };
@@ -2216,6 +2218,8 @@
 		94A72C982C2EBE1E001E8782 /* InscriptionTraitsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionTraitsCell.xib; sourceTree = "<group>"; };
 		94A72CA32C2EBFF9001E8782 /* InscriptionTraitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionTraitCell.swift; sourceTree = "<group>"; };
 		94A72CA42C2EBFF9001E8782 /* InscriptionTraitCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionTraitCell.xib; sourceTree = "<group>"; };
+		94AC155F2C3D77CD0029E1AB /* AppButtonGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupView.swift; sourceTree = "<group>"; };
+		94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonsViewModel.swift; sourceTree = "<group>"; };
 		94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCell.swift; sourceTree = "<group>"; };
 		94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectibleCell.xib; sourceTree = "<group>"; };
 		94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
@@ -2759,7 +2763,7 @@
 		7B14568B1FCC17AD001B6DED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */,
+				7B9A2BD02023729E00135DA4 /* AppButtonGroupMessageViewModel.swift */,
 				7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */,
 				7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */,
 				7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */,
@@ -2825,6 +2829,7 @@
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
 				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 				7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */,
+				94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4307,6 +4312,7 @@
 				948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */,
 				94D0FF352BEB1BD700E3947F /* InscriptionContentView.xib */,
 				94D0FF302BEB1BC900E3947F /* InscriptionContentView.swift */,
+				94AC155F2C3D77CD0029E1AB /* AppButtonGroupView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5384,7 +5390,7 @@
 				94BFA98A2B98546000200FC4 /* SyncSafeSnapshotJob.swift in Sources */,
 				94EE1DC72B721E4800C32DD4 /* MultisigPreviewViewController.swift in Sources */,
 				E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */,
-				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
+				7B9A2BD12023729E00135DA4 /* AppButtonGroupMessageViewModel.swift in Sources */,
 				9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */,
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
@@ -6083,6 +6089,7 @@
 				9419524E2BFF60430046DE50 /* ExploreSolanaViewController.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */,
+				94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
@@ -6109,6 +6116,7 @@
 				DF846CDD2369550B00AA1197 /* MultisigUserCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,
+				94AC15602C3D77CD0029E1AB /* AppButtonGroupView.swift in Sources */,
 				7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */,
 				E0E3301F23962B2100276746 /* EditFavoriteAppsHeaderView.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,

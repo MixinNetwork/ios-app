@@ -2871,8 +2871,8 @@ extension ConversationViewController {
         if let viewModel = viewModel as? StickerMessageViewModel {
             param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
                                              cornerRadius: StickerMessageCell.contentCornerRadius)
-        } else if let viewModel = viewModel as? AppButtonGroupViewModel {
-            param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
+        } else if let viewModel = viewModel as? AppButtonGroupMessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
                                              cornerRadius: AppButtonView.cornerRadius)
         } else {
             if viewModel.style.contains(.received) {

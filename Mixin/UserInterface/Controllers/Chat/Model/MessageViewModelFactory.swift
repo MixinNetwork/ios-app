@@ -146,7 +146,7 @@ class MessageViewModelFactory {
             } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
                 viewModel = SystemMessageViewModel(message: message)
             } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
-                viewModel = AppButtonGroupViewModel(message: message)
+                viewModel = AppButtonGroupMessageViewModel(message: message)
             } else if message.category == MessageCategory.APP_CARD.rawValue {
                 viewModel = AppCardMessageViewModel(message: message)
             } else if message.category == MessageCategory.MESSAGE_RECALL.rawValue {

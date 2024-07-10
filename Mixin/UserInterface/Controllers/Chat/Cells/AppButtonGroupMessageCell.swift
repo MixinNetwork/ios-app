@@ -10,39 +10,34 @@ protocol AppButtonGroupMessageCellDelegate: AnyObject {
     
 }
 
-class AppButtonGroupMessageCell: DetailInfoMessageCell {
+final class AppButtonGroupMessageCell: DetailInfoMessageCell {
+    
+    let buttonsView = AppButtonGroupView()
     
     weak var appButtonDelegate: AppButtonGroupMessageCellDelegate?
     
-    private(set) var buttonViews = [AppButtonView]()
-    
     override var contentFrame: CGRect {
-        return (viewModel as? AppButtonGroupViewModel)?.buttonGroupFrame ?? .zero
+        (viewModel as? AppButtonGroupMessageViewModel)?.contentFrame ?? .zero
     }
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
-        if let viewModel = viewModel as? AppButtonGroupViewModel, let appButtons = viewModel.message.appButtons {
-            buttonViews.forEach {
-                $0.removeFromSuperview()
-            }
-            buttonViews = []
-            for (i, frame) in viewModel.frames.enumerated() {
-                let content = appButtons[i]
-                let view = AppButtonView()
-                view.frame = frame
-                view.setTitle(content.label, colorHexString: content.color)
-                view.button.tag = i
-                view.button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
+        if let viewModel = viewModel as? AppButtonGroupMessageViewModel, let appButtons = viewModel.message.appButtons {
+            buttonsView.frame = viewModel.contentFrame
+            buttonsView.layoutButtons(viewModel: viewModel.buttonsViewModel)
+            for (i, content) in appButtons.enumerated() {
+                let buttonView = buttonsView.buttonViews[i]
+                let button = buttonView.button
+                buttonView.setTitle(content.label, colorHexString: content.color)
+                button.tag = i
+                button.removeTarget(self, action: nil, for: .touchUpInside)
+                button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
                 
                 // According to disassembly result of UIKitCore from iOS 13.4.1
                 // UITableView's context menu handler cancels any context menu interaction
                 // on UIControl subclasses, therefore we have to handle it here
                 let interaction = UIContextMenuInteraction(delegate: self)
-                view.button.addInteraction(interaction)
-                
-                buttonViews.append(view)
-                messageContentView.addSubview(view)
+                button.addInteraction(interaction)
             }
         }
     }
@@ -51,6 +46,7 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
         super.prepare()
         timeLabel.isHidden = true
         statusImageView.isHidden = true
+        messageContentView.addSubview(buttonsView)
     }
     
     @objc func buttonAction(sender: Any) {

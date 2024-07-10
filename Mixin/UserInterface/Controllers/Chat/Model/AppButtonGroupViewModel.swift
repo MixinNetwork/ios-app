@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class AppButtonGroupViewModel: DetailInfoMessageViewModel {
+class AppButtonGroupMessageViewModel: DetailInfoMessageViewModel {
     
     var frames = [CGRect]()
     var buttonGroupFrame = CGRect.zero

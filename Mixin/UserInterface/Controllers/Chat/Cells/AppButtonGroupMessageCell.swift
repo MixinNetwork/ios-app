@@ -1,20 +1,10 @@
 import UIKit
 
-protocol AppButtonGroupMessageCellDelegate: AnyObject {
-    
-    func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int)
-    
-    func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell) -> UIContextMenuConfiguration?
-    func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview?
-    func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview?
-    
-}
-
 final class AppButtonGroupMessageCell: DetailInfoMessageCell {
     
     let buttonsView = AppButtonGroupView()
     
-    weak var appButtonDelegate: AppButtonGroupMessageCellDelegate?
+    weak var appButtonDelegate: AppButtonDelegate?
     
     override var contentFrame: CGRect {
         (viewModel as? AppButtonGroupMessageViewModel)?.contentFrame ?? .zero
@@ -31,7 +21,7 @@ final class AppButtonGroupMessageCell: DetailInfoMessageCell {
                 buttonView.setTitle(content.label, colorHexString: content.color)
                 button.tag = i
                 button.removeTarget(self, action: nil, for: .touchUpInside)
-                button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
+                button.addTarget(self, action: #selector(performButtonAction(_:)), for: .touchUpInside)
                 
                 // According to disassembly result of UIKitCore from iOS 13.4.1
                 // UITableView's context menu handler cancels any context menu interaction
@@ -49,11 +39,8 @@ final class AppButtonGroupMessageCell: DetailInfoMessageCell {
         messageContentView.addSubview(buttonsView)
     }
     
-    @objc func buttonAction(sender: Any) {
-        guard let sender = sender as? UIButton else {
-            return
-        }
-        appButtonDelegate?.appButtonGroupMessageCell(self, didSelectActionAt: sender.tag)
+    @objc private func performButtonAction(_ sender: UIButton) {
+        appButtonDelegate?.appButtonCell(self, didSelectActionAt: sender.tag)
     }
     
 }

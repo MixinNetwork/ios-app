@@ -308,7 +308,7 @@ public class ReceiveMessageService: MixinService {
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             return
         }
-        if let appId = appCard.appId {
+        if let appId = appCard.appID {
             guard !appId.isEmpty, UUID(uuidString: appId) != nil else {
                 processUnknownMessage(data: data)
                 updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)

@@ -697,14 +697,14 @@ extension MixinWebViewController {
             DispatchQueue.main.async {
                 let validUrl = currentUrl.absoluteString + "/"
                 if let app = app, let iconUrl = URL(string: app.iconUrl), app.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                    let appCard = AppCardData(appId: app.appId,
-                                              iconUrl: iconUrl,
-                                              title: String(cardTitle.prefix(32)),
-                                              description: String(app.name.prefix(64)),
-                                              action: currentUrl,
-                                              updatedAt: nil,
-                                              isShareable: isShareable)
-                    let vc = MessageReceiverViewController.instance(content: .appCard(appCard))
+                    let content = AppCardData.V0Content(appId: app.appId,
+                                                        iconUrl: iconUrl,
+                                                        title: String(cardTitle.prefix(32)),
+                                                        description: String(app.name.prefix(64)),
+                                                        action: currentUrl,
+                                                        updatedAt: nil,
+                                                        isShareable: isShareable)
+                    let vc = MessageReceiverViewController.instance(content: .appCard(.v0(content)))
                     self?.navigationController?.pushViewController(vc, animated: true)
                 } else {
                     let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))

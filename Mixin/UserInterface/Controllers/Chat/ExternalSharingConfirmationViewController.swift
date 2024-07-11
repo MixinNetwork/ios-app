@@ -281,44 +281,49 @@ extension ExternalSharingConfirmationViewController {
     }
     
     private func loadPreview(for appCardData: AppCardData) {
-        imageView.image = R.image.ic_chat_bubble_right_white()
-        previewWrapperView.addSubview(imageView)
-        imageView.snp.makeConstraints { (make) in
-            make.leading.greaterThanOrEqualToSuperview().offset(30)
-            make.trailing.lessThanOrEqualToSuperview().offset(-30)
-            make.center.equalToSuperview()
+        switch appCardData {
+        case .v0(let content):
+            imageView.image = R.image.ic_chat_bubble_right_white()
+            previewWrapperView.addSubview(imageView)
+            imageView.snp.makeConstraints { (make) in
+                make.leading.greaterThanOrEqualToSuperview().offset(30)
+                make.trailing.lessThanOrEqualToSuperview().offset(-30)
+                make.center.equalToSuperview()
+            }
+            
+            let iconImageView = UIImageView()
+            iconImageView.layer.cornerRadius = 5
+            iconImageView.clipsToBounds = true
+            imageView.addSubview(iconImageView)
+            iconImageView.snp.makeConstraints { (make) in
+                make.width.height.equalTo(40)
+                make.leading.equalToSuperview().offset(12)
+            }
+            
+            let contentView = CardMessageTitleView()
+            contentView.titleLabel.textColor = .text
+            contentView.titleLabel.font = MessageFontSet.cardTitle.scaled
+            contentView.titleLabel.adjustsFontForContentSizeCategory = true
+            contentView.subtitleLabel.textColor = R.color.text_tertiary()!
+            contentView.subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
+            contentView.subtitleLabel.adjustsFontForContentSizeCategory = true
+            imageView.addSubview(contentView)
+            contentView.snp.makeConstraints { (make) in
+                make.leading.equalTo(iconImageView.snp.trailing).offset(8)
+                make.top.equalToSuperview().offset(13)
+                make.bottom.equalToSuperview().offset(-15)
+                make.trailing.equalToSuperview().offset(-41)
+                make.centerY.equalTo(iconImageView)
+            }
+            
+            iconImageView.sd_setImage(with: content.iconUrl, completed: nil)
+            contentView.titleLabel.text = content.title
+            contentView.subtitleLabel.text = content.description
+            
+            sendButton.isEnabled = true
+        case .v1(let content):
+            break
         }
-        
-        let iconImageView = UIImageView()
-        iconImageView.layer.cornerRadius = 5
-        iconImageView.clipsToBounds = true
-        imageView.addSubview(iconImageView)
-        iconImageView.snp.makeConstraints { (make) in
-            make.width.height.equalTo(40)
-            make.leading.equalToSuperview().offset(12)
-        }
-        
-        let contentView = CardMessageTitleView()
-        contentView.titleLabel.textColor = .text
-        contentView.titleLabel.font = MessageFontSet.cardTitle.scaled
-        contentView.titleLabel.adjustsFontForContentSizeCategory = true
-        contentView.subtitleLabel.textColor = R.color.text_tertiary()!
-        contentView.subtitleLabel.font = MessageFontSet.cardSubtitle.scaled
-        contentView.subtitleLabel.adjustsFontForContentSizeCategory = true
-        imageView.addSubview(contentView)
-        contentView.snp.makeConstraints { (make) in
-            make.leading.equalTo(iconImageView.snp.trailing).offset(8)
-            make.top.equalToSuperview().offset(13)
-            make.bottom.equalToSuperview().offset(-15)
-            make.trailing.equalToSuperview().offset(-41)
-            make.centerY.equalTo(iconImageView)
-        }
-        
-        iconImageView.sd_setImage(with: appCardData.iconUrl, completed: nil)
-        contentView.titleLabel.text = appCardData.title
-        contentView.subtitleLabel.text = appCardData.description
-        
-        sendButton.isEnabled = true
     }
     
     private func loadStickerPreview(stickerId: String, isAdded: Bool) {

@@ -270,28 +270,29 @@ extension StaticMessagesViewController {
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.location())
                 navigationController?.pushViewController(container, animated: true)
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
-                if let appId = appCard.appId, !appId.isEmpty {
-                    DispatchQueue.global().async { [weak self] in
-                        var app = AppDAO.shared.getApp(appId: appId)
-                        if app == nil {
-                            if case let .success(response) = UserAPI.showUser(userId: appId) {
-                                UserDAO.shared.updateUsers(users: [response])
-                                app = response.app
-                            }
+                guard let appId = appCard.appID, !appId.isEmpty, case let .v0(content) = appCard else {
+                    return
+                }
+                DispatchQueue.global().async { [weak self] in
+                    var app = AppDAO.shared.getApp(appId: appId)
+                    if app == nil {
+                        if case let .success(response) = UserAPI.showUser(userId: appId) {
+                            UserDAO.shared.updateUsers(users: [response])
+                            app = response.app
                         }
-                        guard let self = self, let app = app else {
+                    }
+                    guard let self = self, let app = app else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        guard !UrlWindow.checkUrl(url: content.action) else {
                             return
                         }
-                        DispatchQueue.main.async {
-                            guard !UrlWindow.checkUrl(url: appCard.action) else {
-                                return
-                            }
-                            guard let parent = self.parent else {
-                                return
-                            }
-                            let context = MixinWebViewController.Context(conversationId: "", url: appCard.action, app: app)
-                            MixinWebViewController.presentInstance(with: context, asChildOf: parent)
+                        guard let parent = self.parent else {
+                            return
                         }
+                        let context = MixinWebViewController.Context(conversationId: "", url: content.action, app: app)
+                        MixinWebViewController.presentInstance(with: context, asChildOf: parent)
                     }
                 }
             } else if message.category.hasSuffix("_TRANSCRIPT"), let parent = parent {

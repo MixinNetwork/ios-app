@@ -1,6 +1,9 @@
 import UIKit
+import MixinServices
 
-class AppCardMessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
+final class AppCardV0MessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
+    
+    var content: AppCardData.V0Content?
     
     override func prepare() {
         super.prepare()
@@ -21,11 +24,9 @@ class AppCardMessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
-        if let viewModel = viewModel as? AppCardMessageViewModel {
-            leftView.sd_setImage(with: viewModel.message.appCard?.iconUrl)
-            titleLabel.text = viewModel.message.appCard?.title
-            subtitleLabel.text = viewModel.message.appCard?.description
-        }
+        leftView.sd_setImage(with: content?.iconUrl)
+        titleLabel.text = content?.title
+        subtitleLabel.text = content?.description
     }
-
+    
 }

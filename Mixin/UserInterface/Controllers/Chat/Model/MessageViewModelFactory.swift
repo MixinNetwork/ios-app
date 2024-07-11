@@ -148,7 +148,14 @@ class MessageViewModelFactory {
             } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 viewModel = AppButtonGroupMessageViewModel(message: message)
             } else if message.category == MessageCategory.APP_CARD.rawValue {
-                viewModel = AppCardMessageViewModel(message: message)
+                switch message.appCard {
+                case let .v1(content):
+                    viewModel = AppCardV1MessageViewModel(message: message, content: content)
+                case let .v0(content):
+                    viewModel = AppCardV0MessageViewModel(message: message, content: content)
+                case .none:
+                    viewModel = AppCardV0MessageViewModel(message: message, content: nil)
+                }
             } else if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
                 viewModel = RecalledMessageViewModel(message: message)
             } else if message.category == MessageCategory.MESSAGE_PIN.rawValue {

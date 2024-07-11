@@ -22,9 +22,8 @@ final class AppButtonGroupMessageViewModel: DetailInfoMessageViewModel {
         super.layout(width: width, style: style)
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
         
-        let buttonLayoutWidth = min(340, max(240, round(width * 3 / 4))) - margin.horizontal
         let contents = message.appButtons?.map(\.label) ?? []
-        buttonsViewModel.layout(lineWidth: buttonLayoutWidth, contents: contents)
+        buttonsViewModel.layout(lineWidth: maxContentWidth + margin.horizontal, contents: contents)
         
         if let lastFrame = buttonsViewModel.frames.last {
             cellHeight = lastFrame.maxY + margin.vertical

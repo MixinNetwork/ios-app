@@ -65,7 +65,7 @@ class ConversationTableView: UITableView {
         } else if message.status == MessageStatus.UNKNOWN.rawValue {
             return dequeueReusableCell(withReuseId: .unknown, for: indexPath)
         } else {
-            return dequeueReusableCell(withReuseId: ReuseId(category: message.category), for: indexPath)
+            return dequeueReusableCell(withReuseId: ReuseId(message: message), for: indexPath)
         }
     }
     
@@ -158,7 +158,8 @@ class ConversationTableView: UITableView {
         register(PostMessageCell.self, forCellReuseIdentifier: ReuseId.post.rawValue)
         register(TransferMessageCell.self, forCellReuseIdentifier: ReuseId.transfer.rawValue)
         register(SnapshotMessageCell.self, forCellReuseIdentifier: ReuseId.snapshot.rawValue)
-        register(AppCardMessageCell.self, forCellReuseIdentifier: ReuseId.appCard.rawValue)
+        register(AppCardV0MessageCell.self, forCellReuseIdentifier: ReuseId.appCardV0.rawValue)
+        register(AppCardV1MessageCell.self, forCellReuseIdentifier: ReuseId.appCardV1.rawValue)
         register(ContactMessageCell.self, forCellReuseIdentifier: ReuseId.contact.rawValue)
         register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
         register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
@@ -199,7 +200,8 @@ extension ConversationTableView {
         case appButtonGroup = "AppButtonGroupCell"
         case contact = "ContactMessageCell"
         case video = "VideoMessageCell"
-        case appCard = "AppCardMessageCell"
+        case appCardV0 = "AppCardV0MessageCell"
+        case appCardV1 = "AppCardV1MessageCell"
         case inscription = "InscriptionMessageCell"
         case audio = "AudioMessageCell"
         case live = "LiveMessageCell"
@@ -210,7 +212,8 @@ extension ConversationTableView {
         case pin = "PinMessageCell"
         case header = "DateHeader"
         
-        init(category: String) {
+        init(message: MessageItem) {
+            let category = message.category
             if category.hasSuffix("_TEXT") {
                 self = .text
             } else if category.hasSuffix("_IMAGE") {
@@ -248,7 +251,12 @@ extension ConversationTableView {
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 self = .appButtonGroup
             } else if category == MessageCategory.APP_CARD.rawValue {
-                self = .appCard
+                switch message.appCard {
+                case .v1:
+                    self = .appCardV1
+                case .v0, .none:
+                    self = .appCardV0
+                }
             } else if category == MessageCategory.MESSAGE_PIN.rawValue {
                 self = .pin
             } else {

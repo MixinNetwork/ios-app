@@ -704,6 +704,7 @@
 "owner" = "群主";
 "participants" = "成員";
 "participants_count" = "%@ 位群組成員";
+"pay" = "支付";
 "pay_paid" = "此付款連結已由某人支付，您無法進行重複付款。";
 "pay_with_biometry_type" = "%@支付";
 "pay_with_pin_interval" = "PIN 使用間隔";
@@ -988,6 +989,7 @@
 "successful" = "成功";
 "suspended_deposit" = "%1$@ 充值已暫停，可能的原因是因為使用率太低、節點故障、區塊鏈網路硬分叉或者擁堵，注意已轉入的 %2$@ 資產可以繼續轉賬。";
 "suspicious_link" = "可疑連結";
+"swap" = "閃兌";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";
 "syncing_and_verifying_tip" = "正在驗證並同步金鑰分片到 TIP 網路，請保持應用在前臺，設定過程中不要強制關閉應用";

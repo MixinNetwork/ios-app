@@ -284,11 +284,10 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
 final class EVMTransferToAddressOperation: EVMTransferOperation {
     
     init(payment: Web3SendingTokenToAddressPayment, decimalAmount: Decimal) throws {
-        let decimalAmountNumber = decimalAmount as NSDecimalNumber
-        let amount = decimalAmountNumber.multiplying(byPowerOf10: payment.token.decimalValuePower)
-        guard amount == amount.rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart) else {
+        guard let amount = payment.token.nativeAmount(decimalAmount: decimalAmount) else {
             throw InitError.invalidAmount(decimalAmount)
         }
+        // No need to worry about the fractional part, the amount is guranteed to be integral
         let amountString = Token.amountString(from: amount as Decimal)
         let transaction: EVMTransactionPreview
         if payment.sendingNativeToken {

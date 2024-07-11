@@ -162,6 +162,23 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
+    func setIcon(web3SwappableToken token: Web3SwappableToken) {
+        if let url = token.iconURL {
+            iconImageView.sd_setImage(with: url,
+                                      placeholderImage: nil,
+                                      context: assetIconContext)
+        } else {
+            iconImageView.image = R.image.unknown_session()
+        }
+        if let url = token.chain.iconURL {
+            badgeImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+            isBadgeHidden = false
+        } else {
+            isBadgeHidden = true
+        }
+        corner = .round
+    }
+    
     private func prepare() {
         backgroundColor = .clear
         badgeBackgroundView.backgroundColorIgnoringSystemSettings = .background

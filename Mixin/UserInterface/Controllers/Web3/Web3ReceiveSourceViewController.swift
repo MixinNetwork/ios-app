@@ -68,8 +68,17 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
         let destination = Source(rawValue: indexPath.row)!
         switch destination {
         case .mixinWallet:
-            let selector = Web3TransferTokenSelectorViewController()
-            selector.delegate = self
+            let selector = Web3TransferTokenSelectorViewController<TokenItem>()
+            selector.onSelected = { token in
+                guard let chain = self.kind.chains.first(where: { $0.mixinChainID == token.chainID }) else {
+                    return
+                }
+                let input = WithdrawInputAmountViewController(tokenItem: token,
+                                                              web3WalletAddress: self.address,
+                                                              web3WalletChainName: chain.name)
+                let container = ContainerViewController.instance(viewController: input, title: R.string.localizable.send())
+                self.navigationController?.pushViewController(container, animated: true)
+            }
             present(selector, animated: true)
             let chainIDs = kind.chains.compactMap(\.mixinChainID)
             DispatchQueue.global().async { [weak selector] in
@@ -83,25 +92,6 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
             let container = ContainerViewController.instance(viewController: deposit, title: R.string.localizable.receive())
             navigationController?.pushViewController(container, animated: true)
         }
-    }
-    
-}
-
-extension Web3ReceiveSourceViewController: Web3TransferTokenSelectorViewControllerDelegate {
-    
-    func web3TransferTokenSelectorViewController(_ viewController: Web3TransferTokenSelectorViewController, didSelectToken token: TokenItem) {
-        guard let chain = kind.chains.first(where: { $0.mixinChainID == token.chainID }) else {
-            return
-        }
-        let input = WithdrawInputAmountViewController(tokenItem: token,
-                                                      web3WalletAddress: address,
-                                                      web3WalletChainName: chain.name)
-        let container = ContainerViewController.instance(viewController: input, title: R.string.localizable.send())
-        navigationController?.pushViewController(container, animated: true)
-    }
-    
-    func web3TransferTokenSelectorViewController(_ viewController: Web3TransferTokenSelectorViewController, didSelectToken token: Web3Token) {
-        
     }
     
 }

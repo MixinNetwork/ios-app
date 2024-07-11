@@ -11,3 +11,15 @@ protocol Web3TransferableToken {
 extension TokenItem: Web3TransferableToken { }
 
 extension Web3Token: Web3TransferableToken { }
+
+extension Web3SwappableToken: Web3TransferableToken {
+    
+    var decimalBalance: Decimal {
+        0
+    }
+    
+    var decimalUSDPrice: Decimal {
+        0
+    }
+    
+}

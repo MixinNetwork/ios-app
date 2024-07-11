@@ -704,6 +704,7 @@
 "owner" = "Propietario";
 "participants" = "Participantes";
 "participants_count" = "%@ PARTICIPANTES";
+"pay" = "Pay";
 "pay_paid" = "Este enlace de pago ya ha sido pagado por alguien, no puedes hacer un pago duplicado.";
 "pay_with_biometry_type" = "Pay with %@";
 "pay_with_pin_interval" = "Intervalo de pago con PIN";
@@ -988,6 +989,7 @@
 "successful" = "Exitoso";
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Enlace sospechoso";
+"swap" = "Swap";
 "symbol" = "Símbolo";
 "symbol_withdrawal" = "Retiro de %@";
 "syncing_and_verifying_tip" = "Mantén la aplicación en primer plano mientras verificas y sincronizas las claves fragmentadas con la red TIP; no fuerces el cierre de la aplicación durante el proceso de configuración.";

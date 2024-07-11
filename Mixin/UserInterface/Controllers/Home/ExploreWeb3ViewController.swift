@@ -6,13 +6,14 @@ import MixinServices
 
 class ExploreWeb3ViewController: UIViewController {
     
-    private let tableView = UITableView()
+    let tableView = UITableView()
+    
+    private(set) var address: String?
+    private(set) var tokens: [Web3Token]?
+    
     private let kind: Web3Chain.Kind
     
     private weak var lastAccountRequest: Request?
-    
-    private var address: String?
-    private var tokens: [Web3Token]?
     
     init(kind: Web3Chain.Kind) {
         self.kind = kind
@@ -67,9 +68,17 @@ class ExploreWeb3ViewController: UIViewController {
         guard let tokens else {
             return
         }
-        let selector = Web3TransferTokenSelectorViewController()
-        selector.delegate = self
+        let selector = Web3TransferTokenSelectorViewController<Web3Token>()
         selector.reload(tokens: tokens)
+        selector.onSelected = { token in
+            guard let address = self.address, let chain = Web3Chain.chain(web3ChainID: token.chainID) else {
+                return
+            }
+            let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
+            let selector = Web3SendingDestinationViewController(payment: payment)
+            let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.address())
+            self.navigationController?.pushViewController(container, animated: true)
+        }
         present(selector, animated: true)
     }
     
@@ -167,10 +176,10 @@ class ExploreWeb3ViewController: UIViewController {
                 let alert = UIAlertController(title: R.string.localizable.update_mixin(),
                                               message: R.string.localizable.app_update_tips(Bundle.main.shortVersion),
                                               preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .default, handler: { _ in
+                alert.addAction(UIAlertAction(title: R.string.localizable.update(), style: .default, handler: { _ in
                     UIApplication.shared.openAppStorePage()
                 }))
-                alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: { _ in
+                alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: { _ in
                     (self.parent as? ExploreViewController)?.switchToSegment(.bots)
                 }))
                 self.present(alert, animated: true)
@@ -215,31 +224,6 @@ extension ExploreWeb3ViewController: UITableViewDelegate {
             let container = ContainerViewController.instance(viewController: viewController, title: token.name)
             navigationController?.pushViewController(container, animated: true)
         }
-    }
-    
-}
-
-// MARK: - Web3TransferTokenSelectorViewControllerDelegate
-extension ExploreWeb3ViewController: Web3TransferTokenSelectorViewControllerDelegate {
-    
-    func web3TransferTokenSelectorViewController(
-        _ viewController: Web3TransferTokenSelectorViewController,
-        didSelectToken token: TokenItem
-    ) {
-        
-    }
-    
-    func web3TransferTokenSelectorViewController(
-        _ viewController: Web3TransferTokenSelectorViewController,
-        didSelectToken token: Web3Token
-    ) {
-        guard let address, let chain = Web3Chain.chain(web3ChainID: token.chainID) else {
-            return
-        }
-        let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
-        let selector = Web3SendingDestinationViewController(payment: payment)
-        let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.address())
-        navigationController?.pushViewController(container, animated: true)
     }
     
 }

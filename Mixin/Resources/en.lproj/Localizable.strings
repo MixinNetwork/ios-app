@@ -704,6 +704,7 @@
 "owner" = "Owner";
 "participants" = "Participants";
 "participants_count" = "%@ PARTICIPANTS";
+"pay" = "Pay";
 "pay_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "pay_with_biometry_type" = "Pay with %@";
 "pay_with_pin_interval" = "Pay with PIN interval";
@@ -988,6 +989,7 @@
 "successful" = "Successful";
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Suspicious Link";
+"swap" = "Swap";
 "symbol" = "Symbol";
 "symbol_withdrawal" = "%@ Withdrawal";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

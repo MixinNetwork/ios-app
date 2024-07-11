@@ -31,7 +31,6 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
     }
     
     override func layout(width: CGFloat, style: Style) {
-        super.layout(width: width, style: style)
         if style.contains(.received) {
             leadingConstant = 9
             trailingConstant = -2
@@ -84,6 +83,8 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
             x = width - Self.bubbleMargin.leading - contentWidth
         }
         backgroundImageFrame = CGRect(x: x, y: fullnameHeight, width: contentWidth, height: contentHeight)
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        layoutQuotedMessageIfPresent()
         
         buttonsViewModel.layout(lineWidth: contentWidth - buttonsLeadingMargin - buttonsTrailingMargin,
                                 contents: content.actions.map(\.label))
@@ -93,11 +94,6 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
             + timeFrame.height
             + timeMargin.bottom
             + bottomSeparatorHeight
-        layoutDetailInfo(insideBackgroundImage: true, backgroundImageFrame: backgroundImageFrame)
-        layoutQuotedMessageIfPresent()
-        if !style.contains(.received) {
-            timeFrame.origin.x += statusFrame.width
-        }
         previewFrame = {
             var buttonsFrame = buttonsViewModel.buttonGroupFrame
             buttonsFrame.origin.y = backgroundImageFrame.maxY

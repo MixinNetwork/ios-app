@@ -1423,7 +1423,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         switch gestureRecognizer {
         case tapRecognizer:
-            if let view = touch.view as? TextMessageLabel {
+            if let view = touch.view as? CoreTextLabel {
                 return !view.canResponseTouch(at: touch.location(in: view))
             } else {
                 return true
@@ -1637,7 +1637,7 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
+        if let label = tableView.hitTest(point, with: nil) as? CoreTextLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
             return nil
         } else {
             return contextMenuConfigurationForRow(at: indexPath)

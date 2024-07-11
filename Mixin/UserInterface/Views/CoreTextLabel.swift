@@ -104,6 +104,18 @@ class CoreTextLabel: UIView {
         }
     }
     
+    func canResponseTouch(at point: CGPoint) -> Bool {
+        guard let content = content else {
+            return false
+        }
+        for link in content.links {
+            if link.hitFrame.applying(coreTextTransform).contains(point) {
+                return true
+            }
+        }
+        return false
+    }
+    
     func additionalDrawings() {
         
     }

@@ -8,6 +8,8 @@ final class AppButtonView: UIView {
     
     let button = UIButton(type: .system)
     
+    private var disclosureIndicatorView: UIView?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         prepare()
@@ -42,9 +44,27 @@ final class AppButtonView: UIView {
                                   transform: nil)
     }
     
-    func setTitle(_ title: String, colorHexString: String) {
+    func setTitle(_ title: String, colorHexString: String, disclosureIndicator: Bool) {
         button.setTitle(title, for: .normal)
         button.setTitleColor(UIColor(hexString: colorHexString) ?? .gray, for: .normal)
+        if disclosureIndicator {
+            let indicator: UIView
+            if let view = self.disclosureIndicatorView {
+                view.isHidden = false
+                indicator = view
+            } else {
+                indicator = UIImageView(image: R.image.app_button_disclosure())
+                indicator.tintColor = R.color.text_tertiary()
+                addSubview(indicator)
+                indicator.snp.makeConstraints { make in
+                    make.top.equalTo(button).offset(6)
+                    make.trailing.equalTo(button).offset(-6)
+                }
+                self.disclosureIndicatorView = indicator
+            }
+        } else {
+            disclosureIndicatorView?.isHidden = true
+        }
     }
     
     private func prepare() {

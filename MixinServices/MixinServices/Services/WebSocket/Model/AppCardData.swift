@@ -14,12 +14,12 @@ public enum AppCardData: Codable {
         }
     }
     
-    public var title: String {
+    public var digest: String {
         switch self {
         case .v0(let content):
             content.title
         case .v1(let content):
-            content.title
+            content.title.isEmpty ? content.description : content.title
         }
     }
     
@@ -102,12 +102,37 @@ extension AppCardData {
         
         public struct Action: Codable {
             
+            enum CodingKeys: String, CodingKey {
+                case action
+                case color
+                case label
+            }
+            
             public let action: String
             public let color: String
             public let label: String
             
-            public var actionURL: URL? {
-                URL(string: action)
+            public let actionURL: URL?
+            public let isActionExternal: Bool
+            
+            public init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.action = try container.decode(String.self, forKey: .action)
+                self.color = try container.decode(String.self, forKey: .color)
+                self.label = try container.decode(String.self, forKey: .label)
+                self.actionURL = URL(string: action)
+                if let url = actionURL {
+                    self.isActionExternal = switch url.scheme {
+                    case "mixin":
+                        false
+                    case "http", "https":
+                        url.host != "mixin.one"
+                    default:
+                        true
+                    }
+                } else {
+                    self.isActionExternal = false
+                }
             }
             
         }

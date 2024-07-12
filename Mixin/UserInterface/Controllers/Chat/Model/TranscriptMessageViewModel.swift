@@ -92,7 +92,7 @@ extension TranscriptMessageViewModel  {
             digest += R.string.localizable.content_location()
         case .APP_CARD:
             if let json = content.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
-                digest += "[\(card.title)]"
+                digest += "[\(card.digest)]"
             }
         default:
             digest += R.string.localizable.content_unknown()

@@ -141,7 +141,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                     return "[\(appButton.label)]"
                 }) ?? []).joined()
             } else if category == MessageCategory.APP_CARD.rawValue, let appCard = item.appCard {
-                contentLabel.text = "[\(appCard.title)]"
+                contentLabel.text = "[\(appCard.digest)]"
             } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
                 setContentLabelFontItalic(true)
                 if senderIsMe {

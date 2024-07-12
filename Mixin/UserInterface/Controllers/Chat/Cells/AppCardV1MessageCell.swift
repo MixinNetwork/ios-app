@@ -126,7 +126,9 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
                 for (i, content) in viewModel.content.actions.enumerated() {
                     let buttonView = buttonsView.buttonViews[i]
                     let button = buttonView.button
-                    buttonView.setTitle(content.label, colorHexString: content.color)
+                    buttonView.setTitle(content.label,
+                                        colorHexString: content.color,
+                                        disclosureIndicator: content.isActionExternal)
                     button.tag = i
                     button.removeTarget(self, action: nil, for: .touchUpInside)
                     button.addTarget(self, action: #selector(performButtonAction(_:)), for: .touchUpInside)

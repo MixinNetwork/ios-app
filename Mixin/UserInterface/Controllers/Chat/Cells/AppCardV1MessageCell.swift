@@ -60,7 +60,7 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
                 coverImageView?.isHidden = true
             }
             
-            if !viewModel.content.title.isEmpty {
+            if let title = viewModel.content.title, !title.isEmpty {
                 let titleLabel: UILabel
                 if let label = self.titleLabel {
                     label.isHidden = false
@@ -77,12 +77,12 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
                     stackView.setCustomSpacing(viewModel.otherSpacing, after: marginStackView)
                     self.titleLabel = titleLabel
                 }
-                titleLabel.text = viewModel.content.title
+                titleLabel.text = title
             } else {
                 titleLabel?.isHidden = true
             }
             
-            if !viewModel.content.description.isEmpty {
+            if let description = viewModel.content.description, !description.isEmpty {
                 let descriptionLabel: TextLabel
                 if let label = self.descriptionLabel {
                     label.isHidden = false
@@ -100,7 +100,7 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
                     stackView.addArrangedSubview(marginStackView)
                     self.descriptionLabel = descriptionLabel
                 }
-                descriptionLabel.text = viewModel.content.description
+                descriptionLabel.text = description
             } else {
                 descriptionLabel?.isHidden = true
             }

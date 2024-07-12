@@ -49,29 +49,29 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
             (contentWidth + leadingConstant - trailingConstant) / coverRatio + coverBottomSpacing
         }
         let titleHeight: CGFloat = {
-            if content.title.isEmpty {
-                return 0
-            } else {
-                let rect = (content.title as NSString).boundingRect(
+            if let title = content.title, !title.isEmpty {
+                let rect = (title as NSString).boundingRect(
                     with: labelFittingSize,
                     options: [.usesLineFragmentOrigin, .usesFontLeading],
                     attributes: [.font: titleFont],
                     context: nil
                 )
                 return rect.height + otherSpacing
+            } else {
+                return 0
             }
         }()
         let descriptionHeight: CGFloat = {
-            if content.description.isEmpty {
-                return -otherSpacing
-            } else {
-                let rect = (content.description as NSString).boundingRect(
+            if let description = content.description, !description.isEmpty {
+                let rect = (description as NSString).boundingRect(
                     with: labelFittingSize,
                     options: [.usesLineFragmentOrigin, .usesFontLeading],
                     attributes: [.font: UIFontMetrics.default.scaledFont(for: descriptionFont)],
                     context: nil
                 )
                 return rect.height
+            } else {
+                return -otherSpacing
             }
         }()
         let contentHeight: CGFloat = coverImageHeight + titleHeight + descriptionHeight + bottomSpacing

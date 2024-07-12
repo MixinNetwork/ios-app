@@ -19,7 +19,11 @@ public enum AppCardData: Codable {
         case .v0(let content):
             content.title
         case .v1(let content):
-            content.title.isEmpty ? content.description : content.title
+            if content.title.isNilOrEmpty {
+                content.description ?? ""
+            } else {
+                content.title ?? ""
+            }
         }
     }
     
@@ -43,7 +47,7 @@ public enum AppCardData: Codable {
     
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: V0Content.CodingKeys.self)
-        let action = try container.decodeIfPresent(String.self, forKey: V0Content.CodingKeys.action)
+        let action = try container.decodeIfPresent(String.self, forKey: .action)
         if action.isNilOrEmpty {
             let content = try V1Content(from: decoder)
             self = .v1(content)
@@ -138,15 +142,19 @@ extension AppCardData {
         }
         
         public let appID: String
-        public let cover: String
-        public let title: String
-        public let description: String
+        public let cover: String?
+        public let title: String?
+        public let description: String?
         public let actions: [Action]
         public let updatedAt: String
         public let isShareable: Bool
         
         public var coverURL: URL? {
-            URL(string: cover)
+            if let cover {
+                URL(string: cover)
+            } else {
+                nil
+            }
         }
         
         enum CodingKeys: String, CodingKey {

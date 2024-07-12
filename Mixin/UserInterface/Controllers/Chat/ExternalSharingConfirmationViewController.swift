@@ -322,7 +322,8 @@ extension ExternalSharingConfirmationViewController {
             
             sendButton.isEnabled = true
         case .v1(let content):
-            break
+            // TODO: Preview
+            sendButton.isEnabled = true
         }
     }
     

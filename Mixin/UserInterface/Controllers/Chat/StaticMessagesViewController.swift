@@ -270,28 +270,29 @@ extension StaticMessagesViewController {
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.location())
                 navigationController?.pushViewController(container, animated: true)
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
-                if let appId = appCard.appId, !appId.isEmpty {
-                    DispatchQueue.global().async { [weak self] in
-                        var app = AppDAO.shared.getApp(appId: appId)
-                        if app == nil {
-                            if case let .success(response) = UserAPI.showUser(userId: appId) {
-                                UserDAO.shared.updateUsers(users: [response])
-                                app = response.app
-                            }
+                guard let appId = appCard.appID, !appId.isEmpty, case let .v0(content) = appCard else {
+                    return
+                }
+                DispatchQueue.global().async { [weak self] in
+                    var app = AppDAO.shared.getApp(appId: appId)
+                    if app == nil {
+                        if case let .success(response) = UserAPI.showUser(userId: appId) {
+                            UserDAO.shared.updateUsers(users: [response])
+                            app = response.app
                         }
-                        guard let self = self, let app = app else {
+                    }
+                    guard let self = self, let app = app else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        guard !UrlWindow.checkUrl(url: content.action) else {
                             return
                         }
-                        DispatchQueue.main.async {
-                            guard !UrlWindow.checkUrl(url: appCard.action) else {
-                                return
-                            }
-                            guard let parent = self.parent else {
-                                return
-                            }
-                            let context = MixinWebViewController.Context(conversationId: "", url: appCard.action, app: app)
-                            MixinWebViewController.presentInstance(with: context, asChildOf: parent)
+                        guard let parent = self.parent else {
+                            return
                         }
+                        let context = MixinWebViewController.Context(conversationId: "", url: content.action, app: app)
+                        MixinWebViewController.presentInstance(with: context, asChildOf: parent)
                     }
                 }
             } else if message.category.hasSuffix("_TRANSCRIPT"), let parent = parent {
@@ -400,7 +401,7 @@ extension StaticMessagesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
+        if let label = tableView.hitTest(point, with: nil) as? CoreTextLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
             return nil
         } else {
             return contextMenuConfigurationForRow(at: indexPath)
@@ -497,7 +498,7 @@ extension StaticMessagesViewController: CoreTextLabelDelegate {
 extension StaticMessagesViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if let view = touch.view as? TextMessageLabel {
+        if let view = touch.view as? CoreTextLabel {
             return !view.canResponseTouch(at: touch.location(in: view))
         } else {
             return true
@@ -673,8 +674,8 @@ extension StaticMessagesViewController {
         if let viewModel = viewModel as? StickerMessageViewModel {
             param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
                                              cornerRadius: StickerMessageCell.contentCornerRadius)
-        } else if let viewModel = viewModel as? AppButtonGroupViewModel {
-            param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
+        } else if let viewModel = viewModel as? AppButtonGroupMessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
                                              cornerRadius: AppButtonView.cornerRadius)
         } else {
             if viewModel.style.contains(.received) {

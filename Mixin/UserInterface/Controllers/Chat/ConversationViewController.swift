@@ -1423,7 +1423,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         switch gestureRecognizer {
         case tapRecognizer:
-            if let view = touch.view as? TextMessageLabel {
+            if let view = touch.view as? CoreTextLabel {
                 return !view.canResponseTouch(at: touch.location(in: view))
             } else {
                 return true
@@ -1471,6 +1471,10 @@ extension ConversationViewController: UITableViewDataSource {
                 cell.render(viewModel: viewModel)
                 cell.layoutIfNeeded()
             }
+        }
+        if let cell = cell as? AppCardV1MessageCell {
+            cell.appButtonDelegate = self
+            cell.descriptionLabel?.delegate = self
         }
         return cell
     }
@@ -1633,7 +1637,7 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
+        if let label = tableView.hitTest(point, with: nil) as? CoreTextLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
             return nil
         } else {
             return contextMenuConfigurationForRow(at: indexPath)
@@ -1675,28 +1679,41 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
     
 }
 
-// MARK: - AppButtonGroupMessageCellDelegate
-extension ConversationViewController: AppButtonGroupMessageCellDelegate {
+// MARK: - AppButtonDelegate
+extension ConversationViewController: AppButtonDelegate {
     
-    func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int) {
-        guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let appButtons = message.appButtons, index < appButtons.count else {
+    func appButtonCell(_ cell: MessageCell, didSelectActionAt index: Int) {
+        guard
+            let indexPath = tableView.indexPath(for: cell),
+            let message = dataSource?.viewModel(for: indexPath)?.message
+        else {
             return
         }
-        openAction(action: appButtons[index].action, sendUserId: message.userId)
+        if let appButtons = message.appButtons {
+            if index < appButtons.count {
+                openAction(action: appButtons[index].action, sendUserId: message.userId)
+            }
+        } else if case let .v1(content) = message.appCard {
+            if index < content.actions.count {
+                openAction(action: content.actions[index].action,
+                           sendUserId: message.userId,
+                           shareable: content.isShareable)
+            }
+        }
     }
     
-    func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell) -> UIContextMenuConfiguration? {
+    func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: MessageCell) -> UIContextMenuConfiguration? {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return nil
         }
         return contextMenuConfigurationForRow(at: indexPath)
     }
     
-    func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+    func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: MessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
     
-    func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+    func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: MessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
     
@@ -2513,6 +2530,9 @@ extension ConversationViewController {
     }
     
     private func openAppCard(appCard: AppCardData, sendUserId: String) {
+        guard case let .v0(appCard) = appCard else {
+            return
+        }
         let action = appCard.action.absoluteString
         let isShareable = appCard.isShareable
         if let appId = appCard.appId, !appId.isEmpty {
@@ -2871,8 +2891,11 @@ extension ConversationViewController {
         if let viewModel = viewModel as? StickerMessageViewModel {
             param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
                                              cornerRadius: StickerMessageCell.contentCornerRadius)
-        } else if let viewModel = viewModel as? AppButtonGroupViewModel {
-            param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
+        } else if let viewModel = viewModel as? AppButtonGroupMessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
+                                             cornerRadius: AppButtonView.cornerRadius)
+        } else if let viewModel = viewModel as? AppCardV1MessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.previewFrame,
                                              cornerRadius: AppButtonView.cornerRadius)
         } else {
             if viewModel.style.contains(.received) {

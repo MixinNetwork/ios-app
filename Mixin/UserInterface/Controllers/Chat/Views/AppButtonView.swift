@@ -1,12 +1,14 @@
 import UIKit
 
-class AppButtonView: UIView {
+final class AppButtonView: UIView {
     
     static let cornerRadius: CGFloat = 8
-    static let buttonMargin = MessageViewModel.Margin(leading: 5, trailing: 5, top: 1, bottom: 3)
-    static let titleMargin = MessageViewModel.Margin(leading: 16, trailing: 16, top: 10, bottom: 12)
+    static let buttonMargin = MessageViewModel.Margin(leading: 4, trailing: 4, top: 1, bottom: 3)
+    static let titleMargin = MessageViewModel.Margin(leading: 15, trailing: 15, top: 8, bottom: 8)
     
-    let button = AppButton()
+    let button = UIButton(type: .system)
+    
+    private var disclosureIndicatorView: UIView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,12 +44,31 @@ class AppButtonView: UIView {
                                   transform: nil)
     }
     
-    func setTitle(_ title: String, colorHexString: String) {
+    func setTitle(_ title: String, colorHexString: String, disclosureIndicator: Bool) {
         button.setTitle(title, for: .normal)
         button.setTitleColor(UIColor(hexString: colorHexString) ?? .gray, for: .normal)
+        if disclosureIndicator {
+            let indicator: UIView
+            if let view = self.disclosureIndicatorView {
+                view.isHidden = false
+                indicator = view
+            } else {
+                indicator = UIImageView(image: R.image.app_button_disclosure())
+                indicator.tintColor = R.color.text_tertiary()
+                addSubview(indicator)
+                indicator.snp.makeConstraints { make in
+                    make.top.equalTo(button).offset(6)
+                    make.trailing.equalTo(button).offset(-6)
+                }
+                self.disclosureIndicatorView = indicator
+            }
+        } else {
+            disclosureIndicatorView?.isHidden = true
+        }
     }
     
     private func prepare() {
+        button.backgroundColor = R.color.chat_button_background()
         if let label = button.titleLabel {
             label.numberOfLines = 0
             label.font = MessageFontSet.appButtonTitle.scaled

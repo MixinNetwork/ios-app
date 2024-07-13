@@ -39,7 +39,7 @@ extension MessageItem {
         } else if category.hasSuffix("_TRANSCRIPT") {
             return R.string.localizable.transcript()
         } else if category == MessageCategory.APP_CARD.rawValue {
-            return appCard?.description ?? ""
+            return appCard?.digest ?? ""
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
             return appButtons?.first?.label ?? ""
         } else {

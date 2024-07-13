@@ -156,8 +156,8 @@ extension TextLabel {
         let str = NSMutableAttributedString(string: text)
         
         // Set attributes
-        let desc = UIFontMetrics.default.scaledFont(for: font).fontDescriptor
-        let ctFont = CTFontCreateWithFontDescriptor(desc as CTFontDescriptor, 0, nil)
+        let descriptor = font.fontDescriptor
+        let ctFont = CTFontCreateWithFontDescriptor(descriptor as CTFontDescriptor, 0, nil)
         
         var textAlignment = self.textAlignment.ctTextAlignment.rawValue
         var lineBreakMode = self.lineBreakMode.rawValue
@@ -202,7 +202,7 @@ extension TextLabel {
         let fullRange = NSRange(location: 0, length: str.mutableString.length)
         str.setAttributes(attr, range: fullRange)
         
-        if let boldFontDescriptor = desc.withSymbolicTraits(.traitBold) {
+        if let boldFontDescriptor = descriptor.withSymbolicTraits(.traitBold) {
             let boldFont = CTFontCreateWithFontDescriptor(boldFontDescriptor as CTFontDescriptor, 0, nil)
             for range in boldRanges {
                 str.removeAttribute(.ctFont, range: range)

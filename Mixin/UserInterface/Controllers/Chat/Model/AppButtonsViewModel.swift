@@ -28,7 +28,7 @@ final class AppButtonGroupViewModel {
             let (numberOfButtons, width) = distributions.first { (numberOfButtons, width) in
                 let lastIndex = index + numberOfButtons - 1
                 return if lastIndex < buttonSizes.count {
-                    buttonSizes[index..<lastIndex].allSatisfy { size in
+                    buttonSizes[index...lastIndex].allSatisfy { size in
                         size.width <= width
                     }
                 } else {

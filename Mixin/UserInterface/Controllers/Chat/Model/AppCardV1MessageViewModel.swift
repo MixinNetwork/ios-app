@@ -15,9 +15,6 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
     let buttonsLeadingMargin: CGFloat = 4
     let buttonsTrailingMargin: CGFloat = 0
     
-    let titleFont: UIFont = .scaledFont(ofSize: 16, weight: .medium)
-    let descriptionFont: UIFont = .systemFont(ofSize: 14)
-    
     let content: AppCardData.V1Content
     let buttonsViewModel = AppButtonGroupViewModel()
     
@@ -53,7 +50,7 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
                 let rect = (title as NSString).boundingRect(
                     with: labelFittingSize,
                     options: [.usesLineFragmentOrigin, .usesFontLeading],
-                    attributes: [.font: titleFont],
+                    attributes: [.font: MessageFontSet.appCardV1Title.scaled],
                     context: nil
                 )
                 return rect.height + otherSpacing
@@ -66,7 +63,7 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
                 let rect = (description as NSString).boundingRect(
                     with: labelFittingSize,
                     options: [.usesLineFragmentOrigin, .usesFontLeading],
-                    attributes: [.font: UIFontMetrics.default.scaledFont(for: descriptionFont)],
+                    attributes: [.font: MessageFontSet.cardSubtitle.scaled],
                     context: nil
                 )
                 return rect.height

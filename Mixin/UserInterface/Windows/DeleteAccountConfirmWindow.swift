@@ -24,7 +24,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         pinField.delegate = self
         pinField.becomeFirstResponder()
         
-        textLabel.font = .systemFont(ofSize: 16)
+        textLabel.font = .preferredFont(forTextStyle: .callout)
         textLabel.lineSpacing = 4
         textLabel.textColor = R.color.text()!
         textLabel.detectLinks = false

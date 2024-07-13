@@ -3,8 +3,6 @@ import MixinServices
 
 final class AppCardV0MessageCell: CardMessageCell<UIImageView, CardMessageTitleView> {
     
-    var content: AppCardData.V0Content?
-    
     override func prepare() {
         super.prepare()
         leftView.layer.cornerRadius = 5
@@ -24,9 +22,11 @@ final class AppCardV0MessageCell: CardMessageCell<UIImageView, CardMessageTitleV
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
-        leftView.sd_setImage(with: content?.iconUrl)
-        titleLabel.text = content?.title
-        subtitleLabel.text = content?.description
+        if let viewModel = viewModel as? AppCardV0MessageViewModel {
+            leftView.sd_setImage(with: viewModel.content?.iconUrl)
+            titleLabel.text = viewModel.content?.title
+            subtitleLabel.text = viewModel.content?.description
+        }
     }
     
 }

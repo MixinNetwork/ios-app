@@ -1,4 +1,5 @@
 import UIKit
+import SDWebImage
 
 final class AppCardV1MessageCell: DetailInfoMessageCell {
     
@@ -6,7 +7,7 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
     
     private let stackView = UIStackView()
     
-    private var coverImageView: UIImageView?
+    private var coverImageView: SDAnimatedImageView?
     private var titleLabel: UILabel?
     private(set) var descriptionLabel: TextLabel?
     private var buttonsView: AppButtonGroupView?
@@ -36,12 +37,12 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
             contentTrailingConstraint.constant = viewModel.trailingConstant
             
             if let url = viewModel.content.coverURL {
-                let imageView: UIImageView
+                let imageView: SDAnimatedImageView
                 if let view = coverImageView {
                     view.isHidden = false
                     imageView = view
                 } else {
-                    imageView = UIImageView()
+                    imageView = SDAnimatedImageView()
                     imageView.clipsToBounds = true
                     imageView.layer.masksToBounds = true
                     imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -68,7 +69,7 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
                 } else {
                     titleLabel = UILabel()
                     titleLabel.numberOfLines = 0
-                    titleLabel.font = viewModel.titleFont
+                    titleLabel.font = MessageFontSet.appCardV1Title.scaled
                     let marginStackView = UIStackView(arrangedSubviews: [titleLabel])
                     marginStackView.axis = .horizontal
                     marginStackView.layoutMargins = viewModel.labelLayoutMargins
@@ -91,7 +92,7 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
                     descriptionLabel = TextLabel()
                     descriptionLabel.backgroundColor = .clear
                     descriptionLabel.textAlignment = .left
-                    descriptionLabel.font = viewModel.descriptionFont
+                    descriptionLabel.font = MessageFontSet.cardSubtitle.scaled
                     descriptionLabel.textColor = R.color.text_tertiary()!
                     let marginStackView = UIStackView(arrangedSubviews: [descriptionLabel])
                     marginStackView.axis = .horizontal

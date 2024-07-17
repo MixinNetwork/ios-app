@@ -284,6 +284,9 @@ extension Web3Chain {
                         chain.dapps = dapps
                     }
                 }
+            case .failure(.httpTransport(.requestAdaptationFailed)):
+                // Logout
+                break
             case .failure(let error):
                 Logger.web3.info(category: "Web3Chain", message: "Failed to load: \(error)")
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: synchronize)

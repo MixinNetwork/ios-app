@@ -31,7 +31,6 @@ public enum BlazeMessageAction: String {
     case listPendingMessages = "LIST_PENDING_MESSAGES"
     case error = "ERROR"
     case countSignalKeys = "COUNT_SIGNAL_KEYS"
-    case consumeSignalKeys = "CONSUME_SIGNAL_KEYS"
     case consumeSessionSignalKeys = "CONSUME_SESSION_SIGNAL_KEYS"
     case syncSignalKeys = "SYNC_SIGNAL_KEYS"
     case listKrakenPeers = "LIST_KRAKEN_PEERS"
@@ -156,7 +155,7 @@ extension BlazeMessage: Codable {
         case BlazeMessageAction.countSignalKeys.rawValue:
             let count = try container.decodeIfPresent(SignalKeyCount.self, forKey: .data)
             data = count != nil ? String(data: try JSONEncoder.default.encode(count), encoding: .utf8) : nil
-        case BlazeMessageAction.consumeSignalKeys.rawValue, BlazeMessageAction.consumeSessionSignalKeys.rawValue:
+        case BlazeMessageAction.consumeSessionSignalKeys.rawValue:
             let keys = try container.decodeIfPresent([SignalKey].self, forKey: .data)
             data = keys != nil ? String(data: try JSONEncoder.default.encode(keys), encoding: .utf8) : nil
         case BlazeMessageAction.listKrakenPeers.rawValue:

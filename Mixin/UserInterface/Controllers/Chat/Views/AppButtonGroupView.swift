@@ -1,6 +1,6 @@
 import UIKit
 
-final class AppButtonGroupView: UIView {
+class AppButtonGroupView: UIView {
     
     private(set) var buttonViews = [AppButtonView]()
     

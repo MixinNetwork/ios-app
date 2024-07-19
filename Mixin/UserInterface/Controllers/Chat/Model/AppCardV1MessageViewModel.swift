@@ -1,17 +1,18 @@
 import Foundation
 import MixinServices
 
-final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
+class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
     
     override class var bubbleImageSet: BubbleImageSet.Type {
         LightRightBubbleImageSet.self
     }
     
-    let coverRatio: CGFloat = 16.0 / 10.0
-    let coverBottomSpacing: CGFloat = 10
-    let otherSpacing: CGFloat = 8
+    static let coverRatio: CGFloat = 16.0 / 10.0
+    static let coverBottomSpacing: CGFloat = 10
+    static let otherSpacing: CGFloat = 8
+    static let labelLayoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+    
     let bottomSpacing: CGFloat = 12
-    let labelLayoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
     let buttonsLeadingMargin: CGFloat = 4
     let buttonsTrailingMargin: CGFloat = 0
     
@@ -38,12 +39,12 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
         super.layout(width: width, style: style)
         
         let contentWidth: CGFloat = min(340, max(240, round(width * 3 / 4)))
-        let labelFittingSize = CGSize(width: contentWidth - leadingConstant + trailingConstant - labelLayoutMargins.horizontal,
+        let labelFittingSize = CGSize(width: contentWidth - leadingConstant + trailingConstant - Self.labelLayoutMargins.horizontal,
                                       height: UIView.layoutFittingExpandedSize.height)
         let coverImageHeight: CGFloat = if content.coverURL == nil {
-            otherSpacing
+            Self.otherSpacing
         } else {
-            (contentWidth + leadingConstant - trailingConstant) / coverRatio + coverBottomSpacing
+            (contentWidth + leadingConstant - trailingConstant) / Self.coverRatio + Self.coverBottomSpacing
         }
         let titleHeight: CGFloat = {
             if let title = content.title, !title.isEmpty {
@@ -53,7 +54,7 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
                     attributes: [.font: MessageFontSet.appCardV1Title.scaled],
                     context: nil
                 )
-                return rect.height + otherSpacing
+                return rect.height + Self.otherSpacing
             } else {
                 return 0
             }
@@ -68,7 +69,7 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
                 )
                 return rect.height
             } else {
-                return -otherSpacing
+                return -Self.otherSpacing
             }
         }()
         let contentHeight: CGFloat = coverImageHeight + titleHeight + descriptionHeight + bottomSpacing
@@ -93,7 +94,7 @@ final class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
             + bottomSeparatorHeight
         previewFrame = {
             var buttonsFrame = buttonsViewModel.buttonGroupFrame
-            buttonsFrame.origin.y = backgroundImageFrame.maxY
+            buttonsFrame.origin = CGPoint(x: backgroundImageFrame.origin.x, y: backgroundImageFrame.maxY)
             return backgroundImageFrame.union(buttonsFrame)
         }()
     }

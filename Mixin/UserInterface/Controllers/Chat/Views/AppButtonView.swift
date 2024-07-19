@@ -2,7 +2,7 @@ import UIKit
 
 final class AppButtonView: UIView {
     
-    static let cornerRadius: CGFloat = 8
+    static let cornerRadius: CGFloat = 5
     static let buttonMargin = MessageViewModel.Margin(leading: 4, trailing: 4, top: 1, bottom: 3)
     static let titleMargin = MessageViewModel.Margin(leading: 15, trailing: 15, top: 8, bottom: 8)
     
@@ -84,7 +84,7 @@ final class AppButtonView: UIView {
         addSubview(button)
         
         layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.16
+        layer.shadowOpacity = 0.1
         layer.shadowOffset = CGSize(width: 0, height: 1)
         layer.shadowRadius = 1
     }

@@ -1474,7 +1474,7 @@ extension ConversationViewController: UITableViewDataSource {
         }
         if let cell = cell as? AppCardV1MessageCell {
             cell.appButtonDelegate = self
-            cell.descriptionLabel?.delegate = self
+            cell.cardContentView.descriptionLabel?.delegate = self
         }
         return cell
     }

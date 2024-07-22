@@ -3,7 +3,7 @@ import MixinServices
 
 final class SyncSafeSnapshotJob: BaseJob {
     
-    private let limit = 200
+    private let limit = 300
     
     override func getJobId() -> String {
         "sync-snapshot"

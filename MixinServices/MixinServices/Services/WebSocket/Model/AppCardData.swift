@@ -32,7 +32,18 @@ public enum AppCardData: Codable {
         case .v0(let content):
             content.isShareable
         case .v1(let content):
-            content.isShareable
+            if content.isShareable {
+                content.actions.allSatisfy { action in
+                    // Forbid forwarding card with action of "input:"
+                    if let url = action.actionURL {
+                        ["mixin", "http", "https"].contains(url.scheme)
+                    } else {
+                        false
+                    }
+                }
+            } else {
+                false
+            }
         }
     }
     

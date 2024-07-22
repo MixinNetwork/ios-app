@@ -1,15 +1,13 @@
 import UIKit
 import SDWebImage
+import MixinServices
 
 final class AppCardV1MessageCell: DetailInfoMessageCell {
     
+    let cardContentView = CardContentView()
+    
     weak var appButtonDelegate: AppButtonDelegate?
     
-    private let stackView = UIStackView()
-    
-    private var coverImageView: SDAnimatedImageView?
-    private var titleLabel: UILabel?
-    private(set) var descriptionLabel: TextLabel?
     private var buttonsView: AppButtonGroupView?
     
     private var contentLeadingConstraint: NSLayoutConstraint!
@@ -20,13 +18,14 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
     
     override func prepare() {
         super.prepare()
-        stackView.axis = .vertical
-        messageContentView.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
+        messageContentView.addSubview(cardContentView)
+        cardContentView.snp.makeConstraints { make in
             make.top.equalTo(backgroundImageView.snp.top).offset(1)
         }
-        contentLeadingConstraint = stackView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor)
-        contentTrailingConstraint = stackView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor)
+        contentLeadingConstraint = cardContentView.leadingAnchor
+            .constraint(equalTo: backgroundImageView.leadingAnchor)
+        contentTrailingConstraint = cardContentView.trailingAnchor
+            .constraint(equalTo: backgroundImageView.trailingAnchor)
         NSLayoutConstraint.activate([contentLeadingConstraint, contentTrailingConstraint])
     }
     
@@ -35,77 +34,7 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? AppCardV1MessageViewModel {
             contentLeadingConstraint.constant = viewModel.leadingConstant
             contentTrailingConstraint.constant = viewModel.trailingConstant
-            
-            if let url = viewModel.content.coverURL {
-                let imageView: SDAnimatedImageView
-                if let view = coverImageView {
-                    view.isHidden = false
-                    imageView = view
-                } else {
-                    imageView = SDAnimatedImageView()
-                    imageView.clipsToBounds = true
-                    imageView.layer.masksToBounds = true
-                    imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-                    imageView.layer.cornerRadius = 5
-                    imageView.snp.makeConstraints { make in
-                        make.width.equalTo(imageView.snp.height)
-                            .multipliedBy(viewModel.coverRatio)
-                    }
-                    imageView.contentMode = .scaleAspectFill
-                    stackView.insertArrangedSubview(imageView, at: 0)
-                    stackView.setCustomSpacing(viewModel.coverBottomSpacing, after: imageView)
-                    self.coverImageView = imageView
-                }
-                imageView.sd_setImage(with: url)
-            } else {
-                coverImageView?.isHidden = true
-            }
-            
-            if let title = viewModel.content.title, !title.isEmpty {
-                let titleLabel: UILabel
-                if let label = self.titleLabel {
-                    label.isHidden = false
-                    titleLabel = label
-                } else {
-                    titleLabel = UILabel()
-                    titleLabel.numberOfLines = 0
-                    titleLabel.font = MessageFontSet.appCardV1Title.scaled
-                    let marginStackView = UIStackView(arrangedSubviews: [titleLabel])
-                    marginStackView.axis = .horizontal
-                    marginStackView.layoutMargins = viewModel.labelLayoutMargins
-                    marginStackView.isLayoutMarginsRelativeArrangement = true
-                    stackView.insertArrangedSubview(marginStackView, at: 1)
-                    stackView.setCustomSpacing(viewModel.otherSpacing, after: marginStackView)
-                    self.titleLabel = titleLabel
-                }
-                titleLabel.text = title
-            } else {
-                titleLabel?.isHidden = true
-            }
-            
-            if let description = viewModel.content.description, !description.isEmpty {
-                let descriptionLabel: TextLabel
-                if let label = self.descriptionLabel {
-                    label.isHidden = false
-                    descriptionLabel = label
-                } else {
-                    descriptionLabel = TextLabel()
-                    descriptionLabel.backgroundColor = .clear
-                    descriptionLabel.textAlignment = .left
-                    descriptionLabel.font = MessageFontSet.cardSubtitle.scaled
-                    descriptionLabel.textColor = R.color.text_tertiary()!
-                    let marginStackView = UIStackView(arrangedSubviews: [descriptionLabel])
-                    marginStackView.axis = .horizontal
-                    marginStackView.layoutMargins = viewModel.labelLayoutMargins
-                    marginStackView.isLayoutMarginsRelativeArrangement = true
-                    stackView.addArrangedSubview(marginStackView)
-                    self.descriptionLabel = descriptionLabel
-                }
-                descriptionLabel.text = description
-            } else {
-                descriptionLabel?.isHidden = true
-            }
-            
+            cardContentView.reloadData(with: viewModel.content)
             if !viewModel.content.actions.isEmpty {
                 let buttonsView: AppButtonGroupView
                 if let view = self.buttonsView {
@@ -177,6 +106,98 @@ extension AppCardV1MessageCell: UIContextMenuInteractionDelegate {
         previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration
     ) -> UITargetedPreview? {
         appButtonDelegate?.previewForDismissingContextMenuOfAppButtonGroupMessageCell(self, with: configuration)
+    }
+    
+}
+
+extension AppCardV1MessageCell {
+    
+    class CardContentView: UIStackView {
+        
+        private var coverImageView: SDAnimatedImageView?
+        private var titleLabel: UILabel?
+        private(set) var descriptionLabel: TextLabel?
+        
+        init() {
+            super.init(frame: .zero)
+            axis = .vertical
+        }
+        
+        required init(coder: NSCoder) {
+            fatalError("Not supported")
+        }
+        
+        func reloadData(with content: AppCardData.V1Content) {
+            if let url = content.coverURL {
+                let imageView: SDAnimatedImageView
+                if let view = coverImageView {
+                    view.isHidden = false
+                    imageView = view
+                } else {
+                    imageView = SDAnimatedImageView()
+                    imageView.clipsToBounds = true
+                    imageView.layer.masksToBounds = true
+                    imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+                    imageView.layer.cornerRadius = 5
+                    imageView.snp.makeConstraints { make in
+                        make.width.equalTo(imageView.snp.height)
+                            .multipliedBy(AppCardV1MessageViewModel.coverRatio)
+                    }
+                    imageView.contentMode = .scaleAspectFill
+                    insertArrangedSubview(imageView, at: 0)
+                    setCustomSpacing(AppCardV1MessageViewModel.coverBottomSpacing, after: imageView)
+                    self.coverImageView = imageView
+                }
+                imageView.sd_setImage(with: url)
+            } else {
+                coverImageView?.isHidden = true
+            }
+            
+            if let title = content.title, !title.isEmpty {
+                let titleLabel: UILabel
+                if let label = self.titleLabel {
+                    label.isHidden = false
+                    titleLabel = label
+                } else {
+                    titleLabel = UILabel()
+                    titleLabel.numberOfLines = 0
+                    titleLabel.font = MessageFontSet.appCardV1Title.scaled
+                    let marginStackView = UIStackView(arrangedSubviews: [titleLabel])
+                    marginStackView.axis = .horizontal
+                    marginStackView.layoutMargins = AppCardV1MessageViewModel.labelLayoutMargins
+                    marginStackView.isLayoutMarginsRelativeArrangement = true
+                    insertArrangedSubview(marginStackView, at: 1)
+                    setCustomSpacing(AppCardV1MessageViewModel.otherSpacing, after: marginStackView)
+                    self.titleLabel = titleLabel
+                }
+                titleLabel.text = title
+            } else {
+                titleLabel?.isHidden = true
+            }
+            
+            if let description = content.description, !description.isEmpty {
+                let descriptionLabel: TextLabel
+                if let label = self.descriptionLabel {
+                    label.isHidden = false
+                    descriptionLabel = label
+                } else {
+                    descriptionLabel = TextLabel()
+                    descriptionLabel.backgroundColor = .clear
+                    descriptionLabel.textAlignment = .left
+                    descriptionLabel.font = MessageFontSet.cardSubtitle.scaled
+                    descriptionLabel.textColor = R.color.text_tertiary()!
+                    let marginStackView = UIStackView(arrangedSubviews: [descriptionLabel])
+                    marginStackView.axis = .horizontal
+                    marginStackView.layoutMargins = AppCardV1MessageViewModel.labelLayoutMargins
+                    marginStackView.isLayoutMarginsRelativeArrangement = true
+                    addArrangedSubview(marginStackView)
+                    self.descriptionLabel = descriptionLabel
+                }
+                descriptionLabel.text = description
+            } else {
+                descriptionLabel?.isHidden = true
+            }
+        }
     }
     
 }

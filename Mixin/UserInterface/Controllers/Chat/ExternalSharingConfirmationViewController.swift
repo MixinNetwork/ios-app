@@ -322,7 +322,81 @@ extension ExternalSharingConfirmationViewController {
             
             sendButton.isEnabled = true
         case .v1(let content):
-            // TODO: Preview
+            let contentView = UIView()
+            previewWrapperView.addSubview(contentView)
+            contentView.snp.makeConstraints { (make) in
+                make.top.greaterThanOrEqualToSuperview().offset(35)
+                make.centerY.equalToSuperview().priority(.high)
+                make.leading.equalToSuperview().offset(35)
+                make.trailing.equalToSuperview().offset(-35)
+            }
+            
+            imageView.image = R.image.ic_chat_bubble_right_white()
+            contentView.addSubview(imageView)
+            imageView.snp.makeConstraints { make in
+                let insets = UIEdgeInsets(top: 0, left: -2, bottom: 0, right: -9)
+                make.top.leading.trailing.equalToSuperview().inset(insets)
+            }
+            
+            let cardContentView = AppCardV1MessageCell.CardContentView()
+            contentView.addSubview(cardContentView)
+            cardContentView.reloadData(with: content)
+            cardContentView.snp.makeConstraints { (make) in
+                let insets = UIEdgeInsets(top: 1, left: 2, bottom: 12, right: 8)
+                make.edges.equalTo(imageView).inset(insets)
+            }
+            
+            if !content.actions.isEmpty {
+                final class ButtonsView: AppButtonGroupView {
+                    
+                    override var intrinsicContentSize: CGSize {
+                        CGSize(width: lastLayoutWidth, height: buttonsViewModel.buttonGroupFrame.height)
+                    }
+                    
+                    private let buttonsViewModel = AppButtonGroupViewModel()
+                    private let actions: [AppCardData.V1Content.Action]
+                    
+                    private var lastLayoutWidth: CGFloat = 288
+                    
+                    init(actions: [AppCardData.V1Content.Action]) {
+                        self.actions = actions
+                        super.init(frame: .zero)
+                        buttonsViewModel.layout(lineWidth: lastLayoutWidth,
+                                                contents: actions.map(\.label))
+                        layoutButtons(viewModel: buttonsViewModel)
+                        for (i, action) in actions.enumerated() {
+                            buttonViews[i].setTitle(action.label,
+                                                    colorHexString: action.color,
+                                                    disclosureIndicator: action.isActionExternal)
+                        }
+                    }
+                    
+                    required init?(coder: NSCoder) {
+                        fatalError("Not supported")
+                    }
+                    
+                    override func layoutSubviews() {
+                        super.layoutSubviews()
+                        if bounds.width != lastLayoutWidth {
+                            buttonsViewModel.layout(lineWidth: bounds.width, contents: actions.map(\.label))
+                            layoutButtons(viewModel: buttonsViewModel)
+                            lastLayoutWidth = bounds.width
+                            invalidateIntrinsicContentSize()
+                        }
+                    }
+                    
+                }
+                let buttonsView = ButtonsView(actions: content.actions)
+                buttonsView.isUserInteractionEnabled = false
+                contentView.addSubview(buttonsView)
+                buttonsView.snp.makeConstraints { make in
+                    make.top.equalTo(imageView.snp.bottom)
+                    make.leading.equalToSuperview().offset(-AppButtonView.buttonMargin.leading)
+                    make.trailing.equalToSuperview().offset(AppButtonView.buttonMargin.trailing)
+                    make.bottom.equalToSuperview()
+                }
+            }
+            
             sendButton.isEnabled = true
         }
     }

@@ -7,7 +7,7 @@ class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
         LightRightBubbleImageSet.self
     }
     
-    static let coverRatio: CGFloat = 16.0 / 10.0
+    static let coverRatio: CGFloat = 1
     static let coverBottomSpacing: CGFloat = 10
     static let otherSpacing: CGFloat = 8
     static let labelLayoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)

@@ -128,6 +128,7 @@ extension AppCardV1MessageCell {
         }
         
         func reloadData(with content: AppCardData.V1Content) {
+            let hasCoverImage: Bool
             if let url = content.coverURL {
                 let imageView: SDAnimatedImageView
                 if let view = coverImageView {
@@ -149,10 +150,13 @@ extension AppCardV1MessageCell {
                     self.coverImageView = imageView
                 }
                 imageView.sd_setImage(with: url)
+                hasCoverImage = true
             } else {
                 coverImageView?.isHidden = true
+                hasCoverImage = false
             }
             
+            let hasTitle: Bool
             if let title = content.title, !title.isEmpty {
                 let titleLabel: UILabel
                 if let label = self.titleLabel {
@@ -165,14 +169,23 @@ extension AppCardV1MessageCell {
                     let marginStackView = UIStackView(arrangedSubviews: [titleLabel])
                     marginStackView.axis = .horizontal
                     marginStackView.layoutMargins = AppCardV1MessageViewModel.labelLayoutMargins
+                    if !hasCoverImage {
+                        marginStackView.layoutMargins.top = 8
+                    }
                     marginStackView.isLayoutMarginsRelativeArrangement = true
-                    insertArrangedSubview(marginStackView, at: 1)
+                    if coverImageView == nil {
+                        addArrangedSubview(marginStackView)
+                    } else {
+                        insertArrangedSubview(marginStackView, at: 1)
+                    }
                     setCustomSpacing(AppCardV1MessageViewModel.otherSpacing, after: marginStackView)
                     self.titleLabel = titleLabel
                 }
                 titleLabel.text = title
+                hasTitle = true
             } else {
                 titleLabel?.isHidden = true
+                hasTitle = false
             }
             
             if let description = content.description, !description.isEmpty {
@@ -189,6 +202,9 @@ extension AppCardV1MessageCell {
                     let marginStackView = UIStackView(arrangedSubviews: [descriptionLabel])
                     marginStackView.axis = .horizontal
                     marginStackView.layoutMargins = AppCardV1MessageViewModel.labelLayoutMargins
+                    if !hasCoverImage && !hasTitle {
+                        marginStackView.layoutMargins.top = 8
+                    }
                     marginStackView.isLayoutMarginsRelativeArrangement = true
                     addArrangedSubview(marginStackView)
                     self.descriptionLabel = descriptionLabel

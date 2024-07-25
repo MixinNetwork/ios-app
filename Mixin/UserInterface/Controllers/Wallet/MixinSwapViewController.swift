@@ -39,6 +39,7 @@ final class MixinSwapViewController: SwapViewController {
         updateSendView(token: nil)
         updateReceiveView(token: nil)
         reloadTokens()
+        sendAmountTextField.delegate = self
     }
     
     override func sendAmountEditingChanged(_ sender: Any) {
@@ -108,7 +109,7 @@ final class MixinSwapViewController: SwapViewController {
         guard
             let sendToken,
             let text = sendAmountTextField.text,
-            let sendAmount = Decimal(string: text),
+            let sendAmount = Decimal(string: text, locale: .current),
             let receiveToken,
             let receiveAmount
         else {
@@ -145,6 +146,36 @@ final class MixinSwapViewController: SwapViewController {
             }
         }
     }
+    
+}
+
+extension MixinSwapViewController: UITextFieldDelegate {
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        let maxFractionDigitsCount = 8
+        let newText = ((textField.text ?? "") as NSString)
+            .replacingCharacters(in: range, with: string)
+        if newText.isEmpty {
+            return true
+        }
+        let components = newText.components(separatedBy: currentDecimalSeparator)
+        switch components.count {
+        case 1:
+            return true
+        case 2:
+            return components[1].count <= 8
+        default:
+            return false
+        }
+    }
+    
+}
+
+extension MixinSwapViewController {
     
     private func reloadTokens() {
         RouteAPI.swappableTokens(source: .exin) { [weak self] result in
@@ -288,7 +319,7 @@ final class MixinSwapViewController: SwapViewController {
         lastQuoteRequest?.cancel()
         guard
             let text = sendAmountTextField.text,
-            let sendAmount = Decimal(string: text),
+            let sendAmount = Decimal(string: text, locale: .current),
             let sendToken,
             let receiveToken
         else {

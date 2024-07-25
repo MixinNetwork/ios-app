@@ -43,6 +43,7 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     override func sendAmountEditingChanged(_ sender: Any) {
+        updateSendValueLabel()
         requestNewQuote()
     }
     
@@ -264,20 +265,31 @@ extension MixinSwapViewController {
             } else {
                 sendNetworkLabel.alpha = 0 // Keeps the height
             }
-            sendValueLabel.text = CurrencyFormatter.localizedString(
-                from: token.decimalUSDPrice * token.decimalBalance,
-                format: .fiatMoney,
-                sign: .never,
-                symbol: .currencySymbol
-            )
         } else {
             sendBalanceLabel.text = nil
             sendIconView.prepareForReuse()
             sendIconView.image = nil
             sendSymbolLabel.text = R.string.localizable.select_token()
             sendNetworkLabel.alpha = 0 // Keeps the height
-            sendValueLabel.text = nil
         }
+        updateSendValueLabel()
+    }
+    
+    private func updateSendValueLabel() {
+        guard
+            let sendToken,
+            let text = sendAmountTextField.text,
+            let sendAmount = Decimal(string: text, locale: .current)
+        else {
+            sendValueLabel.text = nil
+            return
+        }
+        sendValueLabel.text = CurrencyFormatter.localizedString(
+            from: sendToken.decimalUSDPrice * sendAmount,
+            format: .fiatMoney,
+            sign: .never,
+            symbol: .currencySymbol
+        )
     }
     
     private func updateReceiveView(token: BalancedSwappableToken?) {
@@ -299,16 +311,16 @@ extension MixinSwapViewController {
     }
     
     private func updateReceiveValueLabel() {
-        if let receiveToken, let receiveAmount {
-            receiveValueLabel.text = CurrencyFormatter.localizedString(
-                from: receiveToken.decimalUSDPrice * receiveAmount,
-                format: .fiatMoney,
-                sign: .never,
-                symbol: .currencySymbol
-            )
-        } else {
+        guard let receiveToken, let receiveAmount else {
             receiveValueLabel.text = nil
+            return
         }
+        receiveValueLabel.text = CurrencyFormatter.localizedString(
+            from: receiveToken.decimalUSDPrice * receiveAmount,
+            format: .fiatMoney,
+            sign: .never,
+            symbol: .currencySymbol
+        )
     }
     
     private func requestNewQuote() {

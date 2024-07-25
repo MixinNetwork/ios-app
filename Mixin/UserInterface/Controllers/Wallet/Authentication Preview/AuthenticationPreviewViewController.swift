@@ -292,6 +292,7 @@ extension AuthenticationPreviewViewController {
         case address
         case network
         case fee
+        case networkFee
         case memo
         case tag
         case total
@@ -314,6 +315,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.network()
             case .fee:
                 R.string.localizable.fee()
+            case .networkFee:
+                R.string.localizable.network_fee()
             case .memo:
                 R.string.localizable.memo()
             case .tag:

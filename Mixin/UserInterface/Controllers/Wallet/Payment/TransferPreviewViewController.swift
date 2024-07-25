@@ -123,7 +123,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                 ),
                 .info(caption: .price, content: "1 \(operation.token.symbol) ≈ \(price) \(context.receiveToken.symbol)"),
                 .info(caption: .slippage, content: "1%"),
-                .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
+                .amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
             ]
         case .inscription(let context):
             rows = [

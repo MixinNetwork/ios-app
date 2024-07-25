@@ -1,84 +1,57 @@
 import UIKit
+import Alamofire
 import MixinServices
 
 final class MixinSwapViewController: SwapViewController {
     
+    // Key is asset id
+    private var swappableTokensMap: [String: TokenItem] = [:]
+    
     private var sendTokens: [TokenItem]?
     private var sendToken: TokenItem? {
         didSet {
-            if let token = sendToken {
-                let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-                sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
-                sendIconView.setIcon(token: token)
-                sendSymbolLabel.text = token.symbol
-                sendNetworkLabel.text = token.chain?.name
-                sendValueLabel.text = CurrencyFormatter.localizedString(
-                    from: token.decimalUSDPrice * token.decimalBalance,
-                    format: .fiatMoney,
-                    sign: .never,
-                    symbol: .currencySymbol
-                )
-            } else {
-                sendBalanceLabel.text = nil
-                sendIconView.prepareForReuse()
-                sendIconView.image = nil
-                sendSymbolLabel.text = R.string.localizable.select_token()
-                sendNetworkLabel.text = nil
-                sendValueLabel.text = nil
-            }
+            updateSendView(token: sendToken)
         }
     }
     
     private var receiveTokens: [BalancedSwappableToken]?
     private var receiveToken: BalancedSwappableToken? {
         didSet {
-            if let token = receiveToken {
-                let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-                receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
-                receiveIconView.setIcon(token: token.token)
-                receiveSymbolLabel.text = token.symbol
-                receiveNetworkLabel.text = token.token.chain.name
-                receiveValueLabel.text = CurrencyFormatter.localizedString(
-                    from: token.decimalUSDPrice * token.decimalBalance,
-                    format: .fiatMoney,
-                    sign: .never,
-                    symbol: .currencySymbol
-                )
-            } else {
-                receiveBalanceLabel.text = nil
-                receiveIconView.prepareForReuse()
-                receiveIconView.image = nil
-                receiveSymbolLabel.text = R.string.localizable.select_token()
-                receiveNetworkLabel.text = nil
-                receiveValueLabel.text = nil
-            }
+            updateReceiveView(token: receiveToken)
         }
     }
     
     private var receiveAmount: Decimal?
     
+    private weak var lastQuoteRequest: Request?
+    
+    private lazy var userInputSimulationFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = .current
+        formatter.maximumFractionDigits = 8
+        formatter.usesGroupingSeparator = false
+        return formatter
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // TODO: Unhide swap button and implement the function
-        swapBackgroundView.isHidden = true
-        swapButton.isHidden = true
-        
+        updateSendView(token: nil)
+        updateReceiveView(token: nil)
         reloadTokens()
     }
     
-    override func sendAmountEditingChanged(_ sender: UITextField) {
-        guard
-            let text = sender.text,
-            let sendAmount = Decimal(string: text),
-            let sendToken
-        else {
+    override func sendAmountEditingChanged(_ sender: Any) {
+        requestNewQuote()
+    }
+    
+    override func inputMaxSendAmount(_ sender: Any) {
+        guard let sendToken else {
             return
         }
-        reviewButton.isEnabled = sendAmount > 0
-            && sendAmount <= sendToken.decimalBalance
-            && receiveToken != nil
-        updateReceivingAmount()
+        let balance = sendToken.decimalBalance as NSDecimalNumber
+        sendAmountTextField.text = userInputSimulationFormatter.string(from: balance)
+        sendAmountEditingChanged(sender)
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -87,8 +60,12 @@ final class MixinSwapViewController: SwapViewController {
         }
         let selector = Web3TransferTokenSelectorViewController<TokenItem>()
         selector.onSelected = { token in
-            self.sendToken = token
-            self.updateReceivingAmount()
+            if token.assetID == self.receiveToken?.token.assetID {
+                self.swapSendingReceiving(sender)
+            } else {
+                self.sendToken = token
+                self.requestNewQuote()
+            }
         }
         selector.reload(tokens: sendTokens)
         present(selector, animated: true)
@@ -100,15 +77,31 @@ final class MixinSwapViewController: SwapViewController {
         }
         let selector = Web3TransferTokenSelectorViewController<BalancedSwappableToken>()
         selector.onSelected = { token in
-            self.receiveToken = token
-            self.updateReceivingAmount()
+            if token.token.assetID == self.sendToken?.assetID {
+                self.swapSendingReceiving(sender)
+            } else {
+                self.receiveToken = token
+                self.requestNewQuote()
+            }
         }
         selector.reload(tokens: receiveTokens)
         present(selector, animated: true)
     }
     
     override func swapSendingReceiving(_ sender: Any) {
-        
+        guard
+            let sendToken,
+            let receiveToken,
+            let newSendToken = swappableTokensMap[receiveToken.token.assetID],
+            let newReceiveToken = receiveTokens?.first(where: {
+                $0.token.assetID == sendToken.assetID
+            })
+        else {
+            return
+        }
+        self.sendToken = newSendToken
+        self.receiveToken = newReceiveToken
+        requestNewQuote()
     }
     
     override func review(_ sender: RoundedButton) {
@@ -170,34 +163,54 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     private func reloadData(swappableTokens: [SwappableToken]) {
-        DispatchQueue.global().async {
-            let swappableTokens: [SwappableToken] = swappableTokens.compactMap { token in
-                // In case API returns invalid results
-                switch token.source {
-                case .exin:
-                    token
-                case .other:
-                    nil
+        DispatchQueue.global().async { [weak self] in
+            let swappableAssetIDs: [String] = swappableTokens.map(\.assetID)
+            let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: swappableAssetIDs)
+            if !missingAssetIDs.isEmpty {
+                switch SafeAPI.assets(ids: missingAssetIDs) {
+                case .success(let tokens):
+                    TokenDAO.shared.save(assets: tokens)
+                case .failure(let error):
+                    Logger.general.error(category: "MixinSwap", message: "\(error)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self?.reloadData(swappableTokens: swappableTokens)
+                    }
+                    return
                 }
             }
-            let swappableAssetIDs: [String] = swappableTokens.map(\.assetID)
-            let positiveBalancedTokens = TokenDAO.shared.positiveBalancedTokens(assetIDs: swappableAssetIDs)
-            let sendTokens = positiveBalancedTokens.filter { $0.decimalBalance > 0 }
-            let sendToken = sendTokens.first
-            let mapping = positiveBalancedTokens.reduce(into: [:]) { result, item in
+            
+            let swappableTokenItems = TokenDAO.shared.tokenItems(with: swappableAssetIDs)
+            let swappableTokensMap = swappableTokenItems.reduce(into: [:]) { result, item in
                 result[item.assetID] = item
             }
-            let receiveTokens = swappableTokens.map { token in
-                if let item = mapping[token.assetID] {
-                    BalancedSwappableToken(token: token, balance: item.decimalBalance, usdPrice: item.decimalUSDPrice)
+            
+            let sendTokens = swappableAssetIDs.compactMap { id in
+                if let token = swappableTokensMap[id], token.decimalBalance > 0 {
+                    return token
                 } else {
-                    BalancedSwappableToken(token: token, balance: 0, usdPrice: 0)
+                    return nil
+                }
+            }
+            let sendToken = sendTokens.first
+            
+            let receiveTokens = swappableTokens.map { token in
+                if let item = swappableTokensMap[token.assetID] {
+                    return BalancedSwappableToken(token: token, balance: item.decimalBalance, usdPrice: item.decimalUSDPrice)
+                } else {
+                    // This is not supposed to happen. Missing tokens should be retrieved by API calls
+                    Logger.general.warn(category: "MixinSwap", message: "Missing token: \(token.assetID)")
+                    return BalancedSwappableToken(token: token, balance: 0, usdPrice: 0)
                 }
             }
             let receiveToken = receiveTokens.first { token in
                 token.token.assetID != sendToken?.assetID
             }
+            
             DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.swappableTokensMap = swappableTokensMap
                 self.sendTokens = sendTokens
                 self.sendToken = sendToken
                 self.receiveTokens = receiveTokens
@@ -208,42 +221,112 @@ final class MixinSwapViewController: SwapViewController {
         }
     }
     
-    private func updateReceivingAmount() {
+    private func updateSendView(token: TokenItem?) {
+        if let token {
+            let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
+            sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
+            sendIconView.setIcon(token: token)
+            sendSymbolLabel.text = token.symbol
+            if let network = token.chain?.name {
+                sendNetworkLabel.text = network
+                sendNetworkLabel.alpha = 1
+            } else {
+                sendNetworkLabel.alpha = 0 // Keeps the height
+            }
+            sendValueLabel.text = CurrencyFormatter.localizedString(
+                from: token.decimalUSDPrice * token.decimalBalance,
+                format: .fiatMoney,
+                sign: .never,
+                symbol: .currencySymbol
+            )
+        } else {
+            sendBalanceLabel.text = nil
+            sendIconView.prepareForReuse()
+            sendIconView.image = nil
+            sendSymbolLabel.text = R.string.localizable.select_token()
+            sendNetworkLabel.alpha = 0 // Keeps the height
+            sendValueLabel.text = nil
+        }
+    }
+    
+    private func updateReceiveView(token: BalancedSwappableToken?) {
+        if let token {
+            let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
+            receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
+            receiveIconView.setIcon(token: token.token)
+            receiveSymbolLabel.text = token.symbol
+            receiveNetworkLabel.text = token.token.chain.name
+            receiveNetworkLabel.alpha = 1
+        } else {
+            receiveBalanceLabel.text = nil
+            receiveIconView.prepareForReuse()
+            receiveIconView.image = nil
+            receiveSymbolLabel.text = R.string.localizable.select_token()
+            receiveNetworkLabel.alpha = 0 // Keeps the height
+        }
+        updateReceiveValueLabel()
+    }
+    
+    private func updateReceiveValueLabel() {
+        if let receiveToken, let receiveAmount {
+            receiveValueLabel.text = CurrencyFormatter.localizedString(
+                from: receiveToken.decimalUSDPrice * receiveAmount,
+                format: .fiatMoney,
+                sign: .never,
+                symbol: .currencySymbol
+            )
+        } else {
+            receiveValueLabel.text = nil
+        }
+    }
+    
+    private func requestNewQuote() {
         receiveAmountTextField.text = nil
-        reportAdditionalInfo(style: .info, text: R.string.localizable.calculating())
+        receiveAmount = nil
+        updateReceiveValueLabel()
         reviewButton.isEnabled = false
+        lastQuoteRequest?.cancel()
         guard
             let text = sendAmountTextField.text,
             let sendAmount = Decimal(string: text),
             let sendToken,
             let receiveToken
         else {
+            hideAdditionalInfo()
             return
         }
+        showAdditionalInfo(style: .info, text: R.string.localizable.calculating())
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard self?.sendAmountTextField.text == text else {
+            guard
+                let self,
+                self.sendAmountTextField.text == text,
+                sendToken.assetID == self.sendToken?.assetID,
+                receiveToken.token.assetID == self.receiveToken?.token.assetID
+            else {
                 return
             }
             let request = QuoteRequest.exin(pay: sendToken, payAmount: sendAmount, receive: receiveToken.token, slippage: 0.01)
-            RouteAPI.quote(request: request) { result in
+            self.lastQuoteRequest = RouteAPI.quote(request: request) { [weak self] result in
                 switch result {
                 case .success(let response):
-                    guard
-                        let self,
-                        self.sendAmountTextField.text == text,
-                        self.receiveToken?.token.assetID == receiveToken.token.assetID,
-                        let receiveAmount = Decimal(string: response.outAmount, locale: .enUSPOSIX)
-                    else {
+                    guard let receiveAmount = Decimal(string: response.outAmount, locale: .enUSPOSIX) else {
+                        Logger.general.error(category: "MixinSwap", message: "Invalid receive amount: \(response.outAmount)")
+                        return
+                    }
+                    guard let self else {
                         return
                     }
                     self.receiveAmount = receiveAmount
                     self.receiveAmountTextField.text = CurrencyFormatter.localizedString(from: receiveAmount as Decimal, format: .precision, sign: .never)
+                    self.updateReceiveValueLabel()
                     let price = CurrencyFormatter.localizedString(from: receiveAmount / sendAmount, format: .precision, sign: .never)
-                    self.reportAdditionalInfo(style: .info, text: "1 \(sendToken.symbol) ≈ \(price) \(receiveToken.symbol)")
-                    self.reviewButton.isEnabled = true
+                    self.showAdditionalInfo(style: .info, text: "1 \(sendToken.symbol) ≈ \(price) \(receiveToken.symbol)")
+                    self.reviewButton.isEnabled = sendAmount > 0 && sendAmount <= sendToken.decimalBalance
+                case .failure(.httpTransport(.explicitlyCancelled)):
+                    break
                 case .failure(let error):
                     Logger.general.debug(category: "Web3Swap", message: error.localizedDescription)
-                    self?.reportAdditionalInfo(style: .error, text: R.string.localizable.no_quote())
+                    self?.showAdditionalInfo(style: .error, text: R.string.localizable.swap_no_quote())
                 }
             }
         }

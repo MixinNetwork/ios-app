@@ -39,7 +39,6 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var receiveValueLabel: UILabel!
     
     @IBOutlet weak var receiveSeparatorLineView: UIView!
-    
     @IBOutlet weak var receiveAdditionalInfoLabel: UILabel!
     
     @IBOutlet weak var swapBackgroundView: UIView!
@@ -78,7 +77,11 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         view.layoutIfNeeded()
     }
     
-    @IBAction func sendAmountEditingChanged(_ sender: UITextField) {
+    @IBAction func sendAmountEditingChanged(_ sender: Any) {
+        
+    }
+    
+    @IBAction func inputMaxSendAmount(_ sender: Any) {
         
     }
     
@@ -98,7 +101,12 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         
     }
     
-    func reportAdditionalInfo(style: AdditionalInfoStyle, text: String) {
+    func hideAdditionalInfo() {
+        receiveSeparatorLineView.isHidden = true
+        receiveAdditionalInfoLabel.isHidden = true
+    }
+    
+    func showAdditionalInfo(style: AdditionalInfoStyle, text: String) {
         switch style {
         case .info:
             receiveAdditionalInfoLabel.textColor = R.color.text_tertiary()
@@ -106,6 +114,8 @@ class SwapViewController: KeyboardBasedLayoutViewController {
             receiveAdditionalInfoLabel.textColor = R.color.red()
         }
         receiveAdditionalInfoLabel.text = text
+        receiveSeparatorLineView.isHidden = false
+        receiveAdditionalInfoLabel.isHidden = false
     }
     
     func reportClientOutdated() {

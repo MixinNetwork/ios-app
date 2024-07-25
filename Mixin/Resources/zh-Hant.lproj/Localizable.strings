@@ -666,7 +666,6 @@
 "no_memo" = "沒有 Memo（備註）";
 "no_network_connection" = "無網路連線";
 "no_posts" = "沒有文章";
-"no_quote" = "沒有報價。請嘗試切換幣種或者修改金額。";
 "no_results" = "未找到相關結果";
 "no_stickers" = "還未新增任何表情";
 "no_tag" = "點選不使用 Tag（標籤）";
@@ -1003,6 +1002,9 @@
 "swap_confirmation" = "確認閃兌";
 "swap_failed" = "閃兌失敗";
 "swap_message_success" = "您的閃兌交易已傳送至網路，交易將很快被處理。";
+"swap_no_quote" = "沒有報價。請嘗試切換幣種或者修改金額。";
+"swap_receive" = "獲得";
+"swap_send" = "支付";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";
 "syncing_and_verifying_tip" = "正在驗證並同步金鑰分片到 TIP 網路，請保持應用在前臺，設定過程中不要強制關閉應用";

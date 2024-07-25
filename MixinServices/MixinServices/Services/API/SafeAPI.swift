@@ -101,6 +101,10 @@ extension SafeAPI {
         request(method: .get, path: "/safe/assets/\(id)")
     }
     
+    public static func assets(ids: [String]) -> MixinAPI.Result<[Token]> {
+        request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+    }
+    
 }
 
 // MARK: - Transfer

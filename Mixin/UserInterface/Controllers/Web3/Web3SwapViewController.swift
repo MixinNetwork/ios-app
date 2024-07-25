@@ -31,18 +31,8 @@ final class Web3SwapViewController: SwapViewController {
         reloadTokens()
     }
     
-    override func sendAmountEditingChanged(_ sender: UITextField) {
-        guard
-            let text = sender.text,
-            let sendAmount = Decimal(string: text),
-            let sendToken
-        else {
-            return
-        }
-        reviewButton.isEnabled = sendAmount > 0
-            && sendAmount <= sendToken.decimalBalance
-            && receiveToken != nil
-        updateReceivingAmount()
+    override func sendAmountEditingChanged(_ sender: Any) {
+        
     }
     
     override func changeSendToken(_ sender: Any) {

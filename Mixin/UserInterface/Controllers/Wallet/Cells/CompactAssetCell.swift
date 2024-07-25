@@ -146,14 +146,14 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
             symbol: .custom(token.symbol)
         )
         chainTagLabel.isHidden = true
-        changeLabel.text = R.string.localizable.na()
-        priceLabel.text =  CurrencyFormatter.localizedString(
+        priceLabel.text = CurrencyFormatter.localizedString(
             from: usdPrice * Currency.current.decimalRate,
             format: .fiatMoneyPrice,
             sign: .never,
             symbol: .currencySymbol
         )
-        changeLabel.isHidden = false
+        changeLabel.text = R.string.localizable.na() // Just for layout guidance
+        changeLabel.isHidden = true
         priceLabel.isHidden = false
         noValueIndicator.isHidden = true
         checkmarkImageView.isHidden = true

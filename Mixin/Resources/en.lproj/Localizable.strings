@@ -666,7 +666,6 @@
 "no_memo" = "No Memo";
 "no_network_connection" = "No network connection";
 "no_posts" = "NO POSTS";
-"no_quote" = "No available quotes found. Please try a different token or amount.";
 "no_results" = "NO RESULTS";
 "no_stickers" = "NO STICKERS";
 "no_tag" = "No Tag";
@@ -1003,6 +1002,9 @@
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
+"swap_no_quote" = "No available quotes found. Please try a different token or amount.";
+"swap_receive" = "Receive";
+"swap_send" = "Send";
 "symbol" = "Symbol";
 "symbol_withdrawal" = "%@ Withdrawal";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

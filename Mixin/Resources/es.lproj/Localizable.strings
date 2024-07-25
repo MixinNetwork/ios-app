@@ -666,7 +666,6 @@
 "no_memo" = "Sin memorando";
 "no_network_connection" = "No hay conexion de red";
 "no_posts" = "SIN PUBLICACIONES";
-"no_quote" = "No available quotes found. Please try a different token or amount.";
 "no_results" = "SIN RESULTADOS";
 "no_stickers" = "SIN PEGATINAS";
 "no_tag" = "Sin etiqueta";
@@ -1003,6 +1002,9 @@
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
+"swap_no_quote" = "No available quotes found. Please try a different token or amount.";
+"swap_receive" = "Receive";
+"swap_send" = "Send";
 "symbol" = "Símbolo";
 "symbol_withdrawal" = "Retiro de %@";
 "syncing_and_verifying_tip" = "Mantén la aplicación en primer plano mientras verificas y sincronizas las claves fragmentadas con la red TIP; no fuerces el cierre de la aplicación durante el proceso de configuración.";

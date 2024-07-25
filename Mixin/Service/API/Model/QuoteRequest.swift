@@ -47,4 +47,8 @@ struct QuoteRequest {
         )
     }
     
+    func asParameter() -> String {
+        "inputMint=\(inputMint)&outputMint=\(outputMint)&amount=\(amount)&slippage=\(slippage)&source=\(source.rawValue)"
+    }
+    
 }

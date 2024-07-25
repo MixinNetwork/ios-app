@@ -23,22 +23,6 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
         present(unlock, animated: true)
     }
     
-    override func reloadData(address: String?) {
-        super.reloadData(address: address)
-        if let headerView = tableView.tableHeaderView as? Web3AccountHeaderView {
-            headerView.addSwapButton(self, action: #selector(swap(_:)))
-            let areTokensLoaded = !(tokens?.isEmpty ?? true)
-            areTokensLoaded ? headerView.disableSwapButton() : headerView.enableSwapButton()
-        }
-    }
-    
-    override func tokensDidReload(_ tokens: [Web3Token]) {
-        guard let headerView = tableView.tableHeaderView as? Web3AccountHeaderView else {
-            return
-        }
-        tokens.isEmpty ? headerView.disableSwapButton() : headerView.enableSwapButton()
-    }
-    
     @objc private func swap(_ sender: Any) {
         guard let address, let tokens else {
             return

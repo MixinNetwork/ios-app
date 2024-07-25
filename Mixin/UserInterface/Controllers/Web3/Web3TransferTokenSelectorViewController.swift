@@ -50,8 +50,10 @@ final class Web3TransferTokenSelectorViewController<Token: Web3TransferableToken
             cell.render(token: token, style: .nameWithBalance)
         case let token as Web3Token:
             cell.render(web3Token: token)
-        case let token as Web3SwappableToken:
-            cell.render(web3SwappableToken: token)
+        case let token as SwappableToken:
+            cell.render(swappableToken: token)
+        case let token as BalancedSwappableToken:
+            cell.render(swappableToken: token.token, balance: token.decimalBalance, usdPrice: token.decimalUSDPrice)
         default:
             break
         }

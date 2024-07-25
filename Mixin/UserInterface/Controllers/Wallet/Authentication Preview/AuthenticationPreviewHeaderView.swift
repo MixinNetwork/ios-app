@@ -12,6 +12,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     private weak var assetIconView: BadgeIconView?
     private weak var progressView: AuthenticationProgressView?
     private weak var textContentView: TextInscriptionContentView?
+    private weak var swapIconView: SwapIconView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -54,6 +55,26 @@ final class AuthenticationPreviewHeaderView: UIView {
             self.assetIconView = iconView
         }
         iconView.setIcon(token: token)
+    }
+    
+    func setIcon(sendToken: TokenItem, receiveToken: SwappableToken) {
+        let iconView: SwapIconView
+        if let view = self.swapIconView, view.isDescendant(of: iconWrapperView) {
+            iconView = view
+        } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
+            iconView = SwapIconView()
+            iconWrapperView.addSubview(iconView)
+            iconView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(124)
+                make.height.equalTo(70)
+            }
+            self.swapIconView = iconView
+        }
+        iconView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
     }
     
     func setIcon(progress: AuthenticationProgressView.Progress) {
@@ -110,6 +131,71 @@ final class AuthenticationPreviewHeaderView: UIView {
                 view.removeFromSuperview()
             }
         }
+    }
+    
+}
+
+extension AuthenticationPreviewHeaderView {
+    
+    private final class SwapIconView: UIView {
+        
+        private let sendIconView = UIImageView()
+        private let borderProviderView = UIView()
+        private let receiveIconView = UIImageView()
+        private let borderWidth: CGFloat = 2
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            loadSubviews()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            loadSubviews()
+        }
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            sendIconView.layer.cornerRadius = sendIconView.frame.width / 2
+            borderProviderView.layer.cornerRadius = borderProviderView.frame.width / 2
+            receiveIconView.layer.cornerRadius = receiveIconView.frame.width / 2
+        }
+        
+        func setIcon(sendToken: TokenItem, receiveToken: SwappableToken) {
+            sendIconView.sd_setImage(with: URL(string: sendToken.iconURL),
+                                     placeholderImage: nil,
+                                     context: assetIconContext)
+            receiveIconView.sd_setImage(with: receiveToken.iconURL,
+                                        placeholderImage: nil,
+                                        context: assetIconContext)
+        }
+        
+        private func loadSubviews() {
+            sendIconView.layer.masksToBounds = true
+            addSubview(sendIconView)
+            sendIconView.snp.makeConstraints { make in
+                make.top.leading.equalToSuperview().offset(borderWidth)
+                make.bottom.equalToSuperview().offset(-borderWidth)
+                make.width.equalTo(sendIconView.snp.height)
+            }
+            
+            borderProviderView.backgroundColor = R.color.background()
+            borderProviderView.layer.masksToBounds = true
+            addSubview(borderProviderView)
+            borderProviderView.snp.makeConstraints { make in
+                make.top.trailing.bottom.equalToSuperview()
+                make.width.equalTo(borderProviderView.snp.height)
+            }
+            
+            receiveIconView.layer.masksToBounds = true
+            addSubview(receiveIconView)
+            receiveIconView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(borderWidth)
+                make.trailing.bottom.equalToSuperview().offset(-borderWidth)
+                make.width.equalTo(receiveIconView.snp.height)
+            }
+        }
+        
     }
     
 }

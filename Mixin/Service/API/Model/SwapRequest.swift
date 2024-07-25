@@ -5,33 +5,54 @@ struct SwapRequest: Encodable {
     
     let payer: String
     let inputMint: String
-    let inAmount: Int
+    let inputAmount: String
     let outputMint: String
     let slippage: Int
-    let source: String
-    let referral: String
+    let source: RouteTokenSource
+    let referral: String?
     
-    init?(
-        pay payToken: Web3Token,
-        payAmount: Decimal,
-        payAddress: String,
-        receive receiveToken: Web3SwappableToken,
+    static func web3(
+        sendToken: Web3Token,
+        sendAmount: Decimal,
+        sendAddress: String,
+        receiveToken: SwappableToken,
         slippage: Decimal
-    ) {
-        guard let inAmount = payToken.nativeAmount(decimalAmount: payAmount) else {
+    ) -> SwapRequest? {
+        guard let sendAmount = sendToken.nativeAmount(decimalAmount: sendAmount) else {
             return nil
         }
-        self.payer = payAddress
-        self.inputMint = if payToken.assetKey == Web3Token.AssetKey.sol {
+        let inputMint = if sendToken.assetKey == Web3Token.AssetKey.sol {
             Web3Token.AssetKey.wrappedSOL
         } else {
-            payToken.assetKey
+            sendToken.assetKey
         }
-        self.inAmount = inAmount.intValue
-        self.outputMint = receiveToken.address
-        self.slippage = (slippage * 10000 as NSDecimalNumber).intValue
-        self.source = receiveToken.source
-        self.referral = payAddress
+        let inputAmount = Token.amountString(from: sendAmount as Decimal)
+        return SwapRequest(
+            payer: sendAddress,
+            inputMint: inputMint,
+            inputAmount: inputAmount,
+            outputMint: receiveToken.address,
+            slippage: Slippage(decimal: slippage).integral,
+            source: receiveToken.source,
+            referral: sendAddress
+        )
+    }
+    
+    static func exin(
+        sendToken: TokenItem,
+        sendAmount: Decimal,
+        receiveToken: SwappableToken,
+        slippage: Decimal
+    ) -> SwapRequest {
+        SwapRequest(
+            payer: myUserId,
+            inputMint: sendToken.assetID,
+            inputAmount: Token.amountString(from: sendAmount),
+            outputMint: receiveToken.assetID,
+            slippage: Slippage(decimal: slippage).integral,
+            source: .exin,
+            referral: nil
+        )
     }
     
 }

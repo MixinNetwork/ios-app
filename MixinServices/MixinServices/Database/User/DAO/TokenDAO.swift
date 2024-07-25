@@ -121,13 +121,22 @@ public final class TokenDAO: UserDatabaseDAO {
         }
     }
     
-    public func positiveBalancedTokens(chainIDs: [String] = []) -> [TokenItem] {
-        var sql = "\(SQL.selector) WHERE te.balance > 0"
-        if !chainIDs.isEmpty {
-            sql += " AND t.chain_id IN ('\(chainIDs.joined(separator: "','"))')"
+    public func positiveBalancedTokens(assetIDs: [String]) -> [TokenItem] {
+        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
+        if !assetIDs.isEmpty {
+            query.append(literal: " AND t.asset_id IN \(assetIDs)")
         }
-        sql += " ORDER BY \(SQL.order)"
-        return db.select(with: sql)
+        query.append(sql: " ORDER BY \(SQL.order)")
+        return db.select(with: query)
+    }
+    
+    public func positiveBalancedTokens(chainIDs: [String] = []) -> [TokenItem] {
+        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
+        if !chainIDs.isEmpty {
+            query.append(literal: " AND t.chain_id IN \(chainIDs)")
+        }
+        query.append(sql: " ORDER BY \(SQL.order)")
+        return db.select(with: query)
     }
     
     public func appTokens(ids: [String]) -> [AppToken] {
@@ -139,10 +148,7 @@ public final class TokenDAO: UserDatabaseDAO {
         if !ids.isEmpty {
             query.append(literal: "\nWHERE t.asset_id IN \(ids)")
         }
-        return try! db.read { (db: GRDB.Database) -> [AppToken] in
-            let (sql, arguments) = try query.build(db)
-            return try AppToken.fetchAll(db, sql: sql, arguments: arguments)
-        }
+        return db.select(with: query)
     }
     
     public func usdBalanceSum() -> Int {

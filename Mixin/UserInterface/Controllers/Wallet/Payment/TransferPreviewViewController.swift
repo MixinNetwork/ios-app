@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TransferPreviewViewController: AuthenticationPreviewViewController {
+class TransferPreviewViewController: AuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     
@@ -9,12 +9,14 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
     private let amountDisplay: AmountIntent
     private let redirection: URL?
     
-    private var inscriptionContext: Payment.InscriptionContext? {
+    private var context: Payment.Context? {
         switch operation.behavior {
         case .transfer, .consolidation:
             nil
         case .inscription(let context):
-            context
+                .inscription(context)
+        case .swap(let context):
+                .swap(context)
         }
     }
     
@@ -58,23 +60,40 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                     imageView.image = R.image.inscription_intaglio()
                 }
             }
+        case .swap(let context):
+            tableHeaderView.setIcon(sendToken: token, receiveToken: context.receiveToken)
         }
-        switch inscriptionContext?.operation {
-        case .release:
-            tableHeaderView.titleLabel.text = R.string.localizable.collectible_release_confirmation()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.collectible_release_hint()
-        case .transfer, .none:
+        
+        switch context {
+        case .swap:
+            tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from_mixin()
+        case .inscription(let context):
+            switch context.operation {
+            case .transfer:
+                tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
+                tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+            case .release:
+                tableHeaderView.titleLabel.text = R.string.localizable.collectible_release_confirmation()
+                tableHeaderView.subtitleLabel.text = R.string.localizable.collectible_release_hint()
+            }
+        case nil:
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
             tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
         }
         
         var rows: [Row]
         
-        let tokenAmount: Decimal
-        if let context = inscriptionContext, case .release = context.operation {
-            tokenAmount = context.outputAmount
-        } else {
-            tokenAmount = operation.amount
+        let tokenAmount: Decimal = switch context {
+        case .inscription(let context):
+            switch context.operation {
+            case .transfer:
+                operation.amount
+            case .release:
+                context.outputAmount
+            }
+        case .swap, .none:
+            operation.amount
         }
         let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = tokenAmount * operation.token.decimalUSDPrice * Currency.current.decimalRate
@@ -82,14 +101,38 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
-        if let context = inscriptionContext {
+        switch context {
+        case .swap(let context):
+            let price = CurrencyFormatter.localizedString(from: context.receiveAmount / operation.amount, format: .precision, sign: .never)
+            rows = [
+                .swapAssetChange(
+                    sendToken: operation.token,
+                    sendAmount: CurrencyFormatter.localizedString(
+                        from: -tokenAmount,
+                        format: .precision,
+                        sign: .always,
+                        symbol: .custom(token.symbol)
+                    ),
+                    receiveToken: context.receiveToken,
+                    receiveAmount: CurrencyFormatter.localizedString(
+                        from: context.receiveAmount,
+                        format: .precision,
+                        sign: .always,
+                        symbol: .custom(context.receiveToken.symbol)
+                    )
+                ),
+                .info(caption: .price, content: "1 \(operation.token.symbol) ≈ \(price) \(context.receiveToken.symbol)"),
+                .info(caption: .slippage, content: "1%"),
+                .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
+            ]
+        case .inscription(let context):
             rows = [
                 .boldInfo(caption: .collectible, content: context.item.collectionSequenceRepresentation),
             ]
             if case .release = context.operation {
                 rows.append(.tokenAmount(token: token, tokenAmount: tokenValue, fiatMoneyAmount: fiatMoneyValue))
             }
-        } else {
+        case .none:
             rows = [
                 .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
             ]
@@ -112,11 +155,16 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             rows.append(.senders([user], threshold: senderThreshold))
         }
         
-        switch inscriptionContext?.operation {
-        case .transfer:
+        switch context {
+        case .swap:
             break
-        case .release:
-            rows.append(.info(caption: .fee, content: feeTokenValue))
+        case .inscription(let context):
+            switch context.operation {
+            case .transfer:
+                break
+            case .release:
+                rows.append(.info(caption: .fee, content: feeTokenValue))
+            }
         case .none:
             rows.append(contentsOf: [
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
@@ -134,11 +182,20 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        switch inscriptionContext?.operation {
-        case .release:
-            layoutTableHeaderView(title: R.string.localizable.collectible_releasing(),
-                                  subtitle: R.string.localizable.collectible_releasing_description())
-        case .transfer, .none:
+        switch context {
+        case .swap:
+            layoutTableHeaderView(title: R.string.localizable.sending(),
+                                  subtitle: R.string.localizable.signature_request_from_mixin())
+        case .inscription(let context):
+            switch context.operation {
+            case .transfer:
+                layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
+                                      subtitle: R.string.localizable.transfer_sending_description())
+            case .release:
+                layoutTableHeaderView(title: R.string.localizable.collectible_releasing(),
+                                      subtitle: R.string.localizable.collectible_releasing_description())
+            }
+        case .none:
             layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
                                   subtitle: R.string.localizable.transfer_sending_description())
         }
@@ -150,11 +207,20 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
-                    switch inscriptionContext?.operation {
-                    case .release:
-                        layoutTableHeaderView(title: R.string.localizable.collectible_release_success(),
-                                              subtitle: R.string.localizable.collectible_released_description())
-                    case .transfer, .none:
+                    switch context {
+                    case .swap:
+                        layoutTableHeaderView(title: R.string.localizable.sending_success(),
+                                              subtitle: R.string.localizable.swap_message_success())
+                    case .inscription(let context):
+                        switch context.operation {
+                        case .transfer:
+                            layoutTableHeaderView(title: R.string.localizable.transfer_success(),
+                                                  subtitle: R.string.localizable.transfer_sent_description())
+                        case .release:
+                            layoutTableHeaderView(title: R.string.localizable.collectible_release_success(),
+                                                  subtitle: R.string.localizable.collectible_released_description())
+                        }
+                    case .none:
                         layoutTableHeaderView(title: R.string.localizable.transfer_success(),
                                               subtitle: R.string.localizable.transfer_sent_description())
                     }
@@ -183,10 +249,17 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
-                    let title = switch inscriptionContext?.operation {
-                    case .release:
-                        R.string.localizable.collectible_release_failed()
-                    case .transfer, .none:
+                    let title = switch context {
+                    case .swap:
+                        R.string.localizable.swap_failed()
+                    case .inscription(let context):
+                        switch context.operation {
+                        case .transfer:
+                            R.string.localizable.transfer_failed()
+                        case .release:
+                            R.string.localizable.collectible_release_failed()
+                        }
+                    case .none:
                         R.string.localizable.transfer_failed()
                     }
                     layoutTableHeaderView(title: title,
@@ -227,14 +300,8 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             return
         }
         var viewControllers = navigation.viewControllers
-        if let context = inscriptionContext, case .release = context.operation {
-            if let preview = viewControllers.last as? InscriptionViewController, preview.inscriptionHash == context.item.inscriptionHash {
-                viewControllers.removeLast()
-                navigation.setViewControllers(viewControllers, animated: false)
-            } else {
-                return
-            }
-        } else {
+        
+        func manipulateTransferFinished() {
             switch operation.destination {
             case let .user(opponent):
                 if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
@@ -258,6 +325,28 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
                 }
                 navigation.setViewControllers(viewControllers, animated: false)
             }
+        }
+        
+        switch context {
+        case .swap(let context):
+            if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is SwapViewController {
+                viewControllers.removeLast()
+            }
+            navigation.setViewControllers(viewControllers, animated: false)
+        case .inscription(let context):
+            switch context.operation {
+            case .transfer:
+                manipulateTransferFinished()
+            case .release:
+                if let preview = viewControllers.last as? InscriptionViewController, preview.inscriptionHash == context.item.inscriptionHash {
+                    viewControllers.removeLast()
+                    navigation.setViewControllers(viewControllers, animated: false)
+                } else {
+                    return
+                }
+            }
+        case .none:
+            manipulateTransferFinished()
         }
     }
     

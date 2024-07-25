@@ -13,6 +13,7 @@ class UrlWindow {
         case userActivity
         case webView(MixinWebViewController.Context)
         case conversation(WeakWrapper<ConversationMessageComposer>)
+        case swap(context: Payment.SwapContext, completion: (String?) -> Void)
         case other
         
         var webContext: MixinWebViewController.Context? {
@@ -26,7 +27,7 @@ class UrlWindow {
         
         var isExternal: Bool {
             switch self {
-            case .openURL, .userActivity, .conversation:
+            case .openURL, .userActivity, .conversation, .swap:
                 return true
             case .webView, .other:
                 return false
@@ -931,26 +932,45 @@ extension UrlWindow {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: homeContainer.view)
+        let completion: (String?) -> Void
+        switch source {
+        case let .swap(_, externalCompletion):
+            completion = externalCompletion
+        default:
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: homeContainer.view)
+            completion = { (message) in
+                if let message {
+                    hud.set(style: .error, text: message)
+                    hud.scheduleAutoHidden()
+                } else {
+                    hud.hide()
+                }
+            }
+        }
         DispatchQueue.global().async {
             let destination: Payment.TransferDestination
             switch paymentURL.address {
             case let .user(id):
-                guard let items = syncUsers(userIds: [id], hud: hud) else {
+                let items = syncUsers(userIds: [id]) { errorDescription in
+                    completion(errorDescription)
+                }
+                guard let items else {
                     return
                 }
                 if let item = items.first {
                     destination = .user(item)
                 } else {
                     DispatchQueue.main.async {
-                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
-                        hud.scheduleAutoHidden()
+                        completion(R.string.localizable.invalid_payment_link())
                     }
                     return
                 }
             case let .multisig(threshold, ids):
-                guard let users = syncUsersInOrder(userIDs: ids, hud: hud) else {
+                let users = syncUsersInOrder(userIDs: ids) { errorDescription in
+                    completion(errorDescription)
+                }
+                guard let users else {
                     return
                 }
                 if users.count == 1 {
@@ -971,33 +991,30 @@ extension UrlWindow {
                     case .user(let user):
                         transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
                     case .multisig:
-                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
-                        hud.scheduleAutoHidden()
+                        completion(R.string.localizable.invalid_payment_link())
                         return
                     case .mainnet(let address):
                         transfer = TransferOutViewController.instance(token: nil, to: .mainnet(address))
                     }
-                    hud.hide()
+                    completion(nil)
                     UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
                 }
                 return
             case let .inscription(hash):
-                guard let (output, inscriptionItem) = syncInscriptionOutput(inscriptionHash: hash, hud: hud) else {
+                guard let (output, inscriptionItem) = syncInscriptionOutput(inscriptionHash: hash, onFailure: { completion($0) }) else {
                     return
                 }
                 guard let outputAmount = output.decimalAmount else {
                     Logger.general.error(category: "UrlWindow", message: "Invalid output amount: \(output.amount)")
                     DispatchQueue.main.async {
-                        hud.set(style: .error, text: "Invalid Output")
-                        hud.scheduleAutoHidden()
+                        completion("Invalid Output")
                     }
                     return
                 }
                 guard let assetID = TokenDAO.shared.assetID(kernelAssetID: output.asset) else {
                     Logger.general.warn(category: "UrlWindow", message: "Missing output asset: \(output.asset)")
                     DispatchQueue.main.async {
-                        hud.set(style: .error, text: "Missing Asset")
-                        hud.scheduleAutoHidden()
+                        completion("Missing Asset")
                     }
                     return
                 }
@@ -1012,16 +1029,14 @@ extension UrlWindow {
                         guard let asset = paymentURL.asset, asset == assetID else {
                             Logger.general.warn(category: "UrlWindow", message: "Mismatched asset: \(paymentURL.asset ?? "(null)") \(assetID)")
                             DispatchQueue.main.async {
-                                hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
-                                hud.scheduleAutoHidden()
+                                completion(R.string.localizable.invalid_payment_link())
                             }
                             return
                         }
                         guard case let .user(item) = destination, item.relationship == Relationship.ME.rawValue else {
                             Logger.general.warn(category: "UrlWindow", message: "Releasing to others")
                             DispatchQueue.main.async {
-                                hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
-                                hud.scheduleAutoHidden()
+                                completion(R.string.localizable.invalid_payment_link())
                             }
                             return
                         }
@@ -1029,8 +1044,7 @@ extension UrlWindow {
                     } else {
                         Logger.general.error(category: "UrlWindow", message: "Invalid amount from URL: \(amount)")
                         DispatchQueue.main.async {
-                            hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
-                            hud.scheduleAutoHidden()
+                            completion(R.string.localizable.invalid_payment_link())
                         }
                         return
                     }
@@ -1038,7 +1052,10 @@ extension UrlWindow {
                     // Transfer
                     context = Payment.InscriptionContext(operation: .transfer, output: output, outputAmount: outputAmount, item: inscriptionItem)
                 }
-                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                let token = syncToken(assetID: assetID) { errorDescription in
+                    completion(errorDescription)
+                }
+                guard let token else {
                     return
                 }
                 payment = .inscription(traceID: paymentURL.trace,
@@ -1046,15 +1063,25 @@ extension UrlWindow {
                                        memo: paymentURL.memo,
                                        context: context)
             case let .prefilled(assetID, amount):
-                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                let token = syncToken(assetID: assetID) { errorDescription in
+                    completion(errorDescription)
+                }
+                guard let token else {
                     return
                 }
                 let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
+                let context: Payment.Context? = switch source {
+                case let .swap(context, _):
+                        .swap(context)
+                default:
+                    nil
+                }
                 payment = Payment(traceID: paymentURL.trace,
                                   token: token,
                                   tokenAmount: amount,
                                   fiatMoneyAmount: fiatMoneyAmount,
-                                  memo: paymentURL.memo)
+                                  memo: paymentURL.memo,
+                                  context: context)
             }
             
             payment.checkPreconditions(
@@ -1064,19 +1091,23 @@ extension UrlWindow {
             ) { reason in
                 switch reason {
                 case .userCancelled:
-                    hud.hide()
+                    completion(nil)
                 case .description(let message):
-                    hud.set(style: .error, text: message)
-                    hud.scheduleAutoHidden()
+                    completion(message)
                 }
             } onSuccess: { (operation, issues) in
-                hud.hide()
+                completion(nil)
                 let redirection = source.isExternal ? paymentURL.redirection : nil
                 let preview = TransferPreviewViewController(issues: issues,
                                                             operation: operation,
                                                             amountDisplay: .byToken,
                                                             redirection: redirection)
-                preview.manipulateNavigationStackOnFinished = false
+                switch source {
+                case .swap:
+                    preview.manipulateNavigationStackOnFinished = true
+                default:
+                    preview.manipulateNavigationStackOnFinished = false
+                }
                 homeContainer.present(preview, animated: true)
             }
         }
@@ -1302,7 +1333,10 @@ extension UrlWindow {
         }
     }
     
-    private static func syncToken(assetID: String, hud: Hud) -> TokenItem? {
+    private static func syncToken(
+        assetID: String,
+        onFailure: @escaping (String) -> Void
+    ) -> TokenItem? {
         var token: TokenItem
         if let localToken = TokenDAO.shared.tokenItem(assetID: assetID) {
             token = localToken
@@ -1315,8 +1349,7 @@ extension UrlWindow {
                 Logger.general.error(category: "UrlWindow", message: "No token: \(assetID) from remote, error: \(error)")
                 let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
                 DispatchQueue.main.async {
-                    hud.set(style: .error, text: text)
-                    hud.scheduleAutoHidden()
+                    onFailure(text)
                 }
                 return nil
             }
@@ -1334,8 +1367,7 @@ extension UrlWindow {
                     Logger.general.error(category: "UrlWindow", message: "No chain: \(token.chainID) from remote, error: \(error)")
                     let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
                     DispatchQueue.main.async {
-                        hud.set(style: .error, text: text)
-                        hud.scheduleAutoHidden()
+                        onFailure(text)
                     }
                     return nil
                 }
@@ -1346,12 +1378,21 @@ extension UrlWindow {
         }
     }
     
-    private static func syncInscriptionOutput(inscriptionHash: String, hud: Hud) -> (Output, InscriptionItem)? {
+    private static func syncToken(assetID: String, hud: Hud) -> TokenItem? {
+        syncToken(assetID: assetID) { errorDescription in
+            hud.set(style: .error, text: errorDescription)
+            hud.scheduleAutoHidden()
+        }
+    }
+    
+    private static func syncInscriptionOutput(
+        inscriptionHash: String,
+        onFailure: @escaping (String) -> Void
+    ) -> (Output, InscriptionItem)? {
         guard let inscriptionOutput = InscriptionDAO.shared.inscriptionOutput(inscriptionHash: inscriptionHash) else {
             Logger.general.error(category: "UrlWindow", message: "Missing output transferring inscription: \(inscriptionHash)")
             DispatchQueue.main.async {
-                hud.set(style: .error, text: R.string.localizable.not_found())
-                hud.scheduleAutoHidden()
+                onFailure(R.string.localizable.not_found())
             }
             return nil
         }
@@ -1362,8 +1403,7 @@ extension UrlWindow {
         func report(error: MixinAPIError) {
             Logger.general.error(category: "UrlWindow", message: "Sync Inscription Failed, hash: \(inscriptionHash), error: \(error)")
             DispatchQueue.main.async {
-                hud.set(style: .error, text: error.localizedDescription)
-                hud.scheduleAutoHidden()
+                onFailure(error.localizedDescription)
             }
         }
         
@@ -1388,6 +1428,13 @@ extension UrlWindow {
         case let .failure(error):
             report(error: error)
             return nil
+        }
+    }
+    
+    private static func syncInscriptionOutput(inscriptionHash: String, hud: Hud) -> (Output, InscriptionItem)? {
+        syncInscriptionOutput(inscriptionHash: inscriptionHash) { errorDescription in
+            hud.set(style: .error, text: errorDescription)
+            hud.scheduleAutoHidden()
         }
     }
     
@@ -1461,7 +1508,10 @@ extension UrlWindow {
         }
     }
     
-    private static func syncUsers(userIds: [String], hud: Hud) -> [UserItem]? {
+    private static func syncUsers(
+        userIds: [String],
+        onFailure: @escaping (String) -> Void
+    ) -> [UserItem]? {
         let uniqueUserIds = userIds.filterDuplicates()
         var users = UserDAO.shared.getUsers(with: uniqueUserIds)
         let syncUserIds = uniqueUserIds.symmetricDifference(from: users.compactMap { $0.userId })
@@ -1473,8 +1523,7 @@ extension UrlWindow {
                 users += userItems.compactMap { UserItem.createUser(from: $0) }
             case let .failure(error):
                 DispatchQueue.main.async {
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
+                    onFailure(error.localizedDescription)
                 }
                 return nil
             }
@@ -1483,8 +1532,18 @@ extension UrlWindow {
         return users
     }
     
-    private static func syncUsersInOrder(userIDs ids: [String], hud: Hud) -> [UserItem]? {
-        guard let syncedItems = syncUsers(userIds: ids, hud: hud) else {
+    private static func syncUsers(userIds: [String], hud: Hud) -> [UserItem]? {
+        syncUsers(userIds: userIds) { errorDescription in
+            hud.set(style: .error, text: errorDescription)
+            hud.scheduleAutoHidden()
+        }
+    }
+    
+    private static func syncUsersInOrder(
+        userIDs ids: [String],
+        onFailure: @escaping (String) -> Void
+    ) -> [UserItem]? {
+        guard let syncedItems = syncUsers(userIds: ids, onFailure: onFailure) else {
             return nil
         }
         let items = ids.compactMap { id in
@@ -1494,10 +1553,16 @@ extension UrlWindow {
             return items
         } else {
             DispatchQueue.main.async {
-                hud.set(style: .error, text: R.string.localizable.user_not_found())
-                hud.scheduleAutoHidden()
+                onFailure(R.string.localizable.user_not_found())
             }
             return nil
+        }
+    }
+    
+    private static func syncUsersInOrder(userIDs ids: [String], hud: Hud) -> [UserItem]? {
+        syncUsersInOrder(userIDs: ids) { errorDescription in
+            hud.set(style: .error, text: errorDescription)
+            hud.scheduleAutoHidden()
         }
     }
     

@@ -122,6 +122,7 @@
 "backup_disable_hint" = "Войдите в iCloud, чтобы создать резервную копию своей истории. Настройки > iCloud > Включить iCloud Drive.";
 "backup_to_icloud" = "Backup to iCloud";
 "balance" = "Баланс";
+"balance_abbreviation" = "Bal %@";
 "balance_max" = "MAX";
 "block" = "Блокировать";
 "block_hint" = "Заблокированные контакты больше не смогут звонить вам или отправлять вам сообщения";
@@ -424,7 +425,10 @@
 "error_invalid_address_plain" = "ОШИБКА 30102: Недопустимый формат адреса.";
 "error_invalid_code_too_frequent" = "ОШИБКА 20129: Код подтверждения отправляется слишком часто. Повторите попытку позже.";
 "error_invalid_emergency_contact" = "ОШИБКА 20130: Недопустимый экстренный контакт";
+"error_invalid_quote_amount" = "ERROR 10614: Invalid quote amount";
+"error_invalid_swap" = "ERROR 10611: Invalid swap";
 "error_network_task_failed" = "Не удалось подключиться к сети. Проверьте или переключите сеть и повторите попытку.";
+"error_no_available_quote" = "ERROR 10615: No available quote";
 "error_not_found" = "Ошибка 404: Не найдено";
 "error_number_reached_limit" = "ОШИБКА 20132: число достигло предела.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
@@ -662,6 +666,7 @@
 "no_memo" = "Нет памятки";
 "no_network_connection" = "Нет подключения к сети";
 "no_posts" = "НЕТ СООБЩЕНИЙ";
+"no_quote" = "No available quotes found. Please try a different token or amount.";
 "no_results" = "НЕТ РЕЗУЛЬТАТОВ";
 "no_stickers" = "НЕТ НАКЛЕЕК";
 "no_tag" = "Нет тега";
@@ -762,6 +767,7 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Подготовка...";
 "preparing_progress" = "Подготовка...(%@)";
+"price" = "Price";
 "privacy" = "Конфиденциальность";
 "privacy_policy" = "Политика конфиденциальности";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -878,6 +884,7 @@
 "select_a_token_for_the_fee" = "Select a token for the fee";
 "select_emergency_contact" = "Выберите экстренный контакт";
 "select_more_photos" = "Выберите больше фотографий";
+"select_token" = "Select Token";
 "selected_count" = "%@ Выбрано";
 "selected_item" = "Выбрано 1 элемент";
 "selected_item_count" = "Выбрано %d элементов";
@@ -965,9 +972,11 @@
 "sign_with_emergency_contact" = "Войти через контакт для экстренных случаев";
 "sign_with_phone_number" = "Войти через номер телефона";
 "signature_request" = "Signature Request";
+"signature_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "signed_message" = "SIGNED MESSAGE";
 "skip" = "Пропустить";
 "slide_to_cancel" = "Сдвиньте, чтобы отменить";
+"slippage" = "Slippage";
 "slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Снимок не найден.";
@@ -990,6 +999,10 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Подозрительная ссылка";
 "swap" = "Swap";
+"swap_asset_change" = "Asset changes (estimate)";
+"swap_confirmation" = "Swap Confirmation";
+"swap_failed" = "Swap Failed";
+"swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
 "symbol" = "Символ";
 "symbol_withdrawal" = "%@ Снятие средств";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
@@ -1160,7 +1173,6 @@
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
-"web3_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

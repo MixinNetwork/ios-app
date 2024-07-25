@@ -122,6 +122,7 @@
 "backup_disable_hint" = "履歴をバックアップするためにサインインしてください：設定＞ユーザー名＞iCloud＞iCloud Driveをオン";
 "backup_to_icloud" = "Backup to iCloud";
 "balance" = "残高";
+"balance_abbreviation" = "Bal %@";
 "balance_max" = "MAX";
 "block" = "ブロック";
 "block_hint" = "あなたにブロックされたユーザーは電話をかけたりメッセージを送ることができなくなります";
@@ -424,7 +425,10 @@
 "error_invalid_address_plain" = "エラー30102：無効なアドレス形式です";
 "error_invalid_code_too_frequent" = "エラー 20129：認証コードを送信する頻度が多すぎます。しばらくしてからもう一度お試しください。";
 "error_invalid_emergency_contact" = "エラー 20130：無効な緊急連絡先です";
+"error_invalid_quote_amount" = "ERROR 10614: Invalid quote amount";
+"error_invalid_swap" = "ERROR 10611: Invalid swap";
 "error_network_task_failed" = "ネットワーク接続に失敗しました。ネットワーク接続状態を確認した後にもう一度試してください。";
+"error_no_available_quote" = "ERROR 10615: No available quote";
 "error_not_found" = "エラー 404：結果なし";
 "error_number_reached_limit" = "エラー 20132：数が上限に達しています";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
@@ -662,6 +666,7 @@
 "no_memo" = "メモなし";
 "no_network_connection" = "ネットワーク接続がありません";
 "no_posts" = "投稿がありません";
+"no_quote" = "No available quotes found. Please try a different token or amount.";
 "no_results" = "結果なし";
 "no_stickers" = "スタンプはありません";
 "no_tag" = "タグなし";
@@ -762,6 +767,7 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "準備中...";
 "preparing_progress" = "準備中...(%@)";
+"price" = "Price";
 "privacy" = "プライバシー";
 "privacy_policy" = "プライバシーポリシー";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -878,6 +884,7 @@
 "select_a_token_for_the_fee" = "Select a token for the fee";
 "select_emergency_contact" = "緊急連絡先を選択";
 "select_more_photos" = "さらに選択";
+"select_token" = "Select Token";
 "selected_count" = "%@を選択しています。";
 "selected_item" = "選択されたアイテム";
 "selected_item_count" = "%d件選択中";
@@ -965,9 +972,11 @@
 "sign_with_emergency_contact" = "緊急連絡先でログイン";
 "sign_with_phone_number" = "電話番号でログイン";
 "signature_request" = "Signature Request";
+"signature_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "signed_message" = "SIGNED MESSAGE";
 "skip" = "スキップ";
 "slide_to_cancel" = "スライドしてキャンセル";
+"slippage" = "Slippage";
 "slow" = "低速";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "スナップショットは見つかりません";
@@ -990,6 +999,10 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "不審なリンクです";
 "swap" = "Swap";
+"swap_asset_change" = "Asset changes (estimate)";
+"swap_confirmation" = "Swap Confirmation";
+"swap_failed" = "Swap Failed";
+"swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
@@ -1160,7 +1173,6 @@
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
-"web3_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

@@ -12,14 +12,14 @@ extension TokenItem: Web3TransferableToken { }
 
 extension Web3Token: Web3TransferableToken { }
 
-extension Web3SwappableToken: Web3TransferableToken {
+extension BalancedSwappableToken: Web3TransferableToken {
     
-    var decimalBalance: Decimal {
-        0
+    var name: String {
+        token.name
     }
     
-    var decimalUSDPrice: Decimal {
-        0
+    var symbol: String {
+        token.symbol
     }
     
 }

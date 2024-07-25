@@ -122,6 +122,7 @@
 "backup_disable_hint" = "Sign in to iCloud to back up your history. Settings > iCloud > Turn on iCloud Drive.";
 "backup_to_icloud" = "Backup to iCloud";
 "balance" = "Balance";
+"balance_abbreviation" = "Bal %@";
 "balance_max" = "MAX";
 "block" = "Block";
 "block_hint" = "Blocked contacts will no longer be able to call you or send you messages";
@@ -424,7 +425,10 @@
 "error_invalid_address_plain" = "ERROR 30102: Invalid address format.";
 "error_invalid_code_too_frequent" = "ERROR 20129: Send verification code too frequent, please try again later.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid emergency contact";
+"error_invalid_quote_amount" = "ERROR 10614: Invalid quote amount";
+"error_invalid_swap" = "ERROR 10611: Invalid swap";
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";
+"error_no_available_quote" = "ERROR 10615: No available quote";
 "error_not_found" = "ERROR 404: Not found";
 "error_number_reached_limit" = "ERROR 20132: The number has reached the limit.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
@@ -662,6 +666,7 @@
 "no_memo" = "No Memo";
 "no_network_connection" = "No network connection";
 "no_posts" = "NO POSTS";
+"no_quote" = "No available quotes found. Please try a different token or amount.";
 "no_results" = "NO RESULTS";
 "no_stickers" = "NO STICKERS";
 "no_tag" = "No Tag";
@@ -762,6 +767,7 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Preparing...";
 "preparing_progress" = "Preparing...(%@)";
+"price" = "Price";
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -878,6 +884,7 @@
 "select_a_token_for_the_fee" = "Select a token for the fee";
 "select_emergency_contact" = "Select Emergency Contact";
 "select_more_photos" = "Select More Photos";
+"select_token" = "Select Token";
 "selected_count" = "%@ Selected";
 "selected_item" = "Selected 1 Item";
 "selected_item_count" = "Selected %d Items";
@@ -965,9 +972,11 @@
 "sign_with_emergency_contact" = "Sign in with emergency contact";
 "sign_with_phone_number" = "Sign in with phone number";
 "signature_request" = "Signature Request";
+"signature_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "signed_message" = "SIGNED MESSAGE";
 "skip" = "Skip";
 "slide_to_cancel" = "Slide to Cancel";
+"slippage" = "Slippage";
 "slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
@@ -990,6 +999,10 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Suspicious Link";
 "swap" = "Swap";
+"swap_asset_change" = "Asset changes (estimate)";
+"swap_confirmation" = "Swap Confirmation";
+"swap_failed" = "Swap Failed";
+"swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
 "symbol" = "Symbol";
 "symbol_withdrawal" = "%@ Withdrawal";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
@@ -1160,7 +1173,6 @@
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
-"web3_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

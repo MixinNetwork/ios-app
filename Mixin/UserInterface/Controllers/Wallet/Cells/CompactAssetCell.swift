@@ -123,8 +123,8 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         checkmarkImageView.isHidden = true
     }
     
-    func render(web3SwappableToken token: Web3SwappableToken) {
-        assetIconView.setIcon(web3SwappableToken: token)
+    func render(swappableToken token: SwappableToken) {
+        assetIconView.setIcon(swappableToken: token)
         nameLabel.text = token.name
         descriptionLabel.text = nil
         chainTagLabel.isHidden = true
@@ -133,6 +133,29 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         changeLabel.isHidden = true
         priceLabel.isHidden = true
         noValueIndicator.isHidden = false
+        checkmarkImageView.isHidden = true
+    }
+    
+    func render(swappableToken token: SwappableToken, balance: Decimal, usdPrice: Decimal) {
+        assetIconView.setIcon(swappableToken: token)
+        nameLabel.text = token.name
+        descriptionLabel.text = CurrencyFormatter.localizedString(
+            from: balance,
+            format: .precision,
+            sign: .never,
+            symbol: .custom(token.symbol)
+        )
+        chainTagLabel.isHidden = true
+        changeLabel.text = R.string.localizable.na()
+        priceLabel.text =  CurrencyFormatter.localizedString(
+            from: usdPrice * Currency.current.decimalRate,
+            format: .fiatMoneyPrice,
+            sign: .never,
+            symbol: .currencySymbol
+        )
+        changeLabel.isHidden = false
+        priceLabel.isHidden = false
+        noValueIndicator.isHidden = true
         checkmarkImageView.isHidden = true
     }
     

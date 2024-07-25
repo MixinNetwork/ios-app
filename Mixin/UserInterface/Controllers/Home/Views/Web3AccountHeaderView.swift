@@ -58,6 +58,20 @@ final class Web3AccountHeaderView: Web3HeaderView {
         disable(wrapper: actionStackView.arrangedSubviews[0])
     }
     
+    func enableSwapButton() {
+        guard swapButton != nil else {
+            return
+        }
+        enable(wrapper: actionStackView.arrangedSubviews[2])
+    }
+    
+    func disableSwapButton() {
+        guard swapButton != nil else {
+            return
+        }
+        disable(wrapper: actionStackView.arrangedSubviews[2])
+    }
+    
     private func enable(wrapper: UIView) {
         wrapper.alpha = 1
         wrapper.isUserInteractionEnabled = true

@@ -3,9 +3,6 @@ import MixinServices
 
 final class ExploreSolanaViewController: ExploreWeb3ViewController {
     
-    private var swappingOutdated = false
-    private var swappableTokens: [Web3SwappableToken]?
-    
     init() {
         super.init(kind: .solana)
     }
@@ -19,7 +16,6 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(propertiesDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
         let address: String? = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress)
         reloadData(address: address)
-        reloadSwappableTokens()
     }
     
     override func unlockAccount(_ sender: Any) {
@@ -31,25 +27,23 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
         super.reloadData(address: address)
         if let headerView = tableView.tableHeaderView as? Web3AccountHeaderView {
             headerView.addSwapButton(self, action: #selector(swap(_:)))
+            let areTokensLoaded = !(tokens?.isEmpty ?? true)
+            areTokensLoaded ? headerView.disableSwapButton() : headerView.enableSwapButton()
         }
     }
     
+    override func tokensDidReload(_ tokens: [Web3Token]) {
+        guard let headerView = tableView.tableHeaderView as? Web3AccountHeaderView else {
+            return
+        }
+        tokens.isEmpty ? headerView.disableSwapButton() : headerView.enableSwapButton()
+    }
+    
     @objc private func swap(_ sender: Any) {
-        if swappingOutdated {
-            let alert = UIAlertController(title: R.string.localizable.update_mixin(),
-                                          message: R.string.localizable.app_update_tips(Bundle.main.shortVersion),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: R.string.localizable.update(), style: .default, handler: { _ in
-                UIApplication.shared.openAppStorePage()
-            }))
-            alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: nil))
-            self.present(alert, animated: true)
+        guard let address, let tokens else {
             return
         }
-        guard let address else {
-            return
-        }
-        let swap = Web3SwapViewController(address: address, payTokens: tokens, receiveTokens: swappableTokens)
+        let swap = Web3SwapViewController(address: address, tokens: tokens)
         let container = ContainerViewController.instance(viewController: swap, title: R.string.localizable.swap())
         navigationController?.pushViewController(container, animated: true)
     }
@@ -64,26 +58,6 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
         case .saved(let convertibleAddress):
             let address = String(convertibleAddress)
             reloadData(address: address)
-        }
-    }
-    
-    private func reloadSwappableTokens() {
-        RouteAPI.swappableTokens { [weak self] result in
-            switch result {
-            case .success(let tokens):
-                guard let self else {
-                    return
-                }
-                self.swappingOutdated = false
-                self.swappableTokens = tokens
-            case .failure(.requiresUpdate):
-                self?.swappingOutdated = true
-            case .failure(let error):
-                Logger.general.debug(category: "ExploreSolana", message: error.localizedDescription)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    self?.reloadSwappableTokens()
-                }
-            }
         }
     }
     

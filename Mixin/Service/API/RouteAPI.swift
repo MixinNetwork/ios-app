@@ -5,11 +5,6 @@ import MixinServices
 
 final class RouteAPI {
     
-    enum Config {
-        static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
-        static let host: String = "https://api.route.mixin.one"
-    }
-    
     enum Error: Swift.Error {
         case missingPublicKey
         case missingPrivateKey
@@ -19,21 +14,34 @@ final class RouteAPI {
         case combineSealedBox
     }
     
-    static func swappableTokens(completion: @escaping (MixinAPI.Result<[Web3SwappableToken]>) -> Void) {
-        request(method: .get, path: "/web3/tokens?version=" + Bundle.main.shortVersion, completion: completion)
+    private enum Config {
+        static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
+        static let host: String = "https://api.route.mixin.one"
+    }
+    
+    static func swappableTokens(
+        source: RouteTokenSource?,
+        completion: @escaping (MixinAPI.Result<[SwappableToken]>) -> Void
+    ) {
+        var path = "/web3/tokens?version=" + Bundle.main.shortVersion
+        if let source {
+            path.append("&source=\(source.rawValue)")
+        }
+        request(method: .get, path: path, completion: completion)
+    }
+    
+    static func quote(request: QuoteRequest, completion: @escaping (MixinAPI.Result<QuoteResponse>) -> Void) {
+        let path = "/web3/quote?inputMint=\(request.inputMint)&outputMint=\(request.outputMint)&amount=\(request.amount)&slippage=\(request.slippage)&source=\(request.source.rawValue)"
+        Self.request(method: .get, path: path, completion: completion)
     }
     
     static func swap(request: SwapRequest, completion: @escaping (MixinAPI.Result<SwapResponse>) -> Void) {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
-    static func quote(request: QuoteRequest, completion: @escaping (MixinAPI.Result<QuoteResponse>) -> Void) {
-        let path = "/web3/quote?inputMint=\(request.inputMint)&outputMint=\(request.outputMint)&amount=\(request.amount)&slippage=\(request.slippage)"
-        Self.request(method: .get, path: path, completion: completion)
-    }
-    
 }
 
+// Authentication not in used currently
 extension RouteAPI {
     
     private static var botPublicKey: Data?
@@ -102,6 +110,10 @@ extension RouteAPI {
         
     }
     
+}
+
+extension RouteAPI {
+    
     private struct ResponseObject<Response: Decodable>: Decodable {
         let data: Response?
         let error: MixinAPIResponseError?
@@ -114,9 +126,8 @@ extension RouteAPI {
         with parameters: Parameters? = nil,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
-        let interceptor = RouteSigningInterceptor(method: method, path: path)
         let url = Config.host + path
-        let dataRequest = AF.request(url, method: method, parameters: parameters, encoder: .json, interceptor: interceptor)
+        let dataRequest = AF.request(url, method: method, parameters: parameters, encoder: .json)
         return request(dataRequest, completion: completion)
     }
     
@@ -127,9 +138,8 @@ extension RouteAPI {
         with parameters: [String: Any]? = nil,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
-        let interceptor = RouteSigningInterceptor(method: method, path: path)
         let url = Config.host + path
-        let dataRequest = AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, interceptor: interceptor)
+        let dataRequest = AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
         return request(dataRequest, completion: completion)
     }
     

@@ -46,6 +46,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.paymentUserGroupCell)
         tableView.register(R.nib.web3MessageCell)
         tableView.register(R.nib.web3AmountChangeCell)
+        tableView.register(R.nib.swapAssetChangeCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -250,6 +251,10 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.secondaryAmountLabel.text = fiatMoneyAmount
             cell.tokenIconView.setIcon(token: token)
             return cell
+        case let .swapAssetChange(sendToken, sendAmount, receiveToken, receiveAmount):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_asset_change, for: indexPath)!
+            cell.reloadData(sendToken: sendToken, sendAmount: sendAmount, receiveToken: receiveToken, receiveAmount: receiveAmount)
+            return cell
         }
     }
     
@@ -294,6 +299,8 @@ extension AuthenticationPreviewViewController {
         case sender
         case receiver
         case collectible
+        case price
+        case slippage
         
         var rawValue: String {
             switch self {
@@ -321,6 +328,10 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.receiver()
             case .collectible:
                 R.string.localizable.collectible()
+            case .price:
+                R.string.localizable.price()
+            case .slippage:
+                R.string.localizable.slippage()
             }
         }
         
@@ -339,6 +350,7 @@ extension AuthenticationPreviewViewController {
         case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3TransferableToken) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
+        case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwappableToken, receiveAmount: String)
     }
     
     struct TableHeaderViewStyle: OptionSet {

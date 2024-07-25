@@ -23,6 +23,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableHeaderView.transferActionView.actions = [.send, .receive, .swap]
         tableHeaderView.transferActionView.delegate = self
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
@@ -188,20 +189,30 @@ extension WalletViewController: TransferActionViewDelegate {
     
     func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
         lastSelectedAction = action
-        let controller = TransferSearchViewController()
-        controller.delegate = self
         switch action {
         case .send:
+            let controller = TransferSearchViewController()
+            controller.delegate = self
             controller.showEmptyHintIfNeeded = true
             controller.searchResultsFromServer = false
             controller.tokens = tokens.filter { $0.balance != "0" }
             controller.sendableAssets = sendableTokens
+            present(controller, animated: true, completion: nil)
         case .receive:
+            let controller = TransferSearchViewController()
+            controller.delegate = self
             controller.showEmptyHintIfNeeded = false
             controller.searchResultsFromServer = true
             controller.tokens = tokens
+            present(controller, animated: true, completion: nil)
+        case .swap:
+            let swap = MixinSwapViewController()
+            let container = ContainerViewController.instance(viewController: swap, title: R.string.localizable.swap())
+            container.loadViewIfNeeded()
+            container.view.backgroundColor = R.color.background_secondary()
+            container.navigationBar.backgroundColor = R.color.background_secondary()
+            navigationController?.pushViewController(container, animated: true)
         }
-        present(controller, animated: true, completion: nil)
     }
     
 }
@@ -218,6 +229,8 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
             controller = TokenViewController.instance(token: token, performSendOnAppear: true)
         case .receive:
             controller = DepositViewController.instance(token: token)
+        case .swap:
+            return
         }
         navigationController?.pushViewController(controller, animated: true)
     }

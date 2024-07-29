@@ -22,8 +22,7 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     private var receiveAmount: Decimal?
-    
-    private weak var lastQuoteRequest: Request?
+    private var requester: SwapQuotePeriodicRequester?
     
     private lazy var userInputSimulationFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -44,7 +43,7 @@ final class MixinSwapViewController: SwapViewController {
     
     override func sendAmountEditingChanged(_ sender: Any) {
         updateSendValueLabel()
-        requestNewQuote()
+        scheduleNewRequesterIfAvailable()
     }
     
     override func inputMaxSendAmount(_ sender: Any) {
@@ -66,7 +65,7 @@ final class MixinSwapViewController: SwapViewController {
                 self.swapSendingReceiving(sender)
             } else {
                 self.sendToken = token
-                self.requestNewQuote()
+                self.scheduleNewRequesterIfAvailable()
             }
         }
         selector.reload(tokens: sendTokens)
@@ -83,7 +82,7 @@ final class MixinSwapViewController: SwapViewController {
                 self.swapSendingReceiving(sender)
             } else {
                 self.receiveToken = token
-                self.requestNewQuote()
+                self.scheduleNewRequesterIfAvailable()
             }
         }
         selector.reload(tokens: receiveTokens)
@@ -103,7 +102,7 @@ final class MixinSwapViewController: SwapViewController {
         }
         self.sendToken = newSendToken
         self.receiveToken = newReceiveToken
-        requestNewQuote()
+        scheduleNewRequesterIfAvailable()
     }
     
     override func review(_ sender: RoundedButton) {
@@ -157,7 +156,6 @@ extension MixinSwapViewController: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        let maxFractionDigitsCount = 8
         let newText = ((textField.text ?? "") as NSString)
             .replacingCharacters(in: range, with: string)
         if newText.isEmpty {
@@ -172,6 +170,51 @@ extension MixinSwapViewController: UITextFieldDelegate {
         default:
             return false
         }
+    }
+    
+}
+
+extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
+    
+    func swapQuotePeriodicRequesterWillUpdate(_ requester: SwapQuotePeriodicRequester) {
+        showAdditionalInfo(style: .info, text: R.string.localizable.calculating())
+        hideAdditionalInfoProgress()
+        reviewButton.isEnabled = false
+    }
+    
+    func swapQuotePeriodicRequester(_ requester: SwapQuotePeriodicRequester, didUpdate result: Result<SwapQuote, any Error>) {
+        switch result {
+        case .success(let response):
+            let sendAmount = response.sendAmount
+            let receiveAmount = response.receiveAmount
+            Logger.general.debug(category: "Web3Swap", message: "Got quote: \(receiveAmount)")
+            self.receiveAmount = receiveAmount
+            receiveAmountTextField.text = CurrencyFormatter.localizedString(
+                from: receiveAmount,
+                format: .precision,
+                sign: .never
+            )
+            updateReceiveValueLabel()
+            let price = CurrencyFormatter.localizedString(
+                from: receiveAmount / sendAmount,
+                format: .precision,
+                sign: .never
+            )
+            let priceRepresentation = "1 \(response.sendToken.symbol) ≈ \(price) \(response.receiveToken.symbol)"
+            showAdditionalInfo(style: .info, text: priceRepresentation)
+            showAdditionalInfoProgress(progress: 1)
+            reviewButton.isEnabled = sendAmount > 0 && sendAmount <= response.sendToken.decimalBalance
+        case .failure(let error):
+            Logger.general.debug(category: "Web3Swap", message: error.localizedDescription)
+            showAdditionalInfo(style: .error, text: R.string.localizable.swap_no_quote())
+            hideAdditionalInfoProgress()
+        }
+    }
+    
+    func swapQuotePeriodicRequester(_ requester: SwapQuotePeriodicRequester, didCountDown value: Int) {
+        let progress = Double(value) / Double(requester.refreshInterval)
+        Logger.general.debug(category: "Web3Swap", message: "Progress: \(progress)")
+        showAdditionalInfoProgress(progress: progress)
     }
     
 }
@@ -323,12 +366,13 @@ extension MixinSwapViewController {
         )
     }
     
-    private func requestNewQuote() {
+    private func scheduleNewRequesterIfAvailable() {
         receiveAmountTextField.text = nil
         receiveAmount = nil
         updateReceiveValueLabel()
         reviewButton.isEnabled = false
-        lastQuoteRequest?.cancel()
+        requester?.stop()
+        requester = nil
         guard
             let text = sendAmountTextField.text,
             let sendAmount = Decimal(string: text, locale: .current),
@@ -336,43 +380,18 @@ extension MixinSwapViewController {
             let receiveToken
         else {
             hideAdditionalInfo()
+            hideAdditionalInfoProgress()
             return
         }
         showAdditionalInfo(style: .info, text: R.string.localizable.calculating())
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard
-                let self,
-                self.sendAmountTextField.text == text,
-                sendToken.assetID == self.sendToken?.assetID,
-                receiveToken.token.assetID == self.receiveToken?.token.assetID
-            else {
-                return
-            }
-            let request = QuoteRequest.exin(pay: sendToken, payAmount: sendAmount, receive: receiveToken.token, slippage: 0.01)
-            self.lastQuoteRequest = RouteAPI.quote(request: request) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    guard let receiveAmount = Decimal(string: response.outAmount, locale: .enUSPOSIX) else {
-                        Logger.general.error(category: "MixinSwap", message: "Invalid receive amount: \(response.outAmount)")
-                        return
-                    }
-                    guard let self else {
-                        return
-                    }
-                    self.receiveAmount = receiveAmount
-                    self.receiveAmountTextField.text = CurrencyFormatter.localizedString(from: receiveAmount as Decimal, format: .precision, sign: .never)
-                    self.updateReceiveValueLabel()
-                    let price = CurrencyFormatter.localizedString(from: receiveAmount / sendAmount, format: .precision, sign: .never)
-                    self.showAdditionalInfo(style: .info, text: "1 \(sendToken.symbol) ≈ \(price) \(receiveToken.symbol)")
-                    self.reviewButton.isEnabled = sendAmount > 0 && sendAmount <= sendToken.decimalBalance
-                case .failure(.httpTransport(.explicitlyCancelled)):
-                    break
-                case .failure(let error):
-                    Logger.general.debug(category: "Web3Swap", message: error.localizedDescription)
-                    self?.showAdditionalInfo(style: .error, text: R.string.localizable.swap_no_quote())
-                }
-            }
-        }
+        hideAdditionalInfoProgress()
+        let requester = SwapQuotePeriodicRequester(sendToken: sendToken,
+                                                   sendAmount: sendAmount,
+                                                   receiveToken: receiveToken.token,
+                                                   slippage: 0.01)
+        requester.delegate = self
+        self.requester = requester
+        requester.start(delay: 1)
     }
     
 }

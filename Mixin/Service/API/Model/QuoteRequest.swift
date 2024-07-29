@@ -10,18 +10,18 @@ struct QuoteRequest {
     let source: RouteTokenSource
     
     static func web3(
-        pay payToken: Web3Token,
-        payAmount: Decimal,
-        receive receiveToken: SwappableToken,
+        sendToken: Web3Token,
+        sendAmount: Decimal,
+        receiveToken: SwappableToken,
         slippage: Decimal
     ) -> QuoteRequest? {
-        guard let payAmount = payToken.nativeAmount(decimalAmount: payAmount) else {
+        guard let payAmount = sendToken.nativeAmount(decimalAmount: sendAmount) else {
             return nil
         }
-        let inputMint = if payToken.assetKey == Web3Token.AssetKey.sol {
+        let inputMint = if sendToken.assetKey == Web3Token.AssetKey.sol {
             Web3Token.AssetKey.wrappedSOL
         } else {
-            payToken.assetKey
+            sendToken.assetKey
         }
         return QuoteRequest(
             inputMint: inputMint,
@@ -33,15 +33,15 @@ struct QuoteRequest {
     }
     
     static func exin(
-        pay payToken: TokenItem,
-        payAmount: Decimal,
-        receive receiveToken: SwappableToken,
+        sendToken: TokenItem,
+        sendAmount: Decimal,
+        receiveToken: SwappableToken,
         slippage: Decimal
     ) -> QuoteRequest {
         QuoteRequest(
-            inputMint: payToken.assetID,
+            inputMint: sendToken.assetID,
             outputMint: receiveToken.assetID,
-            amount: Token.amountString(from: payAmount),
+            amount: Token.amountString(from: sendAmount),
             slippage: Slippage(decimal: slippage).integral,
             source: .exin
         )

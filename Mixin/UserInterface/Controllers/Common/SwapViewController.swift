@@ -40,6 +40,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var receiveSeparatorLineView: UIView!
     @IBOutlet weak var receiveAdditionalInfoLabel: UILabel!
+    @IBOutlet weak var receiveAdditionalInfoProgressView: CircularProgressView!
     
     @IBOutlet weak var swapBackgroundView: UIView!
     @IBOutlet weak var swapButton: UIButton!
@@ -116,6 +117,15 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         receiveAdditionalInfoLabel.text = text
         receiveSeparatorLineView.isHidden = false
         receiveAdditionalInfoLabel.isHidden = false
+    }
+    
+    func hideAdditionalInfoProgress() {
+        receiveAdditionalInfoProgressView.isHidden = true
+    }
+    
+    func showAdditionalInfoProgress(progress: Double) {
+        receiveAdditionalInfoProgressView.isHidden = false
+        receiveAdditionalInfoProgressView.setProgress(progress, animationDuration: 1)
     }
     
     func reportClientOutdated() {

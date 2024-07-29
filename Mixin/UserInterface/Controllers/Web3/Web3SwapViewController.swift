@@ -179,9 +179,9 @@ final class Web3SwapViewController: SwapViewController {
                 return
             }
             guard let request = QuoteRequest.web3(
-                pay: sendToken,
-                payAmount: payAmount,
-                receive: receiveToken.token,
+                sendToken: sendToken,
+                sendAmount: payAmount,
+                receiveToken: receiveToken.token,
                 slippage: 0.01
             ) else {
                 self?.receiveAmountTextField.text = nil

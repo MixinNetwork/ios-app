@@ -122,6 +122,7 @@
 "backup_disable_hint" = "需要登入 iCloud 來備份你的聊天記錄。 設定 > iCloud > 開啟 iCloud 雲碟。";
 "backup_to_icloud" = "備份到 iCloud";
 "balance" = "餘額";
+"balance_abbreviation" = "餘額 %@";
 "balance_max" = "最大";
 "block" = "封鎖使用者";
 "block_hint" = "封鎖後對方無法向您撥打電話或傳送訊息";
@@ -333,7 +334,7 @@
 "delete_for_everyone" = "撤回";
 "delete_for_me" = "刪除";
 "delete_group_chat_confirmation" = "刪除\"%@\"的聊天？";
-"delete_my_account" = "登出賬戶";
+"delete_my_account" = "刪除賬號";
 "delete_synced_contact" = "刪除已同步的通訊錄";
 "delete_withdraw_address" = "刪除 %@ 地址";
 "deleted" = "已刪除";
@@ -424,7 +425,10 @@
 "error_invalid_address_plain" = "錯誤 30102：地址格式錯誤。";
 "error_invalid_code_too_frequent" = "錯誤 20129：傳送驗證碼太頻繁，請稍後再試";
 "error_invalid_emergency_contact" = "錯誤 20130：緊急聯絡人不正確";
+"error_invalid_quote_amount" = "錯誤 10614: 數量無效";
+"error_invalid_swap" = "錯誤 10611: 閃兌無效";
 "error_network_task_failed" = "網路連線失敗。檢查或切換網路並重試";
+"error_no_available_quote" = "錯誤 10615: 沒有報價";
 "error_not_found" = "錯誤 404：沒有找到相應的資訊";
 "error_number_reached_limit" = "錯誤 20132： 已達到上限";
 "error_opponent_not_registered_to_safe" = "錯誤 10404: 對方客戶端版本過低，請提醒對方更新客戶端到最新版本";
@@ -762,6 +766,7 @@
 "preauthorize_amount" = "預授權額度";
 "preparing" = "正在準備...";
 "preparing_progress" = "備份中...（%@）";
+"price" = "價格";
 "privacy" = "隱私";
 "privacy_policy" = "隱私政策";
 "process_can_not_be_stop" = "流程一旦開始無法取消，請牢記 6 位數字 PIN，意外中止流程需要再次輸入";
@@ -878,6 +883,7 @@
 "select_a_token_for_the_fee" = "選擇支付手續費的幣種";
 "select_emergency_contact" = "選擇緊急聯絡人";
 "select_more_photos" = "選擇更多照片";
+"select_token" = "選擇代幣";
 "selected_count" = "選擇了 %@ 個訊息";
 "selected_item" = "已選擇 1 項";
 "selected_item_count" = "已選擇 %d 項";
@@ -965,9 +971,11 @@
 "sign_with_emergency_contact" = "透過緊急聯絡人登入";
 "sign_with_phone_number" = "透過手機號登入";
 "signature_request" = "簽名確認";
+"signature_request_from_mixin" = "該簽名請求來自 Mixin Messenger。";
 "signed_message" = "簽名";
 "skip" = "跳過";
 "slide_to_cancel" = "滑動取消";
+"slippage" = "滑點";
 "slow" = "緩慢";
 "snapshot_hash" = "快照雜湊";
 "snapshot_not_found" = "找不到該轉賬記錄。";
@@ -990,6 +998,14 @@
 "suspended_deposit" = "%1$@ 充值已暫停，可能的原因是因為使用率太低、節點故障、區塊鏈網路硬分叉或者擁堵，注意已轉入的 %2$@ 資產可以繼續轉賬。";
 "suspicious_link" = "可疑連結";
 "swap" = "閃兌";
+"swap_asset_change" = "資產變動（預估）";
+"swap_confirmation" = "確認閃兌";
+"swap_failed" = "閃兌失敗";
+"swap_invalid_amount" = "沒有報價。請嘗試修改金額。";
+"swap_message_success" = "您的閃兌交易已傳送至網路，交易將很快被處理。";
+"swap_no_available_quote" = "沒有報價。請嘗試切換幣種。";
+"swap_receive" = "獲得";
+"swap_send" = "支付";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";
 "syncing_and_verifying_tip" = "正在驗證並同步金鑰分片到 TIP 網路，請保持應用在前臺，設定過程中不要強制關閉應用";
@@ -1160,7 +1176,6 @@
 "web3_ensure_trust" = "請確保您信任此應用程式。";
 "web3_message_request" = "訊息簽名";
 "web3_no_asset" = "沒有資產";
-"web3_request_from_mixin" = "該簽名請求來自 Mixin Messenger。";
 "web3_signing" = "正在簽名";
 "web3_signing_data_success" = "資料已簽名併發送成功，請返回 dApp 繼續操作。";
 "web3_signing_failed" = "簽名失敗";

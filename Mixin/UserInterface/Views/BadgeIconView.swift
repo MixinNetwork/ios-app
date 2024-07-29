@@ -162,7 +162,7 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
-    func setIcon(web3SwappableToken token: Web3SwappableToken) {
+    func setIcon(swappableToken token: SwappableToken) {
         if let url = token.iconURL {
             iconImageView.sd_setImage(with: url,
                                       placeholderImage: nil,

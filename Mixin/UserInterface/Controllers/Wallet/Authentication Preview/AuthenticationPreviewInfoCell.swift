@@ -19,7 +19,7 @@ final class AuthenticationPreviewInfoCell: UITableViewCell {
         disclosureImageView.isHidden = true
     }
     
-    func setPrimaryAmountLabel(usesBoldFont: Bool) {
+    func setPrimaryLabel(usesBoldFont: Bool) {
         let weight: UIFont.Weight = usesBoldFont ? .medium : .regular
         primaryLabel.setFont(scaledFor: .systemFont(ofSize: 16, weight: weight),
                              adjustForContentSize: true)

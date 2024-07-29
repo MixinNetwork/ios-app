@@ -115,6 +115,10 @@ class ExploreWeb3ViewController: UIViewController {
         present(sheet, animated: true)
     }
     
+    func tokensDidReload(_ tokens: [Web3Token]) {
+        
+    }
+    
     func reloadData(address: String?) {
         self.address = address
         let chain = kind.chains[0]
@@ -172,6 +176,7 @@ class ExploreWeb3ViewController: UIViewController {
                 } else {
                     nil
                 }
+                self.tokensDidReload(account.tokens)
             case .failure(.requiresUpdate):
                 let alert = UIAlertController(title: R.string.localizable.update_mixin(),
                                               message: R.string.localizable.app_update_tips(Bundle.main.shortVersion),

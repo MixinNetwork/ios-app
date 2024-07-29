@@ -1,30 +1,54 @@
 import Foundation
 import MixinServices
 
-struct QuoteRequest: Encodable {
+struct QuoteRequest {
     
     let inputMint: String
     let outputMint: String
-    let amount: Int
+    let amount: String
     let slippage: Int
+    let source: RouteTokenSource
     
-    init?(
-        pay payToken: Web3Token,
-        payAmount: Decimal,
-        receive receiveToken: Web3SwappableToken,
+    static func web3(
+        sendToken: Web3Token,
+        sendAmount: Decimal,
+        receiveToken: SwappableToken,
         slippage: Decimal
-    ) {
-        guard let payAmount = payToken.nativeAmount(decimalAmount: payAmount) else {
+    ) -> QuoteRequest? {
+        guard let payAmount = sendToken.nativeAmount(decimalAmount: sendAmount) else {
             return nil
         }
-        self.inputMint = if payToken.assetKey == Web3Token.AssetKey.sol {
+        let inputMint = if sendToken.assetKey == Web3Token.AssetKey.sol {
             Web3Token.AssetKey.wrappedSOL
         } else {
-            payToken.assetKey
+            sendToken.assetKey
         }
-        self.amount = payAmount.intValue
-        self.outputMint = receiveToken.address
-        self.slippage = (slippage * 10000 as NSDecimalNumber).intValue
+        return QuoteRequest(
+            inputMint: inputMint,
+            outputMint: receiveToken.address,
+            amount: Token.amountString(from: Decimal(payAmount.intValue)),
+            slippage: Slippage(decimal: slippage).integral,
+            source: receiveToken.source
+        )
+    }
+    
+    static func exin(
+        sendToken: TokenItem,
+        sendAmount: Decimal,
+        receiveToken: SwappableToken,
+        slippage: Decimal
+    ) -> QuoteRequest {
+        QuoteRequest(
+            inputMint: sendToken.assetID,
+            outputMint: receiveToken.assetID,
+            amount: Token.amountString(from: sendAmount),
+            slippage: Slippage(decimal: slippage).integral,
+            source: .exin
+        )
+    }
+    
+    func asParameter() -> String {
+        "inputMint=\(inputMint)&outputMint=\(outputMint)&amount=\(amount)&slippage=\(slippage)&source=\(source.rawValue)"
     }
     
 }

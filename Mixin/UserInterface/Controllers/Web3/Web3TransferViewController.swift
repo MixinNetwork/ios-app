@@ -67,7 +67,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                                   style: .destructive)
         case .web3ToMixinWallet, .web3ToAddress:
             layoutTableHeaderView(title: title,
-                                  subtitle: R.string.localizable.web3_request_from_mixin(),
+                                  subtitle: R.string.localizable.signature_request_from_mixin(),
                                   style: [])
         }
         
@@ -85,7 +85,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         
         switch proposer {
         case .dapp(let proposer):
-            rows.append(.proposer(name: proposer.name, host: proposer.host))
+            rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
             rows.append(.info(caption: .account, content: operation.fromAddress))
         case .web3ToMixinWallet:
             if let account = LoginManager.shared.account {

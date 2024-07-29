@@ -122,6 +122,7 @@
 "backup_disable_hint" = "Inicie sesión en iCloud para realizar una copia de seguridad de tu historial. Configuración > iCloud > Activar iCloud Drive.";
 "backup_to_icloud" = "Backup to iCloud";
 "balance" = "Balance";
+"balance_abbreviation" = "Bal %@";
 "balance_max" = "MAX";
 "block" = "Bloquear";
 "block_hint" = "Los contactos bloqueados ya no podrán llamarte ni enviarte mensajes";
@@ -424,7 +425,10 @@
 "error_invalid_address_plain" = "ERROR 30102: formato de dirección no válido.";
 "error_invalid_code_too_frequent" = "ERROR 20129: enviar el código de verificación con demasiada frecuencia, inténtalo de nuevo más tarde.";
 "error_invalid_emergency_contact" = "ERROR 20130: Contacto de emergencia no válido";
+"error_invalid_quote_amount" = "ERROR 10614: Invalid quote amount";
+"error_invalid_swap" = "ERROR 10611: Invalid swap";
 "error_network_task_failed" = "La conexión de red ha fallado. Comprueba o cambia tu red e inténtalo de nuevo";
+"error_no_available_quote" = "ERROR 10615: No available quote";
 "error_not_found" = "Error 404 no encontrado";
 "error_number_reached_limit" = "ERROR 20132: El número ha llegado al límite.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
@@ -762,6 +766,7 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Preparando...";
 "preparing_progress" = "Preparando...(%@)";
+"price" = "Price";
 "privacy" = "Privacidad";
 "privacy_policy" = "Política de privacidad";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
@@ -878,6 +883,7 @@
 "select_a_token_for_the_fee" = "Select a token for the fee";
 "select_emergency_contact" = "Seleccionar contacto de emergencia";
 "select_more_photos" = "Seleccionar más fotos";
+"select_token" = "Select Token";
 "selected_count" = "%@ Seleccionado";
 "selected_item" = "1 artículo seleccionado";
 "selected_item_count" = "%d elementos seleccionados";
@@ -965,9 +971,11 @@
 "sign_with_emergency_contact" = "Iniciar sesión con contacto de emergencia";
 "sign_with_phone_number" = "Iniciar sesión con número de teléfono";
 "signature_request" = "Signature Request";
+"signature_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "signed_message" = "SIGNED MESSAGE";
 "skip" = "Saltar";
 "slide_to_cancel" = "Deslizar para cancelar";
+"slippage" = "Slippage";
 "slow" = "Slow";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Instantánea no encontrada.";
@@ -990,6 +998,14 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Enlace sospechoso";
 "swap" = "Swap";
+"swap_asset_change" = "Asset changes (estimate)";
+"swap_confirmation" = "Swap Confirmation";
+"swap_failed" = "Swap Failed";
+"swap_invalid_amount" = "No available quote found. Please try a different amount.";
+"swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
+"swap_no_available_quote" = "No available quote found. Please try a different token.";
+"swap_receive" = "Receive";
+"swap_send" = "Send";
 "symbol" = "Símbolo";
 "symbol_withdrawal" = "Retiro de %@";
 "syncing_and_verifying_tip" = "Mantén la aplicación en primer plano mientras verificas y sincronizas las claves fragmentadas con la red TIP; no fuerces el cierre de la aplicación durante el proceso de configuración.";
@@ -1160,7 +1176,6 @@
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
-"web3_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
 "web3_signing" = "Signing";
 "web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
 "web3_signing_failed" = "Signing Failed";

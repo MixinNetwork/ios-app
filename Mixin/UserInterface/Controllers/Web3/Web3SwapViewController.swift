@@ -1,39 +1,20 @@
 import UIKit
 import MixinServices
 
-final class Web3SwapViewController: KeyboardBasedLayoutViewController {
-    
-    @IBOutlet weak var payView: UIView!
-    @IBOutlet weak var payStackView: UIStackView!
-    @IBOutlet weak var payTitleStackView: UIStackView!
-    @IBOutlet weak var payBalanceLabel: UILabel!
-    @IBOutlet weak var payAmountTextField: UITextField!
-    @IBOutlet weak var payIconView: BadgeIconView!
-    @IBOutlet weak var paySymbolLabel: UILabel!
-    @IBOutlet weak var payValueLabel: UILabel!
-    
-    @IBOutlet weak var receiveView: UIView!
-    @IBOutlet weak var receiveBalanceLabel: UILabel!
-    @IBOutlet weak var receiveAmountTextField: UITextField!
-    @IBOutlet weak var receiveIconView: BadgeIconView!
-    @IBOutlet weak var receiveSymbolLabel: UILabel!
-    
-    @IBOutlet weak var swapButton: RoundedButton!
-    @IBOutlet weak var swapButtonWrapperBottomConstrait: NSLayoutConstraint!
+final class Web3SwapViewController: SwapViewController {
     
     private let address: String
-    private let payTokens: [Web3Token]
-    private let receiveTokens: [Web3SwappableToken]
+    private let addressTokens: [Web3Token]
     
-    private var payToken: Web3Token?
-    private var receiveToken: Web3SwappableToken?
+    private var sendTokens: [Web3Token]?
+    private var sendToken: Web3Token?
+    private var receiveTokens: [BalancedSwappableToken]?
+    private var receiveToken: BalancedSwappableToken?
     
-    init(address: String, payTokens: [Web3Token]?, receiveTokens: [Web3SwappableToken]?) {
+    init(address: String, tokens: [Web3Token]) {
         self.address = address
-        self.payTokens = payTokens ?? []
-        self.receiveTokens = receiveTokens ?? []
-        let nib = R.nib.web3SwapView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        self.addressTokens = tokens
+        super.init()
     }
     
     required init?(coder: NSCoder) {
@@ -42,89 +23,64 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        payView.layer.masksToBounds = true
-        payView.layer.cornerRadius = 8
-        payStackView.setCustomSpacing(15, after: payTitleStackView)
-        receiveView.layer.masksToBounds = true
-        receiveView.layer.cornerRadius = 8
-        if let token = payTokens.first {
-            reloadPayView(with: token)
-            payToken = token
-        }
-        receiveToken = receiveTokens.first(where: { token in
-            if let payToken {
-                !token.isEqual(to: payToken)
-            } else {
-                true
-            }
-        })
-        if let token = receiveToken {
-            reloadReceiveView(with: token)
-            receiveToken = token
-        }
-        payAmountTextField.becomeFirstResponder()
+        
+        // TODO: Unhide swap button and implement the function
+        swapBackgroundView.isHidden = true
+        swapButton.isHidden = true
+        
+        reloadTokens()
     }
     
-    override func layout(for keyboardFrame: CGRect) {
-        let keyboardHeight = view.bounds.height - keyboardFrame.origin.y
-        swapButtonWrapperBottomConstrait.constant = keyboardHeight
-        view.layoutIfNeeded()
+    override func sendAmountEditingChanged(_ sender: Any) {
+        
     }
     
-    @IBAction func payAmountEditingChanged(_ sender: UITextField) {
-        guard
-            let text = sender.text,
-            let payAmount = Decimal(string: text),
-            let payToken
-        else {
+    override func changeSendToken(_ sender: Any) {
+        guard let sendTokens else {
             return
         }
-        swapButton.isEnabled = payAmount > 0
-            && payAmount <= payToken.decimalBalance
-            && receiveToken != nil
-        updateReceivingAmount()
-    }
-    
-    @IBAction func changePayToken(_ sender: Any) {
         let selector = Web3TransferTokenSelectorViewController<Web3Token>()
         selector.onSelected = { token in
-            self.payToken = token
-            self.reloadPayView(with: token)
+            self.sendToken = token
+            self.reloadSendView(with: token)
             self.updateReceivingAmount()
         }
-        selector.reload(tokens: payTokens)
+        selector.reload(tokens: sendTokens)
         present(selector, animated: true)
     }
     
-    @IBAction func changeReceiveToken(_ sender: Any) {
-        let receiveTokens = self.receiveTokens.filter { token in
-            if let payToken {
-                !token.isEqual(to: payToken)
+    override func changeReceiveToken(_ sender: Any) {
+        guard let receiveTokens else {
+            return
+        }
+        let selectableReceiveTokens = receiveTokens.filter { token in
+            if let sendToken {
+                !token.token.isEqual(to: sendToken)
             } else {
                 true
             }
         }
-        let selector = Web3TransferTokenSelectorViewController<Web3SwappableToken>()
+        let selector = Web3TransferTokenSelectorViewController<BalancedSwappableToken>()
         selector.onSelected = { token in
             self.receiveToken = token
             self.reloadReceiveView(with: token)
             self.updateReceivingAmount()
         }
-        selector.reload(tokens: receiveTokens)
+        selector.reload(tokens: selectableReceiveTokens)
         present(selector, animated: true)
     }
     
-    @IBAction func swap(_ sender: RoundedButton) {
+    override func review(_ sender: RoundedButton) {
         guard
-            let payToken,
-            let text = payAmountTextField.text,
-            let payAmount = Decimal(string: text),
+            let sendToken,
+            let text = sendAmountTextField.text,
+            let sendAmount = Decimal(string: text),
             let receiveToken,
-            let request = SwapRequest(
-                pay: payToken,
-                payAmount: payAmount,
-                payAddress: address,
-                receive: receiveToken,
+            let request = SwapRequest.web3(
+                sendToken: sendToken,
+                sendAmount: sendAmount,
+                sendAddress: address,
+                receiveToken: receiveToken.token,
                 slippage: 0.01
             )
         else {
@@ -145,21 +101,89 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
         }
     }
     
+    private func reloadTokens() {
+        RouteAPI.swappableTokens(source: nil) { [weak self] result in
+            switch result {
+            case .success(let tokens):
+                self?.reloadData(supportedTokens: tokens)
+            case .failure(.requiresUpdate):
+                self?.reportClientOutdated()
+            case .failure(let error):
+                Logger.general.debug(category: "Web3Swap", message: error.localizedDescription)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self?.reloadTokens()
+                }
+            }
+        }
+    }
+    
+    private func reloadData(supportedTokens: [SwappableToken]) {
+        DispatchQueue.global().async { [addressTokens, weak self] in
+            let sendTokens = addressTokens.filter { addressToken in
+                supportedTokens.contains { supportedToken in
+                    supportedToken.isEqual(to: addressToken)
+                }
+            }
+            let sendToken = sendTokens.first
+            let receiveTokens = supportedTokens.map { supportedToken in
+                let addressToken = addressTokens.first { addressToken in
+                    supportedToken.isEqual(to: addressToken)
+                }
+                return if let addressToken {
+                    BalancedSwappableToken(token: supportedToken,
+                                           balance: addressToken.decimalBalance,
+                                           usdPrice: addressToken.decimalUSDPrice)
+                } else {
+                    BalancedSwappableToken(token: supportedToken,
+                                           balance: 0,
+                                           usdPrice: 0)
+                }
+            }
+            let receiveToken = receiveTokens.first { token in
+                if let sendToken {
+                    token.token.isEqual(to: sendToken)
+                } else {
+                    true
+                }
+            }
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.sendTokens = sendTokens
+                self.sendToken = sendToken
+                self.receiveTokens = receiveTokens
+                self.receiveToken = receiveToken
+                if let sendToken {
+                    self.reloadSendView(with: sendToken)
+                }
+                if let receiveToken {
+                    self.reloadReceiveView(with: receiveToken)
+                }
+            }
+        }
+    }
+    
     private func updateReceivingAmount() {
         receiveAmountTextField.text = nil
         guard
-            let text = payAmountTextField.text,
+            let text = sendAmountTextField.text,
             let payAmount = Decimal(string: text),
-            let payToken,
+            let sendToken,
             let receiveToken
         else {
             return
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard self?.payAmountTextField.text == text else {
+            guard self?.sendAmountTextField.text == text else {
                 return
             }
-            guard let request = QuoteRequest(pay: payToken, payAmount: payAmount, receive: receiveToken, slippage: 0.01) else {
+            guard let request = QuoteRequest.web3(
+                sendToken: sendToken,
+                sendAmount: payAmount,
+                receiveToken: receiveToken.token,
+                slippage: 0.01
+            ) else {
                 self?.receiveAmountTextField.text = nil
                 return
             }
@@ -168,10 +192,10 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
                 case .success(let response):
                     guard
                         let self,
-                        self.payAmountTextField.text == text,
-                        self.receiveToken?.address == receiveToken.address,
+                        self.sendAmountTextField.text == text,
+                        self.receiveToken?.token.address == receiveToken.token.address,
                         let receiveAmount = Decimal(string: response.outAmount, locale: .enUSPOSIX),
-                        let decimalAmount = receiveToken.decimalAmount(nativeAmount: receiveAmount)
+                        let decimalAmount = receiveToken.token.decimalAmount(nativeAmount: receiveAmount)
                     else {
                         return
                     }
@@ -183,19 +207,21 @@ final class Web3SwapViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    private func reloadPayView(with token: Web3Token) {
+    private func reloadSendView(with token: Web3Token) {
         let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-        payBalanceLabel.text = "Bal " + balance
-        payIconView.setIcon(web3Token: token)
-        paySymbolLabel.text = token.symbol
-        payValueLabel.text = CurrencyFormatter.localizedString(from: 0, format: .fiatMoney, sign: .never)
+        sendBalanceLabel.text = "Bal " + balance
+        sendIconView.setIcon(web3Token: token)
+        sendSymbolLabel.text = token.symbol
+        sendValueLabel.text = CurrencyFormatter.localizedString(from: 0, format: .fiatMoney, sign: .never)
+        sendLoadingIndicator.stopAnimating()
     }
     
-    private func reloadReceiveView(with token: Web3SwappableToken) {
+    private func reloadReceiveView(with token: BalancedSwappableToken) {
         receiveBalanceLabel.text = nil
-        receiveIconView.setIcon(web3SwappableToken: token)
+        receiveIconView.setIcon(token: token.token)
         receiveSymbolLabel.text = token.symbol
-        payValueLabel.text = ""
+        receiveValueLabel.text = ""
+        receiveLoadingIndicator.stopAnimating()
     }
     
     private func requestSign(transaction raw: String) {

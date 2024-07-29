@@ -3,24 +3,28 @@ import MixinServices
 
 struct Payment {
     
+    enum Context {
+        case swap(SwapContext)
+        case inscription(InscriptionContext)
+    }
+    
     let traceID: String
     let token: TokenItem
     let tokenAmount: Decimal
     let fiatMoneyAmount: Decimal
     let memo: String
-    
-    private let inscriptionContext: InscriptionContext?
+    let context: Context?
     
     init(
         traceID: String, token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal,
-        memo: String, inscriptionContext: InscriptionContext? = nil
+        memo: String, context: Context? = nil
     ) {
         self.traceID = traceID
         self.token = token
         self.tokenAmount = tokenAmount
         self.fiatMoneyAmount = fiatMoneyAmount
         self.memo = memo
-        self.inscriptionContext = inscriptionContext
+        self.context = context
     }
     
     static func inscription(
@@ -35,7 +39,7 @@ struct Payment {
                        tokenAmount: context.transferAmount,
                        fiatMoneyAmount: fiatMoneyAmount,
                        memo: memo,
-                       inscriptionContext: context)
+                       context: .inscription(context))
     }
     
 }
@@ -151,6 +155,11 @@ extension Payment {
         
     }
     
+    struct SwapContext {
+        let receiveToken: SwappableToken
+        let receiveAmount: Decimal
+    }
+    
     func checkPreconditions(
         transferTo destination: TransferDestination,
         reference: String?,
@@ -162,14 +171,29 @@ extension Payment {
             let preconditions: [PaymentPrecondition]
             switch destination {
             case let .user(opponent):
-                if let context = inscriptionContext {
+                switch context {
+                case .inscription:
                     preconditions = [
                         NoPendingTransactionPrecondition(token: token),
                         AlreadyPaidPrecondition(traceID: traceID),
                         KnownOpponentPrecondition(opponent: opponent),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
-                } else {
+                case .swap:
+                    preconditions = [
+                        NoPendingTransactionPrecondition(token: token),
+                        AlreadyPaidPrecondition(traceID: traceID),
+                        DuplicationPrecondition(operation: .transfer(opponent),
+                                                token: token,
+                                                tokenAmount: tokenAmount,
+                                                fiatMoneyAmount: fiatMoneyAmount,
+                                                memo: memo),
+                        LargeAmountPrecondition(token: token,
+                                                tokenAmount: tokenAmount,
+                                                fiatMoneyAmount: fiatMoneyAmount),
+                        ReferenceValidityPrecondition(reference: reference),
+                    ]
+                case .none:
                     preconditions = [
                         NoPendingTransactionPrecondition(token: token),
                         AlreadyPaidPrecondition(traceID: traceID),
@@ -199,20 +223,21 @@ extension Payment {
                     onFailure(reason)
                 }
             case .passed(let issues):
-                let outputCollectionResult: OutputCollectingResult
-                if let inscriptionContext {
-                    if let collection = UTXOService.OutputCollection(output: inscriptionContext.output) {
-                        outputCollectionResult = .success(collection)
+                let outputCollectionResult: OutputCollectingResult = switch context {
+                case .inscription(let context):
+                    if let collection = UTXOService.OutputCollection(output: context.output) {
+                        .success(collection)
                     } else {
-                        outputCollectionResult = .failure(.description("Invalid Amount"))
+                        .failure(.description("Invalid Amount"))
                     }
-                } else {
-                    outputCollectionResult = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
+                case .swap, .none:
+                    await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
                 }
                 
                 switch outputCollectionResult {
                 case .success(let collection):
-                    let operation = if let context = inscriptionContext {
+                    let operation = switch context {
+                    case let .inscription(context):
                         TransferPaymentOperation.inscription(
                             traceID: traceID,
                             spendingOutputs: collection,
@@ -222,7 +247,18 @@ extension Payment {
                             reference: reference,
                             context: context
                         )
-                    } else {
+                    case let .swap(context):
+                        TransferPaymentOperation.swap(
+                            traceID: traceID,
+                            spendingOutputs: collection,
+                            destination: destination,
+                            token: token,
+                            amount: tokenAmount,
+                            memo: memo,
+                            reference: reference,
+                            context: context
+                        )
+                    case .none:
                         TransferPaymentOperation.transfer(
                             traceID: traceID,
                             spendingOutputs: collection,

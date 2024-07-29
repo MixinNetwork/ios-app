@@ -46,6 +46,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.paymentUserGroupCell)
         tableView.register(R.nib.web3MessageCell)
         tableView.register(R.nib.web3AmountChangeCell)
+        tableView.register(R.nib.swapAssetChangeCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -168,14 +169,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.primaryLabel.text = fiatMoney
                 cell.secondaryLabel.text = token
             }
-            cell.setPrimaryAmountLabel(usesBoldFont: boldPrimaryAmount)
-            return cell
-        case let .proposer(name, host):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.from().uppercased()
-            cell.primaryLabel.text = name
-            cell.secondaryLabel.text = host
-            cell.setPrimaryAmountLabel(usesBoldFont: false)
+            cell.setPrimaryLabel(usesBoldFont: boldPrimaryAmount)
             return cell
         case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
@@ -191,6 +185,13 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setBoldContent(content)
+            return cell
+        case let .doubleLineInfo(caption, primary, secondary):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
+            cell.captionLabel.text = caption.rawValue.uppercased()
+            cell.primaryLabel.text = primary
+            cell.secondaryLabel.text = secondary
+            cell.setPrimaryLabel(usesBoldFont: false)
             return cell
         case let .senders(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
@@ -240,7 +241,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.fee_selection(speed).uppercased()
             cell.primaryLabel.text = tokenAmount
             cell.secondaryLabel.text = fiatMoneyAmount
-            cell.setPrimaryAmountLabel(usesBoldFont: false)
+            cell.setPrimaryLabel(usesBoldFont: false)
             cell.disclosureImageView.isHidden = false
             return cell
         case let .tokenAmount(token, tokenAmount, fiatMoneyAmount):
@@ -249,6 +250,10 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.amountLabel.text = tokenAmount
             cell.secondaryAmountLabel.text = fiatMoneyAmount
             cell.tokenIconView.setIcon(token: token)
+            return cell
+        case let .swapAssetChange(sendToken, sendAmount, receiveToken, receiveAmount):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_asset_change, for: indexPath)!
+            cell.reloadData(sendToken: sendToken, sendAmount: sendAmount, receiveToken: receiveToken, receiveAmount: receiveAmount)
             return cell
         }
     }
@@ -287,6 +292,7 @@ extension AuthenticationPreviewViewController {
         case address
         case network
         case fee
+        case networkFee
         case memo
         case tag
         case total
@@ -294,6 +300,9 @@ extension AuthenticationPreviewViewController {
         case sender
         case receiver
         case collectible
+        case price
+        case slippage
+        case from
         
         var rawValue: String {
             switch self {
@@ -307,6 +316,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.network()
             case .fee:
                 R.string.localizable.fee()
+            case .networkFee:
+                R.string.localizable.network_fee()
             case .memo:
                 R.string.localizable.memo()
             case .tag:
@@ -321,6 +332,12 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.receiver()
             case .collectible:
                 R.string.localizable.collectible()
+            case .price:
+                R.string.localizable.price()
+            case .slippage:
+                R.string.localizable.slippage()
+            case .from:
+                R.string.localizable.from()
             }
         }
         
@@ -328,9 +345,9 @@ extension AuthenticationPreviewViewController {
     
     enum Row {
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
-        case proposer(name: String, host: String)
         case info(caption: Caption, content: String)
         case boldInfo(caption: Caption, content: String)
+        case doubleLineInfo(caption: Caption, primary: String, secondary: String)
         case receivingAddress(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
@@ -339,6 +356,7 @@ extension AuthenticationPreviewViewController {
         case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3TransferableToken) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
+        case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwappableToken, receiveAmount: String)
     }
     
     struct TableHeaderViewStyle: OptionSet {

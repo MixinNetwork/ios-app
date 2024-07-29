@@ -21,8 +21,10 @@ final class MixinSwapViewController: SwapViewController {
         }
     }
     
-    private var receiveAmount: Decimal?
+    private var quote: SwapQuote?
     private var requester: SwapQuotePeriodicRequester?
+    
+    private var priceUnit: SwapQuote.PriceUnit = .send
     
     private lazy var userInputSimulationFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -105,21 +107,25 @@ final class MixinSwapViewController: SwapViewController {
         scheduleNewRequesterIfAvailable()
     }
     
+    override func swapPrice(_ sender: Any) {
+        priceUnit = switch priceUnit {
+        case .send:
+                .receive
+        case .receive:
+                .send
+        }
+        updateCurrentPriceRepresentation()
+    }
+    
     override func review(_ sender: RoundedButton) {
-        guard
-            let sendToken,
-            let text = sendAmountTextField.text,
-            let sendAmount = Decimal(string: text, locale: .current),
-            let receiveToken,
-            let receiveAmount
-        else {
+        guard let quote else {
             return
         }
         sender.isBusy = true
         let request = SwapRequest.exin(
-            sendToken: sendToken,
-            sendAmount: sendAmount,
-            receiveToken: receiveToken.token,
+            sendToken: quote.sendToken,
+            sendAmount: quote.sendAmount,
+            receiveToken: quote.receiveToken,
             slippage: 0.01
         )
         RouteAPI.swap(request: request) { [weak self] response in
@@ -129,7 +135,8 @@ final class MixinSwapViewController: SwapViewController {
             switch response {
             case .success(let response):
                 if let url = URL(string: response.tx) {
-                    let context = Payment.SwapContext(receiveToken: receiveToken.token, receiveAmount: receiveAmount)
+                    let context = Payment.SwapContext(receiveToken: quote.receiveToken,
+                                                      receiveAmount: quote.receiveAmount)
                     let source: UrlWindow.Source = .swap(context: context) { description in
                         if let description {
                             showAutoHiddenHud(style: .error, text: description)
@@ -177,44 +184,48 @@ extension MixinSwapViewController: UITextFieldDelegate {
 extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
     
     func swapQuotePeriodicRequesterWillUpdate(_ requester: SwapQuotePeriodicRequester) {
-        showAdditionalInfo(style: .info, text: R.string.localizable.calculating())
-        hideAdditionalInfoProgress()
+        showFooterInfoLabel(style: .info, text: R.string.localizable.calculating())
+        hideFooterInfoProgress()
+        hidePriceSwapping()
         reviewButton.isEnabled = false
     }
     
     func swapQuotePeriodicRequester(_ requester: SwapQuotePeriodicRequester, didUpdate result: Result<SwapQuote, any Error>) {
         switch result {
-        case .success(let response):
-            let sendAmount = response.sendAmount
-            let receiveAmount = response.receiveAmount
-            Logger.general.debug(category: "Web3Swap", message: "Got quote: \(receiveAmount)")
-            self.receiveAmount = receiveAmount
+        case .success(let quote):
+            self.quote = quote
+            Logger.general.debug(category: "Web3Swap", message: "Got quote: \(quote)")
             receiveAmountTextField.text = CurrencyFormatter.localizedString(
-                from: receiveAmount,
+                from: quote.receiveAmount,
                 format: .precision,
                 sign: .never
             )
             updateReceiveValueLabel()
-            let price = CurrencyFormatter.localizedString(
-                from: receiveAmount / sendAmount,
-                format: .precision,
-                sign: .never
-            )
-            let priceRepresentation = "1 \(response.sendToken.symbol) ≈ \(price) \(response.receiveToken.symbol)"
-            showAdditionalInfo(style: .info, text: priceRepresentation)
-            showAdditionalInfoProgress(progress: 1)
-            reviewButton.isEnabled = sendAmount > 0 && sendAmount <= response.sendToken.decimalBalance
+            updateCurrentPriceRepresentation()
+            showFooterInfoProgress(progress: 1)
+            showPriceSwapping()
+            reviewButton.isEnabled = quote.sendAmount > 0
+                && quote.sendAmount <= quote.sendToken.decimalBalance
         case .failure(let error):
-            Logger.general.debug(category: "Web3Swap", message: error.localizedDescription)
-            showAdditionalInfo(style: .error, text: R.string.localizable.swap_no_quote())
-            hideAdditionalInfoProgress()
+            let description = switch error {
+            case MixinAPIResponseError.invalidQuoteAmount:
+                R.string.localizable.swap_invalid_amount()
+            case MixinAPIResponseError.noAvailableQuote:
+                R.string.localizable.swap_no_available_quote()
+            default:
+                "\(error)"
+            }
+            Logger.general.debug(category: "Web3Swap", message: description)
+            showFooterInfoLabel(style: .error, text: description)
+            hideFooterInfoProgress()
+            hidePriceSwapping()
         }
     }
     
     func swapQuotePeriodicRequester(_ requester: SwapQuotePeriodicRequester, didCountDown value: Int) {
         let progress = Double(value) / Double(requester.refreshInterval)
         Logger.general.debug(category: "Web3Swap", message: "Progress: \(progress)")
-        showAdditionalInfoProgress(progress: progress)
+        footerInfoProgressView.setProgress(progress, animationDuration: 1)
     }
     
 }
@@ -354,21 +365,29 @@ extension MixinSwapViewController {
     }
     
     private func updateReceiveValueLabel() {
-        guard let receiveToken, let receiveAmount else {
+        guard let receiveToken, let quote else {
             receiveValueLabel.text = nil
             return
         }
         receiveValueLabel.text = CurrencyFormatter.localizedString(
-            from: receiveToken.decimalUSDPrice * receiveAmount,
+            from: receiveToken.decimalUSDPrice * quote.receiveAmount,
             format: .fiatMoney,
             sign: .never,
             symbol: .currencySymbol
         )
     }
     
+    private func updateCurrentPriceRepresentation() {
+        guard let quote else {
+            return
+        }
+        let price = quote.priceRepresentation(unit: priceUnit)
+        showFooterInfoLabel(style: .info, text: price)
+    }
+    
     private func scheduleNewRequesterIfAvailable() {
         receiveAmountTextField.text = nil
-        receiveAmount = nil
+        quote = nil
         updateReceiveValueLabel()
         reviewButton.isEnabled = false
         requester?.stop()
@@ -379,12 +398,14 @@ extension MixinSwapViewController {
             let sendToken,
             let receiveToken
         else {
-            hideAdditionalInfo()
-            hideAdditionalInfoProgress()
+            hideFooterInfoLabel()
+            hideFooterInfoProgress()
+            hidePriceSwapping()
             return
         }
-        showAdditionalInfo(style: .info, text: R.string.localizable.calculating())
-        hideAdditionalInfoProgress()
+        showFooterInfoLabel(style: .info, text: R.string.localizable.calculating())
+        hideFooterInfoProgress()
+        hidePriceSwapping()
         let requester = SwapQuotePeriodicRequester(sendToken: sendToken,
                                                    sendAmount: sendAmount,
                                                    receiveToken: receiveToken.token,

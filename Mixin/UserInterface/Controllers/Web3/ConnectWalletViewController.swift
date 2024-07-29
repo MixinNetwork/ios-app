@@ -40,7 +40,7 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         
         let host = URL(string: proposal.proposer.url)?.host ?? proposal.proposer.url
         var rows: [Row] = [
-            .proposer(name: proposal.proposer.name, host: host),
+            .doubleLineInfo(caption: .from, primary: proposal.proposer.name, secondary: host)
         ]
         let kinds = Set(chains.map(\.kind))
         if kinds.contains(.evm), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {

@@ -75,7 +75,7 @@ final class Web3SignViewController: AuthenticationPreviewViewController {
             reloadData(with: [
                 .web3Message(caption: R.string.localizable.unsigned_message(), message: operation.humanReadableMessage),
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
-                .proposer(name: operation.proposer.name, host: operation.proposer.host),
+                .doubleLineInfo(caption: .from, primary: operation.proposer.name, secondary: operation.proposer.host),
                 .info(caption: .account, content: operation.address),
                 .info(caption: .network, content: chainName)
             ])

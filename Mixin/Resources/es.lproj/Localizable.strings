@@ -1001,8 +1001,9 @@
 "swap_asset_change" = "Asset changes (estimate)";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
+"swap_invalid_amount" = "No available quote found. Please try a different amount.";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
-"swap_no_quote" = "No available quotes found. Please try a different token or amount.";
+"swap_no_available_quote" = "No available quote found. Please try a different token.";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
 "symbol" = "Símbolo";

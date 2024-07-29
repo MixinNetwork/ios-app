@@ -103,7 +103,10 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         switch context {
         case .swap(let context):
-            let price = CurrencyFormatter.localizedString(from: context.receiveAmount / operation.amount, format: .precision, sign: .never)
+            let quote = SwapQuote(sendToken: operation.token,
+                                  sendAmount: operation.amount,
+                                  receiveToken: context.receiveToken,
+                                  receiveAmount: context.receiveAmount)
             rows = [
                 .swapAssetChange(
                     sendToken: operation.token,
@@ -121,7 +124,11 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                         symbol: .custom(context.receiveToken.symbol)
                     )
                 ),
-                .info(caption: .price, content: "1 \(operation.token.symbol) ≈ \(price) \(context.receiveToken.symbol)"),
+                .doubleLineInfo(
+                    caption: .price,
+                    primary: quote.priceRepresentation(unit: .send),
+                    secondary: quote.priceRepresentation(unit: .receive)
+                ),
                 .info(caption: .slippage, content: "1%"),
                 .amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
             ]

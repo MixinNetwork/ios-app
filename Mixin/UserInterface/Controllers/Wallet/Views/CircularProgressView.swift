@@ -54,14 +54,20 @@ final class CircularProgressView: UIView {
     }
     
     // The `progress` must be in the range [0,1]
-    func setProgress(_ progress: Double, animationDuration: CFTimeInterval) {
-        let animation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
-        animation.duration = animationDuration
-        animation.fromValue = progressLayer.strokeEnd
-        animation.toValue = progress
-        animation.timingFunction = CAMediaTimingFunction(name: .linear)
-        progressLayer.strokeEnd = progress
-        progressLayer.add(animation, forKey: "progress")
+    func setProgress(_ progress: Double, animationDuration: CFTimeInterval?) {
+        if let duration = animationDuration {
+            let animation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
+            animation.duration = duration
+            animation.fromValue = progressLayer.strokeEnd
+            animation.toValue = progress
+            animation.timingFunction = CAMediaTimingFunction(name: .linear)
+            progressLayer.strokeEnd = progress
+            progressLayer.add(animation, forKey: "progress")
+        } else {
+            CATransaction.performWithoutAnimation {
+                progressLayer.strokeEnd = progress
+            }
+        }
     }
     
     private func loadSubviews() {

@@ -1001,8 +1001,9 @@
 "swap_asset_change" = "資產變動（預估）";
 "swap_confirmation" = "確認閃兌";
 "swap_failed" = "閃兌失敗";
+"swap_invalid_amount" = "沒有報價。請嘗試修改金額。";
 "swap_message_success" = "您的閃兌交易已傳送至網路，交易將很快被處理。";
-"swap_no_quote" = "沒有報價。請嘗試切換幣種或者修改金額。";
+"swap_no_available_quote" = "沒有報價。請嘗試切換幣種。";
 "swap_receive" = "獲得";
 "swap_send" = "支付";
 "symbol" = "符號";

@@ -38,9 +38,9 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var receiveNetworkLabel: UILabel!
     @IBOutlet weak var receiveValueLabel: UILabel!
     
-    @IBOutlet weak var receiveSeparatorLineView: UIView!
-    @IBOutlet weak var receiveAdditionalInfoLabel: UILabel!
-    @IBOutlet weak var receiveAdditionalInfoProgressView: CircularProgressView!
+    @IBOutlet weak var footerInfoLabel: UILabel!
+    @IBOutlet weak var footerInfoProgressView: CircularProgressView!
+    @IBOutlet weak var swapPriceButton: UIButton!
     
     @IBOutlet weak var swapBackgroundView: UIView!
     @IBOutlet weak var swapButton: UIButton!
@@ -67,7 +67,6 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         receiveView.layer.cornerRadius = 8
         receiveStackView.setCustomSpacing(12, after: receiveTokenStackView)
         receiveStackView.setCustomSpacing(16, after: receiveInfoStackView)
-        receiveStackView.setCustomSpacing(16, after: receiveSeparatorLineView)
         receiveLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         sendAmountTextField.becomeFirstResponder()
     }
@@ -98,34 +97,44 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         
     }
     
+    @IBAction func swapPrice(_ sender: Any) {
+        
+    }
+    
     @IBAction func review(_ sender: RoundedButton) {
         
     }
     
-    func hideAdditionalInfo() {
-        receiveSeparatorLineView.isHidden = true
-        receiveAdditionalInfoLabel.isHidden = true
+    func hideFooterInfoLabel() {
+        footerInfoLabel.isHidden = true
     }
     
-    func showAdditionalInfo(style: AdditionalInfoStyle, text: String) {
+    func showFooterInfoLabel(style: AdditionalInfoStyle, text: String) {
         switch style {
         case .info:
-            receiveAdditionalInfoLabel.textColor = R.color.text_tertiary()
+            footerInfoLabel.textColor = R.color.text_tertiary()
         case .error:
-            receiveAdditionalInfoLabel.textColor = R.color.red()
+            footerInfoLabel.textColor = R.color.red()
         }
-        receiveAdditionalInfoLabel.text = text
-        receiveSeparatorLineView.isHidden = false
-        receiveAdditionalInfoLabel.isHidden = false
+        footerInfoLabel.text = text
+        footerInfoLabel.isHidden = false
     }
     
-    func hideAdditionalInfoProgress() {
-        receiveAdditionalInfoProgressView.isHidden = true
+    func hideFooterInfoProgress() {
+        footerInfoProgressView.isHidden = true
     }
     
-    func showAdditionalInfoProgress(progress: Double) {
-        receiveAdditionalInfoProgressView.isHidden = false
-        receiveAdditionalInfoProgressView.setProgress(progress, animationDuration: 1)
+    func showFooterInfoProgress(progress: Double) {
+        footerInfoProgressView.isHidden = false
+        footerInfoProgressView.setProgress(progress, animationDuration: nil)
+    }
+    
+    func hidePriceSwapping() {
+        swapPriceButton.isHidden = true
+    }
+    
+    func showPriceSwapping() {
+        swapPriceButton.isHidden = false
     }
     
     func reportClientOutdated() {

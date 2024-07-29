@@ -85,7 +85,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
         
         switch proposer {
         case .dapp(let proposer):
-            rows.append(.proposer(name: proposer.name, host: proposer.host))
+            rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
             rows.append(.info(caption: .account, content: operation.fromAddress))
         case .web3ToMixinWallet:
             if let account = LoginManager.shared.account {

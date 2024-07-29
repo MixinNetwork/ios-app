@@ -169,14 +169,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.primaryLabel.text = fiatMoney
                 cell.secondaryLabel.text = token
             }
-            cell.setPrimaryAmountLabel(usesBoldFont: boldPrimaryAmount)
-            return cell
-        case let .proposer(name, host):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.from().uppercased()
-            cell.primaryLabel.text = name
-            cell.secondaryLabel.text = host
-            cell.setPrimaryAmountLabel(usesBoldFont: false)
+            cell.setPrimaryLabel(usesBoldFont: boldPrimaryAmount)
             return cell
         case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
@@ -192,6 +185,13 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setBoldContent(content)
+            return cell
+        case let .doubleLineInfo(caption, primary, secondary):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
+            cell.captionLabel.text = caption.rawValue.uppercased()
+            cell.primaryLabel.text = primary
+            cell.secondaryLabel.text = secondary
+            cell.setPrimaryLabel(usesBoldFont: false)
             return cell
         case let .senders(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
@@ -241,7 +241,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.fee_selection(speed).uppercased()
             cell.primaryLabel.text = tokenAmount
             cell.secondaryLabel.text = fiatMoneyAmount
-            cell.setPrimaryAmountLabel(usesBoldFont: false)
+            cell.setPrimaryLabel(usesBoldFont: false)
             cell.disclosureImageView.isHidden = false
             return cell
         case let .tokenAmount(token, tokenAmount, fiatMoneyAmount):
@@ -302,6 +302,7 @@ extension AuthenticationPreviewViewController {
         case collectible
         case price
         case slippage
+        case from
         
         var rawValue: String {
             switch self {
@@ -335,6 +336,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.price()
             case .slippage:
                 R.string.localizable.slippage()
+            case .from:
+                R.string.localizable.from()
             }
         }
         
@@ -342,9 +345,9 @@ extension AuthenticationPreviewViewController {
     
     enum Row {
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
-        case proposer(name: String, host: String)
         case info(caption: Caption, content: String)
         case boldInfo(caption: Caption, content: String)
+        case doubleLineInfo(caption: Caption, primary: String, secondary: String)
         case receivingAddress(value: String, label: String?)
         case senders([UserItem], threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)

@@ -1001,8 +1001,9 @@
 "swap_asset_change" = "资产变动（预估）";
 "swap_confirmation" = "确认闪兑";
 "swap_failed" = "闪兑失败";
+"swap_invalid_amount" = "没有报价。请尝试修改金额。";
 "swap_message_success" = "您的闪兑交易已发送至网络，交易将很快被处理。";
-"swap_no_quote" = "没有报价。请尝试切换币种或者修改金额。";
+"swap_no_available_quote" = "没有报价。请尝试切换币种。";
 "swap_receive" = "获得";
 "swap_send" = "支付";
 "symbol" = "符号";

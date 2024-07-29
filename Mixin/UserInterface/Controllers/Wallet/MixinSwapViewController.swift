@@ -212,6 +212,8 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 R.string.localizable.swap_invalid_amount()
             case MixinAPIResponseError.noAvailableQuote:
                 R.string.localizable.swap_no_available_quote()
+            case MixinAPIError.response(let error):
+                error.localizedDescription
             default:
                 "\(error)"
             }
@@ -395,6 +397,7 @@ extension MixinSwapViewController {
         guard
             let text = sendAmountTextField.text,
             let sendAmount = Decimal(string: text, locale: .current),
+            sendAmount > 0,
             let sendToken,
             let receiveToken
         else {

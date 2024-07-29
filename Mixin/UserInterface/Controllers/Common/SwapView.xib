@@ -290,7 +290,7 @@
                                             <rect key="frame" x="0.0" y="1049" width="353" height="144"/>
                                             <subviews>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0N-2O-dzm">
-                                                    <rect key="frame" x="16" y="71.666666666666742" width="0.0" height="17"/>
+                                                    <rect key="frame" x="0.0" y="71.666666666666742" width="0.0" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -299,7 +299,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zTW-Qk-BeR" customClass="CircularProgressView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="5" y="74.666666666666742" width="11" height="11"/>
+                                                    <rect key="frame" x="0.0" y="74.666666666666742" width="11" height="11"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="zTW-Qk-BeR" secondAttribute="height" priority="999" id="JL4-4R-JRJ"/>
@@ -307,11 +307,12 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-H7-0Lv">
-                                                    <rect key="frame" x="16" y="16" width="293" height="128"/>
+                                                    <rect key="frame" x="16" y="16" width="321" height="128"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQi-MQ-HSB">
-                                                    <rect key="frame" x="317" y="70" width="20" height="20"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQi-MQ-HSB">
+                                                    <rect key="frame" x="0.0" y="70" width="0.0" height="20"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="xQi-MQ-HSB" secondAttribute="height" priority="999" id="8XF-W6-OqN"/>
                                                         <constraint firstAttribute="height" constant="20" id="MG0-XV-sSD"/>

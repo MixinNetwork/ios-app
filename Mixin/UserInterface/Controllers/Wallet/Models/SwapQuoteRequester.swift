@@ -14,7 +14,7 @@ final class SwapQuotePeriodicRequester {
         case invalidResponseAmount(String)
     }
     
-    let refreshInterval = 30
+    let refreshInterval = 10
     
     var countDownIncludesZero = true
     
@@ -114,7 +114,7 @@ final class SwapQuotePeriodicRequester {
             }
         }
         self.timer = timer
-        nextQuoteCountDown = refreshInterval
+        nextQuoteCountDown = refreshInterval + lastCountDown
         timer.fire()
     }
     

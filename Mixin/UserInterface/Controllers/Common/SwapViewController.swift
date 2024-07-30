@@ -69,12 +69,12 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         receiveStackView.setCustomSpacing(16, after: receiveInfoStackView)
         receiveLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         sendAmountTextField.becomeFirstResponder()
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            guard let self = self, self.presentedViewController == nil else {
-                return
-            }
-            self.sendAmountTextField.becomeFirstResponder()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive(_:)),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
     }
     
     override func layout(for keyboardFrame: CGRect) {
@@ -109,6 +109,13 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     
     @IBAction func review(_ sender: RoundedButton) {
         
+    }
+    
+    @objc private func applicationDidBecomeActive(_ notification: Notification) {
+        guard presentedViewController == nil else {
+            return
+        }
+        sendAmountTextField.becomeFirstResponder()
     }
     
     func hideFooterInfoLabel() {

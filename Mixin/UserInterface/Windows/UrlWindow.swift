@@ -65,6 +65,12 @@ class UrlWindow {
             case .inscription(let hash):
                 checkInscription(hash: hash)
                 return true
+            case let .swap(input, output):
+                if let navigationController = UIApplication.homeNavigationController {
+                    let swap = MixinSwapViewController.contained(sendAssetID: input, receiveAssetID: output)
+                    navigationController.pushViewController(swap, animated: true)
+                }
+                return true
             }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool

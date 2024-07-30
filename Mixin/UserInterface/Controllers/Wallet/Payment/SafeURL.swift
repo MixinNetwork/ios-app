@@ -8,6 +8,7 @@ enum SafeURL {
     case code(String)
     case tip(TIPURL)
     case inscription(String)
+    case swap(input: String?, output: String?)
     
 }
 
@@ -31,21 +32,37 @@ extension SafeURL {
             self = .tip(tip)
         } else {
             let pathComponents = url.pathComponents
-            if pathComponents.count == 3, pathComponents[1] == "schemes" {
+            switch pathComponents.count {
+            case 2 where pathComponents[1] == "swap":
+                var input, output: String?
+                if let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: true)?.queryItems {
+                    for item in queryItems {
+                        switch item.name {
+                        case "input":
+                            input = item.value
+                        case "output":
+                            output = item.value
+                        default:
+                            break
+                        }
+                    }
+                }
+                self = .swap(input: input, output: output)
+            case 3 where pathComponents[1] == "schemes":
                 let uuid = pathComponents[2]
                 if UUID.isValidLowercasedUUIDString(uuid) {
                     self = .code(uuid)
                 } else {
                     return nil
                 }
-            } else if pathComponents.count == 3, pathComponents[1] == "inscriptions" {
+            case 3 where pathComponents[1] == "inscriptions":
                 let hash = pathComponents[2]
                 if Inscription.isHashValid(hash) {
                     self = .inscription(hash)
                 } else {
                     return nil
                 }
-            } else {
+            default:
                 return nil
             }
         }

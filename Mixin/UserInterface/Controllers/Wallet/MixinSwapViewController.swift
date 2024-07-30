@@ -4,6 +4,9 @@ import MixinServices
 
 final class MixinSwapViewController: SwapViewController {
     
+    private let arbitrarySendAssetID: String?
+    private let arbitraryReceiveAssetID: String?
+    
     // Key is asset id
     private var swappableTokensMap: [String: TokenItem] = [:]
     
@@ -34,6 +37,25 @@ final class MixinSwapViewController: SwapViewController {
         formatter.usesGroupingSeparator = false
         return formatter
     }()
+    
+    init(sendAssetID: String?, receiveAssetID: String?) {
+        self.arbitrarySendAssetID = sendAssetID
+        self.arbitraryReceiveAssetID = receiveAssetID
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    static func contained(sendAssetID: String?, receiveAssetID: String?) -> ContainerViewController {
+        let swap = MixinSwapViewController(sendAssetID: sendAssetID, receiveAssetID: receiveAssetID)
+        let container = ContainerViewController.instance(viewController: swap, title: R.string.localizable.swap())
+        container.loadViewIfNeeded()
+        container.view.backgroundColor = R.color.background_secondary()
+        container.navigationBar.backgroundColor = R.color.background_secondary()
+        return container
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -251,7 +273,7 @@ extension MixinSwapViewController {
     }
     
     private func reloadData(swappableTokens: [SwappableToken]) {
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async { [weak self, arbitrarySendAssetID, arbitraryReceiveAssetID] in
             let swappableAssetIDs: [String] = swappableTokens.map(\.assetID)
             let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: swappableAssetIDs)
             if !missingAssetIDs.isEmpty {
@@ -279,7 +301,13 @@ extension MixinSwapViewController {
                     return nil
                 }
             }
-            let sendToken = sendTokens.first
+            let sendToken = if let id = arbitrarySendAssetID, let token = sendTokens.first(where: { $0.assetID == id }) {
+                token
+            } else {
+                sendTokens.first(where: { token in
+                    token.assetID != arbitraryReceiveAssetID
+                })
+            }
             
             let receiveTokens = swappableTokens.map { token in
                 if let item = swappableTokensMap[token.assetID] {
@@ -290,8 +318,16 @@ extension MixinSwapViewController {
                     return BalancedSwappableToken(token: token, balance: 0, usdPrice: 0)
                 }
             }
-            let receiveToken = receiveTokens.first { token in
-                token.token.assetID != sendToken?.assetID
+            let receiveToken: BalancedSwappableToken?
+            if let id = arbitraryReceiveAssetID,
+               id != sendToken?.assetID,
+               let token = receiveTokens.first(where: { $0.token.assetID == id })
+            {
+                receiveToken = token
+            } else {
+                receiveToken = receiveTokens.first { token in
+                    token.token.assetID != sendToken?.assetID
+                }
             }
             
             DispatchQueue.main.async {

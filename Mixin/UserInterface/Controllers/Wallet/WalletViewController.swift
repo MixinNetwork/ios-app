@@ -206,12 +206,8 @@ extension WalletViewController: TransferActionViewDelegate {
             controller.tokens = tokens
             present(controller, animated: true, completion: nil)
         case .swap:
-            let swap = MixinSwapViewController()
-            let container = ContainerViewController.instance(viewController: swap, title: R.string.localizable.swap())
-            container.loadViewIfNeeded()
-            container.view.backgroundColor = R.color.background_secondary()
-            container.navigationBar.backgroundColor = R.color.background_secondary()
-            navigationController?.pushViewController(container, animated: true)
+            let swap = MixinSwapViewController.contained(sendAssetID: nil, receiveAssetID: nil)
+            navigationController?.pushViewController(swap, animated: true)
         }
     }
     

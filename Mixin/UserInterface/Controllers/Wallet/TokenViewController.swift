@@ -36,7 +36,7 @@ final class TokenViewController: SafeSnapshotListViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableHeaderView.render(token: token)
-        tableHeaderView.transferActionView.actions = [.send, .receive]
+        tableHeaderView.transferActionView.actions = [.send, .receive, .swap]
         tableHeaderView.transferActionView.delegate = self
         tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilter(_:)), for: .touchUpInside)
         tableHeaderView.tokenInfoButton.addTarget(self, action: #selector(showTokenInfo(_:)), for: .touchUpInside)
@@ -146,7 +146,8 @@ extension TokenViewController: TransferActionViewDelegate {
             let deposit = DepositViewController.instance(token: token)
             navigationController?.pushViewController(deposit, animated: true)
         case .swap:
-            break
+            let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
+            navigationController?.pushViewController(swap, animated: true)
         }
     }
     

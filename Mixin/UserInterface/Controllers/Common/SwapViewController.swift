@@ -69,6 +69,12 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         receiveStackView.setCustomSpacing(16, after: receiveInfoStackView)
         receiveLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         sendAmountTextField.becomeFirstResponder()
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self, self.presentedViewController == nil else {
+                return
+            }
+            self.sendAmountTextField.becomeFirstResponder()
+        }
     }
     
     override func layout(for keyboardFrame: CGRect) {

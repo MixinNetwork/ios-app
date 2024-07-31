@@ -7,7 +7,6 @@ class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
         LightRightBubbleImageSet.self
     }
     
-    static let coverRatio: CGFloat = 16.0 / 10.0
     static let coverBottomSpacing: CGFloat = 10
     static let otherSpacing: CGFloat = 8
     static let labelLayoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
@@ -26,6 +25,7 @@ class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
     init(message: MessageItem, content: AppCardData.V1Content) {
         self.content = content
         super.init(message: message)
+        self.thumbnail = content.cover?.thumbnail()
     }
     
     override func layout(width: CGFloat, style: Style) {
@@ -41,10 +41,11 @@ class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
         let contentWidth: CGFloat = min(340, max(240, round(width * 3 / 4)))
         let labelFittingSize = CGSize(width: contentWidth - leadingConstant + trailingConstant - Self.labelLayoutMargins.horizontal,
                                       height: UIView.layoutFittingExpandedSize.height)
-        let coverImageHeight: CGFloat = if content.coverURL == nil {
-            Self.otherSpacing
+        let coverImageHeight: CGFloat
+        if let cover = content.cover {
+            coverImageHeight = (contentWidth + leadingConstant - trailingConstant) / cover.ratio + Self.coverBottomSpacing
         } else {
-            (contentWidth + leadingConstant - trailingConstant) / Self.coverRatio + Self.coverBottomSpacing
+            coverImageHeight = Self.otherSpacing
         }
         let titleHeight: CGFloat = {
             if let title = content.title, !title.isEmpty {

@@ -34,7 +34,7 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? AppCardV1MessageViewModel {
             contentLeadingConstraint.constant = viewModel.leadingConstant
             contentTrailingConstraint.constant = viewModel.trailingConstant
-            cardContentView.reloadData(with: viewModel.content)
+            cardContentView.reloadData(with: viewModel.content, coverThumbnail: viewModel.thumbnail)
             if !viewModel.content.actions.isEmpty {
                 let buttonsView: AppButtonGroupView
                 if let view = self.buttonsView {
@@ -127,9 +127,9 @@ extension AppCardV1MessageCell {
             fatalError("Not supported")
         }
         
-        func reloadData(with content: AppCardData.V1Content) {
+        func reloadData(with content: AppCardData.V1Content, coverThumbnail: UIImage?) {
             let hasCoverImage: Bool
-            if let url = content.coverURL {
+            if let cover = content.cover {
                 let imageView: SDAnimatedImageView
                 if let view = coverImageView {
                     view.isHidden = false
@@ -142,14 +142,19 @@ extension AppCardV1MessageCell {
                     imageView.layer.cornerRadius = 5
                     imageView.snp.makeConstraints { make in
                         make.width.equalTo(imageView.snp.height)
-                            .multipliedBy(AppCardV1MessageViewModel.coverRatio)
+                            .multipliedBy(cover.ratio)
                     }
                     imageView.contentMode = .scaleAspectFill
                     insertArrangedSubview(imageView, at: 0)
                     setCustomSpacing(AppCardV1MessageViewModel.coverBottomSpacing, after: imageView)
                     self.coverImageView = imageView
                 }
-                imageView.sd_setImage(with: url)
+                switch cover {
+                case .plain(let string):
+                    imageView.sd_setImage(with: URL(string: string), placeholderImage: nil)
+                case .rich(let cover):
+                    imageView.sd_setImage(with: cover.url, placeholderImage: coverThumbnail)
+                }
                 hasCoverImage = true
             } else {
                 coverImageView?.isHidden = true

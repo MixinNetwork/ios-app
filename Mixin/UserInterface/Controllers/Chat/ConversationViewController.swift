@@ -98,6 +98,7 @@ class ConversationViewController: UIViewController {
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
+    private var startTextMessage: String?
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
@@ -249,7 +250,11 @@ class ConversationViewController: UIViewController {
     }
     
     // MARK: - Factory
-    class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
+    class func instance(
+        conversation: ConversationItem,
+        highlight: ConversationDataSource.Highlight? = nil,
+        start: String? = nil
+    ) -> ConversationViewController {
         let vc = R.storyboard.chat.conversation()!
         let dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
         let ownerUser: UserItem?
@@ -261,10 +266,11 @@ class ConversationViewController: UIViewController {
         vc.ownerUser = ownerUser
         vc.dataSource = dataSource
         vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
+        vc.startTextMessage = start
         return vc
     }
     
-    class func instance(ownerUser: UserItem) -> ConversationViewController {
+    class func instance(ownerUser: UserItem, start: String? = nil) -> ConversationViewController {
         let vc = R.storyboard.chat.conversation()!
         vc.ownerUser = ownerUser
         let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
@@ -273,6 +279,7 @@ class ConversationViewController: UIViewController {
         let dataSource = ConversationDataSource(conversation: conversation)
         vc.dataSource = dataSource
         vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
+        vc.startTextMessage = start
         return vc
     }
     
@@ -401,6 +408,10 @@ class ConversationViewController: UIViewController {
         if let user = self.ownerUser {
             let job = RefreshUserJob(userIds: [user.userId])
             ConcurrentJobQueue.shared.addJob(job: job)
+        }
+        if let content = startTextMessage {
+            startTextMessage = nil
+            composer.sendMessage(type: .SIGNAL_TEXT, value: content)
         }
     }
     

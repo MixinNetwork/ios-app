@@ -29,6 +29,11 @@ final class AppCardV1MessageCell: DetailInfoMessageCell {
         NSLayoutConstraint.activate([contentLeadingConstraint, contentTrailingConstraint])
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cardContentView.prepareForReuse()
+    }
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? AppCardV1MessageViewModel {
@@ -127,6 +132,10 @@ extension AppCardV1MessageCell {
             fatalError("Not supported")
         }
         
+        func prepareForReuse() {
+            coverImageView?.sd_cancelCurrentImageLoad()
+        }
+        
         func reloadData(with content: AppCardData.V1Content, coverThumbnail: UIImage?) {
             let hasCoverImage: Bool
             if let cover = content.cover {
@@ -177,6 +186,7 @@ extension AppCardV1MessageCell {
                     if !hasCoverImage {
                         marginStackView.layoutMargins.top = 8
                     }
+                    marginStackView.insetsLayoutMarginsFromSafeArea = false
                     marginStackView.isLayoutMarginsRelativeArrangement = true
                     if coverImageView == nil {
                         addArrangedSubview(marginStackView)
@@ -202,14 +212,16 @@ extension AppCardV1MessageCell {
                     descriptionLabel = TextLabel()
                     descriptionLabel.backgroundColor = .clear
                     descriptionLabel.textAlignment = .left
+                    descriptionLabel.lineSpacing = AppCardV1MessageViewModel.descriptionLineSpacing
                     descriptionLabel.font = MessageFontSet.cardSubtitle.scaled
-                    descriptionLabel.textColor = R.color.text_tertiary()!
+                    descriptionLabel.textColor = R.color.text()!
                     let marginStackView = UIStackView(arrangedSubviews: [descriptionLabel])
                     marginStackView.axis = .horizontal
                     marginStackView.layoutMargins = AppCardV1MessageViewModel.labelLayoutMargins
                     if !hasCoverImage && !hasTitle {
                         marginStackView.layoutMargins.top = 8
                     }
+                    marginStackView.insetsLayoutMarginsFromSafeArea = false
                     marginStackView.isLayoutMarginsRelativeArrangement = true
                     addArrangedSubview(marginStackView)
                     self.descriptionLabel = descriptionLabel

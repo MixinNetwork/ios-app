@@ -10,6 +10,7 @@ class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
     static let coverBottomSpacing: CGFloat = 10
     static let otherSpacing: CGFloat = 8
     static let labelLayoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+    static let descriptionLineSpacing: CGFloat = 3
     
     let bottomSpacing: CGFloat = 12
     let buttonsLeadingMargin: CGFloat = 4
@@ -62,10 +63,15 @@ class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
         }()
         let descriptionHeight: CGFloat = {
             if let description = content.description, !description.isEmpty {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = Self.descriptionLineSpacing
                 let rect = (description as NSString).boundingRect(
                     with: labelFittingSize,
                     options: [.usesLineFragmentOrigin, .usesFontLeading],
-                    attributes: [.font: MessageFontSet.cardSubtitle.scaled],
+                    attributes: [
+                        .font: MessageFontSet.cardSubtitle.scaled,
+                        .paragraphStyle: paragraphStyle,
+                    ],
                     context: nil
                 )
                 return rect.height

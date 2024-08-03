@@ -146,7 +146,7 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .history:
             let item = history[indexPath.row]
-            let viewController = TokenViewController.instance(token: item)
+            let viewController = TokenViewController(token: item)
             navigationController?.pushViewController(viewController, animated: true)
         case .trending:
             let item = trending[indexPath.row]
@@ -156,7 +156,7 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
                 func pushTokenViewController(with token: TokenItem) {
                     DispatchQueue.main.sync {
                         hud.hide()
-                        let viewController = TokenViewController.instance(token: token)
+                        let viewController = TokenViewController(token: token)
                         self.navigationController?.pushViewController(viewController, animated: true)
                     }
                 }

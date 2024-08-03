@@ -188,9 +188,6 @@ final class BadgeIconView: UIView {
         addSubview(iconImageView)
         addSubview(badgeBackgroundView)
         addSubview(badgeImageView)
-        layer.shadowColor = R.color.icon_shadow()!.cgColor
-        layer.shadowOpacity = 0.2
-        layer.shadowRadius = 6
         iconImageView.backgroundColor = R.color.background_secondary()
         badgeImageView.backgroundColor = R.color.background_secondary()
     }

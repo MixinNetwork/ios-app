@@ -43,6 +43,9 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let navigationController, !navigationController.isNavigationBarHidden {
+            navigationController.setNavigationBarHidden(true, animated: true)
+        }
         DispatchQueue.global().async {
             let canMigrateAssets = AssetDAO.shared.hasPositiveBalancedAssets()
             DispatchQueue.main.async {
@@ -157,7 +160,7 @@ extension WalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = TokenViewController.instance(token: token)
+        let viewController = TokenViewController(token: token)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -222,7 +225,7 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
         let controller: UIViewController
         switch action {
         case .send:
-            controller = TokenViewController.instance(token: token, performSendOnAppear: true)
+            controller = TokenViewController(token: token, performSendOnAppear: true)
         case .receive:
             controller = DepositViewController.instance(token: token)
         case .swap:

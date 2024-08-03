@@ -14,6 +14,9 @@ final class TransferActionView: UIView {
     
     var actions: [Action] = [] {
         didSet {
+            guard actions != oldValue else {
+                return
+            }
             reloadData(actions: actions)
         }
     }

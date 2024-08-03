@@ -708,6 +708,14 @@
 		940B304B2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */; };
 		940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */; };
 		940C7541299AAE130006338F /* Web3Wallet in Frameworks */ = {isa = PBXBuildFile; productRef = 940C7540299AAE130006338F /* Web3Wallet */; };
+		940D109A2C5C8C3A0071E36D /* UIBarButtonItem+NavigationBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10992C5C8C3A0071E36D /* UIBarButtonItem+NavigationBack.swift */; };
+		940D109F2C5C8EFB0071E36D /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D109E2C5C8EFB0071E36D /* NavigationTitleView.swift */; };
+		940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */; };
+		940D10A62C5C91630071E36D /* InsetGroupedTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10A32C5C91630071E36D /* InsetGroupedTitleCell.swift */; };
+		940D10B12C5C9A930071E36D /* TokenBalanceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10B02C5C9A930071E36D /* TokenBalanceCell.xib */; };
+		940D10B22C5C9A930071E36D /* TokenBalanceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10AF2C5C9A930071E36D /* TokenBalanceCell.swift */; };
+		940D10B52C5CC3380071E36D /* NoTransactionIndicatorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10B42C5CC3380071E36D /* NoTransactionIndicatorCell.xib */; };
+		940D10B62C5CC3380071E36D /* NoTransactionIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10B32C5CC3380071E36D /* NoTransactionIndicatorCell.swift */; };
 		940DC5922B075E03009A15D1 /* SafePaymentURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940DC5912B075E03009A15D1 /* SafePaymentURL.swift */; };
 		9412AF4D2C1AEAE00083ABB3 /* ShareInscriptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9412AF4C2C1AEAE00083ABB3 /* ShareInscriptionView.xib */; };
 		9412AF4E2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9412AF4B2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift */; };
@@ -913,6 +921,7 @@
 		9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC329E924B400EBAAF3 /* LocalNetworkAuthorization.swift */; };
 		949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */; };
 		949569A8263B13BF00E043FE /* TranscriptMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */; };
+		9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */; };
 		94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94980FC62A5D653A0051AE6D /* IntroViewController.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
@@ -2020,6 +2029,14 @@
 		940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSpeedInspector.swift; sourceTree = "<group>"; };
 		940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServerDataSource.swift; sourceTree = "<group>"; };
 		940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinAuthorizationsContentViewController.swift; sourceTree = "<group>"; };
+		940D10992C5C8C3A0071E36D /* UIBarButtonItem+NavigationBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+NavigationBack.swift"; sourceTree = "<group>"; };
+		940D109E2C5C8EFB0071E36D /* NavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitleView.swift; sourceTree = "<group>"; };
+		940D10A32C5C91630071E36D /* InsetGroupedTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetGroupedTitleCell.swift; sourceTree = "<group>"; };
+		940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InsetGroupedTitleCell.xib; sourceTree = "<group>"; };
+		940D10AF2C5C9A930071E36D /* TokenBalanceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenBalanceCell.swift; sourceTree = "<group>"; };
+		940D10B02C5C9A930071E36D /* TokenBalanceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenBalanceCell.xib; sourceTree = "<group>"; };
+		940D10B32C5CC3380071E36D /* NoTransactionIndicatorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoTransactionIndicatorCell.swift; sourceTree = "<group>"; };
+		940D10B42C5CC3380071E36D /* NoTransactionIndicatorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionIndicatorCell.xib; sourceTree = "<group>"; };
 		940DC5912B075E03009A15D1 /* SafePaymentURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafePaymentURL.swift; sourceTree = "<group>"; };
 		9412AF4B2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInscriptionViewController.swift; sourceTree = "<group>"; };
 		9412AF4C2C1AEAE00083ABB3 /* ShareInscriptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareInscriptionView.xib; sourceTree = "<group>"; };
@@ -2220,6 +2237,7 @@
 		9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedPlaylistView.xib; sourceTree = "<group>"; };
 		949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptMessageCell.swift; sourceTree = "<group>"; };
 		949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptMessageViewModel.swift; sourceTree = "<group>"; };
+		9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBackgroundConfiguration+GroupedCell.swift"; sourceTree = "<group>"; };
 		94980FC62A5D653A0051AE6D /* IntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
@@ -2899,6 +2917,7 @@
 				7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */,
 				7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */,
 				94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */,
+				940D109E2C5C8EFB0071E36D /* NavigationTitleView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3964,6 +3983,8 @@
 				94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */,
 				94CEEAC2277E06A9001E7A24 /* Date+Holiday.swift */,
 				940764C429B26B0B00B779A6 /* PropertyListEncoder+Global.swift */,
+				940D10992C5C8C3A0071E36D /* UIBarButtonItem+NavigationBack.swift */,
+				9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -4210,6 +4231,12 @@
 				94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */,
 				94CF1F3E2BA1EC0400BC52C1 /* Web3DappCell.xib */,
 				94CF1F3D2BA1EC0400BC52C1 /* Web3DappCell.swift */,
+				940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */,
+				940D10A32C5C91630071E36D /* InsetGroupedTitleCell.swift */,
+				940D10B02C5C9A930071E36D /* TokenBalanceCell.xib */,
+				940D10AF2C5C9A930071E36D /* TokenBalanceCell.swift */,
+				940D10B42C5CC3380071E36D /* NoTransactionIndicatorCell.xib */,
+				940D10B32C5CC3380071E36D /* NoTransactionIndicatorCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4921,6 +4948,7 @@
 				94CDA7FF2A5DBC3400F1CDEE /* ComboBoxView.xib in Resources */,
 				7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */,
 				9492286425DFB7EF0000A19F /* MinimizedPlaylistView.xib in Resources */,
+				940D10B12C5C9A930071E36D /* TokenBalanceCell.xib in Resources */,
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				7CEB735529DB24F3006FB5B2 /* RestoreChatView.xib in Resources */,
@@ -4939,6 +4967,7 @@
 				9401A6082BDAA74A00679686 /* Web3AccountCell.xib in Resources */,
 				94C359F728B506D40010F53C /* TIPFullscreenInputView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
+				940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */,
 				947EFA932B9AEAF600A53551 /* TokenTableHeaderView.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
 				94E82DBC2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib in Resources */,
@@ -5035,6 +5064,7 @@
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
 				941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */,
+				940D10B52C5CC3380071E36D /* NoTransactionIndicatorCell.xib in Resources */,
 				94CD47162BECACED00A3DE10 /* InscriptionActionCell.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* captcha.html in Resources */,
 				7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */,
@@ -5558,6 +5588,7 @@
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
 				9401A57C2BD960F600679686 /* Web3Chain.swift in Sources */,
 				7C54078F296BDD7B0082368C /* FontSizeSlider.swift in Sources */,
+				940D109A2C5C8C3A0071E36D /* UIBarButtonItem+NavigationBack.swift in Sources */,
 				7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */,
 				941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */,
 				7BBCEC242523332200F270DF /* PopupTitleView.swift in Sources */,
@@ -5573,6 +5604,7 @@
 				7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */,
 				DF1A9A801FF25DB600A95188 /* RequestInAppNotificationJob.swift in Sources */,
 				7B2A115B22C1EAA600AD029C /* GalleryVideoControlView.swift in Sources */,
+				940D10A62C5C91630071E36D /* InsetGroupedTitleCell.swift in Sources */,
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
 				9419374525DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift in Sources */,
 				7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */,
@@ -5839,6 +5871,7 @@
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
+				940D10B22C5C9A930071E36D /* TokenBalanceCell.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
 				944C61F32B6BF97B00C7DF06 /* PaymentUserGroupCell.swift in Sources */,
 				94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */,
@@ -5897,6 +5930,7 @@
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
+				940D10B62C5CC3380071E36D /* NoTransactionIndicatorCell.swift in Sources */,
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
 				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
 				94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */,
@@ -5913,6 +5947,7 @@
 				7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
+				9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,
 				94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */,
@@ -6101,6 +6136,7 @@
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */,
 				941952792BFF6B3D0046DE50 /* UnlockSolanaAccountViewController.swift in Sources */,
+				940D109F2C5C8EFB0071E36D /* NavigationTitleView.swift in Sources */,
 				94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				7B57186E24D9375300682D86 /* MixinAPIError+Localization.swift in Sources */,

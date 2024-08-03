@@ -28,7 +28,7 @@ class SafeSnapshotListViewController: UIViewController {
     
     private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<DateRepresentation, SnapshotID>
     
-    let tableView = UITableView()
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     var tokens: [String: TokenItem] = [:] // Key is asset id
     

@@ -32,6 +32,19 @@ class HomeNavigationController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 15.0, *) {
+            let backIndicatorImage = R.image.ic_search_back()
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = R.color.background_secondary()
+            appearance.shadowColor = nil
+            appearance.shadowImage = nil
+            appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        } else {
+            updateNavigationBar()
+        }
         self.interactivePopGestureRecognizer?.isEnabled = true
         self.interactivePopGestureRecognizer?.delegate = self
         self.isNavigationBarHidden = true
@@ -45,6 +58,13 @@ class HomeNavigationController: UINavigationController {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
                 ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             }
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
+            updateNavigationBar()
         }
     }
     
@@ -137,6 +157,18 @@ extension HomeNavigationController {
 
             AccountAPI.updateSession(deviceCheckToken: token)
         }
+    }
+    
+    private func updateNavigationBar() {
+        guard #unavailable(iOS 15.0) else {
+            return
+        }
+        let backIndicatorImage = R.image.ic_search_back()
+        let image = R.color.background()!.image
+        navigationBar.setBackgroundImage(image, for: .default)
+        navigationBar.shadowImage = image
+        navigationBar.backIndicatorImage = backIndicatorImage
+        navigationBar.backIndicatorTransitionMaskImage = backIndicatorImage
     }
     
 }

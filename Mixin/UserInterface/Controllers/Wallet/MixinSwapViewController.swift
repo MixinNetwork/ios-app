@@ -330,6 +330,20 @@ extension MixinSwapViewController {
                 }
             }
             
+            let missingAssetID: String?
+            if let id = arbitrarySendAssetID, sendToken?.assetID != id {
+                missingAssetID = id
+            } else if let id = arbitraryReceiveAssetID, receiveToken?.token.assetID != id {
+                missingAssetID = id
+            } else {
+                missingAssetID = nil
+            }
+            let missingAssetSymbol: String? = if let missingAssetID {
+                TokenDAO.shared.symbol(assetID: missingAssetID)
+            } else {
+                nil
+            }
+            
             DispatchQueue.main.async {
                 guard let self else {
                     return
@@ -341,6 +355,9 @@ extension MixinSwapViewController {
                 self.receiveToken = receiveToken
                 self.sendLoadingIndicator.stopAnimating()
                 self.receiveLoadingIndicator.stopAnimating()
+                if let missingAssetSymbol {
+                    self.showFooterInfoLabel(style: .error, text: R.string.localizable.swap_not_supported(missingAssetSymbol))
+                }
             }
         }
     }

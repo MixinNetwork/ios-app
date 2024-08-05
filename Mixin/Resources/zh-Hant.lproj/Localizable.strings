@@ -1004,6 +1004,7 @@
 "swap_invalid_amount" = "沒有報價。請嘗試修改金額。";
 "swap_message_success" = "您的閃兌交易已傳送至網路，交易將很快被處理。";
 "swap_no_available_quote" = "沒有報價。請嘗試切換幣種。";
+"swap_not_supported" = "不支援 %@ 閃兌，已切換";
 "swap_receive" = "獲得";
 "swap_send" = "支付";
 "symbol" = "符號";

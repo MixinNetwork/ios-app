@@ -1004,6 +1004,7 @@
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
 "swap_no_available_quote" = "No available quote found. Please try a different token.";
+"swap_not_supported" = "%@ swap is not supported, it has been replaced";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
 "symbol" = "Símbolo";

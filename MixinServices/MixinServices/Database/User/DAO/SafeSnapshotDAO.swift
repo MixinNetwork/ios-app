@@ -30,8 +30,8 @@ extension SafeSnapshotDAO {
     
     public enum Offset: CustomDebugStringConvertible {
         
-        case before(offset: SafeSnapshot, includesOffset: Bool)
-        case after(offset: SafeSnapshot, includesOffset: Bool)
+        case before(offset: SafeSnapshotItem, includesOffset: Bool)
+        case after(offset: SafeSnapshotItem, includesOffset: Bool)
         
         public var debugDescription: String {
             switch self {
@@ -69,7 +69,7 @@ extension SafeSnapshotDAO {
     public func snapshots(
         offset: Offset? = nil,
         filter: SafeSnapshot.Filter,
-        sort: SafeSnapshot.Order,
+        order: SafeSnapshot.Order,
         limit: Int
     ) -> [SafeSnapshotItem] {
         var query = GRDB.SQL(sql: Self.querySQL)
@@ -97,24 +97,40 @@ extension SafeSnapshotDAO {
                 conditions.append("s.withdrawal IS NULL")
             }
         }
-        switch offset {
-        case .none:
-            break
-        case let .after(offset, includesOffset):
-            switch sort {
-            case .newest:
-                if includesOffset {
-                    conditions.append("s.created_at <= \(offset.createdAt)")
-                } else {
-                    conditions.append("s.created_at < \(offset.createdAt)")
-                }
-            case .oldest:
+        
+        if let offset {
+            switch (order, offset) {
+            case let (.oldest, .after(offset, includesOffset)), let (.newest, .before(offset, includesOffset)):
                 if includesOffset {
                     conditions.append("s.created_at >= \(offset.createdAt)")
                 } else {
                     conditions.append("s.created_at > \(offset.createdAt)")
                 }
-            case .biggestAmount:
+            case let (.oldest, .before(offset, includesOffset)), let (.newest, .after(offset, includesOffset)):
+                if includesOffset {
+                    conditions.append("s.created_at <= \(offset.createdAt)")
+                } else {
+                    conditions.append("s.created_at < \(offset.createdAt)")
+                }
+            case let (.mostValuable, .after(offset, includesOffset)):
+                let offsetValue = offset.decimalAmount * (offset.decimalTokenUSDPrice ?? 0)
+                let lesserValue: GRDB.SQL = "ABS(s.amount * IFNULL(t.price_usd, 0)) < ABS(\(offsetValue))"
+                let equalValue: GRDB.SQL = "ABS(s.amount * IFNULL(t.price_usd, 0)) = ABS(\(offsetValue))"
+                if includesOffset {
+                    conditions.append("(\(lesserValue) OR (\(equalValue) AND s.created_at <= \(offset.createdAt)))")
+                } else {
+                    conditions.append("(\(lesserValue) OR (\(equalValue) AND s.created_at < \(offset.createdAt)))")
+                }
+            case let (.mostValuable, .before(offset, includesOffset)):
+                let offsetValue = offset.decimalAmount * (offset.decimalTokenUSDPrice ?? 0)
+                let greaterValue: GRDB.SQL = "ABS(s.amount * IFNULL(t.price_usd, 0)) > ABS(\(offsetValue))"
+                let equalValue: GRDB.SQL = "ABS(s.amount * IFNULL(t.price_usd, 0)) = ABS(\(offsetValue))"
+                if includesOffset {
+                    conditions.append("(\(greaterValue) OR (\(equalValue) AND s.created_at >= \(offset.createdAt)))")
+                } else {
+                    conditions.append("(\(greaterValue) OR (\(equalValue) AND s.created_at > \(offset.createdAt)))")
+                }
+            case let (.biggestAmount, .after(offset, includesOffset)):
                 let lesserAmount: GRDB.SQL = "ABS(s.amount) < ABS(\(offset.amount))"
                 let equalAmount: GRDB.SQL = "ABS(s.amount) = ABS(\(offset.amount))"
                 if includesOffset {
@@ -122,22 +138,7 @@ extension SafeSnapshotDAO {
                 } else {
                     conditions.append("(\(lesserAmount) OR (\(equalAmount) AND s.created_at < \(offset.createdAt)))")
                 }
-            }
-        case let .before(offset, includesOffset):
-            switch sort {
-            case .newest:
-                if includesOffset {
-                    conditions.append("s.created_at >= \(offset.createdAt)")
-                } else {
-                    conditions.append("s.created_at > \(offset.createdAt)")
-                }
-            case .oldest:
-                if includesOffset {
-                    conditions.append("s.created_at <= \(offset.createdAt)")
-                } else {
-                    conditions.append("s.created_at < \(offset.createdAt)")
-                }
-            case .biggestAmount:
+            case let (.biggestAmount, .before(offset, includesOffset)):
                 let greaterAmount: GRDB.SQL = "ABS(s.amount) > ABS(\(offset.amount))"
                 let equalAmount: GRDB.SQL = "ABS(s.amount) = ABS(\(offset.amount))"
                 if includesOffset {
@@ -151,28 +152,15 @@ extension SafeSnapshotDAO {
             query.append(literal: "WHERE \(conditions.joined(operator: .and))\n")
         }
         
-        switch sort {
+        switch order {
         case .newest:
-            switch offset {
-            case .after, .none:
-                query.append(sql: "ORDER BY s.created_at DESC")
-            case .before:
-                query.append(sql: "ORDER BY s.created_at ASC")
-            }
+            query.append(sql: "ORDER BY s.created_at DESC")
         case .oldest:
-            switch offset {
-            case .after, .none:
-                query.append(sql: "ORDER BY s.created_at ASC")
-            case .before:
-                query.append(sql: "ORDER BY s.created_at DESC")
-            }
+            query.append(sql: "ORDER BY s.created_at ASC")
+        case .mostValuable:
+            query.append(sql: "ORDER BY ABS(s.amount * t.price_usd) DESC, s.created_at DESC")
         case .biggestAmount:
-            switch offset {
-            case .after, .none:
-                query.append(sql: "ORDER BY ABS(s.amount) DESC, s.created_at DESC")
-            case .before:
-                query.append(sql: "ORDER BY ABS(s.amount) ASC, s.created_at ASC")
-            }
+            query.append(sql: "ORDER BY ABS(s.amount) DESC, s.created_at DESC")
         }
         
         query.append(literal: "\nLIMIT \(limit)")

@@ -69,28 +69,9 @@ final class TransactionHistoryViewController: UIViewController {
         
         updateNavigationSubtitle(order: order)
         
+        let typeFilterActions = typeFilterActions(selectedType: filter.type)
         typeFilterView.reloadData(type: filter.type)
-        typeFilterView.button.menu = UIMenu(children: [
-            UIAction(
-                title: R.string.localizable.all(),
-                handler: { [weak self] _ in self?.reloadData(filterType: nil) }
-            ),
-            UIAction(
-                title: R.string.localizable.deposit(),
-                image: R.image.filter_deposit(),
-                handler: { [weak self] _ in self?.reloadData(filterType: .deposit) }
-            ),
-            UIAction(
-                title: R.string.localizable.withdrawal(),
-                image: R.image.filter_withdrawal(),
-                handler: { [weak self] _ in self?.reloadData(filterType: .withdrawal) }
-            ),
-            UIAction(
-                title: R.string.localizable.transfer(),
-                image: R.image.filter_transfer(),
-                handler: { [weak self] _ in self?.reloadData(filterType: .transfer) }
-            ),
-        ])
+        typeFilterView.button.menu = UIMenu(children: typeFilterActions)
         assetFilterView.reloadData(tokens: filter.tokens)
         assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
         recipientFilterView.reloadData(users: filter.users, addresses: filter.addresses)
@@ -107,7 +88,6 @@ final class TransactionHistoryViewController: UIViewController {
                 let snapshot = self.items[snapshotID]!
                 let token = self.tokens[snapshot.assetID]
                 cell.render(snapshot: snapshot, token: token)
-                cell.delegate = self
             }
             return cell
         }
@@ -156,20 +136,105 @@ final class TransactionHistoryViewController: UIViewController {
             R.string.localizable.sort_by_recent()
         case .oldest:
             R.string.localizable.sort_by_oldest()
+        case .mostValuable:
+            R.string.localizable.sort_by_value()
         case .biggestAmount:
             R.string.localizable.sort_by_amount()
         }
         container?.setSubtitle(subtitle: subtitle)
     }
     
+    private func orderActions(selectedOrder order: SafeSnapshot.Order) -> [UIAction] {
+        let actions = [
+            UIAction(
+                title: R.string.localizable.recent(),
+                image: R.image.order_newest(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .newest) }
+            ),
+            UIAction(
+                title: R.string.localizable.oldest(),
+                image: R.image.order_oldest(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .oldest) }
+            ),
+            UIAction(
+                title: R.string.localizable.value(),
+                image: R.image.order_value(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .mostValuable) }
+            ),
+            UIAction(
+                title: R.string.localizable.amount(),
+                image: R.image.order_amount(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .biggestAmount) }
+            ),
+        ]
+        switch order {
+        case .newest:
+            actions[0].state = .on
+        case .oldest:
+            actions[1].state = .on
+        case .mostValuable:
+            actions[2].state = .on
+        case .biggestAmount:
+            actions[3].state = .on
+        }
+        return actions
+    }
+    
+    private func typeFilterActions(selectedType type: SafeSnapshot.DisplayType?) -> [UIAction] {
+        let actions = [
+            UIAction(
+                title: R.string.localizable.all(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: nil) }
+            ),
+            UIAction(
+                title: R.string.localizable.deposit(),
+                image: R.image.filter_deposit(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .deposit) }
+            ),
+            UIAction(
+                title: R.string.localizable.withdrawal(),
+                image: R.image.filter_withdrawal(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .withdrawal) }
+            ),
+            UIAction(
+                title: R.string.localizable.transfer(),
+                image: R.image.filter_transfer(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .transfer) }
+            ),
+        ]
+        switch type {
+        case .none:
+            actions[0].state = .on
+        case .deposit:
+            actions[1].state = .on
+        case .withdrawal:
+            actions[2].state = .on
+        case .transfer:
+            actions[3].state = .on
+        }
+        return actions
+    }
+    
     private func reloadData(filterType type: SafeSnapshot.DisplayType?) {
         filter.type = type
+        let actions = typeFilterActions(selectedType: filter.type)
+        typeFilterView.button.menu = UIMenu(children: actions)
         typeFilterView.reloadData(type: type)
         reloadData()
     }
     
     private func reloadData(order: SafeSnapshot.Order) {
         self.order = order
+        let actions = orderActions(selectedOrder: order)
+        container?.rightButton.menu = UIMenu(children: actions)
         updateNavigationSubtitle(order: order)
         reloadData()
     }
@@ -180,7 +245,7 @@ final class TransactionHistoryViewController: UIViewController {
             viewController: self,
             behavior: .reload,
             filter: filter,
-            sort: order
+            order: order
         )
         queue.addOperation(operation)
     }
@@ -202,24 +267,9 @@ extension TransactionHistoryViewController: ContainerViewControllerDelegate {
     }
     
     func prepareBar(rightButton: StateResponsiveButton) {
+        let actions = orderActions(selectedOrder: order)
         rightButton.removeTarget(nil, action: nil, for: .touchUpInside)
-        rightButton.menu = UIMenu(children: [
-            UIAction(
-                title: R.string.localizable.recent(),
-                image: R.image.order_newest(),
-                handler: { [weak self] _ in self?.reloadData(order: .newest) }
-            ),
-            UIAction(
-                title: R.string.localizable.oldest(),
-                image: R.image.order_oldest(),
-                handler: { [weak self] _ in self?.reloadData(order: .oldest) }
-            ),
-            UIAction(
-                title: R.string.localizable.amount(),
-                image: R.image.order_amount(),
-                handler: { [weak self] _ in self?.reloadData(order: .biggestAmount) }
-            ),
-        ])
+        rightButton.menu = UIMenu(children: actions)
         rightButton.tintColor = R.color.icon_tint()
         rightButton.showsMenuAsPrimaryAction = true
     }
@@ -238,7 +288,7 @@ extension TransactionHistoryViewController: UITableViewDelegate {
                 view.label.text = sectionTitles[section]
             }
             return view
-        case .biggestAmount:
+        case .mostValuable, .biggestAmount:
             return nil
         }
     }
@@ -247,7 +297,7 @@ extension TransactionHistoryViewController: UITableViewDelegate {
         switch order {
         case .newest, .oldest:
             44
-        case .biggestAmount:
+        case .mostValuable, .biggestAmount:
             .leastNormalMagnitude
         }
     }
@@ -289,14 +339,6 @@ extension TransactionHistoryViewController: UITableViewDelegate {
                 self?.navigationController?.pushViewController(viewController, animated: true)
             }
         }
-    }
-    
-}
-
-extension TransactionHistoryViewController: SnapshotCellDelegate {
-    
-    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
-        
     }
     
 }
@@ -378,7 +420,7 @@ extension TransactionHistoryViewController {
             viewController: self,
             behavior: behavior,
             filter: filter,
-            sort: order
+            order: order
         )
         queue.addOperation(operation)
     }
@@ -401,7 +443,7 @@ extension TransactionHistoryViewController {
             viewController: self,
             behavior: .prepend(offset: firstItem),
             filter: filter,
-            sort: order
+            order: order
         )
         queue.addOperation(operation)
     }
@@ -414,7 +456,7 @@ extension TransactionHistoryViewController {
             viewController: self,
             behavior: .append(offset: lastItem),
             filter: filter,
-            sort: order
+            order: order
         )
         queue.addOperation(operation)
     }
@@ -508,11 +550,11 @@ extension TransactionHistoryViewController {
         
         private let behavior: Behavior
         private let filter: SafeSnapshot.Filter
-        private let sort: SafeSnapshot.Order
+        private let order: SafeSnapshot.Order
         
         private let limit = 50
         private let loadMoreThreshold = 5
-        private let amountSortedSection = ""
+        private let amountSortedSection = "" // There must be a section for items to insert
         
         private weak var viewController: TransactionHistoryViewController?
         
@@ -520,17 +562,17 @@ extension TransactionHistoryViewController {
             viewController: TransactionHistoryViewController?,
             behavior: Behavior,
             filter: SafeSnapshot.Filter,
-            sort: SafeSnapshot.Order
+            order: SafeSnapshot.Order
         ) {
             self.viewController = viewController
             self.behavior = behavior
             self.filter = filter
-            self.sort = sort
+            self.order = order
             assert(limit > loadMoreThreshold)
         }
         
         override func main() {
-            Logger.general.debug(category: "SnapshotListLoader", message: "Start loading with behavior: \(behavior), filter: \(filter.description), sort: \(sort)")
+            Logger.general.debug(category: "SnapshotListLoader", message: "Start loading with behavior: \(behavior), filter: \(filter.description), order: \(order)")
             let offset: SafeSnapshotDAO.Offset? = switch behavior {
             case .reload:
                     .none
@@ -542,7 +584,7 @@ extension TransactionHistoryViewController {
                     .after(offset: offset, includesOffset: false)
             }
             
-            let items = SafeSnapshotDAO.shared.snapshots(filter: filter, sort: sort, limit: limit)
+            let items = SafeSnapshotDAO.shared.snapshots(offset: offset, filter: filter, order: order, limit: limit)
             loadMissingUsersOrTokens(items)
             
             var dataSnapshot: DataSourceSnapshot
@@ -560,8 +602,8 @@ extension TransactionHistoryViewController {
                 }
             }
             
-            switch sort {
-            case .newest:
+            switch order {
+            case .newest, .oldest:
                 switch offset {
                 case .before:
                     for item in items {
@@ -590,9 +632,7 @@ extension TransactionHistoryViewController {
                         dataSnapshot.appendItems([item.id], toSection: date)
                     }
                 }
-            case .oldest:
-                break
-            case .biggestAmount:
+            case .mostValuable, .biggestAmount:
                 if dataSnapshot.numberOfSections == 0 {
                     dataSnapshot.appendSections([amountSortedSection])
                 }
@@ -614,7 +654,7 @@ extension TransactionHistoryViewController {
                 guard let controller = viewController, !isCancelled else {
                     return
                 }
-                controller.order = sort
+                controller.order = order
                 controller.sectionTitles = dataSnapshot.sectionIdentifiers
                 switch behavior {
                 case .reload, .reloadVisibleItems:

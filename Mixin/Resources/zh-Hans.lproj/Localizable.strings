@@ -1149,6 +1149,7 @@
 "user_not_found" = "找不到这个用户";
 "utxo_count_exceeded" = "该交易使用的 UTXO 数量过多，请尝试首先归集 UTXO 或者分批转账。";
 "validation_timed_out" = "验证超时";
+"value" = "价值";
 "value_now" = "价值 %@";
 "value_then" = "当时价值 %@";
 "verify" = "验证";

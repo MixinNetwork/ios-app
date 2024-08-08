@@ -1149,6 +1149,7 @@
 "user_not_found" = "Usuario no encontrado";
 "utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "Se ha agotado el tiempo de validación";
+"value" = "Value";
 "value_now" = "valor ahora %@";
 "value_then" = "valor entonces %@";
 "verify" = "Verificar";

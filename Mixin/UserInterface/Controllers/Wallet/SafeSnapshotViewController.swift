@@ -180,7 +180,7 @@ final class SafeSnapshotViewController: RowListViewController {
         {
             navigationController?.popToViewController(viewController, animated: true)
         } else {
-            let viewController = TokenViewController(token: token)
+            let viewController = TokenViewController.contained(token: token)
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

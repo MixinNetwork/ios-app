@@ -523,12 +523,12 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         switch opponent {
         case let .contact(user):
-            let history = TransactionHistoryViewController(user: user)
+            let history = TransactionHistoryViewController.contained(user: user)
             navigationController?.pushViewController(history, animated: true)
         case let .address(address):
             // TODO: Reduce database access
             if let item = AddressDAO.shared.addressItem(id: address.addressId) {
-                let history = TransactionHistoryViewController(address: item)
+                let history = TransactionHistoryViewController.contained(address: item)
                 navigationController?.pushViewController(history, animated: true)
             }
             break

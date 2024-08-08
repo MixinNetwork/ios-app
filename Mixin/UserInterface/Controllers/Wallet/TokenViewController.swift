@@ -13,7 +13,7 @@ final class TokenViewController: UIViewController {
     private var performSendOnAppear: Bool
     private var transactionRows: [TransactionRow] = []
     
-    init(token: TokenItem, performSendOnAppear: Bool = false) {
+    private init(token: TokenItem, performSendOnAppear: Bool = false) {
         self.token = token
         self.performSendOnAppear = performSendOnAppear
         super.init(nibName: nil, bundle: nil)
@@ -27,29 +27,19 @@ final class TokenViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    static func contained(token: TokenItem, performSendOnAppear: Bool = false) -> ContainerViewController {
+        let controller = TokenViewController(token: token, performSendOnAppear: performSendOnAppear)
+        return ContainerViewController.instance(viewController: controller, title: token.name)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = .navigationBack(
-            target: self,
-            action: #selector(goBack)
-        )
-        navigationItem.rightBarButtonItem = {
-            let item = UIBarButtonItem(
-                image: R.image.ic_title_more(),
-                style: .plain,
-                target: self,
-                action: #selector(presentMoreActions)
-            )
-            item.tintColor = R.color.icon_tint()
-            return item
-        }()
-        navigationItem.titleView = {
-            let view = NavigationTitleView()
-            view.titleLabel.text = token.name
-            view.subtitleLabel.text = token.depositNetworkName
-            return view
-        }()
+        if let container {
+            container.setSubtitle(subtitle: token.depositNetworkName)
+            container.view.backgroundColor = R.color.background_secondary()
+            container.navigationBar.backgroundColor = R.color.background_secondary()
+        }
         
         let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.backgroundColor = R.color.background_secondary()
@@ -82,17 +72,6 @@ final class TokenViewController: UIViewController {
         reloadSnapshots()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let navigationController {
-            if navigationController.isNavigationBarHidden {
-                navigationController.setNavigationBarHidden(false, animated: true)
-            }
-            navigationController.navigationBar.standardAppearance.backgroundColor = R.color.background_secondary()
-            navigationController.navigationBar.scrollEdgeAppearance?.backgroundColor = R.color.background_secondary()
-        }
-    }
-    
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         if view.safeAreaInsets.bottom < 1 {
@@ -112,26 +91,6 @@ final class TokenViewController: UIViewController {
     
     @objc private func goBack() {
         navigationController?.popViewController(animated: true)
-    }
-    
-    @objc private func presentMoreActions() {
-        let token = self.token
-        let wasHidden = token.isHidden
-        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
-            DispatchQueue.global().async {
-                let extra = TokenExtra(assetID: token.assetID,
-                                       kernelAssetID: token.kernelAssetID,
-                                       isHidden: !wasHidden,
-                                       balance: token.balance,
-                                       updatedAt: Date().toUTCString())
-                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
-            }
-            self.navigationController?.popViewController(animated: true)
-        }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(sheet, animated: true, completion: nil)
     }
     
     @objc private func balanceDidUpdate(_ notification: Notification) {
@@ -312,6 +271,34 @@ extension TokenViewController {
     
 }
 
+extension TokenViewController: ContainerViewControllerDelegate {
+    
+    func barRightButtonTappedAction() {
+        let token = self.token
+        let wasHidden = token.isHidden
+        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
+            DispatchQueue.global().async {
+                let extra = TokenExtra(assetID: token.assetID,
+                                       kernelAssetID: token.kernelAssetID,
+                                       isHidden: !wasHidden,
+                                       balance: token.balance,
+                                       updatedAt: Date().toUTCString())
+                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+            }
+            self.navigationController?.popViewController(animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
+    func imageBarRightButton() -> UIImage? {
+        R.image.ic_title_more()
+    }
+    
+}
+
 extension TokenViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -420,7 +407,7 @@ extension TokenViewController: UITableViewDelegate {
         let row = transactionRows[indexPath.row]
         switch row {
         case .title, .viewAll:
-            let history = TransactionHistoryViewController(token: token)
+            let history = TransactionHistoryViewController.contained(token: token)
             navigationController?.pushViewController(history, animated: true)
         case .transaction(let snapshot):
             let inscriptionItem: InscriptionItem? = if let hash = snapshot.inscriptionHash {
@@ -428,10 +415,12 @@ extension TokenViewController: UITableViewDelegate {
             } else {
                 nil
             }
-            let viewController = SafeSnapshotViewController.instance(token: token,
-                                                                     snapshot: snapshot,
-                                                                     messageID: nil,
-                                                                     inscription: inscriptionItem)
+            let viewController = SafeSnapshotViewController.instance(
+                token: token,
+                snapshot: snapshot,
+                messageID: nil,
+                inscription: inscriptionItem
+            )
             navigationController?.pushViewController(viewController, animated: true)
         case .emptyIndicator, .bottomSeparator:
             break

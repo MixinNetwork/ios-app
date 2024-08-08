@@ -159,7 +159,7 @@
                                 <constraint firstItem="0fM-hg-hYy" firstAttribute="top" secondItem="gTf-S6-Nbv" secondAttribute="top" id="tmY-Vl-cJ8"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yql-9Q-cdY" customClass="CollectiblesSortButton" customModule="Mixin" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yql-9Q-cdY" customClass="OutlineButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="279" y="12" width="94" height="38"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="38" id="JpZ-pC-SqF"/>

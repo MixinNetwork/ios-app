@@ -108,12 +108,18 @@ final class TransactionHistoryDatePickerViewController: UIViewController {
         pickingDate = .start
         startButton.isSelected = true
         endButton.isSelected = false
+        if let startDate {
+            datePicker.date = startDate
+        }
     }
     
     @IBAction func changeEndDate(_ sender: Any) {
         pickingDate = .end
         startButton.isSelected = false
         endButton.isSelected = true
+        if let endDate {
+            datePicker.date = endDate
+        }
     }
     
     @IBAction func changeDate(_ picker: UIDatePicker) {
@@ -145,6 +151,11 @@ final class TransactionHistoryDatePickerViewController: UIViewController {
         case let (_, .some(endDate)):
             let daysBefore = endDate.advanced(by: -numberOfDays * .day)
             self.startDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: daysBefore)
+        }
+        if startButton.isSelected, let startDate {
+            datePicker.date = startDate
+        } else if endButton.isSelected, let endDate {
+            datePicker.date = endDate
         }
     }
     

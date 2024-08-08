@@ -219,6 +219,7 @@ extension SafeSnapshot {
     public enum Order {
         case newest
         case oldest
+        case mostValuable
         case biggestAmount
     }
     
@@ -235,7 +236,7 @@ extension SafeSnapshot {
         public var endDate: Date?
         
         public var description: String {
-            ""
+            "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), users: \(users.map(\.fullName)), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
         }
         
         public init() {

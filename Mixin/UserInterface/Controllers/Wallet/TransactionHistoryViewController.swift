@@ -17,7 +17,6 @@ final class TransactionHistoryViewController: UIViewController {
     
     private let headerReuseIdentifier = "h"
     private let queue = OperationQueue()
-    private let navigationTitleView = NavigationTitleView()
     
     private var filter = SafeSnapshot.Filter()
     private var order: SafeSnapshot.Order = .newest
@@ -32,63 +31,43 @@ final class TransactionHistoryViewController: UIViewController {
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: SafeSnapshotItem?
     
-    init() {
+    private init() {
         let nib = R.nib.transactionHistoryView
         super.init(nibName: nib.name, bundle: nib.bundle)
         self.queue.maxConcurrentOperationCount = 1
-    }
-    
-    convenience init(token: TokenItem) {
-        self.init()
-        self.filter.tokens = [token]
-    }
-    
-    convenience init(user: UserItem) {
-        self.init()
-        self.filter.users = [user]
-    }
-    
-    convenience init(address: AddressItem) {
-        self.init()
-        self.filter.addresses = [address]
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
     }
     
+    static func contained() -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
+    static func contained(token: TokenItem) -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        history.filter.tokens = [token]
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
+    static func contained(user: UserItem) -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        history.filter.users = [user]
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
+    static func contained(address: AddressItem) -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        history.filter.addresses = [address]
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = .navigationBack(
-            target: self,
-            action: #selector(goBack)
-        )
-        navigationItem.rightBarButtonItem = {
-            let menu = UIMenu(children: [
-                UIAction(
-                    title: R.string.localizable.recent(),
-                    image: R.image.order_newest(),
-                    handler: { [weak self] _ in self?.reloadData(order: .newest) }
-                ),
-                UIAction(
-                    title: R.string.localizable.oldest(),
-                    image: R.image.order_oldest(),
-                    handler: { [weak self] _ in self?.reloadData(order: .oldest) }
-                ),
-                UIAction(
-                    title: R.string.localizable.amount(),
-                    image: R.image.order_amount(),
-                    handler: { [weak self] _ in self?.reloadData(order: .biggestAmount) }
-                ),
-            ])
-            let item = UIBarButtonItem(image: R.image.navigation_filter(), menu: menu)
-            item.tintColor = R.color.icon_tint()
-            return item
-        }()
-        navigationTitleView.titleLabel.text = R.string.localizable.transaction_history()
         updateNavigationSubtitle(order: order)
-        navigationItem.titleView = navigationTitleView
         
         typeFilterView.reloadData(type: filter.type)
         typeFilterView.button.menu = UIMenu(children: [
@@ -136,17 +115,6 @@ final class TransactionHistoryViewController: UIViewController {
         reloadData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let navigationController {
-            if navigationController.isNavigationBarHidden {
-                navigationController.setNavigationBarHidden(false, animated: true)
-            }
-            navigationController.navigationBar.standardAppearance.backgroundColor = R.color.background()
-            navigationController.navigationBar.scrollEdgeAppearance?.backgroundColor = R.color.background()
-        }
-    }
-    
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         if view.safeAreaInsets.bottom < 1 {
@@ -154,10 +122,6 @@ final class TransactionHistoryViewController: UIViewController {
         } else {
             tableView.contentInset.bottom = 0
         }
-    }
-    
-    @objc private func goBack() {
-        navigationController?.popViewController(animated: true)
     }
     
     @objc private func pickTokens(_ sender: Any) {
@@ -187,7 +151,7 @@ final class TransactionHistoryViewController: UIViewController {
     }
     
     private func updateNavigationSubtitle(order: SafeSnapshot.Order) {
-        navigationTitleView.subtitleLabel.text = switch order {
+        let subtitle = switch order {
         case .newest:
             R.string.localizable.sort_by_recent()
         case .oldest:
@@ -195,6 +159,7 @@ final class TransactionHistoryViewController: UIViewController {
         case .biggestAmount:
             R.string.localizable.sort_by_amount()
         }
+        container?.setSubtitle(subtitle: subtitle)
     }
     
     private func reloadData(filterType type: SafeSnapshot.DisplayType?) {
@@ -226,6 +191,37 @@ final class TransactionHistoryViewController: UIViewController {
             text: R.string.localizable.no_transactions(),
             photo: R.image.emptyIndicator.ic_data()!
         )
+    }
+    
+}
+
+extension TransactionHistoryViewController: ContainerViewControllerDelegate {
+    
+    func imageBarRightButton() -> UIImage? {
+        R.image.navigation_filter()
+    }
+    
+    func prepareBar(rightButton: StateResponsiveButton) {
+        rightButton.removeTarget(nil, action: nil, for: .touchUpInside)
+        rightButton.menu = UIMenu(children: [
+            UIAction(
+                title: R.string.localizable.recent(),
+                image: R.image.order_newest(),
+                handler: { [weak self] _ in self?.reloadData(order: .newest) }
+            ),
+            UIAction(
+                title: R.string.localizable.oldest(),
+                image: R.image.order_oldest(),
+                handler: { [weak self] _ in self?.reloadData(order: .oldest) }
+            ),
+            UIAction(
+                title: R.string.localizable.amount(),
+                image: R.image.order_amount(),
+                handler: { [weak self] _ in self?.reloadData(order: .biggestAmount) }
+            ),
+        ])
+        rightButton.tintColor = R.color.icon_tint()
+        rightButton.showsMenuAsPrimaryAction = true
     }
     
 }

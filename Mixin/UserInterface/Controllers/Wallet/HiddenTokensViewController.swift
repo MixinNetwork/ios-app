@@ -79,7 +79,7 @@ extension HiddenTokensViewController: UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(TokenViewController(token: tokens[indexPath.row]), animated: true)
+        navigationController?.pushViewController(TokenViewController.contained(token: tokens[indexPath.row]), animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

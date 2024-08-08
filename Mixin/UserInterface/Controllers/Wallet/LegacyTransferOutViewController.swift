@@ -328,7 +328,7 @@ extension LegacyTransferOutViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         switch opponent! {
         case let .contact(user):
-            let history = TransactionHistoryViewController(user: user)
+            let history = TransactionHistoryViewController.contained(user: user)
             navigationController?.pushViewController(history, animated: true)
         }
     }

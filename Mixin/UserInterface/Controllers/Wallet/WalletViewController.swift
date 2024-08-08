@@ -107,7 +107,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
             self.reloadPendingDeposits()
-            let history = TransactionHistoryViewController()
+            let history = TransactionHistoryViewController.contained()
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
@@ -162,7 +162,7 @@ extension WalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = TokenViewController(token: token)
+        let viewController = TokenViewController.contained(token: token)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -227,7 +227,7 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
         let controller: UIViewController
         switch action {
         case .send:
-            controller = TokenViewController(token: token, performSendOnAppear: true)
+            controller = TokenViewController.contained(token: token, performSendOnAppear: true)
         case .receive:
             controller = DepositViewController.instance(token: token)
         case .swap:

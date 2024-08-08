@@ -70,6 +70,7 @@
 "alert_key_group_video_message" = "%@发送一个视频";
 "all" = "全部";
 "all_conversations" = "所有会话";
+"all_dates" = "所有日期";
 "all_photos" = "所有照片";
 "all_signer_failure" = "所有节点失败";
 "all_transactions" = "所有交易记录";
@@ -98,6 +99,7 @@
 "asset_migration_hint" = "您还有资产在旧的 Mixin 网络，点击查看。";
 "asset_not_found" = "找不到该资产";
 "asset_type" = "资产类型";
+"assets" = "资产";
 "assets" = "资产";
 "assets_title" = "资产";
 "audio" = "语音";
@@ -400,6 +402,7 @@
 "enable_pay" = "启用%@支付";
 "enable_pay_confirmation" = "启用%@支付？";
 "enable_touch_pay_hint" = "输入 PIN 启用指纹支付";
+"end" = "结束";
 "end_to_end_encryption" = "端到端加密";
 "enter_new_anonymous_number" = "输入你的新匿名号码";
 "enter_new_phone_number" = "输入你的新手机号码";
@@ -486,6 +489,7 @@
 "free" = "免手续费";
 "from" = "来自";
 "from_address" = "从外部转入";
+"from_date" = "自%@";
 "from_mixin_wallet" = "从 Mixin 钱包转入";
 "generating" = "正在生成...";
 "generating_keys" = "正在创建密钥...";
@@ -683,9 +687,13 @@
 "notification_content" = "不再遗漏好友的消息。";
 "notification_message_preview_description" = "在推送通知中显示消息内容。";
 "now_an_addmin" = "%@现在是管理员";
+"number_of_assets" = "%d 资产";
+"number_of_days" = "%d天";
+"number_of_recipients" = "%d 收款人";
 "off" = "关闭";
 "ok" = "好的";
 "old_device_is_waiting" = "确保旧的设备已停留在同步等待扫码的界面";
+"oldest" = "最早";
 "one_by_one_forward" = "逐条转发";
 "one_hour" = "1 小时";
 "one_week" = "1 星期";
@@ -794,6 +802,7 @@
 "recent" = "最近";
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜索";
+"recipients" = "收款人";
 "refresh" = "刷新";
 "release" = "分解";
 "reload" = "重新载入";
@@ -818,6 +827,7 @@
 "request_rejected_reason_another_request_in_process" = "正在处理另一请求，请完成当前请求后重试";
 "resend_code" = "重发验证码";
 "resend_code_pending" = "%@ 后重新发送验证码";
+"reset" = "重置";
 "reset_link" = "重置邀请链接";
 "restore" = "恢复";
 "restore_chat_from_icloud" = "从 iCloud 恢复您的聊天记录。";
@@ -881,6 +891,7 @@
 "select" = "选择";
 "select_a_country_or_region" = "选择一个国家或地区";
 "select_a_token_for_the_fee" = "选择支付手续费的币种";
+"select_date" = "选择日期";
 "select_emergency_contact" = "选择紧急联系人";
 "select_more_photos" = "选择更多照片";
 "select_token" = "选择代币";
@@ -980,6 +991,10 @@
 "snapshot_hash" = "快照哈希";
 "snapshot_not_found" = "找不到该转账记录。";
 "sort_by" = "顺序";
+"sort_by_amount" = "按金额排序";
+"sort_by_oldest" = "按最早排序";
+"sort_by_recent" = "按最近排序";
+"sort_by_value" = "按价值排序";
 "start" = "开始";
 "start_messaging" = "开始聊天";
 "started_group_call" = "%@ 开始了群通话";
@@ -1039,6 +1054,7 @@
 "track_not_found" = "Track 无效";
 "transaction" = "交易详情";
 "transaction_hash" = "交易哈希";
+"transaction_history" = "转账记录";
 "transaction_id" = "交易编号";
 "transaction_request" = "请求转账";
 "transaction_type" = "交易类型";
@@ -1113,6 +1129,7 @@
 "unread_messages" = "未读消息";
 "unrecognized_codes" = "未识别的链接";
 "unsigned_message" = "待签名消息";
+"until_date" = "至%@";
 "update" = "升级";
 "update_mixin" = "升级 Mixin";
 "upgrade" = "升级";

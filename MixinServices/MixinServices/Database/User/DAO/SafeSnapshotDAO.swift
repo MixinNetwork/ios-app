@@ -67,143 +67,117 @@ extension SafeSnapshotDAO {
     }
     
     public func snapshots(
-        assetId: String? = nil,
         offset: Offset? = nil,
-        sort: Snapshot.Sort,
+        filter: SafeSnapshot.Filter,
+        sort: SafeSnapshot.Order,
         limit: Int
     ) -> [SafeSnapshotItem] {
-        let (conditions, arguments) = if let assetId {
-            (["s.asset_id = :asset_id"], ["asset_id": assetId])
-        } else {
-            ([], [:])
+        var query = GRDB.SQL(sql: Self.querySQL)
+        
+        var conditions: [GRDB.SQL] = []
+        if !filter.tokens.isEmpty {
+            conditions.append("s.asset_id IN \(filter.tokens.map(\.assetID))")
         }
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded(offset: offset,
-                                                                sort: sort,
-                                                                limit: limit,
-                                                                additionalConditions: conditions,
-                                                                additionalArguments: arguments)
-    }
-    
-    public func snapshots(
-        opponentID: String,
-        offset: Offset? = nil,
-        sort: Snapshot.Sort,
-        limit: Int
-    ) -> [SafeSnapshotItem] {
-        getSnapshotsAndRefreshCorrespondingAssetIfNeeded(offset: offset,
-                                                         sort: sort,
-                                                         limit: limit,
-                                                         additionalConditions: ["s.opponent_id = :opponent_id"],
-                                                         additionalArguments: ["opponent_id": opponentID])
-    }
-    
-    public func snapshots(
-        assetID: String,
-        address: String,
-        offset: Offset? = nil,
-        sort: Snapshot.Sort,
-        limit: Int
-    ) -> [SafeSnapshotItem] {
-        let conditions = [
-            "s.asset_id = :asset_id",
-            "(s.deposit LIKE :address OR s.withdrawal LIKE :address)",
-        ]
-        let arguments = [
-            "asset_id": assetID,
-            "address": "%\(address)%",
-        ]
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded(offset: offset,
-                                                                sort: sort,
-                                                                limit: limit,
-                                                                additionalConditions: conditions,
-                                                                additionalArguments: arguments)
-    }
-    
-    private func getSnapshotsAndRefreshCorrespondingAssetIfNeeded(
-        offset: Offset? = nil,
-        sort: Snapshot.Sort,
-        limit: Int,
-        additionalConditions: [String],
-        additionalArguments: [String: String]
-    ) -> [SafeSnapshotItem] {
-        var sql = Self.querySQL
-        
-        var conditions = additionalConditions
-        var arguments = additionalArguments
-        
+        if !filter.users.isEmpty {
+            conditions.append("s.opponent_id IN \(filter.users.map(\.userId))")
+        }
+        for address in filter.addresses {
+            let keyword = "%\(address.destination.sqlEscaped)%"
+            let condition: GRDB.SQL = "(s.deposit LIKE \(keyword) OR s.withdrawal LIKE \(keyword))"
+            conditions.append(condition)
+        }
+        if let type = filter.type {
+            switch type {
+            case .deposit:
+                conditions.append("s.deposit IS NOT NULL")
+            case .withdrawal:
+                conditions.append("s.withdrawal IS NOT NULL")
+            case .transfer:
+                conditions.append("s.deposit IS NULL")
+                conditions.append("s.withdrawal IS NULL")
+            }
+        }
         switch offset {
+        case .none:
+            break
         case let .after(offset, includesOffset):
             switch sort {
-            case .createdAt:
+            case .newest:
                 if includesOffset {
-                    conditions.append("s.created_at <= :offset_created_at")
+                    conditions.append("s.created_at <= \(offset.createdAt)")
                 } else {
-                    conditions.append("s.created_at < :offset_created_at")
+                    conditions.append("s.created_at < \(offset.createdAt)")
                 }
-                arguments["offset_created_at"] = offset.createdAt
-            case .amount:
-                let amount = "ABS(s.amount)"
-                let offsetAmount = "ABS(:offset_amount)"
+            case .oldest:
                 if includesOffset {
-                    conditions.append("(\(amount) < \(offsetAmount) OR (\(amount) = \(offsetAmount) AND s.created_at <= :offset_created_at))")
+                    conditions.append("s.created_at >= \(offset.createdAt)")
                 } else {
-                    conditions.append("(\(amount) < \(offsetAmount) OR (\(amount) = \(offsetAmount) AND s.created_at < :offset_created_at))")
+                    conditions.append("s.created_at > \(offset.createdAt)")
                 }
-                arguments["offset_amount"] = offset.amount
-                arguments["offset_created_at"] = offset.createdAt
+            case .biggestAmount:
+                let lesserAmount: GRDB.SQL = "ABS(s.amount) < ABS(\(offset.amount))"
+                let equalAmount: GRDB.SQL = "ABS(s.amount) = ABS(\(offset.amount))"
+                if includesOffset {
+                    conditions.append("(\(lesserAmount) OR (\(equalAmount) AND s.created_at <= \(offset.createdAt)))")
+                } else {
+                    conditions.append("(\(lesserAmount) OR (\(equalAmount) AND s.created_at < \(offset.createdAt)))")
+                }
             }
         case let .before(offset, includesOffset):
             switch sort {
-            case .createdAt:
+            case .newest:
                 if includesOffset {
-                    conditions.append("s.created_at >= :offset_created_at")
+                    conditions.append("s.created_at >= \(offset.createdAt)")
                 } else {
-                    conditions.append("s.created_at > :offset_created_at")
+                    conditions.append("s.created_at > \(offset.createdAt)")
                 }
-                arguments["offset_created_at"] = offset.createdAt
-            case .amount:
-                let amount = "ABS(s.amount)"
-                let offsetAmount = "ABS(:offset_amount)"
+            case .oldest:
                 if includesOffset {
-                    conditions.append("(\(amount) > \(offsetAmount) OR (\(amount) = \(offsetAmount) AND s.created_at >= :offset_created_at))")
+                    conditions.append("s.created_at <= \(offset.createdAt)")
                 } else {
-                    conditions.append("(\(amount) > \(offsetAmount) OR (\(amount) = \(offsetAmount) AND s.created_at > :offset_created_at))")
+                    conditions.append("s.created_at < \(offset.createdAt)")
                 }
-                arguments["offset_amount"] = offset.amount
-                arguments["offset_created_at"] = offset.createdAt
+            case .biggestAmount:
+                let greaterAmount: GRDB.SQL = "ABS(s.amount) > ABS(\(offset.amount))"
+                let equalAmount: GRDB.SQL = "ABS(s.amount) = ABS(\(offset.amount))"
+                if includesOffset {
+                    conditions.append("(\(greaterAmount) OR (\(equalAmount) AND s.created_at >= \(offset.createdAt)))")
+                } else {
+                    conditions.append("(\(greaterAmount) OR (\(equalAmount) AND s.created_at > \(offset.createdAt)))")
+                }
             }
-        case .none:
-            break
         }
         if !conditions.isEmpty {
-            sql += "WHERE " + conditions.joined(separator: " AND ")
+            query.append(literal: "WHERE \(conditions.joined(operator: .and))\n")
         }
         
         switch sort {
-        case .createdAt:
+        case .newest:
             switch offset {
             case .after, .none:
-                sql += "\nORDER BY s.created_at DESC"
+                query.append(sql: "ORDER BY s.created_at DESC")
             case .before:
-                sql += "\nORDER BY s.created_at ASC"
+                query.append(sql: "ORDER BY s.created_at ASC")
             }
-        case .amount:
+        case .oldest:
             switch offset {
             case .after, .none:
-                sql += "\nORDER BY ABS(s.amount) DESC, s.created_at DESC"
+                query.append(sql: "ORDER BY s.created_at ASC")
             case .before:
-                sql += "\nORDER BY ABS(s.amount) ASC, s.created_at ASC"
+                query.append(sql: "ORDER BY s.created_at DESC")
+            }
+        case .biggestAmount:
+            switch offset {
+            case .after, .none:
+                query.append(sql: "ORDER BY ABS(s.amount) DESC, s.created_at DESC")
+            case .before:
+                query.append(sql: "ORDER BY ABS(s.amount) ASC, s.created_at ASC")
             }
         }
         
-        sql += "\nLIMIT \(limit)"
+        query.append(literal: "\nLIMIT \(limit)")
         
-        let snapshots: [SafeSnapshotItem] = db.select(with: sql, arguments: StatementArguments(arguments))
-        for snapshot in snapshots where snapshot.tokenSymbol == nil {
-            let job = RefreshTokenJob(assetID: snapshot.assetID)
-            ConcurrentJobQueue.shared.addJob(job: job)
-        }
-        return snapshots
+        return db.select(with: query)
     }
     
 }

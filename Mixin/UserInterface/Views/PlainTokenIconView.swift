@@ -18,7 +18,7 @@ final class PlainTokenIconView: UIImageView {
         layer.cornerRadius = bounds.width / 2
     }
     
-    func setIcon(token: TokenItem) {
+    func setIcon(token: Token) {
         sd_setImage(with: URL(string: token.iconURL),
                     placeholderImage: nil,
                     context: assetIconContext)
@@ -36,6 +36,16 @@ final class PlainTokenIconView: UIImageView {
     
     func setIcon(token: SwappableToken) {
         if let url = token.iconURL {
+            sd_setImage(with: url,
+                        placeholderImage: nil,
+                        context: assetIconContext)
+        } else {
+            image = R.image.unknown_session()
+        }
+    }
+    
+    func setIcon(address: AddressItem) {
+        if let string = address.tokenIconURL, let url = URL(string: string) {
             sd_setImage(with: url,
                         placeholderImage: nil,
                         context: assetIconContext)

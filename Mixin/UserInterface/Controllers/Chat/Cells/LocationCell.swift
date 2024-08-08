@@ -16,9 +16,7 @@ class LocationCell: ModernSelectedBackgroundCell {
                     contentStackView.addArrangedSubview(navigationImageView)
                 }
             } else {
-                if let view = navigationImageViewIfLoaded {
-                    contentStackView.removeArrangedSubview(view)
-                }
+                navigationImageViewIfLoaded?.removeFromSuperview()
             }
         }
     }

@@ -70,6 +70,7 @@
 "alert_key_group_video_message" = "%@ ha enviado un vídeo";
 "all" = "Todo";
 "all_conversations" = "Todas las conversaciones";
+"all_dates" = "All Dates";
 "all_photos" = "Todas las fotos";
 "all_signer_failure" = "Falla de todos los nodos";
 "all_transactions" = "Todas las transacciones";
@@ -98,6 +99,7 @@
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Activo no encontrado.";
 "asset_type" = "Tipo de activo";
+"assets" = "Assets";
 "assets" = "ACTIVOS";
 "assets_title" = "Activos";
 "audio" = "Audio";
@@ -400,6 +402,7 @@
 "enable_pay" = "Habilitar %@ Pagar";
 "enable_pay_confirmation" = "¿Habilitar %@ Pagar?";
 "enable_touch_pay_hint" = "Confirme el PIN para habilitar Touch Pay";
+"end" = "End";
 "end_to_end_encryption" = "Cifrado de extremo a extremo";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Introduce tu nuevo número de teléfono";
@@ -486,6 +489,7 @@
 "free" = "FREE";
 "from" = "De";
 "from_address" = "From address";
+"from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generando...";
 "generating_keys" = "Generando claves...";
@@ -683,9 +687,13 @@
 "notification_content" = "No te pierdas los mensajes de tus amigos.";
 "notification_message_preview_description" = "Obtén una vista previa del texto del mensaje dentro de las notificaciones de mensajes nuevos.";
 "now_an_addmin" = "%@ ahora es administrador";
+"number_of_assets" = "%d Assets";
+"number_of_days" = "%d Days";
+"number_of_recipients" = "%d Recipients";
 "off" = "Apagado";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
+"oldest" = "Oldest";
 "one_by_one_forward" = "Adelante uno por uno";
 "one_hour" = "1 hora";
 "one_week" = "1 semana";
@@ -794,6 +802,7 @@
 "recent" = "Recent";
 "recent_chats" = "CHATS";
 "recent_searches" = "Búsquedas recientes";
+"recipients" = "Recipients";
 "refresh" = "Actualizar";
 "release" = "Release";
 "reload" = "Recargar";
@@ -818,6 +827,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "Reenviar codigo";
 "resend_code_pending" = "Reenviar código en %@";
+"reset" = "Reiniciar";
 "reset_link" = "Restablecer enlace";
 "restore" = "Restaurar";
 "restore_chat_from_icloud" = "Restore your chat history from iCloud.";
@@ -881,6 +891,7 @@
 "select" = "Seleccionar";
 "select_a_country_or_region" = "Seleccionar un país o región";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_date" = "Select Date";
 "select_emergency_contact" = "Seleccionar contacto de emergencia";
 "select_more_photos" = "Seleccionar más fotos";
 "select_token" = "Select Token";
@@ -980,6 +991,10 @@
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Instantánea no encontrada.";
 "sort_by" = "Ordenar por";
+"sort_by_amount" = "Sort by Amount";
+"sort_by_oldest" = "Sort by Oldest";
+"sort_by_recent" = "Sort by Recent";
+"sort_by_value" = "Sort by Value";
 "start" = "Comenzar";
 "start_messaging" = "Empezar a enviar mensajes";
 "started_group_call" = "%@ ha iniciado una llamada de grupo";
@@ -1039,6 +1054,7 @@
 "track_not_found" = "Pista no encontrada";
 "transaction" = "Transacción";
 "transaction_hash" = "Hash de transacción";
+"transaction_history" = "Transaction History";
 "transaction_id" = "ID de transacción";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Tipo de transacción";
@@ -1113,6 +1129,7 @@
 "unread_messages" = "Mensajes no leídos";
 "unrecognized_codes" = "Códigos no reconocidos";
 "unsigned_message" = "UNSIGNED MESSAGE";
+"until_date" = "Until %@";
 "update" = "Actualizar";
 "update_mixin" = "Actualizar Mixin";
 "upgrade" = "Mejora";

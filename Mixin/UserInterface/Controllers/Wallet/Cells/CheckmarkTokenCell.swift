@@ -1,0 +1,45 @@
+import UIKit
+import MixinServices
+
+final class CheckmarkTokenCell: UITableViewCell {
+    
+    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var checkmarkView: CheckmarkView!
+    @IBOutlet weak var iconView: BadgeIconView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var tagLabel: InsetLabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        contentStackView.setCustomSpacing(20, after: checkmarkView)
+        tagLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
+        tagLabel.layer.cornerRadius = 4
+        tagLabel.layer.masksToBounds = true
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        checkmarkView.status = selected ? .selected : .deselected
+    }
+    
+    func load(address: AddressItem) {
+        iconView.setIcon(address: address)
+        titleLabel.text = address.label
+        tagLabel.isHidden = true
+        subtitleLabel.text = address.fullRepresentation
+    }
+    
+    func load(token: TokenItem) {
+        iconView.setIcon(token: token)
+        titleLabel.text = token.name
+        if let name = token.chainTag {
+            tagLabel.text = name
+            tagLabel.isHidden = false
+        } else {
+            tagLabel.isHidden = true
+        }
+        subtitleLabel.text = token.localizedBalanceWithSymbol
+    }
+    
+}

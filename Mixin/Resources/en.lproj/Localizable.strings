@@ -70,6 +70,7 @@
 "alert_key_group_video_message" = "%@ sent a video";
 "all" = "All";
 "all_conversations" = "All Conversations";
+"all_dates" = "All Dates";
 "all_photos" = "All Photos";
 "all_signer_failure" = "All node failure";
 "all_transactions" = "All Transactions";
@@ -98,6 +99,7 @@
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Asset not found.";
 "asset_type" = "Asset Type";
+"assets" = "Assets";
 "assets" = "ASSETS";
 "assets_title" = "Assets";
 "audio" = "Audio";
@@ -400,6 +402,7 @@
 "enable_pay" = "Enable %@ Pay";
 "enable_pay_confirmation" = "Enable %@ Pay?";
 "enable_touch_pay_hint" = "Confirm PIN to enable Touch Pay";
+"end" = "End";
 "end_to_end_encryption" = "End-to-end Encrypted";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Enter your new phone number";
@@ -486,6 +489,7 @@
 "free" = "FREE";
 "from" = "From";
 "from_address" = "From address";
+"from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
@@ -683,9 +687,13 @@
 "notification_content" = "Don't miss messages from your friends.";
 "notification_message_preview_description" = "Preview message text inside new message notifications.";
 "now_an_addmin" = "%@ now an admin";
+"number_of_assets" = "%d Assets";
+"number_of_days" = "%d Days";
+"number_of_recipients" = "%d Recipients";
 "off" = "Off";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
+"oldest" = "Oldest";
 "one_by_one_forward" = "One-by-One Forward";
 "one_hour" = "1 Hour";
 "one_week" = "1 Week";
@@ -794,6 +802,7 @@
 "recent" = "Recent";
 "recent_chats" = "CHATS";
 "recent_searches" = "Recent searches";
+"recipients" = "Recipients";
 "refresh" = "Refresh";
 "release" = "Release";
 "reload" = "Reload";
@@ -818,6 +827,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "Resend code";
 "resend_code_pending" = "Resend code in %@";
+"reset" = "Reset";
 "reset_link" = "Reset Link";
 "restore" = "Restore";
 "restore_chat_from_icloud" = "Restore your chat history from iCloud.";
@@ -881,6 +891,7 @@
 "select" = "Select";
 "select_a_country_or_region" = "Select a Country or Region";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_date" = "Select Date";
 "select_emergency_contact" = "Select Emergency Contact";
 "select_more_photos" = "Select More Photos";
 "select_token" = "Select Token";
@@ -980,6 +991,10 @@
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
 "sort_by" = "Sort by";
+"sort_by_amount" = "Sort by Amount";
+"sort_by_oldest" = "Sort by Oldest";
+"sort_by_recent" = "Sort by Recent";
+"sort_by_value" = "Sort by Value";
 "start" = "Start";
 "start_messaging" = "Start Messaging";
 "started_group_call" = "%@ has started a group call";
@@ -1039,6 +1054,7 @@
 "track_not_found" = "Track not found";
 "transaction" = "Transaction";
 "transaction_hash" = "Transaction Hash";
+"transaction_history" = "Transaction History";
 "transaction_id" = "Transaction Id";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Transaction Type";
@@ -1113,6 +1129,7 @@
 "unread_messages" = "Unread messages";
 "unrecognized_codes" = "Unrecognized codes";
 "unsigned_message" = "UNSIGNED MESSAGE";
+"until_date" = "Until %@";
 "update" = "Update";
 "update_mixin" = "Update Mixin";
 "upgrade" = "Upgrade";

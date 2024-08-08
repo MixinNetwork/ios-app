@@ -93,6 +93,15 @@ final class TokenViewController: UIViewController {
         }
     }
     
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        if view.safeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if performSendOnAppear {
@@ -232,18 +241,18 @@ extension TokenViewController {
                 }
                 self.token = token
                 let indexPath = IndexPath(row: 0, section: Section.balance.rawValue)
-                if let cell = self.tableView.cellForRow(at: indexPath) as? TokenBalanceCell {
-                    self.tableView.beginUpdates()
-                    cell.token = token
-                    self.tableView.endUpdates()
-                }
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+                self.tableView.endUpdates()
             }
         }
     }
     
     private func reloadSnapshots() {
-        queue.async { [id=token.assetID, limit=transactionsCount, weak self] in
-            let limitExceededSnapshots = SafeSnapshotDAO.shared.snapshots(assetId: id, sort: .createdAt, limit: limit + 1)
+        var filter = SafeSnapshot.Filter()
+        filter.tokens = [token]
+        queue.async { [limit=transactionsCount, weak self] in
+            let limitExceededSnapshots = SafeSnapshotDAO.shared.snapshots(filter: filter, sort: .newest, limit: limit + 1)
             let hasMoreSnapshots = limitExceededSnapshots.count > limit
             let snapshots = Array(limitExceededSnapshots.prefix(limit))
             let transactionRows: [TransactionRow] = if snapshots.isEmpty {
@@ -411,7 +420,8 @@ extension TokenViewController: UITableViewDelegate {
         let row = transactionRows[indexPath.row]
         switch row {
         case .title, .viewAll:
-            break
+            let history = TransactionHistoryViewController(token: token)
+            navigationController?.pushViewController(history, animated: true)
         case .transaction(let snapshot):
             let inscriptionItem: InscriptionItem? = if let hash = snapshot.inscriptionHash {
                 InscriptionDAO.shared.inscriptionItem(with: hash)

@@ -70,6 +70,7 @@
 "alert_key_group_video_message" = "%@ отправил видео";
 "all" = "Все";
 "all_conversations" = "Все разговоры";
+"all_dates" = "All Dates";
 "all_photos" = "Все фотографии";
 "all_signer_failure" = "All node failure";
 "all_transactions" = "Все транзакции";
@@ -98,6 +99,7 @@
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
+"assets" = "Assets";
 "assets" = "АКТИВЫ";
 "assets_title" = "Активы";
 "audio" = "Аудио";
@@ -400,6 +402,7 @@
 "enable_pay" = "Включить %@ Pay";
 "enable_pay_confirmation" = "Включить %@ Pay?";
 "enable_touch_pay_hint" = "Подтвердите PIN-код, чтобы включить Touch Pay";
+"end" = "End";
 "end_to_end_encryption" = "Сквозное шифрование";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Введите новый номер телефона";
@@ -486,6 +489,7 @@
 "free" = "FREE";
 "from" = "От";
 "from_address" = "From address";
+"from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
@@ -683,9 +687,13 @@
 "notification_content" = "Не пропустите сообщения от друзей.";
 "notification_message_preview_description" = "Предварительный просмотр текста сообщения в уведомлениях о новых сообщениях.";
 "now_an_addmin" = "%@ теперь администратор";
+"number_of_assets" = "%d Assets";
+"number_of_days" = "%d Days";
+"number_of_recipients" = "%d Recipients";
 "off" = "Выключенный";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
+"oldest" = "Oldest";
 "one_by_one_forward" = "Один за другим вперед";
 "one_hour" = "1 час";
 "one_week" = "1 неделя";
@@ -794,6 +802,7 @@
 "recent" = "Recent";
 "recent_chats" = "ЧАТЫ";
 "recent_searches" = "Недавние поиски";
+"recipients" = "Recipients";
 "refresh" = "Обновить";
 "release" = "Release";
 "reload" = "Перезагрузить";
@@ -818,6 +827,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "Отправить код еще раз";
 "resend_code_pending" = "Повторно отправить код в %@";
+"reset" = "Перезагрузить";
 "reset_link" = "Сбросить ссылку";
 "restore" = "Восстановить";
 "restore_chat_from_icloud" = "Restore your chat history from iCloud.";
@@ -881,6 +891,7 @@
 "select" = "Выбрать";
 "select_a_country_or_region" = "Выберите страну или регион";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_date" = "Select Date";
 "select_emergency_contact" = "Выберите экстренный контакт";
 "select_more_photos" = "Выберите больше фотографий";
 "select_token" = "Select Token";
@@ -980,6 +991,10 @@
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Снимок не найден.";
 "sort_by" = "Сортировать по";
+"sort_by_amount" = "Sort by Amount";
+"sort_by_oldest" = "Sort by Oldest";
+"sort_by_recent" = "Sort by Recent";
+"sort_by_value" = "Sort by Value";
 "start" = "Start";
 "start_messaging" = "Начать обмен сообщениями";
 "started_group_call" = "%@ начал групповой вызов";
@@ -1039,6 +1054,7 @@
 "track_not_found" = "Трек не найден";
 "transaction" = "Сделка";
 "transaction_hash" = "Хэш транзакции";
+"transaction_history" = "Transaction History";
 "transaction_id" = "ID транзакции";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Тип операции";
@@ -1113,6 +1129,7 @@
 "unread_messages" = "Непрочитанные сообщения";
 "unrecognized_codes" = "Нераспознанные коды";
 "unsigned_message" = "UNSIGNED MESSAGE";
+"until_date" = "Until %@";
 "update" = "Обновить";
 "update_mixin" = "Обновить Mixin";
 "upgrade" = "Upgrade";

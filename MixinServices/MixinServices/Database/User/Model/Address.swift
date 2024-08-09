@@ -67,3 +67,13 @@ extension Address {
     }
     
 }
+
+extension Address {
+    
+    public func matches(lowercasedKeyword keyword: String) -> Bool {
+        label.lowercased().contains(keyword)
+        || destination.lowercased().contains(keyword)
+        || tag.lowercased().contains(keyword)
+    }
+    
+}

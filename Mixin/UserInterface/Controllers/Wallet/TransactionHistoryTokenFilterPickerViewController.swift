@@ -20,7 +20,11 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
     private var selectedAssetIDs: Set<String>
     private var selectedTokens: [TokenItem]
     
-    private var searchResults: [UserItem] = []
+    private var searchResults: [TokenItem] = []
+    
+    private var tokenModels: [TokenItem] {
+        isSearching ? searchResults : tokens
+    }
     
     init(selectedTokens: [TokenItem]) {
         self.selectedAssetIDs = Set(selectedTokens.map(\.assetID))
@@ -34,6 +38,8 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
         
         hideSegmentControlWrapperView()
         
@@ -59,6 +65,28 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
         }
     }
     
+    override func search(keyword: String) {
+        queue.cancelAllOperations()
+        let op = BlockOperation()
+        let tokens = self.tokens
+        op.addExecutionBlock { [unowned op, weak self] in
+            let searchResults = tokens.filter { token in
+                token.symbol.lowercased().contains(keyword)
+                    || token.name.lowercased().contains(keyword)
+            }
+            DispatchQueue.main.sync {
+                guard let self, !op.isCancelled else {
+                    return
+                }
+                self.searchingKeyword = keyword
+                self.searchResults = searchResults
+                self.tableView.reloadData()
+                self.reloadTableViewSelections()
+            }
+        }
+        queue.addOperation(op)
+    }
+    
     override func reset(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
         delegate?.transactionHistoryTokenFilterPickerViewController(self, didPickTokens: [])
@@ -72,7 +100,7 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
         var indexPaths: [IndexPath] = []
-        for (row, token) in tokens.enumerated() where selectedAssetIDs.contains(token.assetID) {
+        for (row, token) in tokenModels.enumerated() where selectedAssetIDs.contains(token.assetID) {
             let indexPath = IndexPath(row: row, section: 0)
             indexPaths.append(indexPath)
         }
@@ -86,12 +114,12 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
 extension TransactionHistoryTokenFilterPickerViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tokens.count
+        tokenModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.checkmark_token, for: indexPath)!
-        let token = tokens[indexPath.row]
+        let token = tokenModels[indexPath.row]
         cell.load(token: token)
         return cell
     }
@@ -101,7 +129,7 @@ extension TransactionHistoryTokenFilterPickerViewController: UITableViewDataSour
 extension TransactionHistoryTokenFilterPickerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let token = tokens[indexPath.row]
+        let token = tokenModels[indexPath.row]
         let (inserted, _) = selectedAssetIDs.insert(token.assetID)
         if inserted {
             let indexPath = IndexPath(item: selectedTokens.count, section: 0)
@@ -112,7 +140,7 @@ extension TransactionHistoryTokenFilterPickerViewController: UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let token = tokens[indexPath.row]
+        let token = tokenModels[indexPath.row]
         selectedAssetIDs.remove(token.assetID)
         if let index = selectedTokens.firstIndex(where: { $0.assetID == token.assetID }) {
             selectedTokens.remove(at: index)
@@ -151,7 +179,7 @@ extension TransactionHistoryTokenFilterPickerViewController: SelectedItemCellDel
         let deselected = selectedTokens.remove(at: indexPath.row)
         selectedAssetIDs.remove(deselected.assetID)
         collectionView.deleteItems(at: [indexPath])
-        if let row = tokens.firstIndex(where: { $0.assetID == deselected.assetID }) {
+        if let row = tokenModels.firstIndex(where: { $0.assetID == deselected.assetID }) {
             let indexPath = IndexPath(row: row, section: 0)
             tableView.deselectRow(at: indexPath, animated: true)
         }

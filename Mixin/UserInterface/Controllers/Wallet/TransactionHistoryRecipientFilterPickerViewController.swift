@@ -73,7 +73,6 @@ final class TransactionHistoryRecipientFilterPickerViewController: TransactionHi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_contact()
         if segments.isEmpty {
             hideSegmentControlWrapperView()
         } else {
@@ -92,13 +91,17 @@ final class TransactionHistoryRecipientFilterPickerViewController: TransactionHi
                 button.addTarget(self, action: #selector(switchToUsers(_:)), for: .touchUpInside)
                 button.isSelected = true
                 userSegmentButton = button
+                searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_contact()
             }
             if segments.contains(.address) {
                 let button = makeSegmentButton(title: R.string.localizable.address())
                 stackView.addArrangedSubview(button)
                 button.addTarget(self, action: #selector(switchToAddress(_:)), for: .touchUpInside)
-                button.isSelected = !segments.contains(.user)
                 addressSegmentButton = button
+                if !segments.contains(.user) {
+                    button.isSelected = true
+                    searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_address()
+                }
             }
         }
         
@@ -116,11 +119,11 @@ final class TransactionHistoryRecipientFilterPickerViewController: TransactionHi
         }
         
         if segments.contains(.user) {
-            let op = BlockOperation()
-            op.addExecutionBlock { [weak self, unowned op] in
+            queue.addOperation { [weak self] in
                 let users = UserDAO.shared.contacts()
                 DispatchQueue.main.sync {
-                    guard let self, !op.isCancelled else {
+                    // Do not check cancellation, init op is not cancellable
+                    guard let self else {
                         return
                     }
                     self.users = users
@@ -129,14 +132,13 @@ final class TransactionHistoryRecipientFilterPickerViewController: TransactionHi
                     }
                 }
             }
-            queue.addOperation(op)
         }
         if segments.contains(.address) {
-            let op = BlockOperation()
-            op.addExecutionBlock { [weak self, unowned op] in
+            queue.addOperation() { [weak self] in
                 let addresses = AddressDAO.shared.addressItems()
                 DispatchQueue.main.sync {
-                    guard let self, !op.isCancelled else {
+                    // Do not check cancellation, init op is not cancellable
+                    guard let self else {
                         return
                     }
                     self.addresses = addresses
@@ -145,7 +147,6 @@ final class TransactionHistoryRecipientFilterPickerViewController: TransactionHi
                     }
                 }
             }
-            queue.addOperation(op)
         }
     }
     
@@ -179,17 +180,69 @@ final class TransactionHistoryRecipientFilterPickerViewController: TransactionHi
         delegate?.transactionHistoryRecipientFilterPickerViewController(self, didPickUsers: selectedUsers, addresses: selectedAddresses)
     }
     
+    override func search(keyword: String) {
+        queue.cancelAllOperations()
+        let op = BlockOperation()
+        switch currentSegment {
+        case .user:
+            let users = self.users
+            op.addExecutionBlock { [unowned op, weak self] in
+                let searchResults = users.filter {
+                    $0.matches(lowercasedKeyword: keyword)
+                }
+                DispatchQueue.main.sync {
+                    guard let self, !op.isCancelled, self.currentSegment == .user else {
+                        return
+                    }
+                    self.searchingKeyword = keyword
+                    self.userSearchResults = searchResults
+                    self.tableView.reloadData()
+                    self.reloadTableViewSelections()
+                }
+            }
+        case .address:
+            let addresses = self.addresses
+            op.addExecutionBlock { [unowned op, weak self] in
+                let searchResults = addresses.filter {
+                    $0.matches(lowercasedKeyword: keyword)
+                }
+                DispatchQueue.main.sync {
+                    guard let self, !op.isCancelled, self.currentSegment == .address else {
+                        return
+                    }
+                    self.searchingKeyword = keyword
+                    self.addressSearchResults = searchResults
+                    self.tableView.reloadData()
+                    self.reloadTableViewSelections()
+                }
+            }
+        }
+        queue.addOperation(op)
+    }
+    
     @objc private func switchToUsers(_ sender: Any) {
+        guard currentSegment != .user else {
+            return
+        }
         currentSegment = .user
         userSegmentButton?.isSelected = true
         addressSegmentButton?.isSelected = false
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_contact()
+        searchBoxView.textField.text = nil
+        searchingKeyword = nil
         reloadCurrentSegment()
     }
     
     @objc private func switchToAddress(_ sender: Any) {
+        guard currentSegment != .address else {
+            return
+        }
         currentSegment = .address
         userSegmentButton?.isSelected = false
         addressSegmentButton?.isSelected = true
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_address()
+        searchBoxView.textField.text = nil
+        searchingKeyword = nil
         reloadCurrentSegment()
     }
     
@@ -320,6 +373,7 @@ extension TransactionHistoryRecipientFilterPickerViewController: UICollectionVie
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.selectedPeer, for: indexPath) as! SelectedPeerCell
             let user = selectedUsers[indexPath.item]
             cell.render(item: user)
+            cell.delegate = self
             return cell
         case .address:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.selectedToken, for: indexPath) as! SelectedTokenCell

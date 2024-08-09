@@ -18,7 +18,7 @@ class TransactionHistoryFilterPickerViewController: UIViewController {
     
     private let trayView = R.nib.authenticationPreviewDoubleButtonTrayView(withOwner: nil)!
     
-    private var searchingKeyword: String?
+    var searchingKeyword: String?
     
     var isSearching: Bool {
         searchingKeyword != nil
@@ -42,6 +42,7 @@ class TransactionHistoryFilterPickerViewController: UIViewController {
             action: #selector(searchTextFieldEditingChanged(_:)),
             for: .editingChanged
         )
+        searchBoxView.textField.delegate = self
         
         trayWrapperView.addSubview(trayView)
         trayView.snp.makeEdgesEqualToSuperview()
@@ -116,6 +117,15 @@ class TransactionHistoryFilterPickerViewController: UIViewController {
         tableView.indexPathsForSelectedRows?.forEach {
             tableView.deselectRow(at: $0, animated: false)
         }
+    }
+    
+}
+
+extension TransactionHistoryFilterPickerViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }

@@ -22,7 +22,7 @@ class SelectedItemCell<IconView: UIView>: UICollectionViewCell {
         loadSubviews()
     }
     
-    @objc private func removeAction(_ sender: Any) {
+    @objc private func remove(_ sender: Any) {
         delegate?.selectedItemCellDidSelectRemove(self)
     }
     
@@ -50,6 +50,7 @@ class SelectedItemCell<IconView: UIView>: UICollectionViewCell {
         let removeImage = R.image.ic_circle_member_remove()?.withRenderingMode(.alwaysOriginal)
         removeButton.setImage(removeImage, for: .normal)
         addSubview(removeButton)
+        removeButton.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
         removeButton.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.trailing.equalTo(iconView.snp.trailing).offset(-2)

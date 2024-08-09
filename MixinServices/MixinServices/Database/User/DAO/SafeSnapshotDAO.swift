@@ -78,14 +78,20 @@ extension SafeSnapshotDAO {
         if !filter.tokens.isEmpty {
             conditions.append("s.asset_id IN \(filter.tokens.map(\.assetID))")
         }
+        
+        var recipientConditions: [GRDB.SQL] = []
         if !filter.users.isEmpty {
-            conditions.append("s.opponent_id IN \(filter.users.map(\.userId))")
+            recipientConditions.append("s.opponent_id IN \(filter.users.map(\.userId))")
         }
         for address in filter.addresses {
             let keyword = "%\(address.destination.sqlEscaped)%"
-            let condition: GRDB.SQL = "(s.deposit LIKE \(keyword) OR s.withdrawal LIKE \(keyword))"
-            conditions.append(condition)
+            let condition: GRDB.SQL = "s.deposit LIKE \(keyword) OR s.withdrawal LIKE \(keyword)"
+            recipientConditions.append(condition)
         }
+        if !recipientConditions.isEmpty {
+            conditions.append("\(recipientConditions.joined(operator: .or))")
+        }
+        
         if let type = filter.type {
             switch type {
             case .deposit:

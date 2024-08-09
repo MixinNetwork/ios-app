@@ -75,6 +75,19 @@ extension SafeSnapshotDAO {
         var query = GRDB.SQL(sql: Self.querySQL)
         
         var conditions: [GRDB.SQL] = []
+        
+        if let type = filter.type {
+            switch type {
+            case .deposit:
+                conditions.append("s.deposit IS NOT NULL")
+            case .withdrawal:
+                conditions.append("s.withdrawal IS NOT NULL")
+            case .transfer:
+                conditions.append("s.deposit IS NULL")
+                conditions.append("s.withdrawal IS NULL")
+            }
+        }
+        
         if !filter.tokens.isEmpty {
             conditions.append("s.asset_id IN \(filter.tokens.map(\.assetID))")
         }
@@ -92,16 +105,11 @@ extension SafeSnapshotDAO {
             conditions.append("\(recipientConditions.joined(operator: .or))")
         }
         
-        if let type = filter.type {
-            switch type {
-            case .deposit:
-                conditions.append("s.deposit IS NOT NULL")
-            case .withdrawal:
-                conditions.append("s.withdrawal IS NOT NULL")
-            case .transfer:
-                conditions.append("s.deposit IS NULL")
-                conditions.append("s.withdrawal IS NULL")
-            }
+        if let startDate = filter.startDate?.toUTCString() {
+            conditions.append("s.created_at >= \(startDate)")
+        }
+        if let endDate = filter.endDate?.toUTCString() {
+            conditions.append("s.created_at <= \(endDate)")
         }
         
         if let offset {

@@ -402,6 +402,47 @@ extension InscriptionViewController: UITableViewDataSource {
 
 extension InscriptionViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if case .content(.image(_)) = rows[indexPath.row],
+           let cell = tableView.cellForRow(at: indexPath) as? InscriptionContentCell,
+           let image = cell.contentImageView.image
+        {
+            let previewView = ImagePreviewView(image: image, frame: view.bounds)
+            let startImageFrame = cell.contentImageView.convert(cell.contentImageView.bounds, to: previewView)
+            let closeAction = UIAction { [weak previewView] _ in
+                guard let view = previewView else {
+                    return
+                }
+                UIView.animate(withDuration: 0.3) {
+                    view.backgroundView.effect = nil
+                    view.closeButton.alpha = 0
+                    view.imageView.frame = startImageFrame
+                    view.imageView.layer.cornerRadius = cell.imageWrapperView.layer.cornerRadius
+                } completion: { _ in
+                    view.removeFromSuperview()
+                    cell.imageWrapperView.alpha = 1
+                }
+            }
+            view.addSubview(previewView)
+            previewView.closeButton.addAction(closeAction, for: .touchUpInside)
+            previewView.imageView.frame = startImageFrame
+            previewView.imageView.layer.cornerRadius = cell.imageWrapperView.layer.cornerRadius
+            let endHeight = ceil(view.bounds.width * (image.size.height / image.size.width))
+            let endFrame = CGRect(x: 0,
+                                  y: (previewView.bounds.height - endHeight) / 2,
+                                  width: previewView.bounds.width,
+                                  height: endHeight)
+            cell.imageWrapperView.alpha = 0
+            UIView.animate(withDuration: 0.3) {
+                previewView.backgroundView.effect = UIBlurEffect(style: .dark)
+                previewView.closeButton.alpha = 1
+                previewView.imageView.frame = endFrame
+                previewView.imageView.layer.cornerRadius = 0
+            }
+        }
+    }
+    
     func tableView(
         _ tableView: UITableView,
         contextMenuConfigurationForRowAt indexPath: IndexPath,
@@ -524,6 +565,52 @@ extension InscriptionViewController: PaymentUserGroupCellDelegate {
     func paymentUserGroupCell(_ cell: PaymentUserGroupCell, didSelectMessengerUser item: UserItem) {
         let profile = UserProfileViewController(user: item)
         present(profile, animated: true, completion: nil)
+    }
+    
+}
+
+extension InscriptionViewController {
+    
+    private class ImagePreviewView: UIView {
+        
+        let backgroundView = UIVisualEffectView()
+        let closeButton = UIButton(type: .system)
+        let imageView: UIImageView
+        
+        private let image: UIImage
+        
+        init(image: UIImage, frame: CGRect) {
+            self.image = image
+            self.imageView = UIImageView(image: image)
+            
+            super.init(frame: frame)
+            
+            backgroundView.effect = nil
+            addSubview(backgroundView)
+            backgroundView.snp.makeEdgesEqualToSuperview()
+            
+            closeButton.setImage(R.image.ic_title_close(), for: .normal)
+            closeButton.tintColor = R.color.icon_tint()
+            closeButton.alpha = 0
+            addSubview(closeButton)
+            closeButton.snp.makeConstraints { make in
+                make.top.equalTo(safeAreaLayoutGuide.snp.top)
+                make.leading.equalToSuperview().offset(10)
+                make.width.height.equalTo(44)
+            }
+            
+            addSubview(imageView)
+            imageView.layer.masksToBounds = true
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        deinit {
+            Logger.general.debug(category: "InscriptionPreview", message: "Deinitialized")
+        }
+        
     }
     
 }

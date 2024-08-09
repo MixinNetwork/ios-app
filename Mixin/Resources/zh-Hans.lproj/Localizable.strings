@@ -426,7 +426,7 @@
 "error_invalid_code_too_frequent" = "错误 20129：发送验证码太频繁，请稍后再试";
 "error_invalid_emergency_contact" = "错误 20130：紧急联系人不正确";
 "error_invalid_quote_amount" = "错误 10614: 数量无效";
-"error_invalid_swap" = "错误 10611: 闪兑无效";
+"error_invalid_swap" = "错误 10611: 交易无效";
 "error_network_task_failed" = "网络连接失败。检查或切换网络并重试";
 "error_no_available_quote" = "错误 10615: 没有报价";
 "error_not_found" = "错误 404：没有找到相应的信息";
@@ -962,7 +962,7 @@
 "share_log_file" = "分享日志文件";
 "share_message_description" = "你确定要发送来自%1$@的%2$@？";
 "share_message_description_empty" = "你确定要发送该%@？";
-"share_to" = "分享给";
+"share_to" = "分享到";
 "shared_media" = "媒体内容";
 "show" = "显示";
 "show_asset" = "显示资产";
@@ -997,14 +997,14 @@
 "successful" = "成功";
 "suspended_deposit" = "%1$@ 充值已暂停，可能的原因是因为使用率太低、节点故障、区块链网络硬分叉或者拥堵，注意已转入的 %2$@ 资产可以继续转账。";
 "suspicious_link" = "可疑链接";
-"swap" = "闪兑";
+"swap" = "交易";
 "swap_asset_change" = "资产变动（预估）";
-"swap_confirmation" = "确认闪兑";
-"swap_failed" = "闪兑失败";
+"swap_confirmation" = "确认交易";
+"swap_failed" = "交易失败";
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";
-"swap_message_success" = "您的闪兑交易已发送至网络，交易将很快被处理。";
+"swap_message_success" = "您的闪兑交易已发送至网络，将很快被处理。";
 "swap_no_available_quote" = "没有报价。请尝试切换币种。";
-"swap_not_supported" = "不支持 %@ 闪兑，已切换";
+"swap_not_supported" = "不支持 %@ 交易，已切换";
 "swap_receive" = "获得";
 "swap_send" = "支付";
 "symbol" = "符号";

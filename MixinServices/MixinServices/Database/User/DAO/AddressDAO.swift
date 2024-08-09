@@ -11,7 +11,7 @@ public final class AddressDAO: UserDatabaseDAO {
         FROM addresses a
             LEFT JOIN tokens t ON a.asset_id = t.asset_id
             LEFT JOIN chains c ON t.chain_id = c.chain_id
-        ORDER BY a.updated_at DESC
+        
     """
     
     public func getAddress(addressId: String) -> Address? {
@@ -31,11 +31,11 @@ public final class AddressDAO: UserDatabaseDAO {
     }
     
     public func addressItem(id: String) -> AddressItem? {
-        db.select(with: addressItemSQL + "\nWHERE a.address_id = ?", arguments: [id])
+        db.select(with: addressItemSQL + "WHERE a.address_id = ?\nORDER BY a.updated_at DESC", arguments: [id])
     }
     
     public func addressItems() -> [AddressItem] {
-        db.select(with: addressItemSQL)
+        db.select(with: addressItemSQL + "ORDER BY a.updated_at DESC")
     }
     
     public func insertOrUpdateAddress(addresses: [Address]) {

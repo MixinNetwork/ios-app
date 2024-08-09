@@ -100,7 +100,14 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func swapSendingReceiving(_ sender: Any) {
-        
+        if let sender = sender as? UIButton, sender === swapButton {
+            let animation = CABasicAnimation(keyPath: "transform.rotation")
+            animation.fromValue = 0
+            animation.toValue = CGFloat.pi
+            animation.duration = 0.35
+            animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            swapButton.layer.add(animation, forKey: nil)
+        }
     }
     
     @IBAction func swapPrice(_ sender: Any) {

@@ -124,6 +124,7 @@ final class MixinSwapViewController: SwapViewController {
         else {
             return
         }
+        super.swapSendingReceiving(sender)
         self.sendToken = newSendToken
         self.receiveToken = newReceiveToken
         scheduleNewRequesterIfAvailable()

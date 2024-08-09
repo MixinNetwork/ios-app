@@ -1,7 +1,9 @@
 import Foundation
 
 extension CGSize {
-
+    
+    public static let blurHashThumbnail = CGSize(width: 32, height: 32)
+    
     public static func +(lhs: CGSize, rhs: CGSize) -> CGSize {
         return CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
     }

@@ -115,6 +115,72 @@ extension AppCardData {
     
     public struct V1Content: Codable {
         
+        public enum Cover: Codable {
+            
+            case plain(String)
+            case rich(RichCover)
+            
+            public var ratio: CGFloat {
+                switch self {
+                case .plain:
+                    1
+                case .rich(let cover):
+                    cover.ratio
+                }
+            }
+            
+            public func thumbnail() -> UIImage? {
+                switch self {
+                case .plain:
+                    nil
+                case .rich(let cover):
+                    UIImage(blurHash: cover.thumbnail, size: .blurHashThumbnail)
+                }
+            }
+            
+        }
+        
+        public struct RichCover: Codable {
+            
+            enum CodingKeys: String, CodingKey {
+                case url
+                case mimeType = "mime_type"
+                case width
+                case height
+                case thumbnail
+            }
+            
+            public let url: URL?
+            public let mimeType: String
+            public let width: Int
+            public let height: Int
+            public let thumbnail: String
+            public let ratio: CGFloat
+            
+            public init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                let urlString = try container.decode(String.self, forKey: .url)
+                let width = try container.decode(Int.self, forKey: .width)
+                let height = try container.decode(Int.self, forKey: .height)
+                self.url = URL(string: urlString)
+                self.mimeType = try container.decode(String.self, forKey: .mimeType)
+                self.width = width
+                self.height = height
+                self.thumbnail = try container.decode(String.self, forKey: .thumbnail)
+                self.ratio = CGFloat(width) / CGFloat(height)
+            }
+            
+            public func encode(to encoder: any Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                try container.encodeIfPresent(url, forKey: .url)
+                try container.encode(mimeType, forKey: .mimeType)
+                try container.encode(width, forKey: .width)
+                try container.encode(height, forKey: .height)
+                try container.encode(thumbnail, forKey: .thumbnail)
+            }
+            
+        }
+        
         public struct Action: Codable {
             
             enum CodingKeys: String, CodingKey {
@@ -153,29 +219,57 @@ extension AppCardData {
         }
         
         public let appID: String
-        public let cover: String?
+        public let cover: Cover?
         public let title: String?
         public let description: String?
         public let actions: [Action]
         public let updatedAt: String
         public let isShareable: Bool
         
-        public var coverURL: URL? {
-            if let cover {
-                URL(string: cover)
-            } else {
-                nil
-            }
-        }
-        
         enum CodingKeys: String, CodingKey {
             case appID = "app_id"
-            case cover = "cover_url"
+            case cover = "cover"
+            case coverURL = "cover_url"
             case title
             case description
             case actions
             case updatedAt = "updated_at"
-            case isShareable = "shareable"
+            case shareable = "shareable"
+        }
+        
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.appID = try container.decode(String.self, forKey: .appID)
+            if let cover = try container.decodeIfPresent(RichCover.self, forKey: .cover), cover.url != nil {
+                self.cover = .rich(cover)
+            } else if let string = try container.decodeIfPresent(String.self, forKey: .coverURL), !string.isEmpty {
+                self.cover = .plain(string)
+            } else {
+                self.cover = nil
+            }
+            self.title = try container.decodeIfPresent(String.self, forKey: .title)
+            self.description = try container.decodeIfPresent(String.self, forKey: .description)
+            self.actions = try container.decode([Action].self, forKey: .actions)
+            self.updatedAt = try container.decode(String.self, forKey: .updatedAt)
+            self.isShareable = try container.decode(Bool.self, forKey: .shareable)
+        }
+        
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(appID, forKey: .appID)
+            switch cover {
+            case .plain(let string):
+                try container.encode(string, forKey: .coverURL)
+            case .rich(let cover):
+                try container.encode(cover, forKey: .cover)
+            case .none:
+                break
+            }
+            try container.encodeIfPresent(title, forKey: .title)
+            try container.encodeIfPresent(description, forKey: .description)
+            try container.encode(actions, forKey: .actions)
+            try container.encode(updatedAt, forKey: .updatedAt)
+            try container.encode(isShareable, forKey: .shareable)
         }
         
     }

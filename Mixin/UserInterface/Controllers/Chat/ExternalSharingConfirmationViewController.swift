@@ -340,7 +340,7 @@ extension ExternalSharingConfirmationViewController {
             
             let cardContentView = AppCardV1MessageCell.CardContentView()
             contentView.addSubview(cardContentView)
-            cardContentView.reloadData(with: content)
+            cardContentView.reloadData(with: content, coverThumbnail: content.cover?.thumbnail())
             cardContentView.snp.makeConstraints { (make) in
                 let insets = UIEdgeInsets(top: 1, left: 2, bottom: 12, right: 8)
                 make.edges.equalTo(imageView).inset(insets)

@@ -4,7 +4,7 @@ final class AppButtonView: UIView {
     
     static let cornerRadius: CGFloat = 5
     static let buttonMargin = MessageViewModel.Margin(leading: 4, trailing: 4, top: 1, bottom: 3)
-    static let titleMargin = MessageViewModel.Margin(leading: 15, trailing: 15, top: 8, bottom: 8)
+    static let titleMargin = MessageViewModel.Margin(leading: 14, trailing: 14, top: 8, bottom: 8)
     
     let button = UIButton(type: .system)
     

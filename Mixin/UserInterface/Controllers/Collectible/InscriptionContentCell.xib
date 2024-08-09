@@ -59,6 +59,7 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="contentImageView" destination="Chj-5a-aXm" id="xqK-DB-C5K"/>
+                <outlet property="imageWrapperView" destination="fgO-b8-21M" id="fgL-sD-V1z"/>
                 <outlet property="placeholderImageView" destination="FvH-5b-Eee" id="QDh-VZ-PwS"/>
             </connections>
             <point key="canvasLocation" x="54.961832061068698" y="115.49295774647888"/>

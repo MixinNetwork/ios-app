@@ -134,11 +134,7 @@ extension AppCardData {
                 case .plain:
                     nil
                 case .rich(let cover):
-                    if let blurhash = cover.thumbnail {
-                        UIImage(blurHash: blurhash, size: .blurHashThumbnail)
-                    } else {
-                        nil
-                    }
+                    UIImage(blurHash: cover.thumbnail, size: .blurHashThumbnail)
                 }
             }
             
@@ -148,15 +144,17 @@ extension AppCardData {
             
             enum CodingKeys: String, CodingKey {
                 case url
+                case mimeType = "mime_type"
                 case width
                 case height
                 case thumbnail
             }
             
             public let url: URL?
+            public let mimeType: String
             public let width: Int
             public let height: Int
-            public let thumbnail: String?
+            public let thumbnail: String
             public let ratio: CGFloat
             
             public init(from decoder: any Decoder) throws {
@@ -165,18 +163,20 @@ extension AppCardData {
                 let width = try container.decode(Int.self, forKey: .width)
                 let height = try container.decode(Int.self, forKey: .height)
                 self.url = URL(string: urlString)
+                self.mimeType = try container.decode(String.self, forKey: .mimeType)
                 self.width = width
                 self.height = height
-                self.thumbnail = try container.decodeIfPresent(String.self, forKey: .thumbnail)
+                self.thumbnail = try container.decode(String.self, forKey: .thumbnail)
                 self.ratio = CGFloat(width) / CGFloat(height)
             }
             
             public func encode(to encoder: any Encoder) throws {
                 var container = encoder.container(keyedBy: CodingKeys.self)
                 try container.encodeIfPresent(url, forKey: .url)
+                try container.encode(mimeType, forKey: .mimeType)
                 try container.encode(width, forKey: .width)
                 try container.encode(height, forKey: .height)
-                try container.encodeIfPresent(thumbnail, forKey: .thumbnail)
+                try container.encode(thumbnail, forKey: .thumbnail)
             }
             
         }

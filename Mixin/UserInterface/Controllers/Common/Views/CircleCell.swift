@@ -78,7 +78,7 @@ class CircleCell: UITableViewCell {
                 stackView.insertArrangedSubview(editingButton, at: 0)
             }
         } else if let button = editingButtonIfLoaded {
-            stackView.removeArrangedSubview(button)
+            button.removeFromSuperview()
         }
     }
     

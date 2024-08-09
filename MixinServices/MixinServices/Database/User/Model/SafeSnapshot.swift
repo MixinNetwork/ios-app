@@ -3,12 +3,6 @@ import GRDB
 
 public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
-    public enum SnapshotType: String {
-        case snapshot
-        case pending
-        case withdrawal
-    }
-    
     public enum CodingKeys: String, CodingKey {
         case id = "snapshot_id"
         case type
@@ -56,6 +50,16 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
     
     public var isInscription: Bool {
         !(inscriptionHash?.isEmpty ?? true)
+    }
+    
+    public var displayType: DisplayType {
+        if deposit != nil {
+            .deposit
+        } else if withdrawal != nil {
+            .withdrawal
+        } else {
+            .transfer
+        }
     }
     
     public init(
@@ -192,6 +196,81 @@ extension SafeSnapshot {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.hash = try container.decode(String.self, forKey: .hash)
             self.receiver = try container.decodeIfPresent(String.self, forKey: .receiver) ?? ""
+        }
+        
+    }
+    
+}
+
+extension SafeSnapshot {
+    
+    public enum DisplayType {
+        case deposit
+        case withdrawal
+        case transfer
+    }
+    
+    public enum SnapshotType: String {
+        case snapshot // Only value that returns from remote
+        case pending // Local only
+        case withdrawal // Local only
+    }
+    
+    public enum Order {
+        case newest
+        case oldest
+        case mostValuable
+        case biggestAmount
+    }
+    
+    public struct Filter: CustomStringConvertible {
+        
+        // For array-type properties, when the value is empty,
+        // it indicates that this filter should not be applied.
+        
+        public var type: SafeSnapshot.DisplayType?
+        public var tokens: [TokenItem]
+        public var users: [UserItem]
+        public var addresses: [AddressItem]
+        public var startDate: Date?
+        public var endDate: Date?
+        
+        public var description: String {
+            "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), users: \(users.map(\.fullName)), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
+        }
+        
+        public init() {
+            type = nil
+            tokens = []
+            users = []
+            addresses = []
+            startDate = nil
+            endDate = nil
+        }
+        
+        public func isIncluded(snapshot: SafeSnapshot) -> Bool {
+            var isIncluded = true
+            if let type {
+                isIncluded = isIncluded && snapshot.displayType == type
+            }
+            if !tokens.isEmpty {
+                isIncluded = isIncluded && tokens.contains(where: { $0.assetID == snapshot.assetID })
+            }
+            if !users.isEmpty {
+                isIncluded = isIncluded && users.contains(where: { $0.userId == snapshot.opponentID })
+            }
+            if !addresses.isEmpty {
+                isIncluded = isIncluded && addresses.contains(where: { address in
+                    snapshot.deposit?.sender == address.destination || snapshot.withdrawal?.receiver == address.destination
+                })
+            }
+            if let startDate {
+                isIncluded = isIncluded && snapshot.createdAt.toUTCDate() >= startDate
+            }
+            if let endDate {
+                isIncluded = isIncluded && snapshot.createdAt.toUTCDate() <= endDate
+            }
+            return isIncluded
         }
         
     }

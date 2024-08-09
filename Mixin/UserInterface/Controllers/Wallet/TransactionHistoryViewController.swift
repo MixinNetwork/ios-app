@@ -1,46 +1,29 @@
 import UIKit
 import MixinServices
 
-class SafeSnapshotListViewController: UIViewController {
+final class TransactionHistoryViewController: UIViewController {
     
-    enum DisplayFilter: CustomDebugStringConvertible {
-        
-        case token(id: String)
-        case user(id: String)
-        case address(assetID: String, address: String)
-        
-        var debugDescription: String {
-            switch self {
-            case let .token(id):
-                "token: " + id
-            case let .user(id):
-                "user: " + id
-            case let .address(_, address):
-                "address: " + address
-            }
-        }
-        
-    }
+    @IBOutlet weak var filtersScrollView: UIScrollView!
+    @IBOutlet weak var typeFilterView: TransactionHistoryTypeFilterView!
+    @IBOutlet weak var assetFilterView: TransactionHistoryAssetFilterView!
+    @IBOutlet weak var recipientFilterView: TransactionHistoryRecipientFilterView!
+    @IBOutlet weak var dateFilterView: TransactionHistoryDateFilterView!
+    @IBOutlet weak var tableView: UITableView!
     
-    typealias DateRepresentation = String
-    typealias SnapshotID = String
-    typealias DiffableDataSource = UITableViewDiffableDataSource<DateRepresentation, SnapshotID>
-    
+    private typealias DateRepresentation = String
+    private typealias SnapshotID = String
+    private typealias DiffableDataSource = UITableViewDiffableDataSource<DateRepresentation, SnapshotID>
     private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<DateRepresentation, SnapshotID>
     
-    let tableView = UITableView()
-    
-    var tokens: [String: TokenItem] = [:] // Key is asset id
-    
-    private(set) var dataSource: DiffableDataSource!
-    private(set) var items: [SnapshotID: SafeSnapshotItem] = [:]
-    
-    private let headerReuseIdentifier = "header"
-    private let displayFilter: DisplayFilter?
+    private let headerReuseIdentifier = "h"
     private let queue = OperationQueue()
     
-    private var sort: Snapshot.Sort = .createdAt
+    private var filter = SafeSnapshot.Filter()
+    private var order: SafeSnapshot.Order = .newest
+    private var dataSource: DiffableDataSource!
     private var sectionTitles: [DateRepresentation] = []
+    private var tokens: [String: TokenItem] = [:] // Key is asset id
+    private var items: [SnapshotID: SafeSnapshotItem] = [:]
     
     private var loadPreviousPageIndexPath: IndexPath?
     private var firstItem: SafeSnapshotItem?
@@ -48,41 +31,71 @@ class SafeSnapshotListViewController: UIViewController {
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: SafeSnapshotItem?
     
-    init(displayFilter: DisplayFilter?) {
-        self.displayFilter = displayFilter
-        super.init(nibName: nil, bundle: nil)
+    private init() {
+        let nib = R.nib.transactionHistoryView
+        super.init(nibName: nib.name, bundle: nib.bundle)
         self.queue.maxConcurrentOperationCount = 1
-        self.dataSource = DiffableDataSource(tableView: tableView) { [weak self] (tableView, indexPath, snapshotID) in
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-            if let self {
-                let snapshot = self.items[snapshotID]!
-                let token = self.tokens[snapshot.assetID]
-                cell.render(snapshot: snapshot, token: token)
-                cell.delegate = self as? SnapshotCellDelegate
-            }
-            return cell
-        }
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
     }
     
+    static func contained() -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
+    static func contained(token: TokenItem) -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        history.filter.tokens = [token]
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
+    static func contained(user: UserItem) -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        history.filter.users = [user]
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
+    static func contained(address: AddressItem) -> ContainerViewController {
+        let history = TransactionHistoryViewController()
+        history.filter.addresses = [address]
+        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        tableView.backgroundColor = R.color.background()!
-        tableView.snp.makeEdgesEqualToSuperview()
+        updateNavigationSubtitle(order: order)
+        
+        let typeFilterActions = typeFilterActions(selectedType: filter.type)
+        typeFilterView.reloadData(type: filter.type)
+        typeFilterView.button.menu = UIMenu(children: typeFilterActions)
+        assetFilterView.reloadData(tokens: filter.tokens)
+        assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
+        recipientFilterView.reloadData(users: filter.users, addresses: filter.addresses)
+        recipientFilterView.button.addTarget(self, action: #selector(pickRecipients(_:)), for: .touchUpInside)
+        dateFilterView.reloadData(startDate: filter.startDate, endDate: filter.endDate)
+        dateFilterView.button.addTarget(self, action: #selector(pickDates(_:)), for: .touchUpInside)
+        
         tableView.register(R.nib.snapshotCell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseIdentifier)
-        tableView.rowHeight = 62
-        tableView.separatorStyle = .none
         tableView.delegate = self
+        dataSource = DiffableDataSource(tableView: tableView) { [weak self] (tableView, indexPath, snapshotID) in
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
+            if let self {
+                let snapshot = self.items[snapshotID]!
+                let token = self.tokens[snapshot.assetID]
+                cell.render(snapshot: snapshot, token: token)
+            }
+            return cell
+        }
         
-        reloadData(with: .createdAt)
-        NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishedNotification, object: nil)
+        // TODO: Responds to snapshot change
+        // NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
+        // NotificationCenter.default.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishedNotification, object: nil)
+        reloadData()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -94,28 +107,183 @@ class SafeSnapshotListViewController: UIViewController {
         }
     }
     
-    func reloadData(with sort: Snapshot.Sort) {
+    @objc private func pickTokens(_ sender: Any) {
+        let picker = TransactionHistoryTokenFilterPickerViewController(selectedTokens: filter.tokens)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    @objc private func pickRecipients(_ sender: Any) {
+        let picker: TransactionHistoryRecipientFilterPickerViewController
+        switch filter.type {
+        case .none:
+            picker = .init(segments: [.user, .address], users: filter.users, addresses: filter.addresses)
+        case .deposit, .withdrawal:
+            picker = .init(segments: [.address], users: [], addresses: filter.addresses)
+        case .transfer:
+            picker = .init(segments: [.user], users: filter.users, addresses: filter.addresses)
+        }
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    @objc private func pickDates(_ sender: Any) {
+        let picker = TransactionHistoryDatePickerViewController(startDate: filter.startDate, endDate: filter.endDate)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    private func updateNavigationSubtitle(order: SafeSnapshot.Order) {
+        let subtitle = switch order {
+        case .newest:
+            R.string.localizable.sort_by_recent()
+        case .oldest:
+            R.string.localizable.sort_by_oldest()
+        case .mostValuable:
+            R.string.localizable.sort_by_value()
+        case .biggestAmount:
+            R.string.localizable.sort_by_amount()
+        }
+        container?.setSubtitle(subtitle: subtitle)
+    }
+    
+    private func orderActions(selectedOrder order: SafeSnapshot.Order) -> [UIAction] {
+        let actions = [
+            UIAction(
+                title: R.string.localizable.recent(),
+                image: R.image.order_newest(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .newest) }
+            ),
+            UIAction(
+                title: R.string.localizable.oldest(),
+                image: R.image.order_oldest(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .oldest) }
+            ),
+            UIAction(
+                title: R.string.localizable.value(),
+                image: R.image.order_value(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .mostValuable) }
+            ),
+            UIAction(
+                title: R.string.localizable.amount(),
+                image: R.image.order_amount(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(order: .biggestAmount) }
+            ),
+        ]
+        switch order {
+        case .newest:
+            actions[0].state = .on
+        case .oldest:
+            actions[1].state = .on
+        case .mostValuable:
+            actions[2].state = .on
+        case .biggestAmount:
+            actions[3].state = .on
+        }
+        return actions
+    }
+    
+    private func typeFilterActions(selectedType type: SafeSnapshot.DisplayType?) -> [UIAction] {
+        let actions = [
+            UIAction(
+                title: R.string.localizable.all(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: nil) }
+            ),
+            UIAction(
+                title: R.string.localizable.deposit(),
+                image: R.image.filter_deposit(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .deposit) }
+            ),
+            UIAction(
+                title: R.string.localizable.withdrawal(),
+                image: R.image.filter_withdrawal(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .withdrawal) }
+            ),
+            UIAction(
+                title: R.string.localizable.transfer(),
+                image: R.image.filter_transfer(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .transfer) }
+            ),
+        ]
+        switch type {
+        case .none:
+            actions[0].state = .on
+        case .deposit:
+            actions[1].state = .on
+        case .withdrawal:
+            actions[2].state = .on
+        case .transfer:
+            actions[3].state = .on
+        }
+        return actions
+    }
+    
+    private func reloadData(filterType type: SafeSnapshot.DisplayType?) {
+        filter.type = type
+        let actions = typeFilterActions(selectedType: filter.type)
+        typeFilterView.button.menu = UIMenu(children: actions)
+        typeFilterView.reloadData(type: type)
+        reloadData()
+    }
+    
+    private func reloadData(order: SafeSnapshot.Order) {
+        self.order = order
+        let actions = orderActions(selectedOrder: order)
+        container?.rightButton.menu = UIMenu(children: actions)
+        updateNavigationSubtitle(order: order)
+        reloadData()
+    }
+    
+    private func reloadData() {
         queue.cancelAllOperations()
-        let operation = LoadLocalDataOperation(viewController: self,
-                                               behavior: .reload,
-                                               filter: displayFilter,
-                                               sort: sort)
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: .reload,
+            filter: filter,
+            order: order
+        )
         queue.addOperation(operation)
     }
     
-    func updateEmptyIndicator(numberOfItems: Int) {
-        tableView.checkEmpty(dataCount: numberOfItems,
-                             text: R.string.localizable.no_transactions(),
-                             photo: R.image.emptyIndicator.ic_data()!)
+    private func updateEmptyIndicator(numberOfItems: Int) {
+        tableView.checkEmpty(
+            dataCount: numberOfItems,
+            text: R.string.localizable.no_transactions(),
+            photo: R.image.emptyIndicator.ic_data()!
+        )
     }
     
 }
 
-extension SafeSnapshotListViewController: UITableViewDelegate {
+extension TransactionHistoryViewController: ContainerViewControllerDelegate {
+    
+    func imageBarRightButton() -> UIImage? {
+        R.image.navigation_filter()
+    }
+    
+    func prepareBar(rightButton: StateResponsiveButton) {
+        let actions = orderActions(selectedOrder: order)
+        rightButton.removeTarget(nil, action: nil, for: .touchUpInside)
+        rightButton.menu = UIMenu(children: actions)
+        rightButton.tintColor = R.color.icon_tint()
+        rightButton.showsMenuAsPrimaryAction = true
+    }
+    
+}
+
+extension TransactionHistoryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        switch sort {
-        case .createdAt:
+        switch order {
+        case .newest, .oldest:
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier) as! AssetHeaderView
             if #available(iOS 15.0, *) {
                 view.label.text = dataSource.sectionIdentifier(for: section)
@@ -123,16 +291,16 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
                 view.label.text = sectionTitles[section]
             }
             return view
-        case .amount:
+        case .mostValuable, .biggestAmount:
             return nil
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch sort {
-        case .createdAt:
+        switch order {
+        case .newest, .oldest:
             44
-        case .amount:
+        case .mostValuable, .biggestAmount:
             .leastNormalMagnitude
         }
     }
@@ -165,10 +333,12 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
                 nil
             }
             DispatchQueue.main.async {
-                let viewController = SafeSnapshotViewController.instance(token: token,
-                                                                         snapshot: item,
-                                                                         messageID: nil,
-                                                                         inscription: inscriptionItem)
+                let viewController = SafeSnapshotViewController.instance(
+                    token: token,
+                    snapshot: item,
+                    messageID: nil,
+                    inscription: inscriptionItem
+                )
                 self?.navigationController?.pushViewController(viewController, animated: true)
             }
         }
@@ -176,23 +346,60 @@ extension SafeSnapshotListViewController: UITableViewDelegate {
     
 }
 
-extension SafeSnapshotListViewController {
+extension TransactionHistoryViewController: TransactionHistoryTokenFilterPickerViewControllerDelegate {
+    
+    func transactionHistoryTokenFilterPickerViewController(
+        _ controller: TransactionHistoryTokenFilterPickerViewController,
+        didPickTokens tokens: [TokenItem]
+    ) {
+        filter.tokens = tokens
+        assetFilterView.reloadData(tokens: tokens)
+        reloadData()
+    }
+    
+}
+
+extension TransactionHistoryViewController: TransactionHistoryRecipientFilterPickerViewControllerDelegate {
+    
+    func transactionHistoryRecipientFilterPickerViewController(
+        _ controller: TransactionHistoryRecipientFilterPickerViewController,
+        didPickUsers users: [UserItem],
+        addresses: [AddressItem]
+    ) {
+        filter.users = users
+        filter.addresses = addresses
+        recipientFilterView.reloadData(users: users, addresses: addresses)
+        reloadData()
+    }
+    
+}
+
+extension TransactionHistoryViewController: TransactionHistoryDatePickerViewControllerDelegate {
+    
+    func transactionHistoryDatePickerViewController(
+        _ controller: TransactionHistoryDatePickerViewController,
+        didPickStartDate startDate: Date?,
+        endDate: Date?
+    ) {
+        filter.startDate = startDate
+        filter.endDate = endDate
+        dateFilterView.reloadData(startDate: startDate, endDate: endDate)
+        filtersScrollView.layoutIfNeeded()
+        let rightMost = CGPoint(x: filtersScrollView.contentSize.width - filtersScrollView.frame.width,
+                                y: filtersScrollView.contentOffset.y)
+        filtersScrollView.setContentOffset(rightMost, animated: false)
+        reloadData()
+    }
+    
+}
+
+extension TransactionHistoryViewController {
     
     @objc private func snapshotsDidSave(_ notification: Notification) {
         if let snapshots = notification.userInfo?[SafeSnapshotDAO.snapshotsUserInfoKey] as? [SafeSnapshot], snapshots.count == 1 {
             // If there's only 1 item is saved, reduce db access by reloading it in place
             let snapshot = snapshots[0]
-            let isSnapshotAssociated = switch displayFilter {
-            case .token(let id):
-                snapshot.assetID == id
-            case .user(let id):
-                snapshot.opponentID == id
-            case let .address(assetID, address):
-                snapshot.assetID == assetID && (snapshot.deposit?.sender == address || snapshot.withdrawal?.receiver == address)
-            case nil:
-                true
-            }
-            if !isSnapshotAssociated {
+            if !filter.isIncluded(snapshot: snapshot) {
                 // The snapshot will never show in this view, no need to load
                 return
             }
@@ -212,29 +419,17 @@ extension SafeSnapshotListViewController {
         } else {
             behavior = .reload
         }
-        let operation = LoadLocalDataOperation(viewController: self,
-                                               behavior: behavior,
-                                               filter: displayFilter,
-                                               sort: sort)
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: behavior,
+            filter: filter,
+            order: order
+        )
         queue.addOperation(operation)
     }
     
     @objc private func inscriptionDidRefresh(_ notification: Notification) {
         guard let snapshotID = notification.userInfo?[RefreshInscriptionJob.UserInfoKey.snapshotID] as? String else {
-            return
-        }
-        let isSnapshotAssociated = switch displayFilter {
-        case .token(let id):
-            snapshotID == id
-        case .user(let id):
-            snapshotID == id
-        case let .address(assetID, address):
-            false
-        case nil:
-            true
-        }
-        if !isSnapshotAssociated {
-            // The snapshot will never show in this view, no need to load
             return
         }
         if items[snapshotID] != nil {
@@ -247,10 +442,12 @@ extension SafeSnapshotListViewController {
         guard let firstItem else {
             return
         }
-        let operation = LoadLocalDataOperation(viewController: self,
-                                               behavior: .prepend(offset: firstItem),
-                                               filter: displayFilter,
-                                               sort: sort)
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: .prepend(offset: firstItem),
+            filter: filter,
+            order: order
+        )
         queue.addOperation(operation)
     }
     
@@ -258,10 +455,12 @@ extension SafeSnapshotListViewController {
         guard let lastItem else {
             return
         }
-        let operation = LoadLocalDataOperation(viewController: self,
-                                               behavior: .append(offset: lastItem),
-                                               filter: displayFilter,
-                                               sort: sort)
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: .append(offset: lastItem),
+            filter: filter,
+            order: order
+        )
         queue.addOperation(operation)
     }
     
@@ -290,15 +489,15 @@ extension SafeSnapshotListViewController {
     
 }
 
-extension SafeSnapshotListViewController {
+extension TransactionHistoryViewController {
     
     private class ReloadSingleItemOperation: Operation {
         
         private let snapshotID: String
         
-        private weak var viewController: SafeSnapshotListViewController?
+        private weak var viewController: TransactionHistoryViewController?
         
-        init(viewController: SafeSnapshotListViewController?, snapshotID: String) {
+        init(viewController: TransactionHistoryViewController?, snapshotID: String) {
             self.viewController = viewController
             self.snapshotID = snapshotID
         }
@@ -353,30 +552,30 @@ extension SafeSnapshotListViewController {
         }
         
         private let behavior: Behavior
-        private let filter: DisplayFilter?
-        private let sort: Snapshot.Sort
+        private let filter: SafeSnapshot.Filter
+        private let order: SafeSnapshot.Order
         
         private let limit = 50
         private let loadMoreThreshold = 5
-        private let amountSortedSection = ""
+        private let amountSortedSection = "" // There must be a section for items to insert
         
-        private weak var viewController: SafeSnapshotListViewController?
+        private weak var viewController: TransactionHistoryViewController?
         
         init(
-            viewController: SafeSnapshotListViewController?,
+            viewController: TransactionHistoryViewController?,
             behavior: Behavior,
-            filter: DisplayFilter?,
-            sort: Snapshot.Sort
+            filter: SafeSnapshot.Filter,
+            order: SafeSnapshot.Order
         ) {
             self.viewController = viewController
             self.behavior = behavior
             self.filter = filter
-            self.sort = sort
+            self.order = order
             assert(limit > loadMoreThreshold)
         }
         
         override func main() {
-            Logger.general.debug(category: "SnapshotListLoader", message: "Start loading with behavior: \(behavior), filter: \(filter?.debugDescription ?? "none"), sort: \(sort)")
+            Logger.general.debug(category: "SnapshotListLoader", message: "Start loading with behavior: \(behavior), filter: \(filter.description), order: \(order)")
             let offset: SafeSnapshotDAO.Offset? = switch behavior {
             case .reload:
                     .none
@@ -388,17 +587,8 @@ extension SafeSnapshotListViewController {
                     .after(offset: offset, includesOffset: false)
             }
             
-            let items: [SafeSnapshotItem] = switch filter {
-            case let .token(id):
-                SafeSnapshotDAO.shared.snapshots(assetId: id, offset: offset, sort: sort, limit: limit)
-            case let .user(id):
-                SafeSnapshotDAO.shared.snapshots(opponentID: id, offset: offset, sort: sort, limit: limit)
-            case let .address(assetID, address):
-                SafeSnapshotDAO.shared.snapshots(assetID: assetID, address: address, offset: offset, sort: sort, limit: limit)
-            case .none:
-                SafeSnapshotDAO.shared.snapshots(offset: offset, sort: sort, limit: limit)
-            }
-            refreshUserIfNeeded(items)
+            let items = SafeSnapshotDAO.shared.snapshots(offset: offset, filter: filter, order: order, limit: limit)
+            loadMissingUsersOrTokens(items)
             
             var dataSnapshot: DataSourceSnapshot
             switch behavior {
@@ -415,8 +605,8 @@ extension SafeSnapshotListViewController {
                 }
             }
             
-            switch sort {
-            case .createdAt:
+            switch order {
+            case .newest, .oldest:
                 switch offset {
                 case .before:
                     for item in items {
@@ -445,7 +635,7 @@ extension SafeSnapshotListViewController {
                         dataSnapshot.appendItems([item.id], toSection: date)
                     }
                 }
-            case .amount:
+            case .mostValuable, .biggestAmount:
                 if dataSnapshot.numberOfSections == 0 {
                     dataSnapshot.appendSections([amountSortedSection])
                 }
@@ -467,7 +657,7 @@ extension SafeSnapshotListViewController {
                 guard let controller = viewController, !isCancelled else {
                     return
                 }
-                controller.sort = sort
+                controller.order = order
                 controller.sectionTitles = dataSnapshot.sectionIdentifiers
                 switch behavior {
                 case .reload, .reloadVisibleItems:
@@ -523,18 +713,28 @@ extension SafeSnapshotListViewController {
             }
         }
         
-        private func refreshUserIfNeeded(_ snapshots: [SafeSnapshotItem]) {
+        private func loadMissingUsersOrTokens(_ snapshots: [SafeSnapshotItem]) {
             var userIDs: Set<String> = []
+            var missingAssetIDs: Set<String> = []
             for snapshot in snapshots {
                 if let userID = snapshot.opponentUserID {
                     userIDs.insert(userID)
                 }
+                if snapshot.tokenSymbol == nil {
+                    missingAssetIDs.insert(snapshot.assetID)
+                }
             }
-            let inexistedUserIDs = userIDs.filter { id in
+            
+            let missingUserIDs = userIDs.filter { id in
                 !UserDAO.shared.isExist(userId: id)
             }
-            if !inexistedUserIDs.isEmpty {
-                let job = RefreshUserJob(userIds: Array(inexistedUserIDs))
+            if !missingUserIDs.isEmpty {
+                let job = RefreshUserJob(userIds: Array(missingUserIDs))
+                ConcurrentJobQueue.shared.addJob(job: job)
+            }
+            
+            for id in missingAssetIDs {
+                let job = RefreshTokenJob(assetID: id)
                 ConcurrentJobQueue.shared.addJob(job: job)
             }
         }

@@ -70,6 +70,7 @@
 "alert_key_group_video_message" = "%@が動画を送信しました";
 "all" = "すべて";
 "all_conversations" = "すべてのチャットルーム";
+"all_dates" = "All Dates";
 "all_photos" = "全ての画像";
 "all_signer_failure" = "All node failure";
 "all_transactions" = "もらった・あげたコイン💰";
@@ -98,6 +99,7 @@
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "資産が存在しません";
 "asset_type" = "資産タイプ";
+"assets" = "Assets";
 "assets" = "資産";
 "assets_title" = "資産";
 "audio" = "音声メッセージ";
@@ -400,6 +402,7 @@
 "enable_pay" = "%@の支払いを有効化";
 "enable_pay_confirmation" = "%@の支払いを有効化しますか？";
 "enable_touch_pay_hint" = "PINコードを確認して指紋認証を利用可能にしてください";
+"end" = "End";
 "end_to_end_encryption" = "E2E暗号化";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "新しい電話番号を入力してください";
@@ -486,6 +489,7 @@
 "free" = "FREE";
 "from" = "より";
 "from_address" = "From address";
+"from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
@@ -683,9 +687,13 @@
 "notification_content" = "友達からのメッセージを見逃さないで！";
 "notification_message_preview_description" = "通知でメッセージ内容を表示する";
 "now_an_addmin" = "%@は管理者です";
+"number_of_assets" = "%d Assets";
+"number_of_days" = "%d Days";
+"number_of_recipients" = "%d Recipients";
 "off" = "オフ";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
+"oldest" = "Oldest";
 "one_by_one_forward" = "それぞれ転送する";
 "one_hour" = "1時間";
 "one_week" = "1週間";
@@ -794,6 +802,7 @@
 "recent" = "Recent";
 "recent_chats" = "チャット";
 "recent_searches" = "最近の検索";
+"recipients" = "Recipients";
 "refresh" = "更新";
 "release" = "Release";
 "reload" = "リロード";
@@ -818,6 +827,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "コードを再送する";
 "resend_code_pending" = "%@ 後にコードを再送";
+"reset" = "リセット";
 "reset_link" = "リンクを取り消す";
 "restore" = "復元";
 "restore_chat_from_icloud" = "Restore your chat history from iCloud.";
@@ -881,6 +891,7 @@
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_date" = "Select Date";
 "select_emergency_contact" = "緊急連絡先を選択";
 "select_more_photos" = "さらに選択";
 "select_token" = "Select Token";
@@ -980,6 +991,10 @@
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "スナップショットは見つかりません";
 "sort_by" = "並びかえ項目";
+"sort_by_amount" = "Sort by Amount";
+"sort_by_oldest" = "Sort by Oldest";
+"sort_by_recent" = "Sort by Recent";
+"sort_by_value" = "Sort by Value";
 "start" = "Start";
 "start_messaging" = "メッセージを開始";
 "started_group_call" = "%@がグループ通話を開始しました";
@@ -1038,6 +1053,7 @@
 "track_not_found" = "トラックが見つかりません";
 "transaction" = "トランザクション";
 "transaction_hash" = "トランザクションハッシュ";
+"transaction_history" = "Transaction History";
 "transaction_id" = "トランザクションID";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "トランザクションタイプ";
@@ -1112,6 +1128,7 @@
 "unread_messages" = "新しいメッセージ";
 "unrecognized_codes" = "不明なコード";
 "unsigned_message" = "UNSIGNED MESSAGE";
+"until_date" = "Until %@";
 "update" = "アップデート";
 "update_mixin" = "Mixinのアップデート";
 "upgrade" = "Upgrade";
@@ -1131,6 +1148,7 @@
 "user_not_found" = "ユーザーが見つかりませんでした";
 "utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "認証時間切れ";
+"value" = "Value";
 "value_now" = "現在価格 %@";
 "value_then" = "当時の価格 %@";
 "verify" = "認証";

@@ -452,8 +452,8 @@ extension UserProfileViewController {
     }
     
     @objc func showTransactions() {
-        let vc = PeerTransactionsViewController.instance(opponentId: user.userId)
-        dismissAndPush(vc)
+        let history = TransactionHistoryViewController.contained(user: user)
+        dismissAndPush(history)
     }
     
     @objc func groupsInCommon() {

@@ -14,6 +14,9 @@ final class TransferActionView: UIView {
     
     var actions: [Action] = [] {
         didSet {
+            guard actions != oldValue else {
+                return
+            }
             reloadData(actions: actions)
         }
     }
@@ -45,7 +48,9 @@ final class TransferActionView: UIView {
     }
     
     private func reloadData(actions: [Action]) {
-        stackView.arrangedSubviews.forEach(stackView.removeArrangedSubview(_:))
+        for view in stackView.arrangedSubviews {
+            view.removeFromSuperview()
+        }
         for action in actions {
             let button = UIButton(type: .system)
             button.tag = action.rawValue

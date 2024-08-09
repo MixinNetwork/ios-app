@@ -212,7 +212,7 @@ extension CircleEditorViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.selected_peer, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: selectedPeerReuseID, for: indexPath) as! SelectedPeerCell
         let member = selections[indexPath.row]
         cell.render(member: member)
         cell.delegate = self
@@ -221,9 +221,9 @@ extension CircleEditorViewController: UICollectionViewDataSource {
     
 }
 
-extension CircleEditorViewController: SelectedPeerCellDelegate {
+extension CircleEditorViewController: SelectedItemCellDelegate {
     
-    func selectedPeerCellDidSelectRemove(_ cell: UICollectionViewCell) {
+    func selectedItemCellDidSelectRemove(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }

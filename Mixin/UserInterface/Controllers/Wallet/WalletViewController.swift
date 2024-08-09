@@ -43,6 +43,9 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let navigationController, !navigationController.isNavigationBarHidden {
+            navigationController.setNavigationBarHidden(true, animated: true)
+        }
         DispatchQueue.global().async {
             let canMigrateAssets = AssetDAO.shared.hasPositiveBalancedAssets()
             DispatchQueue.main.async {
@@ -103,7 +106,9 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     @IBAction func moreAction(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
-            self.navigationController?.pushViewController(AllTransactionsViewController.instance(), animated: true)
+            self.reloadPendingDeposits()
+            let history = TransactionHistoryViewController.contained()
+            self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(HiddenTokensViewController.instance(), animated: true)
@@ -157,7 +162,7 @@ extension WalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = TokenViewController.instance(token: token)
+        let viewController = TokenViewController.contained(token: token)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -222,7 +227,7 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
         let controller: UIViewController
         switch action {
         case .send:
-            controller = TokenViewController.instance(token: token, performSendOnAppear: true)
+            controller = TokenViewController.contained(token: token, performSendOnAppear: true)
         case .receive:
             controller = DepositViewController.instance(token: token)
         case .swap:
@@ -321,6 +326,32 @@ extension WalletViewController {
                                    balance: token.balance,
                                    updatedAt: Date().toUTCString())
             TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+        }
+    }
+    
+    private func reloadPendingDeposits() {
+        SafeAPI.allDeposits(queue: .global()) { result in
+            guard case .success(let deposits) = result else {
+                return
+            }
+            let entries = DepositEntryDAO.shared.compactEntries()
+            let myDeposits = deposits.filter { deposit in
+                // `SafeAPI.allDeposits` returns all deposits, whether it's mine or other's
+                // Filter with my entries to get my deposits
+                entries.contains(where: { (entry) in
+                    let isDestinationMatch = entry.destination == deposit.destination
+                    let isTagMatch: Bool
+                    if entry.tag.isNilOrEmpty && deposit.tag.isNilOrEmpty {
+                        isTagMatch = true
+                    } else if entry.tag == deposit.tag {
+                        isTagMatch = true
+                    } else {
+                        isTagMatch = false
+                    }
+                    return isDestinationMatch && isTagMatch
+                })
+            }
+            SafeSnapshotDAO.shared.replaceAllPendingSnapshots(with: myDeposits)
         }
     }
     

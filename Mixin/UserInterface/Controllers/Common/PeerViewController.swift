@@ -23,6 +23,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     let tableView: UITableView
     let initDataOperation = BlockOperation()
     let headerReuseId = "header"
+    let selectedPeerReuseID = "selected_peer"
     
     lazy var collectionViewLayout = UICollectionViewFlowLayout()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
@@ -83,7 +84,8 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
                 make.trailing.equalToSuperview().offset(-20)
                 make.height.equalTo(80)
             }
-            collectionView.register(R.nib.selectedPeerCell)
+            collectionView.register(SelectedPeerCell.self,
+                                    forCellWithReuseIdentifier: selectedPeerReuseID)
         }
         searchBoxView.textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_contact()

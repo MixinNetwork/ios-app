@@ -167,7 +167,7 @@ extension TokenSearchResultsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = searchResults[indexPath.row]
-        let vc = TokenViewController.instance(token: item)
+        let vc = TokenViewController.contained(token: item)
         navigationController?.pushViewController(vc, animated: true)
         DispatchQueue.global().async {
             AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)

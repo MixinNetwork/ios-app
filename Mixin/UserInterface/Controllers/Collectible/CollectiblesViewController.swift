@@ -10,7 +10,7 @@ final class CollectiblesViewController: UIViewController {
     @IBOutlet weak var collectionImageView: UIImageView!
     @IBOutlet weak var showItemButton: UIButton!
     @IBOutlet weak var showCollectionButton: UIButton!
-    @IBOutlet weak var sortButton: CollectiblesSortButton!
+    @IBOutlet weak var sortButton: OutlineButton!
     
     private let hiddenSearchTopMargin: CGFloat = -28
     
@@ -32,7 +32,6 @@ final class CollectiblesViewController: UIViewController {
         updateContentSelection()
         updateOrderingSelection()
         sortButton.layer.cornerRadius = 19
-        sortButton.layer.borderWidth = 1
         sortButton.layer.masksToBounds = true
         sortButton.menu = UIMenu(children: [
             UIAction(

@@ -410,7 +410,7 @@ extension InscriptionViewController: UITableViewDelegate {
         {
             let previewView = ImagePreviewView(image: image, frame: view.bounds)
             let startImageFrame = cell.contentImageView.convert(cell.contentImageView.bounds, to: previewView)
-            let closeAction = UIAction { [weak previewView] _ in
+            previewView.dismissAction = { [weak previewView] in
                 guard let view = previewView else {
                     return
                 }
@@ -425,7 +425,6 @@ extension InscriptionViewController: UITableViewDelegate {
                 }
             }
             view.addSubview(previewView)
-            previewView.closeButton.addAction(closeAction, for: .touchUpInside)
             previewView.imageView.frame = startImageFrame
             previewView.imageView.layer.cornerRadius = cell.imageWrapperView.layer.cornerRadius
             let endHeight = ceil(view.bounds.width * (image.size.height / image.size.width))
@@ -577,6 +576,8 @@ extension InscriptionViewController {
         let closeButton = UIButton(type: .system)
         let imageView: UIImageView
         
+        var dismissAction: (() -> Void)?
+        
         private let image: UIImage
         
         init(image: UIImage, frame: CGRect) {
@@ -590,8 +591,10 @@ extension InscriptionViewController {
             backgroundView.snp.makeEdgesEqualToSuperview()
             
             closeButton.setImage(R.image.ic_title_close(), for: .normal)
+            closeButton.overrideUserInterfaceStyle = .dark
             closeButton.tintColor = R.color.icon_tint()
             closeButton.alpha = 0
+            closeButton.addTarget(self, action: #selector(dismiss(_:)), for: .touchUpInside)
             addSubview(closeButton)
             closeButton.snp.makeConstraints { make in
                 make.top.equalTo(safeAreaLayoutGuide.snp.top)
@@ -601,6 +604,12 @@ extension InscriptionViewController {
             
             addSubview(imageView)
             imageView.layer.masksToBounds = true
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismiss(_:)))
+            let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(dismiss(_:)))
+            swipeRecognizer.direction = .down
+            imageView.addGestureRecognizer(tapRecognizer)
+            imageView.addGestureRecognizer(swipeRecognizer)
+            imageView.isUserInteractionEnabled = true
         }
         
         required init?(coder: NSCoder) {
@@ -609,6 +618,10 @@ extension InscriptionViewController {
         
         deinit {
             Logger.general.debug(category: "InscriptionPreview", message: "Deinitialized")
+        }
+        
+        @objc private func dismiss(_ sender: Any) {
+            dismissAction?()
         }
         
     }

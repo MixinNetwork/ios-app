@@ -138,7 +138,7 @@ final class TransactionHistoryDatePickerViewController: UIViewController {
     
     @objc private func loadFixedPeriod(_ sender: OutlineButton) {
         let calendar: Calendar = .current
-        let numberOfDays = TimeInterval(sender.tag)
+        let numberOfDays = TimeInterval(sender.tag) - 1
         switch (startDate, endDate) {
         case (.none, .none):
             let now = Date()

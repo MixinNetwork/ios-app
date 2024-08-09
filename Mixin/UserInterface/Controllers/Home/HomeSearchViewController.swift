@@ -9,15 +9,16 @@ protocol HomeSearchViewController {
 
 extension HomeSearchViewController where Self: UIViewController {
     
-    var trimmedLowercaseKeyword: String? {
+    var trimmedKeyword: String? {
         guard let text = searchTextField.text else {
             return nil
         }
         let trimmed = text.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty else {
+        if trimmed.isEmpty {
             return nil
+        } else {
+            return trimmed
         }
-        return trimmed.lowercased()
     }
     
     var homeViewController: HomeViewController? {

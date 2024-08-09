@@ -88,7 +88,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     }
     
     @IBAction func searchAction(_ sender: Any) {
-        guard let keyword = trimmedLowercaseKeyword else {
+        guard let keyword = trimmedKeyword else {
             showRecentApps()
             lastKeyword = nil
             cancelOperation()
@@ -322,11 +322,11 @@ extension SearchViewController: UITableViewDelegate {
         case .asset:
             pushTokenViewController(token: assets[indexPath.row].asset)
         case .user:
-            pushViewController(keyword: trimmedLowercaseKeyword, result: users[indexPath.row])
+            pushViewController(keyword: trimmedKeyword, result: users[indexPath.row])
         case .group:
-            pushViewController(keyword: trimmedLowercaseKeyword, result: conversationsByName[indexPath.row])
+            pushViewController(keyword: trimmedKeyword, result: conversationsByName[indexPath.row])
         case .conversation:
-            pushViewController(keyword: trimmedLowercaseKeyword, result: conversationsByMessage[indexPath.row])
+            pushViewController(keyword: trimmedKeyword, result: conversationsByMessage[indexPath.row])
         }
     }
     

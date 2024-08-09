@@ -103,7 +103,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     
     @objc func searchAction(_ sender: Any) {
         cancelOperation()
-        guard let keyword = trimmedLowercaseKeyword else {
+        guard let keyword = trimmedKeyword else {
             models = []
             tableView.reloadData()
             lastKeyword = nil
@@ -216,7 +216,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
             let asset = (model as! AssetSearchResult).asset
             pushTokenViewController(token: asset)
         case .user, .conversationsByName, .conversationsByMessage:
-            pushViewController(keyword: trimmedLowercaseKeyword, result: model as! SearchResult)
+            pushViewController(keyword: trimmedKeyword, result: model as! SearchResult)
         }
     }
     

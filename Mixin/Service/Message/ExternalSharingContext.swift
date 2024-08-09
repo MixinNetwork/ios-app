@@ -34,11 +34,16 @@ struct ExternalSharingContext {
         
     }
     
+    enum Destination {
+        case conversation(String)
+        case user(String)
+    }
+    
     private struct TransferImageData: Decodable {
         let url: URL
     }
     
-    let conversationId: String?
+    let destination: Destination?
     var content: Content
     
     init?(url: URL) {
@@ -48,16 +53,16 @@ struct ExternalSharingContext {
         guard let items = components.queryItems else {
             return nil
         }
-        if let text = items.first(where: { $0.name == "text" })?.value {
+        let queries = items.reduce(into: [:]) { result, item in
+            result[item.name] = item.value
+        }
+        if let text = queries["text"] {
             let clamped = String(text.prefix(maxTextMessageContentLength))
             self.content = .text(clamped)
-            self.conversationId = nil
+            self.destination = nil
             return
         }
-        guard let category = items.first(where: { $0.name == "category" })?.value else {
-            return nil
-        }
-        guard let data = items.first(where: { $0.name == "data" })?.value else {
+        guard let category = queries["category"], let data = queries["data"] else {
             return nil
         }
         switch category {
@@ -113,7 +118,13 @@ struct ExternalSharingContext {
         default:
             return nil
         }
-        self.conversationId = items.first(where: { $0.name == "conversation" })?.value
+        if let id = queries["user"] {
+            self.destination = .user(id)
+        } else if let id = queries["conversation"] {
+            self.destination = .conversation(id)
+        } else {
+            self.destination = nil
+        }
     }
     
     private static func decode<T>(base64Encoded string: String) -> T? where T : Decodable {

@@ -129,7 +129,7 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         queue.operations
             .filter({ $0 != loadConversationOp })
             .forEach({ $0.cancel() })
-        guard let keyword = trimmedLowercaseKeyword else {
+        guard let keyword = trimmedKeyword else {
             messages = []
             tableView.reloadData()
             lastKeyword = nil
@@ -219,7 +219,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let location = messages.last?.last?.messageId else {
             return
         }
-        guard let keyword = trimmedLowercaseKeyword else {
+        guard let keyword = trimmedKeyword else {
             return
         }
         let conversationId = self.conversationId
@@ -251,7 +251,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let conversation = conversation else {
             return
         }
-        guard let keyword = trimmedLowercaseKeyword else {
+        guard let keyword = trimmedKeyword else {
             return
         }
         let messageId = messages[indexPath.section][indexPath.row].messageId

@@ -153,12 +153,12 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountTextField.delegate = self
         memoTextField.delegate = self
         
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            guard let self = self, self.presentedViewController == nil else {
-                return
-            }
-            self.amountTextField.becomeFirstResponder()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive(_:)),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
     }
     
     override func keyboardWillChangeFrame(_ notification: Notification) {
@@ -395,6 +395,13 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
             }
         }
+    }
+    
+    @objc private func applicationDidBecomeActive(_ notification: Notification) {
+        guard presentedViewController == nil else {
+            return
+        }
+        amountTextField.becomeFirstResponder()
     }
     
     private func updateViews(token: TokenItem) {

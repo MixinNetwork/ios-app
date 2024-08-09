@@ -141,7 +141,6 @@
 		7B3FD4EE241965BE00B58006 /* LocationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B3FD4ED241965BE00B58006 /* LocationView.xib */; };
 		7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */; };
 		7B402F88214692C300383687 /* BubbleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B402F87214692C200383687 /* BubbleLayer.swift */; };
-		7B4375C32170CA6900846DC5 /* SnapshotFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* SnapshotFilterConditionCell.swift */; };
 		7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B441ADB24CAE1B80067231A /* StreamId.swift */; };
 		7B45A51C2189F28E0008F894 /* ringtone_outgoing.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
@@ -156,7 +155,6 @@
 		7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */; };
 		7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */; };
 		7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4EF79E22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift */; };
-		7B4F5ACD224CBA4A00A8392D /* SnapshotFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4F5ACC224CBA4A00A8392D /* SnapshotFilterViewController.swift */; };
 		7B4FCCE02440A66600360F65 /* SolidBackgroundColorImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4FCCDF2440A66600360F65 /* SolidBackgroundColorImageView.swift */; };
 		7B50DE112333C37E00FB651A /* FullScreenPopupEdgePanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B50DE102333C37E00FB651A /* FullScreenPopupEdgePanGestureRecognizer.swift */; };
 		7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */; };
@@ -187,7 +185,6 @@
 		7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5A748E230274E200C6107E /* GroupIconMaker.swift */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
-		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
 		7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */; };
 		7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */; };
 		7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */; };
@@ -992,8 +989,6 @@
 		94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */; };
 		94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */; };
 		94C886122BA2D5460039F723 /* ConnectWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */; };
-		94C886B52BA469800039F723 /* SnapshotFilterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C886B42BA469800039F723 /* SnapshotFilterView.xib */; };
-		94C886C22BA46E000039F723 /* SnapshotFilterConditionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C886C02BA46E000039F723 /* SnapshotFilterConditionCell.xib */; };
 		94C8C4842C11A1A100993027 /* Web3API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C4832C11A1A100993027 /* Web3API.swift */; };
 		94C8C49D2C11A29C00993027 /* PriorityFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C49C2C11A29C00993027 /* PriorityFee.swift */; };
 		94CD47162BECACED00A3DE10 /* InscriptionActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CD47152BECACED00A3DE10 /* InscriptionActionCell.xib */; };
@@ -1466,7 +1461,6 @@
 		7B3FD4ED241965BE00B58006 /* LocationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationView.xib; sourceTree = "<group>"; };
 		7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentExpirationHintingMessageCell.swift; sourceTree = "<group>"; };
 		7B402F87214692C200383687 /* BubbleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLayer.swift; sourceTree = "<group>"; };
-		7B4375C22170CA6900846DC5 /* SnapshotFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotFilterConditionCell.swift; sourceTree = "<group>"; };
 		7B441ADB24CAE1B80067231A /* StreamId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamId.swift; sourceTree = "<group>"; };
 		7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ringtone_outgoing.caf; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
@@ -1481,7 +1475,6 @@
 		7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxLeftView.swift; sourceTree = "<group>"; };
 		7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewMaskView.swift; sourceTree = "<group>"; };
 		7B4EF79E22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveEmergencyContactValidationViewController.swift; sourceTree = "<group>"; };
-		7B4F5ACC224CBA4A00A8392D /* SnapshotFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotFilterViewController.swift; sourceTree = "<group>"; };
 		7B4FCCDF2440A66600360F65 /* SolidBackgroundColorImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidBackgroundColorImageView.swift; sourceTree = "<group>"; };
 		7B50DE102333C37E00FB651A /* FullScreenPopupEdgePanGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenPopupEdgePanGestureRecognizer.swift; sourceTree = "<group>"; };
 		7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueButtonViewController.swift; sourceTree = "<group>"; };
@@ -1512,7 +1505,6 @@
 		7B5A748E230274E200C6107E /* GroupIconMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconMaker.swift; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
-		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
 		7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputTextView.swift; sourceTree = "<group>"; };
 		7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorViewController.swift; sourceTree = "<group>"; };
 		7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -2318,8 +2310,6 @@
 		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttachmentDiagnosticView.xib; sourceTree = "<group>"; };
 		94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectWalletViewController.swift; sourceTree = "<group>"; };
-		94C886B42BA469800039F723 /* SnapshotFilterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotFilterView.xib; sourceTree = "<group>"; };
-		94C886C02BA46E000039F723 /* SnapshotFilterConditionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotFilterConditionCell.xib; sourceTree = "<group>"; };
 		94C8C4832C11A1A100993027 /* Web3API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3API.swift; sourceTree = "<group>"; };
 		94C8C49C2C11A29C00993027 /* PriorityFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityFee.swift; sourceTree = "<group>"; };
 		94CD47142BECACED00A3DE10 /* InscriptionActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionActionCell.swift; sourceTree = "<group>"; };
@@ -3947,7 +3937,6 @@
 				7C53049C28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift */,
 				7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */,
 				7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */,
-				7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */,
 				7B833E9822C4904F0063929D /* AppLoadingIndicatorView.swift */,
 				7CB227842907CE060034F9FD /* DepositNetworkCell.swift */,
 				7CB227852907CE060034F9FD /* DepositNetworkCell.xib */,
@@ -4241,8 +4230,6 @@
 			children = (
 				7B4D1125205B8D380074BF60 /* AddressCell.swift */,
 				DF87949B207505F4004A1E55 /* TransactionCell.swift */,
-				94C886C02BA46E000039F723 /* SnapshotFilterConditionCell.xib */,
-				7B4375C22170CA6900846DC5 /* SnapshotFilterConditionCell.swift */,
 				7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */,
 				7BEC4DF021A7D054003336F2 /* AssetCell.xib */,
 				7B9916D321945A6800C11401 /* AssetCell.swift */,
@@ -4462,8 +4449,6 @@
 				94F9525C2AE6174A0025B995 /* TransferOutView.xib */,
 				94F952572AE616F40025B995 /* TransferOutViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
-				94C886B42BA469800039F723 /* SnapshotFilterView.xib */,
-				7B4F5ACC224CBA4A00A8392D /* SnapshotFilterViewController.swift */,
 				9459693528B28F18006F5421 /* TIPNavigationViewController.swift */,
 				948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */,
 				94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */,
@@ -5152,7 +5137,6 @@
 				7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
 				DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */,
-				94C886B52BA469800039F723 /* SnapshotFilterView.xib in Resources */,
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
 				94B2CD782B0F88D300D268E1 /* DepositView.xib in Resources */,
 				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
@@ -5206,7 +5190,6 @@
 				947FA4D229957A2400EF13A0 /* AuthorizationTableViewCell.xib in Resources */,
 				7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */,
 				E05F1B9E23BB546F00A2569D /* AppReceptionView.xib in Resources */,
-				94C886C22BA46E000039F723 /* SnapshotFilterConditionCell.xib in Resources */,
 				946331D62C6282D300C54B76 /* TransactionHistoryDatePickerView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6301,7 +6284,6 @@
 				E07E38A623A774940005A538 /* MixinError.swift in Sources */,
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,
 				7B8144631FDD62B900404431 /* SystemMessageViewModel.swift in Sources */,
-				7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */,
 				7BA722811FC1F2A100132FF4 /* PhotoMessageCell.swift in Sources */,
 				94FCB5FF264673C400CCC8FD /* TranscriptPreviewViewController.swift in Sources */,
 				7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */,
@@ -6336,14 +6318,12 @@
 				7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */,
 				7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */,
 				7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */,
-				7B4F5ACD224CBA4A00A8392D /* SnapshotFilterViewController.swift in Sources */,
 				945E865229C078E7000FDA54 /* RIPEMD160.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,
 				7C47352928571CC900ECD293 /* AccessPhoneContactHintWindow.swift in Sources */,
 				7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */,
 				52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */,
 				94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */,
-				7B4375C32170CA6900846DC5 /* SnapshotFilterConditionCell.swift in Sources */,
 				DF846CDD2369550B00AA1197 /* MultisigUserCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,

@@ -149,14 +149,13 @@ extension AppCardV1MessageCell {
                     imageView.layer.masksToBounds = true
                     imageView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
                     imageView.layer.cornerRadius = 5
-                    imageView.snp.makeConstraints { make in
-                        make.width.equalTo(imageView.snp.height)
-                            .multipliedBy(cover.ratio)
-                    }
                     imageView.contentMode = .scaleAspectFill
                     insertArrangedSubview(imageView, at: 0)
                     setCustomSpacing(AppCardV1MessageViewModel.coverBottomSpacing, after: imageView)
                     self.coverImageView = imageView
+                }
+                imageView.snp.remakeConstraints { make in
+                    make.width.equalTo(imageView.snp.height).multipliedBy(cover.ratio)
                 }
                 switch cover {
                 case .plain(let string):

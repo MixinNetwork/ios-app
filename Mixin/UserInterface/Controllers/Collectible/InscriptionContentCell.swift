@@ -2,6 +2,7 @@ import UIKit
 
 final class InscriptionContentCell: UITableViewCell {
     
+    @IBOutlet weak var imageWrapperView: UIView!
     @IBOutlet weak var contentImageView: UIImageView!
     @IBOutlet weak var placeholderImageView: UIImageView!
     

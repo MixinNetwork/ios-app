@@ -71,6 +71,8 @@ class UrlWindow {
                     navigationController.pushViewController(swap, animated: true)
                 }
                 return true
+            case let .send(context):
+                return checkSendUrl(sharingContext: context, webContext: source.webContext)
             }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
@@ -762,12 +764,75 @@ class UrlWindow {
     }
     
     class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) -> Bool {
-        var sharingContext = sharingContext
-        var message = Message.createMessage(context: sharingContext)
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
-        func presentSendingConfirmation() {
+        let onScreenConversationID: String? = UIApplication.currentConversationId()
+        let conversationID: String?
+        let needsConfirmation: Bool
+        switch sharingContext.destination {
+        case .conversation(let id):
+            conversationID = id
+            needsConfirmation = true
+        case .user(let id):
+            conversationID = ConversationDAO.shared.makeConversationId(userId: id, ownerUserId: myUserId)
+            needsConfirmation = false
+        case .none:
+            if let id = onScreenConversationID {
+                conversationID = id
+                needsConfirmation = false
+            } else {
+                conversationID = nil
+                needsConfirmation = true
+            }
+        }
+        
+        var sharingContext = sharingContext
+        var message = Message.createMessage(messageId: UUID().uuidString.lowercased(),
+                                            conversationId: conversationID ?? "",
+                                            userId: myUserId,
+                                            category: "",
+                                            status: MessageStatus.SENDING.rawValue,
+                                            createdAt: Date().toUTCString())
+        switch sharingContext.content {
+        case .text(let text):
+            message.category = MessageCategory.SIGNAL_TEXT.rawValue
+            message.content = text
+        case .image:
+            message.category = MessageCategory.SIGNAL_IMAGE.rawValue
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+        case .live(let data):
+            message.category = MessageCategory.SIGNAL_LIVE.rawValue
+            message.mediaUrl = data.url
+            message.mediaWidth = data.width
+            message.mediaHeight = data.height
+            message.thumbUrl = data.thumbUrl
+            let data = try! JSONEncoder.default.encode(data)
+            message.content = String(data: data, encoding: .utf8)
+        case .contact(let data):
+            message.category = MessageCategory.SIGNAL_CONTACT.rawValue
+            message.sharedUserId = data.userId
+            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
+        case .post(let text):
+            message.category = MessageCategory.SIGNAL_POST.rawValue
+            message.content = text
+        case .appCard(let data):
+            message.category = MessageCategory.APP_CARD.rawValue
+            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
+        case .sticker(let stickerId, _):
+            message.category = MessageCategory.SIGNAL_STICKER.rawValue
+            message.stickerId = stickerId
+            let data = TransferStickerData(stickerId: stickerId)
+            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
+        }
+        
+        func sendMessageWithOrWithoutConfirmation() {
+            guard let conversationID else {
+                hud.hide()
+                present(action: .forward)
+                return
+            }
+            
             func present(action: ExternalSharingConfirmationViewController.Action) {
                 let vc = R.storyboard.chat.external_sharing_confirmation()!
                 vc.modalPresentationStyle = .custom
@@ -775,24 +840,64 @@ class UrlWindow {
                 UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 vc.load(sharingContext: sharingContext, message: message, webContext: webContext, action: action)
             }
-            if !sharingContext.conversationId.isNilOrEmpty && sharingContext.conversationId == UIApplication.currentConversationId() {
-                DispatchQueue.global().async {
-                    guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
-                        hud.hideInMainThread()
+            
+            DispatchQueue.global().async {
+                switch sharingContext.destination {
+                case .user(let id):
+                    if syncUser(userId: id, hud: hud) == nil {
                         return
                     }
-                    guard let (ownerUser, _) = syncUser(userId: conversation.ownerId, hud: hud) else {
-                        hud.hideInMainThread()
+                case .conversation, .none:
+                    break
+                }
+                var conversation = ConversationDAO.shared.getConversation(conversationId: conversationID)
+                var isMember = false
+                if conversation == nil {
+                    switch ConversationAPI.getConversation(conversationId: conversationID) {
+                    case let .success(response):
+                        guard response.participants.contains(where: { $0.userId == myUserId }) else {
+                            break
+                        }
+                        isMember = true
+                        conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
+                    case let .failure(error):
+                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.conversation_not_found())
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: text)
+                            hud.scheduleAutoHidden()
+                        }
                         return
                     }
+                } else {
+                    isMember = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationID)
+                }
+                guard let conversation = conversation, isMember else {
                     DispatchQueue.main.async {
-                        hud.hide()
-                        present(action: .send(conversation: conversation, ownerUser: ownerUser))
+                        hud.set(style: .error, text: R.string.localizable.conversation_not_found())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                guard !conversation.ownerId.isEmpty else {
+                    hud.hideInMainThread()
+                    return
+                }
+                guard let (user, _) = syncUser(userId: conversation.ownerId, hud: hud) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    hud.hide()
+                    if needsConfirmation {
+                        present(action: .send(conversation: conversation, ownerUser: user))
+                    } else {
+                        message.createdAt = Date().toUTCString()
+                        SendMessageService.shared.sendMessage(message: message, ownerUser: user, isGroupMessage: conversation.isGroup())
+                        if conversationID != onScreenConversationID {
+                            let viewController = ConversationViewController.instance(ownerUser: user)
+                            UIApplication.homeNavigationController?.pushViewController(withBackRoot: viewController)
+                        }
                     }
                 }
-            } else {
-                hud.hide()
-                present(action: .forward)
             }
         }
         
@@ -802,9 +907,7 @@ class UrlWindow {
                 guard let (_, _) = syncUser(userId: data.userId, hud: hud) else {
                     return
                 }
-                DispatchQueue.main.async {
-                    presentSendingConfirmation()
-                }
+                DispatchQueue.main.async(execute: sendMessageWithOrWithoutConfirmation)
             }
         case .image(let imageURL):
             AF.request(imageURL).responseData { (response) in
@@ -832,9 +935,7 @@ class UrlWindow {
                     
                     sharingContext.content = .image(fileUrl)
                     
-                    DispatchQueue.main.async {
-                        presentSendingConfirmation()
-                    }
+                    DispatchQueue.main.async(execute: sendMessageWithOrWithoutConfirmation)
                 }
             }
         case let .sticker(stickerId, _):
@@ -852,13 +953,11 @@ class UrlWindow {
                 }
                 DispatchQueue.main.async {
                     sharingContext.content = .sticker(stickerId, isAdded)
-                    presentSendingConfirmation()
+                    sendMessageWithOrWithoutConfirmation()
                 }
             }
         default:
-            DispatchQueue.main.async {
-                presentSendingConfirmation()
-            }
+            DispatchQueue.main.async(execute: sendMessageWithOrWithoutConfirmation)
         }
         return true
     }

@@ -9,6 +9,7 @@ enum SafeURL {
     case tip(TIPURL)
     case inscription(String)
     case swap(input: String?, output: String?)
+    case send(ExternalSharingContext)
     
 }
 
@@ -48,6 +49,12 @@ extension SafeURL {
                     }
                 }
                 self = .swap(input: input, output: output)
+            case 2 where pathComponents[1] == "send":
+                if let context = ExternalSharingContext(url: url) {
+                    self = .send(context)
+                } else {
+                    return nil
+                }
             case 3 where pathComponents[1] == "schemes":
                 let uuid = pathComponents[2]
                 if UUID.isValidLowercasedUUIDString(uuid) {

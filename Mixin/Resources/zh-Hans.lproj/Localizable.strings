@@ -1004,7 +1004,7 @@
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";
 "swap_message_success" = "您的交易已发送至网络，将很快被处理。";
 "swap_no_available_quote" = "没有报价。请尝试切换币种。";
-"swap_not_supported" = "不支持 %@ 交易，已切换";
+"swap_not_supported" = "不支持 %@ 交易";
 "swap_receive" = "获得";
 "swap_send" = "支付";
 "symbol" = "符号";

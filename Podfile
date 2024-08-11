@@ -12,6 +12,10 @@ target 'Mixin' do
   use_frameworks!
   inhibit_all_warnings!
 
+  pod 'Firebase/Core'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Performance'
+  pod 'Firebase/Crashlytics'
   pod 'SnapKit'
   pod 'PhoneNumberKit', :git => 'https://github.com/marmelroy/PhoneNumberKit'
   pod 'libwebp'

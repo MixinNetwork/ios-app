@@ -346,7 +346,11 @@ extension ExternalSharingConfirmationViewController {
                 make.edges.equalTo(imageView).inset(insets)
             }
             
-            if !content.actions.isEmpty {
+            if content.actions.isEmpty {
+                cardContentView.snp.makeConstraints { (make) in
+                    make.bottom.equalToSuperview()
+                }
+            } else {
                 final class ButtonsView: AppButtonGroupView {
                     
                     override var intrinsicContentSize: CGSize {

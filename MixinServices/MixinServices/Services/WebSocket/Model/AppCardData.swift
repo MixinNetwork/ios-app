@@ -249,7 +249,7 @@ extension AppCardData {
             }
             self.title = try container.decodeIfPresent(String.self, forKey: .title)
             self.description = try container.decodeIfPresent(String.self, forKey: .description)
-            self.actions = try container.decode([Action].self, forKey: .actions)
+            self.actions = try container.decodeIfPresent([Action].self, forKey: .actions) ?? []
             self.updatedAt = try container.decode(String.self, forKey: .updatedAt)
             self.isShareable = try container.decode(Bool.self, forKey: .shareable)
         }
@@ -267,7 +267,9 @@ extension AppCardData {
             }
             try container.encodeIfPresent(title, forKey: .title)
             try container.encodeIfPresent(description, forKey: .description)
-            try container.encode(actions, forKey: .actions)
+            if !actions.isEmpty {
+                try container.encode(actions, forKey: .actions)
+            }
             try container.encode(updatedAt, forKey: .updatedAt)
             try container.encode(isShareable, forKey: .shareable)
         }

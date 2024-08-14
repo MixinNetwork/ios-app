@@ -290,7 +290,16 @@ extension TokenMarketViewController: UITableViewDelegate {
 
 extension TokenMarketViewController: ChartView.Delegate {
     
-    func chartView(_ view: ChartView, didSelectValue value: Decimal) {
+    func chartView(_ view: ChartView, extremumAnnotationForPoint point: ChartView.Point) -> String {
+        CurrencyFormatter.localizedString(
+            from: point.value,
+            format: .fiatMoney,
+            sign: .never,
+            symbol: .currencySymbol
+        )
+    }
+    
+    func chartView(_ view: ChartView, didSelectPoint point: ChartView.Point) {
         
     }
     

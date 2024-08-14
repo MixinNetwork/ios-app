@@ -20,6 +20,7 @@ final class TokenPriceChartCell: UITableViewCell {
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         priceLabel.setFont(scaledFor: .systemFont(ofSize: 22, weight: .medium), adjustForContentSize: true)
         changeLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        chartView.annotateExtremums = true
         for (i, period) in PriceHistory.Period.allCases.enumerated() {
             let button = UIButton(type: .system)
             button.tag = i

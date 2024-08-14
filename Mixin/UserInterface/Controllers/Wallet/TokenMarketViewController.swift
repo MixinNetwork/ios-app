@@ -220,7 +220,13 @@ extension TokenMarketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_info, for: indexPath)!
                 let row = viewModel.infos[indexPath.row]
                 cell.titleLabel.text = row.title
-                cell.contentLabel.attributedText = row.content
+                cell.primaryContentLabel.text = row.primaryContent
+                if let content = row.secondaryContent {
+                    (cell.secondaryContentLabel.text, cell.secondaryContentLabel.textColor) = content
+                    cell.secondaryContentLabel.isHidden = false
+                } else {
+                    cell.secondaryContentLabel.isHidden = true
+                }
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
@@ -320,45 +326,18 @@ extension TokenMarketViewController {
         
         struct Info {
             
-            static let contentAttributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.preferredFont(forTextStyle: .callout),
-                .foregroundColor: R.color.text()!,
-            ]
-            
             let title: String
-            let content: NSAttributedString
+            let primaryContent: String
+            let secondaryContent: (String, UIColor)?
             
-            init(title: String, content: NSAttributedString) {
+            init(title: String, primaryContent: String, secondaryContent: (String, UIColor)? = nil) {
                 self.title = title
-                self.content = content
-            }
-            
-            init(title: String, content: String) {
-                self.title = title
-                self.content = NSAttributedString(string: content, attributes: Self.contentAttributes)
-            }
-            
-            init(title: String, content: String, date: Date) {
-                let content = NSMutableAttributedString(string: content + "\n", attributes: Self.contentAttributes)
-                let date = NSAttributedString(
-                    string: DateFormatter.shortDateOnly.string(from: date),
-                    attributes: [
-                        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
-                        .foregroundColor: R.color.text_tertiary()!,
-                    ]
-                )
-                content.append(date)
-                
-                self.title = title
-                self.content = content
+                self.primaryContent = primaryContent
+                self.secondaryContent = secondaryContent
             }
             
             static func contentNotApplicable(title: String) -> Info {
-                let content = NSAttributedString(string: notApplicable, attributes: [
-                    .font: UIFont.preferredFont(forTextStyle: .callout),
-                    .foregroundColor: R.color.text_tertiary()!,
-                ])
-                return Info(title: title, content: content)
+                Info(title: title, primaryContent: notApplicable)
             }
             
         }
@@ -374,23 +353,19 @@ extension TokenMarketViewController {
         
         init(token: TokenItem) {
             var infos = [
-                Info(title: R.string.localizable.name().uppercased(), content: token.name),
-                Info(title: R.string.localizable.symbol().uppercased(), content: token.symbol),
+                Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
+                Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
             ]
             if let chainName = token.chain?.name {
-                infos.append(Info(title: R.string.localizable.chain().uppercased(), content: chainName))
+                infos.append(Info(title: R.string.localizable.chain().uppercased(), primaryContent: chainName))
             }
-            infos.append(contentsOf: [
-                Info(title: R.string.localizable.contract_address().uppercased(), content: {
-                    let content = NSMutableAttributedString(string: token.assetKey + "\n", attributes: Info.contentAttributes)
-                    let warning = NSAttributedString(string: R.string.localizable.address_warning(), attributes: [
-                        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
-                        .foregroundColor: R.color.red()!,
-                    ])
-                    content.append(warning)
-                    return content
-                }()),
-            ])
+            infos.append(
+                Info(
+                    title: R.string.localizable.contract_address().uppercased(),
+                    primaryContent: token.assetKey,
+                    secondaryContent: (R.string.localizable.address_warning(), R.color.red()!)
+                )
+            )
             
             self.token = token
             self.fixedInfosCount = infos.count
@@ -465,7 +440,7 @@ extension TokenMarketViewController {
                         sign: .never,
                         symbol: .currencySymbol
                     )
-                    infos.append(Info(title: title, content: content))
+                    infos.append(Info(title: title, primaryContent: content))
                 }
             }
             if let circulatingSupply = Decimal(string: market.circulatingSupply, locale: .enUSPOSIX) {
@@ -480,7 +455,7 @@ extension TokenMarketViewController {
                         sign: .never,
                         symbol: .custom(token.symbol)
                     )
-                    infos.append(Info(title: title, content: content))
+                    infos.append(Info(title: title, primaryContent: content))
                 }
             }
             if let totalSupply = Decimal(string: market.totalSupply, locale: .enUSPOSIX) {
@@ -495,7 +470,7 @@ extension TokenMarketViewController {
                         sign: .never,
                         symbol: .custom(token.symbol)
                     )
-                    infos.append(Info(title: title, content: content))
+                    infos.append(Info(title: title, primaryContent: content))
                 }
             }
             
@@ -511,7 +486,11 @@ extension TokenMarketViewController {
                         sign: .never,
                         symbol: .currencySymbol
                     )
-                    infos.append(Info(title: title, content: price, date: market.athDate.toUTCDate()))
+                    let date = (
+                        DateFormatter.shortDateOnly.string(from: market.athDate.toUTCDate()),
+                        R.color.text_tertiary()!
+                    )
+                    infos.append(Info(title: title, primaryContent: price, secondaryContent: date))
                 }
             }
             if let atl = Decimal(string: market.atl, locale: .enUSPOSIX) {
@@ -526,7 +505,11 @@ extension TokenMarketViewController {
                         sign: .never,
                         symbol: .currencySymbol
                     )
-                    infos.append(Info(title: title, content: price, date: market.athDate.toUTCDate()))
+                    let date = (
+                        DateFormatter.shortDateOnly.string(from: market.atlDate.toUTCDate()),
+                        R.color.text_tertiary()!
+                    )
+                    infos.append(Info(title: title, primaryContent: price, secondaryContent: date))
                 }
             }
             self.infos = infos

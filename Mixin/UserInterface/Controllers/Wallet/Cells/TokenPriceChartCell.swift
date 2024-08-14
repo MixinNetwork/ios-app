@@ -68,8 +68,8 @@ final class TokenPriceChartCell: UITableViewCell {
         private func loadSubview() {
             let layer = self.layer as! CAGradientLayer
             layer.colors = [
-                UIColor(displayP3RgbValue: 0xd9d9d9, alpha: 0.2),
-                UIColor(displayP3RgbValue: 0xd9d9d9, alpha: 0),
+                UIColor(displayP3RgbValue: 0xd9d9d9, alpha: 0.2).cgColor,
+                UIColor(displayP3RgbValue: 0xd9d9d9, alpha: 0).cgColor,
             ]
             
             let label = UILabel()

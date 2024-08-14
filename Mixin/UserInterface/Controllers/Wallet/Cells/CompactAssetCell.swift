@@ -46,7 +46,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
             } else {
                 changeLabel.textColor = .walletRed
             }
-            priceLabel.text = Currency.current.symbol + asset.localizedFiatMoneyPrice
+            priceLabel.text = asset.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
             noValueIndicator.isHidden = true
@@ -77,13 +77,13 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
             chainTagLabel.isHidden = true
         }
         if token.decimalUSDPrice > 0 {
-            changeLabel.text = " \(token.localizedUsdChange)%"
-            if token.decimalUSDChange > 0 {
+            changeLabel.text = token.localizedUSDChange
+            if token.decimalUSDChange >= 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed
             }
-            priceLabel.text = Currency.current.symbol + token.localizedFiatMoneyPrice
+            priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
             noValueIndicator.isHidden = true
@@ -109,7 +109,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
             } else {
                 changeLabel.textColor = .walletRed
             }
-            priceLabel.text = Currency.current.symbol + token.localizedFiatMoneyPrice
+            priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
             noValueIndicator.isHidden = true

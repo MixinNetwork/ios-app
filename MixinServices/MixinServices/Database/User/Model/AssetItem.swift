@@ -23,7 +23,7 @@ public final class AssetItem: Asset, NumberStringLocalizable {
     
     public lazy var localizedUsdChange: String = {
         let usdChange = changeUsd.doubleValue * 100
-        return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
+        return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? zeroWith2Fractions
     }()
     
     public init(asset: Asset, chain: Chain) {

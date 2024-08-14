@@ -36,6 +36,7 @@
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "アドレスが見つかりません";
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
+"address_warning" = "Contract address is NOT a deposit address!";
 "admin" = "管理者";
 "agree_hint" = "%@と%@に同意し次へ進む";
 "albums" = "アルバム";
@@ -73,6 +74,8 @@
 "all_dates" = "All Dates";
 "all_photos" = "全ての画像";
 "all_signer_failure" = "All node failure";
+"all_time_high" = "All Time High";
+"all_time_low" = "All Time Low";
 "all_transactions" = "もらった・あげたコイン💰";
 "allow" = "許可";
 "allow_bot_access_asset" = "Allow bot to access your asset list and balance.";
@@ -209,6 +212,7 @@
 "circle_subtitle_count" = "%dのチャットルーム";
 "circle_title" = "%@のグループリスト";
 "circles" = "グループリスト";
+"circulation_supply" = "Circulation Supply";
 "clear" = "削除";
 "clear_cache" = "キャッシュをクリア";
 "clear_chat" = "チャットを削除する";
@@ -290,6 +294,7 @@
 "continue" = "続ける";
 "continue_open_url" = "URLを開く";
 "continue_with_pin" = "Continue with PIN";
+"contract_address" = "Contract Address";
 "conversation" = "チャットルーム";
 "conversation_has_too_many_circles" = "グループリスト数を減らしてください";
 "conversation_not_found" = "チャットルームが見つかりません";
@@ -322,6 +327,7 @@
 "date_format_day" = "HH:mm a";
 "date_format_month" = "M月d日（E）";
 "date_format_week_date" = "yyyy年MM月d日（E）";
+"days_count_short" = "%dD";
 "declined" = "拒否";
 "decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
 "delete" = "削除";
@@ -511,10 +517,12 @@
 "hidden_assets" = "非表示資産";
 "hide" = "非表示";
 "hide_asset" = "資産を非表示にする";
+"high_24h" = "24H HIGH";
 "hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "長押しして録音、離して送信";
 "hour" = "%d時間";
 "hour_count" = "%d時間";
+"hours_count_short" = "%dH";
 "how_are_you" = "こんにちは、調子はどうですか";
 "i_am_good" = "いい気分";
 "id" = "ID";
@@ -590,10 +598,14 @@
 "logined" = "ログインしました";
 "logs" = "ログ";
 "lost_your_mobile_number" = "電話番号をお忘れですか？";
+"low_24h" = "24H LOW";
 "make_group_admin" = "管理者権限を付与";
 "manage" = "管理";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
+"market" = "Market";
+"market_cap" = "Market Cap";
+"market_states" = "Market States";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "メディア";
@@ -616,6 +628,7 @@
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mobile_contacts" = "連絡先";
 "monthly" = "月";
+"months_count_short" = "%dM";
 "more" = "もっとみる";
 "move_and_scale" = "移動と拡大縮小";
 "multisig_receiver" = "受取人";
@@ -636,6 +649,7 @@
 "mute_until" = "%@まで";
 "muted" = "ミュートされました";
 "muted_until" = "%@までミュートする";
+"my_balance" = "My Balance";
 "my_contacts" = "連絡先";
 "my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "マイMixin ID:%@";
@@ -775,6 +789,7 @@
 "preparing" = "準備中...";
 "preparing_progress" = "準備中...(%@)";
 "price" = "Price";
+"price_data_unavailable" = "Price data unavailable";
 "privacy" = "プライバシー";
 "privacy_policy" = "プライバシーポリシー";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -1050,6 +1065,7 @@
 "today" = "今日";
 "token" = "Token";
 "total" = "Total";
+"total_supply" = "Total Supply";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
 "transaction" = "トランザクション";
@@ -1157,6 +1173,7 @@
 "version_update" = "アップデート";
 "video" = "動画";
 "videos" = "動画";
+"view_all" = "View All";
 "view_authorization" = "閲覧権限";
 "view_emergency_contact" = "緊急連絡先を確認";
 "view_on_explorer" = "View on Explorer";
@@ -1164,6 +1181,7 @@
 "view_wallet" = "ウォレットを確認";
 "voice_call_cancelled" = "グループ通話がキャンセルされました";
 "voice_call_has_been_declined" = "権限不足です";
+"vol_24h" = "24H VOL(%@)";
 "waiting" = "待機中";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1204,6 +1222,7 @@
 "web3_transaction_request" = "Transaction Request";
 "weekly" = "週";
 "weeks" = "週間";
+"weeks_count_short" = "%dW";
 "whats_your_name" = "お名前は何ですか？";
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fiとデータ通信";
@@ -1238,3 +1257,4 @@
 "your_phone_number_has_been_changed" = "電話番号が変更されました";
 "your_pin_has_been_changed" = "PINコードが変更されました";
 "your_pin_has_been_created" = "PINコードが生成されました";
+"ytd" = "YTD";

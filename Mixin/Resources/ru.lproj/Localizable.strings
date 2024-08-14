@@ -36,6 +36,7 @@
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "Адрес не найден.";
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
+"address_warning" = "Contract address is NOT a deposit address!";
 "admin" = "Администратор";
 "agree_hint" = "Продолжая, вы соглашаетесь с %@ и %@.";
 "albums" = "Альбомы";
@@ -73,6 +74,8 @@
 "all_dates" = "All Dates";
 "all_photos" = "Все фотографии";
 "all_signer_failure" = "All node failure";
+"all_time_high" = "All Time High";
+"all_time_low" = "All Time Low";
 "all_transactions" = "Все транзакции";
 "allow" = "Разрешить";
 "allow_bot_access_asset" = "Allow bot to access your asset list and balance.";
@@ -209,6 +212,7 @@
 "circle_subtitle_count" = "%d чаты";
 "circle_title" = "Круги пользователя %@";
 "circles" = "Круги";
+"circulation_supply" = "Circulation Supply";
 "clear" = "Очистить";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Очистить чат";
@@ -290,6 +294,7 @@
 "continue" = "Продолжить";
 "continue_open_url" = "Продолжить Открыть URL";
 "continue_with_pin" = "Continue with PIN";
+"contract_address" = "Contract Address";
 "conversation" = "Беседа";
 "conversation_has_too_many_circles" = "В беседе слишком много кругов";
 "conversation_not_found" = "Разговор не найден.";
@@ -322,6 +327,7 @@
 "date_format_day" = "H:mm";
 "date_format_month" = "EEE, d MMMM";
 "date_format_week_date" = "EEE, d MMMM yyyy";
+"days_count_short" = "%dD";
 "declined" = "Отклоненный";
 "decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
 "delete" = "Удалить";
@@ -511,10 +517,12 @@
 "hidden_assets" = "Скрытые активы";
 "hide" = "Скрыть";
 "hide_asset" = "Скрыть актив";
+"high_24h" = "24H HIGH";
 "hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "Удерживайте, чтобы записать, отпустите, чтобы отправить";
 "hour" = "%d час";
 "hour_count" = "%d часы";
+"hours_count_short" = "%dH";
 "how_are_you" = "Привет, как дела?";
 "i_am_good" = "Я в порядке.";
 "id" = "ID";
@@ -590,10 +598,14 @@
 "logined" = "Вы вошли";
 "logs" = "Журналы";
 "lost_your_mobile_number" = "Потеряли номер мобильного?";
+"low_24h" = "24H LOW";
 "make_group_admin" = "Сделать администратором группы";
 "manage" = "Управлять";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
+"market" = "Market";
+"market_cap" = "Market Cap";
+"market_states" = "Market States";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Медиа";
@@ -616,6 +628,7 @@
 "mixin_server_encounters_errors" = "Сервер Mixin обнаруживает ошибки";
 "mobile_contacts" = "Мобильные контакты";
 "monthly" = "Ежемесячно";
+"months_count_short" = "%dM";
 "more" = "Больше";
 "move_and_scale" = "Move and Scale";
 "multisig_receiver" = "Receiver";
@@ -636,6 +649,7 @@
 "mute_until" = "До %@";
 "muted" = "Приглушен";
 "muted_until" = "Приглушено до %@";
+"my_balance" = "My Balance";
 "my_contacts" = "Мои контакты";
 "my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "Мой Mixin ID: %@";
@@ -775,6 +789,7 @@
 "preparing" = "Подготовка...";
 "preparing_progress" = "Подготовка...(%@)";
 "price" = "Price";
+"price_data_unavailable" = "Price data unavailable";
 "privacy" = "Конфиденциальность";
 "privacy_policy" = "Политика конфиденциальности";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -1050,6 +1065,7 @@
 "today" = "Сегодня";
 "token" = "Token";
 "total" = "Total";
+"total_supply" = "Total Supply";
 "touch_id" = "Сенсорный идентификатор";
 "track_not_found" = "Трек не найден";
 "transaction" = "Сделка";
@@ -1157,6 +1173,7 @@
 "version_update" = "Обновление версии";
 "video" = "Видео";
 "videos" = "Видео";
+"view_all" = "View All";
 "view_authorization" = "Просмотр авторизации";
 "view_emergency_contact" = "Посмотреть экстренный контакт";
 "view_on_explorer" = "View on Explorer";
@@ -1164,6 +1181,7 @@
 "view_wallet" = "Посмотреть кошелек";
 "voice_call_cancelled" = "голосовой вызов отменен";
 "voice_call_has_been_declined" = "Голосовой вызов был отклонен";
+"vol_24h" = "24H VOL(%@)";
 "waiting" = "Ожидание";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1204,6 +1222,7 @@
 "web3_transaction_request" = "Transaction Request";
 "weekly" = "Еженедельно";
 "weeks" = "недели";
+"weeks_count_short" = "%dW";
 "whats_your_name" = "Как вас зовут?";
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi и сотовая связь";
@@ -1238,3 +1257,4 @@
 "your_phone_number_has_been_changed" = "Ваш номер телефона был изменен";
 "your_pin_has_been_changed" = "Ваш PIN-код был изменен";
 "your_pin_has_been_created" = "Ваш PIN-код был создан";
+"ytd" = "YTD";

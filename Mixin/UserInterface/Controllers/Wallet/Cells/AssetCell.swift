@@ -33,8 +33,8 @@ class AssetCell: ModernSelectedBackgroundCell {
     func render(asset: TokenItem, attributedSymbol: NSAttributedString? = nil) {
         assetIconView.setIcon(token: asset)
         let balance: String
-        if asset.balance == "0" {
-            balance = "0\(currentDecimalSeparator)00"
+        if asset.decimalBalance.isZero {
+            balance = zeroWith2Fractions
         } else {
             balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
         }
@@ -45,13 +45,13 @@ class AssetCell: ModernSelectedBackgroundCell {
             symbolLabel.attributedText = NSAttributedString(string: asset.symbol, attributes: AssetCell.symbolAttributes)
         }
         if asset.decimalUSDPrice > 0 {
-            changeLabel.text = " \(asset.localizedUsdChange)%"
+            changeLabel.text = asset.localizedUSDChange
             if asset.decimalUSDChange > 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed
             }
-            fiatMoneyPriceLabel.text = Currency.current.symbol + asset.localizedFiatMoneyPrice
+            fiatMoneyPriceLabel.text = asset.localizedFiatMoneyPrice
             changeLabel.alpha = 1
             fiatMoneyPriceLabel.alpha = 1
             noFiatMoneyPriceIndicatorLabel.alpha = 0
@@ -69,7 +69,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         assetIconView.setIcon(web3Token: token)
         let balance: String
         if token.balance == "0" {
-            balance = "0\(currentDecimalSeparator)00"
+            balance = zeroWith2Fractions
         } else {
             balance = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? ""
         }

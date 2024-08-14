@@ -12,6 +12,7 @@ final class TokenViewController: UIViewController {
     
     private var performSendOnAppear: Bool
     private var transactionRows: [TransactionRow] = []
+    private var chartPoints: [ChartView.Point]?
     
     private init(token: TokenItem, performSendOnAppear: Bool = false) {
         self.token = token
@@ -48,6 +49,7 @@ final class TokenViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.register(R.nib.tokenBalanceCell)
         tableView.register(R.nib.insetGroupedTitleCell)
+        tableView.register(R.nib.tokenMarketCell)
         tableView.register(R.nib.snapshotCell)
         tableView.register(R.nib.noTransactionIndicatorCell)
         tableView.register(UITableViewCell.self,
@@ -70,6 +72,30 @@ final class TokenViewController: UIViewController {
         center.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
         center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishedNotification, object: nil)
         reloadSnapshots()
+        
+        DispatchQueue.global().async { [id=token.assetID, weak self] in
+            if let history = MarketDAO.shared.priceHistory(assetID: id, period: .day),
+               let prices = TokenPrice(priceHistory: history)?.chartViewPoints()
+            {
+                DispatchQueue.main.sync {
+                    self?.reloadChart(prices)
+                }
+            }
+            RouteAPI.priceHistory(assetID: id, period: .day, queue: .global()) { result in
+                switch result {
+                case .success(let price):
+                    if let history = price.asPriceHistory() {
+                        MarketDAO.shared.savePriceHistory(history)
+                    }
+                    let prices = price.chartViewPoints()
+                    DispatchQueue.main.async {
+                        self?.reloadChart(prices)
+                    }
+                case .failure(let error):
+                    Logger.general.debug(category: "TokenView", message: "\(error)")
+                }
+            }
+        }
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -87,10 +113,6 @@ final class TokenViewController: UIViewController {
             performSendOnAppear = false
             send()
         }
-    }
-    
-    @objc private func goBack() {
-        navigationController?.popViewController(animated: true)
     }
     
     @objc private func balanceDidUpdate(_ notification: Notification) {
@@ -149,7 +171,13 @@ extension TokenViewController {
     
     private enum Section: Int, CaseIterable {
         case balance
+        case market
         case transactions
+    }
+    
+    private enum MarketRow: Int, CaseIterable {
+        case title
+        case content
     }
     
     private enum TransactionRow {
@@ -204,6 +232,14 @@ extension TokenViewController {
                 self.tableView.reloadRows(at: [indexPath], with: .none)
                 self.tableView.endUpdates()
             }
+        }
+    }
+    
+    private func reloadChart(_ points: [ChartView.Point]) {
+        self.chartPoints = points
+        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
+        if let cell = tableView.cellForRow(at: indexPath) as? TokenMarketCell {
+            cell.chartView.points = points
         }
     }
     
@@ -313,6 +349,8 @@ extension TokenViewController: UITableViewDataSource {
         switch Section(rawValue: section)! {
         case .balance:
             1
+        case .market:
+            MarketRow.allCases.count
         case .transactions:
             transactionRows.count
         }
@@ -326,6 +364,19 @@ extension TokenViewController: UITableViewDataSource {
             cell.actionView.actions = [.send, .receive, .swap]
             cell.actionView.delegate = self
             return cell
+        case .market:
+            switch MarketRow(rawValue: indexPath.row)! {
+            case .title:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
+                cell.label.text = R.string.localizable.market()
+                return cell
+            case .content:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_market, for: indexPath)!
+                cell.priceLabel.text = token.localizedFiatMoneyPrice
+                cell.changeLabel.text = NumberFormatter.percentage.string(decimal: token.decimalUSDChange)
+                cell.chartView.points = chartPoints ?? []
+                return cell
+            }
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {
@@ -350,7 +401,7 @@ extension TokenViewController: UITableViewDataSource {
                 cell.backgroundConfiguration = .groupedCell
                 cell.contentConfiguration = {
                     var content = cell.defaultContentConfiguration()
-                    content.text = "View All"
+                    content.text = R.string.localizable.view_all()
                     content.textProperties.alignment = .center
                     content.textProperties.font = .scaledFont(ofSize: 14, weight: .regular)
                     content.textProperties.color = R.color.theme()!
@@ -367,7 +418,7 @@ extension TokenViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
-        case .balance:
+        case .balance, .market:
             return UITableView.automaticDimension
         case .transactions:
             let row = transactionRows[indexPath.row]
@@ -407,6 +458,14 @@ extension TokenViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .balance:
             break
+        case .market:
+            switch MarketRow(rawValue: indexPath.row)! {
+            case .title:
+                let market = TokenMarketViewController.contained(token: token, chartPoints: chartPoints)
+                navigationController?.pushViewController(market, animated: true)
+            case .content:
+                break
+            }
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {

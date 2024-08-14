@@ -38,7 +38,7 @@ final class TokenBalanceCell: UITableViewCell {
         iconView.setIcon(token: token)
         let amount: String
         if token.decimalBalance == 0 {
-            amount = "0\(currentDecimalSeparator)00"
+            amount = zeroWith2Fractions
             valueLabel.text = "≈ $0\(currentDecimalSeparator)00"
         } else {
             amount = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)

@@ -321,7 +321,7 @@ extension LegacyTransactionViewController {
     private func formatedBalance(_ balance: String) -> String {
         let amount: String
         if balance == "0" {
-            amount = "0\(currentDecimalSeparator)00"
+            amount = zeroWith2Fractions
         } else {
             amount = CurrencyFormatter.localizedString(from: balance, format: .precision, sign: .never) ?? ""
         }

@@ -36,6 +36,7 @@
 "address_editing_description" = "正在将修改地址的请求发送到 Mixin 服务器验证，请稍候。";
 "address_not_found" = "找不到该地址。";
 "address_validity_reminder" = "您已经超过 %3$@ 天没有使用地址 %1$@（%2$@），请注意检查地址是否仍然有效。";
+"address_warning" = "合同地址不是充值地址！";
 "admin" = "管理员";
 "agree_hint" = "继续使用即表示你同意 %@ 和 %@";
 "albums" = "相册";
@@ -73,6 +74,8 @@
 "all_dates" = "所有日期";
 "all_photos" = "所有照片";
 "all_signer_failure" = "所有节点失败";
+"all_time_high" = "历史最高";
+"all_time_low" = "历史最低";
 "all_transactions" = "所有交易记录";
 "allow" = "允许";
 "allow_bot_access_asset" = "允许机器人查看你的所有资产和余额。";
@@ -209,6 +212,7 @@
 "circle_subtitle_count" = "%d 会话";
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
+"circulation_supply" = "流通量";
 "clear" = "清理";
 "clear_cache" = "清理缓存";
 "clear_chat" = "清除聊天记录";
@@ -290,6 +294,7 @@
 "continue" = "继续";
 "continue_open_url" = "继续访问";
 "continue_with_pin" = "输入 PIN 继续";
+"contract_address" = "合约地址";
 "conversation" = "会话";
 "conversation_has_too_many_circles" = "已达圈子数上限";
 "conversation_not_found" = "找不到该会话";
@@ -322,6 +327,7 @@
 "date_format_day" = "ahh:mm";
 "date_format_month" = "MM 月 d 日 E";
 "date_format_week_date" = "yyyy 年 MM 月 d 日 E";
+"days_count_short" = "%d天";
 "declined" = "已拒绝";
 "decode_transaction_failed" = "无法估计资产变化，注意只给您信任的应用程序签名。";
 "delete" = "删除";
@@ -511,10 +517,12 @@
 "hidden_assets" = "隐藏的资产";
 "hide" = "隐藏";
 "hide_asset" = "隐藏资产";
+"high_24h" = "24小时最高";
 "hint_address" = "输入钱包地址";
 "hold_to_record_audio" = "长按说话，松手发送";
 "hour" = "%d 小时";
 "hour_count" = "%d 小时";
+"hours_count_short" = "%d小时";
 "how_are_you" = "嗨，你好吗？";
 "i_am_good" = "我很好。";
 "id" = "ID";
@@ -590,10 +598,14 @@
 "logined" = "已登录";
 "logs" = "日志";
 "lost_your_mobile_number" = "手机丢失？";
+"low_24h" = "24小时最低";
 "make_group_admin" = "设定为群组管理员";
 "manage" = "管理";
 "manage_your_apps" = "管理你所有的机器人";
 "manage_your_circles" = "管理你所有的圈子";
+"market" = "行情";
+"market_cap" = "市值";
+"market_states" = "行情数据";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以添加 5 个喜欢的机器人，注意其他人可以在你的个人信息弹窗里查看这些你喜欢的机器人。";
 "media" = "媒体";
@@ -616,6 +628,7 @@
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mobile_contacts" = "通讯录";
 "monthly" = "每月";
+"months_count_short" = "%d月";
 "more" = "更多";
 "move_and_scale" = "移动和缩放";
 "multisig_receiver" = "交易接收人";
@@ -636,6 +649,7 @@
 "mute_until" = "直到 %@";
 "muted" = "已静音";
 "muted_until" = "已静音至 %@";
+"my_balance" = "我的余额";
 "my_contacts" = "我的联系人";
 "my_favorite_bots" = "我收藏的机器人";
 "my_mixin_id" = "我的 Mixin ID：%@";
@@ -775,6 +789,7 @@
 "preparing" = "正在准备...";
 "preparing_progress" = "备份中...（%@）";
 "price" = "价格";
+"price_data_unavailable" = "价格数据不可用";
 "privacy" = "隐私";
 "privacy_policy" = "隐私政策";
 "process_can_not_be_stop" = "流程一旦开始无法取消，请牢记 6 位数字 PIN，意外中止流程需要再次输入";
@@ -1050,6 +1065,7 @@
 "today" = "今天";
 "token" = "代币";
 "total" = "共计";
+"total_supply" = "总量";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";
 "transaction" = "交易详情";
@@ -1157,6 +1173,7 @@
 "version_update" = "版本更新";
 "video" = "视频";
 "videos" = "视频";
+"view_all" = "查看全部";
 "view_authorization" = "查看授权";
 "view_emergency_contact" = "查看紧急联系人";
 "view_on_explorer" = "在浏览器中查看";
@@ -1164,6 +1181,7 @@
 "view_wallet" = "查看钱包";
 "voice_call_cancelled" = "对方已取消语音通话";
 "voice_call_has_been_declined" = "已拒绝通话";
+"vol_24h" = "24小时交易量（%@）";
 "waiting" = "等待中";
 "waiting_for_other_device" = "等待其他设备...";
 "waiting_for_other_device_login" = "在新设备上登录当前账户并选择从其他手机恢复";
@@ -1204,6 +1222,7 @@
 "web3_transaction_request" = "交易签名";
 "weekly" = "每周";
 "weeks" = "周";
+"weeks_count_short" = "%d周";
 "whats_your_name" = "你的名字？";
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 与蜂窝移动网";
@@ -1238,3 +1257,4 @@
 "your_phone_number_has_been_changed" = "更换手机号";
 "your_pin_has_been_changed" = "修改 PIN";
 "your_pin_has_been_created" = "PIN 已创建";
+"ytd" = "年初至今";

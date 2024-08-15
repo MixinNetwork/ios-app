@@ -31,9 +31,9 @@ class LegacyTransactionViewController: UIViewController {
             amountLabel.textColor = .walletGray
         } else {
             if snapshot.amount.hasMinusPrefix {
-                amountLabel.textColor = .walletRed
+                amountLabel.textColor = .priceFalling
             } else {
-                amountLabel.textColor = .walletGreen
+                amountLabel.textColor = .priceRising
             }
         }
         amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)

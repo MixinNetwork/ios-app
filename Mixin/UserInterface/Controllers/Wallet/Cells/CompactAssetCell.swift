@@ -42,9 +42,9 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         if asset.priceUsd.doubleValue > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"
             if asset.changeUsd.doubleValue > 0 {
-                changeLabel.textColor = .walletGreen
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
             priceLabel.text = asset.localizedFiatMoneyPrice
             changeLabel.isHidden = false
@@ -79,9 +79,9 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedUSDChange
             if token.decimalUSDChange >= 0 {
-                changeLabel.textColor = .walletGreen
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
@@ -105,9 +105,9 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
             if token.decimalAbsoluteChange > 0 {
-                changeLabel.textColor = .walletGreen
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false

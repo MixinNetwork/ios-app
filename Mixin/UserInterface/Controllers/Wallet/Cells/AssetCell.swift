@@ -47,9 +47,9 @@ class AssetCell: ModernSelectedBackgroundCell {
         if asset.decimalUSDPrice > 0 {
             changeLabel.text = asset.localizedUSDChange
             if asset.decimalUSDChange > 0 {
-                changeLabel.textColor = .walletGreen
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
             fiatMoneyPriceLabel.text = asset.localizedFiatMoneyPrice
             changeLabel.alpha = 1
@@ -78,9 +78,9 @@ class AssetCell: ModernSelectedBackgroundCell {
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
             if token.decimalPercentChange > 0 {
-                changeLabel.textColor = .walletGreen
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
             fiatMoneyPriceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.alpha = 1

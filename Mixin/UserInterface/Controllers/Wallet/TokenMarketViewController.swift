@@ -6,6 +6,7 @@ final class TokenMarketViewController: UIViewController {
     private let token: TokenItem
     
     private weak var tableView: UITableView!
+    private weak var pushingViewController: UIViewController?
     
     private var viewModel: MarketViewModel
     private var chartPeriod: PriceHistory.Period = .day
@@ -27,8 +28,13 @@ final class TokenMarketViewController: UIViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(token: TokenItem, chartPoints: [ChartView.Point]?) -> ContainerViewController {
+    static func contained(
+        token: TokenItem,
+        chartPoints: [ChartView.Point]?,
+        pushingViewController: UIViewController?
+    ) -> ContainerViewController {
         let controller = TokenMarketViewController(token: token, chartPoints: chartPoints)
+        controller.pushingViewController = pushingViewController
         return ContainerViewController.instance(viewController: controller, title: token.name)
     }
     
@@ -142,7 +148,7 @@ final class TokenMarketViewController: UIViewController {
         self.chartPoints = points
         if let cell = tokenPriceChartCell {
             cell.updateChart(points: points)
-            cell.updateChange(points: points)
+            cell.updatePriceAndChange(token: token, points: points)
         }
     }
     
@@ -158,7 +164,7 @@ extension TokenMarketViewController: UITableViewDataSource {
         switch Section(rawValue: section)! {
         case .chart:
             1
-        case .marketStates:
+        case .marketStats:
             MarketStatesRow.allCases.count
         case .myBalance:
             MyBalanceRow.allCases.count
@@ -171,19 +177,19 @@ extension TokenMarketViewController: UITableViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .chart:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
-            cell.priceLabel.text = token.localizedFiatMoneyPrice
             cell.tokenIconView.setIcon(token: token)
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
-            cell.updateChange(points: chartPoints)
+            cell.updatePriceAndChange(token: token, points: chartPoints)
             cell.delegate = self
             cell.chartView.delegate = self
             return cell
-        case .marketStates:
+        case .marketStats:
             switch MarketStatesRow(rawValue: indexPath.row)! {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
-                cell.label.text = R.string.localizable.market_states().uppercased()
+                cell.label.text = R.string.localizable.market_stats().uppercased()
+                cell.disclosureIndicatorView.isHidden = true
                 return cell
             case .price:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_market_state, for: indexPath)!
@@ -210,7 +216,7 @@ extension TokenMarketViewController: UITableViewDataSource {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.my_balance()
-                cell.disclosureIndicatorView.isHidden = true
+                cell.disclosureIndicatorView.isHidden = false
                 return cell
             case .content:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_my_balance, for: indexPath)!
@@ -218,6 +224,7 @@ extension TokenMarketViewController: UITableViewDataSource {
                 cell.periodLabel.text = R.string.localizable.hours_count_short(24)
                 cell.priceLabel.text = token.localizedFiatMoneyPrice
                 cell.changeLabel.text = viewModel.priceChange
+                cell.changeLabel.textColor = viewModel.priceChangeColor
                 return cell
             }
         case .infos:
@@ -226,6 +233,7 @@ extension TokenMarketViewController: UITableViewDataSource {
                 let row = viewModel.infos[indexPath.row]
                 cell.titleLabel.text = row.title
                 cell.primaryContentLabel.text = row.primaryContent
+                cell.primaryContentLabel.textColor = row.primaryContentColor
                 if let content = row.secondaryContent {
                     (cell.secondaryContentLabel.text, cell.secondaryContentLabel.textColor) = content
                     cell.secondaryContentLabel.isHidden = false
@@ -250,7 +258,7 @@ extension TokenMarketViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .chart:
             UITableView.automaticDimension
-        case .marketStates:
+        case .marketStats:
             switch MarketStatesRow(rawValue: indexPath.row)! {
             case .title, .price, .volume:
                 UITableView.automaticDimension
@@ -288,7 +296,19 @@ extension TokenMarketViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        switch Section(rawValue: indexPath.section)! {
+        case .myBalance:
+            switch MyBalanceRow(rawValue: indexPath.row)! {
+            case .title:
+                if pushingViewController is TokenViewController {
+                    navigationController?.popViewController(animated: true)
+                }
+            default:
+                break
+            }
+        default:
+            break
+        }
     }
     
 }
@@ -317,11 +337,11 @@ extension TokenMarketViewController: ChartView.Delegate {
         guard let base = view.points.first else {
             return
         }
-        tokenPriceChartCell?.updateChange(base: base, now: point)
+        tokenPriceChartCell?.updatePriceAndChange(base: base, now: point)
     }
     
     func chartViewDidCancelSelection(_ view: ChartView) {
-        tokenPriceChartCell?.updateChange(points: view.points)
+        tokenPriceChartCell?.updatePriceAndChange(token: token, points: view.points)
     }
     
 }
@@ -345,7 +365,7 @@ extension TokenMarketViewController {
     
     private enum Section: Int, CaseIterable {
         case chart
-        case marketStates
+        case marketStats
         case myBalance
         case infos
     }
@@ -368,16 +388,27 @@ extension TokenMarketViewController {
             
             let title: String
             let primaryContent: String
+            let primaryContentColor: UIColor
             let secondaryContent: (String, UIColor)?
             
-            init(title: String, primaryContent: String, secondaryContent: (String, UIColor)? = nil) {
+            init(
+                title: String,
+                primaryContent: String,
+                primaryContentColor: UIColor = R.color.text()!,
+                secondaryContent: (String, UIColor)? = nil
+            ) {
                 self.title = title
                 self.primaryContent = primaryContent
+                self.primaryContentColor = primaryContentColor
                 self.secondaryContent = secondaryContent
             }
             
             static func contentNotApplicable(title: String) -> Info {
-                Info(title: title, primaryContent: notApplicable)
+                Info(
+                    title: title,
+                    primaryContent: notApplicable,
+                    primaryContentColor: R.color.text_tertiary()!
+                )
             }
             
         }
@@ -389,6 +420,7 @@ extension TokenMarketViewController {
         private(set) var low24H: String
         private(set) var fiatMoneyVolume24H: String
         private(set) var priceChange: String
+        private(set) var priceChangeColor: UIColor
         private(set) var infos: [Info]
         
         init(token: TokenItem) {
@@ -413,6 +445,7 @@ extension TokenMarketViewController {
             self.low24H = ""
             self.fiatMoneyVolume24H = ""
             self.priceChange = ""
+            self.priceChangeColor = .clear
             self.infos = infos
         }
         
@@ -430,6 +463,7 @@ extension TokenMarketViewController {
             self.low24H = notApplicable
             self.fiatMoneyVolume24H = notApplicable
             self.priceChange = notApplicable
+            self.priceChangeColor = R.color.text_quaternary()!
             self.infos = infos
         }
         
@@ -465,6 +499,7 @@ extension TokenMarketViewController {
                     change += "(\(percent))"
                 }
                 self.priceChange = change
+                self.priceChangeColor = priceChange24H >= 0 ? .priceRising : .priceFalling
             }
             
             var infos = Array(self.infos.prefix(fixedInfosCount))

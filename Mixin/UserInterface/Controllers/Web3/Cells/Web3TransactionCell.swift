@@ -40,7 +40,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 } else {
                     transfer.localizedFiatMoneyAmount
                 }
-                upperAmountLabel.textColor = isConfirmed ? .walletGreen : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? .priceRising : .walletGray
                 subtitleLabel.text = Address.compactRepresentation(of: transaction.sender)
             } else {
                 renderAsDefault()
@@ -57,7 +57,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 } else {
                     transfer.localizedFiatMoneyAmount
                 }
-                upperAmountLabel.textColor = isConfirmed ? .walletRed : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? .priceFalling : .walletGray
                 subtitleLabel.text = Address.compactRepresentation(of: transaction.receiver)
             } else {
                 renderAsDefault()
@@ -76,11 +76,11 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 subtitleLabel.text = "\(inTransfer.symbol) -> \(outTransfer.symbol)"
                 upperAmountLabel.text = CurrencyFormatter.localizedString(from: inTransfer.amount, format: .precision, sign: .always)
                 upperSymbolLabel.text = inTransfer.symbol
-                upperAmountLabel.textColor = isConfirmed ? .walletGreen : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? .priceRising : .walletGray
                 
                 lowerAmountLabel.text = CurrencyFormatter.localizedString(from: -outTransfer.decimalAmount, format: .precision, sign: .always)
                 lowerSymbolLabel.text = outTransfer.symbol
-                lowerAmountLabel.textColor = isConfirmed ? .walletRed : .walletGray
+                lowerAmountLabel.textColor = isConfirmed ? .priceFalling : .walletGray
             } else {
                 renderAsDefault()
             }

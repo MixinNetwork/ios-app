@@ -31,14 +31,6 @@ final class TokenPriceChartCell: UITableViewCell {
         chartView.annotateExtremums = true
         chartView.minPointPosition = 135 / 184
         chartView.maxPointPosition = 23 / 184
-        switch ScreenWidth.current {
-        case .short:
-            periodSelectorStackView.spacing = 15
-        case .medium:
-            periodSelectorStackView.spacing = 10
-        case .long:
-            periodSelectorStackView.spacing = 20
-        }
         for (i, period) in PriceHistory.Period.allCases.enumerated() {
             let button = UIButton(type: .system)
             button.tag = i
@@ -57,14 +49,7 @@ final class TokenPriceChartCell: UITableViewCell {
             button.setTitle(title, for: .normal)
             button.layer.cornerRadius = periodSelectorHeightConstraint.constant / 2
             button.layer.masksToBounds = true
-            switch ScreenWidth.current {
-            case .short:
-                button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
-            case .medium:
-                button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
-            case .long:
-                button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
-            }
+            button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
             periodSelectorStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(changePeriod(_:)), for: .touchUpInside)
         }
@@ -92,19 +77,27 @@ final class TokenPriceChartCell: UITableViewCell {
         }
     }
     
-    func updateChange(points: [ChartView.Point]?) {
+    func updatePriceAndChange(token: TokenItem, points: [ChartView.Point]?) {
         guard let points, points.count >= 2 else {
+            priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.text = nil
             return
         }
         let base = points[0]
         let now = points[points.count - 1]
-        updateChange(base: base, now: now)
+        updatePriceAndChange(base: base, now: now)
     }
     
-    func updateChange(base: ChartView.Point, now: ChartView.Point) {
+    func updatePriceAndChange(base: ChartView.Point, now: ChartView.Point) {
+        priceLabel.text = CurrencyFormatter.localizedString(
+            from: now.value * Currency.current.decimalRate,
+            format: .fiatMoneyPrice,
+            sign: .never,
+            symbol: .currencySymbol
+        )
         let change = (now.value - base.value) / base.value
         changeLabel.text = NumberFormatter.percentage.string(decimal: change)
+        changeLabel.textColor = change >= 0 ? .priceRising : .priceFalling
     }
     
     @objc private func changePeriod(_ sender: UIButton) {

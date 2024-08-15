@@ -74,16 +74,17 @@
                             <constraint firstItem="TIN-8J-fIw" firstAttribute="centerY" secondItem="Rzf-xM-AtC" secondAttribute="centerY" constant="-22" id="drM-fU-bqh"/>
                         </constraints>
                     </view>
-                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="THy-el-xRN">
+                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THy-el-xRN">
                         <rect key="frame" x="16" y="340" width="288" height="26"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="288" placeholderIntrinsicHeight="26" translatesAutoresizingMaskIntoConstraints="NO" id="gZN-wO-gxb">
+                            <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="288" placeholderIntrinsicHeight="26" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="gZN-wO-gxb">
                                 <rect key="frame" x="0.0" y="0.0" width="288" height="26"/>
                             </stackView>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="height" constant="26" id="3Tq-Ys-lIn"/>
                             <constraint firstItem="gZN-wO-gxb" firstAttribute="top" secondItem="qCK-vc-n03" secondAttribute="top" id="9sC-ds-V4Y"/>
+                            <constraint firstItem="gZN-wO-gxb" firstAttribute="width" secondItem="k6W-Hj-XN9" secondAttribute="width" priority="999" id="csF-dC-Biz"/>
                             <constraint firstItem="qCK-vc-n03" firstAttribute="leading" secondItem="gZN-wO-gxb" secondAttribute="leading" id="mRt-GT-rUt"/>
                             <constraint firstItem="gZN-wO-gxb" firstAttribute="trailing" secondItem="qCK-vc-n03" secondAttribute="trailing" id="spy-cp-GDY"/>
                             <constraint firstItem="gZN-wO-gxb" firstAttribute="bottom" secondItem="qCK-vc-n03" secondAttribute="bottom" id="wiE-MT-t6m"/>

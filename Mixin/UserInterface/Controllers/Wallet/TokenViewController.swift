@@ -238,9 +238,7 @@ extension TokenViewController {
     private func reloadChart(_ points: [ChartView.Point]) {
         self.chartPoints = points
         let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
-        if let cell = tableView.cellForRow(at: indexPath) as? TokenMarketCell {
-            cell.chartView.points = points
-        }
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
     
     private func reloadSnapshots() {
@@ -372,9 +370,7 @@ extension TokenViewController: UITableViewDataSource {
                 return cell
             case .content:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_market, for: indexPath)!
-                cell.priceLabel.text = token.localizedFiatMoneyPrice
-                cell.changeLabel.text = NumberFormatter.percentage.string(decimal: token.decimalUSDChange)
-                cell.chartView.points = chartPoints ?? []
+                cell.reloadData(token: token, points: chartPoints)
                 return cell
             }
         case .transactions:
@@ -461,7 +457,11 @@ extension TokenViewController: UITableViewDelegate {
         case .market:
             switch MarketRow(rawValue: indexPath.row)! {
             case .title:
-                let market = TokenMarketViewController.contained(token: token, chartPoints: chartPoints)
+                let market = TokenMarketViewController.contained(
+                    token: token,
+                    chartPoints: chartPoints,
+                    pushingViewController: self
+                )
                 navigationController?.pushViewController(market, animated: true)
             case .content:
                 break

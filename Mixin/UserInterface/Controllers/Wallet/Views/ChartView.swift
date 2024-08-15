@@ -120,6 +120,7 @@ final class ChartView: UIView {
                 if let y = drawingPoint(around: x)?.y {
                     dot.position = CGPoint(x: x, y: y)
                 }
+                dot.zPosition = .greatestFiniteMagnitude
                 cursorDotLayer = dot
             }
             if cursorView == nil {

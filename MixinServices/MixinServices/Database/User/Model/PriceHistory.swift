@@ -7,7 +7,7 @@ public struct PriceHistory {
         case day = "1D"
         case week = "1W"
         case month = "1M"
-        case year = "YTD"
+        case ytd = "YTD"
         case all = "ALL"
     }
     

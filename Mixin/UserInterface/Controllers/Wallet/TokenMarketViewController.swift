@@ -8,6 +8,7 @@ final class TokenMarketViewController: UIViewController {
     private weak var tableView: UITableView!
     
     private var viewModel: MarketViewModel
+    private var chartPeriod: PriceHistory.Period = .day
     private var chartPoints: [ChartView.Point]?
     
     private init(token: TokenItem, chartPoints: [ChartView.Point]?) {
@@ -85,29 +86,7 @@ final class TokenMarketViewController: UIViewController {
             }
         }
         if chartPoints == nil {
-            DispatchQueue.global().async { [id=token.assetID, weak self] in
-                if let history = MarketDAO.shared.priceHistory(assetID: id, period: .day),
-                   let points = TokenPrice(priceHistory: history)?.chartViewPoints()
-                {
-                    DispatchQueue.main.sync {
-                        self?.reloadPriceChart(points)
-                    }
-                }
-                RouteAPI.priceHistory(assetID: id, period: .day, queue: .global()) { result in
-                    switch result {
-                    case .success(let price):
-                        if let history = price.asPriceHistory() {
-                            MarketDAO.shared.savePriceHistory(history)
-                        }
-                        let points = price.chartViewPoints()
-                        DispatchQueue.main.async {
-                            self?.reloadPriceChart(points)
-                        }
-                    case .failure(let error):
-                        Logger.general.debug(category: "TokenMarketView", message: "\(error)")
-                    }
-                }
-            }
+            reloadPriceChart(period: chartPeriod)
         }
     }
     
@@ -125,11 +104,40 @@ final class TokenMarketViewController: UIViewController {
         tableView.reloadData()
     }
     
-    private func reloadPriceChart(_ points: [ChartView.Point]) {
+    private func reloadPriceChart(period: PriceHistory.Period) {
+        DispatchQueue.global().async { [id=token.assetID, weak self] in
+            if let history = MarketDAO.shared.priceHistory(assetID: id, period: period),
+               let points = TokenPrice(priceHistory: history)?.chartViewPoints()
+            {
+                DispatchQueue.main.sync {
+                    self?.reloadPriceChart(period: period, points: points)
+                }
+            }
+            RouteAPI.priceHistory(assetID: id, period: period, queue: .global()) { result in
+                switch result {
+                case .success(let price):
+                    if let history = price.asPriceHistory() {
+                        MarketDAO.shared.savePriceHistory(history)
+                    }
+                    let points = price.chartViewPoints()
+                    DispatchQueue.main.async {
+                        self?.reloadPriceChart(period: period, points: points)
+                    }
+                case .failure(let error):
+                    Logger.general.debug(category: "TokenMarketView", message: "\(error)")
+                }
+            }
+        }
+    }
+    
+    private func reloadPriceChart(period: PriceHistory.Period, points: [ChartView.Point]) {
+        guard period == self.chartPeriod else {
+            return
+        }
         self.chartPoints = points
         let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
         if let cell = tableView.cellForRow(at: indexPath) as? TokenPriceChartCell {
-            cell.chartView.points = points
+            cell.updateChart(points: points)
         }
     }
     
@@ -160,18 +168,9 @@ extension TokenMarketViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
             cell.priceLabel.text = token.localizedFiatMoneyPrice
             cell.tokenIconView.setIcon(token: token)
-            if let chartPoints {
-                if chartPoints.isEmpty {
-                    cell.showUnavailableView()
-                } else {
-                    cell.chartView.points = chartPoints
-                    cell.hideUnavailableView()
-                }
-                cell.loadingIndicatorView.stopAnimating()
-            } else {
-                cell.hideUnavailableView()
-                cell.loadingIndicatorView.startAnimating()
-            }
+            cell.setPeriodSelection(period: chartPeriod)
+            cell.updateChart(points: chartPoints)
+            cell.delegate = self
             cell.chartView.delegate = self
             return cell
         case .marketStates:
@@ -305,6 +304,16 @@ extension TokenMarketViewController: ChartView.Delegate {
     
 }
 
+extension TokenMarketViewController: TokenPriceChartCell.Delegate {
+    
+    func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistory.Period) {
+        chartPoints = nil
+        self.chartPeriod = period
+        reloadPriceChart(period: period)
+    }
+    
+}
+
 extension TokenMarketViewController {
     
     private enum ReuseIdentifier {
@@ -427,7 +436,7 @@ extension TokenMarketViewController {
                 )
             }
             if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
-                var change = CurrencyFormatter.localizedString(from: priceChange24H, format: .precision, sign: .always)
+                var change = CurrencyFormatter.localizedString(from: priceChange24H, format: .fiatMoneyPrice, sign: .always)
                 if let priceChangePercentage24H = Decimal(string: market.priceChangePercentage24H, locale: .enUSPOSIX),
                    let percent = NumberFormatter.percentage.string(decimal: priceChangePercentage24H / 100)
                 {

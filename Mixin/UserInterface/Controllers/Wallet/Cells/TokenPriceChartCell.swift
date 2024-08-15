@@ -3,6 +3,10 @@ import MixinServices
 
 final class TokenPriceChartCell: UITableViewCell {
     
+    protocol Delegate: AnyObject {
+        func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistory.Period)
+    }
+    
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
@@ -11,6 +15,10 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var chartView: ChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var periodSelectorStackView: UIStackView!
+    
+    @IBOutlet weak var periodSelectorHeightConstraint: NSLayoutConstraint!
+    
+    weak var delegate: Delegate?
     
     private weak var unavailableView: UIView?
     
@@ -21,14 +29,79 @@ final class TokenPriceChartCell: UITableViewCell {
         priceLabel.setFont(scaledFor: .systemFont(ofSize: 22, weight: .medium), adjustForContentSize: true)
         changeLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         chartView.annotateExtremums = true
+        chartView.minPointPosition = 135 / 184
+        chartView.maxPointPosition = 23 / 184
+        switch ScreenWidth.current {
+        case .short:
+            periodSelectorStackView.spacing = 15
+        case .medium:
+            periodSelectorStackView.spacing = 10
+        case .long:
+            periodSelectorStackView.spacing = 20
+        }
         for (i, period) in PriceHistory.Period.allCases.enumerated() {
             let button = UIButton(type: .system)
             button.tag = i
-            button.setTitle("\(period)", for: .normal)
+            let title = switch period {
+            case .day:
+                R.string.localizable.days_count_short(1)
+            case .week:
+                R.string.localizable.weeks_count_short(1)
+            case .month:
+                R.string.localizable.months_count_short(1)
+            case .ytd:
+                R.string.localizable.ytd()
+            case .all:
+                R.string.localizable.all()
+            }
+            button.setTitle(title, for: .normal)
+            button.layer.cornerRadius = periodSelectorHeightConstraint.constant / 2
+            button.layer.masksToBounds = true
+            switch ScreenWidth.current {
+            case .short:
+                button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
+            case .medium:
+                button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+            case .long:
+                button.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
+            }
+            periodSelectorStackView.addArrangedSubview(button)
+            button.addTarget(self, action: #selector(changePeriod(_:)), for: .touchUpInside)
         }
     }
     
-    func showUnavailableView() {
+    func setPeriodSelection(period: PriceHistory.Period) {
+        guard let index = PriceHistory.Period.allCases.firstIndex(of: period) else {
+            return
+        }
+        setPeriodSelection(index: index)
+    }
+    
+    func updateChart(points: [ChartView.Point]?) {
+        if let points {
+            if points.isEmpty {
+                showUnavailableView()
+            } else {
+                chartView.points = points
+                hideUnavailableView()
+            }
+            loadingIndicatorView.stopAnimating()
+        } else {
+            hideUnavailableView()
+            loadingIndicatorView.startAnimating()
+        }
+    }
+    
+    @objc private func changePeriod(_ sender: UIButton) {
+        setPeriodSelection(index: sender.tag)
+        chartView.points = []
+        hideUnavailableView()
+        loadingIndicatorView.startAnimating()
+        let period = PriceHistory.Period.allCases[sender.tag]
+        delegate?.tokenPriceChartCell(self, didSelectPeriod: period)
+    }
+    
+    private func showUnavailableView() {
         let unavailableView: UIView
         if let view = self.unavailableView {
             unavailableView = view
@@ -46,8 +119,20 @@ final class TokenPriceChartCell: UITableViewCell {
         unavailableView.isHidden = false
     }
     
-    func hideUnavailableView() {
+    private func hideUnavailableView() {
         unavailableView?.isHidden = true
+    }
+    
+    private func setPeriodSelection(index: Int) {
+        for case let button as UIButton in periodSelectorStackView.arrangedSubviews {
+            if button.tag == index {
+                button.backgroundColor = R.color.background_secondary()
+                button.setTitleColor(R.color.text(), for: .normal)
+            } else {
+                button.backgroundColor = .clear
+                button.setTitleColor(R.color.text_quaternary(), for: .normal)
+            }
+        }
     }
     
     private class UnavailableView: UIView {

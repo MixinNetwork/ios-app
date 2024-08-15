@@ -16,15 +16,25 @@ final class ChartView: UIView {
     
     var annotateExtremums = false {
         didSet {
-            needsRedraw = true
-            redrawIfNeeded()
+            redraw()
         }
     }
     
     var points: [Point] = [] {
         didSet {
-            needsRedraw = true
-            redrawIfNeeded()
+            redraw()
+        }
+    }
+    
+    var minPointPosition: CGFloat = (44 - 6) / 44 {
+        didSet {
+            redraw()
+        }
+    }
+    
+    var maxPointPosition: CGFloat = 4 / 44 {
+        didSet {
+            redraw()
         }
     }
     
@@ -34,9 +44,9 @@ final class ChartView: UIView {
     private let riseColor = R.color.green()!
     private let fallColor = R.color.red()!
     
-    private var needsRedraw = false
     private var lastLayoutBounds: CGRect?
     private var extremumAnnotationLayers: [CALayer] = []
+    private var extremumAnnotationViews: [UIView] = []
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -54,7 +64,8 @@ final class ChartView: UIView {
             lineLayer.frame = bounds
             fillingLayer.frame = bounds
             fillingLayerMask.frame = bounds
-            redrawIfNeeded()
+            redraw()
+            self.lastLayoutBounds = bounds
         }
     }
     
@@ -65,22 +76,21 @@ final class ChartView: UIView {
         }
     }
     
-    private func redrawIfNeeded() {
-        guard needsRedraw else {
-            return
-        }
-        redraw()
-    }
-    
     private func redraw() {
         for layer in extremumAnnotationLayers {
             layer.removeFromSuperlayer()
         }
         extremumAnnotationLayers = []
+        for view in extremumAnnotationViews {
+            view.removeFromSuperview()
+        }
+        extremumAnnotationViews = []
         
         guard points.count >= 2 else {
-            lineLayer.opacity = 0
-            fillingLayer.opacity = 0
+            CATransaction.performWithoutAnimation {
+                lineLayer.opacity = 0
+                fillingLayer.opacity = 0
+            }
             return
         }
         
@@ -97,12 +107,12 @@ final class ChartView: UIView {
         let firstValue = points[0].value
         let lastValue = points[points.count - 1].value
         let isRising = lastValue >= firstValue
-        let color = isRising ? riseColor : fallColor
+        let color = (isRising ? riseColor : fallColor).resolvedColor(with: traitCollection)
         
         let maxV = (points[maxIndex].value as NSDecimalNumber).doubleValue
         let minV = (points[minIndex].value as NSDecimalNumber).doubleValue
-        let minY = (44 - 6) / 44 * bounds.height
-        let maxY = 4 / 44 * bounds.height
+        let minY = minPointPosition * bounds.height
+        let maxY = maxPointPosition * bounds.height
         let a = (maxY - minY) / (maxV - minV)
         let b = maxY - a * maxV
         let xUnit = bounds.width / CGFloat(points.count)
@@ -119,7 +129,9 @@ final class ChartView: UIView {
         }
         lineLayer.path = linePath
         lineLayer.strokeColor = color.cgColor
-        lineLayer.opacity = 1
+        CATransaction.performWithoutAnimation {
+            lineLayer.opacity = 1
+        }
         
         if let fillingMaskPath = linePath.mutableCopy() {
             let bottomRight = CGPoint(x: bounds.width, y: bounds.height)
@@ -132,7 +144,9 @@ final class ChartView: UIView {
             fillingLayerMask.path = nil
         }
         fillingLayer.colors = [color.cgColor, color.withAlphaComponent(0).cgColor]
-        fillingLayer.opacity = 1
+        CATransaction.performWithoutAnimation {
+            fillingLayer.opacity = 1
+        }
         
         if annotateExtremums {
             let maxDotLayer = AnnotationDotLayer(color: color)
@@ -146,27 +160,33 @@ final class ChartView: UIView {
             extremumAnnotationLayers = [maxDotLayer, minDotLayer]
             
             if let text = delegate?.chartView(self, extremumAnnotationForPoint: points[maxIndex]) {
-                let maxTextLayer = AnnotationTextLayer(text: text, color: color)
-                layer.addSublayer(maxTextLayer)
-                let size = maxTextLayer.preferredFrameSize()
-                maxTextLayer.frame.size = size
-                maxTextLayer.frame.origin = CGPoint(
-                    x: min(bounds.width - size.width, max(0, maxDotLayer.position.x - size.width / 2)),
-                    y: maxDotLayer.frame.minY - size.height
-                )
-                extremumAnnotationLayers.append(maxTextLayer)
+                let maxLabel = AnnotationLabel(text: text, color: color)
+                addSubview(maxLabel)
+                maxLabel.snp.makeConstraints { make in
+                    make.bottom.equalTo(snp.top)
+                        .offset(maxDotLayer.frame.minY)
+                    make.centerX.equalTo(snp.leading)
+                        .offset(maxDotLayer.position.x)
+                        .priority(.high)
+                    make.leading.greaterThanOrEqualToSuperview()
+                    make.trailing.lessThanOrEqualToSuperview()
+                }
+                extremumAnnotationViews.append(maxLabel)
             }
             
             if let text = delegate?.chartView(self, extremumAnnotationForPoint: points[minIndex]) {
-                let minTextLayer = AnnotationTextLayer(text: text, color: color)
-                layer.addSublayer(minTextLayer)
-                let size = minTextLayer.preferredFrameSize()
-                minTextLayer.frame.size = size
-                minTextLayer.frame.origin = CGPoint(
-                    x: min(bounds.width - size.width, max(0, minDotLayer.position.x - size.width / 2)),
-                    y: minDotLayer.frame.maxY
-                )
-                extremumAnnotationLayers.append(minTextLayer)
+                let minLabel = AnnotationLabel(text: text, color: color)
+                addSubview(minLabel)
+                minLabel.snp.makeConstraints { make in
+                    make.top.equalToSuperview()
+                        .offset(minDotLayer.frame.maxY)
+                    make.centerX.equalTo(snp.leading)
+                        .offset(minDotLayer.position.x)
+                        .priority(.high)
+                    make.leading.greaterThanOrEqualToSuperview()
+                    make.trailing.lessThanOrEqualToSuperview()
+                }
+                extremumAnnotationViews.append(minLabel)
             }
         }
     }
@@ -174,6 +194,7 @@ final class ChartView: UIView {
     private func loadSublayers() {
         fillingLayer.mask = fillingLayerMask
         layer.addSublayer(fillingLayer)
+        
         lineLayer.fillColor = UIColor.clear.cgColor
         lineLayer.opacity = 1
         lineLayer.lineWidth = 2
@@ -216,18 +237,13 @@ extension ChartView {
         
     }
     
-    private class AnnotationTextLayer: CATextLayer {
+    private class AnnotationLabel: UILabel {
         
         init(text: String, color: UIColor) {
-            super.init()
-            fontSize = 14
-            string = text
-            foregroundColor = color.cgColor
-            contentsScale = UIScreen.main.scale
-        }
-        
-        override init(layer: Any) {
-            super.init(layer: layer)
+            super.init(frame: .zero)
+            self.font = .systemFont(ofSize: 14, weight: .medium)
+            self.textColor = color
+            self.text = text
         }
         
         required init?(coder: NSCoder) {

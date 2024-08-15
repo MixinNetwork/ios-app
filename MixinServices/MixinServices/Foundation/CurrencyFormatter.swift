@@ -98,7 +98,7 @@ public struct CurrencyFormatter {
             setSignBehavior(sign, for: fiatMoneyFormatter)
             str = fiatMoneyFormatter.string(from: number) ?? ""
         case .fiatMoneyPrice:
-            if decimal.isLess(than: 1) {
+            if abs(decimal) < 1 {
                 setSignBehavior(sign, for: precisionFormatter)
                 str = precisionFormatter.string(from: number) ?? ""
             } else {

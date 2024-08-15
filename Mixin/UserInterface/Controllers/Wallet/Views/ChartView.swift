@@ -54,8 +54,6 @@ final class ChartView: UIView {
     private let lineLayer = CAShapeLayer()
     private let fillingLayer = CAGradientLayer()
     private let fillingLayerMask = CAShapeLayer()
-    private let riseColor = R.color.green()!
-    private let fallColor = R.color.red()!
     
     private var lastLayoutBounds: CGRect?
     private var drawingPoints: [CGPoint] = []
@@ -114,8 +112,9 @@ final class ChartView: UIView {
         switch recognizer.state {
         case .began:
             if cursorDotLayer == nil {
-                let color = (arePointsRising ? riseColor : fallColor).resolvedColor(with: traitCollection)
-                let dot = AnnotationDotLayer(color: color)
+                let backgroundColor = R.color.background()!.resolvedColor(with: traitCollection)
+                let dotColor: UIColor = arePointsRising ? .priceRising : .priceFalling
+                let dot = AnnotationDotLayer(backgroundColor: backgroundColor.cgColor, dotColor: dotColor.cgColor)
                 layer.addSublayer(dot)
                 if let y = drawingPoint(around: x)?.y {
                     dot.position = CGPoint(x: x, y: y)
@@ -220,7 +219,8 @@ final class ChartView: UIView {
             }
         }
         
-        let color = (arePointsRising ? riseColor : fallColor).resolvedColor(with: traitCollection)
+        let color = (arePointsRising ? UIColor.priceRising : UIColor.priceFalling)
+            .resolvedColor(with: traitCollection)
         
         let maxV = (points[maxIndex].value as NSDecimalNumber).doubleValue
         let minV = (points[minIndex].value as NSDecimalNumber).doubleValue
@@ -263,11 +263,20 @@ final class ChartView: UIView {
         }
         
         if annotateExtremums {
-            let maxDotLayer = AnnotationDotLayer(color: color)
+            let backgroundColor = R.color.background()!.resolvedColor(with: traitCollection)
+            let dotColor: UIColor = arePointsRising ? .priceRising : .priceFalling
+            
+            let maxDotLayer = AnnotationDotLayer(
+                backgroundColor: backgroundColor.cgColor,
+                dotColor: dotColor.cgColor
+            )
             maxDotLayer.position = drawingPoints[maxIndex]
             layer.addSublayer(maxDotLayer)
             
-            let minDotLayer = AnnotationDotLayer(color: color)
+            let minDotLayer = AnnotationDotLayer(
+                backgroundColor: backgroundColor.cgColor,
+                dotColor: dotColor.cgColor
+            )
             minDotLayer.position = drawingPoints[minIndex]
             layer.addSublayer(minDotLayer)
             
@@ -332,16 +341,16 @@ extension ChartView {
     // Do not draw it with a bordered layer. The edge is visible and ugly.
     private class AnnotationDotLayer: CALayer {
         
-        init(color: UIColor) {
+        init(backgroundColor: CGColor, dotColor: CGColor) {
             super.init()
             
-            backgroundColor = R.color.background()!.cgColor
-            frame.size = CGSize(width: 10, height: 10)
-            cornerRadius = 5
-            masksToBounds = true
+            self.backgroundColor = backgroundColor
+            self.frame.size = CGSize(width: 10, height: 10)
+            self.cornerRadius = 5
+            self.masksToBounds = true
             
             let dotLayer = CALayer()
-            dotLayer.backgroundColor = color.cgColor
+            dotLayer.backgroundColor = dotColor
             dotLayer.frame.size = CGSize(width: 6, height: 6)
             dotLayer.cornerRadius = 3
             dotLayer.masksToBounds = true

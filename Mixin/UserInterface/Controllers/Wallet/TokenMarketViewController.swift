@@ -11,6 +11,11 @@ final class TokenMarketViewController: UIViewController {
     private var chartPeriod: PriceHistory.Period = .day
     private var chartPoints: [ChartView.Point]?
     
+    private var tokenPriceChartCell: TokenPriceChartCell? {
+        let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
+        return tableView.cellForRow(at: indexPath) as? TokenPriceChartCell
+    }
+    
     private init(token: TokenItem, chartPoints: [ChartView.Point]?) {
         self.token = token
         self.viewModel = MarketViewModel(token: token)
@@ -135,9 +140,9 @@ final class TokenMarketViewController: UIViewController {
             return
         }
         self.chartPoints = points
-        let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
-        if let cell = tableView.cellForRow(at: indexPath) as? TokenPriceChartCell {
+        if let cell = tokenPriceChartCell {
             cell.updateChart(points: points)
+            cell.updateChange(points: points)
         }
     }
     
@@ -170,6 +175,7 @@ extension TokenMarketViewController: UITableViewDataSource {
             cell.tokenIconView.setIcon(token: token)
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
+            cell.updateChange(points: chartPoints)
             cell.delegate = self
             cell.chartView.delegate = self
             return cell
@@ -298,8 +304,24 @@ extension TokenMarketViewController: ChartView.Delegate {
         )
     }
     
+    func chartView(_ view: ChartView, inspectionAnnotationForPoint point: ChartView.Point) -> String {
+        switch chartPeriod {
+        case .day:
+            DateFormatter.shortTimeOnly.string(from: point.date)
+        case .week, .month, .ytd, .all:
+            DateFormatter.shortDateOnly.string(from: point.date)
+        }
+    }
+    
     func chartView(_ view: ChartView, didSelectPoint point: ChartView.Point) {
-        
+        guard let base = view.points.first else {
+            return
+        }
+        tokenPriceChartCell?.updateChange(base: base, now: point)
+    }
+    
+    func chartViewDidCancelSelection(_ view: ChartView) {
+        tokenPriceChartCell?.updateChange(points: view.points)
     }
     
 }

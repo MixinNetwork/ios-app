@@ -30,6 +30,14 @@ extension DateFormatter {
         return formatter
     }()
     
+    static let shortTimeOnly: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = .current
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
     // Returns nil if `from` `to` are both nil
     static func shortDatePeriod(from start: Date?, to end: Date?) -> String? {
         let formatter: DateFormatter = .shortDateOnly

@@ -79,7 +79,7 @@ final class TokenPriceChartCell: UITableViewCell {
     
     func updateChart(points: [ChartView.Point]?) {
         if let points {
-            if points.isEmpty {
+            if points.count < 2 {
                 showUnavailableView()
             } else {
                 chartView.points = points
@@ -90,6 +90,21 @@ final class TokenPriceChartCell: UITableViewCell {
             hideUnavailableView()
             loadingIndicatorView.startAnimating()
         }
+    }
+    
+    func updateChange(points: [ChartView.Point]?) {
+        guard let points, points.count >= 2 else {
+            changeLabel.text = nil
+            return
+        }
+        let base = points[0]
+        let now = points[points.count - 1]
+        updateChange(base: base, now: now)
+    }
+    
+    func updateChange(base: ChartView.Point, now: ChartView.Point) {
+        let change = (now.value - base.value) / base.value
+        changeLabel.text = NumberFormatter.percentage.string(decimal: change)
     }
     
     @objc private func changePeriod(_ sender: UIButton) {

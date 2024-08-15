@@ -9,10 +9,18 @@ final class ChartView: UIView {
     
     protocol Delegate: AnyObject {
         func chartView(_ view: ChartView, extremumAnnotationForPoint point: Point) -> String
+        func chartView(_ view: ChartView, inspectionAnnotationForPoint point: Point) -> String
         func chartView(_ view: ChartView, didSelectPoint point: Point)
+        func chartViewDidCancelSelection(_ view: ChartView)
     }
     
     weak var delegate: Delegate?
+    
+    override var isUserInteractionEnabled: Bool {
+        didSet {
+            setupRecognizerIfNeeded()
+        }
+    }
     
     var annotateExtremums = false {
         didSet {
@@ -22,6 +30,11 @@ final class ChartView: UIView {
     
     var points: [Point] = [] {
         didSet {
+            if let firstValue = points.first?.value, let lastValue = points.last?.value {
+                arePointsRising = lastValue >= firstValue
+            } else {
+                arePointsRising = true
+            }
             redraw()
         }
     }
@@ -45,17 +58,28 @@ final class ChartView: UIView {
     private let fallColor = R.color.red()!
     
     private var lastLayoutBounds: CGRect?
+    private var drawingPoints: [CGPoint] = []
+    private var arePointsRising: Bool = true
     private var extremumAnnotationLayers: [CALayer] = []
     private var extremumAnnotationViews: [UIView] = []
+    
+    private weak var inspectionRecognizer: UIGestureRecognizer?
+    private weak var cursorView: VerticalDashLineView?
+    private weak var cursorViewCenterXConstraint: NSLayoutConstraint?
+    private weak var cursorDotLayer: CALayer?
+    private weak var inspectionAnnotationLabel: UILabel?
+    private weak var inspectionAnnotationLabelCenterXConstraint: NSLayoutConstraint?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         loadSublayers()
+        setupRecognizerIfNeeded()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadSublayers()
+        setupRecognizerIfNeeded()
     }
     
     override func layoutSubviews() {
@@ -76,6 +100,96 @@ final class ChartView: UIView {
         }
     }
     
+    @objc private func inspect(_ recognizer: InspectionGestureRecognizer) {
+        let x = {
+            var x = recognizer.location(in: self).x
+            x = max(0, min(bounds.width, x))
+            return x
+        }()
+        let point: Point = {
+            var index = Int(round(x / bounds.width * Double(points.count)))
+            index = max(0, min(points.count - 1, index))
+            return points[index]
+        }()
+        switch recognizer.state {
+        case .began:
+            if cursorDotLayer == nil {
+                let color = (arePointsRising ? riseColor : fallColor).resolvedColor(with: traitCollection)
+                let dot = AnnotationDotLayer(color: color)
+                layer.addSublayer(dot)
+                if let y = drawingPoint(around: x)?.y {
+                    dot.position = CGPoint(x: x, y: y)
+                }
+                cursorDotLayer = dot
+            }
+            if cursorView == nil {
+                let view = VerticalDashLineView()
+                addSubview(view)
+                view.snp.makeConstraints { make in
+                    make.top.bottom.equalToSuperview()
+                    make.width.equalTo(1)
+                }
+                let constraint = view.centerXAnchor.constraint(equalTo: leadingAnchor, constant: x)
+                constraint.isActive = true
+                cursorView = view
+                cursorViewCenterXConstraint = constraint
+            }
+            if inspectionAnnotationLabel == nil {
+                let label = UILabel()
+                label.font = .systemFont(ofSize: 12)
+                label.textColor = R.color.text_quaternary()
+                label.text = delegate?.chartView(self, inspectionAnnotationForPoint: point)
+                addSubview(label)
+                label.snp.makeConstraints { make in
+                    make.bottom.equalTo(snp.top).offset(-6)
+                    make.leading.greaterThanOrEqualToSuperview()
+                    make.trailing.lessThanOrEqualToSuperview()
+                }
+                let constraint = label.centerXAnchor.constraint(equalTo: leadingAnchor, constant: x)
+                constraint.priority = .defaultHigh
+                constraint.isActive = true
+                inspectionAnnotationLabel = label
+                inspectionAnnotationLabelCenterXConstraint = constraint
+            }
+            delegate?.chartView(self, didSelectPoint: point)
+        case .changed:
+            if let dot = cursorDotLayer, let y = drawingPoint(around: x)?.y {
+                CATransaction.performWithoutAnimation {
+                    dot.position = CGPoint(x: x, y: y)
+                }
+            }
+            if let constraint = cursorViewCenterXConstraint {
+                constraint.constant = x
+            }
+            if let label = inspectionAnnotationLabel {
+                label.text = delegate?.chartView(self, inspectionAnnotationForPoint: point)
+            }
+            if let constraint = inspectionAnnotationLabelCenterXConstraint {
+                constraint.constant = x
+            }
+            layoutIfNeeded()
+            delegate?.chartView(self, didSelectPoint: point)
+        case .ended, .cancelled, .failed:
+            cursorDotLayer?.removeFromSuperlayer()
+            cursorView?.removeFromSuperview()
+            inspectionAnnotationLabel?.removeFromSuperview()
+            delegate?.chartViewDidCancelSelection(self)
+        case .possible, .recognized:
+            break
+        @unknown default:
+            break
+        }
+    }
+    
+    private func drawingPoint(around x: CGFloat) -> CGPoint? {
+        guard !drawingPoints.isEmpty else {
+            return nil
+        }
+        var index = Int(round(x / bounds.width * Double(drawingPoints.count)))
+        index = max(0, min(points.count - 1, index))
+        return drawingPoints[index]
+    }
+    
     private func redraw() {
         for layer in extremumAnnotationLayers {
             layer.removeFromSuperlayer()
@@ -85,6 +199,7 @@ final class ChartView: UIView {
             view.removeFromSuperview()
         }
         extremumAnnotationViews = []
+        drawingPoints = []
         
         guard points.count >= 2 else {
             CATransaction.performWithoutAnimation {
@@ -104,10 +219,7 @@ final class ChartView: UIView {
             }
         }
         
-        let firstValue = points[0].value
-        let lastValue = points[points.count - 1].value
-        let isRising = lastValue >= firstValue
-        let color = (isRising ? riseColor : fallColor).resolvedColor(with: traitCollection)
+        let color = (arePointsRising ? riseColor : fallColor).resolvedColor(with: traitCollection)
         
         let maxV = (points[maxIndex].value as NSDecimalNumber).doubleValue
         let minV = (points[minIndex].value as NSDecimalNumber).doubleValue
@@ -132,6 +244,7 @@ final class ChartView: UIView {
         CATransaction.performWithoutAnimation {
             lineLayer.opacity = 1
         }
+        self.drawingPoints = drawingPoints
         
         if let fillingMaskPath = linePath.mutableCopy() {
             let bottomRight = CGPoint(x: bounds.width, y: bounds.height)
@@ -188,6 +301,14 @@ final class ChartView: UIView {
                 }
                 extremumAnnotationViews.append(minLabel)
             }
+        }
+    }
+    
+    private func setupRecognizerIfNeeded() {
+        if isUserInteractionEnabled && inspectionRecognizer == nil {
+            let recognizer = InspectionGestureRecognizer(target: self, action: #selector(inspect(_:)))
+            addGestureRecognizer(recognizer)
+            self.inspectionRecognizer = recognizer
         }
     }
     
@@ -248,6 +369,77 @@ extension ChartView {
         
         required init?(coder: NSCoder) {
             fatalError("Not supported")
+        }
+        
+    }
+    
+    private class InspectionGestureRecognizer: UIGestureRecognizer {
+        
+        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+            super.touchesBegan(touches, with: event)
+            state = .began
+        }
+        
+        override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+            super.touchesMoved(touches, with: event)
+            state = .changed
+        }
+        
+        override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+            super.touchesCancelled(touches, with: event)
+            state = .cancelled
+        }
+        
+        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+            super.touchesEnded(touches, with: event)
+            state = .ended
+        }
+        
+    }
+    
+    private class VerticalDashLineView: UIView {
+        
+        private let lineWidth: CGFloat = 1
+        private let lineColor: UIColor = R.color.chat_pin_count_background()!
+        private let numberOfDashes: CGFloat = 22
+        private let lineLayer = CAShapeLayer()
+        
+        private var lastLayoutBounds: CGRect?
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            loadLayer()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            loadLayer()
+        }
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            if lastLayoutBounds != bounds {
+                lineLayer.frame.size = CGSize(width: lineWidth, height: bounds.height)
+                lineLayer.position = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+                
+                let path = CGMutablePath()
+                path.move(to: .zero)
+                path.addLine(to: CGPoint(x: 0, y: bounds.height))
+                lineLayer.path = path
+                
+                let dashLength = bounds.height / (numberOfDashes * 2 + 1)
+                lineLayer.lineDashPattern = [NSNumber(value: dashLength), NSNumber(value: dashLength)]
+                
+                lastLayoutBounds = bounds
+            }
+        }
+        
+        private func loadLayer() {
+            lineLayer.fillColor = UIColor.clear.cgColor
+            lineLayer.strokeColor = lineColor.cgColor
+            lineLayer.lineWidth = lineWidth
+            lineLayer.lineJoin = .round
+            layer.addSublayer(lineLayer)
         }
         
     }

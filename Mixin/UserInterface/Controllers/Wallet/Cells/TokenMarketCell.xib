@@ -17,7 +17,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hw2-ql-z4P" customClass="ChartView" customModule="Mixin" customModuleProvider="target">
+                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hw2-ql-z4P" customClass="ChartView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="208" y="7" width="96" height="44"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>

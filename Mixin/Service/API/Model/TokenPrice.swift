@@ -36,7 +36,7 @@ struct TokenPrice {
             guard let decimalPrice = Decimal(string: price.price, locale: .enUSPOSIX) else {
                 return nil
             }
-            let date = Date(timeIntervalSince1970: TimeInterval(price.timestamp))
+            let date = Date(timeIntervalSince1970: TimeInterval(price.timestamp) / 1000)
             return ChartView.Point(date: date, value: decimalPrice)
         }
     }

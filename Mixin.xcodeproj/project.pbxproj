@@ -1000,8 +1000,8 @@
 		94CB85D02C6B43A900135641 /* TokenMyBalanceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CB85CE2C6B43A900135641 /* TokenMyBalanceCell.xib */; };
 		94CB85D92C6B4EC600135641 /* TokenInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB85D72C6B4EC600135641 /* TokenInfoCell.swift */; };
 		94CB85DA2C6B4EC600135641 /* TokenInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CB85D82C6B4EC600135641 /* TokenInfoCell.xib */; };
-		94CB85E02C6BA9D000135641 /* TokenMarketStateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB85DE2C6BA9D000135641 /* TokenMarketStateCell.swift */; };
-		94CB85E12C6BA9D000135641 /* TokenMarketStateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CB85DF2C6BA9D000135641 /* TokenMarketStateCell.xib */; };
+		94CB85E02C6BA9D000135641 /* TokenStatsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB85DE2C6BA9D000135641 /* TokenStatsCell.swift */; };
+		94CB85E12C6BA9D000135641 /* TokenStatsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CB85DF2C6BA9D000135641 /* TokenStatsCell.xib */; };
 		94CD47162BECACED00A3DE10 /* InscriptionActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CD47152BECACED00A3DE10 /* InscriptionActionCell.xib */; };
 		94CD47172BECACED00A3DE10 /* InscriptionActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CD47142BECACED00A3DE10 /* InscriptionActionCell.swift */; };
 		94CD471D2BECAE9D00A3DE10 /* InscriptionHashCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CD471C2BECAE9D00A3DE10 /* InscriptionHashCell.xib */; };
@@ -2335,8 +2335,8 @@
 		94CB85CE2C6B43A900135641 /* TokenMyBalanceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMyBalanceCell.xib; sourceTree = "<group>"; };
 		94CB85D72C6B4EC600135641 /* TokenInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfoCell.swift; sourceTree = "<group>"; };
 		94CB85D82C6B4EC600135641 /* TokenInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenInfoCell.xib; sourceTree = "<group>"; };
-		94CB85DE2C6BA9D000135641 /* TokenMarketStateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMarketStateCell.swift; sourceTree = "<group>"; };
-		94CB85DF2C6BA9D000135641 /* TokenMarketStateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMarketStateCell.xib; sourceTree = "<group>"; };
+		94CB85DE2C6BA9D000135641 /* TokenStatsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStatsCell.swift; sourceTree = "<group>"; };
+		94CB85DF2C6BA9D000135641 /* TokenStatsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenStatsCell.xib; sourceTree = "<group>"; };
 		94CD47142BECACED00A3DE10 /* InscriptionActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionActionCell.swift; sourceTree = "<group>"; };
 		94CD47152BECACED00A3DE10 /* InscriptionActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionActionCell.xib; sourceTree = "<group>"; };
 		94CD471B2BECAE9D00A3DE10 /* InscriptionHashCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionHashCell.swift; sourceTree = "<group>"; };
@@ -4283,8 +4283,8 @@
 				946331FE2C63E36800C54B76 /* CheckmarkTokenCell.swift */,
 				94F2375B2C691D5C0057D1AB /* TokenPriceChartCell.xib */,
 				94F2375A2C691D5C0057D1AB /* TokenPriceChartCell.swift */,
-				94CB85DF2C6BA9D000135641 /* TokenMarketStateCell.xib */,
-				94CB85DE2C6BA9D000135641 /* TokenMarketStateCell.swift */,
+				94CB85DF2C6BA9D000135641 /* TokenStatsCell.xib */,
+				94CB85DE2C6BA9D000135641 /* TokenStatsCell.swift */,
 				94CB85CE2C6B43A900135641 /* TokenMyBalanceCell.xib */,
 				94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */,
 				94CB85D82C6B4EC600135641 /* TokenInfoCell.xib */,
@@ -5009,7 +5009,7 @@
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				7CEB735529DB24F3006FB5B2 /* RestoreChatView.xib in Resources */,
-				94CB85E12C6BA9D000135641 /* TokenMarketStateCell.xib in Resources */,
+				94CB85E12C6BA9D000135641 /* TokenStatsCell.xib in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7CEB735929DB272F006FB5B2 /* RestoreChatTableViewCell.xib in Resources */,
 				7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */,
@@ -5934,7 +5934,7 @@
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
-				94CB85E02C6BA9D000135641 /* TokenMarketStateCell.swift in Sources */,
+				94CB85E02C6BA9D000135641 /* TokenStatsCell.swift in Sources */,
 				94CF1F332BA1CD7700BC52C1 /* BulletDescriptionView.swift in Sources */,
 				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,
 				7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */,

@@ -605,7 +605,6 @@
 "manage_your_circles" = "Manage your circles";
 "market" = "Market";
 "market_cap" = "Market Cap";
-"market_stats" = "Market Stats";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Media";
@@ -1013,6 +1012,7 @@
 "start" = "Start";
 "start_messaging" = "Start Messaging";
 "started_group_call" = "%@ has started a group call";
+"stats" = "Stats";
 "status" = "Status";
 "stay_in_mixin" = "Stay in Mixin";
 "sticker" = "Sticker";

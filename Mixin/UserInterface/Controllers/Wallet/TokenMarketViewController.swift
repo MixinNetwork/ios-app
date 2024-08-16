@@ -55,7 +55,7 @@ final class TokenMarketViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.register(R.nib.tokenPriceChartCell)
         tableView.register(R.nib.insetGroupedTitleCell)
-        tableView.register(R.nib.tokenMarketStateCell)
+        tableView.register(R.nib.tokenStatsCell)
         tableView.register(R.nib.tokenMyBalanceCell)
         tableView.register(R.nib.tokenInfoCell)
         tableView.register(UITableViewCell.self,
@@ -169,7 +169,7 @@ extension TokenMarketViewController: UITableViewDataSource {
         case .myBalance:
             MyBalanceRow.allCases.count
         case .infos:
-            viewModel.infos.count + 1 // 1 for a separator
+            viewModel.infos.count + 2 // 2 for separators
         }
     }
     
@@ -188,22 +188,22 @@ extension TokenMarketViewController: UITableViewDataSource {
             switch MarketStatesRow(rawValue: indexPath.row)! {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
-                cell.label.text = R.string.localizable.market_stats().uppercased()
+                cell.label.text = R.string.localizable.stats()
                 cell.disclosureIndicatorView.isHidden = true
                 return cell
             case .price:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_market_state, for: indexPath)!
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
                 cell.leftTitleLabel.text = R.string.localizable.high_24h().uppercased()
-                cell.leftContentLabel.text = viewModel.high24H
+                cell.setLeftContent(text: viewModel.high24H)
                 cell.rightTitleLabel.text = R.string.localizable.low_24h().uppercased()
-                cell.rightContentLabel.text = viewModel.low24H
+                cell.setRightContent(text: viewModel.low24H)
                 return cell
             case .volume:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_market_state, for: indexPath)!
-                cell.leftTitleLabel.text = R.string.localizable.vol_24h(token.symbol)
-                cell.leftContentLabel.text = notApplicable
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
+                cell.leftTitleLabel.isHidden = true
+                cell.leftContentLabel.isHidden = true
                 cell.rightTitleLabel.text = R.string.localizable.vol_24h(Currency.current.code)
-                cell.rightContentLabel.text = viewModel.fiatMoneyVolume24H
+                cell.setRightContent(text: viewModel.fiatMoneyVolume24H)
                 return cell
             case .bottomSeparator:
                 let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
@@ -222,15 +222,16 @@ extension TokenMarketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_my_balance, for: indexPath)!
                 cell.balanceLabel.text = token.localizedBalanceWithSymbol
                 cell.periodLabel.text = R.string.localizable.hours_count_short(24)
-                cell.priceLabel.text = token.localizedFiatMoneyPrice
+                cell.valueLabel.text = token.localizedFiatMoneyBalance
                 cell.changeLabel.text = viewModel.priceChange
                 cell.changeLabel.textColor = viewModel.priceChangeColor
                 return cell
             }
         case .infos:
-            if indexPath.row < viewModel.infos.count {
+            let index = indexPath.row - 1
+            if index >= 0 && index < viewModel.infos.count {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_info, for: indexPath)!
-                let row = viewModel.infos[indexPath.row]
+                let row = viewModel.infos[index]
                 cell.titleLabel.text = row.title
                 cell.primaryContentLabel.text = row.primaryContent
                 cell.primaryContentLabel.textColor = row.primaryContentColor
@@ -257,18 +258,19 @@ extension TokenMarketViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
         case .chart:
-            UITableView.automaticDimension
+            return UITableView.automaticDimension
         case .marketStats:
-            switch MarketStatesRow(rawValue: indexPath.row)! {
+            return switch MarketStatesRow(rawValue: indexPath.row)! {
             case .title, .price, .volume:
                 UITableView.automaticDimension
             case .bottomSeparator:
                 10
             }
         case .myBalance:
-            UITableView.automaticDimension
+            return UITableView.automaticDimension
         case .infos:
-            if indexPath.row < viewModel.infos.count {
+            let index = indexPath.row - 1
+            return if index >= 0 && index < viewModel.infos.count {
                 UITableView.automaticDimension
             } else {
                 10
@@ -416,9 +418,9 @@ extension TokenMarketViewController {
         private let token: TokenItem
         private let fixedInfosCount: Int
         
-        private(set) var high24H: String
-        private(set) var low24H: String
-        private(set) var fiatMoneyVolume24H: String
+        private(set) var high24H: String?
+        private(set) var low24H: String?
+        private(set) var fiatMoneyVolume24H: String?
         private(set) var priceChange: String
         private(set) var priceChangeColor: UIColor
         private(set) var infos: [Info]
@@ -441,9 +443,9 @@ extension TokenMarketViewController {
             
             self.token = token
             self.fixedInfosCount = infos.count
-            self.high24H = ""
-            self.low24H = ""
-            self.fiatMoneyVolume24H = ""
+            self.high24H = nil
+            self.low24H = nil
+            self.fiatMoneyVolume24H = nil
             self.priceChange = ""
             self.priceChangeColor = .clear
             self.infos = infos
@@ -459,9 +461,9 @@ extension TokenMarketViewController {
                 Info.contentNotApplicable(title: R.string.localizable.all_time_low().uppercased()),
             ])
             
-            self.high24H = notApplicable
-            self.low24H = notApplicable
-            self.fiatMoneyVolume24H = notApplicable
+            self.high24H = nil
+            self.low24H = nil
+            self.fiatMoneyVolume24H = nil
             self.priceChange = notApplicable
             self.priceChangeColor = R.color.text_quaternary()!
             self.infos = infos
@@ -492,11 +494,16 @@ extension TokenMarketViewController {
                 )
             }
             if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
-                var change = CurrencyFormatter.localizedString(from: priceChange24H, format: .fiatMoneyPrice, sign: .always)
+                var change = CurrencyFormatter.localizedString(
+                    from: priceChange24H * token.decimalBalance,
+                    format: .fiatMoneyPrice,
+                    sign: .always,
+                    symbol: .currencyCode
+                )
                 if let priceChangePercentage24H = Decimal(string: market.priceChangePercentage24H, locale: .enUSPOSIX),
                    let percent = NumberFormatter.percentage.string(decimal: priceChangePercentage24H / 100)
                 {
-                    change += "(\(percent))"
+                    change += " (\(percent))"
                 }
                 self.priceChange = change
                 self.priceChangeColor = priceChange24H >= 0 ? .priceRising : .priceFalling

@@ -74,7 +74,7 @@
                 <outlet property="balanceLabel" destination="lh5-XM-p3e" id="PTr-hx-bLw"/>
                 <outlet property="changeLabel" destination="hQj-Id-3dB" id="R5R-7w-d9E"/>
                 <outlet property="periodLabel" destination="wd7-CH-Lis" id="MjY-GI-iUM"/>
-                <outlet property="priceLabel" destination="sL2-xq-Zbb" id="urb-H9-XcT"/>
+                <outlet property="valueLabel" destination="sL2-xq-Zbb" id="urb-H9-XcT"/>
             </connections>
             <point key="canvasLocation" x="-61.068702290076331" y="51.408450704225352"/>
         </tableViewCell>

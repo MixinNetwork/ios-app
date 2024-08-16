@@ -605,7 +605,6 @@
 "manage_your_circles" = "管理你所有的圈子";
 "market" = "行情";
 "market_cap" = "市值";
-"market_stats" = "行情統計";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
 "media" = "媒體";
@@ -1013,6 +1012,7 @@
 "start" = "開始";
 "start_messaging" = "開始聊天";
 "started_group_call" = "%@ 開始了群通話";
+"stats" = "統計";
 "status" = "交易狀態";
 "stay_in_mixin" = "留在 Mixin";
 "sticker" = "貼紙";

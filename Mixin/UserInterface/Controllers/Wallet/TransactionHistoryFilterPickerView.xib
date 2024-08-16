@@ -28,12 +28,28 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1IO-ba-ZRa" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="20" y="74" width="353" height="40"/>
+                    <rect key="frame" x="20" y="74" width="284" height="40"/>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="S2w-bu-Cf1"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r9d-zE-OwY">
+                    <rect key="frame" x="304" y="74" width="89" height="40"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                    <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" name="theme"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="cancel:" destination="-1" eventType="touchUpInside" id="jus-ka-pPv"/>
+                    </connections>
+                </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZGV-dn-cl1">
                     <rect key="frame" x="0.0" y="114" width="393" height="83"/>
                     <color key="backgroundColor" name="background"/>
@@ -67,6 +83,9 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="PAz-eV-Tr6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5KK-ke-HPl"/>
+                <constraint firstItem="r9d-zE-OwY" firstAttribute="bottom" secondItem="1IO-ba-ZRa" secondAttribute="bottom" id="Di2-D8-vwS"/>
+                <constraint firstItem="r9d-zE-OwY" firstAttribute="leading" secondItem="1IO-ba-ZRa" secondAttribute="trailing" id="Eor-Ao-kGt"/>
+                <constraint firstItem="r9d-zE-OwY" firstAttribute="top" secondItem="1IO-ba-ZRa" secondAttribute="top" id="Ffg-J1-rlm"/>
                 <constraint firstAttribute="trailing" secondItem="PAz-eV-Tr6" secondAttribute="trailing" id="G59-zK-P3w"/>
                 <constraint firstAttribute="bottom" secondItem="PAz-eV-Tr6" secondAttribute="bottom" id="L6o-Jn-qTt"/>
                 <constraint firstItem="Bdv-Ci-XXg" firstAttribute="top" secondItem="2JE-hN-rYf" secondAttribute="bottom" id="VB1-SJ-fDG"/>
@@ -79,7 +98,7 @@
                 <constraint firstItem="ZGV-dn-cl1" firstAttribute="leading" secondItem="1xL-Cc-Ohu" secondAttribute="leading" id="r5P-KS-Hjx"/>
                 <constraint firstItem="1IO-ba-ZRa" firstAttribute="leading" secondItem="1xL-Cc-Ohu" secondAttribute="leading" constant="20" id="rDj-QD-85A"/>
                 <constraint firstAttribute="trailing" secondItem="Bdv-Ci-XXg" secondAttribute="trailing" id="rbM-A7-Hcb"/>
-                <constraint firstItem="1xL-Cc-Ohu" firstAttribute="trailing" secondItem="1IO-ba-ZRa" secondAttribute="trailing" constant="20" id="tDB-wz-Ydv"/>
+                <constraint firstItem="1xL-Cc-Ohu" firstAttribute="trailing" secondItem="r9d-zE-OwY" secondAttribute="trailing" id="rf2-Tr-Y41"/>
                 <constraint firstItem="Bdv-Ci-XXg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tqE-MZ-0sD"/>
                 <constraint firstItem="2JE-hN-rYf" firstAttribute="top" secondItem="ZGV-dn-cl1" secondAttribute="bottom" id="wMy-XB-5O3"/>
                 <constraint firstItem="1IO-ba-ZRa" firstAttribute="top" secondItem="1xL-Cc-Ohu" secondAttribute="top" constant="15" id="wsA-po-hP8"/>
@@ -90,6 +109,9 @@
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

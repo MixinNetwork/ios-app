@@ -125,10 +125,12 @@ final class TokenPriceChartCell: UITableViewCell {
             self.unavailableView = unavailableView
         }
         unavailableView.isHidden = false
+        periodSelectorStackView.isHidden = true
     }
     
     private func hideUnavailableView() {
         unavailableView?.isHidden = true
+        periodSelectorStackView.isHidden = false
     }
     
     private func setPeriodSelection(index: Int) {

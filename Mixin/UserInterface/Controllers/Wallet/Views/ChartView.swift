@@ -328,7 +328,7 @@ final class ChartView: UIView {
         
         lineLayer.fillColor = UIColor.clear.cgColor
         lineLayer.opacity = 1
-        lineLayer.lineWidth = 2
+        lineLayer.lineWidth = 1
         lineLayer.lineCap = .round
         lineLayer.lineJoin = .round
         layer.addSublayer(lineLayer)

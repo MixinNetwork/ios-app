@@ -52,6 +52,10 @@ class TransactionHistoryFilterPickerViewController: UIViewController {
         trayView.rightButton.addTarget(self, action: #selector(apply(_:)), for: .touchUpInside)
     }
     
+    @IBAction func cancel(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
+    }
+    
     @objc func reset(_ sender: Any) {
         
     }

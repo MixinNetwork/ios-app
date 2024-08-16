@@ -10,15 +10,6 @@ final class TokenBalanceCell: UITableViewCell {
     @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var actionView: TransferActionView!
     
-    var token: TokenItem? {
-        didSet {
-            guard let token, token !== oldValue else {
-                return
-            }
-            reloadData(token: token)
-        }
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         titleStackView.setCustomSpacing(10, after: titleLabel)
@@ -27,16 +18,9 @@ final class TokenBalanceCell: UITableViewCell {
         actionView.actions = [.send, .receive, .swap]
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection), let token {
-            reloadData(token: token)
-        }
-    }
-    
-    private func reloadData(token: TokenItem) {
+    func reloadData(token: TokenItem) {
         iconView.setIcon(token: token)
-        let amount: String
+        var amount: String
         if token.decimalBalance == 0 {
             amount = zeroWith2Fractions
             valueLabel.text = "≈ " + Currency.current.symbol + zeroWith2Fractions
@@ -44,38 +28,34 @@ final class TokenBalanceCell: UITableViewCell {
             amount = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             valueLabel.text = token.localizedFiatMoneyBalance
         }
-        let attributedAmount = attributedString(amount: amount, symbol: token.symbol)
-        amountTextView.attributedText = attributedAmount
-        
-        // TODO: Uncomment these lines for linebreaking on specific length of amount
-        // Currently this corrupts cell layout because when the cell is set with `token`,
-        // `cell.bounds` will change multiple times after, which cause character finding
-        // results in wrong.
-        
-//        let range = NSRange(location: 0, length: attributedAmount.length)
-//        var lineCount = 0
-//        var lastLineGlyphCount = 0
-//        amountTextView.layoutManager.enumerateLineFragments(forGlyphRange: range) { (rect, usedRect, textContainer, glyphRange, stop) in
-//            lastLineGlyphCount = glyphRange.length
-//            lineCount += 1
-//        }
-//        let minGlyphCountOfLastLine = 4 // 3 digits and 1 asset symbol
-//        if lineCount > 1 && lastLineGlyphCount < minGlyphCountOfLastLine {
-//            let linebreak = NSAttributedString(string: "\n")
-//            attributedAmount.insert(linebreak, at: attributedAmount.length - minGlyphCountOfLastLine)
-//            amountTextView.attributedText = attributedAmount
-//        }
-    }
-    
-    private func attributedString(amount: String, symbol: String) -> NSMutableAttributedString {
-        let attrs: [NSAttributedString.Key: Any] = [
+        if amount.count > 3 {
+            var index = amount.index(amount.endIndex, offsetBy: -3)
+            let beforeIndex = amount.index(before: index)
+            let afterIndex = amount.index(after: index)
+            if amount[index..<afterIndex] == currentDecimalSeparator {
+                // Avoid decimal separator being first character of the new line
+                if beforeIndex == amount.startIndex {
+                    index = afterIndex
+                } else {
+                    index = beforeIndex
+                }
+            }
+            amount.insert("\u{200B}", at: index)
+        }
+        let amountAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFontMetrics.default.scaledFont(for: .condensed(size: 34)),
-            .foregroundColor: UIColor.text
+            .foregroundColor: R.color.text()!,
         ]
-        let str = NSMutableAttributedString(string: amount, attributes: attrs)
-        let attachment = SymbolTextAttachment(text: symbol)
-        str.append(NSAttributedString(attachment: attachment))
-        return str
+        let attributedAmount = NSMutableAttributedString(string: amount, attributes: amountAttributes)
+        
+        let symbolAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.preferredFont(forTextStyle: .caption1),
+            .foregroundColor: R.color.text()!,
+        ]
+        let attributedSymbol = NSAttributedString(string: "\u{2060} \u{2060}\(token.symbol)", attributes: symbolAttributes)
+        
+        attributedAmount.append(attributedSymbol)
+        amountTextView.attributedText = attributedAmount
     }
     
 }

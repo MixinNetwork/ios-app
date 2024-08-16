@@ -200,10 +200,10 @@ extension TokenMarketViewController: UITableViewDataSource {
                 return cell
             case .volume:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
-                cell.leftTitleLabel.isHidden = true
-                cell.leftContentLabel.isHidden = true
-                cell.rightTitleLabel.text = R.string.localizable.vol_24h(Currency.current.code)
-                cell.setRightContent(text: viewModel.fiatMoneyVolume24H)
+                cell.leftTitleLabel.text = R.string.localizable.vol_24h(Currency.current.code)
+                cell.setLeftContent(text: viewModel.fiatMoneyVolume24H)
+                cell.rightTitleLabel.text = nil
+                cell.rightContentLabel.text = nil
                 return cell
             case .bottomSeparator:
                 let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)

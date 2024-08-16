@@ -36,6 +36,7 @@
 "address_editing_description" = "正在將修改地址的請求傳送到 Mixin 伺服器驗證，請稍候。";
 "address_not_found" = "找不到該地址。";
 "address_validity_reminder" = "您已經超過 %3$@ 天沒有使用地址 %1$@（%2$@），請注意檢查地址是否仍然有效。";
+"address_warning" = "合同地址不是充值地址！";
 "admin" = "管理員";
 "agree_hint" = "繼續使用即表示你同意 %@ 和 %@";
 "albums" = "相簿";
@@ -70,8 +71,11 @@
 "alert_key_group_video_message" = "%@傳送一個影片";
 "all" = "全部";
 "all_conversations" = "所有會話";
+"all_dates" = "所有日期";
 "all_photos" = "所有照片";
 "all_signer_failure" = "所有節點失敗";
+"all_time_high" = "歷史最高";
+"all_time_low" = "歷史最低";
 "all_transactions" = "所有交易記錄";
 "allow" = "允許";
 "allow_bot_access_asset" = "允許機器人檢視你的所有資產和餘額。";
@@ -99,7 +103,6 @@
 "asset_not_found" = "找不到該資產";
 "asset_type" = "資產型別";
 "assets" = "資產";
-"assets_title" = "資產";
 "audio" = "語音";
 "audio_shareable_false" = "該語音已被設定為不允許轉發";
 "audios" = "音訊";
@@ -207,6 +210,7 @@
 "circle_subtitle_count" = "%d 會話";
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
+"circulation_supply" = "流通量";
 "clear" = "清理";
 "clear_cache" = "清理快取";
 "clear_chat" = "清除聊天記錄";
@@ -288,6 +292,7 @@
 "continue" = "繼續";
 "continue_open_url" = "繼續訪問";
 "continue_with_pin" = "輸入 PIN 繼續";
+"contract_address" = "合約地址";
 "conversation" = "會話";
 "conversation_has_too_many_circles" = "已達圈子數上限";
 "conversation_not_found" = "找不到該會話";
@@ -320,6 +325,7 @@
 "date_format_day" = "ahh:mm";
 "date_format_month" = "MM 月 d 日 E";
 "date_format_week_date" = "yyyy 年 MM 月 d 日 E";
+"days_count_short" = "%d天";
 "declined" = "已拒絕";
 "decode_transaction_failed" = "無法估計資產變化，注意只給您信任的應用程式簽名。";
 "delete" = "刪除";
@@ -400,6 +406,7 @@
 "enable_pay" = "啟用%@支付";
 "enable_pay_confirmation" = "啟用%@支付？";
 "enable_touch_pay_hint" = "輸入 PIN 啟用指紋支付";
+"end" = "結束";
 "end_to_end_encryption" = "端到端加密";
 "enter_new_anonymous_number" = "輸入你的新匿名號碼";
 "enter_new_phone_number" = "輸入你的新手機號碼";
@@ -486,6 +493,7 @@
 "free" = "免手續費";
 "from" = "來自";
 "from_address" = "從外部轉入";
+"from_date" = "自%@";
 "from_mixin_wallet" = "從 Mixin 錢包轉入";
 "generating" = "正在生成...";
 "generating_keys" = "正在建立金鑰...";
@@ -507,10 +515,12 @@
 "hidden_assets" = "隱藏的資產";
 "hide" = "隱藏";
 "hide_asset" = "隱藏資產";
+"high_24h" = "24 小時最高";
 "hint_address" = "輸入錢包地址";
 "hold_to_record_audio" = "長按說話，鬆手傳送";
 "hour" = "%d 小時";
 "hour_count" = "%d 小時";
+"hours_count_short" = "%d小時";
 "how_are_you" = "嗨，你好嗎？";
 "i_am_good" = "我很好。";
 "id" = "ID";
@@ -586,10 +596,13 @@
 "logined" = "已登入";
 "logs" = "日誌";
 "lost_your_mobile_number" = "手機丟失？";
+"low_24h" = "24 小時最低";
 "make_group_admin" = "設定為群組管理員";
 "manage" = "管理";
 "manage_your_apps" = "管理你所有的機器人";
 "manage_your_circles" = "管理你所有的圈子";
+"market" = "行情";
+"market_cap" = "市值";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
 "media" = "媒體";
@@ -612,6 +625,7 @@
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mobile_contacts" = "通訊錄";
 "monthly" = "每月";
+"months_count_short" = "%d月";
 "more" = "更多";
 "move_and_scale" = "移動和縮放";
 "multisig_receiver" = "交易接收人";
@@ -632,6 +646,7 @@
 "mute_until" = "直到 %@";
 "muted" = "已靜音";
 "muted_until" = "已靜音至 %@";
+"my_balance" = "我的餘額";
 "my_contacts" = "我的聯絡人";
 "my_favorite_bots" = "我收藏的機器人";
 "my_mixin_id" = "我的 Mixin ID：%@";
@@ -683,9 +698,13 @@
 "notification_content" = "不再遺漏好友的訊息。";
 "notification_message_preview_description" = "在推送通知中顯示訊息內容。";
 "now_an_addmin" = "%@現在是管理員";
+"number_of_assets" = "%d 資產";
+"number_of_days" = "%d天";
+"number_of_recipients" = "%d 收款人";
 "off" = "關閉";
 "ok" = "好的";
 "old_device_is_waiting" = "確保舊的裝置已停留在同步等待掃碼的介面";
+"oldest" = "最早";
 "one_by_one_forward" = "逐條轉發";
 "one_hour" = "1 小時";
 "one_week" = "1 星期";
@@ -767,6 +786,7 @@
 "preparing" = "正在準備...";
 "preparing_progress" = "備份中...（%@）";
 "price" = "價格";
+"price_data_unavailable" = "價格資料不可用";
 "privacy" = "隱私";
 "privacy_policy" = "隱私政策";
 "process_can_not_be_stop" = "流程一旦開始無法取消，請牢記 6 位數字 PIN，意外中止流程需要再次輸入";
@@ -794,6 +814,7 @@
 "recent" = "最近";
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜尋";
+"recipients" = "收款人";
 "refresh" = "重新整理";
 "release" = "分解";
 "reload" = "重新載入";
@@ -818,6 +839,7 @@
 "request_rejected_reason_another_request_in_process" = "正在處理另一請求，請完成當前請求後重試";
 "resend_code" = "重發驗證碼";
 "resend_code_pending" = "%@ 後重新發送驗證碼";
+"reset" = "重置";
 "reset_link" = "重置邀請連結";
 "restore" = "恢復";
 "restore_chat_from_icloud" = "從 iCloud 恢復您的聊天記錄。";
@@ -881,6 +903,7 @@
 "select" = "選擇";
 "select_a_country_or_region" = "選擇一個國家或地區";
 "select_a_token_for_the_fee" = "選擇支付手續費的幣種";
+"select_date" = "選擇日期";
 "select_emergency_contact" = "選擇緊急聯絡人";
 "select_more_photos" = "選擇更多照片";
 "select_token" = "選擇代幣";
@@ -980,9 +1003,14 @@
 "snapshot_hash" = "快照雜湊";
 "snapshot_not_found" = "找不到該轉賬記錄。";
 "sort_by" = "順序";
+"sort_by_amount" = "按金額排序";
+"sort_by_oldest" = "按最早排序";
+"sort_by_recent" = "按最近排序";
+"sort_by_value" = "按價值排序";
 "start" = "開始";
 "start_messaging" = "開始聊天";
 "started_group_call" = "%@ 開始了群通話";
+"stats" = "統計";
 "status" = "交易狀態";
 "stay_in_mixin" = "留在 Mixin";
 "sticker" = "貼紙";
@@ -1035,10 +1063,12 @@
 "today" = "今天";
 "token" = "代幣";
 "total" = "共計";
+"total_supply" = "總量";
 "touch_id" = "指紋";
 "track_not_found" = "Track 無效";
 "transaction" = "交易詳情";
 "transaction_hash" = "交易雜湊";
+"transaction_history" = "轉賬記錄";
 "transaction_id" = "交易編號";
 "transaction_request" = "請求轉賬";
 "transaction_type" = "交易型別";
@@ -1113,6 +1143,7 @@
 "unread_messages" = "未讀訊息";
 "unrecognized_codes" = "未識別的連結";
 "unsigned_message" = "待簽名訊息";
+"until_date" = "至%@";
 "update" = "升級";
 "update_mixin" = "升級 Mixin";
 "upgrade" = "升級";
@@ -1132,6 +1163,7 @@
 "user_not_found" = "找不到這個使用者";
 "utxo_count_exceeded" = "該交易使用的 UTXO 數量過多，請嘗試首先歸集 UTXO 或者分批轉賬。";
 "validation_timed_out" = "驗證超時";
+"value" = "價值";
 "value_now" = "價值 %@";
 "value_then" = "當時價值 %@";
 "verify" = "驗證";
@@ -1139,6 +1171,7 @@
 "version_update" = "版本更新";
 "video" = "影片";
 "videos" = "影片";
+"view_all" = "檢視全部";
 "view_authorization" = "檢視授權";
 "view_emergency_contact" = "檢視緊急聯絡人";
 "view_on_explorer" = "在瀏覽器中檢視";
@@ -1146,6 +1179,7 @@
 "view_wallet" = "檢視錢包";
 "voice_call_cancelled" = "對方已取消語音通話";
 "voice_call_has_been_declined" = "已拒絕通話";
+"vol_24h" = "24 小時交易量（%@）";
 "waiting" = "等待中";
 "waiting_for_other_device" = "等待其他裝置...";
 "waiting_for_other_device_login" = "在新裝置上登入當前賬戶並選擇從其他手機恢復";
@@ -1186,6 +1220,7 @@
 "web3_transaction_request" = "交易簽名";
 "weekly" = "每週";
 "weeks" = "週";
+"weeks_count_short" = "%d周";
 "whats_your_name" = "你的名字？";
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 與行動數據";
@@ -1220,3 +1255,4 @@
 "your_phone_number_has_been_changed" = "更換手機號";
 "your_pin_has_been_changed" = "修改 PIN";
 "your_pin_has_been_created" = "PIN 已建立";
+"ytd" = "年初至今";

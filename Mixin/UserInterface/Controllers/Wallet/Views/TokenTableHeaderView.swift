@@ -41,7 +41,7 @@ final class TokenTableHeaderView: InfiniteTopView {
         assetIconView.setIcon(token: token)
         let amount: String
         if token.balance == "0" {
-            amount = "0\(currentDecimalSeparator)00"
+            amount = zeroWith2Fractions
             fiatMoneyValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
         } else {
             amount = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? ""

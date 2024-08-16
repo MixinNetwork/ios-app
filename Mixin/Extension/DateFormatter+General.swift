@@ -22,6 +22,37 @@ extension DateFormatter {
         return formatter
     }()
     
+    static let shortDateOnly: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = .current
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        return formatter
+    }()
+    
+    static let shortTimeOnly: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = .current
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
+    // Returns nil if `from` `to` are both nil
+    static func shortDatePeriod(from start: Date?, to end: Date?) -> String? {
+        let formatter: DateFormatter = .shortDateOnly
+        return switch (start, end) {
+        case (.none, .none):
+            nil
+        case let (.some(start), .none):
+            R.string.localizable.from_date(formatter.string(from: start))
+        case let (.none, .some(end)):
+            R.string.localizable.until_date(formatter.string(from: end))
+        case let (.some(start), .some(end)):
+            formatter.string(from: start) + " ~ " + formatter.string(from: end)
+        }
+    }
+    
 }
 
 extension ISO8601DateFormatter {

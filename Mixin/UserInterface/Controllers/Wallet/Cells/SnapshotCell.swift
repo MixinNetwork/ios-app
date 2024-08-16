@@ -74,9 +74,9 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
             }
             pendingDepositProgressView.isHidden = true
             if snapshot.amount.hasMinusPrefix {
-                amountLabel.textColor = .walletRed
+                amountLabel.textColor = .priceFalling
             } else {
-                amountLabel.textColor = .walletGreen
+                amountLabel.textColor = .priceRising
             }
         }
         if snapshot.isInscription {

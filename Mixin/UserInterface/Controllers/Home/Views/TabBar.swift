@@ -96,9 +96,9 @@ final class TabBar: UIView {
                 }
             }
         } else if numberOfButtonsToBeAdded < 0 {
-            stackView.arrangedSubviews
-                .suffix(-numberOfButtonsToBeAdded)
-                .forEach(stackView.removeArrangedSubview(_:))
+            for button in stackView.arrangedSubviews.suffix(-numberOfButtonsToBeAdded) {
+                button.removeFromSuperview()
+            }
             buttons.removeLast(-numberOfButtonsToBeAdded)
         }
         

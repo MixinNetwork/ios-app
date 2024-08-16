@@ -88,9 +88,9 @@ final class SafeSnapshotViewController: RowListViewController {
             amountLabel.textColor = .walletGray
         } else {
             if snapshot.amount.hasMinusPrefix {
-                amountLabel.textColor = .walletRed
+                amountLabel.textColor = .priceFalling
             } else {
-                amountLabel.textColor = .walletGreen
+                amountLabel.textColor = .priceRising
             }
         }
         if ScreenHeight.current >= .extraLong {
@@ -180,7 +180,7 @@ final class SafeSnapshotViewController: RowListViewController {
         {
             navigationController?.popToViewController(viewController, animated: true)
         } else {
-            let viewController = TokenViewController.instance(token: token)
+            let viewController = TokenViewController.contained(token: token)
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

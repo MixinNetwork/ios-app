@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public final class Address: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+public class Address: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case type
@@ -27,7 +27,7 @@ public final class Address: Codable, DatabaseColumnConvertible, MixinFetchableRe
     
     public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
-    public init(from decoder: Decoder) throws {
+    required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         addressId = try container.decode(String.self, forKey: .addressId)
         type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
@@ -55,13 +55,25 @@ extension Address {
     }
     
     public static func compactRepresentation(of string: String) -> String {
-        let prefixCount = 8
-        let suffixCount = 6
+        truncatedRepresentation(string: string, prefixCount: 8, suffixCount: 6)
+    }
+    
+    public static func truncatedRepresentation(string: String, prefixCount: Int, suffixCount: Int) -> String {
         if string.count > prefixCount + suffixCount {
-            return string.prefix(prefixCount) + "..." + string.suffix(suffixCount)
+            string.prefix(prefixCount) + "…" + string.suffix(suffixCount)
         } else {
-            return string
+            string
         }
+    }
+    
+}
+
+extension Address {
+    
+    public func matches(lowercasedKeyword keyword: String) -> Bool {
+        label.lowercased().contains(keyword)
+        || destination.lowercased().contains(keyword)
+        || tag.lowercased().contains(keyword)
     }
     
 }

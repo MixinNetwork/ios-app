@@ -20,7 +20,7 @@ public class Web3Account: Codable {
         let decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
         let balance = decimalBalance * Currency.current.decimalRate
         if balance.isZero {
-            return "0\(currentDecimalSeparator)00"
+            return zeroWith2Fractions
         } else {
             return CurrencyFormatter.localizedString(from: balance, format: .fiatMoney, sign: .never)
         }

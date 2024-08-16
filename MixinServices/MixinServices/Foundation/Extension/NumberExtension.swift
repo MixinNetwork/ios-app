@@ -2,6 +2,18 @@ import Foundation
 
 public extension NumberFormatter {
     
+    public static let percentage: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        formatter.roundingMode = .floor
+        formatter.positivePrefix = ""
+        formatter.negativePrefix = formatter.minusSign
+        formatter.locale = .current
+        return formatter
+    }()
+    
     static let usLocalizedDecimal: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -49,6 +61,11 @@ public extension NumberFormatter {
     func stringFormat(value: Float64) -> String {
         return string(from: NSNumber(value: value)) ?? "\(Int64(value))"
     }
+    
+    func string(decimal: Decimal) -> String? {
+        string(from: decimal as NSDecimalNumber)
+    }
+    
 }
 
 public extension Int64 {

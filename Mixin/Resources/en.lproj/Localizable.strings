@@ -36,6 +36,7 @@
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "Address not found.";
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
+"address_warning" = "Contract address is NOT a deposit address!";
 "admin" = "Admin";
 "agree_hint" = "By proceeding, you agree to the %@ and %@.";
 "albums" = "Albums";
@@ -70,8 +71,11 @@
 "alert_key_group_video_message" = "%@ sent a video";
 "all" = "All";
 "all_conversations" = "All Conversations";
+"all_dates" = "All Dates";
 "all_photos" = "All Photos";
 "all_signer_failure" = "All node failure";
+"all_time_high" = "All Time High";
+"all_time_low" = "All Time Low";
 "all_transactions" = "All Transactions";
 "allow" = "Allow";
 "allow_bot_access_asset" = "Allow bot to access your asset list and balance.";
@@ -98,8 +102,7 @@
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Asset not found.";
 "asset_type" = "Asset Type";
-"assets" = "ASSETS";
-"assets_title" = "Assets";
+"assets" = "Assets";
 "audio" = "Audio";
 "audio_shareable_false" = "The audio has been set to not allow sharing";
 "audios" = "Audios";
@@ -207,6 +210,7 @@
 "circle_subtitle_count" = "%d Conversations";
 "circle_title" = "%@'s Circles";
 "circles" = "Circles";
+"circulation_supply" = "Circulation Supply";
 "clear" = "Clear";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Clear Chat";
@@ -288,6 +292,7 @@
 "continue" = "Continue";
 "continue_open_url" = "Continue Open URL";
 "continue_with_pin" = "Continue with PIN";
+"contract_address" = "Contract Address";
 "conversation" = "Conversation";
 "conversation_has_too_many_circles" = "The conversation has too many circles";
 "conversation_not_found" = "Conversation not found.";
@@ -320,6 +325,7 @@
 "date_format_day" = "hh:mm a";
 "date_format_month" = "E, d MMM";
 "date_format_week_date" = "E, d MMM yyyy";
+"days_count_short" = "%dD";
 "declined" = "Declined";
 "decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
 "delete" = "Delete";
@@ -400,6 +406,7 @@
 "enable_pay" = "Enable %@ Pay";
 "enable_pay_confirmation" = "Enable %@ Pay?";
 "enable_touch_pay_hint" = "Confirm PIN to enable Touch Pay";
+"end" = "End";
 "end_to_end_encryption" = "End-to-end Encrypted";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Enter your new phone number";
@@ -486,6 +493,7 @@
 "free" = "FREE";
 "from" = "From";
 "from_address" = "From address";
+"from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
@@ -507,10 +515,12 @@
 "hidden_assets" = "Hidden Assets";
 "hide" = "Hide";
 "hide_asset" = "Hide asset";
+"high_24h" = "24H HIGH";
 "hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "Hold to record, release to send.";
 "hour" = "%d Hour";
 "hour_count" = "%d Hours";
+"hours_count_short" = "%dH";
 "how_are_you" = "Hi, how are you?";
 "i_am_good" = "I’m good.";
 "id" = "ID";
@@ -586,10 +596,13 @@
 "logined" = "Logged in";
 "logs" = "Logs";
 "lost_your_mobile_number" = "Lost your mobile number?";
+"low_24h" = "24H LOW";
 "make_group_admin" = "Make group admin";
 "manage" = "Manage";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
+"market" = "Market";
+"market_cap" = "Market Cap";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Media";
@@ -612,6 +625,7 @@
 "mixin_server_encounters_errors" = "Mixin server encounters errors";
 "mobile_contacts" = "Mobile Contacts";
 "monthly" = "Monthly";
+"months_count_short" = "%dM";
 "more" = "More";
 "move_and_scale" = "Move and Scale";
 "multisig_receiver" = "Receiver";
@@ -632,6 +646,7 @@
 "mute_until" = "Until %@";
 "muted" = "Muted";
 "muted_until" = "Muted until %@";
+"my_balance" = "My Balance";
 "my_contacts" = "My Contacts";
 "my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "My Mixin ID: %@";
@@ -683,9 +698,13 @@
 "notification_content" = "Don't miss messages from your friends.";
 "notification_message_preview_description" = "Preview message text inside new message notifications.";
 "now_an_addmin" = "%@ now an admin";
+"number_of_assets" = "%d Assets";
+"number_of_days" = "%d Days";
+"number_of_recipients" = "%d Recipients";
 "off" = "Off";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
+"oldest" = "Oldest";
 "one_by_one_forward" = "One-by-One Forward";
 "one_hour" = "1 Hour";
 "one_week" = "1 Week";
@@ -767,6 +786,7 @@
 "preparing" = "Preparing...";
 "preparing_progress" = "Preparing...(%@)";
 "price" = "Price";
+"price_data_unavailable" = "Price data unavailable";
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -794,6 +814,7 @@
 "recent" = "Recent";
 "recent_chats" = "CHATS";
 "recent_searches" = "Recent searches";
+"recipients" = "Recipients";
 "refresh" = "Refresh";
 "release" = "Release";
 "reload" = "Reload";
@@ -818,6 +839,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "Resend code";
 "resend_code_pending" = "Resend code in %@";
+"reset" = "Reset";
 "reset_link" = "Reset Link";
 "restore" = "Restore";
 "restore_chat_from_icloud" = "Restore your chat history from iCloud.";
@@ -881,6 +903,7 @@
 "select" = "Select";
 "select_a_country_or_region" = "Select a Country or Region";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_date" = "Select Date";
 "select_emergency_contact" = "Select Emergency Contact";
 "select_more_photos" = "Select More Photos";
 "select_token" = "Select Token";
@@ -980,9 +1003,14 @@
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
 "sort_by" = "Sort by";
+"sort_by_amount" = "Sort by Amount";
+"sort_by_oldest" = "Sort by Oldest";
+"sort_by_recent" = "Sort by Recent";
+"sort_by_value" = "Sort by Value";
 "start" = "Start";
 "start_messaging" = "Start Messaging";
 "started_group_call" = "%@ has started a group call";
+"stats" = "Stats";
 "status" = "Status";
 "stay_in_mixin" = "Stay in Mixin";
 "sticker" = "Sticker";
@@ -1035,10 +1063,12 @@
 "today" = "Today";
 "token" = "Token";
 "total" = "Total";
+"total_supply" = "Total Supply";
 "touch_id" = "Touch ID";
 "track_not_found" = "Track not found";
 "transaction" = "Transaction";
 "transaction_hash" = "Transaction Hash";
+"transaction_history" = "Transaction History";
 "transaction_id" = "Transaction Id";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Transaction Type";
@@ -1113,6 +1143,7 @@
 "unread_messages" = "Unread messages";
 "unrecognized_codes" = "Unrecognized codes";
 "unsigned_message" = "UNSIGNED MESSAGE";
+"until_date" = "Until %@";
 "update" = "Update";
 "update_mixin" = "Update Mixin";
 "upgrade" = "Upgrade";
@@ -1132,6 +1163,7 @@
 "user_not_found" = "User not found";
 "utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "Validation timed out";
+"value" = "Value";
 "value_now" = "value now %@";
 "value_then" = "value then %@";
 "verify" = "Verify";
@@ -1139,6 +1171,7 @@
 "version_update" = "Version Update";
 "video" = "Video";
 "videos" = "Videos";
+"view_all" = "View All";
 "view_authorization" = "View Authorization";
 "view_emergency_contact" = "View emergency contact";
 "view_on_explorer" = "View on Explorer";
@@ -1146,6 +1179,7 @@
 "view_wallet" = "View Wallet";
 "voice_call_cancelled" = "voice call cancelled";
 "voice_call_has_been_declined" = "Voice call has been declined";
+"vol_24h" = "24H VOL(%@)";
 "waiting" = "Waiting";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1186,6 +1220,7 @@
 "web3_transaction_request" = "Transaction Request";
 "weekly" = "Weekly";
 "weeks" = "weeks";
+"weeks_count_short" = "%dW";
 "whats_your_name" = "What's your name?";
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi and Cellular";
@@ -1220,3 +1255,4 @@
 "your_phone_number_has_been_changed" = "Your phone number has been changed";
 "your_pin_has_been_changed" = "Your PIN has been changed";
 "your_pin_has_been_created" = "Your PIN has been created";
+"ytd" = "YTD";

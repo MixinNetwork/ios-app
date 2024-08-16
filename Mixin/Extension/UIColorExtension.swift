@@ -9,6 +9,12 @@ extension UIColor {
     
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
     static let walletRed = UIColor(displayP3RgbValue: 0xF67070)
+    static var priceRising: UIColor {
+        .walletGreen
+    }
+    static var priceFalling: UIColor {
+        .walletRed
+    }
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
     
     static let tagBackground = UIColor.black.withAlphaComponent(0.16)

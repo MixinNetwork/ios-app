@@ -335,8 +335,8 @@ extension LegacyTransferOutViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         switch opponent! {
         case let .contact(user):
-            let vc = PeerTransactionsViewController.instance(opponentId: user.userId)
-            navigationController?.pushViewController(vc, animated: true)
+            let history = TransactionHistoryViewController.contained(user: user)
+            navigationController?.pushViewController(history, animated: true)
         }
     }
 

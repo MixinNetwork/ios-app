@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TransactionHistoryDatePickerViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="datePicker" destination="kif-eI-H57" id="csg-nA-ogA"/>
+                <outlet property="datePickerBackgroundView" destination="VSX-vC-IqB" id="Fpg-GI-Ydk"/>
+                <outlet property="endButton" destination="sfZ-PM-HDp" id="9HO-Lj-FkP"/>
+                <outlet property="fixedPeriodStackView" destination="UDe-gf-daW" id="pKg-qy-ty7"/>
+                <outlet property="startButton" destination="TRM-MK-mdV" id="r9S-q2-2Le"/>
+                <outlet property="titleView" destination="GXo-fI-EuJ" id="Sxa-Hr-FE1"/>
+                <outlet property="trayWrapperView" destination="Wfr-L4-QDK" id="Myp-Aa-JYe"/>
+                <outlet property="view" destination="iN0-l3-epB" id="Xze-B0-TlQ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="535"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GXo-fI-EuJ" customClass="PopupTitleView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="70"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="Gy4-Yd-tjN"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="WRS-eP-r0Y">
+                    <rect key="frame" x="20" y="88" width="353" height="398"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="vBe-hY-wCh">
+                            <rect key="frame" x="0.0" y="0.0" width="353" height="44"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TRM-MK-mdV" customClass="OutlineButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="157" height="44"/>
+                                    <color key="backgroundColor" name="background_secondary"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="Start">
+                                        <color key="titleColor" name="text_quaternary"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="normalBackgroundColor">
+                                            <color key="value" name="background_secondary"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="normalOutlineColor">
+                                            <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="changeStartDate:" destination="-1" eventType="touchUpInside" id="3to-Wo-LpO"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="to" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u5C-4r-0ig">
+                                    <rect key="frame" x="170" y="0.0" width="13" height="44"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_tertiary"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="to"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sfZ-PM-HDp" customClass="OutlineButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="196" y="0.0" width="157" height="44"/>
+                                    <color key="backgroundColor" name="background_secondary"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="End">
+                                        <color key="titleColor" name="text_quaternary"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="normalBackgroundColor">
+                                            <color key="value" name="background_secondary"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="normalOutlineColor">
+                                            <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="changeEndDate:" destination="-1" eventType="touchUpInside" id="K6E-xr-s8P"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="TRM-MK-mdV" firstAttribute="width" secondItem="sfZ-PM-HDp" secondAttribute="width" id="m7L-T6-FAt"/>
+                                <constraint firstAttribute="height" constant="44" id="rZ5-SM-ChL"/>
+                            </constraints>
+                        </stackView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VSX-vC-IqB">
+                            <rect key="frame" x="0.0" y="60" width="353" height="192"/>
+                            <subviews>
+                                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="kif-eI-H57">
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="192"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <date key="minimumDate" timeIntervalSinceReferenceDate="694972800">
+                                        <!--2023-01-09 16:00:00 +0000-->
+                                    </date>
+                                    <connections>
+                                        <action selector="changeDate:" destination="-1" eventType="valueChanged" id="kdQ-Qw-rfK"/>
+                                    </connections>
+                                </datePicker>
+                            </subviews>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="kif-eI-H57" secondAttribute="trailing" id="ONb-22-uGL"/>
+                                <constraint firstItem="kif-eI-H57" firstAttribute="leading" secondItem="VSX-vC-IqB" secondAttribute="leading" id="lx7-7f-PNY"/>
+                                <constraint firstAttribute="bottom" secondItem="kif-eI-H57" secondAttribute="bottom" id="md4-Hp-Mmb"/>
+                                <constraint firstItem="kif-eI-H57" firstAttribute="top" secondItem="VSX-vC-IqB" secondAttribute="top" id="vV3-JJ-Pgc"/>
+                            </constraints>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="UDe-gf-daW">
+                            <rect key="frame" x="0.0" y="268" width="353" height="130"/>
+                        </stackView>
+                    </subviews>
+                </stackView>
+                <view contentMode="scaleToFill" verticalHuggingPriority="750" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="116" translatesAutoresizingMaskIntoConstraints="NO" id="Wfr-L4-QDK">
+                    <rect key="frame" x="0.0" y="511" width="393" height="24"/>
+                    <color key="backgroundColor" name="background"/>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="Wfr-L4-QDK" firstAttribute="top" secondItem="WRS-eP-r0Y" secondAttribute="bottom" constant="25" id="6wL-pz-iGB"/>
+                <constraint firstAttribute="trailing" secondItem="Wfr-L4-QDK" secondAttribute="trailing" id="7Qf-cM-Yoa"/>
+                <constraint firstItem="WRS-eP-r0Y" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Qi9-lw-dGE"/>
+                <constraint firstAttribute="bottom" secondItem="Wfr-L4-QDK" secondAttribute="bottom" id="awa-Bj-B7O"/>
+                <constraint firstItem="GXo-fI-EuJ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="ctY-GL-HIl"/>
+                <constraint firstItem="Wfr-L4-QDK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="d1e-0T-PLZ"/>
+                <constraint firstAttribute="trailing" secondItem="WRS-eP-r0Y" secondAttribute="trailing" constant="20" id="fma-i2-yKa"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="GXo-fI-EuJ" secondAttribute="trailing" id="qwS-rP-fve"/>
+                <constraint firstItem="WRS-eP-r0Y" firstAttribute="top" secondItem="GXo-fI-EuJ" secondAttribute="bottom" constant="18" id="udU-dl-IHJ"/>
+                <constraint firstItem="GXo-fI-EuJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="x1C-dO-TQf"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="136.64122137404578" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

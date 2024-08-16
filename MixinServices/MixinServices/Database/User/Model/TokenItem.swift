@@ -15,10 +15,12 @@ public final class TokenItem: Token, NumberStringLocalizable {
                                                                                                 sign: .never,
                                                                                                 symbol: .custom(symbol))
     
-    public lazy var localizedFiatMoneyPrice: String = {
-        let value = usdPrice.doubleValue * Currency.current.rate
-        return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never) ?? ""
-    }()
+    public lazy var localizedFiatMoneyPrice = CurrencyFormatter.localizedString(
+        from: decimalUSDPrice * Currency.current.decimalRate,
+        format: .fiatMoneyPrice,
+        sign: .never,
+        symbol: .currencySymbol
+    )
     
     public lazy var localizedFiatMoneyBalance: String = {
         let fiatMoneyBalance = balance.doubleValue * usdPrice.doubleValue * Currency.current.rate
@@ -29,10 +31,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
         }
     }()
     
-    public lazy var localizedUsdChange: String = {
-        let usdChange = usdChange.doubleValue * 100
-        return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
-    }()
+    public lazy var localizedUSDChange = NumberFormatter.percentage.string(decimal: decimalUSDChange)
     
     public init(token: Token, balance: String, isHidden: Bool, chain: Chain?) {
         self.balance = balance

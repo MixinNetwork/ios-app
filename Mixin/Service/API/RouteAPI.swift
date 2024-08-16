@@ -41,6 +41,24 @@ final class RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
+    static func market(assetID: String, completion: @escaping (MixinAPI.Result<TokenMarket>) -> Void) {
+        request(method: .get, path: "/markets/" + assetID, completion: completion)
+    }
+    
+    static func priceHistory(
+        assetID: String,
+        period: PriceHistory.Period,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<TokenPrice>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/markets/\(assetID)/price-history?type=\(period.rawValue)",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
 }
 
 // Authentication not in used currently
@@ -126,11 +144,19 @@ extension RouteAPI {
         method: HTTPMethod,
         path: String,
         with parameters: Parameters? = nil,
+        queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         let url = Config.host + path
-        let dataRequest = AF.request(url, method: method, parameters: parameters, encoder: .json)
-        return request(dataRequest, completion: completion)
+        let interceptor = RouteSigningInterceptor(method: method, path: path)
+        let dataRequest = AF.request(
+            url,
+            method: method,
+            parameters: parameters,
+            encoder: .json,
+            interceptor: interceptor
+        )
+        return request(dataRequest, queue: queue, completion: completion)
     }
     
     @discardableResult
@@ -138,19 +164,28 @@ extension RouteAPI {
         method: HTTPMethod,
         path: String,
         with parameters: [String: Any]? = nil,
+        queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         let url = Config.host + path
-        let dataRequest = AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
-        return request(dataRequest, completion: completion)
+        let interceptor = RouteSigningInterceptor(method: method, path: path)
+        let dataRequest = AF.request(
+            url,
+            method: method,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            interceptor: interceptor
+        )
+        return request(dataRequest, queue: queue, completion: completion)
     }
     
     private static func request<Response>(
         _ request: DataRequest,
+        queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         request.validate(statusCode: 200...299)
-            .responseDecodable(of: ResponseObject<Response>.self) { response in
+            .responseDecodable(of: ResponseObject<Response>.self, queue: queue) { response in
                 switch response.result {
                 case .success(let response):
                     if let data = response.data {

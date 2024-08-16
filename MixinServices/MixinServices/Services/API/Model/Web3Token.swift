@@ -50,13 +50,7 @@ public class Web3Token: Codable {
                                           symbol: .custom(symbol))
     }()
     
-    public private(set) lazy var localizedPercentChange: String = {
-        let string = CurrencyFormatter.localizedString(from: decimalPercentChange, 
-                                                       format: .fiatMoney,
-                                                       sign: .whenNegative)
-        let change = string ?? "0\(currentDecimalSeparator)00"
-        return change + "%"
-    }()
+    public private(set) lazy var localizedPercentChange = NumberFormatter.percentage.string(decimal: decimalPercentChange / 100)
     
     public private(set) lazy var localizedFiatMoneyPrice: String = {
         let value = decimalUSDPrice * Currency.current.decimalRate

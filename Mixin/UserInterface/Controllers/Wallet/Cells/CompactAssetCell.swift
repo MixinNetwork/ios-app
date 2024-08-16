@@ -42,11 +42,11 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         if asset.priceUsd.doubleValue > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"
             if asset.changeUsd.doubleValue > 0 {
-                changeLabel.textColor = .walletGreen
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
-            priceLabel.text = Currency.current.symbol + asset.localizedFiatMoneyPrice
+            priceLabel.text = asset.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
             noValueIndicator.isHidden = true
@@ -77,13 +77,13 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
             chainTagLabel.isHidden = true
         }
         if token.decimalUSDPrice > 0 {
-            changeLabel.text = " \(token.localizedUsdChange)%"
-            if token.decimalUSDChange > 0 {
-                changeLabel.textColor = .walletGreen
+            changeLabel.text = token.localizedUSDChange
+            if token.decimalUSDChange >= 0 {
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
-            priceLabel.text = Currency.current.symbol + token.localizedFiatMoneyPrice
+            priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
             noValueIndicator.isHidden = true
@@ -105,11 +105,11 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
             if token.decimalAbsoluteChange > 0 {
-                changeLabel.textColor = .walletGreen
+                changeLabel.textColor = .priceRising
             } else {
-                changeLabel.textColor = .walletRed
+                changeLabel.textColor = .priceFalling
             }
-            priceLabel.text = Currency.current.symbol + token.localizedFiatMoneyPrice
+            priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
             noValueIndicator.isHidden = true

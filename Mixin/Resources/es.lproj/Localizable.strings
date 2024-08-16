@@ -36,6 +36,7 @@
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "Dirección no encontrada.";
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
+"address_warning" = "Contract address is NOT a deposit address!";
 "admin" = "Administrador";
 "agree_hint" = "Al continuar, aceptas el %@ y el %@.";
 "albums" = "Álbumes";
@@ -70,8 +71,11 @@
 "alert_key_group_video_message" = "%@ ha enviado un vídeo";
 "all" = "Todo";
 "all_conversations" = "Todas las conversaciones";
+"all_dates" = "All Dates";
 "all_photos" = "Todas las fotos";
 "all_signer_failure" = "Falla de todos los nodos";
+"all_time_high" = "All Time High";
+"all_time_low" = "All Time Low";
 "all_transactions" = "Todas las transacciones";
 "allow" = "Permitir";
 "allow_bot_access_asset" = "Permite que el bot acceda a tu lista de activos y saldo.";
@@ -98,8 +102,7 @@
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Activo no encontrado.";
 "asset_type" = "Tipo de activo";
-"assets" = "ACTIVOS";
-"assets_title" = "Activos";
+"assets" = "Assets";
 "audio" = "Audio";
 "audio_shareable_false" = "El audio se ha configurado para no permitir compartir";
 "audios" = "Audios";
@@ -207,6 +210,7 @@
 "circle_subtitle_count" = "%d Conversaciones";
 "circle_title" = "Círculos de %@";
 "circles" = "Círculos";
+"circulation_supply" = "Circulation Supply";
 "clear" = "Borrar";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Vaciar la conversación";
@@ -288,6 +292,7 @@
 "continue" = "Continuar";
 "continue_open_url" = "Continuar Abrir URL";
 "continue_with_pin" = "Continue with PIN";
+"contract_address" = "Contract Address";
 "conversation" = "Conversación";
 "conversation_has_too_many_circles" = "La conversación tiene demasiados círculos.";
 "conversation_not_found" = "Conversación no encontrada.";
@@ -320,6 +325,7 @@
 "date_format_day" = "hh:mm un";
 "date_format_month" = "E, D MMM";
 "date_format_week_date" = "E, d MMM aaaa";
+"days_count_short" = "%dD";
 "declined" = "Rechazado";
 "decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
 "delete" = "Borrar";
@@ -400,6 +406,7 @@
 "enable_pay" = "Habilitar %@ Pagar";
 "enable_pay_confirmation" = "¿Habilitar %@ Pagar?";
 "enable_touch_pay_hint" = "Confirme el PIN para habilitar Touch Pay";
+"end" = "End";
 "end_to_end_encryption" = "Cifrado de extremo a extremo";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Introduce tu nuevo número de teléfono";
@@ -486,6 +493,7 @@
 "free" = "FREE";
 "from" = "De";
 "from_address" = "From address";
+"from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
 "generating" = "Generando...";
 "generating_keys" = "Generando claves...";
@@ -507,10 +515,12 @@
 "hidden_assets" = "Activos ocultos";
 "hide" = "Ocultar";
 "hide_asset" = "Ocultar activo";
+"high_24h" = "24H HIGH";
 "hint_address" = "Enter a wallet address";
 "hold_to_record_audio" = "Sostén para grabar, suelta para enviar";
 "hour" = "%d Hora";
 "hour_count" = "%d Horas";
+"hours_count_short" = "%dH";
 "how_are_you" = "¿Hola, cómo estás?";
 "i_am_good" = "Estoy bien.";
 "id" = "ID";
@@ -586,10 +596,13 @@
 "logined" = "Sesión iniciada";
 "logs" = "Registros";
 "lost_your_mobile_number" = "¿Has perdido tu número de móvil?";
+"low_24h" = "24H LOW";
 "make_group_admin" = "Hacer administrador de grupo";
 "manage" = "Administrar";
 "manage_your_apps" = "Administra tus bots";
 "manage_your_circles" = "Administra tus círculos";
+"market" = "Market";
+"market_cap" = "Market Cap";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Medios de comunicación";
@@ -612,6 +625,7 @@
 "mixin_server_encounters_errors" = "El servidor Mixin encuentra errores";
 "mobile_contacts" = "Contactos móviles";
 "monthly" = "Mensual";
+"months_count_short" = "%dM";
 "more" = "Más";
 "move_and_scale" = "Mover y escalar";
 "multisig_receiver" = "Receiver";
@@ -632,6 +646,7 @@
 "mute_until" = "Hasta el %@";
 "muted" = "Silenciado";
 "muted_until" = "Silenciado hasta %@";
+"my_balance" = "My Balance";
 "my_contacts" = "Mis contactos";
 "my_favorite_bots" = "My Favorite Bots";
 "my_mixin_id" = "Mi ID de Mixin: %@";
@@ -683,9 +698,13 @@
 "notification_content" = "No te pierdas los mensajes de tus amigos.";
 "notification_message_preview_description" = "Obtén una vista previa del texto del mensaje dentro de las notificaciones de mensajes nuevos.";
 "now_an_addmin" = "%@ ahora es administrador";
+"number_of_assets" = "%d Assets";
+"number_of_days" = "%d Days";
+"number_of_recipients" = "%d Recipients";
 "off" = "Apagado";
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
+"oldest" = "Oldest";
 "one_by_one_forward" = "Adelante uno por uno";
 "one_hour" = "1 hora";
 "one_week" = "1 semana";
@@ -767,6 +786,7 @@
 "preparing" = "Preparando...";
 "preparing_progress" = "Preparando...(%@)";
 "price" = "Price";
+"price_data_unavailable" = "Price data unavailable";
 "privacy" = "Privacidad";
 "privacy_policy" = "Política de privacidad";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
@@ -794,6 +814,7 @@
 "recent" = "Recent";
 "recent_chats" = "CHATS";
 "recent_searches" = "Búsquedas recientes";
+"recipients" = "Recipients";
 "refresh" = "Actualizar";
 "release" = "Release";
 "reload" = "Recargar";
@@ -818,6 +839,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "Reenviar codigo";
 "resend_code_pending" = "Reenviar código en %@";
+"reset" = "Reiniciar";
 "reset_link" = "Restablecer enlace";
 "restore" = "Restaurar";
 "restore_chat_from_icloud" = "Restore your chat history from iCloud.";
@@ -881,6 +903,7 @@
 "select" = "Seleccionar";
 "select_a_country_or_region" = "Seleccionar un país o región";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_date" = "Select Date";
 "select_emergency_contact" = "Seleccionar contacto de emergencia";
 "select_more_photos" = "Seleccionar más fotos";
 "select_token" = "Select Token";
@@ -980,9 +1003,14 @@
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Instantánea no encontrada.";
 "sort_by" = "Ordenar por";
+"sort_by_amount" = "Sort by Amount";
+"sort_by_oldest" = "Sort by Oldest";
+"sort_by_recent" = "Sort by Recent";
+"sort_by_value" = "Sort by Value";
 "start" = "Comenzar";
 "start_messaging" = "Empezar a enviar mensajes";
 "started_group_call" = "%@ ha iniciado una llamada de grupo";
+"stats" = "Stats";
 "status" = "Estado";
 "stay_in_mixin" = "Quédate en Mixin";
 "sticker" = "Pegatina";
@@ -1035,10 +1063,12 @@
 "today" = "Hoy";
 "token" = "Token";
 "total" = "Total";
+"total_supply" = "Total Supply";
 "touch_id" = "identifición de toque";
 "track_not_found" = "Pista no encontrada";
 "transaction" = "Transacción";
 "transaction_hash" = "Hash de transacción";
+"transaction_history" = "Transaction History";
 "transaction_id" = "ID de transacción";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Tipo de transacción";
@@ -1113,6 +1143,7 @@
 "unread_messages" = "Mensajes no leídos";
 "unrecognized_codes" = "Códigos no reconocidos";
 "unsigned_message" = "UNSIGNED MESSAGE";
+"until_date" = "Until %@";
 "update" = "Actualizar";
 "update_mixin" = "Actualizar Mixin";
 "upgrade" = "Mejora";
@@ -1132,6 +1163,7 @@
 "user_not_found" = "Usuario no encontrado";
 "utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "Se ha agotado el tiempo de validación";
+"value" = "Value";
 "value_now" = "valor ahora %@";
 "value_then" = "valor entonces %@";
 "verify" = "Verificar";
@@ -1139,6 +1171,7 @@
 "version_update" = "Actualización de versión";
 "video" = "Video";
 "videos" = "Vídeos";
+"view_all" = "View All";
 "view_authorization" = "Ver autorización";
 "view_emergency_contact" = "Ver contacto de emergencia";
 "view_on_explorer" = "View on Explorer";
@@ -1146,6 +1179,7 @@
 "view_wallet" = "Ver Cartera";
 "voice_call_cancelled" = "llamada de voz cancelada";
 "voice_call_has_been_declined" = "La llamada de voz ha sido rechazada";
+"vol_24h" = "24H VOL(%@)";
 "waiting" = "Esperando";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1186,6 +1220,7 @@
 "web3_transaction_request" = "Transaction Request";
 "weekly" = "Semanalmente";
 "weeks" = "semanas";
+"weeks_count_short" = "%dW";
 "whats_your_name" = "¿Cómo te llamas?";
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi y móvil";
@@ -1220,3 +1255,4 @@
 "your_phone_number_has_been_changed" = "Tu número de teléfono se ha cambiado";
 "your_pin_has_been_changed" = "Tu PIN se ha cambiado";
 "your_pin_has_been_created" = "Tu PIN se ha creado";
+"ytd" = "YTD";

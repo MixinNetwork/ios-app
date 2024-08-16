@@ -319,7 +319,7 @@ extension TokenMarketViewController: ChartView.Delegate {
     
     func chartView(_ view: ChartView, extremumAnnotationForPoint point: ChartView.Point) -> String {
         CurrencyFormatter.localizedString(
-            from: point.value,
+            from: point.value * Currency.current.decimalRate,
             format: .fiatMoney,
             sign: .never,
             symbol: .currencySymbol
@@ -495,10 +495,10 @@ extension TokenMarketViewController {
             }
             if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
                 var change = CurrencyFormatter.localizedString(
-                    from: priceChange24H * token.decimalBalance,
+                    from: priceChange24H * token.decimalBalance * Currency.current.decimalRate,
                     format: .fiatMoneyPrice,
                     sign: .always,
-                    symbol: .currencyCode
+                    symbol: .currencySymbol
                 )
                 if let priceChangePercentage24H = Decimal(string: market.priceChangePercentage24H, locale: .enUSPOSIX),
                    let percent = NumberFormatter.percentage.string(decimal: priceChangePercentage24H / 100)

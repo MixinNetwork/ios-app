@@ -103,8 +103,6 @@
 "asset_not_found" = "Activo no encontrado.";
 "asset_type" = "Tipo de activo";
 "assets" = "Assets";
-"assets" = "ACTIVOS";
-"assets_title" = "Activos";
 "audio" = "Audio";
 "audio_shareable_false" = "El audio se ha configurado para no permitir compartir";
 "audios" = "Audios";

@@ -103,8 +103,6 @@
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
 "assets" = "Assets";
-"assets" = "АКТИВЫ";
-"assets_title" = "Активы";
 "audio" = "Аудио";
 "audio_shareable_false" = "The audio has been set to not allow sharing";
 "audios" = "Аудио";

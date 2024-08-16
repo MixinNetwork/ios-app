@@ -75,14 +75,21 @@ public struct CurrencyFormatter {
     
     public static func localizedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
         let number = NSDecimalNumber(decimal: decimal)
+        let symbolPrefix: String? = switch symbol {
+        case .currencySymbol:
+            Currency.current.symbol
+        default:
+            nil
+        }
+        
         var str: String
         
         switch format {
         case .precision:
-            setSignBehavior(sign, for: precisionFormatter)
+            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: precisionFormatter)
             str = precisionFormatter.string(from: number) ?? ""
         case .pretty:
-            setSignBehavior(sign, for: prettyFormatter)
+            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: prettyFormatter)
             let numberOfFractionalDigits = decimal.numberOfSignificantFractionalDigits
             let integralPart = number.rounding(accordingToBehavior: roundToIntegerBehavior).doubleValue
             if integralPart == 0 {
@@ -95,38 +102,43 @@ public struct CurrencyFormatter {
             }
             str = prettyFormatter.string(from: number) ?? ""
         case .fiatMoney:
-            setSignBehavior(sign, for: fiatMoneyFormatter)
+            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: fiatMoneyFormatter)
             str = fiatMoneyFormatter.string(from: number) ?? ""
         case .fiatMoneyPrice:
             if abs(decimal) < 1 {
-                setSignBehavior(sign, for: precisionFormatter)
+                setSignBehavior(sign, symbolPrefix: symbolPrefix, for: precisionFormatter)
                 str = precisionFormatter.string(from: number) ?? ""
             } else {
-                setSignBehavior(sign, for: fiatMoneyFormatter)
+                setSignBehavior(sign, symbolPrefix: symbolPrefix, for: fiatMoneyFormatter)
                 str = fiatMoneyFormatter.string(from: number) ?? ""
             }
         case .networkFee:
-            setSignBehavior(sign, for: networkFeeFormatter)
+            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: networkFeeFormatter)
             str = networkFeeFormatter.string(from: number) ?? ""
         }
         
-        if let symbol = symbol {
-            switch symbol {
-            case .btc:
-                str += " BTC"
-            case .currencyCode:
-                str += " " + Currency.current.code
-            case .currencySymbol:
-                str = Currency.current.symbol + str
-            case .custom(let symbol):
-                str += " " + symbol
-            }
+        switch symbol {
+        case .btc:
+            str += " BTC"
+        case .currencyCode:
+            str += " " + Currency.current.code
+        case .currencySymbol:
+            // Inserted with `setSignBehavior`
+            break
+        case .custom(let symbol):
+            str += " " + symbol
+        case nil:
+            break
         }
         
         return str
     }
     
-    private static func setSignBehavior(_ sign: SignBehavior, for formatter: NumberFormatter) {
+    private static func setSignBehavior(
+        _ sign: SignBehavior,
+        symbolPrefix: String?,
+        for formatter: NumberFormatter
+    ) {
         switch sign {
         case .always:
             formatter.positivePrefix = formatter.plusSign
@@ -137,6 +149,10 @@ public struct CurrencyFormatter {
         case .whenNegative:
             formatter.positivePrefix = ""
             formatter.negativePrefix = formatter.minusSign
+        }
+        if let prefix = symbolPrefix {
+            formatter.positivePrefix = formatter.positivePrefix + prefix
+            formatter.negativePrefix = formatter.negativePrefix + prefix
         }
     }
     

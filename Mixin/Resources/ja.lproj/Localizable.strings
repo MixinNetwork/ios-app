@@ -103,8 +103,6 @@
 "asset_not_found" = "資産が存在しません";
 "asset_type" = "資産タイプ";
 "assets" = "Assets";
-"assets" = "資産";
-"assets_title" = "資産";
 "audio" = "音声メッセージ";
 "audio_shareable_false" = "The audio has been set to not allow sharing";
 "audios" = "音声メッセージ";

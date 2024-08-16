@@ -376,7 +376,7 @@ extension SearchViewController {
             case .top:
                 return nil
             case .asset:
-                return R.string.localizable.assets_title()
+                return R.string.localizable.assets()
             case .user:
                 return R.string.localizable.contact_title()
             case .group:

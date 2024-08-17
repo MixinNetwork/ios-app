@@ -300,13 +300,8 @@ extension TokenMarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
-            switch MyBalanceRow(rawValue: indexPath.row)! {
-            case .title:
-                if pushingViewController is TokenViewController {
-                    navigationController?.popViewController(animated: true)
-                }
-            default:
-                break
+            if pushingViewController is TokenViewController {
+                navigationController?.popViewController(animated: true)
             }
         default:
             break

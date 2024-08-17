@@ -358,7 +358,7 @@ extension TokenViewController: UITableViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .balance:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_balance, for: indexPath)!
-            cell.token = token
+            cell.reloadData(token: token)
             cell.actionView.actions = [.send, .receive, .swap]
             cell.actionView.delegate = self
             return cell

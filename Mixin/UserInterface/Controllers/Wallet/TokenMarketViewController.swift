@@ -315,7 +315,7 @@ extension TokenMarketViewController: ChartView.Delegate {
     func chartView(_ view: ChartView, extremumAnnotationForPoint point: ChartView.Point) -> String {
         CurrencyFormatter.localizedString(
             from: point.value * Currency.current.decimalRate,
-            format: .fiatMoney,
+            format: .fiatMoneyPrice,
             sign: .never,
             symbol: .currencySymbol
         )

@@ -300,13 +300,8 @@ extension TokenMarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
-            switch MyBalanceRow(rawValue: indexPath.row)! {
-            case .title:
-                if pushingViewController is TokenViewController {
-                    navigationController?.popViewController(animated: true)
-                }
-            default:
-                break
+            if pushingViewController is TokenViewController {
+                navigationController?.popViewController(animated: true)
             }
         default:
             break
@@ -320,7 +315,7 @@ extension TokenMarketViewController: ChartView.Delegate {
     func chartView(_ view: ChartView, extremumAnnotationForPoint point: ChartView.Point) -> String {
         CurrencyFormatter.localizedString(
             from: point.value * Currency.current.decimalRate,
-            format: .fiatMoney,
+            format: .fiatMoneyPrice,
             sign: .never,
             symbol: .currencySymbol
         )

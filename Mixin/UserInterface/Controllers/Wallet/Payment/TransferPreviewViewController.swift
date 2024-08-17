@@ -335,7 +335,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         }
         
         switch context {
-        case .swap(let context):
+        case .swap:
             if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is SwapViewController {
                 viewControllers.removeLast()
             }

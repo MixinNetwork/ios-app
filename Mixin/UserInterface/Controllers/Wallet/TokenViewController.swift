@@ -455,17 +455,12 @@ extension TokenViewController: UITableViewDelegate {
         case .balance:
             break
         case .market:
-            switch MarketRow(rawValue: indexPath.row)! {
-            case .title:
-                let market = TokenMarketViewController.contained(
-                    token: token,
-                    chartPoints: chartPoints,
-                    pushingViewController: self
-                )
-                navigationController?.pushViewController(market, animated: true)
-            case .content:
-                break
-            }
+            let market = TokenMarketViewController.contained(
+                token: token,
+                chartPoints: chartPoints,
+                pushingViewController: self
+            )
+            navigationController?.pushViewController(market, animated: true)
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {

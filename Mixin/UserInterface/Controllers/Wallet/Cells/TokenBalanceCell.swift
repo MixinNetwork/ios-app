@@ -5,7 +5,7 @@ final class TokenBalanceCell: UITableViewCell {
     
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var amountTextView: UITextView!
+    @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var actionView: TransferActionView!
@@ -13,8 +13,6 @@ final class TokenBalanceCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         titleStackView.setCustomSpacing(10, after: titleLabel)
-        amountTextView.textContainerInset = .zero
-        amountTextView.textContainer.lineFragmentPadding = 0
         actionView.actions = [.send, .receive, .swap]
     }
     
@@ -32,8 +30,8 @@ final class TokenBalanceCell: UITableViewCell {
             var index = amount.index(amount.endIndex, offsetBy: -3)
             let beforeIndex = amount.index(before: index)
             let afterIndex = amount.index(after: index)
-            if amount[index..<afterIndex] == currentDecimalSeparator {
-                // Avoid decimal separator being first character of the new line
+            if !amount[index].isNumber {
+                // Avoid decimal separator or grouping separator being first character of the new line
                 if beforeIndex == amount.startIndex {
                     index = afterIndex
                 } else {
@@ -42,20 +40,16 @@ final class TokenBalanceCell: UITableViewCell {
             }
             amount.insert("\u{200B}", at: index)
         }
-        let amountAttributes: [NSAttributedString.Key: Any] = [
+        let attributedAmount = NSMutableAttributedString(string: amount, attributes: [
             .font: UIFontMetrics.default.scaledFont(for: .condensed(size: 34)),
             .foregroundColor: R.color.text()!,
-        ]
-        let attributedAmount = NSMutableAttributedString(string: amount, attributes: amountAttributes)
-        
-        let symbolAttributes: [NSAttributedString.Key: Any] = [
+        ])
+        let attributedSymbol = NSAttributedString(string: "\u{2060} \u{2060}\(token.symbol)", attributes: [
             .font: UIFont.preferredFont(forTextStyle: .caption1),
             .foregroundColor: R.color.text()!,
-        ]
-        let attributedSymbol = NSAttributedString(string: "\u{2060} \u{2060}\(token.symbol)", attributes: symbolAttributes)
-        
+        ])
         attributedAmount.append(attributedSymbol)
-        amountTextView.attributedText = attributedAmount
+        amountLabel.attributedText = attributedAmount
     }
     
 }

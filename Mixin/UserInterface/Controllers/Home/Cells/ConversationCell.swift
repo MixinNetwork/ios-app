@@ -43,10 +43,10 @@ class ConversationCell: ModernSelectedBackgroundCell {
         }
 
         if item.ownerIsVerified {
-            verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
+            verifiedImageView.image = R.image.ic_user_verified()
             verifiedImageView.isHidden = false
         } else if item.ownerIsBot {
-            verifiedImageView.image = #imageLiteral(resourceName: "ic_user_bot")
+            verifiedImageView.image = R.image.ic_user_bot()
             verifiedImageView.isHidden = false
         } else {
             verifiedImageView.isHidden = true
@@ -54,7 +54,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
 
         if item.messageStatus == MessageStatus.FAILED.rawValue {
             messageStatusImageView.isHidden = false
-            messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sending")
+            messageStatusImageView.image = R.image.ic_status_sending()
             messageTypeImageView.isHidden = true
             contentLabel.text = R.string.localizable.chat_decryption_failed_hint(item.senderFullName)
         } else if item.messageStatus == MessageStatus.UNKNOWN.rawValue {
@@ -221,13 +221,13 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageStatusImageView.isHidden = false
             switch conversation.messageStatus {
             case MessageStatus.SENDING.rawValue:
-                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sending")
+                messageStatusImageView.image = R.image.ic_status_sending()
             case MessageStatus.SENT.rawValue:
-                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sent")
+                messageStatusImageView.image = R.image.ic_status_sent()
             case MessageStatus.DELIVERED.rawValue:
-                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_delivered")
+                messageStatusImageView.image = R.image.ic_status_delivered()
             case MessageStatus.READ.rawValue:
-                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_read")
+                messageStatusImageView.image = R.image.ic_status_read()
             default:
                 messageStatusImageView.isHidden = true
             }

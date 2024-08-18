@@ -589,7 +589,7 @@ extension CameraViewController {
                 self.sendButton.isHidden = false
                 self.shutterAnimationView.removeFromSuperview()
             })
-            backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back_white"), for: .normal)
+            backButton.setImage(R.image.ic_titlebar_back_white(), for: .normal)
         } else {
             snapshotImageView.isHidden = true
             sendButton.isHidden = true
@@ -628,12 +628,12 @@ extension CameraViewController {
                 if self.flashOn {
                     deviceInput.device.torchMode = .on
                     DispatchQueue.main.async {
-                        self.cameraFlashButton.setImage(#imageLiteral(resourceName: "ic_camera_flash_on"), for: .normal)
+                        self.cameraFlashButton.setImage(R.image.ic_camera_flash_on(), for: .normal)
                     }
                 } else {
                     deviceInput.device.torchMode = .off
                     DispatchQueue.main.async {
-                        self.cameraFlashButton.setImage(#imageLiteral(resourceName: "ic_camera_flash_off"), for: .normal)
+                        self.cameraFlashButton.setImage(R.image.ic_camera_flash_off(), for: .normal)
                     }
                 }
                 deviceInput.device.unlockForConfiguration()

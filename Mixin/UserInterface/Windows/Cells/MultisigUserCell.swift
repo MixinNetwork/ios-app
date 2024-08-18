@@ -16,10 +16,10 @@ class MultisigUserCell: ModernSelectedBackgroundCell {
         idLabel.text = user.identityNumber
 
         if user.isVerified {
-            verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
+            verifiedImageView.image = R.image.ic_user_verified()
             verifiedImageView.isHidden = false
         } else if user.isBot {
-            verifiedImageView.image = #imageLiteral(resourceName: "ic_user_bot")
+            verifiedImageView.image = R.image.ic_user_bot()
             verifiedImageView.isHidden = false
         } else {
             verifiedImageView.isHidden = true

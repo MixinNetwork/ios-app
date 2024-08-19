@@ -78,7 +78,7 @@ extension StorageUsageViewController: UITableViewDataSource {
                 isVerified: conversation.ownerIsVerified ?? false,
                 appID: conversation.ownerAppID
             )
-            cell.badgeImageView.isHidden = false
+            cell.badgeImageView.isHidden = cell.badgeImageView.image == nil
         } else {
             cell.avatarImageView.setGroupImage(with: conversation.iconUrl ?? "")
             cell.badgeImageView.isHidden = true

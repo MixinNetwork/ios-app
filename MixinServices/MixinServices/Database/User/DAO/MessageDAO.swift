@@ -41,7 +41,7 @@ public final class MessageDAO: UserDatabaseDAO {
             m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
             m.sticker_id, m.created_at,
         u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl,
-        u.membership as userMembership, u.app_id as appId,
+        u.app_id as appId, u.membership as userMembership,
         u1.full_name as participantFullName, u1.user_id as participantUserId,
         COALESCE(a.icon_url, t.icon_url) AS token_icon, COALESCE(a.name, t.name) AS token_name, COALESCE(a.symbol, t.symbol) AS token_symbol,
         t.collection_hash AS token_collection_hash,

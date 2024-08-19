@@ -12,13 +12,11 @@ class ContactMessageViewModel: CardMessageViewModel {
     let verifiedImage: UIImage?
     
     override init(message: MessageItem) {
-        if message.sharedUserIsVerified ?? false {
-            verifiedImage = R.image.ic_user_verified()
-        } else if let id = message.sharedUserAppId, !id.isEmpty {
-            verifiedImage = R.image.ic_user_bot()
-        } else {
-            verifiedImage = nil
-        }
+        verifiedImage = UserBadgeIcon.image(
+            membership: message.sharedUserMembership,
+            isVerified: message.sharedUserIsVerified ?? false,
+            appID: message.sharedUserAppId
+        )
         super.init(message: message)
     }
     

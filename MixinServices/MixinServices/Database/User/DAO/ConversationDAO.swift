@@ -17,7 +17,8 @@ public final class ConversationDAO: UserDatabaseDAO {
     m.content as content, m.category as contentType, em.expire_in as contentExpireIn, m.created_at as createdAt,
     m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
     u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
-    m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId,
+    u1.app_id as appId, u1.membership as ownerMembership,
+    m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId,
     mm.mentions
     """
     private static let sqlQueryConversation = """
@@ -316,8 +317,9 @@ public final class ConversationDAO: UserDatabaseDAO {
                 m.content as content, m.category as contentType, em.expire_in as contentExpireIn, m.created_at as createdAt,
                 m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
                 u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
+                u1.app_id as appId, u1.membership as ownerMembership,
                 m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId,
-                m.status as messageStatus, m.id as messageId, u1.app_id as appId,
+                m.status as messageStatus, m.id as messageId,
                 mm.mentions
                 FROM conversations c
                 LEFT JOIN messages m ON c.last_message_id = m.id

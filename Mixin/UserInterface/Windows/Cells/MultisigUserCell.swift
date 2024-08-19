@@ -14,16 +14,8 @@ class MultisigUserCell: ModernSelectedBackgroundCell {
         avatarView.setImage(with: user)
         nameLabel.text = user.fullName
         idLabel.text = user.identityNumber
-
-        if user.isVerified {
-            verifiedImageView.image = R.image.ic_user_verified()
-            verifiedImageView.isHidden = false
-        } else if user.isBot {
-            verifiedImageView.image = R.image.ic_user_bot()
-            verifiedImageView.isHidden = false
-        } else {
-            verifiedImageView.isHidden = true
-        }
+        verifiedImageView.image = user.badgeImage
+        verifiedImageView.isHidden = verifiedImageView.image == nil
     }
-
+    
 }

@@ -15,6 +15,7 @@ public struct UserResponse: Codable {
     public let app: App?
     public let isScam: Bool
     public let isDeactivated: Bool?
+    public let membership: User.Membership
     
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
@@ -30,6 +31,7 @@ public struct UserResponse: Codable {
         case app
         case isScam = "is_scam"
         case isDeactivated = "is_deactivated"
+        case membership
     }
     
     public var deactivationIgnored: UserResponse {
@@ -45,7 +47,8 @@ public struct UserResponse: Codable {
                      createdAt: createdAt,
                      app: app,
                      isScam: isScam,
-                     isDeactivated: nil)
+                     isDeactivated: nil,
+                     membership: membership)
     }
     
 }
@@ -71,26 +74,6 @@ public enum Relationship: String, Codable {
         default:
             self = .STRANGER
         }
-    }
-    
-}
-
-public extension UserResponse {
-    
-    static func createUser(account: Account) -> UserResponse {
-        UserResponse(userId: account.userID,
-                     fullName: account.fullName,
-                     biography: account.biography,
-                     relationship: Relationship.ME,
-                     identityNumber: account.identityNumber,
-                     avatarUrl: account.avatarURL,
-                     phone: account.phone,
-                     isVerified: false,
-                     muteUntil: nil,
-                     createdAt: account.createdAt,
-                     app: nil,
-                     isScam: false,
-                     isDeactivated: false)
     }
     
 }

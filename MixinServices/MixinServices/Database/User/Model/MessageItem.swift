@@ -34,7 +34,7 @@ public final class MessageItem {
     public var userFullName: String?
     public var userIdentityNumber: String?
     public var userAvatarUrl: String?
-    
+    public var userMembership: User.Membership?
     public var appId: String?
     
     public var tokenIcon: String?
@@ -62,6 +62,7 @@ public final class MessageItem {
     public var sharedUserAvatarUrl: String?
     public var sharedUserAppId: String?
     public var sharedUserIsVerified: Bool?
+    public var sharedUserMembership: User.Membership?
     
     public var quoteMessageId: String?
     public var quoteContent: Data?
@@ -246,7 +247,7 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case userFullName
         case userIdentityNumber
         case userAvatarUrl
-        
+        case userMembership
         case appId
         
         case participantFullName
@@ -275,6 +276,7 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case sharedUserAvatarUrl
         case sharedUserAppId
         case sharedUserIsVerified
+        case sharedUserMembership
         
         case quoteMessageId = "quote_message_id"
         case quoteContent = "quote_content"

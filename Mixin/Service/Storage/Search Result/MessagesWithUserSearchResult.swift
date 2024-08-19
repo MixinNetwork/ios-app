@@ -1,14 +1,24 @@
 import UIKit
+import MixinServices
 
 class MessagesWithUserSearchResult: MessagesWithinConversationSearchResult {
     
     let userId: String
     let userFullname: String
     
-    init(conversationId: String, name: String, iconUrl: String, userId: String, userIsVerified: Bool, userAppId: String?, relatedMessageCount: Int, keyword: String) {
+    init(
+        conversationId: String, name: String, iconUrl: String, userId: String,
+        userIsVerified: Bool, userAppId: String?,
+        userMembership: User.Membership?, relatedMessageCount: Int,
+        keyword: String
+    ) {
         self.userId = userId
         self.userFullname = name
-        let badgeImage = SearchResult.userBadgeImage(isVerified: userIsVerified, appId: userAppId)
+        let badgeImage = UserBadgeIcon.image(
+            membership: userMembership,
+            isVerified: userIsVerified,
+            appID: userAppId
+        )
         super.init(conversationId: conversationId,
                    badgeImage: badgeImage,
                    name: name,

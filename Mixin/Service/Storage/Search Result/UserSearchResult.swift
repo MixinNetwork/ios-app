@@ -10,10 +10,8 @@ class UserSearchResult: SearchResult {
     init(user: UserItem, keyword: String) {
         self.user = user
         self.keyword = keyword
-        let badgeImage = SearchResult.userBadgeImage(isVerified: user.isVerified,
-                                                     appId: user.appId)
         super.init(iconUrl: user.avatarUrl,
-                   badgeImage: badgeImage,
+                   badgeImage: user.badgeImage,
                    superscript: nil)
     }
     

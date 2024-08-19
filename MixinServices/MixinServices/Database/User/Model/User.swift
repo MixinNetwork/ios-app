@@ -18,10 +18,17 @@ public struct User {
     public let relationship: String
     public var isScam: Bool
     public let isDeactivated: Bool
+    public let membership: User.Membership?
     
     public var app: App?
     
-    public init(userId: String, fullName: String?, biography: String?, identityNumber: String, avatarUrl: String?, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, relationship: String, isScam: Bool, isDeactivated: Bool, app: App? = nil) {
+    public init(
+        userId: String, fullName: String?, biography: String?, identityNumber: String,
+        avatarUrl: String?, phone: String? = nil, isVerified: Bool,
+        muteUntil: String? = nil, appId: String? = nil, createdAt: String?,
+        relationship: String, isScam: Bool, isDeactivated: Bool,
+        membership: User.Membership?, app: App? = nil
+    ) {
         self.userId = userId
         self.fullName = fullName
         self.biography = biography
@@ -35,6 +42,7 @@ public struct User {
         self.relationship = relationship
         self.isScam = isScam
         self.isDeactivated = isDeactivated
+        self.membership = membership
         self.app = app
     }
     
@@ -52,6 +60,7 @@ public struct User {
              relationship: "",
              isScam: false,
              isDeactivated: false,
+             membership: nil,
              app: nil)
     }
     
@@ -69,6 +78,7 @@ public struct User {
              relationship: user.relationship.rawValue,
              isScam: user.isScam,
              isDeactivated: user.isDeactivated ?? false,
+             membership: user.membership, 
              app: user.app)
     }
 
@@ -86,6 +96,7 @@ public struct User {
              relationship: Relationship.ME.rawValue,
              isScam: false,
              isDeactivated: false,
+             membership: account.membership,
              app: nil)
     }
     
@@ -117,6 +128,7 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
         case createdAt = "created_at"
         case isScam = "is_scam"
         case isDeactivated = "is_deactivated"
+        case membership
     }
     
     public init(from decoder: Decoder) throws {
@@ -142,6 +154,8 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
         
         self.isScam = try container.decodeIfPresent(Bool.self, forKey: .isScam) ?? false
         self.isDeactivated = try container.decodeIfPresent(Bool.self, forKey: .isDeactivated) ?? false
+        
+        self.membership = try container.decodeIfPresent(User.Membership.self, forKey: .membership)
     }
     
 }
@@ -149,5 +163,62 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
 extension User: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "users"
+    
+}
+
+extension User {
+    
+    public struct Membership: Codable, DatabaseValueConvertible {
+        
+        public enum Plan: String, Codable {
+            case none
+            case advance
+            case elite
+            case prosperity
+        }
+        
+        public enum CodingKeys: String, CodingKey {
+            case plan
+            case expiredAt = "expired_at"
+        }
+        
+        public let plan: Plan
+        public let expiredAt: Date
+        
+        public var databaseValue: DatabaseValue {
+            if let data = try? JSONEncoder.default.encode(self),
+               let string = String(data: data, encoding: .utf8)
+            {
+                string.databaseValue
+            } else {
+                .null
+            }
+        }
+        
+        public init(from decoder: any Decoder) throws {
+            let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
+            let expiredAt = try container.decode(String.self, forKey: .expiredAt)
+            self.plan = try container.decode(User.Membership.Plan.self, forKey: .plan)
+            self.expiredAt = DateFormatter.iso8601Full.date(from: expiredAt) ?? .distantPast
+        }
+        
+        public static func fromDatabaseValue(_ dbValue: DatabaseValue) -> User.Membership? {
+            guard 
+                let string = String.fromDatabaseValue(dbValue),
+                let data = string.data(using: .utf8),
+                let object = try? JSONDecoder.default.decode(Self.self, from: data)
+            else {
+                return nil
+            }
+            return object
+        }
+        
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(plan, forKey: .plan)
+            try container.encode(expiredAt.toUTCString(), forKey: .expiredAt)
+        }
+        
+    }
     
 }

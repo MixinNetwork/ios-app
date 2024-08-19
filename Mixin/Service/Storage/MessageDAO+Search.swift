@@ -8,7 +8,7 @@ extension MessageDAO {
         var results = [MessageSearchResult]()
         
         var sql = """
-        SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
+        SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id, u.membership
         FROM messages m LEFT JOIN users u ON m.user_id = u.user_id
         """
         let arguments: StatementArguments
@@ -51,17 +51,20 @@ extension MessageDAO {
                 let rows = try Row.fetchCursor(db, sql: sql, arguments: arguments, adapter: nil)
                 while let row = try rows.next() {
                     let counter = Counter(value: -1)
-                    let result = MessageSearchResult(conversationId: conversationId,
-                                                     messageId: row[counter.advancedValue] ?? "",
-                                                     category: row[counter.advancedValue] ?? "",
-                                                     content: row[counter.advancedValue] ?? "",
-                                                     createdAt: row[counter.advancedValue] ?? "",
-                                                     userId: row[counter.advancedValue] ?? "",
-                                                     fullname: row[counter.advancedValue] ?? "",
-                                                     avatarUrl: row[counter.advancedValue] ?? "",
-                                                     isVerified: row[counter.advancedValue] ?? false,
-                                                     appId: row[counter.advancedValue] ?? "",
-                                                     keyword: keyword)
+                    let result = MessageSearchResult(
+                        conversationId: conversationId,
+                        messageId: row[counter.advancedValue] ?? "",
+                        category: row[counter.advancedValue] ?? "",
+                        content: row[counter.advancedValue] ?? "",
+                        createdAt: row[counter.advancedValue] ?? "",
+                        userId: row[counter.advancedValue] ?? "",
+                        fullname: row[counter.advancedValue] ?? "",
+                        avatarUrl: row[counter.advancedValue] ?? "",
+                        isVerified: row[counter.advancedValue] ?? false,
+                        appId: row[counter.advancedValue] ?? "",
+                        membership: row[counter.advancedValue],
+                        keyword: keyword
+                    )
                     results.append(result)
                 }
             }

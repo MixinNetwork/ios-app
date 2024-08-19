@@ -72,16 +72,6 @@ extension SearchResult {
         return str
     }
     
-    static func userBadgeImage(isVerified: Bool, appId: String?) -> UIImage? {
-        if isVerified {
-            return R.image.ic_user_verified()
-        } else if !appId.isNilOrEmpty {
-            return R.image.ic_user_bot()
-        } else {
-            return nil
-        }
-    }
-    
     static func description(identityNumber: String?, phoneNumber: String?, keyword: String) -> NSAttributedString? {
         if let identityNumber = identityNumber, identityNumber.contains(keyword) {
             let text = R.string.localizable.contact_mixin_id(identityNumber)

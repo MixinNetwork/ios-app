@@ -23,6 +23,7 @@ public final class ConversationItem {
     public var ownerFullName: String = ""
     public var ownerAvatarUrl: String = ""
     public var ownerIsVerified = false
+    public var ownerMembership: User.Membership?
     
     public var messageStatus: String = ""
     public var messageId: String = ""
@@ -134,6 +135,7 @@ public final class ConversationItem {
         self.ownerFullName = (try? container.decodeIfPresent(String.self, forKey: .ownerFullName)) ?? ""
         self.ownerAvatarUrl = (try? container.decodeIfPresent(String.self, forKey: .ownerAvatarUrl)) ?? ""
         self.ownerIsVerified = (try? container.decodeIfPresent(Bool.self, forKey: .ownerIsVerified)) ?? false
+        self.ownerMembership = try? container.decodeIfPresent(User.Membership.self, forKey: .ownerMembership)
         
         self.messageStatus = (try? container.decodeIfPresent(String.self, forKey: .messageStatus)) ?? ""
         self.messageId = (try? container.decodeIfPresent(String.self, forKey: .messageId)) ?? ""
@@ -229,6 +231,7 @@ extension ConversationItem: Decodable, MixinFetchableRecord {
         case ownerFullName
         case ownerAvatarUrl
         case ownerIsVerified
+        case ownerMembership
         case actionName
         case participantFullName
         case participantUserId

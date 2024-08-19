@@ -272,7 +272,14 @@ class CallViewController: ResizablePopupViewController {
             if let user = call.remoteUser {
                 members = [user]
             } else {
-                let item = UserItem.createUser(userId: call.remoteUserId, fullName: call.remoteUsername, identityNumber: "", avatarUrl: "", appId: nil)
+                let item = UserItem.createUser(
+                    userId: call.remoteUserId,
+                    fullName: call.remoteUsername,
+                    identityNumber: "",
+                    avatarUrl: "",
+                    appId: nil,
+                    membership: nil
+                )
                 members = [item]
             }
             membersCollectionView.dataSource = self

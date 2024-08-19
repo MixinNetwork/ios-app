@@ -19,22 +19,10 @@ class ContactCell: ModernSelectedBackgroundCell {
         iconImageView.setImage(with: user.avatarUrl,
                                userId: user.userId,
                                name: user.fullName)
-        render(fullName: user.fullName,
-               isVerified: user.isVerified,
-               isBot: user.isBot)
-    }
-    
-    private func render(fullName: String, isVerified: Bool, isBot: Bool) {
-        nameLabel.text = fullName
-        if isVerified {
-            identityImageView.image = R.image.ic_user_verified()
-            identityImageView.isHidden = false
-        } else if isBot {
-            identityImageView.image = R.image.ic_user_bot()
-            identityImageView.isHidden = false
-        } else {
-            identityImageView.isHidden = true
-        }
+        nameLabel.text = user.fullName
+        let badgeImage = user.badgeImage
+        identityImageView.image = badgeImage
+        identityImageView.isHidden = badgeImage == nil
     }
     
 }

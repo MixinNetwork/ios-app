@@ -27,10 +27,10 @@ class ContactCell: ModernSelectedBackgroundCell {
     private func render(fullName: String, isVerified: Bool, isBot: Bool) {
         nameLabel.text = fullName
         if isVerified {
-            identityImageView.image = #imageLiteral(resourceName: "ic_user_verified")
+            identityImageView.image = R.image.ic_user_verified()
             identityImageView.isHidden = false
         } else if isBot {
-            identityImageView.image = #imageLiteral(resourceName: "ic_user_bot")
+            identityImageView.image = R.image.ic_user_bot()
             identityImageView.isHidden = false
         } else {
             identityImageView.isHidden = true

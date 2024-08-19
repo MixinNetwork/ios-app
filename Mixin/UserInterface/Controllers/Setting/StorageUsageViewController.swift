@@ -73,8 +73,15 @@ extension StorageUsageViewController: UITableViewDataSource {
             cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl ?? "",
                                           userId: conversation.ownerId ?? "",
                                           name: conversation.ownerFullName ?? "")
+            cell.badgeImageView.image = UserBadgeIcon.image(
+                membership: conversation.ownerMembership,
+                isVerified: conversation.ownerIsVerified ?? false,
+                appID: conversation.ownerAppID
+            )
+            cell.badgeImageView.isHidden = false
         } else {
             cell.avatarImageView.setGroupImage(with: conversation.iconUrl ?? "")
+            cell.badgeImageView.isHidden = true
         }
         cell.nameLabel.text = conversation.getConversationName()
         cell.sizeLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: conversation.mediaSize ?? 0)

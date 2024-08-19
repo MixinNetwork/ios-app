@@ -13,6 +13,8 @@ public final class ConversationStorageUsage: Decodable, MixinFetchableRecord {
     public var ownerFullName: String?
     public var ownerAvatarUrl: String?
     public var ownerIsVerified: Bool?
+    public let ownerAppID: String?
+    public let ownerMembership: User.Membership?
     
     public var mediaSize: Int64?
     

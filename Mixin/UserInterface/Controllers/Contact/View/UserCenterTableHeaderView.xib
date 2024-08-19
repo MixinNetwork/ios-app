@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,12 +32,20 @@
                         <constraint firstAttribute="trailing" secondItem="pcc-jN-PLK" secondAttribute="trailing" id="m8R-Ep-uQI"/>
                     </constraints>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QGf-Lu-Ppe">
-                    <rect key="frame" x="28" y="120" width="319" height="21.5"/>
-                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                    <color key="textColor" name="text"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ts0-xa-0eg">
+                    <rect key="frame" x="163" y="120" width="49.5" height="21.5"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QGf-Lu-Ppe">
+                            <rect key="frame" x="0.0" y="0.0" width="49.5" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" placeholderIntrinsicWidth="18" placeholderIntrinsicHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="K4q-zW-Fx6">
+                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="21.5"/>
+                        </imageView>
+                    </subviews>
+                </stackView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Mixin Id: 32543" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0rh-Of-BjL" customClass="IdentityNumberLabel" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="28" y="145.5" width="319" height="14.5"/>
                     <gestureRecognizers/>
@@ -48,20 +56,22 @@
             </subviews>
             <color key="backgroundColor" name="background"/>
             <constraints>
+                <constraint firstItem="ts0-xa-0eg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FFq-F9-mfz"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ts0-xa-0eg" secondAttribute="trailing" constant="28" id="FoJ-Mc-6sa"/>
                 <constraint firstItem="ftp-yO-VFQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="Hzf-Do-9Ty"/>
-                <constraint firstItem="QGf-Lu-Ppe" firstAttribute="top" secondItem="ftp-yO-VFQ" secondAttribute="bottom" constant="10" id="O12-uk-0AO"/>
+                <constraint firstItem="ts0-xa-0eg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="28" id="K5L-u3-Xb9"/>
                 <constraint firstAttribute="bottom" secondItem="0rh-Of-BjL" secondAttribute="bottom" priority="250" constant="32" id="OO3-86-a6t"/>
-                <constraint firstItem="QGf-Lu-Ppe" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="28" id="PDl-3d-eVX"/>
                 <constraint firstItem="0rh-Of-BjL" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="28" id="RdC-la-wyJ"/>
                 <constraint firstItem="ftp-yO-VFQ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="X9g-JD-R8e"/>
-                <constraint firstAttribute="trailing" secondItem="QGf-Lu-Ppe" secondAttribute="trailing" priority="999" constant="28" id="XSN-yw-Ntx"/>
                 <constraint firstAttribute="trailing" secondItem="0rh-Of-BjL" secondAttribute="trailing" priority="999" constant="28" id="Yqc-PV-9xF"/>
-                <constraint firstItem="0rh-Of-BjL" firstAttribute="top" secondItem="QGf-Lu-Ppe" secondAttribute="bottom" constant="4" id="c8E-kZ-M9q"/>
+                <constraint firstItem="ts0-xa-0eg" firstAttribute="top" secondItem="ftp-yO-VFQ" secondAttribute="bottom" constant="10" id="gI8-wU-qEA"/>
+                <constraint firstItem="0rh-Of-BjL" firstAttribute="top" secondItem="ts0-xa-0eg" secondAttribute="bottom" constant="4" id="r9s-Rc-4I0"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="avatarImageView" destination="pcc-jN-PLK" id="hd5-Jb-HWx"/>
                 <outlet property="identityNumberLabel" destination="0rh-Of-BjL" id="6ZJ-AA-sIu"/>
+                <outlet property="membershipImageView" destination="K4q-zW-Fx6" id="ph0-ZP-I2d"/>
                 <outlet property="nameLabel" destination="QGf-Lu-Ppe" id="Eim-DT-TH6"/>
             </connections>
             <point key="canvasLocation" x="138.40579710144928" y="139.62053571428569"/>

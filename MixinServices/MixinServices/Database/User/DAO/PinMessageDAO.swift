@@ -21,12 +21,19 @@ public final class PinMessageDAO: UserDatabaseDAO {
         let sql = """
             SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
                 m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-                m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
-                m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl, u.app_id as appId,
+                m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, 
+                m.status, m.participant_id, m.snapshot_id, m.name, m.sticker_id, m.created_at,
+                u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl, 
+                u.app_id as appId, u.membership as userMembership,
                 u1.full_name as participantFullName, u1.user_id as participantUserId,
                 NULL, NULL, NULL, NULL, NULL,
-                st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, st.asset_type as assetType, alb.category as assetCategory,
-                m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
+                st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, 
+                st.asset_type as assetType, alb.category as assetCategory,
+                m.action as actionName, m.shared_user_id as sharedUserId,
+                su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, 
+                su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId,
+                su.is_verified as sharedUserIsVerified, su.membership as sharedUserMembership,
+                m.quote_message_id, m.quote_content,
                 mm.mentions, mm.has_read as hasMentionRead, 0 AS pinned
             FROM pin_messages p
             INNER JOIN messages m ON p.message_id = m.id

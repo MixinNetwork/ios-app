@@ -74,8 +74,10 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func storageUsageConversations() -> [ConversationStorageUsage] {
         let sql = """
-        SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
-        u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
+        SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name,
+        u.identity_number as ownerIdentityNumber, u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl,
+        u.is_verified as ownerIsVerified, u.app_id as ownerAppID, u.membership as ownerMembership,
+        m.mediaSize
         FROM conversations c
         INNER JOIN (SELECT conversation_id, sum(media_size) as mediaSize FROM messages WHERE media_status = 'DONE' GROUP BY conversation_id) m
             ON m.conversation_id = c.conversation_id

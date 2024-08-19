@@ -20,19 +20,20 @@ class RecipientCell: UITableViewCell {
     
     func render(conversation: RecipientSearchItem) {
         titleLabel.text = conversation.name
-        let badgeImage = UserBadgeIcon.image(
-            membership: conversation.membership,
-            isVerified: conversation.isVerified,
-            isBot: conversation.isBot
-        )
-        badgeImageView.image = badgeImage
-        badgeImageView.isHidden = badgeImage == nil
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             avatarImageView.setImage(with: conversation.avatarUrl,
                                      userId: conversation.userId,
                                      name: conversation.name)
+            badgeImageView.image = UserBadgeIcon.image(
+                membership: conversation.membership,
+                isVerified: conversation.isVerified,
+                isBot: conversation.isBot
+            )
+            badgeImageView.isHidden = badgeImageView.image == nil
         } else {
             avatarImageView.setGroupImage(with: conversation.iconUrl)
+            badgeImageView.isHidden = true
         }
     }
+    
 }

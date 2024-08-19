@@ -701,6 +701,8 @@
 		940AE02D2BA0D88100E7A9FE /* ExploreSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940AE02B2BA0D88100E7A9FE /* ExploreSegmentCell.xib */; };
 		940B30492A16050D00B45D26 /* NetworkSpeedInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */; };
 		940B304B2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */; };
+		940B6C942C72501A0003FCDB /* UserBadgeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */; };
+		940B6C952C7266150003FCDB /* UserBadgeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */; };
 		940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */; };
 		940C7541299AAE130006338F /* Web3Wallet in Frameworks */ = {isa = PBXBuildFile; productRef = 940C7540299AAE130006338F /* Web3Wallet */; };
 		940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */; };
@@ -2042,6 +2044,7 @@
 		940AE02B2BA0D88100E7A9FE /* ExploreSegmentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreSegmentCell.xib; sourceTree = "<group>"; };
 		940B30482A16050D00B45D26 /* NetworkSpeedInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSpeedInspector.swift; sourceTree = "<group>"; };
 		940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServerDataSource.swift; sourceTree = "<group>"; };
+		940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBadgeIcon.swift; sourceTree = "<group>"; };
 		940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinAuthorizationsContentViewController.swift; sourceTree = "<group>"; };
 		940D10A32C5C91630071E36D /* InsetGroupedTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetGroupedTitleCell.swift; sourceTree = "<group>"; };
 		940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InsetGroupedTitleCell.xib; sourceTree = "<group>"; };
@@ -3070,6 +3073,7 @@
 				7BF196B02411625300CC8325 /* UserInterfaceStyle.swift */,
 				942F25BC274903550040E585 /* WebPImageDecoder.swift */,
 				941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */,
+				940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -5941,6 +5945,7 @@
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
+				940B6C942C72501A0003FCDB /* UserBadgeIcon.swift in Sources */,
 				940D10B22C5C9A930071E36D /* TokenBalanceCell.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
 				944C61F32B6BF97B00C7DF06 /* PaymentUserGroupCell.swift in Sources */,
@@ -6579,6 +6584,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFE864F22422A59E009B1833 /* RecipientHeaderView.swift in Sources */,
+				940B6C952C7266150003FCDB /* UserBadgeIcon.swift in Sources */,
 				DFE861BC2422673B009B1833 /* ShareRecipientViewController.swift in Sources */,
 				DFE864E8242299CB009B1833 /* RecipientSearchItem.swift in Sources */,
 				DFE864E624228753009B1833 /* RecipientCell.swift in Sources */,

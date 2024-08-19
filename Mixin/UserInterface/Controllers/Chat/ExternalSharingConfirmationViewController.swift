@@ -208,16 +208,6 @@ extension ExternalSharingConfirmationViewController {
             guard let user = UserDAO.shared.getUser(userId: userId) else {
                 return
             }
-            
-            let badge: UIImage?
-            if user.isVerified {
-                badge = R.image.ic_user_verified()
-            } else if user.isBot {
-                badge = R.image.ic_user_bot()
-            } else {
-                badge = nil
-            }
-            
             DispatchQueue.main.async {
                 guard let contentView = contentView else {
                     return
@@ -225,7 +215,7 @@ extension ExternalSharingConfirmationViewController {
                 avatarImageView?.setImage(with: user)
                 contentView.fullnameLabel.text = user.fullName
                 contentView.idLabel.text = user.identityNumber
-                if let badge = badge {
+                if let badge = user.badgeImage {
                     contentView.badgeImageView.image = badge
                     contentView.badgeImageView.isHidden = false
                 } else {

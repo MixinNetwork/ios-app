@@ -20,21 +20,20 @@ class RecipientCell: UITableViewCell {
     
     func render(conversation: RecipientSearchItem) {
         titleLabel.text = conversation.name
-        if conversation.isVerified {
-            badgeImageView.image = R.image.ic_user_verified()
-            badgeImageView.isHidden = false
-        } else if conversation.isBot {
-            badgeImageView.image = R.image.ic_user_bot()
-            badgeImageView.isHidden = false
-        } else {
-            badgeImageView.isHidden = true
-        }
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             avatarImageView.setImage(with: conversation.avatarUrl,
                                      userId: conversation.userId,
                                      name: conversation.name)
+            badgeImageView.image = UserBadgeIcon.image(
+                membership: conversation.membership,
+                isVerified: conversation.isVerified,
+                isBot: conversation.isBot
+            )
+            badgeImageView.isHidden = badgeImageView.image == nil
         } else {
             avatarImageView.setGroupImage(with: conversation.iconUrl)
+            badgeImageView.isHidden = true
         }
     }
+    
 }

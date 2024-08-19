@@ -32,8 +32,16 @@ class ConversationCell: ModernSelectedBackgroundCell {
     func render(item: ConversationItem) {
         if item.category == ConversationCategory.CONTACT.rawValue {
             avatarView.setImage(with: item.ownerAvatarUrl, userId: item.ownerId, name: item.ownerFullName)
+            let badgeImage = UserBadgeIcon.image(
+                membership: item.ownerMembership,
+                isVerified: item.ownerIsVerified,
+                isBot: item.ownerIsBot
+            )
+            verifiedImageView.image = badgeImage
+            verifiedImageView.isHidden = badgeImage == nil
         } else {
             avatarView.setGroupImage(with: item.iconUrl)
+            verifiedImageView.isHidden = true
         }
         nameLabel.text = item.getConversationName()
         if item.createdAt.isEmpty {
@@ -41,17 +49,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
         } else {
             timeLabel.text = item.createdAt.toUTCDate().timeAgo()
         }
-
-        if item.ownerIsVerified {
-            verifiedImageView.image = R.image.ic_user_verified()
-            verifiedImageView.isHidden = false
-        } else if item.ownerIsBot {
-            verifiedImageView.image = R.image.ic_user_bot()
-            verifiedImageView.isHidden = false
-        } else {
-            verifiedImageView.isHidden = true
-        }
-
+        
         if item.messageStatus == MessageStatus.FAILED.rawValue {
             messageStatusImageView.isHidden = false
             messageStatusImageView.image = R.image.ic_status_sending()

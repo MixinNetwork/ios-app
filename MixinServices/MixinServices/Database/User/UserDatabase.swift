@@ -814,6 +814,13 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("membership") { db in
+            let itemColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(users)").map(\.name)
+            if !itemColumns.contains("membership") {
+                try db.execute(sql: "ALTER TABLE `users` ADD COLUMN `membership` TEXT")
+            }
+        }
+        
         return migrator
     }
     

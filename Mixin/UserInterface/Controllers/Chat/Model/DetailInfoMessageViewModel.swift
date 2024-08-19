@@ -6,7 +6,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let bubbleMargin = Margin(leading: 8, trailing: 66, top: 0, bottom: 0)
     static let statusLeftMargin: CGFloat = 4
     static let identityIconLeftMargin: CGFloat = 4
-    static let identityIconSize = R.image.ic_user_bot()!.size
     static let encryptedIconRightMargin: CGFloat = 4
     static let forwarderIconRightMargin: CGFloat = 4
     static let pinnedIconRightMargin: CGFloat = 4
@@ -28,7 +27,8 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var pinnedIconFrame = CGRect.zero
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
-    var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
+    var identityIconImage: UIImage?
+    var identityIconFrame: CGRect = .zero
     var expiredIconFrame = CGRect(x: 0, y: 0, width: 16, height: 16)
     
     var statusNormalTintColor: UIColor {
@@ -78,6 +78,17 @@ class DetailInfoMessageViewModel: MessageViewModel {
         updateStatusImageAndTintColor()
         backgroundImage = type(of: self).bubbleImageSet.image(forStyle: style, highlight: false)
         timeFrame.size = ceil((time as NSString).size(withAttributes: [.font: MessageFontSet.time.scaled]))
+        if style.contains(.fullname) {
+            if let membership = message.userMembership?.badgeImage {
+                identityIconImage = membership
+            } else if message.userIsBot {
+                identityIconImage = R.image.ic_user_bot()
+            } else {
+                identityIconImage = nil
+            }
+        } else {
+            identityIconImage = nil
+        }
     }
     
     func layoutDetailInfo(insideBackgroundImage: Bool = true, backgroundImageFrame: CGRect) {
@@ -116,8 +127,16 @@ class DetailInfoMessageViewModel: MessageViewModel {
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
         fullnameFrame.size.width = max(minFullnameWidth, min(fullnameFrame.size.width, maxContentWidth))
-        identityIconFrame.origin = CGPoint(x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
-                                           y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
+        if let image = identityIconImage {
+            identityIconFrame = CGRect(
+                x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
+                y: fullnameFrame.origin.y + (fullnameFrame.height - image.size.height) / 2,
+                width: image.size.width,
+                height: image.size.height
+            )
+        } else {
+            identityIconFrame = .zero
+        }
     }
     
     func layoutExpiredIconFrame(backgroundImageFrame: CGRect) {

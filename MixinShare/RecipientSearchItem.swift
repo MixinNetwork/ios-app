@@ -11,6 +11,7 @@ class RecipientSearchItem {
     let category: String
     let isBot : Bool
     let isVerified : Bool
+    let membership: User.Membership?
     let identityNumber: String
     let phoneNumber: String
 
@@ -31,6 +32,7 @@ class RecipientSearchItem {
         conversationId = conversation.conversationId
         isBot = conversation.ownerIsBot
         isVerified = conversation.ownerIsVerified
+        membership = conversation.ownerMembership
         phoneNumber = ""
     }
 
@@ -43,6 +45,7 @@ class RecipientSearchItem {
         avatarUrl = user.avatarUrl
         isBot = user.isBot
         isVerified = user.isVerified
+        membership = user.membership
         identityNumber = user.identityNumber
         phoneNumber = user.phone ?? ""
     }

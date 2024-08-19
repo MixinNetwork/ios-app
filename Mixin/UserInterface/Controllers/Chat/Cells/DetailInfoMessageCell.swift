@@ -16,7 +16,7 @@ class DetailInfoMessageCell: MessageCell {
     let timeLabel = UILabel()
     let statusImageView = SDAnimatedImageView()
     let forwarderImageView = UIImageView(image: R.image.conversation.ic_forwarder_bot())
-    let identityIconImageView = UIImageView(image: R.image.ic_user_bot())
+    let identityIconImageView = UIImageView()
     let highlightAnimationDuration: TimeInterval = 0.2
     
     lazy var expiredIconView: UIImageView = {
@@ -43,9 +43,14 @@ class DetailInfoMessageCell: MessageCell {
                 fullnameButton.setTitle(viewModel.message.userFullName, for: .normal)
                 fullnameButton.setTitleColor(viewModel.fullnameColor, for: .normal)
                 fullnameButton.isHidden = false
-                identityIconImageView.isHidden = !viewModel.message.userIsBot
             } else {
                 fullnameButton.isHidden = true
+            }
+            if let image = viewModel.identityIconImage {
+                identityIconImageView.frame = viewModel.identityIconFrame
+                identityIconImageView.image = image
+                identityIconImageView.isHidden = false
+            } else {
                 identityIconImageView.isHidden = true
             }
             forwarderImageView.frame = viewModel.forwarderFrame
@@ -57,9 +62,7 @@ class DetailInfoMessageCell: MessageCell {
             timeLabel.frame = viewModel.timeFrame
             timeLabel.text = viewModel.time
             updateStatusImageView()
-            if viewModel.message.userIsBot {
-                identityIconImageView.frame = viewModel.identityIconFrame
-            }
+            
             if viewModel.message.isExpiredMessage {
                 expiredIconView.frame = viewModel.expiredIconFrame
                 expiredIconView.isHidden = false

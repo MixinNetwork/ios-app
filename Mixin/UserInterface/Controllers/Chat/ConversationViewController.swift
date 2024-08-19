@@ -12,6 +12,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var membershipIconView: UIImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!
@@ -2025,14 +2026,25 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func updateNavigationBar() {
+        let membershipIcon: UIImage?
         if dataSource.category == .group {
             let conversation = dataSource.conversation
             titleLabel.text = conversation.name
             avatarImageView.setGroupImage(with: conversation.iconUrl)
+            membershipIcon = nil
         } else if let user = ownerUser {
             subtitleLabel.text = user.identityNumber
             titleLabel.text = user.fullName
             avatarImageView.setImage(with: user)
+            membershipIcon = user.membership?.badgeImage
+        } else {
+            membershipIcon = nil
+        }
+        if let membershipIcon {
+            membershipIconView.image = membershipIcon
+            membershipIconView.isHidden = false
+        } else {
+            membershipIconView.isHidden = true
         }
     }
     

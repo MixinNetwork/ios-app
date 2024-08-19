@@ -238,9 +238,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             contentSize.width = max(contentSize.width, lastLineWithTrailingWidth)
         }
         if style.contains(.fullname) {
-            if message.userIsBot {
-                let identityIconWidth = DetailInfoMessageViewModel.identityIconLeftMargin
-                    + DetailInfoMessageViewModel.identityIconSize.width
+            if let image = identityIconImage {
+                let identityIconWidth = DetailInfoMessageViewModel.identityIconLeftMargin + image.size.width
                 contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameFrame.size.width + identityIconWidth))
             } else {
                 contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameFrame.size.width))

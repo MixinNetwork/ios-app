@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class UserCenterViewController: SettingsTableViewController, MixinNavigationAnimating {
+final class UserCenterViewController: SettingsTableViewController, MixinNavigationAnimating {
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
@@ -110,6 +110,8 @@ extension UserCenterViewController {
         DispatchQueue.main.async {
             headerView.avatarImageView.setImage(with: account.avatarURL, userId: account.userID, name: account.fullName)
             headerView.nameLabel.text = account.fullName
+            headerView.membershipImageView.image = account.membership?.badgeImage
+            headerView.membershipImageView.isHidden = headerView.membershipImageView.image == nil
             headerView.identityNumberLabel.text = R.string.localizable.contact_mixin_id(account.identityNumber)
         }
     }

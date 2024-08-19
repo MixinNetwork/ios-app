@@ -10,8 +10,9 @@ public final class CircleMember {
     public let iconUrl: String
     public let identityNumber: String?
     public let phoneNumber: String?
-    
-    public var badgeImage: UIImage? = nil
+    public let isVerified: Bool?
+    public let appID: String?
+    public let membership: User.Membership?
     
     public func matches(lowercasedKeyword keyword: String) -> Bool {
         name.lowercased().contains(keyword)
@@ -19,7 +20,12 @@ public final class CircleMember {
             || (phoneNumber?.contains(keyword) ?? false)
     }
     
-    public init(conversationId: String, userId: String?, category: String, name: String, iconUrl: String, identityNumber: String?, phoneNumber: String?, badgeImage: UIImage? = nil) {
+    public init(
+        conversationId: String, userId: String?, category: String,
+        name: String, iconUrl: String, identityNumber: String?,
+        phoneNumber: String?, isVerified: Bool?, appID: String?,
+        membership: User.Membership?
+    ) {
         self.conversationId = conversationId
         self.userId = userId
         self.category = category
@@ -27,7 +33,9 @@ public final class CircleMember {
         self.iconUrl = iconUrl
         self.identityNumber = identityNumber
         self.phoneNumber = phoneNumber
-        self.badgeImage = badgeImage
+        self.isVerified = isVerified
+        self.appID = appID
+        self.membership = membership
     }
     
     public init(from decoder: Decoder) throws {
@@ -39,6 +47,9 @@ public final class CircleMember {
         iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
         identityNumber = try container.decodeIfPresent(String.self, forKey: .identityNumber)
         phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
+        isVerified = try container.decodeIfPresent(Bool.self, forKey: .isVerified)
+        appID = try container.decodeIfPresent(String.self, forKey: .appID)
+        membership = try container.decodeIfPresent(User.Membership.self, forKey: .membership)
     }
     
 }
@@ -69,6 +80,9 @@ extension CircleMember: Decodable, MixinFetchableRecord {
         case iconUrl = "icon_url"
         case identityNumber = "identity_number"
         case phoneNumber = "phone"
+        case isVerified = "is_verified"
+        case appID = "app_id"
+        case membership
     }
     
 }

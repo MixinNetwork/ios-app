@@ -30,13 +30,7 @@ class UserHandleCell: ModernSelectedBackgroundCell {
             }
             return fullname.copy() as? NSAttributedString
         }()
-        if user.isVerified {
-            badgeImageView.image = R.image.ic_user_verified()
-        } else if user.isBot {
-            badgeImageView.image = R.image.ic_user_bot()
-        } else {
-            badgeImageView.image = nil
-        }
+        badgeImageView.image = user.badgeImage
         identityNumberLabel.attributedText = {
             let number = NSMutableAttributedString(string: user.identityNumber, attributes: normalIdAttributes)
             if let range = identityNumberKeywordRange {

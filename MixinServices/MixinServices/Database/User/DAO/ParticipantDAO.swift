@@ -46,10 +46,10 @@ public final class ParticipantDAO: UserDatabaseDAO {
     
     public func getParticipants(conversationId: String) -> [UserItem] {
         let sql = """
-        SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, a.creator_id as appCreatorId, p.role
+        SELECT u.*, a.creator_id as appCreatorId, p.role
         FROM participants p
-        INNER JOIN users u ON u.user_id = p.user_id
-        LEFT JOIN apps a ON a.app_id = u.app_id
+            INNER JOIN users u ON u.user_id = p.user_id
+            LEFT JOIN apps a ON a.app_id = u.app_id
         WHERE p.conversation_id = ?
         ORDER BY p.created_at DESC
         """

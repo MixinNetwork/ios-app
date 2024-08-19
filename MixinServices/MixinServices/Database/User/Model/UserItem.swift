@@ -18,8 +18,15 @@ public struct UserItem {
     public let relationship: String
     public var role: String
     public var appCreatorId: String?
+    public let membership: User.Membership?
     
-    internal init(userId: String, fullName: String, biography: String, identityNumber: String, avatarUrl: String, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, isScam: Bool, isDeactivated: Bool, relationship: String, role: String, appCreatorId: String? = nil) {
+    internal init(
+        userId: String, fullName: String, biography: String, identityNumber: String,
+        avatarUrl: String, phone: String? = nil, isVerified: Bool,
+        muteUntil: String? = nil, appId: String? = nil, createdAt: String?,
+        isScam: Bool, isDeactivated: Bool, relationship: String, role: String,
+        appCreatorId: String? = nil, membership: User.Membership?
+    ) {
         self.userId = userId
         self.fullName = fullName
         self.biography = biography
@@ -35,6 +42,7 @@ public struct UserItem {
         self.relationship = relationship
         self.role = role
         self.appCreatorId = appCreatorId
+        self.membership = membership
     }
     
 }
@@ -57,6 +65,7 @@ extension UserItem: Decodable, MixinFetchableRecord {
         case isDeactivated = "is_deactivated"
         case appCreatorId
         case role
+        case membership
     }
     
     public init(from decoder: Decoder) throws {
@@ -84,6 +93,7 @@ extension UserItem: Decodable, MixinFetchableRecord {
         self.role = try container.decodeIfPresent(String.self, forKey: .role) ?? ""
         
         self.appCreatorId = try container.decodeIfPresent(String.self, forKey: .appCreatorId)
+        self.membership = try container.decodeIfPresent(User.Membership.self, forKey: .membership)
     }
     
 }
@@ -126,7 +136,10 @@ extension UserItem {
         return userInfo
     }
     
-    public static func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String, appId: String?) -> UserItem {
+    public static func createUser(
+        userId: String, fullName: String, identityNumber: String,
+        avatarUrl: String, appId: String?, membership: User.Membership?
+    ) -> UserItem {
         UserItem(userId: userId,
                  fullName: fullName,
                  biography: "",
@@ -141,7 +154,8 @@ extension UserItem {
                  isDeactivated: false,
                  relationship: "",
                  role: "",
-                 appCreatorId: nil)
+                 appCreatorId: nil,
+                 membership: membership)
     }
     
     public static func createUser(from user: UserResponse) -> UserItem {
@@ -159,7 +173,8 @@ extension UserItem {
                  isDeactivated: user.isDeactivated ?? false,
                  relationship: user.relationship.rawValue,
                  role: "",
-                 appCreatorId: user.app?.creatorId)
+                 appCreatorId: user.app?.creatorId,
+                 membership: user.membership)
     }
     
     public static func createUser(from user: User) -> UserItem {
@@ -177,7 +192,8 @@ extension UserItem {
                  isDeactivated: user.isDeactivated,
                  relationship: user.relationship,
                  role: "",
-                 appCreatorId: user.app?.creatorId)
+                 appCreatorId: user.app?.creatorId,
+                 membership: user.membership)
     }
     
     public static func createUser(from account: Account) -> UserItem {
@@ -195,7 +211,8 @@ extension UserItem {
                  isDeactivated: false,
                  relationship: "",
                  role: "",
-                 appCreatorId: nil)
+                 appCreatorId: nil,
+                 membership: account.membership)
     }
     
     public static func makeUserItem(notificationUserInfo userInfo: [AnyHashable: Any]) -> UserItem? {
@@ -212,7 +229,7 @@ extension UserItem {
             return nil
         }
         let appId = userInfo[UNNotificationContent.UserInfoKey.ownerUserAppId] as? String
-        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, appId: appId)
+        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, appId: appId, membership: nil)
     }
     
     public func matches(lowercasedKeyword keyword: String) -> Bool {

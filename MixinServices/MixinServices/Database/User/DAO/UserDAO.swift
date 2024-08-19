@@ -13,7 +13,10 @@ public final class UserDAO: UserDatabaseDAO {
     public static let correspondingAppDidChange = NSNotification.Name("one.mixin.services.UserDAO.correspondingAppDidChange")
     
     private static let sqlQueryColumns = """
-    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, u.is_deactivated, '' AS role, a.creator_id as appCreatorId
+    SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url,
+        u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship,
+        u.created_at, u.is_scam, u.is_deactivated, u.membership, '' AS role,
+        a.creator_id as appCreatorId
     FROM users u
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
@@ -21,10 +24,11 @@ public final class UserDAO: UserDatabaseDAO {
     private static let saveUserResponseWithoutDeactivationSQL = """
     INSERT INTO users(
         user_id, full_name, biography, identity_number, avatar_url, phone, is_verified,
-        mute_until, app_id, relationship, created_at, is_scam, is_deactivated
+        mute_until, app_id, relationship, created_at, is_scam, is_deactivated, membership
     ) VALUES (
         :user_id, :full_name, :biography, :identity_number, :avatar_url, :phone, :is_verified,
-        :mute_until, :app_id, :relationship, :created_at, :is_scam, :is_deactivated
+        :mute_until, :app_id, :relationship, :created_at, :is_scam, :is_deactivated,
+        :membership
     )
     ON CONFLICT(user_id) DO UPDATE SET user_id = :user_id,
         full_name = :full_name,
@@ -37,7 +41,8 @@ public final class UserDAO: UserDatabaseDAO {
         app_id = :app_id,
         relationship = :relationship,
         created_at = :created_at,
-        is_scam = :is_scam
+        is_scam = :is_scam,
+        membership = :membership
     """
     
     private static let saveUserResponseSQL = saveUserResponseWithoutDeactivationSQL + ", is_deactivated = :is_deactivated"
@@ -146,8 +151,7 @@ public final class UserDAO: UserDatabaseDAO {
     
     public func getAppUsers(inConversationOf conversationId: String) -> [User] {
         let sql = """
-        SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url,
-                u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam
+        SELECT u.*
         FROM participants p, apps a, users u
         WHERE p.conversation_id = ? AND p.user_id = u.user_id AND a.app_id = u.app_id
         """
@@ -166,7 +170,7 @@ public final class UserDAO: UserDatabaseDAO {
     
     public func getAppUsers() -> [User] {
         let sql = """
-            SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam
+            SELECT u.*
             FROM apps a, users u
             WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
             ORDER BY u.full_name ASC
@@ -321,7 +325,8 @@ public final class UserDAO: UserDatabaseDAO {
                         "relationship":     response.relationship.rawValue,
                         "created_at":       response.createdAt,
                         "is_scam":          response.isScam,
-                        "is_deactivated":   response.isDeactivated
+                        "is_deactivated":   response.isDeactivated,
+                        "membership":       response.membership,
                     ])
                     if let app = response.app {
                         try app.save(db)

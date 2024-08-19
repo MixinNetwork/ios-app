@@ -46,15 +46,11 @@ extension PaymentUserGroupCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.payment_user, for: indexPath)!
         let user = users[indexPath.item]
+        let badgeImage = user.badgeImage
         cell.avatarImageView.setImage(with: user)
         cell.usernameLabel.text = "\(user.fullName) (\(user.identityNumber))"
-        cell.badge = if user.isVerified {
-            .verified
-        } else if user.isBot {
-            .bot
-        } else {
-            nil
-        }
+        cell.badgeImageView.image = badgeImage
+        cell.badgeImageView.isHidden = badgeImage == nil
         return cell
     }
     

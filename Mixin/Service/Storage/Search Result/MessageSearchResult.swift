@@ -18,7 +18,11 @@ class MessageSearchResult: SearchResult {
     private let content: String
     private let keyword: String
     
-    init(conversationId: String, messageId: String, category: String, content: String, createdAt: String, userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?, keyword: String) {
+    init(
+        conversationId: String, messageId: String, category: String, content: String, createdAt: String,
+        userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?,
+        membership: User.Membership?, keyword: String
+    ) {
         self.conversationId = conversationId
         self.messageId = messageId
         if category.hasSuffix("_DATA") {
@@ -33,8 +37,11 @@ class MessageSearchResult: SearchResult {
         self.userFullname = fullname
         self.createdAt = createdAt
         self.keyword = keyword
-        let badgeImage = SearchResult.userBadgeImage(isVerified: isVerified,
-                                                     appId: appId)
+        let badgeImage = UserBadgeIcon.image(
+            membership: membership,
+            isVerified: isVerified,
+            appID: appId
+        )
         let superscript = createdAt.toUTCDate().timeAgo()
         super.init(iconUrl: avatarUrl,
                    badgeImage: badgeImage,

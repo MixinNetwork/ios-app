@@ -50,7 +50,7 @@ public final class CircleDAO: UserDatabaseDAO {
                 CASE WHEN conv.category IS NULL THEN 'CONTACT' ELSE conv.category END AS category,
                 CASE WHEN conv.category = 'GROUP' THEN conv.name ELSE u.full_name END AS name,
                 CASE WHEN conv.category = 'GROUP' THEN conv.icon_url ELSE u.avatar_url END AS icon_url,
-                u.identity_number, u.phone
+                u.identity_number, u.phone, u.is_verified, u.app_id, u.membership
             FROM circle_conversations cc
             LEFT JOIN conversations conv ON conv.conversation_id = cc.conversation_id
             LEFT JOIN users u ON u.user_id = cc.user_id

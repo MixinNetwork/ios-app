@@ -655,15 +655,9 @@ extension UserProfileViewController {
             subtitleLabel.identityNumber = nil
         }
         
-        if user.isVerified {
-            badgeImageView.image = R.image.ic_user_verified()
-            badgeImageView.isHidden = false
-        } else if user.isBot {
-            badgeImageView.image = R.image.ic_user_bot()
-            badgeImageView.isHidden = false
-        } else {
-            badgeImageView.isHidden = true
-        }
+        let badgeImage = user.badgeImage
+        badgeImageView.image = badgeImage
+        badgeImageView.isHidden = badgeImage == nil
         
         if user.isDeactivated {
             centerStackView.addArrangedSubview(deactivatedHintView)

@@ -778,7 +778,7 @@ class UrlWindow {
             conversationID = ConversationDAO.shared.makeConversationId(userId: id, ownerUserId: myUserId)
             needsConfirmation = false
         case .none:
-            if let id = onScreenConversationID {
+            if webContext == nil, let id = onScreenConversationID {
                 conversationID = id
                 needsConfirmation = false
             } else {

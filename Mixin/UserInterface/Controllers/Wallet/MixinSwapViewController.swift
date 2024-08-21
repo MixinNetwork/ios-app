@@ -395,7 +395,7 @@ extension MixinSwapViewController {
             return
         }
         sendValueLabel.text = CurrencyFormatter.localizedString(
-            from: sendToken.decimalUSDPrice * sendAmount,
+            from: sendToken.decimalUSDPrice * sendAmount * Currency.current.decimalRate,
             format: .fiatMoney,
             sign: .never,
             symbol: .currencySymbol
@@ -426,7 +426,7 @@ extension MixinSwapViewController {
             return
         }
         receiveValueLabel.text = CurrencyFormatter.localizedString(
-            from: receiveToken.decimalUSDPrice * quote.receiveAmount,
+            from: receiveToken.decimalUSDPrice * quote.receiveAmount * Currency.current.decimalRate,
             format: .fiatMoney,
             sign: .never,
             symbol: .currencySymbol

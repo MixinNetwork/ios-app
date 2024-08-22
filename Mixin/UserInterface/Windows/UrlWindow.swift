@@ -1227,6 +1227,13 @@ extension UrlWindow {
         SafeAPI.multisigs(id: multisig.id, queue: .global()) { result in
             switch result {
             case .success(let response):
+                guard response.revokedBy.isNilOrEmpty else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.multisig_revoked())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
                 let sendersHash = response.sendersHash
                 let receiver = response.receivers.first(where: { $0.membersHash != sendersHash })
                 ?? response.receivers.first(where: { $0.membersHash == sendersHash })

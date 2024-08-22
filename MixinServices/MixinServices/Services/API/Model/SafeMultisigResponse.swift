@@ -13,6 +13,7 @@ public struct SafeMultisigResponse: Decodable {
         case signers
         case rawTransaction = "raw_transaction"
         case views
+        case revokedBy = "revoked_by"
         case safe
     }
     
@@ -26,6 +27,7 @@ public struct SafeMultisigResponse: Decodable {
     public let signers: [String]
     public let rawTransaction: String
     public let views: [String]?
+    public let revokedBy: String?
     public let safe: Safe?
     
 }

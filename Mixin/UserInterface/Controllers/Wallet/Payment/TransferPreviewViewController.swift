@@ -67,7 +67,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         switch context {
         case .swap:
             tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from_mixin()
+            tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinMessenger)
         case .inscription(let context):
             switch context.operation {
             case .transfer:
@@ -192,7 +192,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         switch context {
         case .swap:
             layoutTableHeaderView(title: R.string.localizable.sending(),
-                                  subtitle: R.string.localizable.signature_request_from_mixin())
+                                  subtitle: R.string.localizable.signature_request_from(mixinMessenger))
         case .inscription(let context):
             switch context.operation {
             case .transfer:

@@ -38,6 +38,12 @@ public final class AddressDAO: UserDatabaseDAO {
         db.select(with: addressItemSQL + "ORDER BY a.updated_at DESC")
     }
     
+    public func label(address: String) -> String? {
+        db.select(column: Address.column(of: .label),
+                  from: Address.self,
+                  where: Address.column(of: .destination) == address)
+    }
+    
     public func insertOrUpdateAddress(addresses: [Address]) {
         guard !addresses.isEmpty else {
             return

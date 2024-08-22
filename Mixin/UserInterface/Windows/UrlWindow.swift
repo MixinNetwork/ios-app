@@ -1237,7 +1237,22 @@ extension UrlWindow {
                     }
                     return
                 }
-                guard let token = syncToken(assetID: response.assetID, hud: hud) else {
+                let token: TokenItem?
+                if let safe = response.safe {
+                    switch safe.operation {
+                    case let .transaction(transaction):
+                        token = syncToken(assetID: transaction.assetID, hud: hud)
+                    case let .recovery(recovery):
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                    }
+                } else {
+                    token = syncToken(assetID: response.assetID, hud: hud)
+                }
+                guard let token else {
                     return
                 }
                 guard let senders = syncUsersInOrder(userIDs: response.senders, hud: hud) else {
@@ -1266,20 +1281,28 @@ extension UrlWindow {
                 } else {
                     state = .pending
                 }
+                if let safe = response.safe, case let .transaction(transaction) = safe.operation {
+                    for recipient in transaction.recipients {
+                        recipient.label = AddressDAO.shared.label(address: recipient.address)
+                    }
+                }
                 DispatchQueue.main.async {
                     hud.hide()
-                    let preview = MultisigPreviewViewController(requestID: response.requestID,
-                                                                token: token,
-                                                                amount: amount,
-                                                                sendersThreshold: response.sendersThreshold,
-                                                                senders: senders,
-                                                                receiversThreshold: receiver.threshold,
-                                                                receivers: receiverMembers,
-                                                                rawTransaction: response.rawTransaction,
-                                                                viewKeys: response.views.joined(separator: ","),
-                                                                action: multisig.action,
-                                                                index: index,
-                                                                state: state)
+                    let preview = MultisigPreviewViewController(
+                        requestID: response.requestID,
+                        token: token,
+                        amount: amount,
+                        sendersThreshold: response.sendersThreshold,
+                        senders: senders,
+                        receiversThreshold: receiver.threshold,
+                        receivers: receiverMembers,
+                        rawTransaction: response.rawTransaction,
+                        viewKeys: (response.views ?? []).joined(separator: ","),
+                        action: multisig.action,
+                        index: index,
+                        state: state,
+                        safe: response.safe
+                    )
                     homeContainer.present(preview, animated: true)
                 }
             case .failure(let error):

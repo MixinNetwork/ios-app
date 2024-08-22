@@ -92,9 +92,8 @@ final class TransactionHistoryViewController: UIViewController {
             return cell
         }
         
-        // TODO: Responds to snapshot change
-        // NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
-        // NotificationCenter.default.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishedNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishedNotification, object: nil)
         reloadData()
     }
     
@@ -244,6 +243,8 @@ final class TransactionHistoryViewController: UIViewController {
     
     private func reloadData() {
         queue.cancelAllOperations()
+        loadPreviousPageIndexPath = nil
+        loadNextPageIndexPath = nil
         let operation = LoadLocalDataOperation(
             viewController: self,
             behavior: .reload,
@@ -308,9 +309,11 @@ extension TransactionHistoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch indexPath {
         case loadPreviousPageIndexPath:
+            Logger.general.debug(category: "TxnHistory", message: "Previous canary consumed")
             loadPreviousPageIndexPath = nil
             loadPreviousPage()
         case loadNextPageIndexPath:
+            Logger.general.debug(category: "TxnHistory", message: "Next canary consumed")
             loadNextPageIndexPath = nil
             loadNextPage()
         default:
@@ -419,6 +422,10 @@ extension TransactionHistoryViewController {
         } else {
             behavior = .reload
         }
+        Logger.general.debug(category: "TxnHistory", message: "Previous canary cleared")
+        loadPreviousPageIndexPath = nil
+        Logger.general.debug(category: "TxnHistory", message: "Next canary cleared")
+        loadNextPageIndexPath = nil
         let operation = LoadLocalDataOperation(
             viewController: self,
             behavior: behavior,
@@ -440,8 +447,10 @@ extension TransactionHistoryViewController {
     
     private func loadPreviousPage() {
         guard let firstItem else {
+            Logger.general.debug(category: "TxnHistory", message: "No firstItem, abort loading")
             return
         }
+        Logger.general.debug(category: "TxnHistory", message: "Will load before \(firstItem.id)")
         let operation = LoadLocalDataOperation(
             viewController: self,
             behavior: .prepend(offset: firstItem),
@@ -453,8 +462,10 @@ extension TransactionHistoryViewController {
     
     private func loadNextPage() {
         guard let lastItem else {
+            Logger.general.debug(category: "TxnHistory", message: "No lastItem, abort loading")
             return
         }
+        Logger.general.debug(category: "TxnHistory", message: "Will load after \(lastItem.id)")
         let operation = LoadLocalDataOperation(
             viewController: self,
             behavior: .append(offset: lastItem),
@@ -469,20 +480,25 @@ extension TransactionHistoryViewController {
             tableView.adjustedContentInset.vertical + tableView.contentSize.height - tableView.frame.height
         }
         
-        let contentSizeBefore = tableView.contentSize
+        let distanceToBottom = tableView.contentSize.height - tableView.contentOffset.y
         let wasAtTableTop = tableView.contentOffset.y < 1
         let wasAtTableBottom = abs(tableView.contentOffset.y - tableBottomContentOffsetY) < 1
         block()
-        view.layoutIfNeeded() // Important, ensures `tableView.contentSize` is correct
+        tableView.layoutIfNeeded() // Important, ensures `tableView.contentSize` is correct
         let contentOffset: CGPoint
         if wasAtTableTop {
+            Logger.general.debug(category: "TxnHistory", message: "Going to table top")
             contentOffset = .zero
         } else if wasAtTableBottom {
+            Logger.general.debug(category: "TxnHistory", message: "Going to table bottom")
             contentOffset = CGPoint(x: 0, y: tableBottomContentOffsetY)
         } else {
+            Logger.general.debug(category: "TxnHistory", message: "Going to managed offset")
             let contentSizeAfter = tableView.contentSize
-            let y = max(tableView.contentOffset.y, tableView.contentOffset.y + contentSizeAfter.height - contentSizeBefore.height)
-            contentOffset = CGPoint(x: tableView.contentOffset.x, y: y)
+            contentOffset = CGPoint(
+                x: tableView.contentOffset.x,
+                y: max(tableView.contentOffset.y, contentSizeAfter.height - distanceToBottom)
+            )
         }
         tableView.setContentOffset(contentOffset, animated: false)
     }
@@ -506,7 +522,7 @@ extension TransactionHistoryViewController {
             guard let item = SafeSnapshotDAO.shared.snapshotItem(id: snapshotID) else {
                 return
             }
-            Logger.general.debug(category: "SnapshotListLoader", message: "Start reloading id: \(snapshotID)")
+            Logger.general.debug(category: "TxnLoader", message: "Reload id: \(snapshotID)")
             DispatchQueue.main.sync {
                 guard let viewController, !isCancelled else {
                     return
@@ -541,11 +557,11 @@ extension TransactionHistoryViewController {
                 case .reload:
                     "reload"
                 case .reloadVisibleItems(let offset):
-                    "reloadVisibleItems(\(offset.amount) \(offset.tokenSymbol ?? "") \(offset.createdAt))"
+                    "reloadVisibleItems(\(offset.id))"
                 case .prepend(let offset):
-                    "prepend(\(offset.amount) \(offset.tokenSymbol ?? "") \(offset.createdAt))"
+                    "prepend(\(offset.id))"
                 case .append(let offset):
-                    "append(\(offset.amount) \(offset.tokenSymbol ?? "") \(offset.createdAt))"
+                    "append(\(offset.id))"
                 }
             }
             
@@ -575,7 +591,7 @@ extension TransactionHistoryViewController {
         }
         
         override func main() {
-            Logger.general.debug(category: "SnapshotListLoader", message: "Start loading with behavior: \(behavior), filter: \(filter.description), order: \(order)")
+            Logger.general.debug(category: "TxnLoader", message: "Load with behavior: \(behavior), filter: \(filter.description), order: \(order)")
             let offset: SafeSnapshotDAO.Offset? = switch behavior {
             case .reload:
                     .none
@@ -589,6 +605,7 @@ extension TransactionHistoryViewController {
             
             let items = SafeSnapshotDAO.shared.snapshots(offset: offset, filter: filter, order: order, limit: limit)
             loadMissingUsersOrTokens(items)
+            Logger.general.debug(category: "TxnLoader", message: "Loaded \(items.count) items:\n\(items.map(\.id))")
             
             var dataSnapshot: DataSourceSnapshot
             switch behavior {
@@ -609,7 +626,7 @@ extension TransactionHistoryViewController {
             case .newest, .oldest:
                 switch offset {
                 case .before:
-                    for item in items {
+                    for item in items.reversed() {
                         let date = DateFormatter.dateSimple.string(from: item.createdAt.toUTCDate())
                         if dataSnapshot.sectionIdentifiers.contains(date) {
                             if let firstItem = dataSnapshot.itemIdentifiers(inSection: date).first {
@@ -641,7 +658,7 @@ extension TransactionHistoryViewController {
                 }
                 switch offset {
                 case .before:
-                    let identifiers = items.reversed().map(\.id)
+                    let identifiers = items.map(\.id)
                     if let firstIdentifier = dataSnapshot.itemIdentifiers.first {
                         dataSnapshot.insertItems(identifiers, beforeItem: firstIdentifier)
                     } else {
@@ -673,6 +690,8 @@ extension TransactionHistoryViewController {
                 case .reload:
                     controller.loadPreviousPageIndexPath = nil
                     controller.firstItem = nil
+                    Logger.general.debug(category: "TxnLoader", message: "Going to table top by reloading")
+                    controller.tableView.setContentOffset(.zero, animated: false)
                     if #available(iOS 15.0, *) {
                         controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                     } else {
@@ -680,8 +699,15 @@ extension TransactionHistoryViewController {
                     }
                 case .reloadVisibleItems:
                     controller.withTableViewContentOffsetManaged {
-                        controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
-                        controller.firstItem = items.first
+                        if let item = items.first {
+                            controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
+                            controller.firstItem = item
+                            Logger.general.debug(category: "TxnLoader", message: "Set previous canary \(item.id)")
+                        } else {
+                            controller.loadPreviousPageIndexPath = nil
+                            controller.firstItem = nil
+                            Logger.general.debug(category: "TxnLoader", message: "Previous canary cleared")
+                        }
                         if #available(iOS 15.0, *) {
                             controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                         } else {
@@ -690,8 +716,15 @@ extension TransactionHistoryViewController {
                     }
                 case .prepend:
                     controller.withTableViewContentOffsetManaged {
-                        controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
-                        controller.firstItem = items.last // `items` are inserted in reversed order
+                        if let item = items.first {
+                            controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
+                            controller.firstItem = item
+                            Logger.general.debug(category: "TxnLoader", message: "Set previous canary \(item.id)")
+                        } else {
+                            controller.loadPreviousPageIndexPath = nil
+                            controller.firstItem = nil
+                            Logger.general.debug(category: "TxnLoader", message: "Previous canary cleared")
+                        }
                         controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
                     }
                 case .append:
@@ -700,15 +733,23 @@ extension TransactionHistoryViewController {
                 controller.updateEmptyIndicator(numberOfItems: dataSnapshot.numberOfItems)
                 switch behavior {
                 case .prepend:
-                    break
-                case .reload, .reloadVisibleItems, .append:
-                    if items.count >= limit {
-                        let canary = items[items.count - loadMoreThreshold]
-                        controller.loadNextPageIndexPath = controller.dataSource.indexPath(for: canary.id)
-                    } else {
-                        controller.loadNextPageIndexPath = nil
+                    // Index path changes after prepending
+                    if let lastItem = controller.lastItem {
+                        controller.loadNextPageIndexPath = controller.dataSource.indexPath(for: lastItem.id)
                     }
-                    controller.lastItem = items.last
+                case .reload, .reloadVisibleItems, .append:
+                    if items.count >= limit,
+                       let canary = items.last,
+                       let indexPath = controller.dataSource.indexPath(for: canary.id)
+                    {
+                        Logger.general.debug(category: "TxnLoader", message: "Set next canary \(canary.id)")
+                        controller.loadNextPageIndexPath = indexPath
+                        controller.lastItem = canary
+                    } else {
+                        Logger.general.debug(category: "TxnHistory", message: "Next canary cleared")
+                        controller.loadNextPageIndexPath = nil
+                        controller.lastItem = nil
+                    }
                 }
             }
         }

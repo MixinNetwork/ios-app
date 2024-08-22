@@ -36,7 +36,7 @@
 "address_editing_description" = "The request to edit the address is currently under verification by the Mixin server. Please wait a moment.";
 "address_not_found" = "Адрес не найден.";
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
-"address_warning" = "Contract address is NOT a deposit address!";
+"address_warning" = "Contract address is NOT a deposit address";
 "admin" = "Администратор";
 "agree_hint" = "Продолжая, вы соглашаетесь с %@ и %@.";
 "albums" = "Альбомы";

@@ -77,31 +77,12 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         super.viewDidLoad()
         
         if let _ = safe {
-            tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe)
             switch state {
             case .paid:
                 tableHeaderView.setIcon(progress: .success)
                 tableHeaderView.titleLabel.text = R.string.localizable.transaction_approved()
-                tableHeaderView.subtitleLabel.text?.append(R.string.localizable.multisig_state_paid())
-            case .signed:
-                tableHeaderView.setIcon(progress: .failure)
-                tableHeaderView.titleLabel.text = switch action {
-                case .sign:
-                    R.string.localizable.approve_transaction()
-                case .unlock:
-                    R.string.localizable.reject_transaction()
-                }
-                tableHeaderView.subtitleLabel.text?.append(R.string.localizable.multisig_safe_state_signed())
-            case .unlocked:
-                tableHeaderView.setIcon(progress: .failure)
-                tableHeaderView.titleLabel.text = switch action {
-                case .sign:
-                    R.string.localizable.approve_transaction()
-                case .unlock:
-                    R.string.localizable.reject_transaction()
-                }
-                tableHeaderView.subtitleLabel.text?.append(R.string.localizable.multisig_safe_state_unlocked())
-            case .pending:
+                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe) + R.string.localizable.multisig_state_paid()
+            case .signed, .unlocked, .pending:
                 tableHeaderView.setIcon { imageView in
                     imageView.image = R.image.transaction_checklist()
                 }
@@ -111,6 +92,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 case .unlock:
                     tableHeaderView.titleLabel.text = R.string.localizable.reject_transaction()
                 }
+                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe)
             }
         } else {
             switch state {
@@ -183,12 +165,12 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     }
     
     override func loadInitialTrayView(animated: Bool) {
-        switch state {
-        case .paid, .signed, .unlocked:
-            loadSingleButtonTrayView(title: R.string.localizable.got_it(),
-                                     action: #selector(close(_:)))
-        case .pending:
-            if safe == nil {
+        if safe == nil {
+            switch state {
+            case .paid, .signed, .unlocked:
+                loadSingleButtonTrayView(title: R.string.localizable.got_it(),
+                                         action: #selector(close(_:)))
+            case .pending:
                 loadDoubleButtonTrayView(
                     leftTitle: R.string.localizable.cancel(),
                     leftAction: #selector(close(_:)),
@@ -196,7 +178,13 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                     rightAction: #selector(confirm(_:)),
                     animation: animated ? .vertical : nil
                 )
-            } else {
+            }
+        } else {
+            switch state {
+            case .paid:
+                loadSingleButtonTrayView(title: R.string.localizable.got_it(),
+                                         action: #selector(close(_:)))
+            case .signed, .unlocked, .pending:
                 switch action {
                 case .sign:
                     loadDoubleButtonTrayView(

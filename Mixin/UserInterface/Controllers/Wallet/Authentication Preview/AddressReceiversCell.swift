@@ -68,12 +68,13 @@ final class AddressReceiversCell: UITableViewCell {
                 let labelLabel = InsetLabel()
                 labelLabel.contentInset = UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 10)
                 labelLabel.font = .systemFont(ofSize: 12)
-                labelLabel.backgroundColor = R.color.background_secondary()
+                labelLabel.backgroundColor = R.color.address_label_background()
                 labelLabel.textColor = R.color.text_secondary()
                 labelLabel.text = label
                 addSubview(labelLabel)
                 labelLabel.snp.makeConstraints { make in
-                    make.leading.top.equalTo(addressLabel)
+                    make.top.equalTo(addressLabel).offset(-2)
+                    make.leading.equalTo(addressLabel)
                     make.trailing.lessThanOrEqualTo(addressLabel.snp.trailing)
                 }
                 labelLabel.layer.borderWidth = 1
@@ -82,6 +83,7 @@ final class AddressReceiversCell: UITableViewCell {
                 
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.firstLineHeadIndent = labelLabel.intrinsicContentSize.width + addressLabelSpacing
+                paragraphStyle.lineSpacing = 1
                 addressLabel.attributedText = NSAttributedString(string: address, attributes: [
                     .paragraphStyle: paragraphStyle,
                     .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
@@ -114,8 +116,8 @@ final class AddressReceiversCell: UITableViewCell {
         }
         
         private func updateLabelBorderColor() {
-            labelLabel?.layer.borderColor = R.color.text_secondary()?
-                .withAlphaComponent(0.33)
+            labelLabel?.layer.borderColor = R.color
+                .address_label_outline()!
                 .resolvedColor(with: traitCollection)
                 .cgColor
         }

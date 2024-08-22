@@ -197,15 +197,26 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                     animation: animated ? .vertical : nil
                 )
             } else {
-                loadDoubleButtonTrayView(
-                    leftTitle: R.string.localizable.cancel(),
-                    leftAction: #selector(close(_:)),
-                    rightTitle: R.string.localizable.reject(),
-                    rightAction: #selector(confirm(_:)),
-                    animation: animated ? .vertical : nil
-                )
-                if let trayView = trayView as? AuthenticationPreviewDoubleButtonTrayView {
-                    trayView.rightButton.backgroundColor = UIColor(displayP3RgbValue: 0xEB5757)
+                switch action {
+                case .sign:
+                    loadDoubleButtonTrayView(
+                        leftTitle: R.string.localizable.cancel(),
+                        leftAction: #selector(close(_:)),
+                        rightTitle: R.string.localizable.approve(),
+                        rightAction: #selector(confirm(_:)),
+                        animation: animated ? .vertical : nil
+                    )
+                case .unlock:
+                    loadDoubleButtonTrayView(
+                        leftTitle: R.string.localizable.cancel(),
+                        leftAction: #selector(close(_:)),
+                        rightTitle: R.string.localizable.reject(),
+                        rightAction: #selector(confirm(_:)),
+                        animation: animated ? .vertical : nil
+                    )
+                    if let trayView = trayView as? AuthenticationPreviewDoubleButtonTrayView {
+                        trayView.rightButton.backgroundColor = UIColor(displayP3RgbValue: 0xEB5757)
+                    }
                 }
             }
         }

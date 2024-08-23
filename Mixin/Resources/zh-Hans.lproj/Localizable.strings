@@ -635,8 +635,6 @@
 "multisig_receiver" = "交易接收人";
 "multisig_receivers_threshold" = "交易接收人（%@）";
 "multisig_revoked" = "已撤销多签交易";
-"multisig_safe_state_signed" = "您已经批准了这笔交易，您无法再次批准。";
-"multisig_safe_state_unlocked" = "这笔交易已经被其他人拒绝，您无法再次拒绝。";
 "multisig_sender" = "交易发起人";
 "multisig_senders_threshold" = "交易发起人（%@）";
 "multisig_signed" = "多签交易签名成功";

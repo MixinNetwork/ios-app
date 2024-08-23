@@ -635,8 +635,6 @@
 "multisig_receiver" = "Receiver";
 "multisig_receivers_threshold" = "Receivers (%@)";
 "multisig_revoked" = "Multisig Revoked";
-"multisig_safe_state_signed" = "You have already approved this transaction; you cannot approve it again.";
-"multisig_safe_state_unlocked" = "This transaction has already been rejected by someone else; you cannot reject it again.";
 "multisig_sender" = "Sender";
 "multisig_senders_threshold" = "Senders (%@)";
 "multisig_signed" = "Multisig Signed";

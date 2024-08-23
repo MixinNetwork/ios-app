@@ -670,6 +670,8 @@
 "new_group" = "グループを作成";
 "new_group_chat" = "新しいグループチャットを作成";
 "new_name" = "新しい名前";
+"new_update_available" = "New Update Available";
+"new_update_available_desc" = "We update the app regularly so we can make it better for you";
 "new_wallet_hint" = "簡単に仮想通貨をやり取りできるウォレットを作成しよう！";
 "next" = "次へ";
 "no_audio" = "音声メッセージがありません";
@@ -1160,6 +1162,7 @@
 "until_date" = "Until %@";
 "update" = "アップデート";
 "update_mixin" = "Mixinのアップデート";
+"update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "データベースをアップグレード";
 "upgrade_tip" = "Upgrade TIP";

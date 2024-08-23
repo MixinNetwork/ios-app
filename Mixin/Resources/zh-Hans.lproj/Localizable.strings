@@ -670,6 +670,8 @@
 "new_group" = "新建群组";
 "new_group_chat" = "新群聊";
 "new_name" = "名称";
+"new_update_available" = "发现新版本";
+"new_update_available_desc" = "我们定期更新应用程序，以便为您提供更好的服务";
 "new_wallet_hint" = "创建你的第一个数字钱包，所有资产都在一个钱包，收发加密资产简单易用。";
 "next" = "下一步";
 "no_audio" = "没有音频";
@@ -1160,6 +1162,7 @@
 "until_date" = "至%@";
 "update" = "升级";
 "update_mixin" = "升级 Mixin";
+"update_now" = "立即更新";
 "upgrade" = "升级";
 "upgrade_database" = "数据库升级";
 "upgrade_tip" = "升级 TIP";

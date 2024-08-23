@@ -670,6 +670,8 @@
 "new_group" = "Новая группа";
 "new_group_chat" = "Новый групповой чат";
 "new_name" = "новое название";
+"new_update_available" = "New Update Available";
+"new_update_available_desc" = "We update the app regularly so we can make it better for you";
 "new_wallet_hint" = "Создайте свой первый цифровой кошелек, все ваши цифровые активы в одном кошельке, легко отправляйте и получайте криптовалюту.";
 "next" = "Следующий";
 "no_audio" = "НЕТ АУДИО";
@@ -1160,6 +1162,7 @@
 "until_date" = "Until %@";
 "update" = "Обновить";
 "update_mixin" = "Обновить Mixin";
+"update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "Обновление базы данных";
 "upgrade_tip" = "Upgrade TIP";

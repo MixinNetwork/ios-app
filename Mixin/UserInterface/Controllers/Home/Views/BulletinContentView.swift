@@ -30,6 +30,11 @@ class BulletinContentView: UIView {
                 descriptionLabel.text = R.string.localizable.tip_introduction()
                 continueButton.setTitle(R.string.localizable.upgrade(), for: .normal)
                 closeButton.isHidden = true
+            case .appUpdate:
+                titleLabel.text = R.string.localizable.new_update_available()
+                descriptionLabel.text = R.string.localizable.new_update_available_desc()
+                continueButton.setTitle(R.string.localizable.update_now(), for: .normal)
+                closeButton.isHidden = false
             case .none:
                 titleLabel.text = nil
                 descriptionLabel.text = nil

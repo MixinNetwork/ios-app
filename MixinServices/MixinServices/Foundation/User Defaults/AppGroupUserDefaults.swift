@@ -126,6 +126,9 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "notification_bulletin_dismissal_date", defaultValue: nil)
     public static var notificationBulletinDismissalDate: Date?
     
+    @Default(namespace: nil, key: "app_update_bulletin_dismissal_date", defaultValue: nil)
+    public static var appUpdateBulletinDismissalDate: Date?
+    
     // Key is chain id
     @Default(namespace: .wallet, key: "web3_rpc", defaultValue: [:])
     public static var web3RPCURL: [String: String]

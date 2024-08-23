@@ -8,7 +8,7 @@ public struct EmergencySessionRequest: Codable {
     let platform = "iOS"
     let platformVersion = UIDevice.current.systemVersion
     let packageName = Bundle.main.bundleIdentifier ?? ""
-    let appVersion = Bundle.main.shortVersion
+    let appVersion = Bundle.main.shortVersionString
     let registrationId: Int?
     
     enum CodingKeys: String, CodingKey {

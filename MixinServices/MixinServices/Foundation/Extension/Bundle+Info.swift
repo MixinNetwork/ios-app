@@ -2,8 +2,12 @@ import Foundation
 
 public extension Bundle {
     
-    var shortVersion: String {
-        return infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    var shortVersion: SemanticVersion? {
+        SemanticVersion(string: shortVersionString)
+    }
+    
+    var shortVersionString: String {
+        return infoDictionary?["CFBundleShortVersionString"] as? String ?? "(null)"
     }
 
     var bundleVersion: String {

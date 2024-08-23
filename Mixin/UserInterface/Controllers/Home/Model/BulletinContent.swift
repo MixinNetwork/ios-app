@@ -5,4 +5,5 @@ enum BulletinContent {
     case emergencyContact
     case initializePIN
     case migrateToTIP
+    case appUpdate
 }

@@ -46,6 +46,7 @@ public struct Account {
     public var hasSafe: Bool
     public var salt: String?
     public let membership: User.Membership?
+    public let system: System?
     
 }
 
@@ -80,6 +81,7 @@ extension Account: Codable {
         case hasSafe = "has_safe"
         case salt = "salt_base64"
         case membership
+        case system
     }
     
     public init(from decoder: Decoder) throws {
@@ -118,6 +120,19 @@ extension Account: Codable {
         hasSafe = try container.decodeIfPresent(Bool.self, forKey: .hasSafe) ?? false
         salt = try container.decodeIfPresent(String.self, forKey: .salt)
         membership = try container.decodeIfPresent(User.Membership.self, forKey: .membership)
+        system = try? container.decodeIfPresent(System.self, forKey: .system)
+    }
+    
+}
+
+extension Account {
+    
+    public struct System: Codable {
+        public let messenger: Messenger
+    }
+    
+    public struct Messenger: Codable {
+        public let version: SemanticVersion
     }
     
 }

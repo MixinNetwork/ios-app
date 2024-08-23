@@ -8,6 +8,7 @@ class HomeViewController: UIViewController {
         static let notificationAuthorization: TimeInterval = 2 * .day
         static let emergencyContact: TimeInterval = 7 * .day
         static let initializePIN: TimeInterval = .day
+        static let appUpdate: TimeInterval = .day
     }
     
     static var hasTriedToRequestReview = false
@@ -225,6 +226,8 @@ class HomeViewController: UIViewController {
         case .migrateToTIP:
             let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
             present(tip, animated: true)
+        case .appUpdate:
+            UIApplication.shared.openAppStorePage()
         case .none:
             break
         }
@@ -240,6 +243,8 @@ class HomeViewController: UIViewController {
             AppGroupUserDefaults.User.initializePINBulletinDismissalDate = Date()
         case .migrateToTIP:
             return
+        case .appUpdate:
+            AppGroupUserDefaults.appUpdateBulletinDismissalDate = Date()
         case .none:
             break
         }
@@ -300,9 +305,7 @@ class HomeViewController: UIViewController {
         }
         DispatchQueue.main.async {
             self.myAvatarImageView.setImage(with: account)
-            if self.bulletinContent == .emergencyContact && account.hasEmergencyContact {
-                self.bulletinContent = nil
-            }
+            self.updateBulletinView()
         }
     }
     
@@ -815,6 +818,17 @@ extension HomeViewController {
                     if isRichEnough {
                         content = .emergencyContact
                     }
+                }
+            }
+            
+            if content == nil {
+                let userJustDismissedUpdateBulletin = isDate(AppGroupUserDefaults.appUpdateBulletinDismissalDate, fallsInto: BulletinDetectInterval.appUpdate)
+                if !userJustDismissedUpdateBulletin,
+                   let latestVersion = LoginManager.shared.account?.system?.messenger.version,
+                   let currentVersion = Bundle.main.shortVersion,
+                   currentVersion < latestVersion
+                {
+                    content = .appUpdate
                 }
             }
             

@@ -160,7 +160,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     func reportClientOutdated() {
         let alert = UIAlertController(
             title: R.string.localizable.update_mixin(),
-            message: R.string.localizable.app_update_tips(Bundle.main.shortVersion),
+            message: R.string.localizable.app_update_tips(Bundle.main.shortVersionString),
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: R.string.localizable.update(), style: .default, handler: { _ in

@@ -670,6 +670,8 @@
 "new_group" = "New Group";
 "new_group_chat" = "New Group Chat";
 "new_name" = "new name";
+"new_update_available" = "New Update Available";
+"new_update_available_desc" = "We update the app regularly so we can make it better for you";
 "new_wallet_hint" = "Create your first digital wallet, all your digital assets in one wallet, easy send and receive cryptocurrency.";
 "next" = "Next";
 "no_audio" = "NO AUDIO";
@@ -1160,6 +1162,7 @@
 "until_date" = "Until %@";
 "update" = "Update";
 "update_mixin" = "Update Mixin";
+"update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "Upgrade Database";
 "upgrade_tip" = "Upgrade TIP";

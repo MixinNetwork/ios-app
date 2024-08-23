@@ -58,7 +58,7 @@ class MixinWebViewController: WebViewController {
         for name in HandlerName.allCases.map(\.rawValue) {
             config.userContentController.add(scriptMessageProxy, name: name)
         }
-        config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
+        config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersionString)"
         return config
     }
     
@@ -928,7 +928,7 @@ extension MixinWebViewController {
         
         var appContextString: String {
             let ctx: [String: Any] = [
-                "app_version": Bundle.main.shortVersion,
+                "app_version": Bundle.main.shortVersionString,
                 "immersive": isImmersive,
                 "appearance": UserInterfaceStyle.current.rawValue,
                 "currency": Currency.current.code,

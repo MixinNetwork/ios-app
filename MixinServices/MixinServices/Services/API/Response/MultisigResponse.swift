@@ -40,7 +40,20 @@ public enum MultisigState: String {
     case signed
 }
 
-public enum MultisigAction: String {
+public enum MultisigAction {
+    
     case sign
-    case unlock
+    case revoke
+    
+    public init?(string: String) {
+        switch string {
+        case "sign":
+            self = .sign
+        case "unlock", "revoke":
+            self = .revoke
+        default:
+            return nil
+        }
+    }
+    
 }

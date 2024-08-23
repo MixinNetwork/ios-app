@@ -165,11 +165,11 @@ class PayWindow: BottomSheetView {
                 renderMultisigInfo(senders: [UserItem.createUser(from: account)], receivers: receivers)
             case let .multisig(multisig, senders, receivers):
                 multisigView.isHidden = false
-                switch multisig.action {
-                case MultisigAction.sign.rawValue:
+                switch MultisigAction(string: multisig.action) {
+                case .sign:
                     multisigActionView.image = R.image.multisig_sign()
                     nameLabel.text = R.string.localizable.multisig_transaction()
-                case MultisigAction.unlock.rawValue:
+                case .revoke:
                     multisigActionView.image = R.image.multisig_revoke()
                     nameLabel.text = R.string.localizable.revoke_multisig_transaction()
                 default:
@@ -715,10 +715,10 @@ extension PayWindow: PinFieldDelegate {
                     weakSelf.failedHandler(error: error)
                 }
             }
-            switch multisig.action {
-            case MultisigAction.sign.rawValue:
+            switch MultisigAction(string: multisig.action) {
+            case .sign:
                 MultisigAPI.sign(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
-            case MultisigAction.unlock.rawValue:
+            case .revoke:
                 MultisigAPI.unlock(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
             default:
                 break

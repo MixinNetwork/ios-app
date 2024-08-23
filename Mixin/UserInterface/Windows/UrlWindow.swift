@@ -1741,9 +1741,10 @@ extension UrlWindow {
             let receiverUsers = users.filter { multisig.receivers.contains($0.userId) }
 
             var error = ""
-            if multisig.action == MultisigAction.sign.rawValue && multisig.state == MultisigState.signed.rawValue {
+            let action = MultisigAction(string: multisig.action)
+            if action == .sign && multisig.state == MultisigState.signed.rawValue {
                 error = R.string.localizable.multisig_state_signed()
-            } else if multisig.action == MultisigAction.unlock.rawValue && multisig.state == MultisigState.unlocked.rawValue {
+            } else if action == .revoke && multisig.state == MultisigState.unlocked.rawValue {
                 error = R.string.localizable.multisig_state_unlocked()
             }
 

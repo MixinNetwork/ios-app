@@ -94,9 +94,10 @@ extension UILabel {
     }
 
     func setFont(scaledFor font: UIFont, adjustForContentSize: Bool) {
-         self.font = UIFontMetrics.default.scaledFont(for: font)
-         self.adjustsFontForContentSizeCategory = adjustForContentSize
-     }
+        self.font = UIFontMetrics.default.scaledFont(for: font)
+        self.adjustsFontForContentSizeCategory = adjustForContentSize
+    }
+    
 }
 
 extension UIFont {

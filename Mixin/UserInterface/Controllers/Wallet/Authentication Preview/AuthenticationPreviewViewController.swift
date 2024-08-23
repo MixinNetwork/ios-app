@@ -47,6 +47,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.web3MessageCell)
         tableView.register(R.nib.web3AmountChangeCell)
         tableView.register(R.nib.swapAssetChangeCell)
+        tableView.register(R.nib.addressReceiversCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -170,6 +171,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.secondaryLabel.text = token
             }
             cell.setPrimaryLabel(usesBoldFont: boldPrimaryAmount)
+            cell.trailingContent = nil
             return cell
         case let .receivingAddress(value, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
@@ -192,6 +194,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.primaryLabel.text = primary
             cell.secondaryLabel.text = secondary
             cell.setPrimaryLabel(usesBoldFont: false)
+            cell.trailingContent = nil
             return cell
         case let .senders(users, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
@@ -242,7 +245,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.primaryLabel.text = tokenAmount
             cell.secondaryLabel.text = fiatMoneyAmount
             cell.setPrimaryLabel(usesBoldFont: false)
-            cell.disclosureImageView.isHidden = false
+            cell.trailingContent = .disclosure
             return cell
         case let .tokenAmount(token, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_amount, for: indexPath)!
@@ -254,6 +257,18 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
         case let .swapAssetChange(sendToken, sendAmount, receiveToken, receiveAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_asset_change, for: indexPath)!
             cell.reloadData(sendToken: sendToken, sendAmount: sendAmount, receiveToken: receiveToken, receiveAmount: receiveAmount)
+            return cell
+        case let .safeMultisigAmount(token, tokenAmount, fiatMoneyAmount):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
+            cell.captionLabel.text = R.string.localizable.total_amount().uppercased()
+            cell.primaryLabel.text = tokenAmount
+            cell.secondaryLabel.text = fiatMoneyAmount
+            cell.setPrimaryLabel(usesBoldFont: true)
+            cell.trailingContent = .plainTokenIcon(token)
+            return cell
+        case let .addressReceivers(token, receivers):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.address_receivers, for: indexPath)!
+            cell.reloadData(token: token, recipients: receivers)
             return cell
         }
     }
@@ -303,6 +318,7 @@ extension AuthenticationPreviewViewController {
         case price
         case slippage
         case from
+        case safe
         
         var rawValue: String {
             switch self {
@@ -338,6 +354,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.slippage()
             case .from:
                 R.string.localizable.from()
+            case .safe:
+                R.string.localizable.safe()
             }
         }
         
@@ -357,6 +375,8 @@ extension AuthenticationPreviewViewController {
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwappableToken, receiveAmount: String)
+        case safeMultisigAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
+        case addressReceivers(TokenItem, [SafeMultisigResponse.Safe.Recipient])
     }
     
     struct TableHeaderViewStyle: OptionSet {

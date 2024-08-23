@@ -42,6 +42,8 @@ let maxTextMessageContentLength = 64 * 1024
 let maxNumberOfTranscriptChildren = 99
 
 let notApplicable = "N/A"
+let mixinMessenger = "Mixin Messenger"
+let mixinSafe = "Mixin Safe"
 
 let minimumTransferAmount: Decimal = 0.000_000_01
 

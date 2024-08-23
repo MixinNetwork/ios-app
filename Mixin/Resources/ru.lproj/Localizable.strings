@@ -98,6 +98,10 @@
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";
 "appearance" = "Вид";
 "apply" = "Подать заявление";
+"approve" = "Approve";
+"approve_transaction" = "Approve Transaction";
+"approving_transaction" = "Approving Transaction";
+"approving_transaction_failed" = "Approving Transaction Failed";
 "asset_key" = "Ключ актива";
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Актив не найден.";
@@ -637,6 +641,7 @@
 "multisig_signed_description" = "Signature successful";
 "multisig_signing_description" = "Requesting. Please wait a moment.";
 "multisig_signing_failed" = "Multisig Signing Failed";
+"multisig_state_paid" = "This transaction has already collected enough signatures; the current signature has been automatically ignored.";
 "multisig_state_signed" = "Эта мультиподписная ссылка уже подписана вами, вы не можете сделать дублирующую операцию.";
 "multisig_state_unlocked" = "Эта мультиподписная ссылка уже кем-то разблокирована, дублировать операцию нельзя.";
 "multisig_transaction" = "Мультиподписная транзакция";
@@ -816,6 +821,10 @@
 "recent_searches" = "Недавние поиски";
 "recipients" = "Recipients";
 "refresh" = "Обновить";
+"reject" = "Reject";
+"reject_transaction" = "Reject Transaction";
+"rejecting_transaction" = "Rejecting Transaction";
+"rejecting_transaction_failed" = "Rejecting Transaction Failed";
 "release" = "Release";
 "reload" = "Перезагрузить";
 "remove_all" = "Убрать все";
@@ -871,6 +880,7 @@
 "revoking_multisig_failed" = "Revoking Multisig Failed";
 "revoking_multisig_signature" = "Revoking Multisig Signature";
 "room_is_full" = "Комната заполнена";
+"safe" = "SAFE";
 "save" = "Сохранить";
 "save_image" = "Сохранить изображение";
 "save_to_camera_roll" = "Сохранить в ленту камеры";
@@ -994,7 +1004,7 @@
 "sign_with_emergency_contact" = "Войти через контакт для экстренных случаев";
 "sign_with_phone_number" = "Войти через номер телефона";
 "signature_request" = "Signature Request";
-"signature_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
+"signature_request_from" = "This signature request is issued by %@.";
 "signed_message" = "SIGNED MESSAGE";
 "skip" = "Пропустить";
 "slide_to_cancel" = "Сдвиньте, чтобы отменить";
@@ -1063,13 +1073,17 @@
 "today" = "Сегодня";
 "token" = "Token";
 "total" = "Total";
+"total_amount" = "Total Amount";
 "total_supply" = "Total Supply";
 "touch_id" = "Сенсорный идентификатор";
 "track_not_found" = "Трек не найден";
 "transaction" = "Сделка";
+"transaction_approved" = "Transaction Approved";
+"transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Хэш транзакции";
 "transaction_history" = "Transaction History";
 "transaction_id" = "ID транзакции";
+"transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Тип операции";
 "transactions" = "Транзакции";

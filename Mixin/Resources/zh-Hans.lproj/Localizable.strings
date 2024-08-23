@@ -98,6 +98,10 @@
 "app_update_tips" = "当前版本（%@）已失效！请点击下方\"更新\"从 App Store 更新至最新版。";
 "appearance" = "外观";
 "apply" = "应用";
+"approve" = "批准";
+"approve_transaction" = "批准交易";
+"approving_transaction" = "正在批准";
+"approving_transaction_failed" = "批准失败";
 "asset_key" = "资产标识";
 "asset_migration_hint" = "您还有资产在旧的 Mixin 网络，点击查看。";
 "asset_not_found" = "找不到该资产";
@@ -637,6 +641,7 @@
 "multisig_signed_description" = "您的签名已成功";
 "multisig_signing_description" = "正在发送，请稍候。";
 "multisig_signing_failed" = "多签交易失败";
+"multisig_state_paid" = "这笔交易已成功收集到足够的签名，当前签名已被自动忽略。";
 "multisig_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 "multisig_transaction" = "多重签名交易";
@@ -816,6 +821,10 @@
 "recent_searches" = "最近搜索";
 "recipients" = "收款人";
 "refresh" = "刷新";
+"reject" = "拒绝";
+"reject_transaction" = "拒绝交易";
+"rejecting_transaction" = "正在拒绝";
+"rejecting_transaction_failed" = "拒绝失败";
 "release" = "分解";
 "reload" = "重新载入";
 "remove_all" = "全部删除";
@@ -871,6 +880,7 @@
 "revoking_multisig_failed" = "撤销多重签名交易失败";
 "revoking_multisig_signature" = "正在撤销多签交易";
 "room_is_full" = "房间已满";
+"safe" = "金库";
 "save" = "保存";
 "save_image" = "保存图片";
 "save_to_camera_roll" = "保存到相册";
@@ -994,7 +1004,7 @@
 "sign_with_emergency_contact" = "通过紧急联系人登录";
 "sign_with_phone_number" = "通过手机号登录";
 "signature_request" = "签名确认";
-"signature_request_from_mixin" = "该签名请求来自 Mixin Messenger。";
+"signature_request_from" = "该签名请求来自 %@。";
 "signed_message" = "签名";
 "skip" = "跳过";
 "slide_to_cancel" = "滑动取消";
@@ -1063,13 +1073,17 @@
 "today" = "今天";
 "token" = "代币";
 "total" = "共计";
+"total_amount" = "总金额";
 "total_supply" = "总量";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";
 "transaction" = "交易详情";
+"transaction_approved" = "批准成功";
+"transaction_failed" = "交易失败";
 "transaction_hash" = "交易哈希";
 "transaction_history" = "转账记录";
 "transaction_id" = "交易编号";
+"transaction_rejected" = "拒绝成功";
 "transaction_request" = "请求转账";
 "transaction_type" = "交易类型";
 "transactions" = "转账记录";

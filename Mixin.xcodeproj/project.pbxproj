@@ -938,6 +938,8 @@
 		9497AEEE2C5E69B000966946 /* TransactionHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */; };
 		94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94980FC62A5D653A0051AE6D /* IntroViewController.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
+		94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */; };
+		94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
 		94A3E6692C34575600556FBC /* MIXAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3E6682C34575600556FBC /* MIXAddress.swift */; };
 		94A40C472B2781AF0028BC02 /* TransferPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */; };
@@ -2274,6 +2276,8 @@
 		9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryView.xib; sourceTree = "<group>"; };
 		94980FC62A5D653A0051AE6D /* IntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
+		94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressReceiversCell.swift; sourceTree = "<group>"; };
+		94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressReceiversCell.xib; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
 		94A3E6682C34575600556FBC /* MIXAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIXAddress.swift; sourceTree = "<group>"; };
 		94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPaymentOperation.swift; sourceTree = "<group>"; };
@@ -3627,6 +3631,8 @@
 				94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */,
 				94B1E56A2C4A05BF00A2349F /* SwapAssetChangeCell.xib */,
 				94B1E5692C4A05BF00A2349F /* SwapAssetChangeCell.swift */,
+				94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */,
+				94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */,
 				9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */,
 				944C61F92B6BFD6F00C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.xib */,
 				944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */,
@@ -5093,6 +5099,7 @@
 				94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */,
 				94F9525D2AE6174A0025B995 /* TransferOutView.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
+				94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */,
 				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
 				941979552BA47782002BA19F /* Web3MessageCell.xib in Resources */,
@@ -5694,6 +5701,7 @@
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
 				940764C529B26B0B00B779A6 /* PropertyListEncoder+Global.swift in Sources */,
 				7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */,
+				94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */,
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
 				7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */,
 				94E1D44E29E9393C00511267 /* DeviceTransferServer.swift in Sources */,

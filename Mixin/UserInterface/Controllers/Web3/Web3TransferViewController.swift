@@ -67,7 +67,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
                                   style: .destructive)
         case .web3ToMixinWallet, .web3ToAddress:
             layoutTableHeaderView(title: title,
-                                  subtitle: R.string.localizable.signature_request_from_mixin(),
+                                  subtitle: R.string.localizable.signature_request_from(mixinMessenger),
                                   style: [])
         }
         

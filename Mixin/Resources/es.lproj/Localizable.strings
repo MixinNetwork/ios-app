@@ -98,6 +98,10 @@
 "app_update_tips" = "¡La versión actual (%@) ya no está disponible! Haz clic en Actualizar a continuación para actualizar a la última versión de la App Store.";
 "appearance" = "Apariencia";
 "apply" = "Aplicar";
+"approve" = "Approve";
+"approve_transaction" = "Approve Transaction";
+"approving_transaction" = "Approving Transaction";
+"approving_transaction_failed" = "Approving Transaction Failed";
 "asset_key" = "Clave de activo";
 "asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Activo no encontrado.";
@@ -637,6 +641,7 @@
 "multisig_signed_description" = "Signature successful";
 "multisig_signing_description" = "Requesting. Please wait a moment.";
 "multisig_signing_failed" = "Multisig Signing Failed";
+"multisig_state_paid" = "This transaction has already collected enough signatures; the current signature has been automatically ignored.";
 "multisig_state_signed" = "Este enlace multisig ya ha sido firmado por ti mismo, no puedes realizar una operación duplicada.";
 "multisig_state_unlocked" = "Este enlace multisig ya fue desbloqueado por alguien, no se puede hacer una operación duplicada.";
 "multisig_transaction" = "Transacción multigrado";
@@ -816,6 +821,10 @@
 "recent_searches" = "Búsquedas recientes";
 "recipients" = "Recipients";
 "refresh" = "Actualizar";
+"reject" = "Reject";
+"reject_transaction" = "Reject Transaction";
+"rejecting_transaction" = "Rejecting Transaction";
+"rejecting_transaction_failed" = "Rejecting Transaction Failed";
 "release" = "Release";
 "reload" = "Recargar";
 "remove_all" = "Eliminar todo";
@@ -871,6 +880,7 @@
 "revoking_multisig_failed" = "Revoking Multisig Failed";
 "revoking_multisig_signature" = "Revoking Multisig Signature";
 "room_is_full" = "El cuarto está lleno";
+"safe" = "SAFE";
 "save" = "Guardar";
 "save_image" = "Guardar imagen";
 "save_to_camera_roll" = "Guarda en el Rollo de la cámara";
@@ -994,7 +1004,7 @@
 "sign_with_emergency_contact" = "Iniciar sesión con contacto de emergencia";
 "sign_with_phone_number" = "Iniciar sesión con número de teléfono";
 "signature_request" = "Signature Request";
-"signature_request_from_mixin" = "This signature request is issued by Mixin Messenger.";
+"signature_request_from" = "This signature request is issued by %@.";
 "signed_message" = "SIGNED MESSAGE";
 "skip" = "Saltar";
 "slide_to_cancel" = "Deslizar para cancelar";
@@ -1063,13 +1073,17 @@
 "today" = "Hoy";
 "token" = "Token";
 "total" = "Total";
+"total_amount" = "Total Amount";
 "total_supply" = "Total Supply";
 "touch_id" = "identifición de toque";
 "track_not_found" = "Pista no encontrada";
 "transaction" = "Transacción";
+"transaction_approved" = "Transaction Approved";
+"transaction_failed" = "Transaction Failed";
 "transaction_hash" = "Hash de transacción";
 "transaction_history" = "Transaction History";
 "transaction_id" = "ID de transacción";
+"transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Tipo de transacción";
 "transactions" = "Transacciones";

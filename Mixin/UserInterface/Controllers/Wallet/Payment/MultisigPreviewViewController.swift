@@ -7,7 +7,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     enum State {
         case paid
         case signed
-        case unlocked
+        case revoked
         case pending
     }
     
@@ -36,7 +36,8 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     private let action: MultisigAction
     private let index: Int
     private let state: State
-
+    private let safe: SafeMultisigResponse.Safe?
+    
     init(
         requestID: String,
         token: TokenItem,
@@ -49,7 +50,8 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         viewKeys: String,
         action: MultisigAction,
         index: Int,
-        state: State
+        state: State,
+        safe: SafeMultisigResponse.Safe?
     ) {
         self.requestID = requestID
         self.token = token
@@ -63,6 +65,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         self.action = action
         self.index = index
         self.state = state
+        self.safe = safe
         super.init(warnings: [])
     }
     
@@ -73,43 +76,58 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        switch state {
-        case .paid:
-            tableHeaderView.setIcon(progress: .failure)
-            tableHeaderView.titleLabel.text = switch action {
-            case .sign:
-                R.string.localizable.multisig_transaction()
-            case .unlock:
-                R.string.localizable.revoke_multisig_transaction()
+        if let _ = safe {
+            switch state {
+            case .paid:
+                tableHeaderView.setIcon(progress: .success)
+                tableHeaderView.titleLabel.text = R.string.localizable.transaction_approved()
+                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe) + R.string.localizable.multisig_state_paid()
+            case .signed, .revoked, .pending:
+                tableHeaderView.setIcon { imageView in
+                    imageView.image = R.image.transaction_checklist()
+                }
+                switch action {
+                case .sign:
+                    tableHeaderView.titleLabel.text = R.string.localizable.approve_transaction()
+                case .unlock:
+                    tableHeaderView.titleLabel.text = R.string.localizable.reject_transaction()
+                }
+                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe)
             }
-            tableHeaderView.subtitleLabel.text = R.string.localizable.pay_paid()
-        case .signed:
-            tableHeaderView.setIcon(progress: .failure)
-            tableHeaderView.titleLabel.text = switch action {
-            case .sign:
-                R.string.localizable.multisig_transaction()
-            case .unlock:
-                R.string.localizable.revoke_multisig_transaction()
-            }
-            tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_signed()
-        case .unlocked:
-            tableHeaderView.setIcon(progress: .failure)
-            tableHeaderView.titleLabel.text = switch action {
-            case .sign:
-                R.string.localizable.multisig_transaction()
-            case .unlock:
-                R.string.localizable.revoke_multisig_transaction()
-            }
-            tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_unlocked()
-        case .pending:
-            tableHeaderView.setIcon(token: token)
-            switch action {
-            case .sign:
-                tableHeaderView.titleLabel.text = R.string.localizable.confirm_signing_multisig()
-                tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
-            case .unlock:
-                tableHeaderView.titleLabel.text = R.string.localizable.revoke_multisig_signature()
-                tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+        } else {
+            switch state {
+            case .paid:
+                tableHeaderView.setIcon(progress: .success)
+                tableHeaderView.titleLabel.text = R.string.localizable.multisig_signed()
+                tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_paid()
+            case .signed:
+                tableHeaderView.setIcon(progress: .failure)
+                tableHeaderView.titleLabel.text = switch action {
+                case .sign:
+                    R.string.localizable.multisig_transaction()
+                case .unlock:
+                    R.string.localizable.revoke_multisig_transaction()
+                }
+                tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_signed()
+            case .revoked:
+                tableHeaderView.setIcon(progress: .failure)
+                tableHeaderView.titleLabel.text = switch action {
+                case .sign:
+                    R.string.localizable.multisig_transaction()
+                case .unlock:
+                    R.string.localizable.revoke_multisig_transaction()
+                }
+                tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_unlocked()
+            case .pending:
+                tableHeaderView.setIcon(token: token)
+                switch action {
+                case .sign:
+                    tableHeaderView.titleLabel.text = R.string.localizable.confirm_signing_multisig()
+                    tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+                case .unlock:
+                    tableHeaderView.titleLabel.text = R.string.localizable.revoke_multisig_signature()
+                    tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+                }
             }
         }
         
@@ -119,42 +137,101 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
-        let rows: [Row] = [
-            .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: true),
-            .receivers(receivers, threshold: receiversThreshold),
-            .senders(senders, threshold: sendersThreshold),
-            .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
-            .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
-            .info(caption: .network, content: token.depositNetworkName ?? ""),
-        ]
+        var rows: [Row]
+        if let safe {
+            rows = [
+                .safeMultisigAmount(token: token, tokenAmount: tokenValue, fiatMoneyAmount: fiatMoneyValue),
+                .info(caption: .sender, content: safe.address),
+                .info(caption: .safe, content: safe.name),
+            ]
+            switch safe.operation {
+            case .transaction(let transaction):
+                rows.insert(.addressReceivers(token, transaction.recipients), at: 2)
+            case .recovery(let recovery):
+                break
+            }
+        } else {
+            rows = [
+                .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: true),
+                .receivers(receivers, threshold: receiversThreshold),
+                .senders(senders, threshold: sendersThreshold),
+                .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
+                .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
+                .info(caption: .network, content: token.depositNetworkName ?? ""),
+            ]
+        }
+        
         reloadData(with: rows)
     }
     
     override func loadInitialTrayView(animated: Bool) {
-        switch state {
-        case .paid, .signed, .unlocked:
-            loadSingleButtonTrayView(title: R.string.localizable.got_it(),
-                                     action: #selector(close(_:)))
-        case .pending:
-            loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
-                                     leftAction: #selector(close(_:)),
-                                     rightTitle: R.string.localizable.confirm(),
-                                     rightAction: #selector(confirm(_:)),
-                                     animation: animated ? .vertical : nil)
+        if safe == nil {
+            switch state {
+            case .paid, .signed, .revoked:
+                loadSingleButtonTrayView(title: R.string.localizable.got_it(),
+                                         action: #selector(close(_:)))
+            case .pending:
+                loadDoubleButtonTrayView(
+                    leftTitle: R.string.localizable.cancel(),
+                    leftAction: #selector(close(_:)),
+                    rightTitle: R.string.localizable.confirm(),
+                    rightAction: #selector(confirm(_:)),
+                    animation: animated ? .vertical : nil
+                )
+            }
+        } else {
+            switch state {
+            case .paid:
+                loadSingleButtonTrayView(title: R.string.localizable.got_it(),
+                                         action: #selector(close(_:)))
+            case .signed, .revoked, .pending:
+                switch action {
+                case .sign:
+                    loadDoubleButtonTrayView(
+                        leftTitle: R.string.localizable.cancel(),
+                        leftAction: #selector(close(_:)),
+                        rightTitle: R.string.localizable.approve(),
+                        rightAction: #selector(confirm(_:)),
+                        animation: animated ? .vertical : nil
+                    )
+                case .unlock:
+                    loadDoubleButtonTrayView(
+                        leftTitle: R.string.localizable.cancel(),
+                        leftAction: #selector(close(_:)),
+                        rightTitle: R.string.localizable.reject(),
+                        rightAction: #selector(confirm(_:)),
+                        animation: animated ? .vertical : nil
+                    )
+                    if let trayView = trayView as? AuthenticationPreviewDoubleButtonTrayView {
+                        trayView.rightButton.backgroundColor = UIColor(displayP3RgbValue: 0xEB5757)
+                    }
+                }
+            }
         }
     }
     
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        switch action {
+        let (title, subtitle) = switch action {
         case .sign:
-            layoutTableHeaderView(title: R.string.localizable.sending_multisig_signature(),
-                                  subtitle: R.string.localizable.multisig_signing_description())
+            if safe == nil {
+                (R.string.localizable.sending_multisig_signature(),
+                 R.string.localizable.multisig_signing_description())
+            } else {
+                (R.string.localizable.approving_transaction(),
+                 R.string.localizable.signature_request_from(mixinSafe))
+            }
         case .unlock:
-            layoutTableHeaderView(title: R.string.localizable.revoking_multisig_signature(),
-                                  subtitle: R.string.localizable.multisig_unlocking_description())
+            if safe == nil {
+                (R.string.localizable.revoking_multisig_signature(),
+                 R.string.localizable.multisig_unlocking_description())
+            } else {
+                (R.string.localizable.rejecting_transaction(),
+                 R.string.localizable.signature_request_from(mixinSafe))
+            }
         }
+        layoutTableHeaderView(title: title, subtitle: subtitle)
         replaceTrayView(with: nil, animation: .vertical)
         Task {
             do {
@@ -177,14 +254,25 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
-                    switch action {
+                    let (title, subtitle) = switch action {
                     case .sign:
-                        layoutTableHeaderView(title: R.string.localizable.multisig_signed(),
-                                              subtitle: R.string.localizable.multisig_signed_description())
+                        if safe == nil {
+                            (R.string.localizable.multisig_signed(),
+                             R.string.localizable.multisig_signed_description())
+                        } else {
+                            (R.string.localizable.transaction_approved(),
+                             R.string.localizable.signature_request_from(mixinSafe))
+                        }
                     case .unlock:
-                        layoutTableHeaderView(title: R.string.localizable.multisig_revoked(),
-                                              subtitle: R.string.localizable.multisig_unlocked_description())
+                        if safe == nil {
+                            (R.string.localizable.multisig_revoked(),
+                             R.string.localizable.multisig_unlocked_description())
+                        } else {
+                            (R.string.localizable.transaction_rejected(),
+                             R.string.localizable.signature_request_from(mixinSafe))
+                        }
                     }
+                    layoutTableHeaderView(title: title, subtitle: subtitle)
                     tableView.setContentOffset(.zero, animated: true)
                     loadSingleButtonTrayView(title: R.string.localizable.done(),
                                              action: #selector(close(_:)))
@@ -200,9 +288,17 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                     tableHeaderView.setIcon(progress: .failure)
                     let title = switch action {
                     case .sign:
-                        R.string.localizable.multisig_signing_failed()
+                        if safe == nil {
+                            R.string.localizable.multisig_signing_failed()
+                        } else {
+                            R.string.localizable.approving_transaction_failed()
+                        }
                     case .unlock:
-                        R.string.localizable.revoking_multisig_failed()
+                        if safe == nil {
+                            R.string.localizable.revoking_multisig_failed()
+                        } else {
+                            R.string.localizable.rejecting_transaction_failed()
+                        }
                     }
                     layoutTableHeaderView(title: title,
                                           subtitle: errorDescription,

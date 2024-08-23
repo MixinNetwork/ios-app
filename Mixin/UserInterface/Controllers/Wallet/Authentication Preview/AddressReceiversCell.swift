@@ -49,7 +49,7 @@ final class AddressReceiversCell: UITableViewCell {
             addressLabel.lineBreakMode = .byCharWrapping
             addSubview(addressLabel)
             addressLabel.snp.makeConstraints { make in
-                make.leading.top.bottom.equalToSuperview()
+                make.leading.bottom.equalToSuperview()
                 make.width.equalToSuperview().multipliedBy(200.0 / 320.0)
             }
             
@@ -73,27 +73,40 @@ final class AddressReceiversCell: UITableViewCell {
                 labelLabel.text = label
                 addSubview(labelLabel)
                 labelLabel.snp.makeConstraints { make in
-                    make.top.equalTo(addressLabel).offset(-2)
-                    make.leading.equalTo(addressLabel)
+                    make.top.equalToSuperview().offset(-2)
+                    make.leading.equalToSuperview()
                     make.trailing.lessThanOrEqualTo(addressLabel.snp.trailing)
                 }
                 labelLabel.layer.borderWidth = 1
                 labelLabel.layer.masksToBounds = true
                 self.labelLabel = labelLabel
                 
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.firstLineHeadIndent = labelLabel.intrinsicContentSize.width + addressLabelSpacing
-                paragraphStyle.lineSpacing = 1
-                addressLabel.attributedText = NSAttributedString(string: address, attributes: [
-                    .paragraphStyle: paragraphStyle,
+                var addressAttributes: [NSAttributedString.Key: Any] = [
                     .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
                     .foregroundColor: R.color.text_secondary()!,
-                ])
+                ]
+                if labelLabel.intrinsicContentSize.width < 100 {
+                    let paragraphStyle = NSMutableParagraphStyle()
+                    paragraphStyle.firstLineHeadIndent = labelLabel.intrinsicContentSize.width + addressLabelSpacing
+                    paragraphStyle.lineSpacing = 1
+                    addressAttributes[.paragraphStyle] = paragraphStyle
+                    addressLabel.snp.makeConstraints { make in
+                        make.top.equalToSuperview()
+                    }
+                } else {
+                    addressLabel.snp.makeConstraints { make in
+                        make.top.equalTo(labelLabel.snp.bottom)
+                    }
+                }
+                addressLabel.attributedText = NSAttributedString(string: address, attributes: addressAttributes)
                 updateLabelBorderColor()
             } else {
                 addressLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
                 addressLabel.textColor = R.color.text_secondary()
                 addressLabel.text = address
+                addressLabel.snp.makeConstraints { make in
+                    make.top.equalToSuperview()
+                }
             }
         }
         

@@ -217,8 +217,8 @@ extension SafeAPI {
         try await Self.request(method: .post, path: "/safe/multisigs/\(id)/sign", parameters: request)
     }
     
-    public static func unlockMultisigs(id: String) async throws -> Empty {
-        try await request(method: .post, path: "/safe/multisigs/\(id)/unlock")
+    public static func revokeMultisigs(id: String) async throws -> Empty {
+        try await request(method: .post, path: "/safe/multisigs/\(id)/revoke")
     }
     
 }

@@ -22,7 +22,7 @@ struct MultisigURL {
             return nil
         }
         if let actionValue = components.queryItems?.first(where: { $0.name == "action" })?.value {
-            if let multisigAction = MultisigAction(rawValue: actionValue) {
+            if let multisigAction = MultisigAction(string: actionValue) {
                 action = multisigAction
             } else {
                 return nil

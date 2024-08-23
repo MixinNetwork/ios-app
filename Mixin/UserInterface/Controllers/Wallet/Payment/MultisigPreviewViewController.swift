@@ -89,7 +89,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 switch action {
                 case .sign:
                     tableHeaderView.titleLabel.text = R.string.localizable.approve_transaction()
-                case .unlock:
+                case .revoke:
                     tableHeaderView.titleLabel.text = R.string.localizable.reject_transaction()
                 }
                 tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe)
@@ -105,7 +105,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 tableHeaderView.titleLabel.text = switch action {
                 case .sign:
                     R.string.localizable.multisig_transaction()
-                case .unlock:
+                case .revoke:
                     R.string.localizable.revoke_multisig_transaction()
                 }
                 tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_signed()
@@ -114,7 +114,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 tableHeaderView.titleLabel.text = switch action {
                 case .sign:
                     R.string.localizable.multisig_transaction()
-                case .unlock:
+                case .revoke:
                     R.string.localizable.revoke_multisig_transaction()
                 }
                 tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_unlocked()
@@ -124,7 +124,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 case .sign:
                     tableHeaderView.titleLabel.text = R.string.localizable.confirm_signing_multisig()
                     tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
-                case .unlock:
+                case .revoke:
                     tableHeaderView.titleLabel.text = R.string.localizable.revoke_multisig_signature()
                     tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
                 }
@@ -194,7 +194,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                         rightAction: #selector(confirm(_:)),
                         animation: animated ? .vertical : nil
                     )
-                case .unlock:
+                case .revoke:
                     loadDoubleButtonTrayView(
                         leftTitle: R.string.localizable.cancel(),
                         leftAction: #selector(close(_:)),
@@ -222,7 +222,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 (R.string.localizable.approving_transaction(),
                  R.string.localizable.signature_request_from(mixinSafe))
             }
-        case .unlock:
+        case .revoke:
             if safe == nil {
                 (R.string.localizable.revoking_multisig_signature(),
                  R.string.localizable.multisig_unlocking_description())
@@ -247,8 +247,8 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                     }
                     let request = TransactionRequest(id: requestID, raw: signature.raw)
                     _ = try await SafeAPI.signMultisigs(id: requestID, request: request)
-                case .unlock:
-                    _ = try await SafeAPI.unlockMultisigs(id: requestID)
+                case .revoke:
+                    _ = try await SafeAPI.revokeMultisigs(id: requestID)
                 }
                 
                 await MainActor.run {
@@ -263,7 +263,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                             (R.string.localizable.transaction_approved(),
                              R.string.localizable.signature_request_from(mixinSafe))
                         }
-                    case .unlock:
+                    case .revoke:
                         if safe == nil {
                             (R.string.localizable.multisig_revoked(),
                              R.string.localizable.multisig_unlocked_description())
@@ -293,7 +293,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                         } else {
                             R.string.localizable.approving_transaction_failed()
                         }
-                    case .unlock:
+                    case .revoke:
                         if safe == nil {
                             R.string.localizable.revoking_multisig_failed()
                         } else {

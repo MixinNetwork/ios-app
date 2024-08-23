@@ -23,6 +23,14 @@ public struct SemanticVersion: InstanceInitializable {
     
 }
 
+extension SemanticVersion: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        "<SemanticVersion \(major).\(minor).\(patch)>"
+    }
+    
+}
+
 extension SemanticVersion: Equatable {
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -34,11 +42,15 @@ extension SemanticVersion: Equatable {
 extension SemanticVersion: Comparable {
     
     public static func < (lhs: Self, rhs: Self) -> Bool {
-        lhs.major < rhs.major || lhs.minor < rhs.minor || lhs.patch < rhs.patch
+        lhs.major < rhs.major
+        || (lhs.major == rhs.major && lhs.minor < rhs.minor)
+        || (lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch < rhs.patch)
     }
     
     public static func > (lhs: Self, rhs: Self) -> Bool {
-        lhs.major > rhs.major || lhs.minor > rhs.minor || lhs.patch > rhs.patch
+        lhs.major > rhs.major
+        || (lhs.major == rhs.major && lhs.minor > rhs.minor)
+        || (lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch > rhs.patch)
     }
     
 }

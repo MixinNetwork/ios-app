@@ -120,7 +120,7 @@ extension Account: Codable {
         hasSafe = try container.decodeIfPresent(Bool.self, forKey: .hasSafe) ?? false
         salt = try container.decodeIfPresent(String.self, forKey: .salt)
         membership = try container.decodeIfPresent(User.Membership.self, forKey: .membership)
-        system = try container.decodeIfPresent(System.self, forKey: .system)
+        system = try? container.decodeIfPresent(System.self, forKey: .system)
     }
     
 }

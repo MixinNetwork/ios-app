@@ -1283,8 +1283,10 @@ extension UrlWindow {
                     state = .paid
                 } else if multisig.action == .sign && response.signers.contains(myUserId) {
                     state = .signed
-                } else if multisig.action == .unlock && response.signers.isEmpty {
-                    state = .unlocked
+                } else if let revoker = response.revokedBy, !revoker.isEmpty {
+                    // Not in used currently. Remove `revokedBy` checking in previous to activate
+                    // this path after new design is confirmed
+                    state = .revoked
                 } else {
                     state = .pending
                 }

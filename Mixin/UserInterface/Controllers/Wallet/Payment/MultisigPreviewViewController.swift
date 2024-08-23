@@ -7,7 +7,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     enum State {
         case paid
         case signed
-        case unlocked
+        case revoked
         case pending
     }
     
@@ -82,7 +82,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 tableHeaderView.setIcon(progress: .success)
                 tableHeaderView.titleLabel.text = R.string.localizable.transaction_approved()
                 tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe) + R.string.localizable.multisig_state_paid()
-            case .signed, .unlocked, .pending:
+            case .signed, .revoked, .pending:
                 tableHeaderView.setIcon { imageView in
                     imageView.image = R.image.transaction_checklist()
                 }
@@ -109,7 +109,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                     R.string.localizable.revoke_multisig_transaction()
                 }
                 tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_signed()
-            case .unlocked:
+            case .revoked:
                 tableHeaderView.setIcon(progress: .failure)
                 tableHeaderView.titleLabel.text = switch action {
                 case .sign:
@@ -167,7 +167,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     override func loadInitialTrayView(animated: Bool) {
         if safe == nil {
             switch state {
-            case .paid, .signed, .unlocked:
+            case .paid, .signed, .revoked:
                 loadSingleButtonTrayView(title: R.string.localizable.got_it(),
                                          action: #selector(close(_:)))
             case .pending:
@@ -184,7 +184,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
             case .paid:
                 loadSingleButtonTrayView(title: R.string.localizable.got_it(),
                                          action: #selector(close(_:)))
-            case .signed, .unlocked, .pending:
+            case .signed, .revoked, .pending:
                 switch action {
                 case .sign:
                     loadDoubleButtonTrayView(

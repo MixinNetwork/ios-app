@@ -404,15 +404,15 @@ extension MixinWebViewController: WKScriptMessageHandler {
             dismissAsChild(animated: true, completion: nil)
         case .getTIPAddress:
             if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 2 {
-                let chainId = body[0]
+                // let chainId = body[0]
                 let callback = body[1]
                 let address = "" // Empty address as rejection
                 webView.evaluateJavaScript("\(callback)('\(address)');")
             }
         case .tipSign:
             if WalletConnectService.isAvailable, let body = message.body as? [String], body.count == 3 {
-                let chainId = body[0]
-                let message = body[1]
+                // let chainId = body[0]
+                // let message = body[1]
                 let callback = body[2]
                 let signature = "" // Empty signature as rejection
                 webView.evaluateJavaScript("\(callback)('\(signature)');")

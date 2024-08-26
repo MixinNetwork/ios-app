@@ -546,7 +546,7 @@ extension PayWindow: PinFieldDelegate {
             guard let self = self else {
                 return
             }
-            var message = description
+            let message = description
             switch error {
             case .malformedPin, .incorrectPin, .insufficientPool, .internalServerError:
                 self.errorContinueAction = .retryPin

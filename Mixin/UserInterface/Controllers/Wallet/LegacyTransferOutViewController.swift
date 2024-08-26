@@ -183,7 +183,6 @@ class LegacyTransferOutViewController: KeyboardBasedLayoutViewController {
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
 
-        let feeAsset = self.feeAsset
         let traceId = self.traceId
         let payWindow = PayWindow.instance()
         payWindow.onDismiss = { [weak self] in

@@ -5,11 +5,7 @@ final class CollectiblesViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
-    @IBOutlet weak var contentSwitchWrapperView: UIView!
-    @IBOutlet weak var itemImageView: UIImageView!
-    @IBOutlet weak var collectionImageView: UIImageView!
-    @IBOutlet weak var showItemButton: UIButton!
-    @IBOutlet weak var showCollectionButton: UIButton!
+    @IBOutlet weak var contentSegmentedControl: OutlineSegmentedControl!
     @IBOutlet weak var sortButton: OutlineButton!
     
     private let hiddenSearchTopMargin: CGFloat = -28
@@ -26,10 +22,16 @@ final class CollectiblesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         sortButton.semanticContentAttribute = .forceRightToLeft
-        contentSwitchWrapperView.layer.cornerRadius = 19
-        contentSwitchWrapperView.layer.borderWidth = 1
-        contentSwitchWrapperView.layer.masksToBounds = true
-        updateContentSelection()
+        contentSegmentedControl.items = [
+            R.image.collectible_tab_item()!,
+            R.image.collectible_tab_collection()!,
+        ]
+        switch content {
+        case .item:
+            contentSegmentedControl.selectItem(at: 0)
+        case .collection:
+            contentSegmentedControl.selectItem(at: 1)
+        }
         updateOrderingSelection()
         sortButton.layer.cornerRadius = 19
         sortButton.layer.masksToBounds = true
@@ -123,17 +125,18 @@ final class CollectiblesViewController: UIViewController {
         navigationController?.pushViewController(settings, animated: true)
     }
     
-    @IBAction func showItems(_ sender: Any) {
-        content = .item
-        AppGroupUserDefaults.User.collectibleContent = .item
-        updateContentSelection()
-        reloadData()
-    }
-    
-    @IBAction func showCollections(_ sender: Any) {
-        content = .collection
-        AppGroupUserDefaults.User.collectibleContent = .collection
-        updateContentSelection()
+    @IBAction func segmentValueChanged(_ control: OutlineSegmentedControl) {
+        let content: CollectibleDisplayContent
+        switch control.selectedItemIndex {
+        case 0:
+            content = .item
+        case 1:
+            content = .collection
+        default:
+            return
+        }
+        self.content = content
+        AppGroupUserDefaults.User.collectibleContent = content
         reloadData()
     }
     
@@ -221,22 +224,11 @@ final class CollectiblesViewController: UIViewController {
     }
     
     private func updateOutlineColors() {
-        contentSwitchWrapperView.layer.borderColor = R.color
+        contentSegmentedControl.layer.borderColor = R.color
             .collectible_outline()!
             .resolvedColor(with: traitCollection)
             .cgColor
         sortButton.updateColors()
-    }
-    
-    private func updateContentSelection() {
-        switch content {
-        case .item:
-            itemImageView.tintColor = R.color.theme()!
-            collectionImageView.tintColor = R.color.icon_tint()!
-        case .collection:
-            itemImageView.tintColor = R.color.icon_tint()!
-            collectionImageView.tintColor = R.color.theme()!
-        }
     }
     
     private func updateOrderingSelection() {

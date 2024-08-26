@@ -53,17 +53,19 @@ extension SafeMultisigResponse {
         public enum Operation: Decodable {
             
             enum CodingKeys: CodingKey {
+                case note
                 case transaction
                 case recovery
             }
             
-            case transaction(Transaction)
+            case transaction(Transaction, note: String)
             case recovery(Recovery)
             
             public init(from decoder: any Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
                 if let transaction = try container.decodeIfPresent(Transaction.self, forKey: .transaction) {
-                    self = .transaction(transaction)
+                    let note = try container.decode(String.self, forKey: .note)
+                    self = .transaction(transaction, note: note)
                 } else if let recovery = try container.decodeIfPresent(Recovery.self, forKey: .recovery) {
                     self = .recovery(recovery)
                 } else {

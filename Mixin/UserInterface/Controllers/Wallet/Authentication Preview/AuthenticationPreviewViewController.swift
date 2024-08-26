@@ -319,6 +319,7 @@ extension AuthenticationPreviewViewController {
         case slippage
         case from
         case safe
+        case note
         
         var rawValue: String {
             switch self {
@@ -356,6 +357,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.from()
             case .safe:
                 R.string.localizable.safe()
+            case .note:
+                R.string.localizable.note()
             }
         }
         

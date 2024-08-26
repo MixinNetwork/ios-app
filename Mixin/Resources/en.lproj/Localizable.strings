@@ -701,6 +701,7 @@
 "not_now" = "Not Now";
 "not_playing" = "Not playing";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
+"note" = "Note";
 "notification_and_confirmation" = "Notification and Confirmation";
 "notification_content" = "Don't miss messages from your friends.";
 "notification_message_preview_description" = "Preview message text inside new message notifications.";

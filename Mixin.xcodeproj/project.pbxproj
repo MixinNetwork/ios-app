@@ -801,6 +801,7 @@
 		944A5A772C2605720021460C /* CollectibleCollectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */; };
 		944A5A7C2C260D220021460C /* CollectibleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944A5A7B2C260D220021460C /* CollectibleCollectionViewController.swift */; };
 		944B1BEE2A4CB0AA00C36B61 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 944B1BED2A4CB0AA00C36B61 /* CryptoSwift */; };
+		944BC2D32C7C71B4008700A8 /* OutlineSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944BC2D22C7C71B4008700A8 /* OutlineSegmentedControl.swift */; };
 		944C608F2B6A79FA00C7DF06 /* AuthenticationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C608D2B6A79FA00C7DF06 /* AuthenticationPreviewViewController.swift */; };
 		944C60FC2B6A896400C7DF06 /* AuthenticationPreviewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C60FB2B6A896400C7DF06 /* AuthenticationPreviewHeaderView.swift */; };
 		944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944C60FD2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib */; };
@@ -2143,6 +2144,7 @@
 		944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCollectionHeaderView.swift; sourceTree = "<group>"; };
 		944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectibleCollectionHeaderView.xib; sourceTree = "<group>"; };
 		944A5A7B2C260D220021460C /* CollectibleCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCollectionViewController.swift; sourceTree = "<group>"; };
+		944BC2D22C7C71B4008700A8 /* OutlineSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineSegmentedControl.swift; sourceTree = "<group>"; };
 		944C608D2B6A79FA00C7DF06 /* AuthenticationPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewViewController.swift; sourceTree = "<group>"; };
 		944C60FB2B6A896400C7DF06 /* AuthenticationPreviewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewHeaderView.swift; sourceTree = "<group>"; };
 		944C60FD2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationPreviewHeaderView.xib; sourceTree = "<group>"; };
@@ -2964,6 +2966,7 @@
 				7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */,
 				94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */,
 				9406F58E2C256C7900DDE060 /* OutlineButton.swift */,
+				944BC2D22C7C71B4008700A8 /* OutlineSegmentedControl.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5787,6 +5790,7 @@
 				7CEB736C29DBD1C0006FB5B2 /* DeviceTransferMessage.swift in Sources */,
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
+				944BC2D32C7C71B4008700A8 /* OutlineSegmentedControl.swift in Sources */,
 				7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				9401A6072BDAA74A00679686 /* Web3AccountCell.swift in Sources */,
 				945AA6582567B18200B39415 /* Country.swift in Sources */,

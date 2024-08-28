@@ -361,6 +361,7 @@ extension TokenViewController: UITableViewDataSource {
             cell.reloadData(token: token)
             cell.actionView.actions = [.send, .receive, .swap]
             cell.actionView.delegate = self
+            cell.delegate = self
             return cell
         case .market:
             switch MarketRow(rawValue: indexPath.row)! {
@@ -524,6 +525,16 @@ extension TokenViewController: SnapshotCellDelegate {
                 self?.present(vc, animated: true, completion: nil)
             }
         }
+    }
+    
+}
+
+extension TokenViewController: TokenBalanceCellDelegate {
+    
+    func tokenBalanceCellWantsToRevealOutputs(_ cell: TokenBalanceCell) {
+        let outputs = OutputsViewController(token: token)
+        let container = ContainerViewController.instance(viewController: outputs, title: "Outputs")
+        navigationController?.pushViewController(container, animated: true)
     }
     
 }

@@ -18,9 +18,9 @@ final class AddressReceiversCell: UITableViewCell {
             view.removeFromSuperview()
         }
         captionLabel.text = if recipients.count > 1 {
-            R.string.localizable.receivers()
+            R.string.localizable.receivers().uppercased()
         } else {
-            R.string.localizable.receiver()
+            R.string.localizable.receiver().uppercased()
         }
         for recipient in recipients {
             let amount = CurrencyFormatter.localizedString(

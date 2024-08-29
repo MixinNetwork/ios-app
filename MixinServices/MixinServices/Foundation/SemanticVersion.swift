@@ -34,7 +34,7 @@ extension SemanticVersion: CustomDebugStringConvertible {
 extension SemanticVersion: Equatable {
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch == rhs.patch
+        (lhs.major, lhs.minor, lhs.patch) == (rhs.major, rhs.minor, rhs.patch)
     }
     
 }
@@ -42,15 +42,11 @@ extension SemanticVersion: Equatable {
 extension SemanticVersion: Comparable {
     
     public static func < (lhs: Self, rhs: Self) -> Bool {
-        lhs.major < rhs.major
-        || (lhs.major == rhs.major && lhs.minor < rhs.minor)
-        || (lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch < rhs.patch)
+        (lhs.major, lhs.minor, lhs.patch) < (rhs.major, rhs.minor, rhs.patch)
     }
     
     public static func > (lhs: Self, rhs: Self) -> Bool {
-        lhs.major > rhs.major
-        || (lhs.major == rhs.major && lhs.minor > rhs.minor)
-        || (lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch > rhs.patch)
+        (lhs.major, lhs.minor, lhs.patch) > (rhs.major, rhs.minor, rhs.patch)
     }
     
 }

@@ -42,8 +42,7 @@ struct SwapRequest: Encodable {
         sendToken: TokenItem,
         sendAmount: Decimal,
         receiveToken: SwappableToken,
-        slippage: Decimal,
-        source: RouteTokenSource
+        slippage: Decimal
     ) -> SwapRequest {
         SwapRequest(
             payer: myUserId,
@@ -51,7 +50,7 @@ struct SwapRequest: Encodable {
             inputAmount: Token.amountString(from: sendAmount),
             outputMint: receiveToken.assetID,
             slippage: Slippage(decimal: slippage).integral,
-            source: source,
+            source: receiveToken.source,
             referral: nil
         )
     }

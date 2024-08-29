@@ -149,8 +149,7 @@ final class MixinSwapViewController: SwapViewController {
             sendToken: quote.sendToken,
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,
-            slippage: 0.01,
-            source: quote.receiveToken.source
+            slippage: 0.01
         )
         RouteAPI.swap(request: request) { [weak self] response in
             guard self != nil else {
@@ -158,19 +157,25 @@ final class MixinSwapViewController: SwapViewController {
             }
             switch response {
             case .success(let response):
-                if let url = URL(string: response.tx) {
-                    let context = Payment.SwapContext(receiveToken: quote.receiveToken,
-                                                      receiveAmount: quote.receiveAmount)
-                    let source: UrlWindow.Source = .swap(context: context) { description in
-                        if let description {
-                            showAutoHiddenHud(style: .error, text: description)
-                        }
-                        sender.isBusy = false
-                    }
-                    _ = UrlWindow.checkUrl(url: url, from: source)
-                } else {
+                guard 
+                    let url = URL(string: response.tx),
+                    quote.sendToken.assetID == response.quote.inputMint,
+                    quote.receiveToken.assetID == response.quote.outputMint,
+                    quote.sendAmount == Decimal(string: response.quote.inAmount, locale: .enUSPOSIX),
+                    let receiveAmount = Decimal(string: response.quote.outAmount, locale: .enUSPOSIX)
+                else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                    sender.isBusy = false
+                    return
                 }
+                let context = Payment.SwapContext(receiveToken: quote.receiveToken, receiveAmount: receiveAmount)
+                let source: UrlWindow.Source = .swap(context: context) { description in
+                    if let description {
+                        showAutoHiddenHud(style: .error, text: description)
+                    }
+                    sender.isBusy = false
+                }
+                _ = UrlWindow.checkUrl(url: url, from: source)
             case .failure(let error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 sender.isBusy = false

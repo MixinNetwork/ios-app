@@ -223,7 +223,7 @@ extension AppCardData {
         public let title: String?
         public let description: String?
         public let actions: [Action]
-        public let updatedAt: String
+        public let updatedAt: String?
         public let isShareable: Bool
         
         enum CodingKeys: String, CodingKey {
@@ -250,7 +250,7 @@ extension AppCardData {
             self.title = try container.decodeIfPresent(String.self, forKey: .title)
             self.description = try container.decodeIfPresent(String.self, forKey: .description)
             self.actions = try container.decodeIfPresent([Action].self, forKey: .actions) ?? []
-            self.updatedAt = try container.decode(String.self, forKey: .updatedAt)
+            self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
             self.isShareable = try container.decode(Bool.self, forKey: .shareable)
         }
         
@@ -270,7 +270,9 @@ extension AppCardData {
             if !actions.isEmpty {
                 try container.encode(actions, forKey: .actions)
             }
-            try container.encode(updatedAt, forKey: .updatedAt)
+            if let updatedAt {
+                try container.encode(updatedAt, forKey: .updatedAt)
+            }
             try container.encode(isShareable, forKey: .shareable)
         }
         

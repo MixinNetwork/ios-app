@@ -20,13 +20,10 @@ final class RouteAPI {
     }
     
     static func swappableTokens(
-        source: RouteTokenSource?,
+        source: RouteTokenSource,
         completion: @escaping (MixinAPI.Result<[SwappableToken]>) -> Void
     ) {
-        var path = "/web3/tokens?version=" + Bundle.main.shortVersionString
-        if let source {
-            path.append("&source=\(source.rawValue)")
-        }
+        let path = "/web3/tokens?version=\(Bundle.main.shortVersionString)&source=\(source.rawValue)"
         request(method: .get, path: path, completion: completion)
     }
     

@@ -102,7 +102,7 @@ final class Web3SwapViewController: SwapViewController {
     }
     
     private func reloadTokens() {
-        RouteAPI.swappableTokens(source: nil) { [weak self] result in
+        RouteAPI.swappableTokens(source: .solana) { [weak self] result in
             switch result {
             case .success(let tokens):
                 self?.reloadData(supportedTokens: tokens)

@@ -38,7 +38,7 @@ struct SwapRequest: Encodable {
         )
     }
     
-    static func exin(
+    static func mixin(
         sendToken: TokenItem,
         sendAmount: Decimal,
         receiveToken: SwappableToken,
@@ -50,7 +50,7 @@ struct SwapRequest: Encodable {
             inputAmount: Token.amountString(from: sendAmount),
             outputMint: receiveToken.assetID,
             slippage: Slippage(decimal: slippage).integral,
-            source: .exin,
+            source: receiveToken.source,
             referral: nil
         )
     }

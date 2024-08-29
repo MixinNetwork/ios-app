@@ -35,14 +35,14 @@ final class TokenMarketViewController: UIViewController {
     ) -> ContainerViewController {
         let controller = TokenMarketViewController(token: token, chartPoints: chartPoints)
         controller.pushingViewController = pushingViewController
-        return ContainerViewController.instance(viewController: controller, title: token.name)
+        return ContainerViewController.instance(viewController: controller, title: token.symbol)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let container {
-            container.setSubtitle(subtitle: token.depositNetworkName)
+            container.setSubtitle(subtitle: token.name)
             container.view.backgroundColor = R.color.background_secondary()
             container.navigationBar.backgroundColor = R.color.background_secondary()
         }

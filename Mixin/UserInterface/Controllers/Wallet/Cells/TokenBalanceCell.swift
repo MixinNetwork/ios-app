@@ -1,6 +1,10 @@
 import UIKit
 import MixinServices
 
+protocol TokenBalanceCellDelegate: AnyObject {
+    func tokenBalanceCellWantsToRevealOutputs(_ cell: TokenBalanceCell)
+}
+
 final class TokenBalanceCell: UITableViewCell {
     
     @IBOutlet weak var titleStackView: UIStackView!
@@ -10,10 +14,15 @@ final class TokenBalanceCell: UITableViewCell {
     @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var actionView: TransferActionView!
     
+    weak var delegate: TokenBalanceCellDelegate?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         titleStackView.setCustomSpacing(10, after: titleLabel)
         actionView.actions = [.send, .receive, .swap]
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
+        recognizer.numberOfTapsRequired = 5
+        iconView.addGestureRecognizer(recognizer)
     }
     
     func reloadData(token: TokenItem) {
@@ -50,6 +59,10 @@ final class TokenBalanceCell: UITableViewCell {
         ])
         attributedAmount.append(attributedSymbol)
         amountLabel.attributedText = attributedAmount
+    }
+    
+    @objc private func revealOutputs(_ sender: Any) {
+        delegate?.tokenBalanceCellWantsToRevealOutputs(self)
     }
     
 }

@@ -259,7 +259,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
 extension MixinSwapViewController {
     
     private func reloadTokens() {
-        RouteAPI.swappableTokens(source: .exin) { [weak self] result in
+        RouteAPI.swappableTokens(source: .mixin) { [weak self] result in
             switch result {
             case .success(let tokens):
                 self?.reloadData(swappableTokens: tokens)

@@ -1,8 +1,8 @@
 import Foundation
 
 enum RouteTokenSource {
-    case exin
-    case mao
+    case mixin
+    case solana
     case other(String)
 }
 
@@ -10,10 +10,10 @@ extension RouteTokenSource {
     
     init(rawValue: String) {
         switch rawValue {
-        case "exin":
-            self = .exin
-        case "mao":
-            self = .mao
+        case "mixin":
+            self = .mixin
+        case "solana":
+            self = .solana
         default:
             self = .other(rawValue)
         }
@@ -21,10 +21,10 @@ extension RouteTokenSource {
     
     var rawValue: String {
         switch self {
-        case .exin:
-            "exin"
-        case .mao:
-            "mao"
+        case .mixin:
+            "mixin"
+        case .solana:
+            "solana"
         case .other(let value):
             value
         }

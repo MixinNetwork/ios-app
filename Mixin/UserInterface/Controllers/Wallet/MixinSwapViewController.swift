@@ -145,11 +145,12 @@ final class MixinSwapViewController: SwapViewController {
             return
         }
         sender.isBusy = true
-        let request = SwapRequest.exin(
+        let request = SwapRequest.mixin(
             sendToken: quote.sendToken,
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,
-            slippage: 0.01
+            slippage: 0.01,
+            source: quote.receiveToken.source
         )
         RouteAPI.swap(request: request) { [weak self] response in
             guard self != nil else {

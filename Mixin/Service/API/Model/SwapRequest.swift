@@ -38,11 +38,12 @@ struct SwapRequest: Encodable {
         )
     }
     
-    static func exin(
+    static func mixin(
         sendToken: TokenItem,
         sendAmount: Decimal,
         receiveToken: SwappableToken,
-        slippage: Decimal
+        slippage: Decimal,
+        source: RouteTokenSource
     ) -> SwapRequest {
         SwapRequest(
             payer: myUserId,
@@ -50,7 +51,7 @@ struct SwapRequest: Encodable {
             inputAmount: Token.amountString(from: sendAmount),
             outputMint: receiveToken.assetID,
             slippage: Slippage(decimal: slippage).integral,
-            source: .exin,
+            source: source,
             referral: nil
         )
     }

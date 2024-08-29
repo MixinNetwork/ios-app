@@ -32,7 +32,7 @@ struct QuoteRequest {
         )
     }
     
-    static func exin(
+    static func mixin(
         sendToken: TokenItem,
         sendAmount: Decimal,
         receiveToken: SwappableToken,
@@ -43,7 +43,7 @@ struct QuoteRequest {
             outputMint: receiveToken.assetID,
             amount: Token.amountString(from: sendAmount),
             slippage: Slippage(decimal: slippage).integral,
-            source: .exin
+            source: receiveToken.source
         )
     }
     

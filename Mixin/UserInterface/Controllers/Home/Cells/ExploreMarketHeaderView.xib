@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="web3_market_header" id="8bo-Qm-44A" customClass="Web3MarketHeaderView" customModule="Mixin" customModuleProvider="target">
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="explore_market_header" id="8bo-Qm-44A" customClass="ExploreMarketHeaderView" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="393" height="94"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -44,18 +44,6 @@
                         </button>
                     </subviews>
                 </stackView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fmx-J1-XiM">
-                    <rect key="frame" x="10" y="54" width="89" height="40"/>
-                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                    <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
-                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                    <state key="normal" title="Watchlist" image="selector_down">
-                        <color key="titleColor" name="text_tertiary"/>
-                    </state>
-                    <connections>
-                        <action selector="sortByMarketCap:" destination="8bo-Qm-44A" eventType="touchUpInside" id="CXk-H7-qCT"/>
-                    </connections>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oqe-E4-UR0">
                     <rect key="frame" x="258" y="55" width="49" height="39"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -80,11 +68,23 @@
                         <action selector="sortByChange:" destination="8bo-Qm-44A" eventType="touchUpInside" id="IrD-KR-8Af"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fmx-J1-XiM">
+                    <rect key="frame" x="0.0" y="54" width="89" height="40"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                    <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="Watchlist" image="selector_down">
+                        <color key="titleColor" name="text_tertiary"/>
+                    </state>
+                    <connections>
+                        <action selector="sortByMarketCap:" destination="8bo-Qm-44A" eventType="touchUpInside" id="CXk-H7-qCT"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="gPU-Xh-AWI" firstAttribute="top" secondItem="8bo-Qm-44A" secondAttribute="top" constant="10" id="9cL-t0-1iR"/>
-                <constraint firstItem="Fmx-J1-XiM" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" constant="10" id="AFW-ec-tJF"/>
+                <constraint firstItem="Fmx-J1-XiM" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" id="AFW-ec-tJF"/>
                 <constraint firstItem="uT0-8z-7TE" firstAttribute="top" secondItem="8bo-Qm-44A" secondAttribute="top" constant="10" id="DX1-LM-SSx"/>
                 <constraint firstAttribute="trailing" secondItem="2Yp-6g-I9K" secondAttribute="trailing" constant="-1" id="Ex1-zv-uhc"/>
                 <constraint firstAttribute="bottom" secondItem="Fmx-J1-XiM" secondAttribute="bottom" id="Jty-eX-bXg"/>
@@ -114,7 +114,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

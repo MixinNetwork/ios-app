@@ -1,10 +1,10 @@
 import UIKit
 import MixinServices
 
-final class Web3TokenMarketCell: UICollectionViewCell {
+final class ExploreMarketTokenCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
-        func web3TokenMarketCellWantsToggleFavorite(_ cell: Web3TokenMarketCell)
+        func exploreTokenMarketCellWantsToggleFavorite(_ cell: ExploreMarketTokenCell)
     }
     
     @IBOutlet weak var contentStackView: UIStackView!
@@ -43,7 +43,7 @@ final class Web3TokenMarketCell: UICollectionViewCell {
     }
     
     @IBAction func toggleFavorite(_ sender: Any) {
-        delegate?.web3TokenMarketCellWantsToggleFavorite(self)
+        delegate?.exploreTokenMarketCellWantsToggleFavorite(self)
     }
     
     func reloadData(market: FavorableMarket) {

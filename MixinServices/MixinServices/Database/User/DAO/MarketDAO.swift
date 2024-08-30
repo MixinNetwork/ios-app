@@ -31,9 +31,9 @@ public final class MarketDAO: UserDatabaseDAO {
         case .price(.descending):
             sql += "\nORDER BY CAST(m.current_price AS REAL) DESC"
         case .change(.ascending):
-            sql += "\nORDER BY ABS(CAST(m.price_change_24h AS REAL)) ASC"
+            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_24h AS REAL)) ASC"
         case .change(.descending):
-            sql += "\nORDER BY ABS(CAST(m.price_change_24h AS REAL)) DESC"
+            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_24h AS REAL)) DESC"
         }
         sql += "\nLIMIT \(limit.count)"
         return db.select(with: sql)

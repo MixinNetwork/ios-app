@@ -8,7 +8,7 @@ final class ExploreMarketViewController: UIViewController {
     private let refreshInterval: TimeInterval = 5 * .minute
     
     private var collectionView: UICollectionView!
-    private var infos: [MarketInfo] = []
+    private var globalMarketViewModels: [GlobalMarketViewModel] = []
     private var markets: [FavorableMarket] = []
     private var favoriteMarkets: [FavorableMarket]?
     private var category = AppGroupUserDefaults.User.marketCategory
@@ -34,7 +34,7 @@ final class ExploreMarketViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0.0, leading: 6, bottom: 0, trailing: 6)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(132), heightDimension: .absolute(90))
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                let group: NSCollectionLayoutGroup = .vertical(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 0, trailing: 12)
                 section.orthogonalScrollingBehavior = .groupPaging
@@ -43,7 +43,7 @@ final class ExploreMarketViewController: UIViewController {
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [
                     NSCollectionLayoutBoundarySupplementaryItem(
@@ -52,6 +52,7 @@ final class ExploreMarketViewController: UIViewController {
                         alignment: .top
                     )
                 ]
+                section.interGroupSpacing = 20
                 section.contentInsets = switch ScreenWidth.current {
                 case .long:
                     NSDirectionalEdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30)
@@ -83,20 +84,20 @@ final class ExploreMarketViewController: UIViewController {
         collectionView.backgroundColor = R.color.background()
         view.addSubview(collectionView)
         collectionView.snp.makeEdgesEqualToSuperview()
-        collectionView.register(R.nib.web3MarketInfoCell)
-        collectionView.register(R.nib.web3TokenMarketCell)
+        collectionView.register(R.nib.exploreGlobalMarketCell)
+        collectionView.register(R.nib.exploreMarketTokenCell)
         collectionView.register(R.nib.watchlistEmptyCell)
-        collectionView.register(R.nib.web3MarketHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
+        collectionView.register(R.nib.exploreMarketHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
         collectionView.dataSource = self
         DispatchQueue.global().async { [weak self] in
             guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
                 return
             }
             DispatchQueue.main.async {
-                guard let self, self.infos.isEmpty else {
+                guard let self, self.globalMarketViewModels.isEmpty else {
                     return
                 }
-                self.infos = MarketInfo.infos(market: market)
+                self.globalMarketViewModels = GlobalMarketViewModel.viewModels(market: market)
                 self.collectionView.reloadData()
             }
         }
@@ -114,7 +115,7 @@ final class ExploreMarketViewController: UIViewController {
                     PropertiesDAO.shared.set(market, forKey: .globalMarket)
                 }
                 if let self {
-                    self.infos = MarketInfo.infos(market: market)
+                    self.globalMarketViewModels = GlobalMarketViewModel.viewModels(market: market)
                     self.collectionView.reloadData()
                 }
             case let .failure(error):
@@ -210,22 +211,14 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
                 Section.allCases.count - 1
             }
         case .favorite:
-            if let favoriteMarkets {
-                if favoriteMarkets.isEmpty {
-                    Section.allCases.count
-                } else {
-                    Section.allCases.count - 1
-                }
-            } else {
-                Section.allCases.count - 2
-            }
+            Section.allCases.count
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .info:
-            infos.count
+            globalMarketViewModels.count
         case .coins:
             switch category {
             case .all:
@@ -245,8 +238,8 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .info:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.web3_market_info, for: indexPath)!
-            let info = infos[indexPath.item]
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_global_market, for: indexPath)!
+            let info = globalMarketViewModels[indexPath.item]
             cell.captionLabel.text = info.caption
             cell.primaryLabel.text = info.primary
             cell.secondaryLabel.text = info.secondary
@@ -259,7 +252,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
             case .favorite:
                 favoriteMarkets ?? []
             }
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.web3_token_market, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_market_token, for: indexPath)!
             let market = markets[indexPath.item]
             cell.reloadData(market: market)
             cell.delegate = self
@@ -270,7 +263,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.web3_market_header, for: indexPath)!
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.explore_market_header, for: indexPath)!
         view.limit = limit
         view.category = category
         view.order = order
@@ -280,28 +273,28 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
     
 }
 
-extension ExploreMarketViewController: Web3MarketHeaderView.Delegate {
+extension ExploreMarketViewController: ExploreMarketHeaderView.Delegate {
     
-    func web3MarketHeaderView(_ view: Web3MarketHeaderView, didSwitchToLimit limit: Market.Limit) {
+    func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToLimit limit: Market.Limit) {
         self.limit = limit
         reloadMarketsFromLocal(overwrites: true)
     }
     
-    func web3MarketHeaderView(_ view: Web3MarketHeaderView, didSwitchToCategory category: Market.Category) {
+    func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToCategory category: Market.Category) {
         self.category = category
         reloadMarketsFromLocal(overwrites: true)
     }
     
-    func web3MarketHeaderView(_ view: Web3MarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression) {
+    func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression) {
         self.order = order
         reloadMarketsFromLocal(overwrites: true)
     }
     
 }
 
-extension ExploreMarketViewController: Web3TokenMarketCell.Delegate {
+extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
     
-    func web3TokenMarketCellWantsToggleFavorite(_ cell: Web3TokenMarketCell) {
+    func exploreTokenMarketCellWantsToggleFavorite(_ cell: ExploreMarketTokenCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
@@ -366,38 +359,38 @@ extension ExploreMarketViewController {
         case noFavoriteIndicator
     }
     
-    private struct MarketInfo {
+    private struct GlobalMarketViewModel {
         
         let caption: String
         let primary: String?
         let secondary: String?
         let secondaryColor: UIColor?
         
-        static func infos(market: GlobalMarket) -> [MarketInfo] {
+        static func viewModels(market: GlobalMarket) -> [GlobalMarketViewModel] {
             [
-                MarketInfo(
+                GlobalMarketViewModel(
                     caption: "Market Cap",
                     primary: NamedLargeNumberFormatter.string(
                         number: market.marketCap * Currency.current.decimalRate,
                         currencyPrefix: true
                     ),
                     secondary: NumberFormatter.percentage.string(
-                        decimal: market.marketCapChangePercentage
+                        decimal: market.marketCapChangePercentage / 100
                     ),
                     secondaryColor: market.marketCapChangePercentage >= 0 ? .priceRising : .priceFalling
                 ),
-                MarketInfo(
+                GlobalMarketViewModel(
                     caption: "24h Volume",
                     primary: NamedLargeNumberFormatter.string(
                         number: market.volume * Currency.current.decimalRate,
                         currencyPrefix: true
                     ),
                     secondary: NumberFormatter.percentage.string(
-                        decimal: market.volumeChangePercentage
+                        decimal: market.volumeChangePercentage / 100
                     ),
                     secondaryColor: market.volumeChangePercentage >= 0 ? .priceRising : .priceFalling
                 ),
-                MarketInfo(
+                GlobalMarketViewModel(
                     caption: "Dominance",
                     primary: NumberFormatter.percentage.string(
                         decimal: market.dominancePercentage / 100

@@ -1,12 +1,12 @@
 import UIKit
 import MixinServices
 
-final class Web3MarketHeaderView: UICollectionReusableView {
+final class ExploreMarketHeaderView: UICollectionReusableView {
 
     protocol Delegate: AnyObject {
-        func web3MarketHeaderView(_ view: Web3MarketHeaderView, didSwitchToLimit limit: Market.Limit)
-        func web3MarketHeaderView(_ view: Web3MarketHeaderView, didSwitchToCategory category: Market.Category)
-        func web3MarketHeaderView(_ view: Web3MarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression)
+        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToLimit limit: Market.Limit)
+        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToCategory category: Market.Category)
+        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression)
     }
     
     @IBOutlet weak var segmentedControl: OutlineSegmentedControl!
@@ -98,10 +98,10 @@ final class Web3MarketHeaderView: UICollectionReusableView {
         switch sender.selectedItemIndex {
         case 0:
             category = .favorite
-            delegate?.web3MarketHeaderView(self, didSwitchToCategory: category)
+            delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category)
         case 1:
             category = .all
-            delegate?.web3MarketHeaderView(self, didSwitchToCategory: category)
+            delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category)
         default:
             break
         }
@@ -114,7 +114,7 @@ final class Web3MarketHeaderView: UICollectionReusableView {
         default:
                 .marketCap(.descending)
         }
-        delegate?.web3MarketHeaderView(self, didSwitchToOrdering: order)
+        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order)
     }
     
     @IBAction func sortByPrice(_ sender: Any) {
@@ -124,7 +124,7 @@ final class Web3MarketHeaderView: UICollectionReusableView {
         default:
                 .price(.descending)
         }
-        delegate?.web3MarketHeaderView(self, didSwitchToOrdering: order)
+        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order)
     }
     
     @IBAction func sortByChange(_ sender: Any) {
@@ -134,12 +134,12 @@ final class Web3MarketHeaderView: UICollectionReusableView {
         default:
                 .change(.descending)
         }
-        delegate?.web3MarketHeaderView(self, didSwitchToOrdering: order)
+        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order)
     }
     
     private func setLimit(_ limit: Market.Limit) {
         self.limit = limit
-        delegate?.web3MarketHeaderView(self, didSwitchToLimit: limit)
+        delegate?.exploreMarketHeaderView(self, didSwitchToLimit: limit)
     }
     
     private func iconButton(ordering: Market.OrderingExpression) -> UIButton {

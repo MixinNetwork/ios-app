@@ -1,6 +1,6 @@
 import UIKit
 
-final class Web3MarketInfoCell: UICollectionViewCell {
+final class ExploreGlobalMarketCell: UICollectionViewCell {
     
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var primaryLabel: UILabel!

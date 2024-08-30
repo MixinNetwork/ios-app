@@ -18,17 +18,17 @@ final class PlainTokenIconView: UIImageView {
         layer.cornerRadius = bounds.width / 2
     }
     
+    func setIcon(tokenIconURL url: URL?) {
+        sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+    }
+    
     func setIcon(token: Token) {
-        sd_setImage(with: URL(string: token.iconURL),
-                    placeholderImage: nil,
-                    context: assetIconContext)
+        setIcon(tokenIconURL: URL(string: token.iconURL))
     }
     
     func setIcon(web3Token token: Web3Token) {
         if let url = URL(string: token.iconURL) {
-            sd_setImage(with: url,
-                        placeholderImage: nil,
-                        context: assetIconContext)
+            setIcon(tokenIconURL: URL(string: token.iconURL))
         } else {
             image = R.image.unknown_session()
         }
@@ -36,9 +36,7 @@ final class PlainTokenIconView: UIImageView {
     
     func setIcon(token: SwappableToken) {
         if let url = token.iconURL {
-            sd_setImage(with: url,
-                        placeholderImage: nil,
-                        context: assetIconContext)
+            setIcon(tokenIconURL: token.iconURL)
         } else {
             image = R.image.unknown_session()
         }
@@ -46,9 +44,7 @@ final class PlainTokenIconView: UIImageView {
     
     func setIcon(address: AddressItem) {
         if let string = address.tokenIconURL, let url = URL(string: string) {
-            sd_setImage(with: url,
-                        placeholderImage: nil,
-                        context: assetIconContext)
+            setIcon(tokenIconURL: url)
         } else {
             image = R.image.unknown_session()
         }

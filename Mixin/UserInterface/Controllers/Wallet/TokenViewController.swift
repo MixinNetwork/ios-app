@@ -81,7 +81,7 @@ final class TokenViewController: UIViewController {
                     self?.reloadChart(prices)
                 }
             }
-            RouteAPI.priceHistory(assetID: id, period: .day, queue: .global()) { result in
+            RouteAPI.priceHistory(id: id, period: .day, queue: .global()) { result in
                 switch result {
                 case .success(let price):
                     if let history = price.asPriceHistory() {

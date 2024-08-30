@@ -38,19 +38,50 @@ final class RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
-    static func market(assetID: String, completion: @escaping (MixinAPI.Result<TokenMarket>) -> Void) {
-        request(method: .get, path: "/markets/" + assetID, completion: completion)
+    static func globalMarket(completion: @escaping (MixinAPI.Result<GlobalMarket>) -> Void) {
+        request(method: .get, path: "/markets/globals", completion: completion)
+    }
+    
+    static func markets(
+        category: Market.Category,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Market]>) -> Void
+    ) {
+        let path = "/markets?category=\(category.rawValue)&limit=500"
+        request(method: .get, path: path, queue: queue, completion: completion)
+    }
+    
+    static func markets(
+        id: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<Market>) -> Void
+    ) {
+        request(method: .get, path: "/markets/" + id, queue: queue, completion: completion)
+    }
+    
+    static func favoriteMarket(
+        coinID: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(method: .post, path: "/markets/\(coinID)/favorite", completion: completion)
+    }
+    
+    static func unfavoriteMarket(
+        coinID: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(method: .post, path: "/markets/\(coinID)/unfavorite", completion: completion)
     }
     
     static func priceHistory(
-        assetID: String,
+        id: String,
         period: PriceHistory.Period,
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<TokenPrice>) -> Void
     ) {
         request(
             method: .get,
-            path: "/markets/\(assetID)/price-history?type=\(period.rawValue)",
+            path: "/markets/\(id)/price-history?type=\(period.rawValue)",
             queue: queue,
             completion: completion
         )
@@ -58,7 +89,6 @@ final class RouteAPI {
     
 }
 
-// Authentication not in used currently
 extension RouteAPI {
     
     private static var botPublicKey: Data?
@@ -189,6 +219,8 @@ extension RouteAPI {
                         completion(.success(data))
                     } else if let error = response.error {
                         completion(.failure(.response(error)))
+                    } else if Response.self == Empty.self {
+                        completion(.success(Empty.value as! Response))
                     } else {
                         completion(.failure(.emptyResponse))
                     }

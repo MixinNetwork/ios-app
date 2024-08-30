@@ -77,11 +77,10 @@ final class TokenMarketViewController: UIViewController {
                     self?.reloadData(viewModel: viewModel)
                 }
             }
-            RouteAPI.market(assetID: id) { result in
+            RouteAPI.markets(id: id, queue: .global()) { result in
                 switch result {
-                case .success(let tm):
-                    let market = tm.asMarket()
-                    MarketDAO.shared.saveMarket(market)
+                case .success(let market):
+                    MarketDAO.shared.save(market: market)
                     viewModel.update(with: market)
                     DispatchQueue.main.async {
                         self?.reloadData(viewModel: viewModel)
@@ -124,7 +123,7 @@ final class TokenMarketViewController: UIViewController {
                     self?.reloadPriceChart(period: period, points: points)
                 }
             }
-            RouteAPI.priceHistory(assetID: id, period: period, queue: .global()) { result in
+            RouteAPI.priceHistory(id: id, period: period, queue: .global()) { result in
                 switch result {
                 case .success(let price):
                     if let history = price.asPriceHistory() {
@@ -482,11 +481,8 @@ extension TokenMarketViewController {
                 )
             }
             if let totalVolume = Decimal(string: market.totalVolume, locale: .enUSPOSIX) {
-                self.fiatMoneyVolume24H = CurrencyFormatter.localizedString(
-                    from: totalVolume * Currency.current.decimalRate,
-                    format: .fiatMoney,
-                    sign: .never
-                )
+                let volume = totalVolume * Currency.current.decimalRate
+                self.fiatMoneyVolume24H = NamedLargeNumberFormatter.string(number: volume, currencyPrefix: false)
             }
             if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
                 var change = CurrencyFormatter.localizedString(
@@ -511,13 +507,10 @@ extension TokenMarketViewController {
                 case 0:
                     infos.append(Info.contentNotApplicable(title: title))
                 default:
-                    let content = CurrencyFormatter.localizedString(
-                        from: marketCap * Currency.current.decimalRate,
-                        format: .fiatMoney,
-                        sign: .never,
-                        symbol: .currencySymbol
-                    )
-                    infos.append(Info(title: title, primaryContent: content))
+                    let value = marketCap * Currency.current.decimalRate
+                    if let content = NamedLargeNumberFormatter.string(number: value, currencyPrefix: true) {
+                        infos.append(Info(title: title, primaryContent: content))
+                    }
                 }
             }
             if let circulatingSupply = Decimal(string: market.circulatingSupply, locale: .enUSPOSIX) {
@@ -526,13 +519,9 @@ extension TokenMarketViewController {
                 case 0:
                     infos.append(Info.contentNotApplicable(title: title))
                 default:
-                    let content = CurrencyFormatter.localizedString(
-                        from: circulatingSupply,
-                        format: .precision,
-                        sign: .never,
-                        symbol: .custom(token.symbol)
-                    )
-                    infos.append(Info(title: title, primaryContent: content))
+                    if let content = NamedLargeNumberFormatter.string(number: circulatingSupply, currencyPrefix: false) {
+                        infos.append(Info(title: title, primaryContent: content + " " + token.symbol))
+                    }
                 }
             }
             if let totalSupply = Decimal(string: market.totalSupply, locale: .enUSPOSIX) {
@@ -541,13 +530,9 @@ extension TokenMarketViewController {
                 case 0:
                     infos.append(Info.contentNotApplicable(title: title))
                 default:
-                    let content = CurrencyFormatter.localizedString(
-                        from: totalSupply,
-                        format: .precision,
-                        sign: .never,
-                        symbol: .custom(token.symbol)
-                    )
-                    infos.append(Info(title: title, primaryContent: content))
+                    if let content = NamedLargeNumberFormatter.string(number: totalSupply, currencyPrefix: false) {
+                        infos.append(Info(title: title, primaryContent: content + " " + token.symbol))
+                    }
                 }
             }
             

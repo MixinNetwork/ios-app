@@ -772,10 +772,34 @@ public final class UserDatabase: Database {
         }
         
         migrator.registerMigration("market") { db in
+            let sql = """
+            CREATE TABLE IF NOT EXISTS `history_prices` (
+                `asset_id` TEXT NOT NULL,
+                `type` TEXT NOT NULL,
+                `data` TEXT NOT NULL,
+                `updated_at` TEXT NOT NULL,
+                PRIMARY KEY(`asset_id`, `type`)
+            )
+            """
+            try db.execute(sql: sql)
+        }
+        
+        migrator.registerMigration("membership") { db in
+            let itemColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(users)").map(\.name)
+            if !itemColumns.contains("membership") {
+                try db.execute(sql: "ALTER TABLE `users` ADD COLUMN `membership` TEXT")
+            }
+        }
+        
+        migrator.registerMigration("market_2") { db in
             let sqls = [
+                "DROP TABLE IF EXISTS `markets`",
                 """
                 CREATE TABLE IF NOT EXISTS `markets` (
-                    `asset_id` TEXT NOT NULL,
+                    `coin_id` TEXT NOT NULL,
+                    `name` TEXT NOT NULL,
+                    `symbol` TEXT NOT NULL,
+                    `icon_url` TEXT NOT NULL,
                     `current_price` TEXT NOT NULL,
                     `market_cap` TEXT NOT NULL,
                     `market_cap_rank` TEXT NOT NULL,
@@ -783,7 +807,10 @@ public final class UserDatabase: Database {
                     `high_24h` TEXT NOT NULL,
                     `low_24h` TEXT NOT NULL,
                     `price_change_24h` TEXT NOT NULL,
+                    `price_change_percentage_1h` TEXT NOT NULL,
                     `price_change_percentage_24h` TEXT NOT NULL,
+                    `price_change_percentage_7d` TEXT NOT NULL,
+                    `price_change_percentage_30d` TEXT NOT NULL,
                     `market_cap_change_24h` TEXT NOT NULL,
                     `market_cap_change_percentage_24h` TEXT NOT NULL,
                     `circulating_supply` TEXT NOT NULL,
@@ -795,29 +822,31 @@ public final class UserDatabase: Database {
                     `atl` TEXT NOT NULL,
                     `atl_change_percentage` TEXT NOT NULL,
                     `atl_date` TEXT NOT NULL,
+                    `asset_ids` TEXT,
+                    `sparkline_in_7d` TEXT NOT NULL,
                     `updated_at` TEXT NOT NULL,
-                    PRIMARY KEY(`asset_id`)
+                    PRIMARY KEY(`coin_id`)
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS `history_prices` (
+                CREATE TABLE IF NOT EXISTS `market_ids` (
+                    `coin_id` TEXT NOT NULL,
                     `asset_id` TEXT NOT NULL,
-                    `type` TEXT NOT NULL,
-                    `data` TEXT NOT NULL,
-                    `updated_at` TEXT NOT NULL,
-                    PRIMARY KEY(`asset_id`, `type`)
+                    `created_at` TEXT NOT NULL,
+                    PRIMARY KEY(`coin_id`, `asset_id`)
+                )
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS `market_favored` (
+                    `coin_id` TEXT NOT NULL,
+                    `is_favored` INTEGER NOT NULL,
+                    `created_at` TEXT NOT NULL,
+                    PRIMARY KEY(`coin_id`)
                 )
                 """,
             ]
             for sql in sqls {
                 try db.execute(sql: sql)
-            }
-        }
-        
-        migrator.registerMigration("membership") { db in
-            let itemColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(users)").map(\.name)
-            if !itemColumns.contains("membership") {
-                try db.execute(sql: "ALTER TABLE `users` ADD COLUMN `membership` TEXT")
             }
         }
         

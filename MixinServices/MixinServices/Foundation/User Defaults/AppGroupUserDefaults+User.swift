@@ -68,6 +68,7 @@ extension AppGroupUserDefaults {
             
             case collectibleContent = "collectible_content"
             case collectibleOrdering = "collectible_order"
+            case marketCategory = "market_category"
         }
         
         public static let version = 32
@@ -264,6 +265,9 @@ extension AppGroupUserDefaults {
         
         @RawRepresentableDefault(namespace: .user, key: Key.collectibleOrdering, defaultValue: .recent)
         public static var collectibleOrdering: CollectibleDisplayOrdering
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.marketCategory, defaultValue: .all)
+        public static var marketCategory: Market.Category
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

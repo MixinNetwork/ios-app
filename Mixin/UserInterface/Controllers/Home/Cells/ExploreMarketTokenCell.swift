@@ -46,19 +46,31 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
         delegate?.exploreTokenMarketCellWantsToggleFavorite(self)
     }
     
-    func reloadData(market: FavorableMarket) {
+    func reloadData(market: FavorableMarket, changePeriod: Market.ChangePeriod) {
         symbolLabel.text = market.name
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
         symbolLabel.text = market.symbol
         rankLabel.text = market.marketCapRank
         marketCapLabel.text = market.localizedMarketCap
         priceLabel.text = market.localizedPrice
-        chartImageView.sd_setImage(with: market.chartImageURL)
-        changeLabel.text = market.localizedChange
-        if market.decimalChangePercentage >= 0 {
-            changeLabel.textColor = .priceRising
-        } else {
-            changeLabel.textColor = .priceFalling
+        switch changePeriod {
+        case .oneHour:
+            chartImageView.sd_setImage(with: nil)
+            changeLabel.text = nil
+        case .twentyFourHours:
+            chartImageView.sd_setImage(with: nil)
+            changeLabel.text = nil
+        case .sevenDays:
+            chartImageView.sd_setImage(with: market.sparklineIn7DURL)
+            changeLabel.text = market.localizedPriceChangePercentage7D
+            if market.decimalPriceChangePercentage7D >= 0 {
+                changeLabel.textColor = .priceRising
+            } else {
+                changeLabel.textColor = .priceFalling
+            }
+        case .thirtyDays:
+            chartImageView.sd_setImage(with: nil)
+            changeLabel.text = nil
         }
         isFavorited = market.isFavorite
     }

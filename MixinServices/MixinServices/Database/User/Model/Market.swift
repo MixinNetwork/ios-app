@@ -77,11 +77,11 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord, M
         symbol: .currencySymbol
     )
     
-    public private(set) lazy var decimalChangePercentage = Decimal(string: priceChangePercentage24H, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalPriceChangePercentage7D = Decimal(string: priceChangePercentage7D, locale: .enUSPOSIX) ?? 0
     
-    public private(set) lazy var localizedChange = NumberFormatter.percentage.string(decimal: decimalChangePercentage / 100)
+    public private(set) lazy var localizedPriceChangePercentage7D = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage7D / 100)
     
-    public private(set) lazy var chartImageURL = URL(string: sparklineIn7D)
+    public private(set) lazy var sparklineIn7DURL = URL(string: sparklineIn7D)
     
 }
 

@@ -29,7 +29,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         }
     }
     
-    var changePeriod: Market.ChangePeriod = .twentyFourHours {
+    var changePeriod: Market.ChangePeriod = .sevenDays {
         didSet {
             changePeriodButton.setTitle(changePeriod.shortTitle, for: .normal)
         }
@@ -74,12 +74,10 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
             R.image.market_favorite()!,
             R.image.market_rank()!,
         ]
-       
         limitButton.semanticContentAttribute = .forceRightToLeft
         limitButton.menu = UIMenu(children: limitActions(selectedLimit: .top100))
         limitButton.showsMenuAsPrimaryAction = true
-        limitButton.layer.masksToBounds = true
-        
+        limitButton.layer.masksToBounds = true        
         changePeriodButton.semanticContentAttribute = .forceRightToLeft
         changePeriodButton.showsMenuAsPrimaryAction = true
         changePeriodButton.layer.masksToBounds = true

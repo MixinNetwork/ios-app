@@ -13,6 +13,7 @@ final class ExploreMarketViewController: UIViewController {
     private var favoriteMarkets: [FavorableMarket]?
     private var category = AppGroupUserDefaults.User.marketCategory
     private var order: Market.OrderingExpression = .marketCap(.descending)
+    private var changePeriod: Market.ChangePeriod = .sevenDays
     private var limit: Market.Limit = .top100
     
     private weak var timer: Timer?
@@ -89,6 +90,7 @@ final class ExploreMarketViewController: UIViewController {
         collectionView.register(R.nib.watchlistEmptyCell)
         collectionView.register(R.nib.exploreMarketHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
         collectionView.dataSource = self
+        collectionView.contentInset.bottom = 20
         DispatchQueue.global().async { [weak self] in
             guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
                 return
@@ -254,7 +256,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
             }
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_market_token, for: indexPath)!
             let market = markets[indexPath.item]
-            cell.reloadData(market: market)
+            cell.reloadData(market: market, changePeriod: changePeriod)
             cell.delegate = self
             return cell
         case .noFavoriteIndicator:

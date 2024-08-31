@@ -45,14 +45,14 @@ final class ExploreMarketViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(94)),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                header.pinToVisibleBounds = true
                 let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [
-                    NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(94)),
-                        elementKind: UICollectionView.elementKindSectionHeader,
-                        alignment: .top
-                    )
-                ]
+                section.boundarySupplementaryItems = [header]
                 section.interGroupSpacing = 20
                 section.contentInsets = switch ScreenWidth.current {
                 case .long:
@@ -371,7 +371,7 @@ extension ExploreMarketViewController {
         static func viewModels(market: GlobalMarket) -> [GlobalMarketViewModel] {
             [
                 GlobalMarketViewModel(
-                    caption: "Market Cap",
+                    caption: R.string.localizable.market_cap(),
                     primary: NamedLargeNumberFormatter.string(
                         number: market.marketCap * Currency.current.decimalRate,
                         currencyPrefix: true
@@ -382,7 +382,7 @@ extension ExploreMarketViewController {
                     secondaryColor: market.marketCapChangePercentage >= 0 ? .priceRising : .priceFalling
                 ),
                 GlobalMarketViewModel(
-                    caption: "24h Volume",
+                    caption: R.string.localizable.volume_24h(),
                     primary: NamedLargeNumberFormatter.string(
                         number: market.volume * Currency.current.decimalRate,
                         currencyPrefix: true
@@ -393,7 +393,7 @@ extension ExploreMarketViewController {
                     secondaryColor: market.volumeChangePercentage >= 0 ? .priceRising : .priceFalling
                 ),
                 GlobalMarketViewModel(
-                    caption: "Dominance",
+                    caption: R.string.localizable.dominance(),
                     primary: NumberFormatter.percentage.string(
                         decimal: market.dominancePercentage / 100
                     ),

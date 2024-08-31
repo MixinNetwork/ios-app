@@ -169,6 +169,8 @@
 "change_name" = "修改名稱";
 "change_number" = "修改手機號";
 "change_number_instead" = "僅修改手機號碼";
+"change_percent_period_day" = "%d天 %%";
+"change_percent_period_hour" = "%d小時 %%";
 "change_phone_number" = "修改手機號";
 "change_pin" = "修改 PIN";
 "change_pin_interval_hint" = "輸入 PIN 修改使用間隔";
@@ -387,6 +389,7 @@
 "disconnected" = "已斷開";
 "disconnecting" = "正在斷開";
 "dismiss_as_admin" = "撤銷管理員身份";
+"dominance" = "市佔率";
 "done" = "完成";
 "dont_have_assets" = "沒有資產";
 "duplicate_transfer_confirmation" = "重複轉賬確認";
@@ -1074,6 +1077,7 @@
 "to_mixin_wallet" = "劃轉到 Mixin 錢包";
 "today" = "今天";
 "token" = "代幣";
+"top_count" = "前 %d";
 "total" = "共計";
 "total_amount" = "總金額";
 "total_supply" = "總量";
@@ -1197,6 +1201,7 @@
 "voice_call_cancelled" = "對方已取消語音通話";
 "voice_call_has_been_declined" = "已拒絕通話";
 "vol_24h" = "24 小時交易量（%@）";
+"volume_24h" = "24 小時交易量";
 "waiting" = "等待中";
 "waiting_for_other_device" = "等待其他裝置...";
 "waiting_for_other_device_login" = "在新裝置上登入當前賬戶並選擇從其他手機恢復";
@@ -1217,6 +1222,8 @@
 "wallet_transfer_recent_tip" = "你已經在 %1$@ 前給 %2$@ 轉賬了 %3$@，確認還要再轉一次嗎？";
 "wallet_withdrawal_changed" = "手續費已從 %1$@ 變更為 %2$@，要更新手續費並繼續提現嗎？";
 "wallet_withdrawal_recent_tip" = "你已經在 %1$@ 前提現 %3$@ 到 %2$@，確認還要再提一次嗎？";
+"watchlist" = "自選列表";
+"watchlist_empty" = "您的自選列表為空";
 "web_cannot_reached_desc" = "無法訪問 %@，請檢查你的網路並嘗試切換 4G、Wi-Fi 或 VPN 後重新載入頁面。";
 "web_cannot_reached_title" = "無法訪問此網頁";
 "web_suspicious_link_tips" = "該連結不在對應的機器人域名白名單內。";

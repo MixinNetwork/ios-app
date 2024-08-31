@@ -169,6 +169,8 @@
 "change_name" = "Изменить имя";
 "change_number" = "Изменить номер";
 "change_number_instead" = "Вместо этого изменить номер";
+"change_percent_period_day" = "%dD %%";
+"change_percent_period_hour" = "%dh %%";
 "change_phone_number" = "Изменить номер телефона";
 "change_pin" = "Изменить PIN-код";
 "change_pin_interval_hint" = "Подтвердите PIN-код, чтобы изменить интервал";
@@ -387,6 +389,7 @@
 "disconnected" = "Disconnected";
 "disconnecting" = "Отключение";
 "dismiss_as_admin" = "Закрыть как администратор";
+"dominance" = "Dominance";
 "done" = "Сделано";
 "dont_have_assets" = "No assets";
 "duplicate_transfer_confirmation" = "Дубликат подтверждения перевода";
@@ -1074,6 +1077,7 @@
 "to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Сегодня";
 "token" = "Token";
+"top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
 "total_supply" = "Total Supply";
@@ -1197,6 +1201,7 @@
 "voice_call_cancelled" = "голосовой вызов отменен";
 "voice_call_has_been_declined" = "Голосовой вызов был отклонен";
 "vol_24h" = "24H VOL(%@)";
+"volume_24h" = "24h Volume";
 "waiting" = "Ожидание";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1217,6 +1222,8 @@
 "wallet_transfer_recent_tip" = "Вы уже перевели %3$@ на %2$@ %1$@ назад. Вы хотите перевести его снова?";
 "wallet_withdrawal_changed" = "Комиссия за снятие средств была изменена с %1$@ на %2$@. Вы хотите продолжить обработку запроса?";
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
+"watchlist" = "Watchlist";
+"watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ заняло слишком много времени для ответа. Пожалуйста, проверьте свою сеть и попробуйте переключить 4G, Wi-Fi или VPN, чтобы перезагрузить страницу.";
 "web_cannot_reached_title" = "Эта веб-страница недоступна";
 "web_suspicious_link_tips" = "Ссылки нет в соответствующих шаблонах ресурсов.";

@@ -31,7 +31,9 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     
     var changePeriod: Market.ChangePeriod = .sevenDays {
         didSet {
-            changePeriodButton.setTitle(changePeriod.shortTitle, for: .normal)
+            let title = changePeriod.displayTitle
+            changePeriodButton.setTitle(title, for: .normal)
+            periodButton.setTitle(title, for: .normal)
         }
     }
     
@@ -41,13 +43,13 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
             case .all:
                 segmentedControl.selectItem(at: 1)
                 UIView.performWithoutAnimation {
-                    marketCapButton.setTitle("Market Cap", for: .normal)
+                    marketCapButton.setTitle(R.string.localizable.market_cap(), for: .normal)
                     marketCapButton.layoutIfNeeded()
                 }
             case .favorite:
                 segmentedControl.selectItem(at: 0)
                 UIView.performWithoutAnimation {
-                    marketCapButton.setTitle("Watchlist", for: .normal)
+                    marketCapButton.setTitle(R.string.localizable.watchlist(), for: .normal)
                     marketCapButton.layoutIfNeeded()
                 }
             }
@@ -78,11 +80,13 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         limitButton.menu = UIMenu(children: limitActions(selectedLimit: .top100))
         limitButton.showsMenuAsPrimaryAction = true
         limitButton.layer.masksToBounds = true        
+        changePeriodButton.setTitle(changePeriod.displayTitle, for: .normal)
         changePeriodButton.semanticContentAttribute = .forceRightToLeft
         changePeriodButton.showsMenuAsPrimaryAction = true
         changePeriodButton.layer.masksToBounds = true
         marketCapButton.semanticContentAttribute = .forceRightToLeft
         priceButton.semanticContentAttribute = .forceRightToLeft
+        periodButton.setTitle(changePeriod.displayTitle, for: .normal)
         periodButton.semanticContentAttribute = .forceRightToLeft
     }
     

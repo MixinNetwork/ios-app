@@ -52,6 +52,9 @@
                     <state key="normal" title="Price">
                         <color key="titleColor" name="text_tertiary"/>
                     </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="price"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="sortByPrice:" destination="8bo-Qm-44A" eventType="touchUpInside" id="3Ch-IK-gM7"/>
                     </connections>

@@ -78,9 +78,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord, M
     )
     
     public private(set) lazy var decimalPriceChangePercentage7D = Decimal(string: priceChangePercentage7D, locale: .enUSPOSIX) ?? 0
-    
     public private(set) lazy var localizedPriceChangePercentage7D = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage7D / 100)
-    
     public private(set) lazy var sparklineIn7DURL = URL(string: sparklineIn7D)
     
 }
@@ -145,10 +143,6 @@ extension Market {
             }
         }
         
-        public var displayTitle: String {
-            "Top \(count)"
-        }
-        
     }
     
     public enum Category: String {
@@ -157,38 +151,10 @@ extension Market {
     }
     
     public enum ChangePeriod: CaseIterable {
-        
         case oneHour
         case twentyFourHours
         case sevenDays
         case thirtyDays
-        
-        public var shortTitle: String {
-            switch self {
-            case .oneHour:
-                "1h %"
-            case .twentyFourHours:
-                "24h %"
-            case .sevenDays:
-                "7D %"
-            case .thirtyDays:
-                "30D %"
-            }
-        }
-        
-        public var fullTitle: String {
-            switch self {
-            case .oneHour:
-                "1 Hour"
-            case .twentyFourHours:
-                "24 Hours"
-            case .sevenDays:
-                "7 Days"
-            case .thirtyDays:
-                "30 Days"
-            }
-        }
-        
     }
     
 }

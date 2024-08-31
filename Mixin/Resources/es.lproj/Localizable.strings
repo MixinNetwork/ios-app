@@ -169,6 +169,8 @@
 "change_name" = "Cambiar nombre";
 "change_number" = "Cambie el número";
 "change_number_instead" = "Cambiar número en su lugar";
+"change_percent_period_day" = "%dD %%";
+"change_percent_period_hour" = "%dh %%";
 "change_phone_number" = "Cambiar número de teléfono";
 "change_pin" = "Cambiar PIN";
 "change_pin_interval_hint" = "Confirmar PIN para cambiar el intervalo";
@@ -387,6 +389,7 @@
 "disconnected" = "Disconnected";
 "disconnecting" = "Desconectando";
 "dismiss_as_admin" = "Descartar como administrador";
+"dominance" = "Dominance";
 "done" = "Hecho";
 "dont_have_assets" = "¿No tienes activos?";
 "duplicate_transfer_confirmation" = "Confirmación de transferencia duplicada";
@@ -1074,6 +1077,7 @@
 "to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Hoy";
 "token" = "Token";
+"top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
 "total_supply" = "Total Supply";
@@ -1197,6 +1201,7 @@
 "voice_call_cancelled" = "llamada de voz cancelada";
 "voice_call_has_been_declined" = "La llamada de voz ha sido rechazada";
 "vol_24h" = "24H VOL(%@)";
+"volume_24h" = "24h Volume";
 "waiting" = "Esperando";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1217,6 +1222,8 @@
 "wallet_transfer_recent_tip" = "Ya has transferido %3$@ a %2$@ hace %1$@. ¿Quieres transferirlo de nuevo?";
 "wallet_withdrawal_changed" = "La tarifa de retiro se ha cambiado de %1$@ a %2$@, ¿quieres continuar con la solicitud?";
 "wallet_withdrawal_recent_tip" = "Ya has retirado %3$@ a %2$@ hace %1$@, ¿quieres retirarlo de nuevo?";
+"watchlist" = "Watchlist";
+"watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ ha tardado demasiado en responder. Verifica tu red e intenta cambiar 4G, Wi-Fi o VPN para recargar la página.";
 "web_cannot_reached_title" = "No se puede acceder a esta página web";
 "web_suspicious_link_tips" = "El enlace no está en los patrones de recursos correspondientes.";

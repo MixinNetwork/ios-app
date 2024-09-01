@@ -6,6 +6,11 @@ extension SDWebImageManager {
     static let localImage = SDWebImageManager(cache: SDImageCache.shared, loader: LocalImageLoader())
     static let assetIcon = SDWebImageManager(cache: SDImageCache.assetIcon, loader: SDImageLoadersManager.shared)
     static let persistentSticker = SDWebImageManager(cache: SDImageCache.persistentSticker, loader: SDImageLoadersManager.shared)
+    static let templateTransforming: SDWebImageManager = {
+        let manager = SDWebImageManager(cache: SDImageCache.shared, loader: SDImageLoadersManager.shared)
+        manager.transformer = TemplateImageTransformer()
+        return manager
+    }()
     
 }
 
@@ -29,6 +34,16 @@ extension SDImageCache {
     
 }
 
+final class TemplateImageTransformer: NSObject, SDImageTransformer {
+    
+    let transformerKey: String = "templated"
+    
+    func transformedImage(with image: UIImage, forKey key: String) -> UIImage? {
+        image.withRenderingMode(.alwaysTemplate)
+    }
+    
+}
+
 public let localImageContext: [SDWebImageContextOption: Any] = [
     .customManager: SDWebImageManager.localImage,
     .storeCacheType: SDImageCacheType.memory.rawValue,
@@ -42,4 +57,8 @@ public let assetIconContext: [SDWebImageContextOption: Any] = [
 
 public let persistentStickerContext: [SDWebImageContextOption: Any] = [
     .customManager: SDWebImageManager.persistentSticker
+]
+
+public let templateImageTransformingContext: [SDWebImageContextOption: Any] = [
+    .customManager: SDWebImageManager.templateTransforming
 ]

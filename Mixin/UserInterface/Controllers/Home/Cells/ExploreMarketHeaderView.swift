@@ -16,6 +16,8 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     @IBOutlet weak var priceButton: UIButton!
     @IBOutlet weak var periodButton: UIButton!
     
+    @IBOutlet weak var priceButtonTrailingConstraint: NSLayoutConstraint!
+    
     weak var delegate: Delegate?
     
     var limit: Market.Limit = .top100 {
@@ -86,6 +88,15 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         changePeriodButton.layer.masksToBounds = true
         marketCapButton.semanticContentAttribute = .forceRightToLeft
         priceButton.semanticContentAttribute = .forceRightToLeft
+        let priceButtonMargin: CGFloat = switch ScreenWidth.current {
+        case .long:
+            40
+        case .medium:
+            20
+        case .short:
+            10
+        }
+        priceButtonTrailingConstraint.constant = 20 + 60 + priceButtonMargin - priceButton.contentEdgeInsets.right
         periodButton.setTitle(changePeriod.displayTitle, for: .normal)
         periodButton.semanticContentAttribute = .forceRightToLeft
     }

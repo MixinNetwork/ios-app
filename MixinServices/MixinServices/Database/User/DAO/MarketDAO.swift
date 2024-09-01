@@ -93,8 +93,8 @@ public final class MarketDAO: UserDatabaseDAO {
     }
     
     public func favorite(coinID: String) {
-        let sql = "UPDATE market_favored SET is_favored = TRUE WHERE coin_id = ?"
-        db.execute(sql: sql, arguments: [coinID])
+        let market = FavoredMarket(coinID: coinID, isFavored: true, createdAt: Date().toUTCString())
+        db.save(market)
     }
     
     public func unfavorite(coinID: String) {

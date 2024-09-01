@@ -15,14 +15,14 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="97" placeholderIntrinsicHeight="38" translatesAutoresizingMaskIntoConstraints="NO" id="gPU-Xh-AWI" customClass="OutlineSegmentedControl" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="10" y="10" width="97" height="38"/>
+                    <rect key="frame" x="20" y="10" width="97" height="38"/>
                     <color key="backgroundColor" name="background"/>
                     <connections>
                         <action selector="segmentValueChanged:" destination="8bo-Qm-44A" eventType="valueChanged" id="tJ0-6A-9f1"/>
                     </connections>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="uT0-8z-7TE">
-                    <rect key="frame" x="355" y="10" width="28" height="37"/>
+                    <rect key="frame" x="345" y="10" width="28" height="37"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Vb-ld-Qid" customClass="OutlineButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="28" height="37"/>
@@ -45,7 +45,7 @@
                     </subviews>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oqe-E4-UR0">
-                    <rect key="frame" x="264" y="55" width="49" height="39"/>
+                    <rect key="frame" x="253" y="55" width="49" height="39"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -60,7 +60,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Yp-6g-I9K">
-                    <rect key="frame" x="343" y="55" width="51" height="39"/>
+                    <rect key="frame" x="332" y="55" width="51" height="39"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -72,7 +72,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fmx-J1-XiM">
-                    <rect key="frame" x="0.0" y="54" width="89" height="40"/>
+                    <rect key="frame" x="10" y="54" width="89" height="40"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -87,15 +87,15 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="gPU-Xh-AWI" firstAttribute="top" secondItem="8bo-Qm-44A" secondAttribute="top" constant="10" id="9cL-t0-1iR"/>
-                <constraint firstItem="Fmx-J1-XiM" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" id="AFW-ec-tJF"/>
+                <constraint firstItem="Fmx-J1-XiM" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" constant="10" id="AFW-ec-tJF"/>
                 <constraint firstItem="uT0-8z-7TE" firstAttribute="top" secondItem="8bo-Qm-44A" secondAttribute="top" constant="10" id="DX1-LM-SSx"/>
-                <constraint firstAttribute="trailing" secondItem="2Yp-6g-I9K" secondAttribute="trailing" constant="-1" id="Ex1-zv-uhc"/>
+                <constraint firstAttribute="trailing" secondItem="2Yp-6g-I9K" secondAttribute="trailing" constant="10" id="Ex1-zv-uhc"/>
+                <constraint firstAttribute="trailing" secondItem="oqe-E4-UR0" secondAttribute="trailing" constant="91" id="IGB-xK-g0Q"/>
                 <constraint firstAttribute="bottom" secondItem="Fmx-J1-XiM" secondAttribute="bottom" id="Jty-eX-bXg"/>
-                <constraint firstItem="2Yp-6g-I9K" firstAttribute="leading" secondItem="oqe-E4-UR0" secondAttribute="trailing" constant="30" id="KFx-zP-avQ"/>
-                <constraint firstItem="gPU-Xh-AWI" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" constant="10" id="bzA-qM-DMQ"/>
+                <constraint firstItem="gPU-Xh-AWI" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" constant="20" id="bzA-qM-DMQ"/>
                 <constraint firstAttribute="bottom" secondItem="2Yp-6g-I9K" secondAttribute="bottom" id="c9Q-cV-LM8"/>
                 <constraint firstAttribute="bottom" secondItem="oqe-E4-UR0" secondAttribute="bottom" id="m3z-CB-OVj"/>
-                <constraint firstAttribute="trailing" secondItem="uT0-8z-7TE" secondAttribute="trailing" constant="10" id="mMw-i1-0OQ"/>
+                <constraint firstAttribute="trailing" secondItem="uT0-8z-7TE" secondAttribute="trailing" constant="20" id="mMw-i1-0OQ"/>
             </constraints>
             <connections>
                 <outlet property="changePeriodButton" destination="8Gr-4N-aMU" id="a3W-de-Iox"/>
@@ -103,6 +103,7 @@
                 <outlet property="marketCapButton" destination="Fmx-J1-XiM" id="CWB-Cq-sOf"/>
                 <outlet property="periodButton" destination="2Yp-6g-I9K" id="oKV-s2-iRa"/>
                 <outlet property="priceButton" destination="oqe-E4-UR0" id="gae-GE-ZKf"/>
+                <outlet property="priceButtonTrailingConstraint" destination="IGB-xK-g0Q" id="Ckc-m9-iH6"/>
                 <outlet property="segmentedControl" destination="gPU-Xh-AWI" id="KpI-nD-wea"/>
             </connections>
             <point key="canvasLocation" x="-376.3358778625954" y="-39.436619718309863"/>

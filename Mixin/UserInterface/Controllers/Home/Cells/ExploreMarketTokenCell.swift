@@ -34,7 +34,14 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         contentStackView.setCustomSpacing(10, after: iconView)
-        contentStackView.setCustomSpacing(24, after: priceLabel)
+        switch ScreenWidth.current {
+        case .long:
+            contentStackView.setCustomSpacing(40, after: priceLabel)
+        case .medium:
+            contentStackView.setCustomSpacing(20, after: priceLabel)
+        case .short:
+            contentStackView.setCustomSpacing(10, after: priceLabel)
+        }
         rankLabel.font = .condensed(size: 12)
         rankLabel.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 0, right: 4)
         priceLabel.setFont(scaledFor: .systemFont(ofSize: 14, weight: .medium),
@@ -61,12 +68,16 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
             chartImageView.sd_setImage(with: nil)
             changeLabel.text = nil
         case .sevenDays:
-            chartImageView.sd_setImage(with: market.sparklineIn7DURL)
+            chartImageView.sd_setImage(with: market.sparklineIn7DURL,
+                                       placeholderImage: nil,
+                                       context: templateImageTransformingContext)
             changeLabel.text = market.localizedPriceChangePercentage7D
             if market.decimalPriceChangePercentage7D >= 0 {
                 changeLabel.textColor = .priceRising
+                chartImageView.tintColor = .priceRising
             } else {
                 changeLabel.textColor = .priceFalling
+                chartImageView.tintColor = .priceFalling
             }
         case .thirtyDays:
             chartImageView.sd_setImage(with: nil)

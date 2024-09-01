@@ -54,14 +54,6 @@ final class ExploreMarketViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.boundarySupplementaryItems = [header]
                 section.interGroupSpacing = 20
-                section.contentInsets = switch ScreenWidth.current {
-                case .long:
-                    NSDirectionalEdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30)
-                case .medium:
-                    NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
-                case .short:
-                    NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-                }
                 return section
             case .noFavoriteIndicator:
                 let margin: CGFloat = switch ScreenHeight.current {
@@ -91,22 +83,32 @@ final class ExploreMarketViewController: UIViewController {
         collectionView.register(R.nib.exploreMarketHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
         collectionView.dataSource = self
         collectionView.contentInset.bottom = 20
+        reloadGlobalMarketFromLocal(overwrites: false)
+        reloadMarketsFromLocal(overwrites: false)
+        reloadGlobalMarketFromRemote()
+        startReloadingMarketsFromRemote()
+        syncWatchlistFromRemote()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadAll(_:)), name: Currency.currentCurrencyDidChangeNotification, object: nil)
+    }
+    
+    @objc private func reloadAll(_ notificaiton: Notification) {
+        reloadGlobalMarketFromLocal(overwrites: true)
+        reloadMarketsFromLocal(overwrites: true)
+    }
+    
+    private func reloadGlobalMarketFromLocal(overwrites: Bool) {
         DispatchQueue.global().async { [weak self] in
             guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
                 return
             }
             DispatchQueue.main.async {
-                guard let self, self.globalMarketViewModels.isEmpty else {
+                guard let self, self.globalMarketViewModels.isEmpty || overwrites else {
                     return
                 }
                 self.globalMarketViewModels = GlobalMarketViewModel.viewModels(market: market)
                 self.collectionView.reloadData()
             }
         }
-        reloadMarketsFromLocal(overwrites: false)
-        reloadGlobalMarketFromRemote()
-        startReloadingMarketsFromRemote()
-        syncWatchlistFromRemote()
     }
     
     private func reloadGlobalMarketFromRemote() {

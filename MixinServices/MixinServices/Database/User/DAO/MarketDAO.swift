@@ -31,9 +31,9 @@ public final class MarketDAO: UserDatabaseDAO {
         case .price(.descending):
             sql += "\nORDER BY CAST(m.current_price AS REAL) DESC"
         case .change(.ascending):
-            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_24h AS REAL)) ASC"
+            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_7d AS REAL)) ASC"
         case .change(.descending):
-            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_24h AS REAL)) DESC"
+            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_7d AS REAL)) DESC"
         }
         sql += "\nLIMIT \(limit.count)"
         return db.select(with: sql)
@@ -88,8 +88,17 @@ public final class MarketDAO: UserDatabaseDAO {
         db.save(history)
     }
     
-    public func saveFavoredMarkets(_ favoredMarkets: [FavoredMarket]) {
-        db.save(favoredMarkets)
+    public func replaceFavoredMarkets(
+        with favoredMarkets: [FavoredMarket],
+        completion: @escaping () -> Void
+    ) {
+        db.write { db in
+            try db.execute(sql: "DELETE FROM market_favored")
+            try favoredMarkets.save(db)
+            db.afterNextTransaction { _ in
+                completion()
+            }
+        }
     }
     
     public func favorite(coinID: String) {

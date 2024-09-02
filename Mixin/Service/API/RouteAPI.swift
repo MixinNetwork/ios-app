@@ -38,8 +38,11 @@ final class RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
-    static func globalMarket(completion: @escaping (MixinAPI.Result<GlobalMarket>) -> Void) {
-        request(method: .get, path: "/markets/globals", completion: completion)
+    static func globalMarket(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<GlobalMarket>) -> Void
+    ) {
+        request(method: .get, path: "/markets/globals", queue: queue, completion: completion)
     }
     
     static func markets(

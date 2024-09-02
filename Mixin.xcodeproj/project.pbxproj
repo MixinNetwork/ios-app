@@ -830,6 +830,7 @@
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
 		944ED8D22646535B00C97215 /* WebContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8D12646535B00C97215 /* WebContentView.xib */; };
 		944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */; };
+		94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */; };
 		945138B82C6622F600839CBB /* TokenMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945138B72C6622F600839CBB /* TokenMarketCell.xib */; };
 		945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945138B62C6622F600839CBB /* TokenMarketCell.swift */; };
 		94525B342C4E3B91008BA7A8 /* RouteTokenSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */; };
@@ -2182,6 +2183,7 @@
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
 		944ED8D12646535B00C97215 /* WebContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebContentView.xib; sourceTree = "<group>"; };
 		944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPopupViewController.swift; sourceTree = "<group>"; };
+		94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGlobalMarketJob.swift; sourceTree = "<group>"; };
 		945138B62C6622F600839CBB /* TokenMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMarketCell.swift; sourceTree = "<group>"; };
 		945138B72C6622F600839CBB /* TokenMarketCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMarketCell.xib; sourceTree = "<group>"; };
 		94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTokenSource.swift; sourceTree = "<group>"; };
@@ -4782,6 +4784,7 @@
 				947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */,
 				842347ED2695BA6400009A39 /* InitializeBotJob.swift */,
 				94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */,
+				94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -5754,6 +5757,7 @@
 				7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */,
 				9497AEE92C5E264600966946 /* TransactionHistoryViewController.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
+				94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */,
 				9457F7632B6EEAFA008FC98F /* TransferPreviewViewController.swift in Sources */,
 				9419794F2BA47620002BA19F /* Web3SignViewController.swift in Sources */,
 				7BC03AB22424EA9B00931D21 /* StorageUsageCell.swift in Sources */,

@@ -78,10 +78,12 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
             R.image.market_favorite()!,
             R.image.market_rank()!,
         ]
+        limitButton.imageView?.contentMode = .center
         limitButton.semanticContentAttribute = .forceRightToLeft
         limitButton.menu = UIMenu(children: limitActions(selectedLimit: .top100))
         limitButton.showsMenuAsPrimaryAction = true
         limitButton.layer.masksToBounds = true        
+        changePeriodButton.imageView?.contentMode = .center
         changePeriodButton.setTitle(changePeriod.displayTitle, for: .normal)
         changePeriodButton.semanticContentAttribute = .forceRightToLeft
         changePeriodButton.showsMenuAsPrimaryAction = true

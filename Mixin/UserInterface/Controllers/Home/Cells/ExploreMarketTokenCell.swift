@@ -70,6 +70,7 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
         case .sevenDays:
             chartImageView.sd_setImage(with: market.sparklineIn7DURL,
                                        placeholderImage: nil,
+                                       options: .refreshCached,
                                        context: templateImageTransformingContext)
             changeLabel.text = market.localizedPriceChangePercentage7D
             if market.decimalPriceChangePercentage7D >= 0 {

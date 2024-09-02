@@ -168,7 +168,7 @@ extension ExploreViewController: UICollectionViewDelegate {
         switch segment {
         case .bots:
             switchToChild(exploreBotsViewController)
-        case .market:
+        case .markets:
             switchToChild(exploreMarketViewController)
         case .evm:
             switchToChild(evmViewController)
@@ -197,7 +197,7 @@ extension ExploreViewController {
     enum Segment: Int, CaseIterable {
         
         case bots
-        case market
+        case markets
         case evm
         case solana
         
@@ -205,8 +205,8 @@ extension ExploreViewController {
             switch self {
             case .bots:
                 R.string.localizable.bots_title()
-            case .market:
-                R.string.localizable.market()
+            case .markets:
+                R.string.localizable.markets()
             case .evm:
                 "Ethereum"
             case .solana:

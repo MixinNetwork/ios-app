@@ -11,7 +11,7 @@ final class ExploreMarketViewController: UIViewController {
     private var category = AppGroupUserDefaults.User.marketCategory
     private var order: Market.OrderingExpression = .marketCap(.descending)
     private var changePeriod: Market.ChangePeriod = .sevenDays
-    private var limit: Market.Limit = .top100
+    private var limit: Market.Limit? = .top100
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -25,14 +25,14 @@ final class ExploreMarketViewController: UIViewController {
         super.viewDidLoad()
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
-            case .info:
+            case .global:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0.0, leading: 6, bottom: 0, trailing: 6)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(132), heightDimension: .absolute(90))
                 let group: NSCollectionLayoutGroup = .vertical(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 0, trailing: 12)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
                 section.orthogonalScrollingBehavior = .groupPaging
                 return section
             case .coins:
@@ -194,7 +194,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
-        case .info:
+        case .global:
             globalMarketViewModels.count
         case .coins:
             switch category {
@@ -214,7 +214,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch Section(rawValue: indexPath.section)! {
-        case .info:
+        case .global:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_global_market, for: indexPath)!
             let info = globalMarketViewModels[indexPath.item]
             cell.captionLabel.text = info.caption
@@ -252,13 +252,13 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
 
 extension ExploreMarketViewController: ExploreMarketHeaderView.Delegate {
     
-    func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToLimit limit: Market.Limit) {
-        self.limit = limit
-        reloadMarkets(overwrites: true)
-    }
-    
-    func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToCategory category: Market.Category) {
+    func exploreMarketHeaderView(
+        _ view: ExploreMarketHeaderView,
+        didSwitchToCategory category: Market.Category,
+        limit: Market.Limit?
+    ) {
         self.category = category
+        self.limit = limit
         reloadMarkets(overwrites: true)
     }
     
@@ -331,7 +331,7 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
 extension ExploreMarketViewController {
     
     private enum Section: Int, CaseIterable {
-        case info
+        case global
         case coins
         case noFavoriteIndicator
     }
@@ -430,7 +430,7 @@ extension ExploreMarketViewController {
             RouteAPI.markets(category: .all, queue: .global()) { [refreshInterval] result in
                 switch result {
                 case let .success(markets):
-                    MarketDAO.shared.save(markets: markets) {
+                    MarketDAO.shared.replaceMarkets(with: markets) {
                         Logger.general.debug(category: "MarketPeriodicRequester", message: "Markets saved")
                         DispatchQueue.main.async {
                             self.onSuccess?()

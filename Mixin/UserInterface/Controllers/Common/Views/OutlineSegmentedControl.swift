@@ -55,6 +55,9 @@ final class OutlineSegmentedControl: UIControl {
     }
     
     @objc private func tapItem(_ sender: UIButton) {
+        guard selectedItemIndex != sender.tag else {
+            return
+        }
         selectItem(at: sender.tag)
         sendActions(for: .valueChanged)
     }

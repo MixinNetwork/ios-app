@@ -8,7 +8,7 @@ public final class MarketDAO: UserDatabaseDAO {
     public func markets(
         category: Market.Category,
         order: Market.OrderingExpression,
-        limit: Market.Limit
+        limit: Market.Limit?
     ) -> [FavorableMarket] {
         var sql = """
         SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
@@ -35,7 +35,9 @@ public final class MarketDAO: UserDatabaseDAO {
         case .change(.descending):
             sql += "\nORDER BY ABS(CAST(m.price_change_percentage_7d AS REAL)) DESC"
         }
-        sql += "\nLIMIT \(limit.count)"
+        if let count = limit?.count {
+            sql += "\nLIMIT \(count)"
+        }
         return db.select(with: sql)
     }
     
@@ -66,7 +68,7 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func save(markets: [Market], completion: @escaping () -> Void) {
+    public func replaceMarkets(with markets: [Market], completion: @escaping () -> Void) {
         let now = Date().toUTCString()
         let ids: [MarketID] = markets.reduce(into: []) { result, market in
             guard let assetIDs = market.assetIDs else {
@@ -78,9 +80,13 @@ public final class MarketDAO: UserDatabaseDAO {
             }
             result.append(contentsOf: ids)
         }
-        db.save(ids)
-        db.save(markets) { _ in
-            completion()
+        db.write { db in
+            try db.execute(sql: "DELETE FROM markets")
+            try ids.save(db)
+            try markets.save(db)
+            db.afterNextTransaction { _ in
+                completion()
+            }
         }
     }
     

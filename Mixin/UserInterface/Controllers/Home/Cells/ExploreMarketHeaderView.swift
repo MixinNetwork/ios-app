@@ -4,8 +4,7 @@ import MixinServices
 final class ExploreMarketHeaderView: UICollectionReusableView {
 
     protocol Delegate: AnyObject {
-        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToLimit limit: Market.Limit)
-        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToCategory category: Market.Category)
+        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToCategory category: Market.Category, limit: Market.Limit?)
         func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression)
     }
     
@@ -20,13 +19,18 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     
     weak var delegate: Delegate?
     
-    var limit: Market.Limit = .top100 {
+    var limit: Market.Limit? = .top100 {
         didSet {
             UIView.performWithoutAnimation {
-                limitButton.setTitle(limit.displayTitle, for: .normal)
-                limitButton.menu = UIMenu(children: limitActions(selectedLimit: limit))
-                limitButton.isHidden = false
-                limitButton.layoutIfNeeded()
+                if let limit {
+                    limitButton.setTitle(limit.displayTitle, for: .normal)
+                    limitButton.menu = UIMenu(children: limitActions(selectedLimit: limit))
+                    limitButton.isHidden = false
+                    limitButton.layoutIfNeeded()
+                    limitButton.isHidden = false
+                } else {
+                    limitButton.isHidden = true
+                }
             }
         }
     }
@@ -113,10 +117,12 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         switch sender.selectedItemIndex {
         case 0:
             category = .favorite
-            delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category)
+            limit = nil
+            delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category, limit: limit)
         case 1:
             category = .all
-            delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category)
+            limit = .top100
+            delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category, limit: limit)
         default:
             break
         }
@@ -154,7 +160,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     
     private func setLimit(_ limit: Market.Limit) {
         self.limit = limit
-        delegate?.exploreMarketHeaderView(self, didSwitchToLimit: limit)
+        delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category, limit: limit)
     }
     
     private func iconButton(ordering: Market.OrderingExpression) -> UIButton {

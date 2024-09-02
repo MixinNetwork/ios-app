@@ -64,7 +64,6 @@
                                 <color key="backgroundColor" name="background"/>
                                 <color key="tintColor" name="chat_pin_count_background"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
                                 </userDefinedRuntimeAttributes>

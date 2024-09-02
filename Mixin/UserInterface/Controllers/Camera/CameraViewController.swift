@@ -78,6 +78,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadingView.style = .large
         previewView.session = session
         sessionQueue.async {
             self.configureSession()

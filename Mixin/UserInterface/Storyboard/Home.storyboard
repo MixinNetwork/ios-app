@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -238,7 +238,6 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
                                                 <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
                                                 </userDefinedRuntimeAttributes>
@@ -656,7 +655,6 @@
                                         <rect key="frame" x="177.5" y="0.0" width="20" height="20"/>
                                         <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                     </view>
@@ -749,7 +747,6 @@
                                         <rect key="frame" x="177.5" y="0.0" width="20" height="20"/>
                                         <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                     </view>
@@ -1294,7 +1291,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

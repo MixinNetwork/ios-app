@@ -2,18 +2,10 @@ import UIKit
 
 class ActivityIndicatorView: UIView {
     
-    @IBInspectable var usesLargerStyle: Bool = false {
-        didSet {
-            guard usesLargerStyle != oldValue else {
-                return
-            }
-            if indicatorLayer != nil {
-                reloadIndicatorLayer(usesLargerStyle: usesLargerStyle)
-                if _isAnimating {
-                    setupAnimation()
-                }
-            }
-        }
+    enum Style {
+        case large
+        case medium
+        case custom(diameter: CGFloat, lineWidth: CGFloat)
     }
     
     @IBInspectable var hidesWhenStopped: Bool = true {
@@ -37,12 +29,37 @@ class ActivityIndicatorView: UIView {
         }
     }
     
+    var style: Style = .medium {
+        didSet {
+            if indicatorLayer != nil {
+                reloadIndicatorLayer()
+                if _isAnimating {
+                    setupAnimation()
+                }
+            }
+        }
+    }
+    
     var lineWidth: CGFloat {
-        return usesLargerStyle ? 3 : 2
+        switch style {
+        case .large:
+            3
+        case .medium:
+            2
+        case let .custom(_, lineWidth):
+            lineWidth
+        }
     }
     
     var contentLength: CGFloat {
-        return usesLargerStyle ? 37 : 20
+        switch style {
+        case .large:
+            37
+        case .medium:
+            20
+        case let .custom(diameter, _):
+            diameter
+        }
     }
     
     // Indicator will stay in center vertically if indicatorCenterY is nil
@@ -100,7 +117,7 @@ class ActivityIndicatorView: UIView {
             return
         }
         if indicatorLayer == nil {
-            reloadIndicatorLayer(usesLargerStyle: usesLargerStyle)
+            reloadIndicatorLayer()
         }
         if hidesWhenStopped {
             isHidden = false
@@ -141,7 +158,7 @@ class ActivityIndicatorView: UIView {
         }
     }
     
-    private func reloadIndicatorLayer(usesLargerStyle: Bool) {
+    private func reloadIndicatorLayer() {
         self.indicatorLayer?.removeFromSuperlayer()
         let indicatorLayer = CAShapeLayer()
         indicatorLayer.backgroundColor = UIColor.clear.cgColor

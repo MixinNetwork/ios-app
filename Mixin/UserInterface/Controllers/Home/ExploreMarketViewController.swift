@@ -305,7 +305,7 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
                     cell.isFavorited = false
                     updateModel(isFavorited: false)
                 case .failure(let error):
-                    showAutoHiddenHud(style: .error, text: "\(error)")
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
@@ -320,7 +320,7 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
                     cell.isFavorited = true
                     updateModel(isFavorited: true)
                 case .failure(let error):
-                    showAutoHiddenHud(style: .error, text: "\(error)")
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         }

@@ -1233,7 +1233,7 @@ extension ReceiveMessageService {
     }
     
     private func processSafeSnapshotMessage(data: BlazeMessageData) {
-        guard let base64Data = Data(base64Encoded: data.data), let snapshot = (try? JSONDecoder.default.decode(SafeSnapshot.self, from: base64Data)) else {
+        guard let base64Data = Data(base64Encoded: data.data), var snapshot = (try? JSONDecoder.default.decode(SafeSnapshot.self, from: base64Data)) else {
             return
         }
         checkUser(userId: snapshot.opponentID, tryAgain: true)
@@ -1251,12 +1251,15 @@ extension ReceiveMessageService {
         }
         
         let depositHash: String?
-        if snapshot.type == SnapshotType.deposit.rawValue, let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
+        if let json = try? JSONSerialization.jsonObject(with: base64Data) as? [String: Any] {
             depositHash = json["deposit_hash"] as? String
         } else {
             depositHash = nil
         }
-        
+        if let hash = depositHash {
+            let deposit = SafeSnapshot.Deposit(hash: hash, sender: "")
+            snapshot = snapshot.replacing(deposit: deposit)
+        }
         SafeSnapshotDAO.shared.save(snapshot: snapshot) { db in
             if let hash = depositHash {
                 try SafeSnapshotDAO.shared.deletePendingSnapshots(depositHash: hash, db: db)
@@ -1273,6 +1276,7 @@ extension ReceiveMessageService {
         
         if let inscriptionHash = snapshot.inscriptionHash, !inscriptionHash.isEmpty {
             let semaphore = DispatchSemaphore(value: 0)
+            let snapshotID = snapshot.id
             Task.detached(priority: .high) {
                 do {
                     let inscription = try await InscriptionItem.fetchAndSave(inscriptionHash: inscriptionHash)
@@ -1282,7 +1286,7 @@ extension ReceiveMessageService {
                 } catch {
                     let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
                     job.messageID = message.messageId
-                    job.snapshotID = snapshot.id
+                    job.snapshotID = snapshotID
                     ConcurrentJobQueue.shared.addJob(job: job)
                     insert(message: message)
                 }

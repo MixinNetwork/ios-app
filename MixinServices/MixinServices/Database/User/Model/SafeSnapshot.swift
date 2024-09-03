@@ -140,6 +140,27 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         self.withdrawal = withdrawal
     }
     
+    func replacing(deposit: Deposit) -> SafeSnapshot {
+        SafeSnapshot(
+            id: self.id,
+            type: self.type,
+            assetID: self.assetID,
+            amount: self.amount,
+            userID: self.userID,
+            opponentID: self.opponentID,
+            memo: self.memo,
+            transactionHash: self.transactionHash,
+            createdAt: self.createdAt,
+            traceID: self.traceID,
+            confirmations: self.confirmations,
+            openingBalance: self.openingBalance,
+            closingBalance: self.closingBalance,
+            inscriptionHash: self.inscriptionHash,
+            deposit: deposit,
+            withdrawal: self.withdrawal
+        )
+    }
+    
 }
 
 extension SafeSnapshot: TableRecord, PersistableRecord {

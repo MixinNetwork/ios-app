@@ -77,9 +77,9 @@ final class TokenPriceChartCell: UITableViewCell {
         }
     }
     
-    func updatePriceAndChange(token: TokenItem, points: [ChartView.Point]?) {
+    func updatePriceAndChange(price: String?, points: [ChartView.Point]?) {
         guard let points, points.count >= 2 else {
-            priceLabel.text = token.localizedFiatMoneyPrice
+            priceLabel.text = price
             changeLabel.text = nil
             return
         }

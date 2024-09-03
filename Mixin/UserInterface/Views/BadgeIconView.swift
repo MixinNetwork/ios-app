@@ -145,6 +145,14 @@ final class BadgeIconView: UIView {
         }
     }
     
+    func setIcon(market: Market) {
+        iconImageView.sd_setImage(with: URL(string: market.iconURL),
+                                  placeholderImage: nil,
+                                  context: assetIconContext)
+        isBadgeHidden = true
+        corner = .round
+    }
+    
     func setIcon(web3Token token: Web3Token) {
         if let url = URL(string: token.iconURL) {
             iconImageView.sd_setImage(with: url,

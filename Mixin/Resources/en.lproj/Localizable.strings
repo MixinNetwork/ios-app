@@ -210,6 +210,8 @@
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "Choose Photo";
+"choose_token" = "Choose %@ Network";
+"choose_token_desc" = "%@ is issued on multiple networks";
 "circle_info" = "Create circles for different groups of chats and quickly switch between them";
 "circle_no_conversation_hint" = "You can add contacts or groups to the current circle";
 "circle_subtitle" = "%d Conversation";

@@ -71,15 +71,92 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord, M
     )
     
     public private(set) lazy var localizedPrice = CurrencyFormatter.localizedString(
-        from: (Decimal(string: currentPrice, locale: .enUSPOSIX) ?? 0) * Currency.current.decimalRate,
+        from: decimalPrice * Currency.current.decimalRate,
         format: .fiatMoneyPrice,
         sign: .never,
         symbol: .currencySymbol
     )
     
+    public private(set) lazy var decimalPrice = Decimal(string: currentPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalPriceChangePercentage7D = Decimal(string: priceChangePercentage7D, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var localizedPriceChangePercentage7D = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage7D / 100)
     public private(set) lazy var sparklineIn7DURL = URL(string: sparklineIn7D)
+    
+    private init(
+        coinID: String, name: String, symbol: String, iconURL: String, currentPrice: String,
+        marketCap: String, marketCapRank: String, totalVolume: String, high24H: String,
+        low24H: String, priceChange24H: String, priceChangePercentage1H: String,
+        priceChangePercentage24H: String, priceChangePercentage7D: String,
+        priceChangePercentage30D: String, marketCapChange24H: String,
+        marketCapChangePercentage24H: String, circulatingSupply: String, 
+        totalSupply: String, maxSupply: String, ath: String, athChangePercentage: String,
+        athDate: String, atl: String, atlChangePercentage: String, atlDate: String,
+        assetIDs: [String]?, sparklineIn7D: String, updatedAt: String
+    ) {
+        self.coinID = coinID
+        self.name = name
+        self.symbol = symbol
+        self.iconURL = iconURL
+        self.currentPrice = currentPrice
+        self.marketCap = marketCap
+        self.marketCapRank = marketCapRank
+        self.totalVolume = totalVolume
+        self.high24H = high24H
+        self.low24H = low24H
+        self.priceChange24H = priceChange24H
+        self.priceChangePercentage1H = priceChangePercentage1H
+        self.priceChangePercentage24H = priceChangePercentage24H
+        self.priceChangePercentage7D = priceChangePercentage7D
+        self.priceChangePercentage30D = priceChangePercentage30D
+        self.marketCapChange24H = marketCapChange24H
+        self.marketCapChangePercentage24H = marketCapChangePercentage24H
+        self.circulatingSupply = circulatingSupply
+        self.totalSupply = totalSupply
+        self.maxSupply = maxSupply
+        self.ath = ath
+        self.athChangePercentage = athChangePercentage
+        self.athDate = athDate
+        self.atl = atl
+        self.atlChangePercentage = atlChangePercentage
+        self.atlDate = atlDate
+        self.assetIDs = assetIDs
+        self.sparklineIn7D = sparklineIn7D
+        self.updatedAt = updatedAt
+    }
+    
+    public func replacingMarketCapRank(with rank: String) -> Market {
+        Market(
+            coinID: coinID,
+            name: name,
+            symbol: symbol,
+            iconURL: iconURL,
+            currentPrice: currentPrice,
+            marketCap: marketCap,
+            marketCapRank: rank,
+            totalVolume: totalVolume,
+            high24H: high24H,
+            low24H: low24H,
+            priceChange24H: priceChange24H,
+            priceChangePercentage1H: priceChangePercentage1H,
+            priceChangePercentage24H: priceChangePercentage24H,
+            priceChangePercentage7D: priceChangePercentage7D,
+            priceChangePercentage30D: priceChangePercentage30D,
+            marketCapChange24H: marketCapChange24H,
+            marketCapChangePercentage24H: marketCapChangePercentage24H,
+            circulatingSupply: circulatingSupply,
+            totalSupply: totalSupply,
+            maxSupply: maxSupply,
+            ath: ath,
+            athChangePercentage: athChangePercentage,
+            athDate: athDate,
+            atl: atl,
+            atlChangePercentage: atlChangePercentage,
+            atlDate: atlDate,
+            assetIDs: assetIDs,
+            sparklineIn7D: sparklineIn7D,
+            updatedAt: updatedAt
+        )
+    }
     
 }
 

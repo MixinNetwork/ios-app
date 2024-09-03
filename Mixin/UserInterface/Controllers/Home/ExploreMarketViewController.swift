@@ -69,15 +69,16 @@ final class ExploreMarketViewController: UIViewController {
             }
         }
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.backgroundColor = R.color.background()
-        view.addSubview(collectionView)
-        collectionView.snp.makeEdgesEqualToSuperview()
         collectionView.register(R.nib.exploreGlobalMarketCell)
         collectionView.register(R.nib.exploreMarketTokenCell)
         collectionView.register(R.nib.watchlistEmptyCell)
         collectionView.register(R.nib.exploreMarketHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
-        collectionView.dataSource = self
+        collectionView.backgroundColor = R.color.background()
         collectionView.contentInset.bottom = 20
+        view.addSubview(collectionView)
+        collectionView.snp.makeEdgesEqualToSuperview()
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
         requester = MarketPeriodicRequester() { [weak self] in
             self?.reloadMarkets(overwrites: true)
@@ -250,6 +251,28 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
     
 }
 
+extension ExploreMarketViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch Section(rawValue: indexPath.section)! {
+        case .global, .noFavoriteIndicator:
+            break
+        case .coins:
+            let markets = switch category {
+            case .all:
+                markets
+            case .favorite:
+                favoriteMarkets
+            }
+            if let market = markets?[indexPath.item] {
+                let controller = MarketViewController.contained(market: market, pushingViewController: self)
+                navigationController?.pushViewController(controller, animated: true)
+            }
+        }
+    }
+    
+}
+
 extension ExploreMarketViewController: ExploreMarketHeaderView.Delegate {
     
     func exploreMarketHeaderView(
@@ -275,15 +298,18 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
-        collectionView.isUserInteractionEnabled = false
-        cell.favoriteActivityIndicatorView.startAnimating()
         let market = switch category {
         case .all:
             markets[indexPath.item]
         case .favorite:
-            favoriteMarkets![indexPath.item]
+            favoriteMarkets?[indexPath.item]
         }
-        
+        guard let market else {
+            assertionFailure()
+            return
+        }
+        collectionView.isUserInteractionEnabled = false
+        cell.favoriteActivityIndicatorView.startAnimating()
         func updateModel(isFavorited: Bool) {
             switch category {
             case .all:

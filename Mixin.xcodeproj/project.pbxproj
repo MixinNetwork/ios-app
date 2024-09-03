@@ -757,7 +757,7 @@
 		9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */; };
 		94287EE12B8743E50088DEAD /* MixinAPIResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */; };
 		94287EE62B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */; };
-		942BA99C2C689FA10096CCC3 /* TokenMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA99A2C689FA10096CCC3 /* TokenMarketViewController.swift */; };
+		942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA99A2C689FA10096CCC3 /* MarketViewController.swift */; };
 		942CF2552BC8257800ECCEFB /* Web3TransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */; };
 		942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */; };
 		942D90F02B05F8FE00E81358 /* WithdrawFeeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90EE2B05F8FE00E81358 /* WithdrawFeeCell.swift */; };
@@ -831,6 +831,9 @@
 		944ED8D22646535B00C97215 /* WebContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8D12646535B00C97215 /* WebContentView.xib */; };
 		944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */; };
 		94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */; };
+		94510FCE2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */; };
+		94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */; };
+		94510FD52C8743AA00ACD972 /* MarketTokenSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94510FD32C8743AA00ACD972 /* MarketTokenSelectorCell.xib */; };
 		945138B82C6622F600839CBB /* TokenMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945138B72C6622F600839CBB /* TokenMarketCell.xib */; };
 		945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945138B62C6622F600839CBB /* TokenMarketCell.swift */; };
 		94525B342C4E3B91008BA7A8 /* RouteTokenSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */; };
@@ -2110,7 +2113,7 @@
 		9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 		94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MixinAPIResponseError+Localization.swift"; sourceTree = "<group>"; };
 		94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocketServiceSendingError+Localization.swift"; sourceTree = "<group>"; };
-		942BA99A2C689FA10096CCC3 /* TokenMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMarketViewController.swift; sourceTree = "<group>"; };
+		942BA99A2C689FA10096CCC3 /* MarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketViewController.swift; sourceTree = "<group>"; };
 		942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferOperation.swift; sourceTree = "<group>"; };
 		942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeSelectorViewController.swift; sourceTree = "<group>"; };
 		942D90EE2B05F8FE00E81358 /* WithdrawFeeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeCell.swift; sourceTree = "<group>"; };
@@ -2184,6 +2187,9 @@
 		944ED8D12646535B00C97215 /* WebContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebContentView.xib; sourceTree = "<group>"; };
 		944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPopupViewController.swift; sourceTree = "<group>"; };
 		94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGlobalMarketJob.swift; sourceTree = "<group>"; };
+		94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorViewController.swift; sourceTree = "<group>"; };
+		94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorCell.swift; sourceTree = "<group>"; };
+		94510FD32C8743AA00ACD972 /* MarketTokenSelectorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketTokenSelectorCell.xib; sourceTree = "<group>"; };
 		945138B62C6622F600839CBB /* TokenMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMarketCell.swift; sourceTree = "<group>"; };
 		945138B72C6622F600839CBB /* TokenMarketCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMarketCell.xib; sourceTree = "<group>"; };
 		94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTokenSource.swift; sourceTree = "<group>"; };
@@ -4324,6 +4330,8 @@
 				94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */,
 				94CB85D82C6B4EC600135641 /* TokenInfoCell.xib */,
 				94CB85D72C6B4EC600135641 /* TokenInfoCell.swift */,
+				94510FD32C8743AA00ACD972 /* MarketTokenSelectorCell.xib */,
+				94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4504,7 +4512,8 @@
 				9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */,
 				9497AEE82C5E264600966946 /* TransactionHistoryViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */,
-				942BA99A2C689FA10096CCC3 /* TokenMarketViewController.swift */,
+				942BA99A2C689FA10096CCC3 /* MarketViewController.swift */,
+				94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */,
 				94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
 				94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */,
@@ -5245,6 +5254,7 @@
 				7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */,
 				94ED08B72B5FB1C300493312 /* ExploreActionCell.xib in Resources */,
 				E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */,
+				94510FD52C8743AA00ACD972 /* MarketTokenSelectorCell.xib in Resources */,
 				94350E3A2BCFE8C5007283B7 /* InputAmountView.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */,
@@ -5842,7 +5852,7 @@
 				7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */,
 				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
-				942BA99C2C689FA10096CCC3 /* TokenMarketViewController.swift in Sources */,
+				942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
 				9414A84A2BE9BF4600FA35EB /* Web3TokenViewController.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
@@ -5862,6 +5872,7 @@
 				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
 				7BA24D77253438B9004906AD /* ViewPanningController.swift in Sources */,
 				94B9FDA62A55E74D00C1E286 /* DepositNetworkSwitchView.swift in Sources */,
+				94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,
 				DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */,
 				7BF42E3322DC860E005066E6 /* GalleryItemViewController.swift in Sources */,
@@ -5955,6 +5966,7 @@
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
 				5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */,
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
+				94510FCE2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift in Sources */,
 				946575982BC8684D00C4C4F4 /* Web3DappProposer.swift in Sources */,
 				7B4FCCE02440A66600360F65 /* SolidBackgroundColorImageView.swift in Sources */,
 				DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */,

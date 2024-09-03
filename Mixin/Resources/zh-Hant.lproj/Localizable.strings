@@ -210,6 +210,8 @@
 "choose_network" = "選擇充值網路";
 "choose_network_tip" = "請選擇 Mixin 支援的網路進行充值，否則您的充值將不會到賬。";
 "choose_photo" = "選擇照片";
+"choose_token" = "選擇 %@ 網路";
+"choose_token_desc" = "%@ 在多個網路上釋出";
 "circle_info" = "新建一個圈子可以過濾會話";
 "circle_no_conversation_hint" = "您可以新增聯絡人或者群組到當前圈子";
 "circle_subtitle" = "%d 會話";
@@ -1223,7 +1225,7 @@
 "wallet_transfer_recent_tip" = "你已經在 %1$@ 前給 %2$@ 轉賬了 %3$@，確認還要再轉一次嗎？";
 "wallet_withdrawal_changed" = "手續費已從 %1$@ 變更為 %2$@，要更新手續費並繼續提現嗎？";
 "wallet_withdrawal_recent_tip" = "你已經在 %1$@ 前提現 %3$@ 到 %2$@，確認還要再提一次嗎？";
-"watchlist" = "自選列表";
+"watchlist" = "自選";
 "watchlist_empty" = "您的自選列表為空";
 "web_cannot_reached_desc" = "無法訪問 %@，請檢查你的網路並嘗試切換 4G、Wi-Fi 或 VPN 後重新載入頁面。";
 "web_cannot_reached_title" = "無法訪問此網頁";

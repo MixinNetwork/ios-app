@@ -456,7 +456,7 @@ extension TokenViewController: UITableViewDelegate {
         case .balance:
             break
         case .market:
-            let market = TokenMarketViewController.contained(
+            let market = MarketViewController.contained(
                 token: token,
                 chartPoints: chartPoints,
                 pushingViewController: self

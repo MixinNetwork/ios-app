@@ -57,14 +57,25 @@ public final class MarketDAO: UserDatabaseDAO {
     }
     
     public func save(market: Market) {
-        db.save(market)
-        if let assetIDs = market.assetIDs {
-            let now = Date().toUTCString()
-            let ids: [MarketID] = assetIDs.reduce(into: []) { result, assetID in
-                let id = MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
-                result.append(id)
+        db.write { db in
+            // When a single Market object is requested, its `marketCapRank` may differ from
+            // the value in the `markets` table. This can result in duplicate ranks when
+            // querying the market list. To avoid this issue, retrieve the known rank for
+            // this record and overwrite it.
+            let existedRank: String? = try Market
+                .select(Market.column(of: .marketCapRank))
+                .filter(Market.column(of: .coinID) == market.coinID)
+                .fetchOne(db)
+            let rankReplacedMarket = market.replacingMarketCapRank(with: existedRank ?? "")
+            try rankReplacedMarket.save(db)
+            if let assetIDs = market.assetIDs, !assetIDs.isEmpty {
+                let now = Date().toUTCString()
+                let ids: [MarketID] = assetIDs.reduce(into: []) { result, assetID in
+                    let id = MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
+                    result.append(id)
+                }
+                try ids.save(db)
             }
-            db.save(ids)
         }
     }
     

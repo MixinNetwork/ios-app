@@ -21,24 +21,42 @@ public final class MarketDAO: UserDatabaseDAO {
         case .favorite:
             sql += "\nWHERE mf.is_favored"
         }
+        let reverseResults: Bool
         switch order {
-        case .marketCap(.ascending):
-            sql += "\nORDER BY CAST(m.market_cap AS REAL) ASC"
-        case .marketCap(.descending):
+        case let .marketCap(ordering):
             sql += "\nORDER BY CAST(m.market_cap AS REAL) DESC"
-        case .price(.ascending):
-            sql += "\nORDER BY CAST(m.current_price AS REAL) ASC"
-        case .price(.descending):
+            reverseResults = switch ordering {
+            case .ascending:
+                true
+            case .descending:
+                false
+            }
+        case let .price(ordering):
             sql += "\nORDER BY CAST(m.current_price AS REAL) DESC"
-        case .change(.ascending):
-            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_7d AS REAL)) ASC"
-        case .change(.descending):
-            sql += "\nORDER BY ABS(CAST(m.price_change_percentage_7d AS REAL)) DESC"
+            reverseResults = switch ordering {
+            case .ascending:
+                true
+            case .descending:
+                false
+            }
+        case let .change(ordering):
+            sql += "\nORDER BY CAST(m.price_change_percentage_7d AS REAL) DESC"
+            reverseResults = switch ordering {
+            case .ascending:
+                true
+            case .descending:
+                false
+            }
         }
         if let count = limit?.count {
             sql += "\nLIMIT \(count)"
         }
-        return db.select(with: sql)
+        let results: [FavorableMarket] = db.select(with: sql)
+        if reverseResults {
+            return results.reversed()
+        } else {
+            return results
+        }
     }
     
     public func market(assetID: String) -> Market? {

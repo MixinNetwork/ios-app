@@ -145,10 +145,10 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 .info(caption: .safe, content: safe.name),
             ]
             switch safe.operation {
-            case let .transaction(transaction, note):
+            case let .transaction(transaction):
                 rows.insert(.addressReceivers(token, transaction.recipients), at: 2)
-                if !note.isEmpty {
-                    rows.append(.info(caption: .note, content: note))
+                if !transaction.note.isEmpty {
+                    rows.append(.info(caption: .note, content: transaction.note))
                 }
             case .recovery(let recovery):
                 break

@@ -1247,7 +1247,7 @@ extension UrlWindow {
                 let token: TokenItem?
                 if let safe = response.safe {
                     switch safe.operation {
-                    case let .transaction(transaction, _):
+                    case let .transaction(transaction):
                         token = syncToken(assetID: transaction.assetID, hud: hud)
                     case let .recovery(recovery):
                         DispatchQueue.main.async {
@@ -1290,7 +1290,7 @@ extension UrlWindow {
                 } else {
                     state = .pending
                 }
-                if let safe = response.safe, case let .transaction(transaction, _) = safe.operation {
+                if case let .transaction(transaction) = response.safe?.operation {
                     for recipient in transaction.recipients {
                         recipient.label = AddressDAO.shared.label(address: recipient.address)
                     }

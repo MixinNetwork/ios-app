@@ -1227,6 +1227,7 @@
 "wallet_withdrawal_changed" = "出金手数料が%1$@から%2$@へ変更されました。このまま出金を行いますか？";
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
 "watchlist" = "Watchlist";
+"watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ 接続に時間がかかり過ぎています、ネットワーク設定を確認してページをリロードしてください。";
 "web_cannot_reached_title" = "アクセスできません";

@@ -345,6 +345,7 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
                     }
                     cell.isFavorited = true
                     updateModel(isFavorited: true)
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.symbol))
                 case .failure(let error):
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }

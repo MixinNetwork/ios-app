@@ -1227,6 +1227,7 @@
 "wallet_withdrawal_changed" = "La tarifa de retiro se ha cambiado de %1$@ a %2$@, ¿quieres continuar con la solicitud?";
 "wallet_withdrawal_recent_tip" = "Ya has retirado %3$@ a %2$@ hace %1$@, ¿quieres retirarlo de nuevo?";
 "watchlist" = "Watchlist";
+"watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ ha tardado demasiado en responder. Verifica tu red e intenta cambiar 4G, Wi-Fi o VPN para recargar la página.";
 "web_cannot_reached_title" = "No se puede acceder a esta página web";

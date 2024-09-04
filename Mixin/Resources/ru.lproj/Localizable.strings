@@ -1227,6 +1227,7 @@
 "wallet_withdrawal_changed" = "Комиссия за снятие средств была изменена с %1$@ на %2$@. Вы хотите продолжить обработку запроса?";
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
 "watchlist" = "Watchlist";
+"watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ заняло слишком много времени для ответа. Пожалуйста, проверьте свою сеть и попробуйте переключить 4G, Wi-Fi или VPN, чтобы перезагрузить страницу.";
 "web_cannot_reached_title" = "Эта веб-страница недоступна";

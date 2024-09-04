@@ -507,6 +507,7 @@
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Получить новый кошелек";
+"global_market_cap" = "Market Cap";
 "got_it" = "Понятно";
 "group_call" = "Групповой вызов";
 "group_call_end_with_duration" = "Групповой вызов завершен, продолжительность: %@";

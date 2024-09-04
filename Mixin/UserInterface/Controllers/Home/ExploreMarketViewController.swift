@@ -372,7 +372,7 @@ extension ExploreMarketViewController {
         static func viewModels(market: GlobalMarket) -> [GlobalMarketViewModel] {
             [
                 GlobalMarketViewModel(
-                    caption: R.string.localizable.market_cap(),
+                    caption: R.string.localizable.global_market_cap(),
                     primary: NamedLargeNumberFormatter.string(
                         number: market.marketCap * Currency.current.decimalRate,
                         currencyPrefix: true

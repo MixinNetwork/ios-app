@@ -507,6 +507,7 @@
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
+"global_market_cap" = "Market Cap";
 "got_it" = "確認";
 "group_call" = "グループ通話";
 "group_call_end_with_duration" = "グループ通話は終了しました。通話時間：%@";

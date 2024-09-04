@@ -507,6 +507,7 @@
 "generating" = "正在生成...";
 "generating_keys" = "正在建立金鑰...";
 "get_a_new_wallet" = "建立錢包";
+"global_market_cap" = "全球總市值";
 "got_it" = "知道了";
 "group_call" = "群組語音";
 "group_call_end_with_duration" = "群組語音結束，時長 %@";

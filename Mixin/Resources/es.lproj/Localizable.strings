@@ -507,6 +507,7 @@
 "generating" = "Generando...";
 "generating_keys" = "Generando claves...";
 "get_a_new_wallet" = "Obtener una nueva cartera";
+"global_market_cap" = "Market Cap";
 "got_it" = "Entendido";
 "group_call" = "Llamada de grupo";
 "group_call_end_with_duration" = "Llamada de grupo finalizada, duración: %@";

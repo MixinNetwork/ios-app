@@ -36,7 +36,6 @@
 "address_editing_description" = "正在将修改地址的请求发送到 Mixin 服务器验证，请稍候。";
 "address_not_found" = "找不到该地址。";
 "address_validity_reminder" = "您已经超过 %3$@ 天没有使用地址 %1$@（%2$@），请注意检查地址是否仍然有效。";
-"address_warning" = "合约地址不是充值地址";
 "admin" = "管理员";
 "agree_hint" = "继续使用即表示你同意 %@ 和 %@";
 "albums" = "相册";

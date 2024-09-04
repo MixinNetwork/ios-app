@@ -24,7 +24,7 @@ final class ChartView: UIView {
     
     var annotateExtremums = false {
         didSet {
-            redraw()
+            redrawWithoutAnimation()
         }
     }
     
@@ -35,19 +35,19 @@ final class ChartView: UIView {
             } else {
                 arePointsRising = true
             }
-            redraw()
+            redrawWithoutAnimation()
         }
     }
     
     var minPointPosition: CGFloat = (44 - 6) / 44 {
         didSet {
-            redraw()
+            redrawWithoutAnimation()
         }
     }
     
     var maxPointPosition: CGFloat = 4 / 44 {
         didSet {
-            redraw()
+            redrawWithoutAnimation()
         }
     }
     
@@ -86,7 +86,7 @@ final class ChartView: UIView {
             lineLayer.frame = bounds
             fillingLayer.frame = bounds
             fillingLayerMask.frame = bounds
-            redraw()
+            redrawWithoutAnimation()
             self.lastLayoutBounds = bounds
         }
     }
@@ -94,7 +94,7 @@ final class ChartView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            redraw()
+            redrawWithoutAnimation()
         }
     }
     
@@ -190,6 +190,10 @@ final class ChartView: UIView {
         return drawingPoints[index]
     }
     
+    private func redrawWithoutAnimation() {
+        CATransaction.performWithoutAnimation(redraw)
+    }
+    
     private func redraw() {
         for layer in extremumAnnotationLayers {
             layer.removeFromSuperlayer()
@@ -202,10 +206,8 @@ final class ChartView: UIView {
         drawingPoints = []
         
         guard points.count >= 2 else {
-            CATransaction.performWithoutAnimation {
-                lineLayer.opacity = 0
-                fillingLayer.opacity = 0
-            }
+            lineLayer.opacity = 0
+            fillingLayer.opacity = 0
             return
         }
         
@@ -242,9 +244,7 @@ final class ChartView: UIView {
         }
         lineLayer.path = linePath
         lineLayer.strokeColor = color.cgColor
-        CATransaction.performWithoutAnimation {
-            lineLayer.opacity = 1
-        }
+        lineLayer.opacity = 1
         self.drawingPoints = drawingPoints
         
         if let fillingMaskPath = linePath.mutableCopy() {
@@ -258,9 +258,7 @@ final class ChartView: UIView {
             fillingLayerMask.path = nil
         }
         fillingLayer.colors = [color.cgColor, color.withAlphaComponent(0).cgColor]
-        CATransaction.performWithoutAnimation {
-            fillingLayer.opacity = 1
-        }
+        fillingLayer.opacity = 1
         
         if annotateExtremums {
             let backgroundColor = R.color.background()!.resolvedColor(with: traitCollection)

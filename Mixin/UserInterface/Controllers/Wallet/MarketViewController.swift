@@ -170,13 +170,13 @@ final class MarketViewController: UIViewController {
     
     private func reloadPriceChart(period: PriceHistoryPeriod) {
         DispatchQueue.global().async { [id, weak self] in
-            let history = switch id {
+            let storage = switch id {
             case .coin(let id):
                 MarketDAO.shared.priceHistory(coinID: id, period: period)
             case .asset(let id):
                 MarketDAO.shared.priceHistory(assetID: id, period: period)
             }
-            if let history, let points = PriceHistory(storage: history)?.chartViewPoints() {
+            if let storage, let points = PriceHistory(storage: storage)?.chartViewPoints() {
                 DispatchQueue.main.sync {
                     self?.reloadPriceChart(period: period, points: points)
                 }

@@ -771,19 +771,6 @@ public final class UserDatabase: Database {
             }
         }
         
-        migrator.registerMigration("market") { db in
-            let sql = """
-            CREATE TABLE IF NOT EXISTS `history_prices` (
-                `asset_id` TEXT NOT NULL,
-                `type` TEXT NOT NULL,
-                `data` TEXT NOT NULL,
-                `updated_at` TEXT NOT NULL,
-                PRIMARY KEY(`asset_id`, `type`)
-            )
-            """
-            try db.execute(sql: sql)
-        }
-        
         migrator.registerMigration("membership") { db in
             let itemColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(users)").map(\.name)
             if !itemColumns.contains("membership") {
@@ -842,6 +829,24 @@ public final class UserDatabase: Database {
                     `is_favored` INTEGER NOT NULL,
                     `created_at` TEXT NOT NULL,
                     PRIMARY KEY(`coin_id`)
+                )
+                """,
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
+        migrator.registerMigration("market_3") { db in
+            let sqls = [
+                "DROP TABLE IF EXISTS `history_prices`",
+                """
+                CREATE TABLE IF NOT EXISTS `history_prices` (
+                    `coin_id` TEXT NOT NULL,
+                    `type` TEXT NOT NULL,
+                    `data` TEXT NOT NULL,
+                    `updated_at` TEXT NOT NULL,
+                    PRIMARY KEY(`coin_id`, `type`)
                 )
                 """,
             ]

@@ -78,9 +78,9 @@ final class RouteAPI {
     
     static func priceHistory(
         id: String,
-        period: PriceHistory.Period,
+        period: PriceHistoryPeriod,
         queue: DispatchQueue,
-        completion: @escaping (MixinAPI.Result<TokenPrice>) -> Void
+        completion: @escaping (MixinAPI.Result<PriceHistory>) -> Void
     ) {
         request(
             method: .get,

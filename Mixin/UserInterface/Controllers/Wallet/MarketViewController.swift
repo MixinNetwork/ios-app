@@ -6,13 +6,13 @@ final class MarketViewController: UIViewController {
     private weak var tableView: UITableView!
     private weak var pushingViewController: UIViewController?
     
-    private let id: String
+    private let id: ID
     private let name: String
     
     private var market: Market?
     private var tokens: [TokenItem]?
     private var viewModel: MarketViewModel
-    private var chartPeriod: PriceHistory.Period = .day
+    private var chartPeriod: PriceHistoryPeriod = .day
     private var chartPoints: [ChartView.Point]?
     
     private var tokenPriceChartCell: TokenPriceChartCell? {
@@ -21,7 +21,7 @@ final class MarketViewController: UIViewController {
     }
     
     private init(token: TokenItem, chartPoints: [ChartView.Point]?) {
-        self.id = token.assetID
+        self.id = .asset(token.assetID)
         self.name = token.name
         self.market = nil
         self.tokens = [token]
@@ -31,7 +31,7 @@ final class MarketViewController: UIViewController {
     }
     
     private init(market: Market) {
-        self.id = market.coinID
+        self.id = .coin(market.coinID)
         self.name = market.name
         self.market = market
         self.tokens = nil
@@ -112,17 +112,22 @@ final class MarketViewController: UIViewController {
                     }
                 }
             } else {
-                if let market = MarketDAO.shared.market(assetID: id) {
-                    DispatchQueue.main.sync {
-                        guard let self else {
-                            return
+                switch id {
+                case .coin(let id):
+                    assertionFailure("Not implemented")
+                case .asset(let id):
+                    if let market = MarketDAO.shared.market(assetID: id) {
+                        DispatchQueue.main.sync {
+                            guard let self else {
+                                return
+                            }
+                            self.market = market
+                            self.viewModel.update(market: market)
+                            self.tableView.reloadData()
                         }
-                        self.market = market
-                        self.viewModel.update(market: market)
-                        self.tableView.reloadData()
                     }
                 }
-                RouteAPI.markets(id: id, queue: .global()) { result in
+                RouteAPI.markets(id: id.value, queue: .global()) { result in
                     switch result {
                     case .success(let market):
                         MarketDAO.shared.save(market: market)
@@ -163,20 +168,24 @@ final class MarketViewController: UIViewController {
         }
     }
     
-    private func reloadPriceChart(period: PriceHistory.Period) {
+    private func reloadPriceChart(period: PriceHistoryPeriod) {
         DispatchQueue.global().async { [id, weak self] in
-            if let history = MarketDAO.shared.priceHistory(assetID: id, period: period),
-               let points = TokenPrice(priceHistory: history)?.chartViewPoints()
-            {
+            let history = switch id {
+            case .coin(let id):
+                MarketDAO.shared.priceHistory(coinID: id, period: period)
+            case .asset(let id):
+                MarketDAO.shared.priceHistory(assetID: id, period: period)
+            }
+            if let history, let points = PriceHistory(storage: history)?.chartViewPoints() {
                 DispatchQueue.main.sync {
                     self?.reloadPriceChart(period: period, points: points)
                 }
             }
-            RouteAPI.priceHistory(id: id, period: period, queue: .global()) { result in
+            RouteAPI.priceHistory(id: id.value, period: period, queue: .global()) { result in
                 switch result {
                 case .success(let price):
-                    if let history = price.asPriceHistory() {
-                        MarketDAO.shared.savePriceHistory(history)
+                    if let storage = price.asStorage() {
+                        MarketDAO.shared.savePriceHistory(storage)
                     }
                     let points = price.chartViewPoints()
                     DispatchQueue.main.async {
@@ -189,7 +198,7 @@ final class MarketViewController: UIViewController {
         }
     }
     
-    private func reloadPriceChart(period: PriceHistory.Period, points: [ChartView.Point]) {
+    private func reloadPriceChart(period: PriceHistoryPeriod, points: [ChartView.Point]) {
         guard period == self.chartPeriod else {
             return
         }
@@ -435,7 +444,7 @@ extension MarketViewController: ChartView.Delegate {
 
 extension MarketViewController: TokenPriceChartCell.Delegate {
     
-    func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistory.Period) {
+    func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod) {
         chartPoints = nil
         self.chartPeriod = period
         reloadPriceChart(period: period)
@@ -444,6 +453,22 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
 }
 
 extension MarketViewController {
+    
+    private enum ID {
+        
+        case coin(String)
+        case asset(String)
+        
+        var value: String {
+            switch self {
+            case .coin(let id):
+                id
+            case .asset(let id):
+                id
+            }
+        }
+        
+    }
     
     private enum ReuseIdentifier {
         static let header = "header"

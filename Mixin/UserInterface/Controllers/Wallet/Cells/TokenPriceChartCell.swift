@@ -4,7 +4,7 @@ import MixinServices
 final class TokenPriceChartCell: UITableViewCell {
     
     protocol Delegate: AnyObject {
-        func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistory.Period)
+        func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
     }
     
     @IBOutlet weak var titleStackView: UIStackView!
@@ -31,7 +31,7 @@ final class TokenPriceChartCell: UITableViewCell {
         chartView.annotateExtremums = true
         chartView.minPointPosition = 135 / 184
         chartView.maxPointPosition = 23 / 184
-        for (i, period) in PriceHistory.Period.allCases.enumerated() {
+        for (i, period) in PriceHistoryPeriod.allCases.enumerated() {
             let button = UIButton(type: .system)
             button.tag = i
             let title = switch period {
@@ -55,8 +55,8 @@ final class TokenPriceChartCell: UITableViewCell {
         }
     }
     
-    func setPeriodSelection(period: PriceHistory.Period) {
-        guard let index = PriceHistory.Period.allCases.firstIndex(of: period) else {
+    func setPeriodSelection(period: PriceHistoryPeriod) {
+        guard let index = PriceHistoryPeriod.allCases.firstIndex(of: period) else {
             return
         }
         setPeriodSelection(index: index)
@@ -105,7 +105,7 @@ final class TokenPriceChartCell: UITableViewCell {
         chartView.points = []
         hideUnavailableView()
         loadingIndicatorView.startAnimating()
-        let period = PriceHistory.Period.allCases[sender.tag]
+        let period = PriceHistoryPeriod.allCases[sender.tag]
         delegate?.tokenPriceChartCell(self, didSelectPeriod: period)
     }
     

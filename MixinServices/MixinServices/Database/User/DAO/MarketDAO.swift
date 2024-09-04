@@ -73,8 +73,25 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [assetID])
     }
     
-    public func priceHistory(assetID: String, period: PriceHistory.Period) -> PriceHistory? {
-        db.select(where: PriceHistory.column(of: .assetID) == assetID && PriceHistory.column(of: .period) == period.rawValue)
+    public func priceHistory(coinID: String, period: PriceHistoryPeriod) -> PriceHistoryStorage? {
+        let sql = """
+        SELECT hp.*
+        FROM history_prices hp
+        WHERE hp.coin_id = ?
+        LIMIT 1
+        """
+        return db.select(with: sql, arguments: [coinID])
+    }
+    
+    public func priceHistory(assetID: String, period: PriceHistoryPeriod) -> PriceHistoryStorage? {
+        let sql = """
+        SELECT hp.*
+        FROM history_prices hp
+            LEFT JOIN market_ids mi ON hp.coin_id = mi.coin_id
+        WHERE mi.asset_id = ?
+        LIMIT 1
+        """
+        return db.select(with: sql, arguments: [assetID])
     }
     
     public func save(market: Market) {
@@ -122,7 +139,7 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func savePriceHistory(_ history: PriceHistory) {
+    public func savePriceHistory(_ history: PriceHistoryStorage) {
         db.save(history)
     }
     

@@ -1088,7 +1088,7 @@
 		94F209DA2C06C1CE00550060 /* EVMTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */; };
 		94F209DC2C06F23A00550060 /* SolanaRPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */; };
 		94F209E52C070DEA00550060 /* solana_rust_sdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */; };
-		94F237562C6915B70057D1AB /* TokenPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F237552C6915B70057D1AB /* TokenPrice.swift */; };
+		94F237562C6915B70057D1AB /* PriceHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F237552C6915B70057D1AB /* PriceHistory.swift */; };
 		94F2375C2C691D5C0057D1AB /* TokenPriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F2375A2C691D5C0057D1AB /* TokenPriceChartCell.swift */; };
 		94F2375D2C691D5C0057D1AB /* TokenPriceChartCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F2375B2C691D5C0057D1AB /* TokenPriceChartCell.xib */; };
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
@@ -2439,7 +2439,7 @@
 		94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EVMTransferOperation.swift; sourceTree = "<group>"; };
 		94F209DB2C06F23A00550060 /* SolanaRPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaRPCClient.swift; sourceTree = "<group>"; };
 		94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = solana_rust_sdk.xcframework; sourceTree = "<group>"; };
-		94F237552C6915B70057D1AB /* TokenPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenPrice.swift; sourceTree = "<group>"; };
+		94F237552C6915B70057D1AB /* PriceHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceHistory.swift; sourceTree = "<group>"; };
 		94F2375A2C691D5C0057D1AB /* TokenPriceChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenPriceChartCell.swift; sourceTree = "<group>"; };
 		94F2375B2C691D5C0057D1AB /* TokenPriceChartCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenPriceChartCell.xib; sourceTree = "<group>"; };
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
@@ -4581,7 +4581,7 @@
 				94793AD02C3A57230078ED51 /* QuoteResponse.swift */,
 				945FFC812C3829B00013DC51 /* SwapRequest.swift */,
 				945FFC892C3832230013DC51 /* SwapResponse.swift */,
-				94F237552C6915B70057D1AB /* TokenPrice.swift */,
+				94F237552C6915B70057D1AB /* PriceHistory.swift */,
 				9464A49D2C7F86EE00588EE6 /* GlobalMarket.swift */,
 			);
 			path = Model;
@@ -5859,7 +5859,7 @@
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7BEED890246D0C3D00387EAE /* CallAdapter.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
-				94F237562C6915B70057D1AB /* TokenPrice.swift in Sources */,
+				94F237562C6915B70057D1AB /* PriceHistory.swift in Sources */,
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
 				94C688B728978BCD00C69537 /* TIPDiagnosticViewController.swift in Sources */,
 				94E9C0CD2BC6CF7A00D6157C /* Web3Worker.swift in Sources */,

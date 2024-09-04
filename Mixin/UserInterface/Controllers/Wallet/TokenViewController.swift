@@ -74,8 +74,8 @@ final class TokenViewController: UIViewController {
         reloadSnapshots()
         
         DispatchQueue.global().async { [id=token.assetID, weak self] in
-            if let history = MarketDAO.shared.priceHistory(assetID: id, period: .day),
-               let prices = TokenPrice(priceHistory: history)?.chartViewPoints()
+            if let storage = MarketDAO.shared.priceHistory(assetID: id, period: .day),
+               let prices = PriceHistory(storage: storage)?.chartViewPoints()
             {
                 DispatchQueue.main.sync {
                     self?.reloadChart(prices)
@@ -84,8 +84,8 @@ final class TokenViewController: UIViewController {
             RouteAPI.priceHistory(id: id, period: .day, queue: .global()) { result in
                 switch result {
                 case .success(let price):
-                    if let history = price.asPriceHistory() {
-                        MarketDAO.shared.savePriceHistory(history)
+                    if let storage = price.asStorage() {
+                        MarketDAO.shared.savePriceHistory(storage)
                     }
                     let prices = price.chartViewPoints()
                     DispatchQueue.main.async {

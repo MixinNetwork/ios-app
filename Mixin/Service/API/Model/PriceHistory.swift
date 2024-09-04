@@ -1,31 +1,31 @@
 import Foundation
 import MixinServices
 
-struct TokenPrice {
+struct PriceHistory {
     
-    let key: String
-    let period: PriceHistory.Period
+    let coinID: String
+    let period: PriceHistoryPeriod
     let prices: [Price]
     let updateAt: String
     
-    init?(priceHistory: PriceHistory) {
-        if let data = priceHistory.data.data(using: .utf8),
+    init?(storage: PriceHistoryStorage) {
+        if let data = storage.data.data(using: .utf8),
            let prices = try? JSONDecoder.default.decode([Price].self, from: data)
         {
-            self.key = priceHistory.assetID
-            self.period = priceHistory.period
+            self.coinID = storage.coinID
+            self.period = storage.period
             self.prices = prices
-            self.updateAt = priceHistory.updateAt
+            self.updateAt = storage.updateAt
         } else {
             return nil
         }
     }
     
-    func asPriceHistory() -> PriceHistory? {
+    func asStorage() -> PriceHistoryStorage? {
         if let data = try? JSONEncoder.default.encode(prices),
            let string = String(data: data, encoding: .utf8)
         {
-            PriceHistory(assetID: key, period: period, data: string, updateAt: updateAt)
+            PriceHistoryStorage(coinID: coinID, period: period, data: string, updateAt: updateAt)
         } else {
             nil
         }
@@ -43,10 +43,10 @@ struct TokenPrice {
     
 }
 
-extension TokenPrice: Decodable {
+extension PriceHistory: Decodable {
     
     enum CodingKeys: String, CodingKey {
-        case key = "key"
+        case coinID = "coin_id"
         case period = "type"
         case prices = "data"
         case updateAt = "updated_at"

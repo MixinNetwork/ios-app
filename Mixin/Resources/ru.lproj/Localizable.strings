@@ -169,6 +169,8 @@
 "change_name" = "Изменить имя";
 "change_number" = "Изменить номер";
 "change_number_instead" = "Вместо этого изменить номер";
+"change_percent_period_day" = "%dD %%";
+"change_percent_period_hour" = "%dh %%";
 "change_phone_number" = "Изменить номер телефона";
 "change_pin" = "Изменить PIN-код";
 "change_pin_interval_hint" = "Подтвердите PIN-код, чтобы изменить интервал";
@@ -208,6 +210,8 @@
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "Выбрать фото";
+"choose_token" = "Choose %@ Network";
+"choose_token_desc" = "%@ is issued on multiple networks";
 "circle_info" = "Создавайте круги для разных групп чатов и быстро переключайтесь между ними";
 "circle_no_conversation_hint" = "Вы можете добавлять контакты или группы в текущий круг";
 "circle_subtitle" = "%d чат";
@@ -387,6 +391,7 @@
 "disconnected" = "Disconnected";
 "disconnecting" = "Отключение";
 "dismiss_as_admin" = "Закрыть как администратор";
+"dominance" = "Dominance";
 "done" = "Сделано";
 "dont_have_assets" = "No assets";
 "duplicate_transfer_confirmation" = "Дубликат подтверждения перевода";
@@ -502,6 +507,7 @@
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Получить новый кошелек";
+"global_market_cap" = "Market Cap";
 "got_it" = "Понятно";
 "group_call" = "Групповой вызов";
 "group_call_end_with_duration" = "Групповой вызов завершен, продолжительность: %@";
@@ -607,6 +613,7 @@
 "manage_your_circles" = "Manage your circles";
 "market" = "Market";
 "market_cap" = "Market Cap";
+"markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Медиа";
@@ -1075,6 +1082,7 @@
 "to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Сегодня";
 "token" = "Token";
+"top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
 "total_supply" = "Total Supply";
@@ -1198,6 +1206,7 @@
 "voice_call_cancelled" = "голосовой вызов отменен";
 "voice_call_has_been_declined" = "Голосовой вызов был отклонен";
 "vol_24h" = "24H VOL(%@)";
+"volume_24h" = "24h Volume";
 "waiting" = "Ожидание";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1218,6 +1227,9 @@
 "wallet_transfer_recent_tip" = "Вы уже перевели %3$@ на %2$@ %1$@ назад. Вы хотите перевести его снова?";
 "wallet_withdrawal_changed" = "Комиссия за снятие средств была изменена с %1$@ на %2$@. Вы хотите продолжить обработку запроса?";
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
+"watchlist" = "Watchlist";
+"watchlist_add_desc" = "%@ is now on your watchlist";
+"watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ заняло слишком много времени для ответа. Пожалуйста, проверьте свою сеть и попробуйте переключить 4G, Wi-Fi или VPN, чтобы перезагрузить страницу.";
 "web_cannot_reached_title" = "Эта веб-страница недоступна";
 "web_suspicious_link_tips" = "Ссылки нет в соответствующих шаблонах ресурсов.";

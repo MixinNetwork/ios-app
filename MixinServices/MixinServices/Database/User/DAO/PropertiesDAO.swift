@@ -10,6 +10,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case snapshotOffset = "snapshot_offset"
         case evmAddress     = "evm_address"
         case solanaAddress  = "solana_address"
+        case globalMarket   = "global_market"
     }
     
     public enum Change {

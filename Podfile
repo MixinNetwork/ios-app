@@ -20,6 +20,8 @@ target 'Mixin' do
   pod 'PhoneNumberKit', :git => 'https://github.com/marmelroy/PhoneNumberKit'
   pod 'libwebp'
   pod 'SDWebImageLottieCoder'
+  pod 'SVGKit', :git => 'https://github.com/SVGKit/SVGKit'
+  pod 'SDWebImageSVGKitPlugin'
   mixin_services
 end
 

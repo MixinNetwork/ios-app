@@ -9,6 +9,7 @@ final class ExploreViewController: UIViewController {
     private let hiddenSearchTopMargin: CGFloat = -28
     
     private lazy var exploreBotsViewController = ExploreBotsViewController()
+    private lazy var exploreMarketViewController = ExploreMarketViewController()
     private lazy var evmViewController = ExploreEVMViewController()
     private lazy var solanaViewController = ExploreSolanaViewController()
     
@@ -167,6 +168,8 @@ extension ExploreViewController: UICollectionViewDelegate {
         switch segment {
         case .bots:
             switchToChild(exploreBotsViewController)
+        case .markets:
+            switchToChild(exploreMarketViewController)
         case .evm:
             switchToChild(evmViewController)
             evmViewController.reloadAccountIfUnlocked()
@@ -194,6 +197,7 @@ extension ExploreViewController {
     enum Segment: Int, CaseIterable {
         
         case bots
+        case markets
         case evm
         case solana
         
@@ -201,6 +205,8 @@ extension ExploreViewController {
             switch self {
             case .bots:
                 R.string.localizable.bots_title()
+            case .markets:
+                R.string.localizable.markets()
             case .evm:
                 "Ethereum"
             case .solana:

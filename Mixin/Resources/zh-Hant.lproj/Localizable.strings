@@ -169,6 +169,8 @@
 "change_name" = "修改名稱";
 "change_number" = "修改手機號";
 "change_number_instead" = "僅修改手機號碼";
+"change_percent_period_day" = "%d天 %%";
+"change_percent_period_hour" = "%d小時 %%";
 "change_phone_number" = "修改手機號";
 "change_pin" = "修改 PIN";
 "change_pin_interval_hint" = "輸入 PIN 修改使用間隔";
@@ -208,6 +210,8 @@
 "choose_network" = "選擇充值網路";
 "choose_network_tip" = "請選擇 Mixin 支援的網路進行充值，否則您的充值將不會到賬。";
 "choose_photo" = "選擇照片";
+"choose_token" = "選擇 %@ 網路";
+"choose_token_desc" = "%@ 在多個網路上釋出";
 "circle_info" = "新建一個圈子可以過濾會話";
 "circle_no_conversation_hint" = "您可以新增聯絡人或者群組到當前圈子";
 "circle_subtitle" = "%d 會話";
@@ -387,6 +391,7 @@
 "disconnected" = "已斷開";
 "disconnecting" = "正在斷開";
 "dismiss_as_admin" = "撤銷管理員身份";
+"dominance" = "市佔率";
 "done" = "完成";
 "dont_have_assets" = "沒有資產";
 "duplicate_transfer_confirmation" = "重複轉賬確認";
@@ -502,6 +507,7 @@
 "generating" = "正在生成...";
 "generating_keys" = "正在建立金鑰...";
 "get_a_new_wallet" = "建立錢包";
+"global_market_cap" = "全球總市值";
 "got_it" = "知道了";
 "group_call" = "群組語音";
 "group_call_end_with_duration" = "群組語音結束，時長 %@";
@@ -607,6 +613,7 @@
 "manage_your_circles" = "管理你所有的圈子";
 "market" = "行情";
 "market_cap" = "市值";
+"markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
 "media" = "媒體";
@@ -1075,6 +1082,7 @@
 "to_mixin_wallet" = "劃轉到 Mixin 錢包";
 "today" = "今天";
 "token" = "代幣";
+"top_count" = "前 %d";
 "total" = "共計";
 "total_amount" = "總金額";
 "total_supply" = "總量";
@@ -1198,6 +1206,7 @@
 "voice_call_cancelled" = "對方已取消語音通話";
 "voice_call_has_been_declined" = "已拒絕通話";
 "vol_24h" = "24 小時交易量（%@）";
+"volume_24h" = "24 小時交易量";
 "waiting" = "等待中";
 "waiting_for_other_device" = "等待其他裝置...";
 "waiting_for_other_device_login" = "在新裝置上登入當前賬戶並選擇從其他手機恢復";
@@ -1218,6 +1227,9 @@
 "wallet_transfer_recent_tip" = "你已經在 %1$@ 前給 %2$@ 轉賬了 %3$@，確認還要再轉一次嗎？";
 "wallet_withdrawal_changed" = "手續費已從 %1$@ 變更為 %2$@，要更新手續費並繼續提現嗎？";
 "wallet_withdrawal_recent_tip" = "你已經在 %1$@ 前提現 %3$@ 到 %2$@，確認還要再提一次嗎？";
+"watchlist" = "自選";
+"watchlist_add_desc" = "%@ 已經加入自選";
+"watchlist_empty" = "您的自選列表為空";
 "web_cannot_reached_desc" = "無法訪問 %@，請檢查你的網路並嘗試切換 4G、Wi-Fi 或 VPN 後重新載入頁面。";
 "web_cannot_reached_title" = "無法訪問此網頁";
 "web_suspicious_link_tips" = "該連結不在對應的機器人域名白名單內。";

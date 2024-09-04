@@ -169,6 +169,8 @@
 "change_name" = "Change name";
 "change_number" = "Change Number";
 "change_number_instead" = "Change Number Instead";
+"change_percent_period_day" = "%dD %%";
+"change_percent_period_hour" = "%dh %%";
 "change_phone_number" = "Change Phone Number";
 "change_pin" = "Change PIN";
 "change_pin_interval_hint" = "Confirm PIN to change interval";
@@ -208,6 +210,8 @@
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "Choose Photo";
+"choose_token" = "Choose %@ Network";
+"choose_token_desc" = "%@ is issued on multiple networks";
 "circle_info" = "Create circles for different groups of chats and quickly switch between them";
 "circle_no_conversation_hint" = "You can add contacts or groups to the current circle";
 "circle_subtitle" = "%d Conversation";
@@ -387,6 +391,7 @@
 "disconnected" = "Disconnected";
 "disconnecting" = "Disconnecting";
 "dismiss_as_admin" = "Dismiss as Admin";
+"dominance" = "Dominance";
 "done" = "Done";
 "dont_have_assets" = "No assets";
 "duplicate_transfer_confirmation" = "Duplicate Transfer Confirmation";
@@ -502,6 +507,7 @@
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Get a new wallet";
+"global_market_cap" = "Market Cap";
 "got_it" = "Got it";
 "group_call" = "Group Call";
 "group_call_end_with_duration" = "Group call ended, duration: %@";
@@ -607,6 +613,7 @@
 "manage_your_circles" = "Manage your circles";
 "market" = "Market";
 "market_cap" = "Market Cap";
+"markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Media";
@@ -1075,6 +1082,7 @@
 "to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Today";
 "token" = "Token";
+"top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
 "total_supply" = "Total Supply";
@@ -1198,6 +1206,7 @@
 "voice_call_cancelled" = "voice call cancelled";
 "voice_call_has_been_declined" = "Voice call has been declined";
 "vol_24h" = "24H VOL(%@)";
+"volume_24h" = "24h Volume";
 "waiting" = "Waiting";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1218,6 +1227,9 @@
 "wallet_transfer_recent_tip" = "You have already transferred %3$@ to %2$@ %1$@ ago. Do you want to transfer it again?";
 "wallet_withdrawal_changed" = "The withdrawal fee has been changed from %1$@ to %2$@, would you like to proceed with the request?";
 "wallet_withdrawal_recent_tip" = "You have already withdrawn %3$@ to %2$@ %1$@ ago, Do you want to withdraw it again?";
+"watchlist" = "Watchlist";
+"watchlist_add_desc" = "%@ is now on your watchlist";
+"watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ took too long to respond. Please check your network and try to switch 4G, Wi-Fi or VPN to reload the page.";
 "web_cannot_reached_title" = "This webpage can't be reached";
 "web_suspicious_link_tips" = "The link is not in the corresponding resource patterns.";

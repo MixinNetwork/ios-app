@@ -11,13 +11,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CollectiblesViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="collectionImageView" destination="KNm-kZ-Mnz" id="oXF-12-f5m"/>
                 <outlet property="collectionView" destination="q3X-vD-KBB" id="qqd-0L-Z0t"/>
                 <outlet property="collectionViewLayout" destination="oyq-su-z6K" id="SN4-UC-EXC"/>
-                <outlet property="contentSwitchWrapperView" destination="gTf-S6-Nbv" id="rem-PJ-gpC"/>
-                <outlet property="itemImageView" destination="Cp2-ck-eUR" id="MND-4d-vbs"/>
-                <outlet property="showCollectionButton" destination="6i7-UZ-9IC" id="Irq-i2-49b"/>
-                <outlet property="showItemButton" destination="MUL-22-drO" id="uan-8D-0KJ"/>
+                <outlet property="contentSegmentedControl" destination="gTf-S6-Nbv" id="ggy-NM-S1u"/>
                 <outlet property="sortButton" destination="yql-9Q-cdY" id="BPU-S4-2JQ"/>
                 <outlet property="view" destination="iN0-l3-epB" id="jrz-J0-WJc"/>
             </connections>
@@ -93,71 +89,12 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Sl-Ci-wRr">
                     <rect key="frame" x="0.0" y="103" width="393" height="60"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gTf-S6-Nbv">
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="97" placeholderIntrinsicHeight="38" translatesAutoresizingMaskIntoConstraints="NO" id="gTf-S6-Nbv" customClass="OutlineSegmentedControl" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="20" y="12" width="97" height="38"/>
-                            <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="0fM-hg-hYy">
-                                    <rect key="frame" x="4.6666666666666714" y="0.0" width="88" height="38"/>
-                                    <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="collectible_tab_item" translatesAutoresizingMaskIntoConstraints="NO" id="Cp2-ck-eUR">
-                                            <rect key="frame" x="0.0" y="0.0" width="44" height="38"/>
-                                            <color key="tintColor" name="theme"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="44" id="lVT-Re-q6f"/>
-                                            </constraints>
-                                        </imageView>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="collectible_tab_collection" translatesAutoresizingMaskIntoConstraints="NO" id="KNm-kZ-Mnz">
-                                            <rect key="frame" x="44" y="0.0" width="44" height="38"/>
-                                            <color key="tintColor" name="icon_tint"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="44" id="VEm-3e-bAM"/>
-                                            </constraints>
-                                        </imageView>
-                                    </subviews>
-                                </stackView>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v3K-gi-rYJ">
-                                    <rect key="frame" x="48" y="10" width="1" height="18"/>
-                                    <color key="backgroundColor" name="collectible_outline"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="1" id="8pi-OC-oT9"/>
-                                        <constraint firstAttribute="height" constant="18" id="jqH-Zu-4El"/>
-                                    </constraints>
-                                </view>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MUL-22-drO">
-                                    <rect key="frame" x="4.6666666666666679" y="0.0" width="44" height="38"/>
-                                    <color key="tintColor" name="icon_tint"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <connections>
-                                        <action selector="showItems:" destination="-1" eventType="touchUpInside" id="HVk-A4-iF8"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6i7-UZ-9IC">
-                                    <rect key="frame" x="48.666666666666671" y="0.0" width="44" height="38"/>
-                                    <color key="tintColor" name="icon_tint"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <connections>
-                                        <action selector="showCollections:" destination="-1" eventType="touchUpInside" id="22I-0P-muK"/>
-                                    </connections>
-                                </button>
-                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstItem="v3K-gi-rYJ" firstAttribute="centerY" secondItem="gTf-S6-Nbv" secondAttribute="centerY" id="294-hE-omC"/>
-                                <constraint firstItem="6i7-UZ-9IC" firstAttribute="top" secondItem="KNm-kZ-Mnz" secondAttribute="top" id="3Cb-Ep-AJP"/>
-                                <constraint firstItem="MUL-22-drO" firstAttribute="top" secondItem="Cp2-ck-eUR" secondAttribute="top" id="Eea-9i-etS"/>
-                                <constraint firstItem="v3K-gi-rYJ" firstAttribute="centerX" secondItem="gTf-S6-Nbv" secondAttribute="centerX" id="LZX-AV-9MR"/>
-                                <constraint firstItem="0fM-hg-hYy" firstAttribute="centerX" secondItem="gTf-S6-Nbv" secondAttribute="centerX" id="Mha-b5-pD0"/>
-                                <constraint firstItem="6i7-UZ-9IC" firstAttribute="bottom" secondItem="KNm-kZ-Mnz" secondAttribute="bottom" id="MwC-Y3-wNh"/>
-                                <constraint firstItem="MUL-22-drO" firstAttribute="leading" secondItem="Cp2-ck-eUR" secondAttribute="leading" id="Nt4-7l-bD9"/>
-                                <constraint firstAttribute="bottom" secondItem="0fM-hg-hYy" secondAttribute="bottom" id="RqR-5B-XaF"/>
-                                <constraint firstItem="6i7-UZ-9IC" firstAttribute="leading" secondItem="KNm-kZ-Mnz" secondAttribute="leading" id="Sf3-n9-Sa2"/>
-                                <constraint firstItem="6i7-UZ-9IC" firstAttribute="trailing" secondItem="KNm-kZ-Mnz" secondAttribute="trailing" id="Tn1-wA-rR2"/>
-                                <constraint firstAttribute="height" constant="38" id="XCQ-TS-BRw"/>
-                                <constraint firstItem="MUL-22-drO" firstAttribute="bottom" secondItem="Cp2-ck-eUR" secondAttribute="bottom" id="eaN-hN-seu"/>
-                                <constraint firstItem="MUL-22-drO" firstAttribute="trailing" secondItem="Cp2-ck-eUR" secondAttribute="trailing" id="nep-n9-TAx"/>
-                                <constraint firstAttribute="width" constant="97" id="tV3-ai-1Xm"/>
-                                <constraint firstItem="0fM-hg-hYy" firstAttribute="top" secondItem="gTf-S6-Nbv" secondAttribute="top" id="tmY-Vl-cJ8"/>
-                            </constraints>
+                            <connections>
+                                <action selector="segmentValueChanged:" destination="-1" eventType="valueChanged" id="Zr9-W0-caY"/>
+                            </connections>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yql-9Q-cdY" customClass="OutlineButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="279" y="12" width="94" height="38"/>
@@ -212,8 +149,6 @@
         </view>
     </objects>
     <resources>
-        <image name="collectible_tab_collection" width="30" height="30"/>
-        <image name="collectible_tab_item" width="30" height="30"/>
         <image name="ic_app_category_scan" width="24" height="24"/>
         <image name="ic_arrow_down" width="30" height="30"/>
         <image name="ic_sticker_setting" width="24" height="24"/>
@@ -221,17 +156,11 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="collectible_outline">
-            <color red="0.89803921568627454" green="0.90980392156862744" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="theme">
-            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

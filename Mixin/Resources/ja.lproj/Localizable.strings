@@ -169,6 +169,8 @@
 "change_name" = "名前を変更";
 "change_number" = "電話番号を変更";
 "change_number_instead" = "電話番号を変更";
+"change_percent_period_day" = "%dD %%";
+"change_percent_period_hour" = "%dh %%";
 "change_phone_number" = "電話番号を変更";
 "change_pin" = "PINコードを変更";
 "change_pin_interval_hint" = "設定を変更するためPINコードを入力してください";
@@ -208,6 +210,8 @@
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "画像を選ぶ";
+"choose_token" = "Choose %@ Network";
+"choose_token_desc" = "%@ is issued on multiple networks";
 "circle_info" = "グループリストを作成し、種類の異なるチャットを切り替えましょう";
 "circle_no_conversation_hint" = "友人またはグループを既に作成したのグループリストに追加できます";
 "circle_subtitle" = "%dのチャットルーム";
@@ -387,6 +391,7 @@
 "disconnected" = "Disconnected";
 "disconnecting" = "切断";
 "dismiss_as_admin" = "管理者権限を解除";
+"dominance" = "Dominance";
 "done" = "完了";
 "dont_have_assets" = "No assets";
 "duplicate_transfer_confirmation" = "二重送金の確認";
@@ -502,6 +507,7 @@
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
+"global_market_cap" = "Market Cap";
 "got_it" = "確認";
 "group_call" = "グループ通話";
 "group_call_end_with_duration" = "グループ通話は終了しました。通話時間：%@";
@@ -607,6 +613,7 @@
 "manage_your_circles" = "Manage your circles";
 "market" = "Market";
 "market_cap" = "Market Cap";
+"markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "メディア";
@@ -1075,6 +1082,7 @@
 "to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "今日";
 "token" = "Token";
+"top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
 "total_supply" = "Total Supply";
@@ -1198,6 +1206,7 @@
 "voice_call_cancelled" = "グループ通話がキャンセルされました";
 "voice_call_has_been_declined" = "権限不足です";
 "vol_24h" = "24H VOL(%@)";
+"volume_24h" = "24h Volume";
 "waiting" = "待機中";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
@@ -1218,6 +1227,9 @@
 "wallet_transfer_recent_tip" = "あなたは%1$@前に%2$@へ同額の送金をしています。再度%3$@を送金しますか？";
 "wallet_withdrawal_changed" = "出金手数料が%1$@から%2$@へ変更されました。このまま出金を行いますか？";
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
+"watchlist" = "Watchlist";
+"watchlist_add_desc" = "%@ is now on your watchlist";
+"watchlist_empty" = "Your watchlist is empty";
 "web_cannot_reached_desc" = "%@ 接続に時間がかかり過ぎています、ネットワーク設定を確認してページをリロードしてください。";
 "web_cannot_reached_title" = "アクセスできません";
 "web_suspicious_link_tips" = "リンクは対応するリソースパターンにありません。";

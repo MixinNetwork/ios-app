@@ -84,9 +84,10 @@ final class SafeSnapshotViewController: RowListViewController {
             symbolLabel.text = token.symbol
             fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + fiatMoneyValue(usdPrice: token.decimalUSDPrice)) + "\n "
         }
-        if snapshot.type == SnapshotType.pendingDeposit.rawValue {
+        switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
+        case .pending:
             amountLabel.textColor = .walletGray
-        } else {
+        default:
             if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = .priceFalling
             } else {

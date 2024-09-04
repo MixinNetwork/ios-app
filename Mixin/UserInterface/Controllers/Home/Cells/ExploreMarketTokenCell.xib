@@ -116,9 +116,8 @@
                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hns-hd-q1n" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="2" y="3" width="44" height="44"/>
                         <color key="backgroundColor" name="background"/>
-                        <color key="tintColor" name="indicator_tint"/>
+                        <color key="tintColor" name="chat_pin_count_background"/>
                         <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
                         </userDefinedRuntimeAttributes>
@@ -156,8 +155,8 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="indicator_tint">
-            <color red="0.89803921568627454" green="0.9137254901960784" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="chat_pin_count_background">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

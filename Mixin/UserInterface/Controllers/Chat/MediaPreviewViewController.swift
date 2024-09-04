@@ -61,6 +61,7 @@ final class MediaPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.autoPlayAnimatedImage = true
+        activityIndicator.style = .large
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -44,7 +44,6 @@ final class GalleryActivityIndicatorView: UIView {
         backgroundView.layer.cornerRadius = backgroundSize.width / 2
         backgroundView.clipsToBounds = true
         addSubview(backgroundView)
-        indicator.usesLargerStyle = false
         addSubview(indicator)
     }
     

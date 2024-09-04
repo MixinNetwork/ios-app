@@ -72,6 +72,7 @@ final class Hud: NSObject {
             containerView = R.nib.hudView(withOwner: self)
             containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             isViewLoaded = true
+            activityIndicator.style = .large
         }
         
         hudView.alpha = 0

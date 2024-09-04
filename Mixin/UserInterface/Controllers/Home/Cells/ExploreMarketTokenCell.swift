@@ -46,7 +46,7 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
         rankLabel.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 0, right: 4)
         priceLabel.setFont(scaledFor: .systemFont(ofSize: 14, weight: .medium),
                            adjustForContentSize: true)
-        
+        favoriteActivityIndicatorView.style = .custom(diameter: 14, lineWidth: 2)
     }
     
     @IBAction func toggleFavorite(_ sender: Any) {

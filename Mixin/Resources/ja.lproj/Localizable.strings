@@ -701,6 +701,7 @@
 "not_now" = "Not Now";
 "not_playing" = "再生しません";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
+"note" = "Note";
 "notification_and_confirmation" = "通知・送金確認";
 "notification_content" = "友達からのメッセージを見逃さないで！";
 "notification_message_preview_description" = "通知でメッセージ内容を表示する";

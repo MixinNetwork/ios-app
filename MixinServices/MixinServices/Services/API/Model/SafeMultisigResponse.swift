@@ -107,10 +107,12 @@ extension SafeMultisigResponse {
             enum CodingKeys: String, CodingKey {
                 case assetID = "asset_id"
                 case recipients = "recipients"
+                case note = "note"
             }
             
             public let assetID: String
             public let recipients: [Recipient]
+            public let note: String
             
         }
         

@@ -1290,7 +1290,7 @@ extension UrlWindow {
                 } else {
                     state = .pending
                 }
-                if let safe = response.safe, case let .transaction(transaction) = safe.operation {
+                if case let .transaction(transaction) = response.safe?.operation {
                     for recipient in transaction.recipients {
                         recipient.label = AddressDAO.shared.label(address: recipient.address)
                     }

@@ -21,42 +21,45 @@ public final class MarketDAO: UserDatabaseDAO {
         case .favorite:
             sql += "\nWHERE mf.is_favored"
         }
-        let reverseResults: Bool
-        switch order {
-        case let .marketCap(ordering):
-            sql += "\nORDER BY CAST(m.market_cap AS REAL) DESC"
-            reverseResults = switch ordering {
-            case .ascending:
-                true
-            case .descending:
-                false
-            }
-        case let .price(ordering):
-            sql += "\nORDER BY CAST(m.current_price AS REAL) DESC"
-            reverseResults = switch ordering {
-            case .ascending:
-                true
-            case .descending:
-                false
-            }
-        case let .change(ordering):
-            sql += "\nORDER BY CAST(m.price_change_percentage_7d AS REAL) DESC"
-            reverseResults = switch ordering {
-            case .ascending:
-                true
-            case .descending:
-                false
-            }
-        }
+        sql += "\nORDER BY CAST(m.market_cap AS REAL) DESC"
         if let count = limit?.count {
             sql += "\nLIMIT \(count)"
         }
-        let results: [FavorableMarket] = db.select(with: sql)
-        if reverseResults {
-            return results.reversed()
-        } else {
-            return results
+        var results: [FavorableMarket] = db.select(with: sql)
+        
+        switch order {
+        case let .marketCap(ordering):
+            switch ordering {
+            case .ascending:
+                results.reverse()
+            case .descending:
+                break
+            }
+        case let .price(ordering):
+            switch ordering {
+            case .ascending:
+                results.sort { one, another in
+                    one.decimalPrice < another.decimalPrice
+                }
+            case .descending:
+                results.sort { one, another in
+                    one.decimalPrice > another.decimalPrice
+                }
+            }
+        case let .change(ordering):
+            switch ordering {
+            case .ascending:
+                results.sort { one, another in
+                    one.decimalPriceChangePercentage7D < another.decimalPriceChangePercentage7D
+                }
+            case .descending:
+                results.sort { one, another in
+                    one.decimalPriceChangePercentage7D > another.decimalPriceChangePercentage7D
+                }
+            }
         }
+        
+        return results
     }
     
     public func market(assetID: String) -> Market? {

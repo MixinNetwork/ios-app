@@ -146,6 +146,7 @@ final class BadgeIconView: UIView {
     }
     
     func setIcon(market: Market) {
+        iconImageView.backgroundColor = .clear
         iconImageView.sd_setImage(with: URL(string: market.iconURL),
                                   placeholderImage: nil,
                                   context: assetIconContext)

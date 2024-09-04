@@ -98,6 +98,9 @@ final class MarketViewController: UIViewController {
             if let market {
                 if let ids = market.assetIDs, !ids.isEmpty {
                     let tokens = TokenDAO.shared.tokenItems(with: ids)
+                        .sorted { one, another in
+                            one.decimalBalance > another.decimalBalance
+                        }
                     DispatchQueue.main.sync {
                         guard let self else {
                             return

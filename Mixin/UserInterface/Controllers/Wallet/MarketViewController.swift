@@ -8,6 +8,7 @@ final class MarketViewController: UIViewController {
     
     private let id: ID
     private let name: String
+    private let initialToken: TokenItem?
     
     private var market: Market?
     private var tokens: [TokenItem]?
@@ -23,6 +24,7 @@ final class MarketViewController: UIViewController {
     private init(token: TokenItem, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
         self.name = token.name
+        self.initialToken = token
         self.market = nil
         self.tokens = [token]
         self.viewModel = MarketViewModel(token: token)
@@ -33,6 +35,7 @@ final class MarketViewController: UIViewController {
     private init(market: Market) {
         self.id = .coin(market.coinID)
         self.name = market.name
+        self.initialToken = nil
         self.market = market
         self.tokens = nil
         self.viewModel = MarketViewModel(market: market)
@@ -94,68 +97,52 @@ final class MarketViewController: UIViewController {
         tableView.delegate = self
         tableView.reloadData()
         
-        DispatchQueue.global().async { [id, market, weak self] in
-            if let market {
-                if let ids = market.assetIDs, !ids.isEmpty {
-                    let tokens = TokenDAO.shared.tokenItems(with: ids)
-                        .sorted { one, another in
-                            one.decimalBalance > another.decimalBalance
-                        }
-                    DispatchQueue.main.sync {
+        if chartPoints == nil {
+            reloadPriceChart(period: chartPeriod)
+        }
+        if let market {
+            reloadTokens(market: market)
+        } else if let initialToken, case let .asset(id) = id {
+            DispatchQueue.global().async { [weak self] in
+                guard let market = MarketDAO.shared.market(assetID: id) else {
+                    return
+                }
+                DispatchQueue.main.sync {
+                    guard let self else {
+                        return
+                    }
+                    self.market = market
+                    self.viewModel.update(market: market, tokens: [initialToken])
+                    self.tableView.reloadData()
+                    self.reloadTokens(market: market)
+                }
+            }
+            RouteAPI.markets(id: id, queue: .global()) { [weak self] result in
+                switch result {
+                case .success(let market):
+                    MarketDAO.shared.save(market: market)
+                    DispatchQueue.main.async {
                         guard let self else {
                             return
                         }
-                        self.tokens = tokens
-                        self.viewModel.update(tokens: tokens)
-                        self.viewModel.update(market: market)
+                        self.market = market
+                        let tokens = self.tokens ?? [initialToken]
+                        self.viewModel.update(market: market, tokens: tokens)
                         self.tableView.reloadData()
                     }
-                }
-            } else {
-                switch id {
-                case .coin:
-                    assertionFailure("Not implemented")
-                case .asset(let id):
-                    if let market = MarketDAO.shared.market(assetID: id) {
-                        DispatchQueue.main.sync {
-                            guard let self else {
-                                return
-                            }
-                            self.market = market
-                            self.viewModel.update(market: market)
-                            self.tableView.reloadData()
+                case .failure(.response(.notFound)):
+                    DispatchQueue.main.async {
+                        guard let self else {
+                            return
                         }
+                        self.market = nil
+                        self.viewModel.updateWithMarketNotFound()
+                        self.tableView.reloadData()
                     }
-                }
-                RouteAPI.markets(id: id.value, queue: .global()) { result in
-                    switch result {
-                    case .success(let market):
-                        MarketDAO.shared.save(market: market)
-                        DispatchQueue.main.async {
-                            guard let self else {
-                                return
-                            }
-                            self.market = market
-                            self.viewModel.update(market: market)
-                            self.tableView.reloadData()
-                        }
-                    case .failure(.response(.notFound)):
-                        DispatchQueue.main.async {
-                            guard let self else {
-                                return
-                            }
-                            self.market = nil
-                            self.viewModel.updateWithMarketNotFound()
-                            self.tableView.reloadData()
-                        }
-                    case .failure(let error):
-                        Logger.general.debug(category: "MarketView", message: "\(error)")
-                    }
+                case .failure(let error):
+                    Logger.general.debug(category: "MarketView", message: "\(error)")
                 }
             }
-        }
-        if chartPoints == nil {
-            reloadPriceChart(period: chartPeriod)
         }
     }
     
@@ -209,6 +196,48 @@ final class MarketViewController: UIViewController {
                 cell.updatePriceAndChange(price: market.localizedPrice, points: points)
             } else if let token = tokens?.first {
                 cell.updatePriceAndChange(price: token.localizedFiatMoneyPrice, points: points)
+            }
+        }
+    }
+    
+    private func reloadTokens(market: Market) {
+        guard let ids = market.assetIDs, !ids.isEmpty else {
+            return
+        }
+        DispatchQueue.global().async { [weak self] in
+            func update(with tokens: [TokenItem]) {
+                DispatchQueue.main.sync {
+                    guard let self else {
+                        return
+                    }
+                    self.tokens = tokens
+                    self.viewModel.update(market: market, tokens: tokens)
+                    self.tableView.reloadData()
+                }
+            }
+            
+            let uniqueIDs = Set(ids)
+            let tokens = TokenDAO.shared.tokenItems(with: uniqueIDs)
+                .sorted { one, another in
+                    one.decimalBalance > another.decimalBalance
+                }
+            update(with: tokens)
+            if tokens.count != uniqueIDs.count {
+                var missingAssetIDs = uniqueIDs
+                for token in tokens {
+                    missingAssetIDs.remove(token.assetID)
+                }
+                Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
+                switch SafeAPI.assets(ids: missingAssetIDs) {
+                case .success(let missingTokens):
+                    TokenDAO.shared.save(assets: missingTokens)
+                    let missingTokenItems = missingTokens.map { token in
+                        TokenItem(token: token, balance: "0", isHidden: false, chain: nil)
+                    }
+                    update(with: tokens + missingTokenItems)
+                case .failure(let error):
+                    Logger.general.debug(category: "MarketView", message: "\(error)")
+                }
             }
         }
     }
@@ -378,17 +407,23 @@ extension MarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
-            if pushingViewController is TokenViewController {
-                navigationController?.popViewController(animated: true)
-            } else if let tokens {
-                if tokens.count == 1 {
-                    let controller = TokenViewController.contained(token: tokens[0])
+            let pushingToken = (pushingViewController as? TokenViewController)?.token
+            
+            func showTokenViewController(token: TokenItem) {
+                if token.assetID == pushingToken?.assetID {
+                    navigationController?.popViewController(animated: true)
+                } else {
+                    let controller = TokenViewController.contained(token: token)
                     navigationController?.pushViewController(controller, animated: true)
+                }
+            }
+            
+            if let tokens {
+                if tokens.count == 1 {
+                    showTokenViewController(token: tokens[0])
                 } else if tokens.count > 1 {
                     let selector = MarketTokenSelectorViewController(name: name, tokens: tokens) { index in
-                        let token = tokens[index]
-                        let controller = TokenViewController.contained(token: token)
-                        self.navigationController?.pushViewController(controller, animated: true)
+                        showTokenViewController(token: tokens[index])
                     }
                     present(selector, animated: true)
                 }
@@ -603,138 +638,13 @@ extension MarketViewController {
         }
         
         struct Stats {
+            
             let high24H: String?
             let low24H: String?
             let marketCap: String?
             let fiatMoneyVolume24H: String?
-        }
-        
-        struct Balance {
             
-            let balance: String
-            let period: String
-            let value: String
-            let change: String
-            let changeColor: UIColor
-            
-            init(balance: String, period: String, value: String, change: String, changeColor: UIColor) {
-                self.balance = balance
-                self.period = period
-                self.value = value
-                self.change = change
-                self.changeColor = changeColor
-            }
-            
-            init(token: TokenItem) {
-                self.init(
-                    balance: token.localizedBalanceWithSymbol,
-                    period: R.string.localizable.hours_count_short(24),
-                    value: token.localizedFiatMoneyBalance,
-                    change: "",
-                    changeColor: .clear
-                )
-            }
-            
-            func replacing(change: String, changeColor: UIColor) -> Balance {
-                Balance(
-                    balance: self.balance,
-                    period: self.period,
-                    value: self.value,
-                    change: change,
-                    changeColor: changeColor
-                )
-            }
-            
-        }
-        
-        private(set) var market: Market?
-        private(set) var token: TokenItem?
-        private(set) var stats: Stats?
-        private(set) var balance: Balance?
-        private(set) var infos: [Info]
-        
-        private let symbol: String
-        private let basicInfos: [Info]
-        
-        private var marketInfos: [Info]
-        
-        init(market: Market) {
-            self.market = market
-            self.token = nil
-            self.stats = nil
-            self.balance = nil
-            self.symbol = market.symbol
-            self.basicInfos = [
-                Info(title: R.string.localizable.name().uppercased(), primaryContent: market.name),
-                Info(title: R.string.localizable.symbol().uppercased(), primaryContent: market.symbol),
-            ]
-            self.marketInfos = Info.marketInfos(market: market)
-            self.infos = basicInfos + marketInfos
-        }
-        
-        init(token: TokenItem) {
-            self.market = nil
-            self.token = token
-            self.stats = nil
-            self.balance = Balance(token: token)
-            self.symbol = token.symbol
-            self.basicInfos = [
-                Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
-                Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
-            ]
-            self.marketInfos = []
-            self.infos = basicInfos
-        }
-        
-        func updateWithMarketNotFound() {
-            self.stats = nil
-            if let balance {
-                self.balance = balance.replacing(change: notApplicable, changeColor: R.color.text_quaternary()!)
-            }
-            self.marketInfos = [
-                Info.contentNotApplicable(title: R.string.localizable.market_cap().uppercased()),
-                Info.contentNotApplicable(title: R.string.localizable.circulation_supply().uppercased()),
-                Info.contentNotApplicable(title: R.string.localizable.total_supply().uppercased()),
-                Info.contentNotApplicable(title: R.string.localizable.all_time_high().uppercased()),
-                Info.contentNotApplicable(title: R.string.localizable.all_time_low().uppercased()),
-            ]
-            self.infos = basicInfos + marketInfos
-        }
-        
-        func update(tokens: [TokenItem]) {
-            if tokens.count == 1 {
-                let token = tokens[0]
-                self.token = token
-                self.balance = Balance(token: token)
-            } else if tokens.count > 1, let market {
-                let balanceSum: Decimal = tokens.reduce(0) { result, item in
-                    result + item.decimalBalance
-                }
-                let balanceSumString = CurrencyFormatter.localizedString(
-                    from: balanceSum,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .custom(symbol)
-                )
-                let valueString = "≈ " + CurrencyFormatter.localizedString(
-                    from: balanceSum * market.decimalPrice * Currency.current.decimalRate,
-                    format: .fiatMoney,
-                    sign: .never,
-                    symbol: .currencySymbol
-                )
-                self.balance = Balance(
-                    balance: balanceSumString,
-                    period: R.string.localizable.hours_count_short(24),
-                    value: valueString,
-                    change: "",
-                    changeColor: .clear
-                )
-            }
-        }
-        
-        func update(market: Market) {
-            self.market = market
-            self.stats = {
+            init(market: Market) {
                 let high24H: String?
                 if let value = Decimal(string: market.high24H, locale: .enUSPOSIX) {
                     high24H = CurrencyFormatter.localizedString(
@@ -772,30 +682,161 @@ extension MarketViewController {
                 } else {
                     fiatMoneyVolume24H = nil
                 }
-                return Stats(
-                    high24H: high24H,
-                    low24H: low24H,
-                    marketCap: marketCap,
-                    fiatMoneyVolume24H: fiatMoneyVolume24H
+                
+                self.high24H = high24H
+                self.low24H = low24H
+                self.marketCap = marketCap
+                self.fiatMoneyVolume24H = fiatMoneyVolume24H
+            }
+            
+        }
+        
+        struct Balance {
+            
+            let balance: String
+            let period: String
+            let value: String
+            let change: String
+            let changeColor: UIColor
+            
+            init(balance: String, period: String, value: String, change: String, changeColor: UIColor) {
+                self.balance = balance
+                self.period = period
+                self.value = value
+                self.change = change
+                self.changeColor = changeColor
+            }
+            
+            func replacing(change: String, changeColor: UIColor) -> Balance {
+                Balance(
+                    balance: self.balance,
+                    period: self.period,
+                    value: self.value,
+                    change: change,
+                    changeColor: changeColor
+                )
+            }
+            
+        }
+        
+        private(set) var stats: Stats?
+        private(set) var balance: Balance?
+        private(set) var infos: [Info]
+        
+        private let symbol: String
+        
+        private var basicInfos: [Info]
+        private var marketInfos: [Info]
+        
+        init(market: Market) {
+            let basicInfos = [
+                Info(title: R.string.localizable.name().uppercased(), primaryContent: market.name),
+                Info(title: R.string.localizable.symbol().uppercased(), primaryContent: market.symbol),
+            ]
+            let marketInfos = Info.marketInfos(market: market)
+            
+            self.stats = Stats(market: market)
+            self.balance = nil
+            self.infos = basicInfos + marketInfos
+            
+            self.symbol = market.symbol
+            
+            self.basicInfos = basicInfos
+            self.marketInfos = marketInfos
+        }
+        
+        init(token: TokenItem) {
+            let basicInfos = [
+                Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
+                Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
+            ]
+            let marketInfos: [Info] = []
+            
+            self.stats = nil
+            self.balance = Balance(
+                balance: token.localizedBalanceWithSymbol,
+                period: R.string.localizable.hours_count_short(24),
+                value: token.localizedFiatMoneyBalance,
+                change: "",
+                changeColor: .clear
+            )
+            self.infos = basicInfos
+            
+            self.symbol = token.symbol
+            
+            self.basicInfos = basicInfos
+            self.marketInfos = marketInfos
+        }
+        
+        func updateWithMarketNotFound() {
+            self.stats = nil
+            if let balance {
+                self.balance = balance.replacing(change: notApplicable, changeColor: R.color.text_quaternary()!)
+            }
+            self.marketInfos = [
+                Info.contentNotApplicable(title: R.string.localizable.market_cap().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.circulation_supply().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.total_supply().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.all_time_high().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.all_time_low().uppercased()),
+            ]
+            self.infos = basicInfos + marketInfos
+        }
+        
+        func update(market: Market, tokens: [TokenItem]) {
+            self.stats = Stats(market: market)
+            
+            self.balance = {
+                let balance: Decimal
+                if tokens.count == 1 {
+                    balance = tokens[0].decimalBalance
+                } else if tokens.count > 1 {
+                    balance = tokens.reduce(0) { result, item in
+                        result + item.decimalBalance
+                    }
+                } else {
+                    balance = 0
+                }
+                
+                var change: String
+                let changeColor: UIColor
+                if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
+                    changeColor = priceChange24H >= 0 ? .priceRising : .priceFalling
+                    change = CurrencyFormatter.localizedString(
+                        from: priceChange24H * balance * Currency.current.decimalRate,
+                        format: .fiatMoneyPrice,
+                        sign: .always,
+                        symbol: .currencySymbol
+                    )
+                    if let priceChangePercentage24H = Decimal(string: market.priceChangePercentage24H, locale: .enUSPOSIX),
+                       let percent = NumberFormatter.percentage.string(decimal: priceChangePercentage24H / 100)
+                    {
+                        change += " (\(percent))"
+                    }
+                } else {
+                    change = ""
+                    changeColor = .clear
+                }
+                
+                return Balance(
+                    balance: CurrencyFormatter.localizedString(
+                        from: balance,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(symbol)
+                    ),
+                    period: R.string.localizable.hours_count_short(24),
+                    value: "≈ " + CurrencyFormatter.localizedString(
+                        from: balance * market.decimalPrice * Currency.current.decimalRate,
+                        format: .fiatMoney,
+                        sign: .never,
+                        symbol: .currencySymbol
+                    ),
+                    change: change,
+                    changeColor: changeColor
                 )
             }()
-            if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX), let token {
-                var change = CurrencyFormatter.localizedString(
-                    from: priceChange24H * token.decimalBalance * Currency.current.decimalRate,
-                    format: .fiatMoneyPrice,
-                    sign: .always,
-                    symbol: .currencySymbol
-                )
-                if let priceChangePercentage24H = Decimal(string: market.priceChangePercentage24H, locale: .enUSPOSIX),
-                   let percent = NumberFormatter.percentage.string(decimal: priceChangePercentage24H / 100)
-                {
-                    change += " (\(percent))"
-                }
-                if let balance {
-                    let color: UIColor = priceChange24H >= 0 ? .priceRising : .priceFalling
-                    self.balance = balance.replacing(change: change, changeColor: color)
-                }
-            }
+            
             self.marketInfos = Info.marketInfos(market: market)
             self.infos = basicInfos + marketInfos
         }

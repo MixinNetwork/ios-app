@@ -50,6 +50,14 @@ final class PlainTokenIconView: UIImageView {
         }
     }
     
+    func setIcon(market: Market) {
+        if let url = URL(string: market.iconURL) {
+            setIcon(tokenIconURL: url)
+        } else {
+            image = R.image.unknown_session()
+        }
+    }
+    
     func prepareForReuse() {
         sd_cancelCurrentImageLoad()
     }

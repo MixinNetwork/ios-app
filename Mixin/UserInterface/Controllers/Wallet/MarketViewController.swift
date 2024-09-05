@@ -113,7 +113,7 @@ final class MarketViewController: UIViewController {
                 }
             } else {
                 switch id {
-                case .coin(let id):
+                case .coin:
                     assertionFailure("Not implemented")
                 case .asset(let id):
                     if let market = MarketDAO.shared.market(assetID: id) {
@@ -170,13 +170,13 @@ final class MarketViewController: UIViewController {
     
     private func reloadPriceChart(period: PriceHistoryPeriod) {
         DispatchQueue.global().async { [id, weak self] in
-            let history = switch id {
+            let storage = switch id {
             case .coin(let id):
                 MarketDAO.shared.priceHistory(coinID: id, period: period)
             case .asset(let id):
                 MarketDAO.shared.priceHistory(assetID: id, period: period)
             }
-            if let history, let points = PriceHistory(storage: history)?.chartViewPoints() {
+            if let storage, let points = PriceHistory(storage: storage)?.chartViewPoints() {
                 DispatchQueue.main.sync {
                     self?.reloadPriceChart(period: period, points: points)
                 }
@@ -523,21 +523,6 @@ extension MarketViewController {
                 )
             }
             
-            static func tokenInfos(token: TokenItem) -> [Info] {
-                var infos = [
-                    Info(
-                        title: R.string.localizable.contract_address().uppercased(),
-                        primaryContent: token.assetKey,
-                        secondaryContent: (R.string.localizable.address_warning(), R.color.red()!)
-                    )
-                ]
-                if let chainName = token.chain?.name {
-                    let info = Info(title: R.string.localizable.chain().uppercased(), primaryContent: chainName)
-                    infos.insert(info, at: 0)
-                }
-                return infos
-            }
-            
             static func marketInfos(market: Market) -> [Info] {
                 var infos: [Info] = []
                 if let marketCap = Decimal(string: market.marketCap, locale: .enUSPOSIX) {
@@ -671,7 +656,6 @@ extension MarketViewController {
         private let symbol: String
         private let basicInfos: [Info]
         
-        private var tokenInfos: [Info]
         private var marketInfos: [Info]
         
         init(market: Market) {
@@ -684,9 +668,8 @@ extension MarketViewController {
                 Info(title: R.string.localizable.name().uppercased(), primaryContent: market.name),
                 Info(title: R.string.localizable.symbol().uppercased(), primaryContent: market.symbol),
             ]
-            self.tokenInfos = []
             self.marketInfos = Info.marketInfos(market: market)
-            self.infos = basicInfos + tokenInfos + marketInfos
+            self.infos = basicInfos + marketInfos
         }
         
         init(token: TokenItem) {
@@ -699,9 +682,8 @@ extension MarketViewController {
                 Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
                 Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
             ]
-            self.tokenInfos = Info.tokenInfos(token: token)
             self.marketInfos = []
-            self.infos = basicInfos + tokenInfos
+            self.infos = basicInfos
         }
         
         func updateWithMarketNotFound() {
@@ -716,7 +698,7 @@ extension MarketViewController {
                 Info.contentNotApplicable(title: R.string.localizable.all_time_high().uppercased()),
                 Info.contentNotApplicable(title: R.string.localizable.all_time_low().uppercased()),
             ]
-            self.infos = basicInfos + tokenInfos + marketInfos
+            self.infos = basicInfos + marketInfos
         }
         
         func update(tokens: [TokenItem]) {
@@ -724,8 +706,6 @@ extension MarketViewController {
                 let token = tokens[0]
                 self.token = token
                 self.balance = Balance(token: token)
-                self.tokenInfos = Info.tokenInfos(token: token)
-                self.infos = basicInfos + tokenInfos + marketInfos
             } else if tokens.count > 1, let market {
                 let balanceSum: Decimal = tokens.reduce(0) { result, item in
                     result + item.decimalBalance
@@ -817,7 +797,7 @@ extension MarketViewController {
                 }
             }
             self.marketInfos = Info.marketInfos(market: market)
-            self.infos = basicInfos + tokenInfos + marketInfos
+            self.infos = basicInfos + marketInfos
         }
         
     }

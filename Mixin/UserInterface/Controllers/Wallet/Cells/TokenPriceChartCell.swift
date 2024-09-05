@@ -31,7 +31,6 @@ final class TokenPriceChartCell: UITableViewCell {
         chartView.annotateExtremums = true
         chartView.minPointPosition = 135 / 184
         chartView.maxPointPosition = 23 / 184
-        loadingIndicatorView.style = .large
         for (i, period) in PriceHistoryPeriod.allCases.enumerated() {
             let button = UIButton(type: .system)
             button.tag = i

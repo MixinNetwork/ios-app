@@ -73,6 +73,9 @@ class UrlWindow {
                 return true
             case let .send(context):
                 return checkSendUrl(sharingContext: context, webContext: source.webContext)
+            case let .market(id):
+                checkMarket(id: id)
+                return true
             }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool
@@ -981,6 +984,28 @@ class UrlWindow {
             return true
         }
         return false
+    }
+    
+    class func checkMarket(id: String) {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        RouteAPI.markets(id: id, queue: .global()) { result in
+            switch result {
+            case let .success(market):
+                MarketDAO.shared.save(market: market)
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let viewController = MarketViewController.contained(market: market, pushingViewController: nil)
+                    UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+                }
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+        }
     }
     
     class func checkURLNowOrAfterScreenUnlocked(url: URL, from source: Source) -> Bool {

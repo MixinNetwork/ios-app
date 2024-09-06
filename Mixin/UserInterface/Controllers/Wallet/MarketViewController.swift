@@ -231,6 +231,13 @@ final class MarketViewController: UIViewController {
         guard let market else {
             return
         }
+        let snapshotView = tableView.snapshotView(afterScreenUpdates: true)
+        if let snapshotView {
+            view.addSubview(snapshotView)
+            snapshotView.snp.makeConstraints { make in
+                make.edges.equalTo(tableView)
+            }
+        }
         let contentOffset = tableView.contentOffset
         tableView.showsVerticalScrollIndicator = false
         tableView.setContentOffset(.zero, animated: false)
@@ -238,6 +245,7 @@ final class MarketViewController: UIViewController {
         defer {
             tableView.setContentOffset(contentOffset, animated: false)
             tableView.showsVerticalScrollIndicator = true
+            snapshotView?.removeFromSuperview()
         }
         
         let statsIndexPath = IndexPath(item: StatsRow.bottomSeparator.rawValue,

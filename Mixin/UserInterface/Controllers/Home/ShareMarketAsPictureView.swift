@@ -19,8 +19,11 @@ final class ShareMarketAsPictureView: UIView {
         qrCodeView.layer.cornerCurve = .continuous
         qrCodeView.layer.cornerRadius = 6
         qrCodeView.layer.masksToBounds = true
-        qrCodeView.setContent(URL.shortMixinMessenger.absoluteString,
-                              size: qrCodeView.bounds.size)
+        qrCodeView.setContent(
+            URL.shortMixinMessenger.absoluteString,
+            size: qrCodeView.bounds.size,
+            activityIndicator: false
+        )
     }
     
     override func layoutSubviews() {

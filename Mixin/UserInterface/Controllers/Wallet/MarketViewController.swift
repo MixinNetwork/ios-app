@@ -188,42 +188,40 @@ final class MarketViewController: UIViewController {
         guard let market else {
             return
         }
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: view)
         if market.isFavorite {
+            market.isFavorite = false
+            updateFavoriteButtonImage()
             RouteAPI.unfavoriteMarket(coinID: market.coinID) { [weak self] result in
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         MarketDAO.shared.unfavorite(coinID: market.coinID, sendNotification: true)
                     }
+                case .failure(let error):
                     if let self {
-                        self.market?.isFavorite = false
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        market.isFavorite = true
                         self.updateFavoriteButtonImage()
                     }
-                    hud.set(style: .notification, text: R.string.localizable.successful())
-                case .failure(let error):
-                    hud.set(style: .error, text: error.localizedDescription)
                 }
-                hud.scheduleAutoHidden()
             }
         } else {
+            market.isFavorite = true
+            updateFavoriteButtonImage()
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         MarketDAO.shared.favorite(coinID: market.coinID, sendNotification: true)
                     }
+                case .failure(let error):
                     if let self {
-                        self.market?.isFavorite = true
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        market.isFavorite = false
                         self.updateFavoriteButtonImage()
                     }
-                    hud.set(style: .notification, text: R.string.localizable.watchlist_add_desc(market.symbol))
-                case .failure(let error):
-                    hud.set(style: .error, text: error.localizedDescription)
                 }
             }
-            hud.scheduleAutoHidden()
         }
     }
     

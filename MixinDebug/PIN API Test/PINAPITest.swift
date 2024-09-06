@@ -93,13 +93,6 @@ class PINAPITest: ObservableObject {
                 }
             }),
             
-            Case(name: "Save Address", work: { onFinished in
-                let request = AddressRequest(assetID: uuid, destination: uuid, tag: "", label: "", pin: self.pin)
-                WithdrawalAPI.save(address: request) { result in
-                    self.validate(result: result, onFinished: onFinished)
-                }
-            }),
-            
             Case(name: "Verify Emergency Contact", work: { onFinished in
                 EmergencyAPI.verifyContact(pin: self.pin, id: uuid, code: "0000") { result in
                     self.validate(result: result, onFinished: onFinished)
@@ -114,27 +107,6 @@ class PINAPITest: ObservableObject {
                                                     pin: self.pin,
                                                     traceId: uuid, memo: "")
                 PaymentAPI.transactions(transactionRequest: request, pin: self.pin) { result in
-                    self.validate(result: result, onFinished: onFinished)
-                }
-            }),
-            
-            Case(name: "Withdrawl", work: { onFinished in
-                let request = WithdrawalRequest(addressId: uuid,
-                                                amount: "0",
-                                                traceId: uuid,
-                                                pin: self.pin,
-                                                memo: "",
-                                                fee: nil,
-                                                assetId: nil,
-                                                destination: nil,
-                                                tag: nil)
-                WithdrawalAPI.withdrawal(withdrawal: request) { result in
-                    self.validate(result: result, onFinished: onFinished)
-                }
-            }),
-            
-            Case(name: "Delete Address", work: { onFinished in
-                WithdrawalAPI.delete(addressId: uuid, pin: self.pin) { result in
                     self.validate(result: result, onFinished: onFinished)
                 }
             }),

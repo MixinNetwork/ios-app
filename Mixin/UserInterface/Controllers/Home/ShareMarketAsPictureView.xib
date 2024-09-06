@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ShareMarketAsPictureView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="295" height="553"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JFA-e2-8Rv">
+                    <rect key="frame" x="0.0" y="6" width="295" height="441"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kvB-un-BoK">
+                    <rect key="frame" x="0.0" y="453" width="295" height="100"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k3a-ET-ea6" customClass="ModernQRCodeView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="199" y="12" width="76" height="76"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="k3a-ET-ea6" secondAttribute="height" id="8qU-Mo-7ac"/>
+                            </constraints>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="XNp-MT-ufp">
+                            <rect key="frame" x="20" y="23" width="159" height="54"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FLD-mV-2rT">
+                                    <rect key="frame" x="0.0" y="0.0" width="159" height="50"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Gs-Qt-J8f">
+                                    <rect key="frame" x="0.0" y="54" width="159" height="0.0"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="install_messenger_desc"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="k3a-ET-ea6" firstAttribute="top" secondItem="kvB-un-BoK" secondAttribute="top" constant="12" id="1ho-bm-qPv"/>
+                        <constraint firstItem="XNp-MT-ufp" firstAttribute="leading" secondItem="kvB-un-BoK" secondAttribute="leading" constant="20" id="3kK-2M-oW3"/>
+                        <constraint firstAttribute="trailing" secondItem="k3a-ET-ea6" secondAttribute="trailing" constant="20" id="E1D-sP-oGm"/>
+                        <constraint firstItem="k3a-ET-ea6" firstAttribute="leading" secondItem="XNp-MT-ufp" secondAttribute="trailing" constant="20" id="bpT-6P-PmM"/>
+                        <constraint firstAttribute="bottom" secondItem="k3a-ET-ea6" secondAttribute="bottom" constant="12" id="eXM-Fv-qGq"/>
+                        <constraint firstAttribute="height" constant="100" id="mRp-IU-HSW"/>
+                        <constraint firstItem="XNp-MT-ufp" firstAttribute="centerY" secondItem="kvB-un-BoK" secondAttribute="centerY" id="pk8-O2-47f"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="JFA-e2-8Rv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="f0V-mU-DUD"/>
+                <constraint firstItem="JFA-e2-8Rv" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="6" id="f6a-9f-nkg"/>
+                <constraint firstAttribute="trailing" secondItem="kvB-un-BoK" secondAttribute="trailing" id="iYM-cK-6AT"/>
+                <constraint firstAttribute="trailing" secondItem="JFA-e2-8Rv" secondAttribute="trailing" id="pI4-Qk-q0N"/>
+                <constraint firstItem="kvB-un-BoK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="vWX-hp-e9d"/>
+                <constraint firstItem="kvB-un-BoK" firstAttribute="top" secondItem="JFA-e2-8Rv" secondAttribute="bottom" constant="6" id="xe8-Zm-P8b"/>
+                <constraint firstAttribute="bottom" secondItem="kvB-un-BoK" secondAttribute="bottom" id="zH3-g8-28O"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="imageView" destination="JFA-e2-8Rv" id="7ev-Cu-nU7"/>
+                <outlet property="obiView" destination="kvB-un-BoK" id="0Jy-2V-qau"/>
+                <outlet property="qrCodeView" destination="k3a-ET-ea6" id="nsN-5b-NfI"/>
+                <outlet property="titleLabel" destination="FLD-mV-2rT" id="ezI-dJ-fcz"/>
+            </connections>
+            <point key="canvasLocation" x="139.69465648854961" y="41.901408450704224"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

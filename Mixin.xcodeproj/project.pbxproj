@@ -712,10 +712,13 @@
 		940D10B52C5CC3380071E36D /* NoTransactionIndicatorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10B42C5CC3380071E36D /* NoTransactionIndicatorCell.xib */; };
 		940D10B62C5CC3380071E36D /* NoTransactionIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10B32C5CC3380071E36D /* NoTransactionIndicatorCell.swift */; };
 		940DC5922B075E03009A15D1 /* SafePaymentURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940DC5912B075E03009A15D1 /* SafePaymentURL.swift */; };
+		940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */; };
+		940EF8B32C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */; };
+		940EF8B52C8AE74D000AD1C6 /* ShareMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */; };
 		9411B3B42C7F2EBD005753F0 /* ExploreMarketHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9411B3B32C7F2EBD005753F0 /* ExploreMarketHeaderView.xib */; };
 		9411B3B52C7F2EBD005753F0 /* ExploreMarketHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411B3B22C7F2EBD005753F0 /* ExploreMarketHeaderView.swift */; };
-		9412AF4D2C1AEAE00083ABB3 /* ShareInscriptionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9412AF4C2C1AEAE00083ABB3 /* ShareInscriptionView.xib */; };
-		9412AF4E2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9412AF4B2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift */; };
+		9412AF4D2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */; };
+		9412AF4E2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */; };
 		94130E292BAB35150098BE48 /* Web3DiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94130E282BAB35150098BE48 /* Web3DiagnosticViewController.swift */; };
 		9413A4002C367D8D00B655AC /* SwapView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9413A3FF2C367D8D00B655AC /* SwapView.xib */; };
 		9413A4012C367D8D00B655AC /* SwapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9413A3FE2C367D8D00B655AC /* SwapViewController.swift */; };
@@ -768,6 +771,9 @@
 		942F4729299CDF1800528759 /* URLSessionWebSocketFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942F4728299CDF1800528759 /* URLSessionWebSocketFactory.swift */; };
 		942F472B299CDF8100528759 /* Web3SignerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942F472A299CDF8100528759 /* Web3SignerFactory.swift */; };
 		942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */ = {isa = PBXBuildFile; fileRef = 942F829725DD56E3004F913B /* opusenc_set_bitrate.c */; };
+		942FB8932C8AD7F800C8025C /* ShareInscriptionAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942FB8922C8AD7F800C8025C /* ShareInscriptionAsPictureView.xib */; };
+		942FB8952C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FB8942C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift */; };
+		942FB8972C8AE09000C8025C /* ShareInscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FB8962C8AE09000C8025C /* ShareInscriptionViewController.swift */; };
 		9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */; };
 		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
 		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
@@ -2069,10 +2075,13 @@
 		940D10B32C5CC3380071E36D /* NoTransactionIndicatorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoTransactionIndicatorCell.swift; sourceTree = "<group>"; };
 		940D10B42C5CC3380071E36D /* NoTransactionIndicatorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionIndicatorCell.xib; sourceTree = "<group>"; };
 		940DC5912B075E03009A15D1 /* SafePaymentURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafePaymentURL.swift; sourceTree = "<group>"; };
+		940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketAsPictureView.xib; sourceTree = "<group>"; };
+		940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketAsPictureView.swift; sourceTree = "<group>"; };
+		940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketViewController.swift; sourceTree = "<group>"; };
 		9411B3B22C7F2EBD005753F0 /* ExploreMarketHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMarketHeaderView.swift; sourceTree = "<group>"; };
 		9411B3B32C7F2EBD005753F0 /* ExploreMarketHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreMarketHeaderView.xib; sourceTree = "<group>"; };
-		9412AF4B2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInscriptionViewController.swift; sourceTree = "<group>"; };
-		9412AF4C2C1AEAE00083ABB3 /* ShareInscriptionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareInscriptionView.xib; sourceTree = "<group>"; };
+		9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewAsPictureViewController.swift; sourceTree = "<group>"; };
+		9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareViewAsPictureView.xib; sourceTree = "<group>"; };
 		94130E282BAB35150098BE48 /* Web3DiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DiagnosticViewController.swift; sourceTree = "<group>"; };
 		9413A3FE2C367D8D00B655AC /* SwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapViewController.swift; sourceTree = "<group>"; };
 		9413A3FF2C367D8D00B655AC /* SwapView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapView.xib; sourceTree = "<group>"; };
@@ -2125,6 +2134,9 @@
 		942F472A299CDF8100528759 /* Web3SignerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SignerFactory.swift; sourceTree = "<group>"; };
 		942F829625DD56E3004F913B /* opusenc_set_bitrate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opusenc_set_bitrate.h; sourceTree = "<group>"; };
 		942F829725DD56E3004F913B /* opusenc_set_bitrate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = opusenc_set_bitrate.c; sourceTree = "<group>"; };
+		942FB8922C8AD7F800C8025C /* ShareInscriptionAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareInscriptionAsPictureView.xib; sourceTree = "<group>"; };
+		942FB8942C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInscriptionAsPictureView.swift; sourceTree = "<group>"; };
+		942FB8962C8AE09000C8025C /* ShareInscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInscriptionViewController.swift; sourceTree = "<group>"; };
 		9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+PlaylistItem.swift"; sourceTree = "<group>"; };
 		94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		94317D052AFBE57200FDC9C9 /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
@@ -3220,6 +3232,8 @@
 				52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */,
 				9413A3FF2C367D8D00B655AC /* SwapView.xib */,
 				9413A3FE2C367D8D00B655AC /* SwapViewController.swift */,
+				9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */,
+				9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -3495,8 +3509,9 @@
 				94A72C972C2EBE1E001E8782 /* InscriptionTraitsCell.swift */,
 				94CD471F2BECB6F100A3DE10 /* InscriptionView.xib */,
 				52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */,
-				9412AF4C2C1AEAE00083ABB3 /* ShareInscriptionView.xib */,
-				9412AF4B2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift */,
+				942FB8922C8AD7F800C8025C /* ShareInscriptionAsPictureView.xib */,
+				942FB8942C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift */,
+				942FB8962C8AE09000C8025C /* ShareInscriptionViewController.swift */,
 				9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */,
 			);
 			path = Collectible;
@@ -4288,6 +4303,9 @@
 				94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */,
 				94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */,
 				944BC2D72C7DAFEA008700A8 /* ExploreMarketViewController.swift */,
+				940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */,
+				940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */,
+				940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */,
 				94CF1F262BA1B74A00BC52C1 /* ExploreWeb3ViewController.swift */,
 				941952482BFF5E6D0046DE50 /* ExploreEVMViewController.swift */,
 				9419524D2BFF60430046DE50 /* ExploreSolanaViewController.swift */,
@@ -5087,6 +5105,7 @@
 				7BA9F32124A22EC200D7C091 /* CallMemberCell.xib in Resources */,
 				7B4C656F242354AE003B78F9 /* LocationSearchNoResultView.xib in Resources */,
 				7B3FD4EE241965BE00B58006 /* LocationView.xib in Resources */,
+				942FB8932C8AD7F800C8025C /* ShareInscriptionAsPictureView.xib in Resources */,
 				94B1E56B2C4A05BF00A2349F /* SwapAssetChangeCell.xib in Resources */,
 				7C11E34A281BF4BC00D3362B /* ic_time_animation_dark@2x.gif in Resources */,
 				945138B82C6622F600839CBB /* TokenMarketCell.xib in Resources */,
@@ -5149,6 +5168,7 @@
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
 				941979552BA47782002BA19F /* Web3MessageCell.xib in Resources */,
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
+				940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */,
 				7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
@@ -5227,7 +5247,7 @@
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
 				94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
-				9412AF4D2C1AEAE00083ABB3 /* ShareInscriptionView.xib in Resources */,
+				9412AF4D2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib in Resources */,
 				944C610F2B6AB7F600C7DF06 /* TokenAmountCell.xib in Resources */,
 				94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
@@ -5676,7 +5696,7 @@
 				94F209D52C06C1A300550060 /* SolanaTransferOperation.swift in Sources */,
 				9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */,
 				7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */,
-				9412AF4E2C1AEAE00083ABB3 /* ShareInscriptionViewController.swift in Sources */,
+				9412AF4E2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
@@ -6095,6 +6115,7 @@
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,
 				946331C02C622C1100C54B76 /* TransactionHistoryRecipientFilterView.swift in Sources */,
+				942FB8952C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift in Sources */,
 				94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */,
 				941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
@@ -6337,7 +6358,9 @@
 				7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
+				940EF8B32C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
+				942FB8972C8AE09000C8025C /* ShareInscriptionViewController.swift in Sources */,
 				7BD3860424DC56DA00A3035C /* UNNotificationConstants.swift in Sources */,
 				9411B3B52C7F2EBD005753F0 /* ExploreMarketHeaderView.swift in Sources */,
 				DF8794942074FB4E004A1E55 /* LegacyTransactionViewController.swift in Sources */,
@@ -6551,6 +6574,7 @@
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
 				94658CA02B347E4100F5EB21 /* UTXODiagnosticViewController.swift in Sources */,
 				DFAD89A1241B6D6400836EDD /* JobService.swift in Sources */,
+				940EF8B52C8AE74D000AD1C6 /* ShareMarketViewController.swift in Sources */,
 				945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */,
 				94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */,
 				94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */,

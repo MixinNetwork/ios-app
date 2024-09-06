@@ -108,10 +108,14 @@ open class Database {
     @discardableResult
     public func execute(
         sql: String,
-        arguments: StatementArguments = StatementArguments()
+        arguments: StatementArguments = StatementArguments(),
+        completion: Completion? = nil
     ) -> Bool {
         write { (db) in
             try db.execute(sql: sql, arguments: arguments)
+            if let completion = completion {
+                db.afterNextTransaction(onCommit: completion)
+            }
         }
     }
     

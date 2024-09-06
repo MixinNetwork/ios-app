@@ -85,6 +85,8 @@ final class ExploreMarketViewController: UIViewController {
         }
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAll(_:)), name: Currency.currentCurrencyDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(propertiesDatabaseDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.favoriteNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.unfavoriteNotification, object: nil)
         
         reloadGlobalMarket(overwrites: false)
         reloadMarkets(overwrites: false)
@@ -112,6 +114,16 @@ final class ExploreMarketViewController: UIViewController {
             return
         }
         reloadGlobalMarket(overwrites: true)
+    }
+    
+    @objc private func favoriteChanged(_ notification: Notification) {
+        guard let coinID = notification.userInfo?[MarketDAO.coinIDUserInfoKey] as? String else {
+            return
+        }
+        guard markets.contains(where: { $0.coinID == coinID }) else {
+            return
+        }
+        reloadMarkets(overwrites: true)
     }
     
     private func syncWatchlistFromRemote() {
@@ -326,7 +338,7 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.unfavorite(coinID: market.coinID)
+                        MarketDAO.shared.unfavorite(coinID: market.coinID, sendNotification: false)
                     }
                     cell.isFavorited = false
                     updateModel(isFavorited: false)
@@ -341,7 +353,7 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.favorite(coinID: market.coinID)
+                        MarketDAO.shared.favorite(coinID: market.coinID, sendNotification: false)
                     }
                     cell.isFavorited = true
                     updateModel(isFavorited: true)

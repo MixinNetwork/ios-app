@@ -79,7 +79,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     override func awakeFromNib() {
         super.awakeFromNib()
         segmentedControl.items = [
-            R.image.market_favorite()!,
+            R.image.market_favorite_hollow()!,
             R.image.market_rank()!,
         ]
         limitButton.imageView?.contentMode = .center

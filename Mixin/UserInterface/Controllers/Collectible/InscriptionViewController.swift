@@ -528,9 +528,7 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
         else {
             return
         }
-        let share = ShareInscriptionViewController()
-        share.inscription = inscription
-        share.token = token
+        let share = ShareInscriptionViewController(inscription: inscription, token: token)
         present(share, animated: true)
     }
     

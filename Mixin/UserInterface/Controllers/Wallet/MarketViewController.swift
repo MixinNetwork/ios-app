@@ -9,8 +9,10 @@ final class MarketViewController: UIViewController {
     private let id: ID
     private let name: String
     private let initialToken: TokenItem?
+    private let favoriteButton = UIButton(type: .system)
+    private let shareButton = UIButton(type: .system)
     
-    private var market: Market?
+    private var market: FavorableMarket?
     private var tokens: [TokenItem]?
     private var viewModel: MarketViewModel
     private var chartPeriod: PriceHistoryPeriod = .day
@@ -32,7 +34,7 @@ final class MarketViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    private init(market: Market) {
+    private init(market: FavorableMarket) {
         self.id = .coin(market.coinID)
         self.name = market.name
         self.initialToken = nil
@@ -58,7 +60,7 @@ final class MarketViewController: UIViewController {
     }
     
     static func contained(
-        market: Market,
+        market: FavorableMarket,
         pushingViewController: UIViewController?
     ) -> ContainerViewController {
         let controller = MarketViewController(market: market)
@@ -73,6 +75,28 @@ final class MarketViewController: UIViewController {
             container.setSubtitle(subtitle: name)
             container.view.backgroundColor = R.color.background_secondary()
             container.navigationBar.backgroundColor = R.color.background_secondary()
+            container.rightButton.removeFromSuperview()
+            
+            favoriteButton.addTarget(self, action: #selector(toggleFavorite(_:)), for: .touchUpInside)
+            shareButton.setImage(R.image.ic_share(), for: .normal)
+            shareButton.tintColor = R.color.icon_tint()
+            shareButton.addTarget(self, action: #selector(shareMarket(_:)), for: .touchUpInside)
+            let stackView = UIStackView(arrangedSubviews: [favoriteButton, shareButton])
+            stackView.axis = .horizontal
+            stackView.spacing = 10
+            container.navigationBar.addSubview(stackView)
+            container.titleLeadingConstraint.constant = 54
+            container.titleTrailingConstraint.constant = 98
+            stackView.snp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
+                make.trailing.equalToSuperview().offset(-10)
+            }
+            favoriteButton.snp.makeConstraints { make in
+                make.width.height.equalTo(44)
+            }
+            shareButton.snp.makeConstraints { make in
+                make.width.height.equalTo(44)
+            }
         }
         
         let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
@@ -102,6 +126,7 @@ final class MarketViewController: UIViewController {
         }
         if let market {
             reloadTokens(market: market)
+            updateFavoriteButtonImage()
         } else if let initialToken, case let .asset(id) = id {
             DispatchQueue.global().async { [weak self] in
                 guard let market = MarketDAO.shared.market(assetID: id) else {
@@ -115,20 +140,23 @@ final class MarketViewController: UIViewController {
                     self.viewModel.update(market: market, tokens: [initialToken])
                     self.tableView.reloadData()
                     self.reloadTokens(market: market)
+                    self.updateFavoriteButtonImage()
                 }
             }
             RouteAPI.markets(id: id, queue: .global()) { [weak self] result in
                 switch result {
                 case .success(let market):
-                    MarketDAO.shared.save(market: market)
-                    DispatchQueue.main.async {
-                        guard let self else {
-                            return
+                    if let market = MarketDAO.shared.save(market: market) {
+                        DispatchQueue.main.async {
+                            guard let self else {
+                                return
+                            }
+                            self.market = market
+                            let tokens = self.tokens ?? [initialToken]
+                            self.viewModel.update(market: market, tokens: tokens)
+                            self.tableView.reloadData()
+                            self.updateFavoriteButtonImage()
                         }
-                        self.market = market
-                        let tokens = self.tokens ?? [initialToken]
-                        self.viewModel.update(market: market, tokens: tokens)
-                        self.tableView.reloadData()
                     }
                 case .failure(.response(.notFound)):
                     DispatchQueue.main.async {
@@ -138,6 +166,7 @@ final class MarketViewController: UIViewController {
                         self.market = nil
                         self.viewModel.updateWithMarketNotFound()
                         self.tableView.reloadData()
+                        self.updateFavoriteButtonImage()
                     }
                 case .failure(let error):
                     Logger.general.debug(category: "MarketView", message: "\(error)")
@@ -153,6 +182,106 @@ final class MarketViewController: UIViewController {
         } else {
             tableView.contentInset.bottom = 0
         }
+    }
+    
+    @objc private func toggleFavorite(_ sender: Any) {
+        guard let market else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: view)
+        if market.isFavorite {
+            RouteAPI.unfavoriteMarket(coinID: market.coinID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        MarketDAO.shared.unfavorite(coinID: market.coinID, sendNotification: true)
+                    }
+                    if let self {
+                        self.market?.isFavorite = false
+                        self.updateFavoriteButtonImage()
+                    }
+                    hud.set(style: .notification, text: R.string.localizable.successful())
+                case .failure(let error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                }
+                hud.scheduleAutoHidden()
+            }
+        } else {
+            RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        MarketDAO.shared.favorite(coinID: market.coinID, sendNotification: true)
+                    }
+                    if let self {
+                        self.market?.isFavorite = true
+                        self.updateFavoriteButtonImage()
+                    }
+                    hud.set(style: .notification, text: R.string.localizable.watchlist_add_desc(market.symbol))
+                case .failure(let error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                }
+            }
+            hud.scheduleAutoHidden()
+        }
+    }
+    
+    @objc private func shareMarket(_ sender: Any) {
+        guard let market else {
+            return
+        }
+        let contentOffset = tableView.contentOffset
+        tableView.showsVerticalScrollIndicator = false
+        tableView.setContentOffset(.zero, animated: false)
+        tableView.layoutIfNeeded()
+        defer {
+            tableView.setContentOffset(contentOffset, animated: false)
+            tableView.showsVerticalScrollIndicator = true
+        }
+        
+        let statsIndexPath = IndexPath(item: StatsRow.bottomSeparator.rawValue,
+                                       section: Section.stats.rawValue)
+        let lastCell: UITableViewCell
+        if viewModel.stats != nil, let cell = tableView.cellForRow(at: statsIndexPath) {
+            lastCell = cell
+        } else if let cell = tokenPriceChartCell {
+            lastCell = cell
+        } else {
+            return
+        }
+        let height = floor(lastCell.convert(lastCell.bounds, to: tableView).maxY) + 10
+        
+        // `tableView.bounds` must be used as the canvas size.
+        // Using other values will result in corruption on iOS 14.
+        let renderer = UIGraphicsImageRenderer(bounds: tableView.bounds)
+        let image = renderer.image { context in
+            tableView.drawHierarchy(in: tableView.bounds, afterScreenUpdates: true)
+        }
+        
+        let croppingRect = CGRect(x: 0, y: 0, width: tableView.bounds.width * image.scale, height: height * image.scale)
+        guard let cgImage = image.cgImage?.cropping(to: croppingRect) else {
+            return
+        }
+        let croppedImage = UIImage(cgImage: cgImage)
+        let share = ShareMarketViewController(symbol: market.symbol, image: croppedImage)
+        present(share, animated: true)
+    }
+    
+    private func updateFavoriteButtonImage() {
+        let image: UIImage?
+        if let market {
+            if market.isFavorite {
+                image = R.image.market_favorite_solid()?.withRenderingMode(.alwaysTemplate)
+                favoriteButton.tintColor = R.color.theme()
+            } else {
+                image = R.image.market_favorite_hollow()?.withRenderingMode(.alwaysTemplate)
+                favoriteButton.tintColor = R.color.icon_tint()
+            }
+        } else {
+            image = nil
+        }
+        favoriteButton.setImage(image, for: .normal)
     }
     
     private func reloadPriceChart(period: PriceHistoryPeriod) {
@@ -254,8 +383,8 @@ extension MarketViewController: UITableViewDataSource {
         switch Section(rawValue: section)! {
         case .chart:
             1
-        case .marketStats:
-            viewModel.stats == nil ? 0 : MarketStatesRow.allCases.count
+        case .stats:
+            viewModel.stats == nil ? 0 : StatsRow.allCases.count
         case .myBalance:
             viewModel.balance == nil ? 0 : MyBalanceRow.allCases.count
         case .infos:
@@ -279,8 +408,8 @@ extension MarketViewController: UITableViewDataSource {
             cell.delegate = self
             cell.chartView.delegate = self
             return cell
-        case .marketStats:
-            switch MarketStatesRow(rawValue: indexPath.row)! {
+        case .stats:
+            switch StatsRow(rawValue: indexPath.row)! {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.stats()
@@ -357,8 +486,8 @@ extension MarketViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .chart:
             return UITableView.automaticDimension
-        case .marketStats:
-            return switch MarketStatesRow(rawValue: indexPath.row)! {
+        case .stats:
+            return switch StatsRow(rawValue: indexPath.row)! {
             case .title, .price, .marketCap:
                 UITableView.automaticDimension
             case .bottomSeparator:
@@ -380,7 +509,7 @@ extension MarketViewController: UITableViewDelegate {
         switch Section(rawValue: section)! {
         case .chart:
             10
-        case .marketStats:
+        case .stats:
             viewModel.stats == nil ? .leastNormalMagnitude : 10
         case .myBalance:
             viewModel.balance == nil ? .leastNormalMagnitude : 10
@@ -512,7 +641,7 @@ extension MarketViewController {
     
     private enum Section: Int, CaseIterable {
         case chart
-        case marketStats
+        case stats
         case myBalance
         case infos
     }
@@ -522,7 +651,7 @@ extension MarketViewController {
         case content
     }
     
-    private enum MarketStatesRow: Int, CaseIterable {
+    private enum StatsRow: Int, CaseIterable {
         case title
         case marketCap
         case price

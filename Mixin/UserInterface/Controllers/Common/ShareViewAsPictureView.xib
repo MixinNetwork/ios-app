@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ShareViewAsPictureViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="actionButtonBackgroundView" destination="BdN-Mg-u4A" id="Q9m-dX-E3s"/>
+                <outlet property="actionButtonStackView" destination="BRj-T7-8lv" id="FsV-vD-VDo"/>
+                <outlet property="actionButtonTrayView" destination="1H8-wN-h5l" id="6ai-hd-Ef3"/>
+                <outlet property="closeButtonEffectView" destination="mOn-aS-e37" id="BEW-Z9-Zqm"/>
+                <outlet property="layoutWrapperView" destination="dMf-Ii-eQE" id="dlu-Xt-T03"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="TouchEventBypassView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMf-Ii-eQE">
+                    <rect key="frame" x="30" y="131" width="315" height="575"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oys-cY-VXv">
+                            <rect key="frame" x="269" y="4" width="44" height="44"/>
+                            <subviews>
+                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mOn-aS-e37">
+                                    <rect key="frame" x="9" y="9" width="26" height="26"/>
+                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pNt-u1-axt">
+                                        <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="26" id="1cc-tJ-KDx"/>
+                                        <constraint firstAttribute="width" secondItem="mOn-aS-e37" secondAttribute="height" id="kyJ-j3-uAW"/>
+                                    </constraints>
+                                    <blurEffect style="light"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="13"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </visualEffectView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o5U-Cc-wet">
+                                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <state key="normal" image="ic_web_dismiss"/>
+                                    <connections>
+                                        <action selector="close:" destination="-1" eventType="touchUpInside" id="gKE-hW-FXA"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="o5U-Cc-wet" secondAttribute="trailing" id="64Z-Tm-30g"/>
+                                <constraint firstAttribute="height" constant="44" id="Dqs-zc-ecT"/>
+                                <constraint firstItem="o5U-Cc-wet" firstAttribute="leading" secondItem="oys-cY-VXv" secondAttribute="leading" id="IHb-JR-QnK"/>
+                                <constraint firstItem="mOn-aS-e37" firstAttribute="centerY" secondItem="oys-cY-VXv" secondAttribute="centerY" id="M89-Ml-I8F"/>
+                                <constraint firstAttribute="bottom" secondItem="o5U-Cc-wet" secondAttribute="bottom" id="O7C-bP-xPV"/>
+                                <constraint firstItem="o5U-Cc-wet" firstAttribute="top" secondItem="oys-cY-VXv" secondAttribute="top" id="e6g-Ag-AkO"/>
+                                <constraint firstItem="mOn-aS-e37" firstAttribute="centerX" secondItem="oys-cY-VXv" secondAttribute="centerX" id="o7H-NQ-AkI"/>
+                                <constraint firstAttribute="width" constant="44" id="sBc-AP-J1X"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1H8-wN-h5l">
+                            <rect key="frame" x="0.0" y="470" width="315" height="105"/>
+                            <subviews>
+                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BdN-Mg-u4A">
+                                    <rect key="frame" x="0.0" y="0.0" width="315" height="105"/>
+                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="9HB-ir-1Bl">
+                                        <rect key="frame" x="0.0" y="0.0" width="315" height="105"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="105" id="g04-Yk-0YP"/>
+                                    </constraints>
+                                    <blurEffect style="dark"/>
+                                </visualEffectView>
+                                <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="255" placeholderIntrinsicHeight="73" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="BRj-T7-8lv">
+                                    <rect key="frame" x="30" y="16" width="255" height="73"/>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="BdN-Mg-u4A" secondAttribute="bottom" id="AmQ-FE-hTn"/>
+                                <constraint firstItem="BdN-Mg-u4A" firstAttribute="top" secondItem="1H8-wN-h5l" secondAttribute="top" id="BJb-DK-NZU"/>
+                                <constraint firstItem="BRj-T7-8lv" firstAttribute="width" secondItem="1H8-wN-h5l" secondAttribute="width" multiplier="0.81" id="MbK-K4-YnY"/>
+                                <constraint firstItem="BRj-T7-8lv" firstAttribute="centerX" secondItem="1H8-wN-h5l" secondAttribute="centerX" id="NW0-x4-jrv"/>
+                                <constraint firstItem="BdN-Mg-u4A" firstAttribute="leading" secondItem="1H8-wN-h5l" secondAttribute="leading" id="Ttt-Ii-JNa"/>
+                                <constraint firstItem="BRj-T7-8lv" firstAttribute="centerY" secondItem="1H8-wN-h5l" secondAttribute="centerY" id="m1h-bE-YJg"/>
+                                <constraint firstAttribute="height" constant="105" id="nTh-Yl-JeF"/>
+                                <constraint firstAttribute="trailing" secondItem="BdN-Mg-u4A" secondAttribute="trailing" id="qy8-LC-UqH"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="12"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="oys-cY-VXv" firstAttribute="top" secondItem="dMf-Ii-eQE" secondAttribute="top" constant="4" id="0B0-on-Ekb"/>
+                        <constraint firstAttribute="trailing" secondItem="1H8-wN-h5l" secondAttribute="trailing" id="9za-nr-bGM"/>
+                        <constraint firstAttribute="bottom" secondItem="1H8-wN-h5l" secondAttribute="bottom" id="Oqd-P0-V0R"/>
+                        <constraint firstItem="1H8-wN-h5l" firstAttribute="leading" secondItem="dMf-Ii-eQE" secondAttribute="leading" id="xsq-rM-giS"/>
+                        <constraint firstAttribute="trailing" secondItem="oys-cY-VXv" secondAttribute="trailing" constant="2" id="yLg-nv-EWt"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="n0b-Aq-B3H"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="dMf-Ii-eQE" firstAttribute="height" relation="lessThanOrEqual" secondItem="n0b-Aq-B3H" secondAttribute="height" id="4M2-Sd-hIb"/>
+                <constraint firstItem="dMf-Ii-eQE" firstAttribute="height" secondItem="n0b-Aq-B3H" secondAttribute="height" multiplier="0.8" priority="750" id="X4N-cr-SYs"/>
+                <constraint firstItem="n0b-Aq-B3H" firstAttribute="trailing" secondItem="dMf-Ii-eQE" secondAttribute="trailing" constant="30" id="qD3-Lo-C3I"/>
+                <constraint firstItem="dMf-Ii-eQE" firstAttribute="leading" secondItem="n0b-Aq-B3H" secondAttribute="leading" constant="30" id="s1a-P6-SBl"/>
+                <constraint firstItem="dMf-Ii-eQE" firstAttribute="centerY" secondItem="n0b-Aq-B3H" secondAttribute="centerY" id="sCb-o6-1qy"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="135.1145038167939" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_web_dismiss" width="12" height="12"/>
+    </resources>
+</document>

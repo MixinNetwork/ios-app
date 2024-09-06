@@ -55,12 +55,15 @@ extension ContainerViewControllerDelegate where Self: UIViewController {
 class ContainerViewController: UIViewController {
 
     @IBOutlet weak var navigationBar: UIView!
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var rightButton: StateResponsiveButton!
     @IBOutlet weak var leftButton: UIButton!
     
+    @IBOutlet weak var titleLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightButtonWidthConstraint: NSLayoutConstraint!
 

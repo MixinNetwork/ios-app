@@ -992,11 +992,14 @@ class UrlWindow {
         RouteAPI.markets(id: id, queue: .global()) { result in
             switch result {
             case let .success(market):
-                MarketDAO.shared.save(market: market)
-                DispatchQueue.main.async {
-                    hud.hide()
-                    let viewController = MarketViewController.contained(market: market, pushingViewController: nil)
-                    UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+                if let market = MarketDAO.shared.save(market: market) {
+                    DispatchQueue.main.async {
+                        hud.hide()
+                        let viewController = MarketViewController.contained(market: market, pushingViewController: nil)
+                        UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+                    }
+                } else {
+                    DispatchQueue.main.async(execute: hud.hide)
                 }
             case let .failure(error):
                 DispatchQueue.main.async {

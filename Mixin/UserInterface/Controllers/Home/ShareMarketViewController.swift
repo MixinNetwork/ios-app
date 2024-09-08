@@ -61,6 +61,7 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
         guard let presentingViewController else {
             return
         }
+        let image = makeSharingImage()
         let item = ActivityItem(
             title: symbol + " " + R.string.localizable.market(),
             image: image
@@ -78,6 +79,7 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
     }
     
     override func savePhoto(_ sender: Any) {
+        let image = makeSharingImage()
         PHPhotoLibrary.checkAuthorization { [image] (isAuthorized) in
             guard isAuthorized else {
                 return
@@ -94,6 +96,14 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
                     }
                 }
             })
+        }
+    }
+    
+    private func makeSharingImage() -> UIImage {
+        let view: UIView = shareMarketContentView.screenshotWrapperView
+        let renderer = UIGraphicsImageRenderer(bounds: view.bounds)
+        return renderer.image { context in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
     }
     

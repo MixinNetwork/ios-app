@@ -2,19 +2,29 @@ import UIKit
 
 final class ShareMarketAsPictureView: UIView {
     
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var obiView: UIView!
+    // Manipulating UIImage to render on CGContext is quite cumbersome, and the behavior varies
+    // across different iOS versions. Therefore, an invisible view is used to capture a screenshot
+    // to generate the image for sharing.
+    
+    @IBOutlet weak var screenshotWrapperView: UIView!
+    @IBOutlet weak var screenshotImageView: UIImageView!
+    @IBOutlet weak var displayImageView: UIImageView!
+    @IBOutlet weak var obiView: GradientView!
     @IBOutlet weak var qrCodeView: ModernQRCodeView!
     @IBOutlet weak var titleLabel: UILabel!
     
-    private let obiBackgroundLayer = CAGradientLayer()
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        obiBackgroundLayer.startPoint = CGPoint(x: 0, y: 0.5)
-        obiBackgroundLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        obiView.layer.insertSublayer(obiBackgroundLayer, at: 0)
-        updateObiColor()
+        obiView.lightColors = [
+            UIColor(displayP3RgbValue: 0x4B7CDD),
+            UIColor(displayP3RgbValue: 0x81A4E7),
+        ]
+        obiView.darkColors = [
+            UIColor(displayP3RgbValue: 0x3B448E),
+            UIColor(displayP3RgbValue: 0x4C7DDE),
+        ]
+        obiView.gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        obiView.gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
         titleLabel.text = mixinMessenger
         qrCodeView.layer.cornerCurve = .continuous
         qrCodeView.layer.cornerRadius = 6
@@ -26,40 +36,15 @@ final class ShareMarketAsPictureView: UIView {
         )
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        obiBackgroundLayer.frame = obiView.bounds
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            updateObiColor()
-        }
-    }
-    
     func setImage(_ image: UIImage) {
-        imageView.image = image
-        imageView.snp.remakeConstraints { make in
-            let ratio = image.size.width / image.size.height
-            make.width.equalTo(imageView.snp.height).multipliedBy(ratio).priority(.low)
+        let ratio = image.size.width / image.size.height
+        screenshotImageView.image = image
+        screenshotImageView.snp.makeConstraints { make in
+            make.width.equalTo(screenshotImageView.snp.height).multipliedBy(ratio)
         }
-    }
-    
-    private func updateObiColor() {
-        switch traitCollection.userInterfaceStyle {
-        case .dark:
-            obiBackgroundLayer.colors = [
-                UIColor(displayP3RgbValue: 0x3B448E).cgColor,
-                UIColor(displayP3RgbValue: 0x4C7DDE).cgColor,
-            ]
-        case .unspecified, .light:
-            fallthrough
-        @unknown default:
-            obiBackgroundLayer.colors = [
-                UIColor(displayP3RgbValue: 0x4B7CDD).cgColor,
-                UIColor(displayP3RgbValue: 0x81A4E7).cgColor,
-            ]
+        displayImageView.image = image
+        displayImageView.snp.remakeConstraints { make in
+            make.width.equalTo(displayImageView.snp.height).multipliedBy(ratio).priority(.low)
         }
     }
     

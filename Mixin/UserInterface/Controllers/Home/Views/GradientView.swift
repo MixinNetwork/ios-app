@@ -8,13 +8,13 @@ final class GradientView: UIView {
     
     var lightColors: [UIColor]? {
         didSet {
-            updatColors()
+            updateColors()
         }
     }
     
     var darkColors: [UIColor]? {
         didSet {
-            updatColors()
+            updateColors()
         }
     }
     
@@ -25,11 +25,11 @@ final class GradientView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            updatColors()
+            updateColors()
         }
     }
     
-    private func updatColors() {
+    private func updateColors() {
         switch traitCollection.userInterfaceStyle {
         case .dark:
             gradientLayer.colors = darkColors?.map(\.cgColor)

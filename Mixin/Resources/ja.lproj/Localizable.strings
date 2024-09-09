@@ -320,6 +320,7 @@
 "current_language" = "日本語";
 "current_location" = "現在の位置";
 "current_selected" = "選択";
+"current_version" = "Version: %@";
 "custom_time" = "日時";
 "daily" = "日";
 "dark" = "ライト";

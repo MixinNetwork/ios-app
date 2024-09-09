@@ -28,7 +28,7 @@ class AboutViewController: SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableHeaderView = R.nib.aboutTableHeaderView(withOwner: self)
-        versionLabel.text = Bundle.main.shortVersionString + "(\(Bundle.main.bundleVersion))"
+        versionLabel.text = Bundle.main.fullVersion
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         #if DEBUG

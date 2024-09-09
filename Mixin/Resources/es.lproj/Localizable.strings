@@ -320,6 +320,7 @@
 "current_language" = "Inglés";
 "current_location" = "Ubicación actual";
 "current_selected" = "Seleccionado actual";
+"current_version" = "Version: %@";
 "custom_time" = "Hora personalizada";
 "daily" = "Diario";
 "dark" = "Oscuro";

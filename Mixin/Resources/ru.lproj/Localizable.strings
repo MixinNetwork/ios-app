@@ -320,6 +320,7 @@
 "current_language" = "Русский";
 "current_location" = "Текущее местоположение";
 "current_selected" = "Текущий выбранный";
+"current_version" = "Version: %@";
 "custom_time" = "Пользовательское время";
 "daily" = "Повседневный";
 "dark" = "Темное";

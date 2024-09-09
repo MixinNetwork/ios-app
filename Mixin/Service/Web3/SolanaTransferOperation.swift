@@ -140,6 +140,10 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
         Logger.web3.info(category: "SolanaTransfer", message: "Rejected")
     }
     
+    func transactionContainsSetAuthority() -> Bool {
+        transaction.containsSetAuthority()
+    }
+    
 }
 
 final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolanaTransferOperation {

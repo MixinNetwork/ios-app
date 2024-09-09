@@ -610,6 +610,7 @@
 "lost_your_mobile_number" = "手機丟失？";
 "low_24h" = "24 小時最低";
 "make_group_admin" = "設定為群組管理員";
+"malicious_instruction_set_authority" = "此交易將更改 SPL 代幣的所有者。這將允許新的所有者在未經您允許的情況下轉讓代幣。";
 "manage" = "管理";
 "manage_your_apps" = "管理你所有的機器人";
 "manage_your_circles" = "管理你所有的圈子";

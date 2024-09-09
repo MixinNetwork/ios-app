@@ -71,7 +71,7 @@ final class OutlineSegmentedControl: UIControl {
         }
         for (index, item) in items.enumerated() {
             let button = UIButton(type: .system)
-            button.setImage(item, for: .normal)
+            button.setImage(item.withRenderingMode(.alwaysTemplate), for: .normal)
             button.tag = index
             button.tintColor = R.color.icon_tint()
             button.addTarget(self, action: #selector(tapItem(_:)), for: .touchUpInside)

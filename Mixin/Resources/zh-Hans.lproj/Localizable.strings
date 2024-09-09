@@ -541,6 +541,7 @@
 "incoming_voice_call" = "语音通话来电";
 "info" = "信息";
 "initializing" = "初始化...";
+"install_messenger_desc" = "访问 mixin.one/mm 或扫描二维码安装";
 "insufficient_balance" = "余额不足";
 "insufficient_gas" = "您的账户中没有足够的 %@ 来支付网络费用";
 "insufficient_transaction_fee" = "手续费不足";

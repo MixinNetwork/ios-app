@@ -79,7 +79,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     override func awakeFromNib() {
         super.awakeFromNib()
         segmentedControl.items = [
-            R.image.market_favorite()!,
+            R.image.market_favorite_hollow()!,
             R.image.market_rank()!,
         ]
         limitButton.imageView?.contentMode = .center
@@ -105,6 +105,12 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         priceButtonTrailingConstraint.constant = 20 + 60 + priceButtonMargin - priceButton.contentEdgeInsets.right
         periodButton.setTitle(changePeriod.displayTitle, for: .normal)
         periodButton.semanticContentAttribute = .forceRightToLeft
+        
+        // UIButton with image and title failed to calculate intrinsicContentSize if bold text is turned on in iOS Display Settings
+        // Set lineBreakMode to byClipping as a workaround. Tested on iOS 17.6.1
+        for button: UIButton in [limitButton, changePeriodButton, marketCapButton] {
+            button.titleLabel?.lineBreakMode = .byClipping
+        }
     }
     
     override func layoutSubviews() {

@@ -27,7 +27,12 @@ final class ModernQRCodeView: UIView {
         layer.masksToBounds = true
     }
     
-    func setContent(_ content: String, size: CGSize, completion: (() -> Void)? = nil) {
+    func setContent(
+        _ content: String,
+        size: CGSize,
+        activityIndicator: Bool = true,
+        completion: (() -> Void)? = nil
+    ) {
         guard content != self.content || size != self.size else {
             completion?()
             return
@@ -35,7 +40,9 @@ final class ModernQRCodeView: UIView {
         
         self.content = content
         self.size = size
-        activityIndicatorView.startAnimating()
+        if activityIndicator {
+            activityIndicatorView.startAnimating()
+        }
         imageView.isHidden = true
         
         let scale = AppDelegate.current.mainWindow.screen.scale
@@ -64,7 +71,9 @@ final class ModernQRCodeView: UIView {
                 } else {
                     self.imageView.image = nil
                 }
-                self.activityIndicatorView.stopAnimating()
+                if activityIndicator {
+                    self.activityIndicatorView.stopAnimating()
+                }
                 self.imageView.isHidden = false
                 completion?()
             }

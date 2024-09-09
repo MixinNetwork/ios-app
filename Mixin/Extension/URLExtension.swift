@@ -5,6 +5,7 @@ extension URL {
     
     static let blank = URL(string: "about:blank")!
     static let mixinMessenger = URL(string: "https://messenger.mixin.one")!
+    static let shortMixinMessenger = URL(string: "https://mixin.one/mm")!
     static let terms = URL(string: "https://mixin.one/pages/terms")!
     static let privacy = URL(string: "https://mixin.one/pages/privacy")!
     static let aboutEncryption = URL(string: "https://mixin.one/pages/1000007")!

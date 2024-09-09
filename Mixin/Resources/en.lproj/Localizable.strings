@@ -541,6 +541,7 @@
 "incoming_voice_call" = "Incoming voice call";
 "info" = "Info";
 "initializing" = "Initializing...";
+"install_messenger_desc" = "Visit mixin.one/mm or scan the QR code to install";
 "insufficient_balance" = "Insufficient balance";
 "insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
 "insufficient_transaction_fee" = "Insufficient transaction fee";

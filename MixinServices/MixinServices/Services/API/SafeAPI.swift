@@ -101,7 +101,9 @@ extension SafeAPI {
         request(method: .get, path: "/safe/assets/\(id)")
     }
     
-    public static func assets(ids: [String]) -> MixinAPI.Result<[Token]> {
+    public static func assets<EncodableStringSequence: Sequence<String> & Encodable>(
+        ids: EncodableStringSequence
+    ) -> MixinAPI.Result<[Token]> {
         request(method: .post, path: "/safe/assets/fetch", parameters: ids)
     }
     

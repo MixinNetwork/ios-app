@@ -11,7 +11,7 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: UILabel!
-    @IBOutlet weak var tokenIconView: BadgeIconView!
+    @IBOutlet weak var tokenIconView: PlainTokenIconView!
     @IBOutlet weak var chartView: ChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var periodSelectorStackView: UIStackView!

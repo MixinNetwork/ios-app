@@ -5,6 +5,11 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public static let shared = MarketDAO()
     
+    public static let favoriteNotification = Notification.Name("one.mixin.service.MarketDAO.Favorite")
+    public static let unfavoriteNotification = Notification.Name("one.mixin.service.MarketDAO.Unfavorite")
+    
+    public static let coinIDUserInfoKey = "cid"
+    
     public func markets(
         category: Market.Category,
         order: Market.OrderingExpression,
@@ -62,11 +67,12 @@ public final class MarketDAO: UserDatabaseDAO {
         return results
     }
     
-    public func market(assetID: String) -> Market? {
+    public func market(assetID: String) -> FavorableMarket? {
         let sql = """
-        SELECT m.*
+        SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
             LEFT JOIN market_ids mi ON m.coin_id = mi.coin_id
+            LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
         WHERE mi.asset_id = ?
         LIMIT 1
         """
@@ -94,8 +100,8 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [assetID, period.rawValue])
     }
     
-    public func save(market: Market) {
-        db.write { db in
+    public func save(market: Market) -> FavorableMarket? {
+        try? db.writeAndReturnError { db in
             // When a single Market object is requested, its `marketCapRank` may differ from
             // the value in the `markets` table. This can result in duplicate ranks when
             // querying the market list. To avoid this issue, retrieve the known rank for
@@ -114,6 +120,16 @@ public final class MarketDAO: UserDatabaseDAO {
                 }
                 try ids.save(db)
             }
+            
+            let sql = """
+            SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+            FROM markets m
+                LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
+            WHERE m.coin_id = ?
+            LIMIT 1
+            """
+            let favorableMarket = try FavorableMarket.fetchOne(db, sql: sql, arguments: [market.coinID])
+            return favorableMarket
         }
     }
     
@@ -156,14 +172,32 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func favorite(coinID: String) {
+    public func favorite(coinID: String, sendNotification: Bool) {
         let market = FavoredMarket(coinID: coinID, isFavored: true, createdAt: Date().toUTCString())
-        db.save(market)
+        db.save(market) { _ in
+            guard sendNotification else {
+                return
+            }
+            DispatchQueue.global().async {
+                NotificationCenter.default.post(name: Self.favoriteNotification,
+                                                object: self,
+                                                userInfo: [Self.coinIDUserInfoKey: coinID])
+            }
+        }
     }
     
-    public func unfavorite(coinID: String) {
+    public func unfavorite(coinID: String, sendNotification: Bool) {
         let sql = "UPDATE market_favored SET is_favored = FALSE WHERE coin_id = ?"
-        db.execute(sql: sql, arguments: [coinID])
+        db.execute(sql: sql, arguments: [coinID]) { _ in
+            guard sendNotification else {
+                return
+            }
+            DispatchQueue.global().async {
+                NotificationCenter.default.post(name: Self.unfavoriteNotification,
+                                                object: self,
+                                                userInfo: [Self.coinIDUserInfoKey: coinID])
+            }
+        }
     }
     
 }

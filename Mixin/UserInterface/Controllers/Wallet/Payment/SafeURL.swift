@@ -10,6 +10,7 @@ enum SafeURL {
     case inscription(String)
     case swap(input: String?, output: String?)
     case send(ExternalSharingContext)
+    case market(id: String)
     
 }
 
@@ -69,6 +70,9 @@ extension SafeURL {
                 } else {
                     return nil
                 }
+            case 3 where pathComponents[1] == "markets":
+                let id = pathComponents[2]
+                self = .market(id: id)
             default:
                 return nil
             }

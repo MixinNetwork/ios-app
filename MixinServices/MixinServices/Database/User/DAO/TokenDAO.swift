@@ -67,9 +67,10 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [kernelAssetID])
     }
     
-    public func tokenItems(with ids: [String]) -> [TokenItem] {
-        let ids = ids.joined(separator: "','")
-        return db.select(with: "\(SQL.selector) WHERE t.asset_id IN ('\(ids)')")
+    public func tokenItems(with ids: any Sequence<String>) -> [TokenItem] {
+        var query = GRDB.SQL(sql: SQL.selector)
+        query.append(literal: " WHERE t.asset_id IN \(ids)")
+        return db.select(with: query)
     }
     
     public func tokens(limit: Int, after assetId: String?) -> [Token] {

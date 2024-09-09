@@ -6,6 +6,10 @@ public extension Bundle {
         SemanticVersion(string: shortVersionString)
     }
     
+    var fullVersion: String {
+        Bundle.main.shortVersionString + "(\(Bundle.main.bundleVersion))"
+    }
+    
     var shortVersionString: String {
         return infoDictionary?["CFBundleShortVersionString"] as? String ?? "(null)"
     }

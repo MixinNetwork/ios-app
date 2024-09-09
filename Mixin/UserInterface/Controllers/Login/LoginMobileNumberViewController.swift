@@ -57,6 +57,16 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.trailing.equalToSuperview().offset(-8)
         }
+        
+        let versionLabel = UILabel()
+        versionLabel.textColor = R.color.text_quaternary()
+        versionLabel.font = .systemFont(ofSize: 14)
+        versionLabel.text = R.string.localizable.current_version(Bundle.main.fullVersion)
+        view.addSubview(versionLabel)
+        versionLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-20)
+        }
     }
     
     override func continueAction(_ sender: Any) {

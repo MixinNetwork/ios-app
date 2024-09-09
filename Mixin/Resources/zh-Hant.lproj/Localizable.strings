@@ -320,6 +320,7 @@
 "current_language" = "繁體中文";
 "current_location" = "當前位置";
 "current_selected" = "當前選擇";
+"current_version" = "當前版本：%@";
 "custom_time" = "自定義時間";
 "daily" = "每天";
 "dark" = "深色";

@@ -12,6 +12,8 @@ class MobileNumberViewController: ContinueButtonViewController {
     private let invertedPhoneNumberCharacterSet = CharacterSet(charactersIn: "0123456789+-() ").inverted
     private let countryLibrary = CountryLibrary()
     
+    private var stopLayoutWithKeyboard = false
+    
     var mobileNumber: String {
         return textField.text?.components(separatedBy: invertedPhoneNumberCharacterSet).joined() ?? ""
     }
@@ -55,7 +57,15 @@ class MobileNumberViewController: ContinueButtonViewController {
         }
     }
     
+    override func layout(for keyboardFrame: CGRect) {
+        guard !stopLayoutWithKeyboard else {
+            return
+        }
+        super.layout(for: keyboardFrame)
+    }
+    
     @IBAction func selectCountryAction(_ sender: Any) {
+        stopLayoutWithKeyboard = true
         let vc = SelectCountryViewController.instance(library: countryLibrary, selectedCountry: country)
         vc.delegate = self
         present(vc, animated: true, completion: nil)
@@ -124,7 +134,8 @@ extension MobileNumberViewController: UITextFieldDelegate {
 extension MobileNumberViewController: SelectCountryViewControllerDelegate {
     
     func selectCountryViewController(_ viewController: SelectCountryViewController, didSelectCountry country: Country) {
-        viewController.dismiss(animated: true, completion: nil)
+        self.stopLayoutWithKeyboard = false
+        dismiss(animated: true, completion: nil)
         self.country = country
         updateContinueButtonIsHidden()
     }

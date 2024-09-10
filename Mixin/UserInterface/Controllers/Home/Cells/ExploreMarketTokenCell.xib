@@ -94,7 +94,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="zWi-sh-Jng">
                                 <rect key="frame" x="293" y="0.0" width="60" height="50"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b3S-uO-F3V">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b3S-uO-F3V" customClass="MarketColorTintedImageView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="60" height="23"/>
                                         <color key="backgroundColor" name="background"/>
                                         <constraints>
@@ -102,7 +102,7 @@
                                             <constraint firstAttribute="width" constant="60" id="57x-rS-Dux"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nmg-wv-tlx">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nmg-wv-tlx" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="23" width="60" height="27"/>
                                         <color key="backgroundColor" name="background"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>

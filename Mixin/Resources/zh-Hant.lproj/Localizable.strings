@@ -509,6 +509,7 @@
 "get_a_new_wallet" = "建立錢包";
 "global_market_cap" = "全球總市值";
 "got_it" = "知道了";
+"green_up_red_down" = "綠漲紅跌";
 "group_call" = "群組語音";
 "group_call_end_with_duration" = "群組語音結束，時長 %@";
 "group_call_has_been_declined" = "已拒絕通話";
@@ -811,6 +812,7 @@
 "profile_share_bot_hint" = "如果您希望分享機器人，請先新增聯絡人。";
 "qr_code" = "二維碼";
 "qr_code_not_found" = "未發現二維碼";
+"quote_color" = "漲跌顏色";
 "raw" = "其他";
 "read_your_apps" = "讀取你的機器人列表";
 "read_your_assets" = "讀取你的所有資產";
@@ -831,6 +833,7 @@
 "recent_chats" = "最近聊天";
 "recent_searches" = "最近搜尋";
 "recipients" = "收款人";
+"red_up_green_down" = "紅漲綠跌";
 "refresh" = "重新整理";
 "reject" = "拒絕";
 "reject_transaction" = "拒絕交易";

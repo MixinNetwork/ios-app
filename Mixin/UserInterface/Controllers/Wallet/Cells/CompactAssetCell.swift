@@ -11,7 +11,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var changeLabel: InsetLabel!
+    @IBOutlet weak var changeLabel: MarketColoredLabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var noValueIndicator: UILabel!
     @IBOutlet weak var chainTagLabel: InsetLabel!
@@ -41,10 +41,10 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         }
         if asset.priceUsd.doubleValue > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"
-            if asset.changeUsd.doubleValue > 0 {
-                changeLabel.textColor = .priceRising
+            if asset.changeUsd.doubleValue >= 0 {
+                changeLabel.marketColor = .rising
             } else {
-                changeLabel.textColor = .priceFalling
+                changeLabel.marketColor = .falling
             }
             priceLabel.text = asset.localizedFiatMoneyPrice
             changeLabel.isHidden = false
@@ -78,11 +78,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         }
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedUSDChange
-            if token.decimalUSDChange >= 0 {
-                changeLabel.textColor = .priceRising
-            } else {
-                changeLabel.textColor = .priceFalling
-            }
+            changeLabel.marketColor = .byValue(token.decimalUSDChange)
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
@@ -104,11 +100,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         chainTagLabel.isHidden = true
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
-            if token.decimalAbsoluteChange > 0 {
-                changeLabel.textColor = .priceRising
-            } else {
-                changeLabel.textColor = .priceFalling
-            }
+            changeLabel.marketColor = .byValue(token.decimalAbsoluteChange)
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false

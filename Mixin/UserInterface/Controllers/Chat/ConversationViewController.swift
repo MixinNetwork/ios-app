@@ -19,7 +19,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var mentionCountLabel: InsetLabel!
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
-    @IBOutlet weak var unreadBadgeLabel: UILabel!
+    @IBOutlet weak var unreadBadgeLabel: InsetLabel!
     @IBOutlet weak var announcementBadgeView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var inputWrapperTopShadowView: TopShadowView!
@@ -320,6 +320,8 @@ class ConversationViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+        mentionCountLabel.contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6)
+        unreadBadgeLabel.contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6)
         if dataSource.category == .group {
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
             if hasUnreadAnnouncement {

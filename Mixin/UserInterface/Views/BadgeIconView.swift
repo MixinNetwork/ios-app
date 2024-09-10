@@ -135,9 +135,13 @@ final class BadgeIconView: UIView {
         iconImageView.sd_setImage(with: URL(string: token.iconURL),
                                   placeholderImage: nil,
                                   context: assetIconContext)
-        if token.collectionHash == nil, let str = token.chain?.iconUrl, let url = URL(string: str) {
-            badgeImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
-            isBadgeHidden = false
+        if token.collectionHash == nil {
+            if let chainIcon = token.chain?.iconUrl, let url = URL(string: chainIcon) {
+                badgeImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+                isBadgeHidden = false
+            } else {
+                isBadgeHidden = true
+            }
             corner = .round
         } else {
             isBadgeHidden = true

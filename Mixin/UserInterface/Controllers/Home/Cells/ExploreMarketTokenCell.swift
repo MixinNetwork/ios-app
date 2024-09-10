@@ -15,8 +15,8 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
     @IBOutlet weak var rankLabel: InsetLabel!
     @IBOutlet weak var marketCapLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
-    @IBOutlet weak var chartImageView: UIImageView!
-    @IBOutlet weak var changeLabel: UILabel!
+    @IBOutlet weak var chartImageView: MarketColorTintedImageView!
+    @IBOutlet weak var changeLabel: MarketColoredLabel!
     
     weak var delegate: Delegate?
     
@@ -73,13 +73,9 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
                                        options: .refreshCached,
                                        context: templateImageTransformingContext)
             changeLabel.text = market.localizedPriceChangePercentage7D
-            if market.decimalPriceChangePercentage7D >= 0 {
-                changeLabel.textColor = .priceRising
-                chartImageView.tintColor = .priceRising
-            } else {
-                changeLabel.textColor = .priceFalling
-                chartImageView.tintColor = .priceFalling
-            }
+            let color: MarketColor = .byValue(market.decimalPriceChangePercentage7D)
+            changeLabel.marketColor = color
+            chartImageView.marketColor = color
         case .thirtyDays:
             chartImageView.sd_setImage(with: nil)
             changeLabel.text = nil

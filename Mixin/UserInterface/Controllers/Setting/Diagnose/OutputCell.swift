@@ -29,9 +29,9 @@ final class OutputCell: UITableViewCell {
             let stateColor: UIColor
             switch output.state {
             case "signed":
-                stateColor = R.color.red()!
+                stateColor = R.color.market_red()!
             case "unspent":
-                stateColor = R.color.green()!
+                stateColor = R.color.market_green()!
             default:
                 stateColor = R.color.text_tertiary()!
             }

@@ -86,12 +86,12 @@ final class SafeSnapshotViewController: RowListViewController {
         }
         switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
         case .pending:
-            amountLabel.textColor = .walletGray
+            amountLabel.textColor = R.color.chat_pin_count_background()
         default:
             if snapshot.amount.hasMinusPrefix {
-                amountLabel.textColor = .priceFalling
+                amountLabel.textColor = R.color.market_red()
             } else {
-                amountLabel.textColor = .priceRising
+                amountLabel.textColor = R.color.market_green()
             }
         }
         if ScreenHeight.current >= .extraLong {

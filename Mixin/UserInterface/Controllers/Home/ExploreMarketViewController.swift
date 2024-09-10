@@ -233,7 +233,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
             cell.captionLabel.text = info.caption
             cell.primaryLabel.text = info.primary
             cell.secondaryLabel.text = info.secondary
-            cell.secondaryLabel.textColor = info.secondaryColor
+            cell.secondaryLabel.marketColor = info.secondaryColor
             return cell
         case .coins:
             let markets = switch category {
@@ -380,7 +380,7 @@ extension ExploreMarketViewController {
         let caption: String
         let primary: String?
         let secondary: String?
-        let secondaryColor: UIColor?
+        let secondaryColor: MarketColor
         
         static func viewModels(market: GlobalMarket) -> [GlobalMarketViewModel] {
             [
@@ -393,7 +393,7 @@ extension ExploreMarketViewController {
                     secondary: NumberFormatter.percentage.string(
                         decimal: market.marketCapChangePercentage / 100
                     ),
-                    secondaryColor: market.marketCapChangePercentage >= 0 ? .priceRising : .priceFalling
+                    secondaryColor: .byValue(market.marketCapChangePercentage)
                 ),
                 GlobalMarketViewModel(
                     caption: R.string.localizable.volume_24h(),
@@ -404,7 +404,7 @@ extension ExploreMarketViewController {
                     secondary: NumberFormatter.percentage.string(
                         decimal: market.volumeChangePercentage / 100
                     ),
-                    secondaryColor: market.volumeChangePercentage >= 0 ? .priceRising : .priceFalling
+                    secondaryColor: .byValue(market.volumeChangePercentage)
                 ),
                 GlobalMarketViewModel(
                     caption: R.string.localizable.dominance(),
@@ -412,7 +412,7 @@ extension ExploreMarketViewController {
                         decimal: market.dominancePercentage / 100
                     ),
                     secondary: market.dominance,
-                    secondaryColor: R.color.text_secondary()
+                    secondaryColor: .arbitrary(R.color.text_secondary()!)
                 ),
             ]
         }

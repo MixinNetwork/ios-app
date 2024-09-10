@@ -509,6 +509,7 @@
 "get_a_new_wallet" = "Получить новый кошелек";
 "global_market_cap" = "Market Cap";
 "got_it" = "Понятно";
+"green_up_red_down" = "Green Up / Red Down";
 "group_call" = "Групповой вызов";
 "group_call_end_with_duration" = "Групповой вызов завершен, продолжительность: %@";
 "group_call_has_been_declined" = "Групповой вызов отклонен";
@@ -811,6 +812,7 @@
 "profile_share_bot_hint" = "Если вы хотите поделиться ботом, сначала добавьте его в контакты";
 "qr_code" = "QR код";
 "qr_code_not_found" = "QR-код не найден";
+"quote_color" = "Quote Color";
 "raw" = "Исходный";
 "read_your_apps" = "Read your bots";
 "read_your_assets" = "Read your assets";
@@ -831,6 +833,7 @@
 "recent_chats" = "ЧАТЫ";
 "recent_searches" = "Недавние поиски";
 "recipients" = "Recipients";
+"red_up_green_down" = "Red Up / Green Down";
 "refresh" = "Обновить";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";

@@ -1,8 +1,8 @@
 import UIKit
 
 class InsetLabel: UILabel {
-
-    var contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6) {
+    
+    var contentInset: UIEdgeInsets = .zero {
         didSet {
             invertedContentInset = UIEdgeInsets(top: -contentInset.top,
                                                 left: -contentInset.left,
@@ -12,8 +12,8 @@ class InsetLabel: UILabel {
         }
     }
     
-    private var invertedContentInset = UIEdgeInsets(top: -1, left: -6, bottom: -1, right: -6)
-
+    private var invertedContentInset: UIEdgeInsets = .zero
+    
     override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
         let layoutBounds = bounds.inset(by: contentInset)
         let textRect = super.textRect(forBounds: layoutBounds, limitedToNumberOfLines: numberOfLines)
@@ -23,5 +23,5 @@ class InsetLabel: UILabel {
     override func drawText(in rect: CGRect) {
         super.drawText(in: rect.inset(by: contentInset))
     }
-
+    
 }

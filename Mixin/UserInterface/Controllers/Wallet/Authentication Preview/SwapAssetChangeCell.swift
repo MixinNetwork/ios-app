@@ -15,7 +15,7 @@ final class SwapAssetChangeCell: UITableViewCell {
         contentStackView.addArrangedSubview(sendingView)
         contentStackView.setCustomSpacing(12, after: receivingView)
         titleLabel.text = R.string.localizable.swap_asset_change().uppercased()
-        receivingView.amountLabel.textColor = R.color.green()
+        receivingView.amountLabel.textColor = R.color.market_green()
         sendingView.amountLabel.textColor = R.color.text()
     }
     

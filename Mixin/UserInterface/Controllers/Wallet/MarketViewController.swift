@@ -7,7 +7,6 @@ final class MarketViewController: UIViewController {
     private weak var pushingViewController: UIViewController?
     
     private let id: ID
-    private let name: String
     private let initialToken: TokenItem?
     private let favoriteButton = UIButton(type: .system)
     private let shareButton = UIButton(type: .system)
@@ -25,7 +24,6 @@ final class MarketViewController: UIViewController {
     
     private init(token: TokenItem, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
-        self.name = token.name
         self.initialToken = token
         self.market = nil
         self.tokens = [token]
@@ -36,7 +34,6 @@ final class MarketViewController: UIViewController {
     
     private init(market: FavorableMarket) {
         self.id = .coin(market.coinID)
-        self.name = market.name
         self.initialToken = nil
         self.market = market
         self.tokens = nil
@@ -72,7 +69,6 @@ final class MarketViewController: UIViewController {
         super.viewDidLoad()
         
         if let container {
-            container.setSubtitle(subtitle: name)
             container.view.backgroundColor = R.color.background_secondary()
             container.navigationBar.backgroundColor = R.color.background_secondary()
             container.rightButton.removeFromSuperview()
@@ -403,9 +399,13 @@ extension MarketViewController: UITableViewDataSource {
         case .chart:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
             if let market {
+                cell.titleLabel.text = market.name
+                cell.rankLabel.text = market.numberedRank
                 cell.tokenIconView.setIcon(market: market)
                 cell.updatePriceAndChange(price: market.localizedPrice, points: chartPoints)
             } else if let token = tokens?.first {
+                cell.titleLabel.text = token.name
+                cell.rankLabel.text = nil
                 cell.tokenIconView.setIcon(token: token)
                 cell.updatePriceAndChange(price: token.localizedFiatMoneyPrice, points: chartPoints)
             }
@@ -420,6 +420,11 @@ extension MarketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.stats()
                 cell.disclosureIndicatorView.isHidden = true
+                if let market {
+                    cell.subtitle = .rank(market.numberedRank)
+                } else {
+                    cell.subtitle = nil
+                }
                 return cell
             case .marketCap:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
@@ -542,9 +547,8 @@ extension MarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
-            let pushingToken = (pushingViewController as? TokenViewController)?.token
-            
             func showTokenViewController(token: TokenItem) {
+                let pushingToken = (pushingViewController as? TokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
                     navigationController?.popViewController(animated: true)
                 } else {
@@ -556,7 +560,7 @@ extension MarketViewController: UITableViewDelegate {
             if let tokens {
                 if tokens.count == 1 {
                     showTokenViewController(token: tokens[0])
-                } else if tokens.count > 1 {
+                } else if tokens.count > 1, let name = market?.name {
                     let selector = MarketTokenSelectorViewController(name: name, tokens: tokens) { index in
                         showTokenViewController(token: tokens[index])
                     }

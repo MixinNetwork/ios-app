@@ -1275,24 +1275,18 @@ extension ReceiveMessageService {
         }
         
         if let inscriptionHash = snapshot.inscriptionHash, !inscriptionHash.isEmpty {
-            let semaphore = DispatchSemaphore(value: 0)
-            let snapshotID = snapshot.id
-            Task.detached(priority: .high) {
-                do {
-                    let inscription = try await InscriptionItem.fetchAndSave(inscriptionHash: inscriptionHash)
-                    var contentUpdatedMessage = message
-                    contentUpdatedMessage.content = inscription.asMessageContent()
-                    insert(message: contentUpdatedMessage)
-                } catch {
-                    let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
-                    job.messageID = message.messageId
-                    job.snapshotID = snapshotID
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                    insert(message: message)
-                }
-                semaphore.signal()
+            switch InscriptionItem.fetchAndSave(inscriptionHash: inscriptionHash) {
+            case .success(let item):
+                var contentUpdatedMessage = message
+                contentUpdatedMessage.content = item.asMessageContent()
+                insert(message: contentUpdatedMessage)
+            case .failure(let error):
+                let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
+                job.messageID = message.messageId
+                job.snapshotID = snapshot.id
+                ConcurrentJobQueue.shared.addJob(job: job)
+                insert(message: message)
             }
-            semaphore.wait()
         } else {
             insert(message: message)
         }

@@ -60,7 +60,7 @@ final class CollectiblesViewController: UIViewController {
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reloadItem(_:)),
-                                               name: RefreshInscriptionJob.didFinishedNotification,
+                                               name: RefreshInscriptionJob.didFinishNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reloadData),

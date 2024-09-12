@@ -226,12 +226,25 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func update(content: String, forMessageWith messageId: String) {
-        let assignments = [
-            Message.column(of: .content).set(to: content)
-        ]
-        let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
-            && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
-        db.update(Message.self, assignments: assignments, where: condition)
+        db.write { db in
+            let changesCount = try Message
+                .filter(Message.column(of: .messageId) == messageId && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue)
+                .updateAll(db, [Message.column(of: .content).set(to: content)])
+            let conversationID: String? = try Message.select(Message.column(of: .conversationId))
+                .filter(Message.column(of: .messageId) == messageId)
+                .fetchOne(db)
+            if changesCount != 0, let conversationID {
+                db.afterNextTransaction { _ in
+                    DispatchQueue.main.async {
+                        let change = ConversationChange(
+                            conversationId: conversationID,
+                            action: .updateMessage(messageId: messageId)
+                        )
+                        NotificationCenter.default.post(name: conversationDidChangeNotification, object: change)
+                    }
+                }
+            }
+        }
     }
     
     public func update(quoteContent: Data, for messageId: String) {

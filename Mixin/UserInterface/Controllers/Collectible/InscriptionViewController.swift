@@ -65,7 +65,7 @@ final class InscriptionViewController: UIViewController {
         let job = RefreshInscriptionJob(inscriptionHash: inscriptionHash)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reloadFromNotification(_:)),
-                                               name: RefreshInscriptionJob.didFinishedNotification,
+                                               name: RefreshInscriptionJob.didFinishNotification,
                                                object: job)
         ConcurrentJobQueue.shared.addJob(job: job)
     }

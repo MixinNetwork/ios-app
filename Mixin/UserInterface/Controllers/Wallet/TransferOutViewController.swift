@@ -98,14 +98,14 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
             opponentImageView.setImage(with: user)
             if let container {
                 container.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
-                container.titleLabel.text = R.string.localizable.send_to_title() + " " + user.fullName
+                container.titleLabel.text = R.string.localizable.send_to(user.fullName)
             }
             memoView.isHidden = false
             withdrawFeeWrapperView.isHidden = true
         case .address(let address):
             opponentImageView.isHidden = true
             if let container {
-                container.titleLabel.text = R.string.localizable.send_to_title() + " " + address.label
+                container.titleLabel.text = R.string.localizable.send_to(address.label)
                 container.setSubtitle(subtitle: address.compactRepresentation)
             }
             memoView.isHidden = true

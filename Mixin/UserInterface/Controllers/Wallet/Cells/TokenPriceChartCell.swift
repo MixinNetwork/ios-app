@@ -9,6 +9,7 @@ final class TokenPriceChartCell: UITableViewCell {
     
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var rankLabel: InsetLabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     @IBOutlet weak var tokenIconView: PlainTokenIconView!
@@ -26,6 +27,9 @@ final class TokenPriceChartCell: UITableViewCell {
         super.awakeFromNib()
         titleStackView.setCustomSpacing(9, after: titleLabel)
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        rankLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
+        rankLabel.layer.masksToBounds = true
+        rankLabel.layer.cornerRadius = 4
         priceLabel.setFont(scaledFor: .systemFont(ofSize: 22, weight: .medium), adjustForContentSize: true)
         changeLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         chartView.annotateExtremums = true

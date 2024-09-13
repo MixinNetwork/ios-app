@@ -42,6 +42,7 @@
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
+                <outlet property="contentStackView" destination="fdk-lY-FuH" id="YzH-sh-egW"/>
                 <outlet property="disclosureIndicatorView" destination="5lE-I8-bS7" id="FUl-9G-LzH"/>
                 <outlet property="label" destination="hDT-Qc-3lr" id="Yh3-o7-8NX"/>
             </connections>

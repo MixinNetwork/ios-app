@@ -95,11 +95,6 @@ PODS:
     - nanopb (~> 3.30910.0)
     - PromisesSwift (~> 2.1)
   - FirebaseSharedSwift (11.0.0)
-  - GCDWebServer (3.5.4):
-    - GCDWebServer/Core (= 3.5.4)
-  - GCDWebServer/Core (3.5.4)
-  - GCDWebServer/WebDAV (3.5.4):
-    - GCDWebServer/Core
   - GoogleAppMeasurement (11.0.0):
     - GoogleAppMeasurement/AdIdSupport (= 11.0.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
@@ -220,8 +215,6 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Crashlytics
   - Firebase/Performance
-  - GCDWebServer
-  - GCDWebServer/WebDAV
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - libwebp
   - MixinServices (from `./MixinServices`)
@@ -250,7 +243,6 @@ SPEC REPOS:
     - FirebaseRemoteConfigInterop
     - FirebaseSessions
     - FirebaseSharedSwift
-    - GCDWebServer
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
@@ -306,7 +298,6 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfigInterop: 1ee07f85eafa4e44ba70acb921f77154282ef584
   FirebaseSessions: a98d41828920e2f11cd617ee36bf2b089e6bbe8f
   FirebaseSharedSwift: 9d0e7130af2f0cf162ecd136971f9661f2a3f769
-  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GoogleAppMeasurement: 6e49ffac7d3f2c3ded9cc663f912a13b67bbd0de
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 52f677b52b0d2bed24e7b9c94455b1f7353a09f8
@@ -328,6 +319,6 @@ SPEC CHECKSUMS:
   SVGKit: 3f02ad9c8227831e508e2e37ecc4005d2f0496a5
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: ef59c92646de22ed4bc90c80d86ebfb5f447fa96
+PODFILE CHECKSUM: 5b87400d6c1121de091b99aa9741fc873c2deeb2
 
 COCOAPODS: 1.15.2

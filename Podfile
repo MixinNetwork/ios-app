@@ -42,8 +42,5 @@ end
 target 'MixinDebug' do
   use_frameworks!
   inhibit_all_warnings!
-
-  pod "GCDWebServer"
-  pod "GCDWebServer/WebDAV"
   mixin_services
 end

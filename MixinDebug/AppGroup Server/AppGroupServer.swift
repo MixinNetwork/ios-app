@@ -6,8 +6,7 @@
 //  Copyright © 2022 Mixin. All rights reserved.
 //
 
-import Foundation
-import GCDWebServer
+import UIKit
 
 class AppGroupServer: NSObject, ObservableObject {
     

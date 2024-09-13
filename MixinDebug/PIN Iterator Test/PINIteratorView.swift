@@ -39,7 +39,7 @@ struct PINIteratorView: View {
     }
     
     init() {
-        let iterator: UInt64 = PropertiesDAO.shared.value(forKey: .iterator) ?? 0
+        let iterator: UInt64 = PropertiesDAO.shared.unsafeValue(forKey: .iterator) ?? 0
         self.iterator = iterator
         self.test = PINIteratorTest(originalIterator: iterator)
     }

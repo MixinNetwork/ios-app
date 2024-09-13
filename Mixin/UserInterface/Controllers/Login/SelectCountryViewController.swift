@@ -164,6 +164,7 @@ extension SelectCountryViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        view.endEditing(true)
         let country = country(at: indexPath)
         delegate?.selectCountryViewController(self, didSelectCountry: country)
     }

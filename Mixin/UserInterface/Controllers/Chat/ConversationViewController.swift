@@ -2,6 +2,7 @@ import UIKit
 import MobileCoreServices
 import AVKit
 import Photos
+import SDWebImage
 import MixinServices
 
 class ConversationViewController: UIViewController {
@@ -12,7 +13,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var membershipIconView: UIImageView!
+    @IBOutlet weak var membershipIconView: SDAnimatedImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!

@@ -1,4 +1,5 @@
 import Foundation
+import SDWebImage
 import MixinServices
 
 class MultisigUserCell: ModernSelectedBackgroundCell {
@@ -8,7 +9,7 @@ class MultisigUserCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var avatarView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
-    @IBOutlet weak var verifiedImageView: UIImageView!
+    @IBOutlet weak var verifiedImageView: SDAnimatedImageView!
     
     func render(user: UserItem) {
         avatarView.setImage(with: user)

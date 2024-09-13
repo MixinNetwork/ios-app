@@ -182,6 +182,15 @@ extension User {
             case expiredAt = "expired_at"
         }
         
+#if DEBUG
+        public static let prosperity = Membership(plan: .prosperity, expiredAt: .distantFuture)
+        
+        init(plan: Plan, expiredAt: Date) {
+            self.plan = plan
+            self.expiredAt = expiredAt
+        }
+#endif
+        
         public let plan: Plan
         public let expiredAt: Date
         

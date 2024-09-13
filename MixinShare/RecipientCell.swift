@@ -1,11 +1,12 @@
 import UIKit
+import SDWebImage
 import MixinServices
 
 class RecipientCell: UITableViewCell {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var badgeImageView: UIImageView!
+    @IBOutlet weak var badgeImageView: SDAnimatedImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

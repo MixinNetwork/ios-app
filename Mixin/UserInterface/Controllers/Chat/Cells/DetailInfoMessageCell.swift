@@ -16,7 +16,7 @@ class DetailInfoMessageCell: MessageCell {
     let timeLabel = UILabel()
     let statusImageView = SDAnimatedImageView()
     let forwarderImageView = UIImageView(image: R.image.conversation.ic_forwarder_bot())
-    let identityIconImageView = UIImageView()
+    let identityIconImageView = SDAnimatedImageView()
     let highlightAnimationDuration: TimeInterval = 0.2
     
     lazy var expiredIconView: UIImageView = {

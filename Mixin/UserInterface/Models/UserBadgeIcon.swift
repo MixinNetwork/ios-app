@@ -1,5 +1,18 @@
 import UIKit
+import SDWebImage
 import MixinServices
+
+fileprivate let prosperityImage: SDAnimatedImage? = {
+    let resource = R.file.user_membership_prosperityJson.url()!
+    let data = try! Data(contentsOf: resource)
+    let size = CGSize(width: 18, height: 18) * UIScreen.main.scale
+    let image = SDAnimatedImage(
+        data: data,
+        scale: UIScreen.main.scale,
+        options: [.decodeThumbnailPixelSize: size]
+    )
+    return image
+}()
 
 enum UserBadgeIcon {
     
@@ -45,7 +58,7 @@ extension User.Membership {
         case .elite:
             R.image.user_membership_elite()
         case .prosperity:
-            R.image.user_membership_prosperity()
+            prosperityImage
         case .none:
             nil
         }

@@ -855,6 +855,16 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("index_optimization_safe_snapshots") { db in
+            let sqls = [
+                "CREATE INDEX IF NOT EXISTS index_safe_snapshots_created_at ON safe_snapshots(created_at)",
+                "CREATE INDEX IF NOT EXISTS index_safe_snapshots_pending ON safe_snapshots(type, asset_id)",
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
         return migrator
     }
     

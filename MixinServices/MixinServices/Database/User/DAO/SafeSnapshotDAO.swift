@@ -296,8 +296,8 @@ extension SafeSnapshotDAO {
         db.write { (db) in
             var changesCount = 0
             
-            try db.execute(sql: "DELETE FROM safe_snapshots WHERE asset_id = ? AND type = ?",
-                           arguments: [assetID, SafeSnapshot.SnapshotType.pending.rawValue])
+            try db.execute(sql: "DELETE FROM safe_snapshots WHERE type = ? AND asset_id = ?",
+                           arguments: [SafeSnapshot.SnapshotType.pending.rawValue, assetID])
             changesCount += db.changesCount
             
             let snapshots = pendingDeposits.map(SafeSnapshot.init(pendingDeposit:))

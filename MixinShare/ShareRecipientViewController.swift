@@ -1,8 +1,10 @@
 import UIKit
 import Photos
-import MixinServices
 import MobileCoreServices
 import Intents
+import SDWebImage
+import SDWebImageLottieCoder
+import MixinServices
 
 class ShareRecipientViewController: UIViewController {
 
@@ -30,7 +32,7 @@ class ShareRecipientViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        SDImageCodersManager.shared.addCoder(SDImageLottieCoder.shared)
         guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             cancelShareAction()
             return

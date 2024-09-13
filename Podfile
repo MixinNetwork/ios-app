@@ -36,6 +36,7 @@ target 'MixinShare' do
   use_frameworks!
   inhibit_all_warnings!
 
+  pod 'SDWebImageLottieCoder'
   mixin_services
 end
 

@@ -1,4 +1,5 @@
 import UIKit
+import SDWebImage
 import MixinServices
 
 class ProfileViewController: ResizablePopupViewController {
@@ -9,7 +10,7 @@ class ProfileViewController: ResizablePopupViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var badgeImageView: UIImageView!
+    @IBOutlet weak var badgeImageView: SDAnimatedImageView!
     @IBOutlet weak var subtitleLabel: IdentityNumberLabel!
     @IBOutlet weak var centerStackView: UIStackView!
     @IBOutlet weak var menuStackView: UIStackView!

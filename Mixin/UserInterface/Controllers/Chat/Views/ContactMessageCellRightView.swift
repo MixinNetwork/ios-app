@@ -1,10 +1,11 @@
 import UIKit
+import SDWebImage
 
 class ContactMessageCellRightView: UIStackView {
     
     let fullnameStackView = UIStackView()
     let fullnameLabel = UILabel()
-    let badgeImageView = UIImageView()
+    let badgeImageView = SDAnimatedImageView()
     let idLabel = UILabel()
     
     init() {

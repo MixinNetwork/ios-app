@@ -13,7 +13,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var unreadLabel: InsetLabel!
     @IBOutlet weak var mentionLabel: InsetLabel!
     @IBOutlet weak var messageStatusImageView: UIImageView!
-    @IBOutlet weak var verifiedImageView: UIImageView!
+    @IBOutlet weak var verifiedImageView: SDAnimatedImageView!
     @IBOutlet weak var pinImageView: UIImageView!
     @IBOutlet weak var expiredImageView: UIImageView!
     

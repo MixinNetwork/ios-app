@@ -1,11 +1,12 @@
 import UIKit
+import SDWebImage
 import MixinServices
 
 class UserHandleCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var badgeImageView: UIImageView!
+    @IBOutlet weak var badgeImageView: SDAnimatedImageView!
     @IBOutlet weak var identityNumberLabel: UILabel!
     
     private var normalNameAttributes = [NSAttributedString.Key: Any]()

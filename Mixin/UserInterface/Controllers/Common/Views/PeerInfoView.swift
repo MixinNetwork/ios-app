@@ -1,4 +1,5 @@
 import UIKit
+import SDWebImage
 import MixinServices
 
 class PeerInfoView: UIView, XibDesignable {
@@ -10,7 +11,7 @@ class PeerInfoView: UIView, XibDesignable {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var badgeImageView: UIImageView!
+    @IBOutlet weak var badgeImageView: SDAnimatedImageView!
     @IBOutlet weak var superscriptLabel: UILabel!
     @IBOutlet weak var prefixIconImageView: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!

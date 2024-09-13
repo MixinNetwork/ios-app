@@ -274,7 +274,8 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                                           style: .destructive)
                     tableView.setContentOffset(.zero, animated: true)
                     switch error {
-                    case MixinAPIResponseError.malformedPin, MixinAPIResponseError.incorrectPin, TIPNode.Error.response(.incorrectPIN), TIPNode.Error.response(.internalServer):
+                    case MixinAPIResponseError.malformedPin, MixinAPIResponseError.incorrectPin, TIPNode.Error.response(.incorrectPIN),
+                        TIPNode.Error.response(.internalServer), MixinAPIResponseError.internalServerError, MixinAPIError.httpTransport:
                         loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                                  leftAction: #selector(close(_:)),
                                                  rightTitle: R.string.localizable.retry(),

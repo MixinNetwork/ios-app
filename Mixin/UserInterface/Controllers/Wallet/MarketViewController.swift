@@ -409,6 +409,7 @@ extension MarketViewController: UITableViewDataSource {
                 cell.tokenIconView.setIcon(token: token)
                 cell.updatePriceAndChange(price: token.localizedFiatMoneyPrice, points: chartPoints)
             }
+            cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
             cell.delegate = self
@@ -420,8 +421,8 @@ extension MarketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.stats()
                 cell.disclosureIndicatorView.isHidden = true
-                if let market {
-                    cell.subtitle = .rank(market.numberedRank)
+                if let rank = market?.numberedRank {
+                    cell.subtitle = .rank(rank)
                 } else {
                     cell.subtitle = nil
                 }

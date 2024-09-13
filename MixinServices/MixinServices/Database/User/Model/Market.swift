@@ -70,7 +70,13 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord, M
         currencyPrefix: true
     )
     
-    public private(set) lazy var numberedRank = "#" + marketCapRank
+    public private(set) lazy var numberedRank: String? = {
+        if marketCapRank.isEmpty {
+            nil
+        } else {
+            "#" + marketCapRank
+        }
+    }()
     
     public private(set) lazy var localizedPrice = CurrencyFormatter.localizedString(
         from: decimalPrice * Currency.current.decimalRate,

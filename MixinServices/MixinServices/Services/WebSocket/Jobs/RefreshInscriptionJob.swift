@@ -24,9 +24,17 @@ public final class RefreshInscriptionJob: BaseJob {
     }
     
     public override func run() throws {
+        if let messageID,
+           let item = InscriptionDAO.shared.inscriptionItem(with: inscriptionHash),
+           let content = item.asMessageContent()
+        {
+            MessageDAO.shared.update(content: content, forMessageWith: messageID)
+            Logger.general.debug(category: "Inscription", message: "Update message content for hash: \(inscriptionHash)")
+            return
+        }
         Logger.general.debug(category: "Inscription", message: "Load \(inscriptionHash), mid: \(messageID), sid: \(snapshotID)")
         repeat {
-            guard LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, !isCancelled else {
                 return
             }
             do {

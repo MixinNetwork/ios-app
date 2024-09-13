@@ -10,7 +10,7 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
-    @IBOutlet weak var changeLabel: UILabel!
+    @IBOutlet weak var changeLabel: MarketColoredLabel!
     @IBOutlet weak var tokenIconView: PlainTokenIconView!
     @IBOutlet weak var chartView: ChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
@@ -97,7 +97,7 @@ final class TokenPriceChartCell: UITableViewCell {
         )
         let change = (now.value - base.value) / base.value
         changeLabel.text = NumberFormatter.percentage.string(decimal: change)
-        changeLabel.textColor = change >= 0 ? .priceRising : .priceFalling
+        changeLabel.marketColor = .byValue(change)
     }
     
     @objc private func changePeriod(_ sender: UIButton) {

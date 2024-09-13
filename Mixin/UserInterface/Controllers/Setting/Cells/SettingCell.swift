@@ -51,6 +51,8 @@ final class SettingCell: ModernSelectedBackgroundCell {
     private(set) var accessorySwitchIfLoaded: UISwitch?
     private(set) var accessoryBusyIndicatorIfLoaded: ActivityIndicatorView?
     
+    private var button: MenuTriggerButton?
+    
     var row: SettingsRow? {
         didSet {
             guard let row = row else {
@@ -65,18 +67,32 @@ final class SettingCell: ModernSelectedBackgroundCell {
                 iconImageViewIfLoaded?.removeFromSuperview()
             }
             titleLabel.text = row.title
-            titleLabel.textColor = {
-                switch row.titleStyle {
-                case .normal:
-                    return .text
-                case .highlighted:
-                    return .theme
-                case .destructive:
-                    return .walletRed
-                }
-            }()
+            titleLabel.textColor = switch row.titleStyle {
+            case .normal:
+                R.color.text()
+            case .highlighted:
+                R.color.theme()
+            case .destructive:
+                R.color.red()
+            }
             subtitleLabel.text = row.subtitle
             updateAccessory(row.accessory, animated: false)
+            if let menu = row.menu {
+                let button: MenuTriggerButton
+                if let b = self.button {
+                    b.isHidden = false
+                    button = b
+                } else {
+                    button = MenuTriggerButton()
+                    button.showsMenuAsPrimaryAction = true
+                    contentView.addSubview(button)
+                    button.snp.makeEdgesEqualToSuperview()
+                    self.button = button
+                }
+                button.menu = menu
+            } else {
+                button?.isHidden = true
+            }
         }
     }
     
@@ -142,6 +158,18 @@ final class SettingCell: ModernSelectedBackgroundCell {
             return
         }
         row.accessory = .switch(isOn: sender.isOn)
+    }
+    
+}
+
+extension SettingCell {
+    
+    private class MenuTriggerButton: UIButton {
+        
+        override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
+            CGPoint(x: bounds.maxX, y: bounds.maxY)
+        }
+        
     }
     
 }

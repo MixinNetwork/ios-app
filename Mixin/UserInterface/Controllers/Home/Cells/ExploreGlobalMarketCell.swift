@@ -4,7 +4,7 @@ final class ExploreGlobalMarketCell: UICollectionViewCell {
     
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var primaryLabel: UILabel!
-    @IBOutlet weak var secondaryLabel: UILabel!
+    @IBOutlet weak var secondaryLabel: MarketColoredLabel!
     
     private let backgroundLayer = CAGradientLayer()
     

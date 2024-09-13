@@ -51,6 +51,11 @@ class CircleCell: UITableViewCell {
     
     private weak var editingButtonIfLoaded: CircleEditingButton?
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        unreadMessageCountLabel.contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6)
+    }
+    
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         if let superview = superview, !(superview is UITableView) {

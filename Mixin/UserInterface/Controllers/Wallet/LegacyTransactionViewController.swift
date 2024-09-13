@@ -28,12 +28,12 @@ class LegacyTransactionViewController: UIViewController {
         assetIconView.setIcon(asset: asset)
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
         if snapshot.type == SnapshotType.pendingDeposit.rawValue {
-            amountLabel.textColor = .walletGray
+            amountLabel.textColor = UIColor(displayP3RgbValue: 0xAAAAAA)
         } else {
             if snapshot.amount.hasMinusPrefix {
-                amountLabel.textColor = .priceFalling
+                amountLabel.textColor = R.color.market_red()
             } else {
-                amountLabel.textColor = .priceRising
+                amountLabel.textColor = R.color.market_green()
             }
         }
         amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)

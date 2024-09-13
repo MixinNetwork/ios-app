@@ -42,12 +42,22 @@ final class SettingsRow: NSObject {
         }
     }
     
-    init(icon: UIImage? = nil, title: String, titleStyle: Style = .normal, subtitle: String? = nil, accessory: Accessory = .none) {
+    let menu: UIMenu?
+    
+    init(
+        icon: UIImage? = nil,
+        title: String,
+        titleStyle: Style = .normal,
+        subtitle: String? = nil,
+        accessory: Accessory = .none,
+        menu: UIMenu? = nil
+    ) {
         self.icon = icon
         self.title = title
         self.titleStyle = titleStyle
         self.subtitle = subtitle
         self.accessory = accessory
+        self.menu = menu
         super.init()
     }
     

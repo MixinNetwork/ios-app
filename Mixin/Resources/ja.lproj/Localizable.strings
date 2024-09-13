@@ -509,6 +509,7 @@
 "get_a_new_wallet" = "新たなウォレットを作成";
 "global_market_cap" = "Market Cap";
 "got_it" = "確認";
+"green_up_red_down" = "Green Up / Red Down";
 "group_call" = "グループ通話";
 "group_call_end_with_duration" = "グループ通話は終了しました。通話時間：%@";
 "group_call_has_been_declined" = "権限不足のためグループ会話はできません。";
@@ -811,6 +812,7 @@
 "profile_share_bot_hint" = "ミニアプリをシェアしたい場合は、まずミニアプリを連絡先に追加してください。";
 "qr_code" = "QRコード";
 "qr_code_not_found" = "QRコードが見つかりません";
+"quote_color" = "Quote Color";
 "raw" = "その他";
 "read_your_apps" = "Read your bots";
 "read_your_assets" = "Read your assets";
@@ -831,6 +833,7 @@
 "recent_chats" = "チャット";
 "recent_searches" = "最近の検索";
 "recipients" = "Recipients";
+"red_up_green_down" = "Red Up / Green Down";
 "refresh" = "更新";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";

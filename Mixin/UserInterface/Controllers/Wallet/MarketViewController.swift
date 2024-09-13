@@ -456,7 +456,7 @@ extension MarketViewController: UITableViewDataSource {
                     cell.periodLabel.text = balance.period
                     cell.valueLabel.text = balance.value
                     cell.changeLabel.text = balance.change
-                    cell.changeLabel.textColor = balance.changeColor
+                    cell.changeLabel.marketColor = balance.changeColor
                 }
                 return cell
             }
@@ -832,9 +832,9 @@ extension MarketViewController {
             let period: String
             let value: String
             let change: String
-            let changeColor: UIColor
+            let changeColor: MarketColor
             
-            init(balance: String, period: String, value: String, change: String, changeColor: UIColor) {
+            init(balance: String, period: String, value: String, change: String, changeColor: MarketColor) {
                 self.balance = balance
                 self.period = period
                 self.value = value
@@ -842,7 +842,7 @@ extension MarketViewController {
                 self.changeColor = changeColor
             }
             
-            func replacing(change: String, changeColor: UIColor) -> Balance {
+            func replacing(change: String, changeColor: MarketColor) -> Balance {
                 Balance(
                     balance: self.balance,
                     period: self.period,
@@ -893,7 +893,7 @@ extension MarketViewController {
                 period: R.string.localizable.hours_count_short(24),
                 value: token.localizedFiatMoneyBalance,
                 change: "",
-                changeColor: .clear
+                changeColor: .arbitrary(.clear)
             )
             self.infos = basicInfos
             
@@ -906,7 +906,7 @@ extension MarketViewController {
         func updateWithMarketNotFound() {
             self.stats = nil
             if let balance {
-                self.balance = balance.replacing(change: notApplicable, changeColor: R.color.text_quaternary()!)
+                self.balance = balance.replacing(change: notApplicable, changeColor: .arbitrary(R.color.text_quaternary()!))
             }
             self.marketInfos = [
                 Info.contentNotApplicable(title: R.string.localizable.market_cap().uppercased()),
@@ -934,9 +934,9 @@ extension MarketViewController {
                 }
                 
                 var change: String
-                let changeColor: UIColor
+                let changeColor: MarketColor
                 if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
-                    changeColor = priceChange24H >= 0 ? .priceRising : .priceFalling
+                    changeColor = .byValue(priceChange24H)
                     change = CurrencyFormatter.localizedString(
                         from: priceChange24H * balance * Currency.current.decimalRate,
                         format: .fiatMoneyPrice,
@@ -950,7 +950,7 @@ extension MarketViewController {
                     }
                 } else {
                     change = ""
-                    changeColor = .clear
+                    changeColor = .arbitrary(.clear)
                 }
                 
                 return Balance(

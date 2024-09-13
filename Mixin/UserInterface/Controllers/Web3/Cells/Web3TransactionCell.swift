@@ -40,7 +40,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 } else {
                     transfer.localizedFiatMoneyAmount
                 }
-                upperAmountLabel.textColor = isConfirmed ? .priceRising : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? R.color.market_green() : R.color.text_tertiary()
                 subtitleLabel.text = Address.compactRepresentation(of: transaction.sender)
             } else {
                 renderAsDefault()
@@ -57,7 +57,7 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 } else {
                     transfer.localizedFiatMoneyAmount
                 }
-                upperAmountLabel.textColor = isConfirmed ? .priceFalling : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? R.color.market_red() : R.color.text_tertiary()
                 subtitleLabel.text = Address.compactRepresentation(of: transaction.receiver)
             } else {
                 renderAsDefault()
@@ -76,11 +76,11 @@ class Web3TransactionCell: ModernSelectedBackgroundCell {
                 subtitleLabel.text = "\(inTransfer.symbol) -> \(outTransfer.symbol)"
                 upperAmountLabel.text = CurrencyFormatter.localizedString(from: inTransfer.amount, format: .precision, sign: .always)
                 upperSymbolLabel.text = inTransfer.symbol
-                upperAmountLabel.textColor = isConfirmed ? .priceRising : .walletGray
+                upperAmountLabel.textColor = isConfirmed ? R.color.market_green() : R.color.text_tertiary()
                 
                 lowerAmountLabel.text = CurrencyFormatter.localizedString(from: -outTransfer.decimalAmount, format: .precision, sign: .always)
                 lowerSymbolLabel.text = outTransfer.symbol
-                lowerAmountLabel.textColor = isConfirmed ? .priceFalling : .walletGray
+                lowerAmountLabel.textColor = isConfirmed ? R.color.market_red() : R.color.text_tertiary()
             } else {
                 renderAsDefault()
             }

@@ -5,7 +5,7 @@ final class TokenMyBalanceCell: UITableViewCell {
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var periodLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
-    @IBOutlet weak var changeLabel: UILabel!
+    @IBOutlet weak var changeLabel: MarketColoredLabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

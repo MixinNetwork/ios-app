@@ -12,7 +12,7 @@ class AssetCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var assetIconView: BadgeIconView!
     @IBOutlet weak var balanceLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
-    @IBOutlet weak var changeLabel: InsetLabel!
+    @IBOutlet weak var changeLabel: MarketColoredLabel!
     @IBOutlet weak var fiatMoneyPriceLabel: UILabel!
     @IBOutlet weak var fiatMoneyBalanceLabel: UILabel!
     @IBOutlet weak var noFiatMoneyPriceIndicatorLabel: UILabel!
@@ -46,11 +46,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         }
         if asset.decimalUSDPrice > 0 {
             changeLabel.text = asset.localizedUSDChange
-            if asset.decimalUSDChange > 0 {
-                changeLabel.textColor = .priceRising
-            } else {
-                changeLabel.textColor = .priceFalling
-            }
+            changeLabel.marketColor = .byValue(asset.decimalUSDChange)
             fiatMoneyPriceLabel.text = asset.localizedFiatMoneyPrice
             changeLabel.alpha = 1
             fiatMoneyPriceLabel.alpha = 1
@@ -77,11 +73,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         symbolLabel.attributedText = NSAttributedString(string: token.symbol, attributes: AssetCell.symbolAttributes)
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
-            if token.decimalPercentChange > 0 {
-                changeLabel.textColor = .priceRising
-            } else {
-                changeLabel.textColor = .priceFalling
-            }
+            changeLabel.marketColor = .byValue(token.decimalPercentChange)
             fiatMoneyPriceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.alpha = 1
             fiatMoneyPriceLabel.alpha = 1

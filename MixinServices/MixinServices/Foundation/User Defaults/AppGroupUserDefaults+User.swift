@@ -69,6 +69,7 @@ extension AppGroupUserDefaults {
             case collectibleContent = "collectible_content"
             case collectibleOrdering = "collectible_order"
             case marketCategory = "market_category"
+            case marketColorAppearance = "color_appearance"
         }
         
         public static let version = 32
@@ -81,7 +82,8 @@ extension AppGroupUserDefaults {
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
-
+        public static let marketColorAppearanceDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.MarketColorAppearanceChange")
+        
         private static let maxNumberOfAssetSearchHistory = 2
         
         public static var needsUpgradeInMainApp: Bool {
@@ -268,6 +270,13 @@ extension AppGroupUserDefaults {
         
         @RawRepresentableDefault(namespace: .user, key: Key.marketCategory, defaultValue: .all)
         public static var marketCategory: Market.Category
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.marketColorAppearance, defaultValue: .greenUpRedDown)
+        public static var marketColorAppearance: MarketColorAppearance {
+            didSet {
+                NotificationCenter.default.post(name: Self.marketColorAppearanceDidChangeNotification, object: nil)
+            }
+        }
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

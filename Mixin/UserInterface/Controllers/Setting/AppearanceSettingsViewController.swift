@@ -21,9 +21,16 @@ class AppearanceSettingsViewController: SettingsTableViewController {
     }
     
     private lazy var dataSource = SettingsDataSource(sections: [
+        SettingsSection(rows: [userInterfaceStyleRow]),
         SettingsSection(rows: [languageRow]),
         SettingsSection(rows: [currencyRow]),
-        SettingsSection(rows: [chatBackgroundRow, chatTextSizeRow])
+        SettingsSection(rows: [chatBackgroundRow, chatTextSizeRow]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.quote_color(),
+                        subtitle: AppGroupUserDefaults.User.marketColorAppearance.description,
+                        accessory: .disclosure,
+                        menu: UIMenu(children: colorAppearanceActions()))
+        ]),
     ])
     
     class func instance() -> UIViewController {
@@ -36,7 +43,6 @@ class AppearanceSettingsViewController: SettingsTableViewController {
         super.viewDidLoad()
         updateCurrencySubtitle()
         updateUserInterfaceStyleSubtitle()
-        dataSource.insertSection(SettingsSection(rows: [userInterfaceStyleRow]), at: 0, animation: .none)
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrencySubtitle), name: Currency.currentCurrencyDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateUserInterfaceStyleSubtitle), name: AppGroupUserDefaults.User.didChangeUserInterfaceStyleNotification, object: nil)
         dataSource.tableViewDelegate = self
@@ -96,6 +102,18 @@ extension AppearanceSettingsViewController {
         chatTextSizeRow.subtitle = Self.chatTextSizeSubtitle
     }
     
+    private func colorAppearanceActions() -> [UIAction] {
+        let selected = AppGroupUserDefaults.User.marketColorAppearance
+        return MarketColorAppearance.allCases.map { appearance in
+            UIAction(
+                title: appearance.description,
+                image: appearance.image,
+                state: appearance == selected ? .on : .off,
+                handler: { [weak self] _ in self?.setColorAppearance(appearance) }
+            )
+        }
+    }
+    
     private func pickUserInterfaceStyle() {
         let sheet = UIAlertController(title: R.string.localizable.interface_style(), message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.light(), style: .default, handler: { (_) in
@@ -135,6 +153,41 @@ extension AppearanceSettingsViewController {
     private func changeChatTextSize() {
         let vc = ChatTextSizeViewController.instance(fontSizeDidChange: updatechatTextSizeSubtitle)
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func setColorAppearance(_ appearance: MarketColorAppearance) {
+        AppGroupUserDefaults.User.marketColorAppearance = appearance
+        let menu = UIMenu(children: colorAppearanceActions())
+        let row = SettingsRow(
+            title: R.string.localizable.quote_color(),
+            subtitle: AppGroupUserDefaults.User.marketColorAppearance.description,
+            accessory: .disclosure,
+            menu: menu
+        )
+        let section = SettingsSection(rows: [row])
+        dataSource.replaceSection(at: 4, with: section, animation: .none)
+    }
+    
+}
+
+extension MarketColorAppearance {
+    
+    var description: String {
+        switch self {
+        case .greenUpRedDown:
+            R.string.localizable.green_up_red_down()
+        case .redUpGreenDown:
+            R.string.localizable.red_up_green_down()
+        }
+    }
+    
+    var image: UIImage {
+        switch self {
+        case .greenUpRedDown:
+            R.image.green_up()!
+        case .redUpGreenDown:
+            R.image.red_up()!
+        }
     }
     
 }

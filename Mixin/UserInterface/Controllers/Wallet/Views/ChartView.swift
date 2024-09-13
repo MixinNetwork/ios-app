@@ -24,30 +24,32 @@ final class ChartView: UIView {
     
     var annotateExtremums = false {
         didSet {
-            redrawWithoutAnimation()
+            redraw()
         }
     }
     
     var points: [Point] = [] {
         didSet {
+            let rising: Bool
             if let firstValue = points.first?.value, let lastValue = points.last?.value {
-                arePointsRising = lastValue >= firstValue
+                rising = lastValue >= firstValue
             } else {
-                arePointsRising = true
+                rising = true
             }
-            redrawWithoutAnimation()
+            self.color = rising ? .rising : .falling
+            redraw()
         }
     }
     
     var minPointPosition: CGFloat = (44 - 6) / 44 {
         didSet {
-            redrawWithoutAnimation()
+            redraw()
         }
     }
     
     var maxPointPosition: CGFloat = 4 / 44 {
         didSet {
-            redrawWithoutAnimation()
+            redraw()
         }
     }
     
@@ -57,7 +59,7 @@ final class ChartView: UIView {
     
     private var lastLayoutBounds: CGRect?
     private var drawingPoints: [CGPoint] = []
-    private var arePointsRising: Bool = true
+    private var color: MarketColor = .arbitrary(.clear)
     private var extremumAnnotationLayers: [CALayer] = []
     private var extremumAnnotationViews: [UIView] = []
     
@@ -86,7 +88,7 @@ final class ChartView: UIView {
             lineLayer.frame = bounds
             fillingLayer.frame = bounds
             fillingLayerMask.frame = bounds
-            redrawWithoutAnimation()
+            redraw()
             self.lastLayoutBounds = bounds
         }
     }
@@ -94,7 +96,7 @@ final class ChartView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            redrawWithoutAnimation()
+            redraw()
         }
     }
     
@@ -113,7 +115,7 @@ final class ChartView: UIView {
         case .began:
             if cursorDotLayer == nil {
                 let backgroundColor = R.color.background()!.resolvedColor(with: traitCollection)
-                let dotColor: UIColor = arePointsRising ? .priceRising : .priceFalling
+                let dotColor = color.uiColor
                 let dot = AnnotationDotLayer(backgroundColor: backgroundColor.cgColor, dotColor: dotColor.cgColor)
                 layer.addSublayer(dot)
                 if let y = drawingPoint(around: x)?.y {
@@ -190,11 +192,13 @@ final class ChartView: UIView {
         return drawingPoints[index]
     }
     
-    private func redrawWithoutAnimation() {
-        CATransaction.performWithoutAnimation(redraw)
-    }
-    
     private func redraw() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        defer {
+            CATransaction.commit()
+        }
+        
         for layer in extremumAnnotationLayers {
             layer.removeFromSuperlayer()
         }
@@ -221,8 +225,7 @@ final class ChartView: UIView {
             }
         }
         
-        let color = (arePointsRising ? UIColor.priceRising : UIColor.priceFalling)
-            .resolvedColor(with: traitCollection)
+        let color = self.color.uiColor.resolvedColor(with: traitCollection)
         
         let maxV = (points[maxIndex].value as NSDecimalNumber).doubleValue
         let minV = (points[minIndex].value as NSDecimalNumber).doubleValue
@@ -262,18 +265,16 @@ final class ChartView: UIView {
         
         if annotateExtremums {
             let backgroundColor = R.color.background()!.resolvedColor(with: traitCollection)
-            let dotColor: UIColor = arePointsRising ? .priceRising : .priceFalling
-            
             let maxDotLayer = AnnotationDotLayer(
                 backgroundColor: backgroundColor.cgColor,
-                dotColor: dotColor.cgColor
+                dotColor: color.cgColor
             )
             maxDotLayer.position = drawingPoints[maxIndex]
             layer.addSublayer(maxDotLayer)
             
             let minDotLayer = AnnotationDotLayer(
                 backgroundColor: backgroundColor.cgColor,
-                dotColor: dotColor.cgColor
+                dotColor: color.cgColor
             )
             minDotLayer.position = drawingPoints[minIndex]
             layer.addSublayer(minDotLayer)

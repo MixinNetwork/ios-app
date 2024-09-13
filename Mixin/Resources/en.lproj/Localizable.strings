@@ -509,6 +509,7 @@
 "get_a_new_wallet" = "Get a new wallet";
 "global_market_cap" = "Market Cap";
 "got_it" = "Got it";
+"green_up_red_down" = "Green Up / Red Down";
 "group_call" = "Group Call";
 "group_call_end_with_duration" = "Group call ended, duration: %@";
 "group_call_has_been_declined" = "Group call has been declined";
@@ -811,6 +812,7 @@
 "profile_share_bot_hint" = "If you want to share a bot, add it to your contacts first";
 "qr_code" = "QR Code";
 "qr_code_not_found" = "QR Code not found";
+"quote_color" = "Quote Color";
 "raw" = "Raw";
 "read_your_apps" = "Read your bots";
 "read_your_assets" = "Read your assets";
@@ -831,6 +833,7 @@
 "recent_chats" = "CHATS";
 "recent_searches" = "Recent searches";
 "recipients" = "Recipients";
+"red_up_green_down" = "Red Up / Green Down";
 "refresh" = "Refresh";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";

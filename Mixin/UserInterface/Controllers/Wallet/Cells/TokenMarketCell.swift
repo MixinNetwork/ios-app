@@ -4,7 +4,7 @@ import MixinServices
 final class TokenMarketCell: UITableViewCell {
     
     @IBOutlet weak var priceLabel: UILabel!
-    @IBOutlet weak var changeLabel: UILabel!
+    @IBOutlet weak var changeLabel: MarketColoredLabel!
     @IBOutlet weak var chartView: ChartView!
     
     override func awakeFromNib() {
@@ -27,12 +27,12 @@ final class TokenMarketCell: UITableViewCell {
             )
             let change = (lastValue - firstValue) / firstValue
             changeLabel.text = NumberFormatter.percentage.string(decimal: change)
-            changeLabel.textColor = change >= 0 ? .priceRising : .priceFalling
+            changeLabel.marketColor = .byValue(change)
             chartView.points = points
         } else {
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.text = NumberFormatter.percentage.string(decimal: token.decimalUSDChange)
-            changeLabel.textColor = token.decimalUSDChange >= 0 ? .priceRising : .priceFalling
+            changeLabel.marketColor = .byValue(token.decimalUSDChange)
             chartView.points = []
         }
     }

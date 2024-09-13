@@ -405,12 +405,15 @@
                     <viewLayoutGuide key="frameLayoutGuide" id="jUE-bb-xjT"/>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GUA-rJ-cEC">
-                    <rect key="frame" x="134" y="760" width="125" height="58"/>
+                    <rect key="frame" x="138.66666666666666" y="760" width="116" height="58"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p0t-vv-kdZ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="125" height="42"/>
+                            <rect key="frame" x="0.0" y="0.0" width="116" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="cuH-FA-KHP"/>
+                            </constraints>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                            <inset key="contentEdgeInsets" minX="38" minY="12" maxX="38" maxY="12"/>
+                            <inset key="contentEdgeInsets" minX="24" minY="12" maxX="24" maxY="12"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Review"/>
                             <userDefinedRuntimeAttributes>

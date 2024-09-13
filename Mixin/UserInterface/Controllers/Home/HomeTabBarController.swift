@@ -11,7 +11,7 @@ final class HomeTabBarController: UIViewController {
         case chat = 0
         case wallet = 1
         case collectibles = 2
-        case explore = 3
+        case more = 3
     }
     
     private(set) weak var selectedViewController: UIViewController?
@@ -42,10 +42,10 @@ final class HomeTabBarController: UIViewController {
                         image: R.image.home_tab_collectibles()!,
                         selectedImage: R.image.home_tab_collectibles_selected()!,
                         text: R.string.localizable.collectibles()),
-            TabBar.Item(id: ChildID.explore.rawValue,
-                        image: R.image.home_tab_explore()!,
-                        selectedImage: R.image.home_tab_explore_selected()!,
-                        text: R.string.localizable.explore()),
+            TabBar.Item(id: ChildID.more.rawValue,
+                        image: R.image.home_tab_more()!,
+                        selectedImage: R.image.home_tab_more_selected()!,
+                        text: R.string.localizable.more()),
         ]
         tabBar.selectedIndex = 0
         tabBar.delegate = self
@@ -97,7 +97,7 @@ final class HomeTabBarController: UIViewController {
             newChild = walletViewController
         case .collectibles:
             newChild = collectiblesViewController
-        case .explore:
+        case .more:
             newChild = exploreViewController
         }
         
@@ -126,7 +126,7 @@ final class HomeTabBarController: UIViewController {
     
     private func switchToChildAfterValidated(with id: ChildID) {
         switch id {
-        case .chat, .collectibles, .explore:
+        case .chat, .collectibles, .more:
             switchToChild(with: id)
         case .wallet:
             switch TIP.status {

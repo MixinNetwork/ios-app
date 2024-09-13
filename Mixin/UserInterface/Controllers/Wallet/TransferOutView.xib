@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -206,12 +206,15 @@
                     </constraints>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="stw-tF-dld" customClass="TouchEventBypassView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="764" width="393" height="88"/>
+                    <rect key="frame" x="0.0" y="774" width="393" height="78"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hgq-Hy-Lec" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="135.66666666666666" y="20" width="121.99999999999997" height="48"/>
+                            <rect key="frame" x="138.66666666666666" y="20" width="116" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="nqt-zT-c0E"/>
+                            </constraints>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                            <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
+                            <inset key="contentEdgeInsets" minX="24" minY="12" maxX="24" maxY="12"/>
                             <state key="normal" title="Continue">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
@@ -227,7 +230,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="Hgq-Hy-Lec" firstAttribute="centerX" secondItem="stw-tF-dld" secondAttribute="centerX" id="C7F-qB-2Ar"/>
-                        <constraint firstAttribute="bottom" secondItem="Hgq-Hy-Lec" secondAttribute="bottom" constant="20" id="bKN-K9-ydK"/>
+                        <constraint firstAttribute="bottom" secondItem="Hgq-Hy-Lec" secondAttribute="bottom" constant="16" id="bKN-K9-ydK"/>
                         <constraint firstItem="Hgq-Hy-Lec" firstAttribute="top" secondItem="stw-tF-dld" secondAttribute="top" constant="20" id="roP-rM-lln"/>
                     </constraints>
                 </view>

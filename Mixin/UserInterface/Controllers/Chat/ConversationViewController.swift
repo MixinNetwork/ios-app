@@ -1575,25 +1575,39 @@ extension ConversationViewController: UITableViewDelegate {
             dataSource.loadMoreBelowIfNeeded()
         }
         
-        let message = dataSource.viewModel(for: indexPath)?.message
-        let messageId = message?.messageId
-        if messageId == dataSource.firstUnreadMessageId || cell is UnreadHintMessageCell {
-            unreadBadgeValue = 0
-            dataSource.firstUnreadMessageId = nil
-        }
-        if let messageId = messageId, messageId == quotingMessageId {
-            quotingMessageId = nil
-        }
-        if let viewModel = dataSource.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
-            viewModel.beginAttachmentLoading(isTriggeredByUser: false)
-            (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
-        }
-        if let message = message, let hasMentionRead = message.hasMentionRead, !hasMentionRead {
-            message.hasMentionRead = true
-            mentionScrollingDestinations.removeAll(where: { $0 == message.messageId })
-            dataSource.queue.async {
-                SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
-                                                                 messageId: message.messageId)
+        if let viewModel = dataSource.viewModel(for: indexPath) {
+            let message = viewModel.message
+            let messageId = message.messageId
+            
+            if let viewModel = viewModel as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
+                viewModel.beginAttachmentLoading(isTriggeredByUser: false)
+                (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
+            }
+            if viewModel is InscriptionMessageViewModel, message.inscription == nil, let snapshotID = message.snapshotId {
+                DispatchQueue.global().async {
+                    guard let hash = SafeSnapshotDAO.shared.inscriptionHash(snapshotID: snapshotID), !hash.isEmpty else {
+                        return
+                    }
+                    let job = RefreshInscriptionJob(inscriptionHash: hash)
+                    job.snapshotID = snapshotID
+                    job.messageID = messageId
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
+            }
+            if messageId == dataSource.firstUnreadMessageId || cell is UnreadHintMessageCell {
+                unreadBadgeValue = 0
+                dataSource.firstUnreadMessageId = nil
+            }
+            if messageId == quotingMessageId {
+                quotingMessageId = nil
+            }
+            if let hasMentionRead = message.hasMentionRead, !hasMentionRead {
+                message.hasMentionRead = true
+                mentionScrollingDestinations.removeAll(where: { $0 == message.messageId })
+                dataSource.queue.async {
+                    SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
+                                                                     messageId: message.messageId)
+                }
             }
         }
     }

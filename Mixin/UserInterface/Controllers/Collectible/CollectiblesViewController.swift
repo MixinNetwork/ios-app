@@ -60,7 +60,7 @@ final class CollectiblesViewController: UIViewController {
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reloadItem(_:)),
-                                               name: RefreshInscriptionJob.didFinishedNotification,
+                                               name: RefreshInscriptionJob.didFinishNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reloadData),
@@ -269,6 +269,19 @@ extension CollectiblesViewController: UICollectionViewDataSource {
 }
 
 extension CollectiblesViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        switch content {
+        case .item:
+            let item = items[indexPath.item]
+            if item.inscription == nil, let hash = item.output.inscriptionHash, !hash.isEmpty {
+                let job = RefreshInscriptionJob(inscriptionHash: hash)
+                ConcurrentJobQueue.shared.addJob(job: job)
+            }
+        case .collection:
+            break
+        }
+    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)

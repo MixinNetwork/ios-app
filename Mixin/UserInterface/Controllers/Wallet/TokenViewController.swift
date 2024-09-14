@@ -70,7 +70,7 @@ final class TokenViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
         
         center.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
-        center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishedNotification, object: nil)
+        center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishNotification, object: nil)
         reloadSnapshots()
         
         DispatchQueue.global().async { [id=token.assetID, weak self] in

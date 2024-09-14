@@ -110,7 +110,7 @@ final class SafeSnapshotViewController: RowListViewController {
                 job.snapshotID = snapshot.id
                 NotificationCenter.default.addObserver(self,
                                                        selector: #selector(reloadInscription(_:)),
-                                                       name: RefreshInscriptionJob.didFinishedNotification,
+                                                       name: RefreshInscriptionJob.didFinishNotification,
                                                        object: job)
                 ConcurrentJobQueue.shared.addJob(job: job)
             }

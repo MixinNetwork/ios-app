@@ -63,6 +63,7 @@ public final class RefreshInscriptionJob: BaseJob {
                         let description = "\(error)"
                         Logger.general.error(category: "Inscription", message: description)
                         Crashes.trackError(error, properties: ["error": description], attachments: nil)
+                        return
                     }
                 }
             }

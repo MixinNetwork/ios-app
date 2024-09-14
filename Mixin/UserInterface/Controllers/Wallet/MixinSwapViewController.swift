@@ -241,7 +241,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 R.string.localizable.swap_invalid_amount()
             case MixinAPIResponseError.noAvailableQuote:
                 R.string.localizable.swap_no_available_quote()
-            case MixinAPIError.response(let error):
+            case let error as MixinAPIError:
                 error.localizedDescription
             default:
                 "\(error)"

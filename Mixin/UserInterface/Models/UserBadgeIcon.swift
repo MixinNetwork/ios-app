@@ -3,8 +3,13 @@ import SDWebImage
 import MixinServices
 
 fileprivate let prosperityImage: SDAnimatedImage? = {
-    let resource = R.file.user_membership_prosperityJson.url()!
-    let data = try! Data(contentsOf: resource)
+    let url = switch UIScreen.main.scale {
+    case 2:
+        R.file.user_membership_prosperity2xGif.url()!
+    default:
+        R.file.user_membership_prosperity3xGif.url()!
+    }
+    let data = try! Data(contentsOf: url)
     let size = CGSize(width: 18, height: 18) * UIScreen.main.scale
     let image = SDAnimatedImage(
         data: data,

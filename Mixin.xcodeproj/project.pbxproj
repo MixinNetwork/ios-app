@@ -695,6 +695,10 @@
 		940764C329B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */; };
 		940764C529B26B0B00B779A6 /* PropertyListEncoder+Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C429B26B0B00B779A6 /* PropertyListEncoder+Global.swift */; };
 		940764C729B26EF300B779A6 /* AuthenticationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C629B26EF300B779A6 /* AuthenticationIntent.swift */; };
+		940785B02C9587DE001707F1 /* user_membership_prosperity@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 940785AF2C9587DE001707F1 /* user_membership_prosperity@3x.gif */; };
+		940785B52C9587EA001707F1 /* user_membership_prosperity@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 940785B42C9587EA001707F1 /* user_membership_prosperity@3x.gif */; };
+		940785B72C958ADE001707F1 /* user_membership_prosperity@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 940785B62C958ADE001707F1 /* user_membership_prosperity@2x.gif */; };
+		940785BC2C958AE4001707F1 /* user_membership_prosperity@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 940785BB2C958AE4001707F1 /* user_membership_prosperity@2x.gif */; };
 		94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94095BB625BE8BC100F44832 /* TextPreviewView.xib */; };
 		94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */; };
 		940AE02C2BA0D88100E7A9FE /* ExploreSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940AE02A2BA0D88100E7A9FE /* ExploreSegmentCell.swift */; };
@@ -760,8 +764,6 @@
 		9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */; };
 		94287EE12B8743E50088DEAD /* MixinAPIResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */; };
 		94287EE62B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */; };
-		942AA7402C9473C9007B97A4 /* user_membership_prosperity.json in Resources */ = {isa = PBXBuildFile; fileRef = 942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */; };
-		942AA7422C9473D7007B97A4 /* user_membership_prosperity.json in Resources */ = {isa = PBXBuildFile; fileRef = 942AA7412C9473D6007B97A4 /* user_membership_prosperity.json */; };
 		942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA99A2C689FA10096CCC3 /* MarketViewController.swift */; };
 		942CF2552BC8257800ECCEFB /* Web3TransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */; };
 		942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */; };
@@ -2079,6 +2081,10 @@
 		940764C229B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectDecodedSigningRequest.swift; sourceTree = "<group>"; };
 		940764C429B26B0B00B779A6 /* PropertyListEncoder+Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PropertyListEncoder+Global.swift"; sourceTree = "<group>"; };
 		940764C629B26EF300B779A6 /* AuthenticationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationIntent.swift; sourceTree = "<group>"; };
+		940785AF2C9587DE001707F1 /* user_membership_prosperity@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "user_membership_prosperity@3x.gif"; sourceTree = "<group>"; };
+		940785B42C9587EA001707F1 /* user_membership_prosperity@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "user_membership_prosperity@3x.gif"; sourceTree = "<group>"; };
+		940785B62C958ADE001707F1 /* user_membership_prosperity@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "user_membership_prosperity@2x.gif"; sourceTree = "<group>"; };
+		940785BB2C958AE4001707F1 /* user_membership_prosperity@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "user_membership_prosperity@2x.gif"; sourceTree = "<group>"; };
 		94095BB625BE8BC100F44832 /* TextPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextPreviewView.xib; sourceTree = "<group>"; };
 		94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewView.swift; sourceTree = "<group>"; };
 		940AE02A2BA0D88100E7A9FE /* ExploreSegmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSegmentCell.swift; sourceTree = "<group>"; };
@@ -2141,8 +2147,6 @@
 		9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 		94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MixinAPIResponseError+Localization.swift"; sourceTree = "<group>"; };
 		94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocketServiceSendingError+Localization.swift"; sourceTree = "<group>"; };
-		942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user_membership_prosperity.json; sourceTree = "<group>"; };
-		942AA7412C9473D6007B97A4 /* user_membership_prosperity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user_membership_prosperity.json; sourceTree = "<group>"; };
 		942BA99A2C689FA10096CCC3 /* MarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketViewController.swift; sourceTree = "<group>"; };
 		942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferOperation.swift; sourceTree = "<group>"; };
 		942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeSelectorViewController.swift; sourceTree = "<group>"; };
@@ -4377,7 +4381,8 @@
 				7C2DEFF22824FF0600758208 /* ic_time_animation@3x.gif */,
 				7C11E348281BF4BC00D3362B /* ic_time_animation_dark@2x.gif */,
 				7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */,
-				942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */,
+				940785B62C958ADE001707F1 /* user_membership_prosperity@2x.gif */,
+				940785AF2C9587DE001707F1 /* user_membership_prosperity@3x.gif */,
 				949A3685261D9C5C004251B2 /* post.css */,
 				94EC81FB2BC5A61F00770DCE /* mixin-min.js */,
 			);
@@ -4912,7 +4917,8 @@
 				DFE864ED24229EFB009B1833 /* Localizable.strings */,
 				DFE861BD2422673B009B1833 /* MainInterface.storyboard */,
 				DFE861C02422673B009B1833 /* Info.plist */,
-				942AA7412C9473D6007B97A4 /* user_membership_prosperity.json */,
+				940785BB2C958AE4001707F1 /* user_membership_prosperity@2x.gif */,
+				940785B42C9587EA001707F1 /* user_membership_prosperity@3x.gif */,
 				DFE8629024227F91009B1833 /* Assets.xcassets */,
 				DFE8629224227FA1009B1833 /* Colors.xcassets */,
 			);
@@ -5212,7 +5218,6 @@
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				7CEB735529DB24F3006FB5B2 /* RestoreChatView.xib in Resources */,
 				94CB85E12C6BA9D000135641 /* TokenStatsCell.xib in Resources */,
-				942AA7402C9473C9007B97A4 /* user_membership_prosperity.json in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7CEB735929DB272F006FB5B2 /* RestoreChatTableViewCell.xib in Resources */,
 				7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */,
@@ -5332,6 +5337,7 @@
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
 				941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */,
 				940D10B52C5CC3380071E36D /* NoTransactionIndicatorCell.xib in Resources */,
+				940785B72C958ADE001707F1 /* user_membership_prosperity@2x.gif in Resources */,
 				94CD47162BECACED00A3DE10 /* InscriptionActionCell.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* captcha.html in Resources */,
 				7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */,
@@ -5355,6 +5361,7 @@
 				7B9650B024879B9000DE86B9 /* MinimizedCallView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				943BC67A2BCE9A17003FA778 /* CollectiblesView.xib in Resources */,
+				940785B02C9587DE001707F1 /* user_membership_prosperity@3x.gif in Resources */,
 				94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */,
 				94E34123261D829200E2F9D3 /* code.css in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
@@ -5466,8 +5473,9 @@
 			files = (
 				DFE864EB24229EFB009B1833 /* Localizable.strings in Resources */,
 				DFE864F02422A49A009B1833 /* RecipientHeaderView.xib in Resources */,
+				940785BC2C958AE4001707F1 /* user_membership_prosperity@2x.gif in Resources */,
+				940785B52C9587EA001707F1 /* user_membership_prosperity@3x.gif in Resources */,
 				7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */,
-				942AA7422C9473D7007B97A4 /* user_membership_prosperity.json in Resources */,
 				DFE8629124227F91009B1833 /* Assets.xcassets in Resources */,
 				DFE861BF2422673B009B1833 /* MainInterface.storyboard in Resources */,
 			);

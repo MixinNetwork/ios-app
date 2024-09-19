@@ -23,10 +23,6 @@ final class SwappableToken: Decodable {
     let source: RouteTokenSource
     let chain: Chain
     
-    var iconURL: URL? {
-        URL(string: icon)
-    }
-    
     init(
         address: String, assetID: String, decimals: Int16,
         name: String, symbol: String, icon: String,
@@ -40,6 +36,39 @@ final class SwappableToken: Decodable {
         self.icon = icon
         self.source = source
         self.chain = chain
+    }
+    
+}
+
+extension SwappableToken {
+    
+    var iconURL: URL? {
+        URL(string: icon)
+    }
+    
+    var chainTag: String? {
+        switch chain.chainID {
+        case ChainID.bnbBeaconChain:
+            "BEP-2"
+        case ChainID.bnbSmartChain:
+            "BEP-20"
+        case ChainID.mvm:
+            "MVM"
+        case assetID:
+            nil
+        case ChainID.ethereum:
+            "ERC-20"
+        case ChainID.tron:
+            "TRC-20"
+        case ChainID.eos:
+            "EOS"
+        case ChainID.polygon:
+            "Polygon"
+        case ChainID.solana:
+            "Solana"
+        default:
+            nil
+        }
     }
     
     func isEqual(to token: Web3Token) -> Bool {

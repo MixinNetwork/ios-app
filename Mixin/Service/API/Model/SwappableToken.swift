@@ -59,6 +59,8 @@ extension SwappableToken {
         case ChainID.ethereum:
             "ERC-20"
         case ChainID.tron:
+            // To determine whether the chain is TRC-10 or TRC-20, the `asset_key` is required.
+            // Currently, the Swap functionality does not support TRC-10 tokens, so we will handle this case simply.
             "TRC-20"
         case ChainID.eos:
             "EOS"

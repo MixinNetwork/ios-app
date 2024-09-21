@@ -359,7 +359,7 @@ extension TokenViewController: UITableViewDataSource {
         case .balance:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_balance, for: indexPath)!
             cell.reloadData(token: token)
-            cell.actionView.actions = [.send, .receive, .swap]
+            cell.actionView.actions = TransferAction.allCases.map(\.title)
             cell.actionView.delegate = self
             cell.delegate = self
             return cell
@@ -489,9 +489,10 @@ extension TokenViewController: UITableViewDelegate {
     
 }
 
-extension TokenViewController: TransferActionViewDelegate {
+extension TokenViewController: PillActionView.Delegate {
     
-    func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        let action = TransferAction(rawValue: index)!
         switch action {
         case .send:
             send()

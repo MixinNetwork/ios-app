@@ -641,7 +641,7 @@
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
 		7CCC801C292DC68E000B4200 /* ImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCC801A292DC68E000B4200 /* ImageCropViewController.swift */; };
-		7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCE65A628D69D1D00FE944A /* TransferActionView.swift */; };
+		7CCE65A828D69D1D00FE944A /* PillActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCE65A628D69D1D00FE944A /* PillActionView.swift */; };
 		7CDBA58A28F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */; };
 		7CDBA58E28F7B6CB00AC3777 /* TransferSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */; };
 		7CDF316C29890FB200421808 /* ConversationFontSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDF316B29890FB200421808 /* ConversationFontSet.swift */; };
@@ -952,6 +952,7 @@
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
 		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
+		9487234B2C9EE7150034BCB0 /* TransferAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9487234A2C9EE7150034BCB0 /* TransferAction.swift */; };
 		94881FA82AD035C300CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA72AD035C300CA7A29 /* RswiftLibrary */; };
 		94881FAA2AD035CC00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA92AD035CC00CA7A29 /* RswiftLibrary */; };
 		94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FAB2AD035ED00CA7A29 /* RswiftLibrary */; };
@@ -2023,7 +2024,7 @@
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
 		7CCC801A292DC68E000B4200 /* ImageCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropViewController.swift; sourceTree = "<group>"; };
-		7CCE65A628D69D1D00FE944A /* TransferActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferActionView.swift; sourceTree = "<group>"; };
+		7CCE65A628D69D1D00FE944A /* PillActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PillActionView.swift; sourceTree = "<group>"; };
 		7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferSearchResultsViewController.swift; sourceTree = "<group>"; };
 		7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSearchViewController.swift; sourceTree = "<group>"; };
 		7CDF316B29890FB200421808 /* ConversationFontSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationFontSet.swift; sourceTree = "<group>"; };
@@ -2350,6 +2351,7 @@
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9487234A2C9EE7150034BCB0 /* TransferAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAction.swift; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
@@ -2934,6 +2936,7 @@
 				94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */,
 				94C56D382C53C954009F3AB8 /* SwapQuote.swift */,
 				94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */,
+				9487234A2C9EE7150034BCB0 /* TransferAction.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4113,7 +4116,7 @@
 				7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */,
 				94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */,
 				9459693828B28FF8006F5421 /* TIPActionView.xib */,
-				7CCE65A628D69D1D00FE944A /* TransferActionView.swift */,
+				7CCE65A628D69D1D00FE944A /* PillActionView.swift */,
 				94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */,
 				94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */,
 				94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */,
@@ -5890,7 +5893,7 @@
 				7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */,
 				94BED0342B692F73004381FA /* PopupPresentationController.swift in Sources */,
 				94A72CA62C2EBFF9001E8782 /* InscriptionTraitCell.swift in Sources */,
-				7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */,
+				7CCE65A828D69D1D00FE944A /* PillActionView.swift in Sources */,
 				940764C329B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift in Sources */,
 				9413A4012C367D8D00B655AC /* SwapViewController.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
@@ -6359,6 +6362,7 @@
 				94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,
+				9487234B2C9EE7150034BCB0 /* TransferAction.swift in Sources */,
 				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				944BC2EE2C7E17BA008700A8 /* ExploreMarketTokenCell.swift in Sources */,

@@ -9,7 +9,7 @@ final class TokenTableHeaderView: InfiniteTopView {
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     @IBOutlet weak var disclosureImageView: UIImageView!
     @IBOutlet weak var tokenInfoButton: UIButton!
-    @IBOutlet weak var transferActionView: TransferActionView!
+    @IBOutlet weak var transferActionView: PillActionView!
     @IBOutlet weak var transactionsHeaderView: UIView!
     @IBOutlet weak var filterButton: UIButton!
     

@@ -11,7 +11,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     private var searchCenterYConstraint: NSLayoutConstraint?
     private var searchViewController: WalletSearchViewController?
-    private var lastSelectedAction: TransferActionView.Action?
+    private var lastSelectedAction: TransferAction?
 
     private var isSearchViewControllerPreloaded = false
     private var tokens = [TokenItem]()
@@ -23,7 +23,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableHeaderView.transferActionView.actions = [.send, .receive, .swap]
+        tableHeaderView.transferActionView.actions = TransferAction.allCases.map(\.title)
         tableHeaderView.transferActionView.delegate = self
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
@@ -190,9 +190,10 @@ extension WalletViewController: UITableViewDelegate {
     
 }
 
-extension WalletViewController: TransferActionViewDelegate {
+extension WalletViewController: PillActionView.Delegate {
     
-    func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        let action = TransferAction(rawValue: index)!
         lastSelectedAction = action
         switch action {
         case .send:

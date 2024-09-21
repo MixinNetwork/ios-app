@@ -12,14 +12,14 @@ final class TokenBalanceCell: UITableViewCell {
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var iconView: BadgeIconView!
-    @IBOutlet weak var actionView: TransferActionView!
+    @IBOutlet weak var actionView: PillActionView!
     
     weak var delegate: TokenBalanceCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         titleStackView.setCustomSpacing(10, after: titleLabel)
-        actionView.actions = [.send, .receive, .swap]
+        actionView.actions = TransferAction.allCases.map(\.title)
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
         recognizer.numberOfTapsRequired = 5
         iconView.addGestureRecognizer(recognizer)

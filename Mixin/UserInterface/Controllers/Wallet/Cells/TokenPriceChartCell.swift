@@ -84,7 +84,7 @@ final class TokenPriceChartCell: UITableViewCell {
     func updatePriceAndChange(price: String?, points: [ChartView.Point]?) {
         guard let points, points.count >= 2 else {
             priceLabel.text = price
-            changeLabel.text = nil
+            changeLabel.alpha = 0
             return
         }
         let base = points[0]
@@ -100,7 +100,12 @@ final class TokenPriceChartCell: UITableViewCell {
             symbol: .currencySymbol
         )
         let change = (now.value - base.value) / base.value
-        changeLabel.text = NumberFormatter.percentage.string(decimal: change)
+        if let changePercentage = NumberFormatter.percentage.string(decimal: change) {
+            changeLabel.text = changePercentage
+            changeLabel.alpha = 1
+        } else {
+            changeLabel.alpha = 0
+        }
         changeLabel.marketColor = .byValue(change)
     }
     

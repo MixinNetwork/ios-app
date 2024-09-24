@@ -81,6 +81,7 @@ final class Web3SwapViewController: SwapViewController {
                 sendAmount: sendAmount,
                 sendAddress: address,
                 receiveToken: receiveToken.token,
+                source: .solana,
                 slippage: 0.01
             )
         else {

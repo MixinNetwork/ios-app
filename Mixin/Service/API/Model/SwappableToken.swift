@@ -10,7 +10,6 @@ final class SwappableToken: Decodable {
         case name
         case symbol
         case icon
-        case source
         case chain
     }
     
@@ -20,13 +19,12 @@ final class SwappableToken: Decodable {
     let name: String
     let symbol: String
     let icon: String
-    let source: RouteTokenSource
     let chain: Chain
     
     init(
         address: String, assetID: String, decimals: Int16,
         name: String, symbol: String, icon: String,
-        source: RouteTokenSource, chain: SwappableToken.Chain
+        chain: SwappableToken.Chain
     ) {
         self.address = address
         self.assetID = assetID
@@ -34,7 +32,6 @@ final class SwappableToken: Decodable {
         self.name = name
         self.symbol = symbol
         self.icon = icon
-        self.source = source
         self.chain = chain
     }
     

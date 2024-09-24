@@ -141,12 +141,8 @@ extension TokenItem {
     
     public var chainTag: String? {
         switch chainID {
-        case ChainID.bnbBeaconChain:
-            "BEP-2"
         case ChainID.bnbSmartChain:
             "BEP-20"
-        case ChainID.mvm:
-            "MVM"
         case assetID:
             nil
         case ChainID.ethereum:

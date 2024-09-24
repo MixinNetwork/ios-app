@@ -1,23 +1,41 @@
 import Foundation
 import MixinServices
 
-struct SwapQuote {
+final class SwapQuote: SwapQuoteDraft {
+    
+    let receiveAmount: Decimal
+    let source: RouteTokenSource
+    
+    override var description: String {
+        "<SwapQuote \(sendAmount)\(sendToken.symbol) -> \(receiveAmount)\(receiveToken.symbol)>"
+    }
+    
+    init(
+        sendToken: TokenItem, sendAmount: Decimal, receiveToken: SwappableToken,
+        receiveAmount: Decimal, source: RouteTokenSource
+    ) {
+        self.receiveAmount = receiveAmount
+        self.source = source
+        super.init(sendToken: sendToken, sendAmount: sendAmount, receiveToken: receiveToken)
+    }
+    
+    init(draft: SwapQuoteDraft, receiveAmount: Decimal, source: RouteTokenSource) {
+        self.receiveAmount = receiveAmount
+        self.source = source
+        super.init(
+            sendToken: draft.sendToken,
+            sendAmount: draft.sendAmount,
+            receiveToken: draft.receiveToken
+        )
+    }
+    
+}
+
+extension SwapQuote {
     
     enum PriceUnit {
         case send
         case receive
-    }
-    
-    let sendToken: TokenItem
-    let sendAmount: Decimal
-    let receiveToken: SwappableToken
-    let receiveAmount: Decimal
-    
-    func updated(receiveAmount: Decimal) -> SwapQuote {
-        SwapQuote(sendToken: self.sendToken,
-                  sendAmount: self.sendAmount,
-                  receiveToken: self.receiveToken,
-                  receiveAmount: receiveAmount)
     }
     
     func priceRepresentation(unit: PriceUnit) -> String {
@@ -37,14 +55,6 @@ struct SwapQuote {
             )
             return "1 \(receiveToken.symbol) ≈ \(price) \(sendToken.symbol)"
         }
-    }
-    
-}
-
-extension SwapQuote: CustomStringConvertible {
-    
-    var description: String {
-        "<SwapQuote \(sendAmount)\(sendToken.symbol) -> \(receiveAmount)\(receiveToken.symbol)>"
     }
     
 }

@@ -158,6 +158,7 @@ extension Payment {
     struct SwapContext {
         let receiveToken: SwappableToken
         let receiveAmount: Decimal
+        let source: RouteTokenSource
     }
     
     func checkPreconditions(

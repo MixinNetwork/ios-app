@@ -149,6 +149,7 @@ final class MixinSwapViewController: SwapViewController {
             sendToken: quote.sendToken,
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,
+            source: quote.source,
             slippage: 0.01
         )
         RouteAPI.swap(request: request) { [weak self] response in
@@ -168,7 +169,11 @@ final class MixinSwapViewController: SwapViewController {
                     sender.isBusy = false
                     return
                 }
-                let context = Payment.SwapContext(receiveToken: quote.receiveToken, receiveAmount: receiveAmount)
+                let context = Payment.SwapContext(
+                    receiveToken: quote.receiveToken,
+                    receiveAmount: receiveAmount,
+                    source: quote.source
+                )
                 let source: UrlWindow.Source = .swap(context: context) { description in
                     if let description {
                         showAutoHiddenHud(style: .error, text: description)

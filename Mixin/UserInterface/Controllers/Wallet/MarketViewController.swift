@@ -373,6 +373,21 @@ final class MarketViewController: UIViewController {
         }
     }
     
+    // `completion` is not called on failure
+    private func pickSingleToken(completion: @escaping (TokenItem) -> Void) {
+        guard let tokens else {
+            return
+        }
+        if tokens.count == 1 {
+            completion(tokens[0])
+        } else if tokens.count > 1, let name = market?.name {
+            let selector = MarketTokenSelectorViewController(name: name, tokens: tokens) { index in
+                completion(tokens[index])
+            }
+            present(selector, animated: true)
+        }
+    }
+    
 }
 
 extension MarketViewController: UITableViewDataSource {
@@ -548,24 +563,13 @@ extension MarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
-            func showTokenViewController(token: TokenItem) {
-                let pushingToken = (pushingViewController as? TokenViewController)?.token
+            pickSingleToken { token in
+                let pushingToken = (self.pushingViewController as? TokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
-                    navigationController?.popViewController(animated: true)
+                    self.navigationController?.popViewController(animated: true)
                 } else {
                     let controller = TokenViewController.contained(token: token)
-                    navigationController?.pushViewController(controller, animated: true)
-                }
-            }
-            
-            if let tokens {
-                if tokens.count == 1 {
-                    showTokenViewController(token: tokens[0])
-                } else if tokens.count > 1, let name = market?.name {
-                    let selector = MarketTokenSelectorViewController(name: name, tokens: tokens) { index in
-                        showTokenViewController(token: tokens[index])
-                    }
-                    present(selector, animated: true)
+                    self.navigationController?.pushViewController(controller, animated: true)
                 }
             }
         default:
@@ -623,6 +627,20 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         chartPoints = nil
         self.chartPeriod = period
         reloadPriceChart(period: period)
+    }
+    
+    func tokenPriceChartCellWantsToSwap(_ cell: TokenPriceChartCell) {
+        pickSingleToken { token in
+            let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
+            self.navigationController?.pushViewController(swap, animated: true)
+        }
+    }
+    
+    func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell) {
+        pickSingleToken { token in
+            let alert = MarketAlertViewController.contained(token: token)
+            self.navigationController?.pushViewController(alert, animated: true)
+        }
     }
     
 }

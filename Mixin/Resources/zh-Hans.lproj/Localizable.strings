@@ -8,6 +8,7 @@
 "acknowledgements" = "许可证";
 "add" = "添加";
 "add_address" = "添加地址";
+"add_alert" = "添加价格预警";
 "add_bot" = "添加机器人";
 "add_by_id_or_phone_number" = "通过 Mixin ID 或手机号码添加";
 "add_by_phone_contacts" = "通过手机通讯录添加";
@@ -39,6 +40,11 @@
 "admin" = "管理员";
 "agree_hint" = "继续使用即表示你同意 %@ 和 %@";
 "albums" = "相册";
+"alert" = "价格预警";
+"alert_frequency" = "预警频率";
+"alert_frequency_daily" = "每日一次";
+"alert_frequency_every" = "持续提醒";
+"alert_frequency_once" = "仅一次";
 "alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
 "alert_key_contact_audio_call_message" = "发起了语音通话";
 "alert_key_contact_audio_message" = "发送一条语音";
@@ -68,6 +74,14 @@
 "alert_key_group_text_message" = "%@发送一条消息";
 "alert_key_group_transcript_message" = "%@分享一个聊天记录";
 "alert_key_group_video_message" = "%@发送一个视频";
+"alert_limit_exceeded" = "所有币种的价格提醒总数不得超过%d。";
+"alert_per_asset_limit_exceeded" = "每个交易对最多可创建%d个价格提醒。";
+"alert_type" = "预警类型";
+"alert_type_percentage_decreased" = "24小时跌幅";
+"alert_type_percentage_increased" = "24小时涨幅";
+"alert_type_price_decreased" = "价格跌倒";
+"alert_type_price_increased" = "价格涨到";
+"alert_type_price_reached" = "价格达到";
 "all" = "全部";
 "all_conversations" = "所有会话";
 "all_dates" = "所有日期";
@@ -319,6 +333,7 @@
 "currency_code" = "货币代码";
 "current_language" = "中文";
 "current_location" = "当前位置";
+"current_price" = "当前价格：%@";
 "current_selected" = "当前选择";
 "current_version" = "当前版本：%@";
 "custom_time" = "自定义时间";
@@ -399,6 +414,7 @@
 "duplication_reminder" = "您已经在%2$@前给该收款人转账了 %1$@。";
 "edit" = "编辑";
 "edit_address" = "修改 %@ 地址";
+"edit_alert" = "编辑价格预警";
 "edit_biography" = "修改简介";
 "edit_circle_name" = "编辑名称";
 "edit_conversations" = "管理圈子";
@@ -420,6 +436,7 @@
 "enter_new_anonymous_number" = "输入你的新匿名号码";
 "enter_new_phone_number" = "输入你的新手机号码";
 "enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
+"enter_price" = "Enter price";
 "enter_your_anonymous_number" = "输入你的匿名号码";
 "enter_your_emergency_contact_mixin_id" = "请输入紧急联系人的 Mixin ID";
 "enter_your_new_pin" = "输入你的新 PIN";
@@ -683,6 +700,7 @@
 "new_update_available_desc" = "我们定期更新应用程序，以便为您提供更好的服务";
 "new_wallet_hint" = "创建你的第一个数字钱包，所有资产都在一个钱包，收发加密资产简单易用。";
 "next" = "下一步";
+"no_alerts" = "没有价格预警";
 "no_audio" = "没有音频";
 "no_authorizations" = "没有授权任何机器人";
 "no_blocked_users" = "没有屏蔽任何人";
@@ -744,6 +762,8 @@
 "owner" = "群主";
 "participants" = "成员";
 "participants_count" = "%@ 位群组成员";
+"pause" = "暂停";
+"paused" = "已暂停";
 "pay" = "支付";
 "pay_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_with_biometry_type" = "%@支付";
@@ -882,6 +902,7 @@
 "restoring" = "正在恢复...";
 "restoring_chat_progress" = "恢复聊天记录（%@%%）";
 "restoring_progress" = "正在恢复 %@";
+"resume" = "恢复";
 "retry" = "重试";
 "return_to_merchant_description" = "来自商家的支付已完成，您可以选择返回商家或者停留在 Mixin。";
 "review" = "预览";

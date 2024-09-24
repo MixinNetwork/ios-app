@@ -5,6 +5,24 @@ final class TokenPriceChartCell: UITableViewCell {
     
     protocol Delegate: AnyObject {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
+        func tokenPriceChartCellWantsToSwap(_ cell: TokenPriceChartCell)
+        func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell)
+    }
+    
+    enum TokenAction: Int, CaseIterable {
+        
+        case swap
+        case alert
+        
+        var title: String {
+            switch self {
+            case .swap:
+                R.string.localizable.swap()
+            case .alert:
+                R.string.localizable.alert()
+            }
+        }
+        
     }
     
     @IBOutlet weak var titleStackView: UIStackView!
@@ -16,8 +34,11 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var chartView: ChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var periodSelectorStackView: UIStackView!
+    @IBOutlet weak var tokenActionView: PillActionView!
     
     @IBOutlet weak var periodSelectorHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var periodSelectorScrollViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var tokenActionViewBottomConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
     
@@ -57,6 +78,8 @@ final class TokenPriceChartCell: UITableViewCell {
             periodSelectorStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(changePeriod(_:)), for: .touchUpInside)
         }
+        tokenActionView.actions = TokenAction.allCases.map(\.title)
+        tokenActionView.delegate = self
     }
     
     func setPeriodSelection(period: PriceHistoryPeriod) {
@@ -117,6 +140,24 @@ final class TokenPriceChartCell: UITableViewCell {
         let period = PriceHistoryPeriod.allCases[sender.tag]
         delegate?.tokenPriceChartCell(self, didSelectPeriod: period)
     }
+    
+}
+
+extension TokenPriceChartCell: PillActionView.Delegate {
+    
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        let action = TokenAction(rawValue: index)!
+        switch action {
+        case .swap:
+            delegate?.tokenPriceChartCellWantsToSwap(self)
+        case .alert:
+            delegate?.tokenPriceChartCellWantsToAddAlert(self)
+        }
+    }
+    
+}
+
+extension TokenPriceChartCell {
     
     private func showUnavailableView() {
         let unavailableView: UIView

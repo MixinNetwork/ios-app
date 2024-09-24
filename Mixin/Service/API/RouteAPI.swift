@@ -90,6 +90,67 @@ final class RouteAPI {
         )
     }
     
+    static func addMarketAlert(
+        assetID: String,
+        type: MarketAlert.AlertType,
+        frequency: MarketAlert.AlertFrequency,
+        value: String,
+        completion: @escaping (MixinAPI.Result<MarketAlert>) -> Void
+    ) {
+        let parameters = [
+            "asset_id": assetID,
+            "type": type.rawValue,
+            "frequency": frequency.rawValue,
+            "value": value
+        ]
+        request(
+            method: .post,
+            path: "/prices/alerts",
+            with: parameters,
+            completion: completion
+        )
+    }
+    
+    static func postAction(
+        alertID: String,
+        action: MarketAlert.Action,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/prices/alerts/\(alertID)?action=\(action.rawValue)",
+            completion: completion
+        )
+    }
+    
+    static func updateMarketAlert(
+        alert: MarketAlert,
+        completion: @escaping (MixinAPI.Result<MarketAlert>) -> Void
+    ) {
+        let parameters = [
+            "type": alert.type.rawValue,
+            "frequency": alert.frequency.rawValue,
+            "value": alert.value
+        ]
+        request(
+            method: .post,
+            path: "/prices/alerts/\(alert.alertID)?action=update",
+            with: parameters,
+            completion: completion
+        )
+    }
+    
+    static func marketAlerts(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[MarketAlert]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/prices/alerts",
+            completion: completion
+        )
+    }
+    
 }
 
 extension RouteAPI {

@@ -8,6 +8,7 @@
 "acknowledgements" = "Благодарности";
 "add" = "Добавить";
 "add_address" = "Добавить адрес";
+"add_alert" = "Add Alert";
 "add_bot" = "Добавить бота";
 "add_by_id_or_phone_number" = "Добавить по Mixin ID или номеру телефона";
 "add_by_phone_contacts" = "Добавить по телефону из Контактов";
@@ -39,6 +40,11 @@
 "admin" = "Администратор";
 "agree_hint" = "Продолжая, вы соглашаетесь с %@ и %@.";
 "albums" = "Альбомы";
+"alert" = "Alert";
+"alert_frequency" = "Frequency";
+"alert_frequency_daily" = "Once a day";
+"alert_frequency_every" = "Continuously";
+"alert_frequency_once" = "Only once";
 "alert_key_contact_audio_call_cancelled_message" = "голосовой вызов отменен";
 "alert_key_contact_audio_call_message" = "приглашает вас на голосовой вызов";
 "alert_key_contact_audio_message" = "отправил вам аудио";
@@ -68,6 +74,14 @@
 "alert_key_group_text_message" = "%@ отправил сообщение";
 "alert_key_group_transcript_message" = "%@ отправил стенограмму";
 "alert_key_group_video_message" = "%@ отправил видео";
+"alert_limit_exceeded" = "The total number of price alerts for all currencies cannot exceed %d.";
+"alert_per_asset_limit_exceeded" = "You can create a maximum of %d price alerts for each trading pair.";
+"alert_type" = "Alert Type";
+"alert_type_percentage_decreased" = "Percentage Decreased";
+"alert_type_percentage_increased" = "Percentage Increased";
+"alert_type_price_decreased" = "Price Decreased";
+"alert_type_price_increased" = "Price Increased";
+"alert_type_price_reached" = "Price Reached";
 "all" = "Все";
 "all_conversations" = "Все разговоры";
 "all_dates" = "All Dates";
@@ -319,6 +333,7 @@
 "currency_code" = "Код";
 "current_language" = "Русский";
 "current_location" = "Текущее местоположение";
+"current_price" = "Current price: %@";
 "current_selected" = "Текущий выбранный";
 "current_version" = "Version: %@";
 "custom_time" = "Пользовательское время";
@@ -399,6 +414,7 @@
 "duplication_reminder" = "You transferred %1$@ to the recipient %2$@ ago.";
 "edit" = "Редактировать";
 "edit_address" = "Изменить адрес %@";
+"edit_alert" = "Edit Alert";
 "edit_biography" = "Редактировать биографию";
 "edit_circle_name" = "Изменить название круга";
 "edit_conversations" = "Редактировать беседы";
@@ -420,6 +436,7 @@
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Введите новый номер телефона";
 "enter_pin_to_delete_account" = "Введите свой PIN-код, чтобы удалить свою учетную запись";
+"enter_price" = "Enter price";
 "enter_your_anonymous_number" = "Enter your anonymous number";
 "enter_your_emergency_contact_mixin_id" = "Введите свой контакт для экстренной связи Mixin ID";
 "enter_your_new_pin" = "Enter your new PIN";
@@ -683,6 +700,7 @@
 "new_update_available_desc" = "We update the app regularly so we can make it better for you";
 "new_wallet_hint" = "Создайте свой первый цифровой кошелек, все ваши цифровые активы в одном кошельке, легко отправляйте и получайте криптовалюту.";
 "next" = "Следующий";
+"no_alerts" = "NO ALERTS";
 "no_audio" = "НЕТ АУДИО";
 "no_authorizations" = "НЕТ РАЗРЕШЕНИЙ";
 "no_blocked_users" = "Нет заблокированных пользователей";
@@ -744,6 +762,8 @@
 "owner" = "Владелец";
 "participants" = "Участники";
 "participants_count" = "%@ УЧАСТНИКОВ";
+"pause" = "Пауза";
+"paused" = "Paused";
 "pay" = "Pay";
 "pay_paid" = "Эта платежная ссылка уже кем-то оплачена, повторный платеж сделать нельзя.";
 "pay_with_biometry_type" = "Pay with %@";
@@ -882,6 +902,7 @@
 "restoring" = "Восстановление...";
 "restoring_chat_progress" = "Restoring Chat (%@%%)";
 "restoring_progress" = "Восстановление %@";
+"resume" = "Resume";
 "retry" = "Повторить";
 "return_to_merchant_description" = "Merchant payment is complete. You can opt to return to the merchant or stay in Mixin.";
 "review" = "Review";

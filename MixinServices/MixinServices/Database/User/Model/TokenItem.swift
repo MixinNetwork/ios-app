@@ -32,6 +32,11 @@ public final class TokenItem: Token, NumberStringLocalizable {
     }()
     
     public lazy var localizedUSDChange = NumberFormatter.percentage.string(decimal: decimalUSDChange)
+    public lazy var localizedUSDPrice = CurrencyFormatter.localizedString(
+        from: decimalUSDPrice,
+        format: .fiatMoneyPrice,
+        sign: .never
+    )
     
     public init(token: Token, balance: String, isHidden: Bool, chain: Chain?) {
         self.balance = balance

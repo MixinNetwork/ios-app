@@ -37,6 +37,7 @@ final class TransactionHistoryAssetFilterView: TransactionHistoryFilterView {
     
     override func loadSubviews() {
         super.loadSubviews()
+        label.text = R.string.localizable.assets()
         iconsStackView.axis = .horizontal
         iconsStackView.spacing = 0
         contentStackView.insertArrangedSubview(iconsStackView, at: 0)

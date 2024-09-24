@@ -10,11 +10,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="token_price_chart" id="KGk-i7-Jjw" customClass="TokenPriceChartCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="386"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="token_price_chart" rowHeight="423" id="KGk-i7-Jjw" customClass="TokenPriceChartCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="456"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="386"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="456"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7VI-hh-T41">
@@ -99,10 +99,25 @@
                         <viewLayoutGuide key="contentLayoutGuide" id="qCK-vc-n03"/>
                         <viewLayoutGuide key="frameLayoutGuide" id="k6W-Hj-XN9"/>
                     </scrollView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qY8-gK-wU5" customClass="PillActionView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="16" y="396" width="288" height="44"/>
+                        <color key="backgroundColor" name="background_input"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="oSm-6X-9HE"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
+                    <constraint firstItem="qY8-gK-wU5" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="1yi-Ug-Ged"/>
                     <constraint firstItem="7VI-hh-T41" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="2Ym-4e-udE"/>
+                    <constraint firstAttribute="trailing" secondItem="qY8-gK-wU5" secondAttribute="trailing" constant="16" id="HTE-r9-8l8"/>
                     <constraint firstItem="Rzf-xM-AtC" firstAttribute="top" secondItem="7VI-hh-T41" secondAttribute="bottom" constant="44" id="JFa-cz-6NI"/>
                     <constraint firstItem="THy-el-xRN" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="MRH-Gz-qdz"/>
                     <constraint firstItem="qTN-cQ-qoo" firstAttribute="leading" secondItem="7VI-hh-T41" secondAttribute="trailing" constant="8" id="P6c-Hw-irC"/>
@@ -110,9 +125,11 @@
                     <constraint firstAttribute="trailing" secondItem="Rzf-xM-AtC" secondAttribute="trailing" constant="16" id="bfa-Jx-RSo"/>
                     <constraint firstAttribute="trailing" secondItem="THy-el-xRN" secondAttribute="trailing" constant="16" id="br6-ue-L89"/>
                     <constraint firstAttribute="trailing" secondItem="qTN-cQ-qoo" secondAttribute="trailing" constant="26" id="dtZ-ux-Es2"/>
+                    <constraint firstItem="qY8-gK-wU5" firstAttribute="top" secondItem="THy-el-xRN" secondAttribute="bottom" constant="30" id="fen-2q-ZF1"/>
                     <constraint firstItem="7VI-hh-T41" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="fs0-Bz-4j6"/>
                     <constraint firstItem="qTN-cQ-qoo" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="mQs-VB-Jlw"/>
-                    <constraint firstAttribute="bottom" secondItem="THy-el-xRN" secondAttribute="bottom" constant="20" id="skY-12-U5g"/>
+                    <constraint firstAttribute="bottom" secondItem="qY8-gK-wU5" secondAttribute="bottom" priority="999" constant="16" id="nU6-9Z-6n3"/>
+                    <constraint firstAttribute="bottom" secondItem="THy-el-xRN" secondAttribute="bottom" priority="1" constant="20" id="skY-12-U5g"/>
                     <constraint firstItem="Rzf-xM-AtC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="wQb-uh-HGl"/>
                 </constraints>
             </tableViewCellContentView>
@@ -122,19 +139,25 @@
                 <outlet property="chartView" destination="Rzf-xM-AtC" id="fkY-HZ-F63"/>
                 <outlet property="loadingIndicatorView" destination="TIN-8J-fIw" id="Cd4-K6-F73"/>
                 <outlet property="periodSelectorHeightConstraint" destination="3Tq-Ys-lIn" id="3Ko-JJ-0gt"/>
+                <outlet property="periodSelectorScrollViewBottomConstraint" destination="skY-12-U5g" id="moG-La-2L5"/>
                 <outlet property="periodSelectorStackView" destination="gZN-wO-gxb" id="9xq-Fm-yhO"/>
                 <outlet property="priceLabel" destination="QcX-xQ-7VE" id="lF4-A6-2KH"/>
                 <outlet property="rankLabel" destination="2je-MH-6HL" id="h8O-65-L8c"/>
                 <outlet property="titleLabel" destination="2zB-2m-GkX" id="9KJ-Za-huS"/>
                 <outlet property="titleStackView" destination="7VI-hh-T41" id="78b-fJ-W2W"/>
+                <outlet property="tokenActionView" destination="qY8-gK-wU5" id="oEE-qH-DCD"/>
+                <outlet property="tokenActionViewBottomConstraint" destination="nU6-9Z-6n3" id="ovn-Nl-trU"/>
                 <outlet property="tokenIconView" destination="qTN-cQ-qoo" id="VkZ-vD-lR6"/>
             </connections>
-            <point key="canvasLocation" x="138.93129770992365" y="41.549295774647888"/>
+            <point key="canvasLocation" x="138.93129770992365" y="54.577464788732399"/>
         </tableViewCell>
     </objects>
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_tag">
             <color red="0.89803921568627454" green="0.90980392156862744" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

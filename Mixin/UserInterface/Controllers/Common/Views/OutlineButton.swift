@@ -1,6 +1,6 @@
 import UIKit
 
-final class OutlineButton: UIButton {
+class OutlineButton: UIButton {
     
     @IBInspectable var normalBackgroundColor: UIColor = R.color.background()! {
         didSet {

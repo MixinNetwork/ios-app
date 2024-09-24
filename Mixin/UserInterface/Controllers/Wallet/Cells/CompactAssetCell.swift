@@ -143,7 +143,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
             symbol: .custom(token.symbol)
         )
         if let tag = token.chainTag {
-            chainTagLabel.text = token.chainTag
+            chainTagLabel.text = tag
             chainTagLabel.isHidden = false
         } else {
             chainTagLabel.isHidden = true

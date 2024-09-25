@@ -1,18 +1,12 @@
 import UIKit
 
-protocol TransferActionViewDelegate: AnyObject {
-    func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action)
-}
-
-final class TransferActionView: UIView {
+final class PillActionView: UIView {
     
-    enum Action: Int {
-        case send
-        case receive
-        case swap
+    protocol Delegate: AnyObject {
+        func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int)
     }
     
-    var actions: [Action] = [] {
+    var actions: [String] = [] {
         didSet {
             guard actions != oldValue else {
                 return
@@ -21,7 +15,7 @@ final class TransferActionView: UIView {
         }
     }
     
-    weak var delegate: TransferActionViewDelegate?
+    weak var delegate: Delegate?
     
     private weak var stackView: UIStackView!
     
@@ -47,22 +41,15 @@ final class TransferActionView: UIView {
         self.stackView = stackView
     }
     
-    private func reloadData(actions: [Action]) {
+    private func reloadData(actions: [String]) {
         for view in stackView.arrangedSubviews {
             view.removeFromSuperview()
         }
-        for action in actions {
+        for (i, action) in actions.enumerated() {
             let button = UIButton(type: .system)
-            button.tag = action.rawValue
+            button.tag = i
             button.addTarget(self, action: #selector(invokeAction(_:)), for: .touchUpInside)
-            switch action {
-            case .send:
-                button.setTitle(R.string.localizable.caption_send(), for: .normal)
-            case .receive:
-                button.setTitle(R.string.localizable.receive(), for: .normal)
-            case .swap:
-                button.setTitle(R.string.localizable.swap(), for: .normal)
-            }
+            button.setTitle(action, for: .normal)
             button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
             button.setTitleColor(R.color.text(), for: .normal)
             stackView.addArrangedSubview(button)
@@ -87,10 +74,7 @@ final class TransferActionView: UIView {
     }
     
     @objc private func invokeAction(_ button: UIButton) {
-        guard let action = Action(rawValue: button.tag) else {
-            return
-        }
-        delegate?.transferActionView(self, didSelect: action)
+        delegate?.pillActionView(self, didSelectActionAtIndex: button.tag)
     }
     
 }

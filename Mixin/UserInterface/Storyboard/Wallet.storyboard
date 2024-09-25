@@ -228,7 +228,7 @@
                                                                     </userDefinedRuntimeAttributes>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
-                                                                    <rect key="frame" x="26" y="-0.6666666666666643" width="24" height="14.333333333333334"/>
+                                                                    <rect key="frame" x="26" y="-0.6666666666666643" width="24" height="14.333333333333332"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="textColor" name="text_tertiary"/>
                                                                     <nil key="highlightedColor"/>
@@ -413,7 +413,7 @@
                                                                 <constraint firstAttribute="trailing" secondItem="5Dw-Be-Da3" secondAttribute="trailing" constant="15" id="xKW-Lt-uFl"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zG-Ga-0cS" customClass="TransferActionView" customModule="Mixin" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zG-Ga-0cS" customClass="PillActionView" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="20" y="148" width="374" height="44"/>
                                                             <color key="backgroundColor" name="background_input"/>
                                                             <constraints>
@@ -594,7 +594,7 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
                                                             <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
@@ -604,7 +604,7 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
@@ -1516,7 +1516,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -1528,7 +1528,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

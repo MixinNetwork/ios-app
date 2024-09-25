@@ -11,7 +11,7 @@ class WalletHeaderView: InfiniteTopView {
     
     @IBOutlet weak var assetChartWrapperView: UIView!
     @IBOutlet weak var assetChartView: BarChartView!
-    @IBOutlet weak var transferActionView: TransferActionView!
+    @IBOutlet weak var transferActionView: PillActionView!
     
     @IBOutlet weak var leftAssetWrapperView: UIView!
     @IBOutlet weak var leftAssetSymbolLabel: UILabel!

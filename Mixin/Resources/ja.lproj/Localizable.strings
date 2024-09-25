@@ -441,10 +441,10 @@
 "error_invalid_address_plain" = "エラー30102：無効なアドレス形式です";
 "error_invalid_code_too_frequent" = "エラー 20129：認証コードを送信する頻度が多すぎます。しばらくしてからもう一度お試しください。";
 "error_invalid_emergency_contact" = "エラー 20130：無効な緊急連絡先です";
-"error_invalid_quote_amount" = "ERROR 10614: Invalid quote amount";
-"error_invalid_swap" = "ERROR 10611: Invalid swap";
+"error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
+"error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
 "error_network_task_failed" = "ネットワーク接続に失敗しました。ネットワーク接続状態を確認した後にもう一度試してください。";
-"error_no_available_quote" = "ERROR 10615: No available quote";
+"error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
 "error_not_found" = "エラー 404：結果なし";
 "error_number_reached_limit" = "エラー 20132：数が上限に達しています";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";

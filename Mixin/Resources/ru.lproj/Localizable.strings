@@ -441,10 +441,10 @@
 "error_invalid_address_plain" = "ОШИБКА 30102: Недопустимый формат адреса.";
 "error_invalid_code_too_frequent" = "ОШИБКА 20129: Код подтверждения отправляется слишком часто. Повторите попытку позже.";
 "error_invalid_emergency_contact" = "ОШИБКА 20130: Недопустимый экстренный контакт";
-"error_invalid_quote_amount" = "ERROR 10614: Invalid quote amount";
-"error_invalid_swap" = "ERROR 10611: Invalid swap";
+"error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
+"error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
 "error_network_task_failed" = "Не удалось подключиться к сети. Проверьте или переключите сеть и повторите попытку.";
-"error_no_available_quote" = "ERROR 10615: No available quote";
+"error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
 "error_not_found" = "Ошибка 404: Не найдено";
 "error_number_reached_limit" = "ОШИБКА 20132: число достигло предела.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";

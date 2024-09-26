@@ -384,13 +384,13 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 return
             }
             let rawNumber = nsString.substring(with: range)
-            let phoneNumberKit = PhoneNumberValidator.global.kit
-            guard let phoneNumber = try? phoneNumberKit.parse(rawNumber) else {
+            let utility = PhoneNumberValidator.global.utility
+            guard let phoneNumber = try? utility.parse(rawNumber) else {
                 return
             }
             let outputNumber: String
             if rawNumber.hasPrefix("+") {
-                outputNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
+                outputNumber = utility.format(phoneNumber, toType: .e164)
             } else {
                 outputNumber = phoneNumber.adjustedNationalNumber()
             }

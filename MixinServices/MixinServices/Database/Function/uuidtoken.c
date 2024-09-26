@@ -1,5 +1,6 @@
-#include "uuidtoken.h"
+#include <stdint.h>
 #include <string.h>
+#include "uuidtoken.h"
 
 char *utot(const char *uuid) {
     char *token = strdup(uuid);

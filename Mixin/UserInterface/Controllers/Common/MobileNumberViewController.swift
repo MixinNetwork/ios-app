@@ -109,7 +109,7 @@ extension MobileNumberViewController: UITextFieldDelegate {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         let numericsInText = newText.digits()
         if newText != numericsInText,
-           let parsedPhoneNumber = try? PhoneNumberValidator.global.kit.parse(newText),
+           let parsedPhoneNumber = try? PhoneNumberValidator.global.utility.parse(newText),
            let country = countryLibrary.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) })
         {
             self.country = country

@@ -803,6 +803,7 @@
 		943BC67A2BCE9A17003FA778 /* CollectiblesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC6792BCE9A17003FA778 /* CollectiblesView.xib */; };
 		943BC7022BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */; };
 		943EDC482C833B55007E160B /* Market+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943EDC472C833B55007E160B /* Market+Localization.swift */; };
+		94428E482CA3435300157E93 /* SwapQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428E472CA3435300157E93 /* SwapQuote.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445065F2C1C5D9700F9C583 /* TIPURL.swift */; };
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
@@ -1023,7 +1024,7 @@
 		94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */; };
 		94C359F728B506D40010F53C /* TIPFullscreenInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */; };
 		94C56D342C53AFBE009F3AB8 /* SwapQuoteRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */; };
-		94C56D392C53C954009F3AB8 /* SwapQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D382C53C954009F3AB8 /* SwapQuote.swift */; };
+		94C56D392C53C954009F3AB8 /* SwapQuoteDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */; };
 		94C56D3E2C560DD6009F3AB8 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D3D2C560DD6009F3AB8 /* CircularProgressView.swift */; };
 		94C5A8932B2157CE00201CDA /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5A8922B2157CE00201CDA /* Payment.swift */; };
 		94C688B728978BCD00C69537 /* TIPDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */; };
@@ -2186,6 +2187,7 @@
 		943BC6792BCE9A17003FA778 /* CollectiblesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectiblesView.xib; sourceTree = "<group>"; };
 		943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReceiveSourceViewController.swift; sourceTree = "<group>"; };
 		943EDC472C833B55007E160B /* Market+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Market+Localization.swift"; sourceTree = "<group>"; };
+		94428E472CA3435300157E93 /* SwapQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuote.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		9445065F2C1C5D9700F9C583 /* TIPURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPURL.swift; sourceTree = "<group>"; };
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
@@ -2418,7 +2420,7 @@
 		94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPFullscreenInputViewController.swift; sourceTree = "<group>"; };
 		94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPFullscreenInputView.xib; sourceTree = "<group>"; };
 		94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuoteRequester.swift; sourceTree = "<group>"; };
-		94C56D382C53C954009F3AB8 /* SwapQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuote.swift; sourceTree = "<group>"; };
+		94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuoteDraft.swift; sourceTree = "<group>"; };
 		94C56D3D2C560DD6009F3AB8 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		94C5A8922B2157CE00201CDA /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
 		94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPDiagnosticViewController.swift; sourceTree = "<group>"; };
@@ -2934,7 +2936,8 @@
 				942D90F22B0606C700E81358 /* WithdrawFeeItem.swift */,
 				94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */,
 				94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */,
-				94C56D382C53C954009F3AB8 /* SwapQuote.swift */,
+				94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */,
+				94428E472CA3435300157E93 /* SwapQuote.swift */,
 				94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */,
 				9487234A2C9EE7150034BCB0 /* TransferAction.swift */,
 			);
@@ -6640,6 +6643,7 @@
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				94C93C902C94880600A31591 /* TIP+Web3.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
+				94428E482CA3435300157E93 /* SwapQuote.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
 				52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */,
 				94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */,
@@ -6741,7 +6745,7 @@
 				94F952582AE616F40025B995 /* TransferOutViewController.swift in Sources */,
 				94CDA9892A5E77D000F1CDEE /* AssetComboBoxView.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
-				94C56D392C53C954009F3AB8 /* SwapQuote.swift in Sources */,
+				94C56D392C53C954009F3AB8 /* SwapQuoteDraft.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
 				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,

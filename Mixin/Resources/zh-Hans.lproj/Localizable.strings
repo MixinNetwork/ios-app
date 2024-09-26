@@ -441,10 +441,10 @@
 "error_invalid_address_plain" = "错误 30102：地址格式错误。";
 "error_invalid_code_too_frequent" = "错误 20129：发送验证码太频繁，请稍后再试";
 "error_invalid_emergency_contact" = "错误 20130：紧急联系人不正确";
-"error_invalid_quote_amount" = "错误 10614: 数量无效";
-"error_invalid_swap" = "错误 10611: 交易无效";
+"error_invalid_quote_amount" = "错误 10614: 输入金额太小或太大，请重新输入。";
+"error_invalid_swap" = "错误 10611: 暂无报价，请稍后重试。";
 "error_network_task_failed" = "网络连接失败。检查或切换网络并重试";
-"error_no_available_quote" = "错误 10615: 没有报价";
+"error_no_available_quote" = "错误 10615: 暂不支持该交易对，请尝试切换币种。";
 "error_not_found" = "错误 404：没有找到相应的信息";
 "error_number_reached_limit" = "错误 20132： 已达到上限";
 "error_opponent_not_registered_to_safe" = "错误 10404: 对方客户端版本过低，请提醒对方更新客户端到最新版本";

@@ -31,6 +31,12 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.app_update_short_hint()
         case .notRegisteredToSafe:
             return R.string.localizable.error_opponent_not_registered_to_safe()
+        case .invalidSwap:
+            return R.string.localizable.error_invalid_swap()
+        case .invalidQuoteAmount:
+            return R.string.localizable.error_invalid_quote_amount()
+        case .noAvailableQuote:
+            return R.string.localizable.error_no_available_quote()
         case .invalidPhoneNumber:
             return R.string.localizable.error_phone_invalid_format()
         case .invalidPhoneVerificationCode:

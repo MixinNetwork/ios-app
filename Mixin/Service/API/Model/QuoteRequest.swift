@@ -28,7 +28,7 @@ struct QuoteRequest {
             outputMint: receiveToken.address,
             amount: Token.amountString(from: Decimal(payAmount.intValue)),
             slippage: Slippage(decimal: slippage).integral,
-            source: receiveToken.source
+            source: .solana
         )
     }
     
@@ -43,7 +43,7 @@ struct QuoteRequest {
             outputMint: receiveToken.assetID,
             amount: Token.amountString(from: sendAmount),
             slippage: Slippage(decimal: slippage).integral,
-            source: receiveToken.source
+            source: .mixin
         )
     }
     

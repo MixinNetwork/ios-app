@@ -16,6 +16,7 @@ struct SwapRequest: Encodable {
         sendAmount: Decimal,
         sendAddress: String,
         receiveToken: SwappableToken,
+        source: RouteTokenSource,
         slippage: Decimal
     ) -> SwapRequest? {
         guard let sendAmount = sendToken.nativeAmount(decimalAmount: sendAmount) else {
@@ -33,7 +34,7 @@ struct SwapRequest: Encodable {
             inputAmount: inputAmount,
             outputMint: receiveToken.address,
             slippage: Slippage(decimal: slippage).integral,
-            source: receiveToken.source,
+            source: source,
             referral: sendAddress
         )
     }
@@ -42,6 +43,7 @@ struct SwapRequest: Encodable {
         sendToken: TokenItem,
         sendAmount: Decimal,
         receiveToken: SwappableToken,
+        source: RouteTokenSource,
         slippage: Decimal
     ) -> SwapRequest {
         SwapRequest(
@@ -50,7 +52,7 @@ struct SwapRequest: Encodable {
             inputAmount: Token.amountString(from: sendAmount),
             outputMint: receiveToken.assetID,
             slippage: Slippage(decimal: slippage).integral,
-            source: receiveToken.source,
+            source: source,
             referral: nil
         )
     }

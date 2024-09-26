@@ -21,7 +21,7 @@ final class SwapQuotePeriodicRequester {
     weak var delegate: SwapQuotePeriodicRequesterDelegate?
     
     private let request: QuoteRequest
-    private let quote: SwapQuote
+    private let quoteDraft: SwapQuoteDraft
     
     private var isRunning = false
     private var nextQuoteCountDown = 0
@@ -43,11 +43,10 @@ final class SwapQuotePeriodicRequester {
             receiveToken: receiveToken,
             slippage: slippage
         )
-        self.quote = SwapQuote(
+        self.quoteDraft = SwapQuoteDraft(
             sendToken: sendToken,
             sendAmount: sendAmount,
-            receiveToken: receiveToken,
-            receiveAmount: 0
+            receiveToken: receiveToken
         )
     }
     
@@ -76,7 +75,7 @@ final class SwapQuotePeriodicRequester {
         timer?.invalidate()
         delegate?.swapQuotePeriodicRequesterWillUpdate(self)
         Logger.general.debug(category: "SwapQuote", message: "\(opaquePointer) Request quote")
-        lastRequest = RouteAPI.quote(request: request) { [weak self, quote] result in
+        lastRequest = RouteAPI.quote(request: request) { [weak self, quoteDraft] result in
             guard let self else {
                 return
             }
@@ -87,8 +86,8 @@ final class SwapQuotePeriodicRequester {
                     self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .failure(error))
                     return
                 }
-                let newQuote = quote.updated(receiveAmount: receiveAmount)
-                self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .success(newQuote))
+                let quote = SwapQuote(draft: quoteDraft, receiveAmount: receiveAmount, source: response.source)
+                self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .success(quote))
                 self.scheduleCountDownTimer()
             case .failure(.httpTransport(.explicitlyCancelled)):
                 break

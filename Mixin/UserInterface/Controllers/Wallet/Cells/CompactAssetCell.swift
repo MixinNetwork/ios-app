@@ -119,7 +119,12 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         assetIconView.setIcon(swappableToken: token)
         nameLabel.text = token.name
         descriptionLabel.text = nil
-        chainTagLabel.isHidden = true
+        if let tag = token.chainTag {
+            chainTagLabel.text = tag
+            chainTagLabel.isHidden = false
+        } else {
+            chainTagLabel.isHidden = true
+        }
         changeLabel.text = R.string.localizable.na() // Just for layout guidance
         priceLabel.text = nil
         changeLabel.isHidden = true
@@ -137,7 +142,12 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
             sign: .never,
             symbol: .custom(token.symbol)
         )
-        chainTagLabel.isHidden = true
+        if let tag = token.chainTag {
+            chainTagLabel.text = tag
+            chainTagLabel.isHidden = false
+        } else {
+            chainTagLabel.isHidden = true
+        }
         priceLabel.text = CurrencyFormatter.localizedString(
             from: usdPrice * Currency.current.decimalRate,
             format: .fiatMoneyPrice,

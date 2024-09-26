@@ -106,7 +106,8 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
             let quote = SwapQuote(sendToken: operation.token,
                                   sendAmount: operation.amount,
                                   receiveToken: context.receiveToken,
-                                  receiveAmount: context.receiveAmount)
+                                  receiveAmount: context.receiveAmount, 
+                                  source: context.source)
             rows = [
                 .swapAssetChange(
                     sendToken: operation.token,

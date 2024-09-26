@@ -10,7 +10,6 @@ final class SwappableToken: Decodable {
         case name
         case symbol
         case icon
-        case source
         case chain
     }
     
@@ -20,17 +19,12 @@ final class SwappableToken: Decodable {
     let name: String
     let symbol: String
     let icon: String
-    let source: RouteTokenSource
     let chain: Chain
-    
-    var iconURL: URL? {
-        URL(string: icon)
-    }
     
     init(
         address: String, assetID: String, decimals: Int16,
         name: String, symbol: String, icon: String,
-        source: RouteTokenSource, chain: SwappableToken.Chain
+        chain: SwappableToken.Chain
     ) {
         self.address = address
         self.assetID = assetID
@@ -38,8 +32,38 @@ final class SwappableToken: Decodable {
         self.name = name
         self.symbol = symbol
         self.icon = icon
-        self.source = source
         self.chain = chain
+    }
+    
+}
+
+extension SwappableToken {
+    
+    var iconURL: URL? {
+        URL(string: icon)
+    }
+    
+    var chainTag: String? {
+        switch chain.chainID {
+        case ChainID.bnbSmartChain:
+            "BEP-20"
+        case assetID:
+            nil
+        case ChainID.ethereum:
+            "ERC-20"
+        case ChainID.tron:
+            // To determine whether the chain is TRC-10 or TRC-20, the `asset_key` is required.
+            // Currently, the Swap functionality does not support TRC-10 tokens, so we will handle this case simply.
+            "TRC-20"
+        case ChainID.eos:
+            "EOS"
+        case ChainID.polygon:
+            "Polygon"
+        case ChainID.solana:
+            "Solana"
+        default:
+            nil
+        }
     }
     
     func isEqual(to token: Web3Token) -> Bool {

@@ -441,10 +441,10 @@
 "error_invalid_address_plain" = "ERROR 30102: Invalid address format.";
 "error_invalid_code_too_frequent" = "ERROR 20129: Send verification code too frequent, please try again later.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid emergency contact";
-"error_invalid_quote_amount" = "ERROR 10614: Invalid quote amount";
-"error_invalid_swap" = "ERROR 10611: Invalid swap";
+"error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
+"error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";
-"error_no_available_quote" = "ERROR 10615: No available quote";
+"error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
 "error_not_found" = "ERROR 404: Not found";
 "error_number_reached_limit" = "ERROR 20132: The number has reached the limit.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";

@@ -18,6 +18,11 @@ final class CheckmarkTokenCell: UITableViewCell {
         tagLabel.layer.masksToBounds = true
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        iconView.prepareForReuse()
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         checkmarkView.status = selected ? .selected : .deselected
@@ -40,6 +45,13 @@ final class CheckmarkTokenCell: UITableViewCell {
             tagLabel.isHidden = true
         }
         subtitleLabel.text = token.localizedBalanceWithSymbol
+    }
+    
+    func load(coin: MarketAlertCoin) {
+        iconView.setIcon(coin: coin)
+        titleLabel.text = coin.symbol
+        tagLabel.isHidden = true
+        subtitleLabel.text = coin.name
     }
     
 }

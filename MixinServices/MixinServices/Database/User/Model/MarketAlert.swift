@@ -4,7 +4,7 @@ import GRDB
 public struct MarketAlert {
     
     public let alertID: String
-    public let assetID: String
+    public let coinID: String
     public let type: AlertType
     public let frequency: AlertFrequency
     public var status: Status
@@ -14,7 +14,7 @@ public struct MarketAlert {
     public func replacing(type: AlertType, frequency: AlertFrequency, value: String) -> MarketAlert {
         MarketAlert(
             alertID: alertID,
-            assetID: assetID,
+            coinID: coinID,
             type: type,
             frequency: frequency,
             status: status,
@@ -52,7 +52,7 @@ extension MarketAlert: Codable, PersistableRecord {
     
     enum CodingKeys: String, CodingKey {
         case alertID = "alert_id"
-        case assetID = "asset_id"
+        case coinID = "coin_id"
         case type = "type"
         case frequency = "frequency"
         case status = "status"

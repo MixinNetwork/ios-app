@@ -12,7 +12,7 @@ final class ReloadMarketAlertsJob: AsynchronousJob {
             switch result {
             case let .success(alerts):
                 if !alerts.isEmpty {
-                    let allAssetIDs = Array(Set(alerts.map(\.assetID)))
+                    let allAssetIDs = Array(Set(alerts.map(\.coinID)))
                     let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: allAssetIDs)
                     if !missingAssetIDs.isEmpty {
                         switch SafeAPI.assets(ids: missingAssetIDs) {

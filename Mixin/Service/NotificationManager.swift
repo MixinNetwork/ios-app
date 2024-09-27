@@ -216,23 +216,27 @@ extension NotificationManager {
     
 }
 
-// MARK: - Private works
+// MARK: - Authorization
 extension NotificationManager {
     
-    private func requestAuthorization(completion: @escaping (_ isAuthorized: Bool) -> Void) {
-        let center = UNUserNotificationCenter.current()
+    func requestAuthorization(completion: @escaping (_ isAuthorized: Bool) -> Void) {
+        let center: UNUserNotificationCenter = .current()
         center.getNotificationSettings { (settings) in
-            switch settings.authorizationStatus {
-            case .authorized, .provisional, .ephemeral:
-                completion(true)
-            case .notDetermined:
-                center.requestAuthorization(options: [.alert, .sound, .badge]) { (isGranted, _) in
-                    completion(isGranted)
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .authorized, .provisional, .ephemeral:
+                    completion(true)
+                case .notDetermined:
+                    center.requestAuthorization(options: [.alert, .sound, .badge]) { (isGranted, _) in
+                        DispatchQueue.main.async {
+                            completion(isGranted)
+                        }
+                    }
+                case .denied:
+                    completion(false)
+                @unknown default:
+                    completion(false)
                 }
-            case .denied:
-                completion(false)
-            @unknown default:
-                completion(false)
             }
         }
     }

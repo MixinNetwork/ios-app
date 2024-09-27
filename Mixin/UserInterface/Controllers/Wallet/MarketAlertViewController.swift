@@ -4,16 +4,18 @@ import MixinServices
 final class MarketAlertViewController: UIViewController {
     
     @IBOutlet weak var assetFilterView: TransactionHistoryAssetFilterView!
-    @IBOutlet weak var addAlertButton: UIButton!
+    @IBOutlet weak var addAlertButton: BusyButton!
     @IBOutlet weak var tableView: UITableView!
     
     private let headerReuseIdentifier = "h"
-    private let token: TokenItem
+    private let market: Market
     
+    private var coins: [MarketAlertCoin]
     private var viewModels: [MarketAlertViewModel] = []
     
-    init(token: TokenItem) {
-        self.token = token
+    init(market: Market) {
+        self.market = market
+        self.coins = [MarketAlertCoin(coinID: market.coinID, name: market.name, symbol: market.symbol, iconURL: market.iconURL, currentPrice: market.currentPrice)]
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -21,8 +23,8 @@ final class MarketAlertViewController: UIViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(token: TokenItem) -> ContainerViewController {
-        let alert = MarketAlertViewController(token: token)
+    static func contained(market: Market) -> ContainerViewController {
+        let alert = MarketAlertViewController(market: market)
         let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.alert())
         container.loadViewIfNeeded()
         container.view.backgroundColor = R.color.background_secondary()
@@ -32,6 +34,9 @@ final class MarketAlertViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        assetFilterView.reloadData(coins: coins)
+        assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
+        addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
         addAlertButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14, weight: .medium), adjustForContentSize: true)
         tableView.register(R.nib.marketAlertTokenCell)
         tableView.dataSource = self
@@ -48,40 +53,69 @@ final class MarketAlertViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
-    @IBAction func addAlert(_ sender: Any) {
-        let addAlert = AddMarketAlertViewController.contained(token: token)
-        navigationController?.pushViewController(addAlert, animated: true)
+    @IBAction func addAlert(_ sender: BusyButton) {
+        sender.isBusy = true
+        NotificationManager.shared.requestAuthorization { [market] isAuthorized in
+            sender.isBusy = false
+            if isAuthorized {
+                let addAlert = AddMarketAlertViewController.contained(market: market)
+                self.navigationController?.pushViewController(addAlert, animated: true)
+            } else {
+                let alert = UIAlertController(
+                    title: R.string.localizable.turn_on_notifications(),
+                    message: R.string.localizable.price_alert_notification_permission(),
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+                alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { _ in
+                    UIApplication.shared.openNotificationSettings()
+                }))
+                self.present(alert, animated: true)
+            }
+        }
+    }
+    
+    @objc private func pickTokens(_ sender: Any) {
+        let picker = MarketAlertCoinPickerViewController(selectedCoins: coins)
+        picker.delegate = self
+        present(picker, animated: true)
     }
     
     @objc private func reloadFromLocal() {
-        DispatchQueue.global().async { [id=token.assetID] in
-            let alerts = MarketAlertDAO.shared.marketAlerts()
-            self.updateViewModels(alerts: alerts, expandAssetID: id)
+        let ids = coins.map(\.coinID)
+        DispatchQueue.global().async {
+            let alerts = if ids.isEmpty {
+                MarketAlertDAO.shared.allMarketAlerts()
+            } else {
+                MarketAlertDAO.shared.marketAlerts(coinIDs: ids)
+            }
+            self.updateViewModels(alerts: alerts)
         }
     }
     
-    private func updateViewModels(alerts: [MarketAlert], expandAssetID: String) {
+    private func updateViewModels(alerts: [MarketAlert]) {
         assert(!Thread.isMainThread)
-        var alerts = alerts
-        let assetIDs = Array(Set(alerts.map(\.assetID)))
-        var tokens = TokenDAO.shared.marketAlertTokens(assetIDs: assetIDs)
-        if let index = tokens.firstIndex(where: { $0.assetID == expandAssetID }) {
-            let token = tokens.remove(at: index)
-            tokens.insert(token, at: 0)
-        }
-        let viewModels = tokens.map { token in
-            var alertsForCurrentToken: [MarketAlert] = []
-            alerts.removeAll { alert in
-                if alert.assetID == token.assetID {
-                    alertsForCurrentToken.append(alert)
-                    return true
-                } else {
-                    return false
+        let viewModels: [MarketAlertViewModel]
+        if alerts.isEmpty {
+            viewModels = []
+        } else {
+            var alerts = alerts
+            let coinIDs = Array(Set(alerts.map(\.coinID)))
+            let coins = MarketDAO.shared.marketAlertCoins(coinIDs: coinIDs)
+            viewModels = coins.map { coin in
+                var alertsForCurrentToken: [MarketAlert] = []
+                alerts.removeAll { alert in
+                    if alert.coinID == coin.coinID {
+                        alertsForCurrentToken.append(alert)
+                        return true
+                    } else {
+                        return false
+                    }
                 }
+                return MarketAlertViewModel(coin: coin, alerts: alertsForCurrentToken)
             }
-            return MarketAlertViewModel(token: token, alerts: alertsForCurrentToken)
+            viewModels.first?.isExpanded = true
         }
-        viewModels.first?.isExpanded = true
         DispatchQueue.main.async {
             self.viewModels = viewModels
             self.tableView.reloadData()
@@ -191,8 +225,21 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
     }
     
     func marketAlertTokenCell(_ cell: MarketAlertTokenCell, wantsToEdit alert: MarketAlert) {
-        let editor = EditMarketAlertViewController.contained(token: token, alert: alert)
+        let editor = EditMarketAlertViewController.contained(market: market, alert: alert)
         navigationController?.pushViewController(editor, animated: true)
+    }
+    
+}
+
+extension MarketAlertViewController: MarketAlertCoinPickerViewController.Delegate {
+    
+    func marketAlertCoinPickerViewController(
+        _ controller: MarketAlertCoinPickerViewController,
+        didPickCoins coins: [MarketAlertCoin]
+    ) {
+        assetFilterView.reloadData(coins: coins)
+        self.coins = coins
+        reloadFromLocal()
     }
     
 }

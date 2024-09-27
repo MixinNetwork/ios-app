@@ -51,7 +51,7 @@ final class MarketAlertViewModel {
         
     }
     
-    let assetID: String
+    let coinID: String
     let iconURL: URL?
     let name: String
     let description: String
@@ -59,11 +59,11 @@ final class MarketAlertViewModel {
     
     var isExpanded = false
     
-    init(token: MarketAlertToken, alerts: [MarketAlert]) {
-        self.assetID = token.assetID
-        self.iconURL = URL(string: token.iconURL)
-        self.name = token.name
-        if let price = Decimal(string: token.usdPrice, locale: .enUSPOSIX) {
+    init(coin: MarketAlertCoin, alerts: [MarketAlert]) {
+        self.coinID = coin.coinID
+        self.iconURL = URL(string: coin.iconURL)
+        self.name = coin.name
+        if let price = Decimal(string: coin.currentPrice, locale: .enUSPOSIX) {
             let usdPrice = CurrencyFormatter.localizedString(
                 from: price,
                 format: .fiatMoneyPrice,

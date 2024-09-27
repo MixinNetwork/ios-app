@@ -805,14 +805,15 @@
 		943BC67A2BCE9A17003FA778 /* CollectiblesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC6792BCE9A17003FA778 /* CollectiblesView.xib */; };
 		943BC7022BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */; };
 		943EDC482C833B55007E160B /* Market+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943EDC472C833B55007E160B /* Market+Localization.swift */; };
-		94428E482CA3435300157E93 /* SwapQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428E472CA3435300157E93 /* SwapQuote.swift */; };
 		943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */; };
 		943FEB3F2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */; };
 		94428D392CA245BA00157E93 /* MenuTriggerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428D382CA245BA00157E93 /* MenuTriggerButton.swift */; };
 		94428D622CA24B0200157E93 /* MarketAlert+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428D612CA24B0200157E93 /* MarketAlert+Description.swift */; };
 		94428D642CA24F6E00157E93 /* ReloadMarketAlertsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428D632CA24F6E00157E93 /* ReloadMarketAlertsJob.swift */; };
 		94428D742CA2A8F200157E93 /* EditMarketAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */; };
+		94428E482CA3435300157E93 /* SwapQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428E472CA3435300157E93 /* SwapQuote.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
+		9443A9212CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */; };
 		944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445065F2C1C5D9700F9C583 /* TIPURL.swift */; };
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
@@ -2202,14 +2203,15 @@
 		943BC6792BCE9A17003FA778 /* CollectiblesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectiblesView.xib; sourceTree = "<group>"; };
 		943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReceiveSourceViewController.swift; sourceTree = "<group>"; };
 		943EDC472C833B55007E160B /* Market+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Market+Localization.swift"; sourceTree = "<group>"; };
-		94428E472CA3435300157E93 /* SwapQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuote.swift; sourceTree = "<group>"; };
 		943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertTokenCell.swift; sourceTree = "<group>"; };
 		943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertTokenCell.xib; sourceTree = "<group>"; };
 		94428D382CA245BA00157E93 /* MenuTriggerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTriggerButton.swift; sourceTree = "<group>"; };
 		94428D612CA24B0200157E93 /* MarketAlert+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarketAlert+Description.swift"; sourceTree = "<group>"; };
 		94428D632CA24F6E00157E93 /* ReloadMarketAlertsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadMarketAlertsJob.swift; sourceTree = "<group>"; };
 		94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMarketAlertViewController.swift; sourceTree = "<group>"; };
+		94428E472CA3435300157E93 /* SwapQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuote.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
+		9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertCoinPickerViewController.swift; sourceTree = "<group>"; };
 		9445065F2C1C5D9700F9C583 /* TIPURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPURL.swift; sourceTree = "<group>"; };
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
@@ -4701,6 +4703,7 @@
 				DF5BF55E1FBB281E0092AFB8 /* TokenViewController.swift */,
 				942BA99A2C689FA10096CCC3 /* MarketViewController.swift */,
 				94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */,
+				9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */,
 				9487235B2C9F37AE0034BCB0 /* MarketAlertView.xib */,
 				94960DA12C929D3C00FB17E2 /* MarketAlertViewController.swift */,
 				948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */,
@@ -6614,6 +6617,7 @@
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				945FFC7A2C3818630013DC51 /* RouteAPI.swift in Sources */,
 				ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */,
+				9443A9212CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift in Sources */,
 				943B5EAB2B600D77001C1F6E /* AppCell.swift in Sources */,
 				7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */,
 				944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */,

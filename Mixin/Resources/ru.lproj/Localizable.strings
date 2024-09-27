@@ -823,7 +823,10 @@
 "preparing" = "Подготовка...";
 "preparing_progress" = "Подготовка...(%@)";
 "price" = "Price";
+"price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
+"price_cannot_be_current" = "The set price cannot be the current price.";
 "price_data_unavailable" = "Price data unavailable";
+"price_in_currency" = "Price (%@)";
 "privacy" = "Конфиденциальность";
 "privacy_policy" = "Политика конфиденциальности";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -903,6 +906,7 @@
 "restoring_chat_progress" = "Restoring Chat (%@%%)";
 "restoring_progress" = "Восстановление %@";
 "resume" = "Resume";
+"resumed" = "Resumed";
 "retry" = "Повторить";
 "return_to_merchant_description" = "Merchant payment is complete. You can opt to return to the merchant or stay in Mixin.";
 "review" = "Review";

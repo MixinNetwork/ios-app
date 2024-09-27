@@ -5,9 +5,9 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
     
     private let alert: MarketAlert
     
-    init(token: TokenItem, alert: MarketAlert) {
+    init(market: Market, alert: MarketAlert) {
         self.alert = alert
-        super.init(token: token)
+        super.init(market: market)
         self.alertType = alert.type
         self.alertFrequency = alert.frequency
     }
@@ -16,8 +16,8 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(token: TokenItem, alert: MarketAlert) -> ContainerViewController {
-        let alert = EditMarketAlertViewController(token: token, alert: alert)
+    static func contained(market: Market, alert: MarketAlert) -> ContainerViewController {
+        let alert = EditMarketAlertViewController(market: market, alert: alert)
         let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.edit_alert())
         container.loadViewIfNeeded()
         container.view.backgroundColor = R.color.background_secondary()

@@ -160,15 +160,6 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
     }
     
-    public func marketAlertTokens(assetIDs ids: [String]) -> [MarketAlertToken] {
-        var query: GRDB.SQL = """
-            SELECT t.asset_id, t.name, t.icon_url, t.price_usd
-            FROM tokens t
-            WHERE t.asset_id IN \(ids)
-        """
-        return db.select(with: query)
-    }
-    
     public func save(assets: [Token], completion: (() -> Void)? = nil) {
         guard !assets.isEmpty else {
             return

@@ -91,14 +91,14 @@ final class RouteAPI {
     }
     
     static func addMarketAlert(
-        assetID: String,
+        coinID: String,
         type: MarketAlert.AlertType,
         frequency: MarketAlert.AlertFrequency,
         value: String,
         completion: @escaping (MixinAPI.Result<MarketAlert>) -> Void
     ) {
         let parameters = [
-            "asset_id": assetID,
+            "coin_id": coinID,
             "type": type.rawValue,
             "frequency": frequency.rawValue,
             "value": value

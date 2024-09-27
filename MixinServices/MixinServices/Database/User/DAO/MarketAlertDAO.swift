@@ -7,8 +7,12 @@ public final class MarketAlertDAO: UserDatabaseDAO {
     
     public static let didSaveNotification = Notification.Name("one.mixin.service.MarketAlertDAO.Save")
     
-    public func marketAlerts() -> [MarketAlert] {
+    public func allMarketAlerts() -> [MarketAlert] {
         db.selectAll()
+    }
+    
+    public func marketAlerts(coinIDs: [String]) -> [MarketAlert] {
+        db.select(where: coinIDs.contains(Market.column(of: .coinID)))
     }
     
     public func save(alert: MarketAlert) {

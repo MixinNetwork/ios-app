@@ -29,7 +29,7 @@
                             <rect key="frame" x="0.0" y="2" width="81" height="36"/>
                             <color key="backgroundColor" name="background_secondary"/>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="rsN-Ti-O0C">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="rsN-Ti-O0C" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="267" y="0.0" width="86" height="40"/>
                             <inset key="contentEdgeInsets" minX="12" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <inset key="imageEdgeInsets" minX="-8" minY="0.0" maxX="0.0" maxY="0.0"/>

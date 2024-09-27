@@ -823,7 +823,10 @@
 "preparing" = "Preparando...";
 "preparing_progress" = "Preparando...(%@)";
 "price" = "Price";
+"price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
+"price_cannot_be_current" = "The set price cannot be the current price.";
 "price_data_unavailable" = "Price data unavailable";
+"price_in_currency" = "Price (%@)";
 "privacy" = "Privacidad";
 "privacy_policy" = "Política de privacidad";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
@@ -903,6 +906,7 @@
 "restoring_chat_progress" = "Restoring Chat (%@%%)";
 "restoring_progress" = "Restaurando %@";
 "resume" = "Resume";
+"resumed" = "Resumed";
 "retry" = "Reintentar";
 "return_to_merchant_description" = "Merchant payment is complete. You can opt to return to the merchant or stay in Mixin.";
 "review" = "Review";

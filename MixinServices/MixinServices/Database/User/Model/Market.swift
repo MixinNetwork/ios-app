@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     
     public enum CodingKeys: String, CodingKey {
         case coinID = "coin_id"
@@ -77,6 +77,13 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord, M
             "#" + marketCapRank
         }
     }()
+    
+    public private(set) lazy var localizedUSDPrice = CurrencyFormatter.localizedString(
+        from: decimalPrice,
+        format: .fiatMoneyPrice,
+        sign: .never,
+        symbol: .custom("USD")
+    )
     
     public private(set) lazy var localizedPrice = CurrencyFormatter.localizedString(
         from: decimalPrice * Currency.current.decimalRate,
@@ -240,6 +247,30 @@ extension Market {
         case twentyFourHours
         case sevenDays
         case thirtyDays
+    }
+    
+}
+
+extension Market {
+    
+    struct MarketCapRankStorage: Codable, MixinEncodableRecord, PersistableRecord {
+        
+        enum CodingKeys: String, CodingKey {
+            case coinID = "coin_id"
+            case marketCapRank = "market_cap_rank"
+            case updatedAt = "updated_at"
+        }
+        
+        static let databaseTableName = "market_cap_ranks"
+        
+        let coinID: String
+        let marketCapRank: String
+        let updatedAt: String
+        
+    }
+    
+    var rankStorage: MarketCapRankStorage {
+        MarketCapRankStorage(coinID: coinID, marketCapRank: marketCapRank, updatedAt: updatedAt)
     }
     
 }

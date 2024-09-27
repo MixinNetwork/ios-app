@@ -823,7 +823,10 @@
 "preparing" = "正在准备...";
 "preparing_progress" = "备份中...（%@）";
 "price" = "价格";
+"price_alert_notification_permission" = "价格预警需要开启通知权限";
+"price_cannot_be_current" = "设定价格不能是现价。";
 "price_data_unavailable" = "价格数据不可用";
+"price_in_currency" = "价格（%@）";
 "privacy" = "隐私";
 "privacy_policy" = "隐私政策";
 "process_can_not_be_stop" = "流程一旦开始无法取消，请牢记 6 位数字 PIN，意外中止流程需要再次输入";
@@ -903,6 +906,7 @@
 "restoring_chat_progress" = "恢复聊天记录（%@%%）";
 "restoring_progress" = "正在恢复 %@";
 "resume" = "恢复";
+"resumed" = "已恢复";
 "retry" = "重试";
 "return_to_merchant_description" = "来自商家的支付已完成，您可以选择返回商家或者停留在 Mixin。";
 "review" = "预览";

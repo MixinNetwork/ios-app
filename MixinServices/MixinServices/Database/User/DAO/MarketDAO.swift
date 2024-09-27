@@ -18,6 +18,7 @@ public final class MarketDAO: UserDatabaseDAO {
         var sql = """
         SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
+            INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
         """
         switch category {
@@ -100,18 +101,25 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [assetID, period.rawValue])
     }
     
+    public func allMarketAlertCoins() -> [MarketAlertCoin] {
+        db.select(with: "SELECT m.coin_id, m.name, m.symbol, m.icon_url, m.current_price FROM markets m")
+    }
+    
+    public func marketAlertCoins(coinIDs ids: [String]) -> [MarketAlertCoin] {
+        guard !ids.isEmpty else {
+            return allMarketAlertCoins()
+        }
+        var query: GRDB.SQL = """
+            SELECT m.coin_id, m.name, m.symbol, m.icon_url, m.current_price
+            FROM markets m
+            WHERE m.coin_id IN \(ids)
+        """
+        return db.select(with: query)
+    }
+    
     public func save(market: Market) -> FavorableMarket? {
         try? db.writeAndReturnError { db in
-            // When a single Market object is requested, its `marketCapRank` may differ from
-            // the value in the `markets` table. This can result in duplicate ranks when
-            // querying the market list. To avoid this issue, retrieve the known rank for
-            // this record and overwrite it.
-            let existedRank: String? = try Market
-                .select(Market.column(of: .marketCapRank))
-                .filter(Market.column(of: .coinID) == market.coinID)
-                .fetchOne(db)
-            let rankReplacedMarket = market.replacingMarketCapRank(with: existedRank ?? "")
-            try rankReplacedMarket.save(db)
+            try market.save(db)
             if let assetIDs = market.assetIDs, !assetIDs.isEmpty {
                 let now = Date().toUTCString()
                 let ids: [MarketID] = assetIDs.reduce(into: []) { result, assetID in
@@ -135,6 +143,7 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public func replaceMarkets(with markets: [Market], completion: @escaping () -> Void) {
         let now = Date().toUTCString()
+        let rankStorages = markets.map(\.rankStorage)
         let ids: [MarketID] = markets.reduce(into: []) { result, market in
             guard let assetIDs = market.assetIDs else {
                 return
@@ -146,9 +155,10 @@ public final class MarketDAO: UserDatabaseDAO {
             result.append(contentsOf: ids)
         }
         db.write { db in
-            try db.execute(sql: "DELETE FROM markets")
-            try ids.save(db)
             try markets.save(db)
+            try db.execute(sql: "DELETE FROM market_cap_ranks")
+            try rankStorages.save(db)
+            try ids.save(db)
             db.afterNextTransaction { _ in
                 completion()
             }

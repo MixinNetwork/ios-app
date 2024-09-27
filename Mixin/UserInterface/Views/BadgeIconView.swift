@@ -183,6 +183,18 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
+    func setIcon(coin: MarketAlertCoin) {
+        if let url = URL(string: coin.iconURL) {
+            iconImageView.sd_setImage(with: url,
+                                      placeholderImage: nil,
+                                      context: assetIconContext)
+        } else {
+            iconImageView.image = R.image.unknown_session()
+        }
+        isBadgeHidden = true
+        corner = .round
+    }
+    
     func setIcon(address: AddressItem) {
         if let string = address.tokenIconURL, let url = URL(string: string) {
             iconImageView.sd_setImage(with: url,

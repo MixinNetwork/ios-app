@@ -58,6 +58,14 @@ final class PlainTokenIconView: UIImageView {
         }
     }
     
+    func setIcon(coin: MarketAlertCoin) {
+        if let url = URL(string: coin.iconURL) {
+            setIcon(tokenIconURL: url)
+        } else {
+            image = R.image.unknown_session()
+        }
+    }
+    
     func prepareForReuse() {
         sd_cancelCurrentImageLoad()
     }

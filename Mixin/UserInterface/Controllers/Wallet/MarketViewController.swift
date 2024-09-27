@@ -427,6 +427,7 @@ extension MarketViewController: UITableViewDataSource {
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
+            cell.tokenActionView.isHidden = market == nil
             cell.delegate = self
             cell.chartView.delegate = self
             return cell
@@ -637,10 +638,11 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
     }
     
     func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell) {
-        pickSingleToken { token in
-            let alert = MarketAlertViewController.contained(token: token)
-            self.navigationController?.pushViewController(alert, animated: true)
+        guard let market else {
+            return
         }
+        let alert = MarketAlertViewController.contained(market: market)
+        self.navigationController?.pushViewController(alert, animated: true)
     }
     
 }

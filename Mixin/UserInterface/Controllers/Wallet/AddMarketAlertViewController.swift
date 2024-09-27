@@ -6,6 +6,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var iconImageView: PlainTokenIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var tokenPriceLabel: UILabel!
+    @IBOutlet weak var alertTypeTitleLabel: UILabel!
     @IBOutlet weak var alertTypeLabel: UILabel!
     @IBOutlet weak var alertTypeButton: UIButton!
     @IBOutlet weak var inputTitleLabel: UILabel!
@@ -13,13 +14,14 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var localCurrencyValueLabel: UILabel!
     @IBOutlet weak var invalidPriceLabel: UILabel!
     @IBOutlet weak var presetPercentageStackView: UIStackView!
+    @IBOutlet weak var alertFrequencyTitleLabel: UILabel!
     @IBOutlet weak var alertFrequencyLabel: UILabel!
     @IBOutlet weak var alertFrequencyButton: UIButton!
     @IBOutlet weak var addAlertButton: RoundedButton!
     
     @IBOutlet weak var addAlertButtonBottomConstraint: NSLayoutConstraint!
     
-    let token: TokenItem
+    let market: Market
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -30,7 +32,16 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         return formatter
     }()
     
-    var alertType: MarketAlert.AlertType = .priceReached
+    var alertType: MarketAlert.AlertType = .priceReached {
+        didSet {
+            switch alertType {
+            case .priceReached, .priceIncreased, .priceDecreased:
+                inputTitleLabel.text = R.string.localizable.price_in_currency("USD")
+            case .percentageIncreased, .percentageDecreased:
+                inputTitleLabel.text = R.string.localizable.value()
+            }
+        }
+    }
     var alertFrequency: MarketAlert.AlertFrequency = .once
     
     var decimalInputValue: Decimal? {
@@ -41,8 +52,8 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         -0.2, -0.1, -0.05, 0.05, 0.1, 0.2
     ]
     
-    init(token: TokenItem) {
-        self.token = token
+    init(market: Market) {
+        self.market = market
         let nib = R.nib.addMarketAlertView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -51,8 +62,8 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(token: TokenItem) -> ContainerViewController {
-        let alert = AddMarketAlertViewController(token: token)
+    static func contained(market: Market) -> ContainerViewController {
+        let alert = AddMarketAlertViewController(market: market)
         let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.add_alert())
         container.loadViewIfNeeded()
         container.view.backgroundColor = R.color.background_secondary()
@@ -62,16 +73,21 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        iconImageView.setIcon(token: token)
-        tokenNameLabel.text = token.name
-        tokenPriceLabel.text = R.string.localizable.current_price(token.localizedUSDPrice)
+        iconImageView.setIcon(market: market)
+        tokenNameLabel.text = market.name
+        tokenPriceLabel.text = R.string.localizable.current_price(market.localizedUSDPrice)
+        alertTypeTitleLabel.text = R.string.localizable.alert_type()
         alertTypeLabel.text = alertType.description
         reloadAlertTypeMenu()
         alertTypeButton.showsMenuAsPrimaryAction = true
+        alertFrequencyTitleLabel.text = R.string.localizable.alert_frequency()
         alertFrequencyLabel.text = alertFrequency.description
         reloadAlertFrequencyMenu()
         alertFrequencyButton.showsMenuAsPrimaryAction = true
+        inputTextField.text = formatter.string(from: market.decimalPrice as NSDecimalNumber)
         inputTextField.becomeFirstResponder()
+        validateInput()
+        invalidPriceLabel.text = R.string.localizable.price_cannot_be_current()
         for (i, percentage) in changePercentages.enumerated() {
             let button = PresetPercentageButton(type: .system)
             let title = NumberFormatter.percentage.string(decimal: percentage)
@@ -84,6 +100,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             presetPercentageStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(loadPresetPercentage(_:)), for: .touchUpInside)
         }
+        addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
     }
     
     override func layout(for keyboardFrame: CGRect) {
@@ -106,7 +123,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
         addAlertButton.isBusy = true
         RouteAPI.addMarketAlert(
-            assetID: token.assetID,
+            coinID: market.coinID,
             type: alertType,
             frequency: alertFrequency,
             value: value
@@ -128,7 +145,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         let percentage = changePercentages[sender.tag]
         let value = switch alertType {
         case .priceReached, .priceIncreased, .priceDecreased:
-            token.decimalUSDPrice * (1 + percentage)
+            market.decimalPrice * (1 + percentage)
         case .percentageIncreased, .percentageDecreased:
             percentage * 100
         }
@@ -148,12 +165,6 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         self.alertType = type
         alertTypeLabel.text = type.description
         reloadAlertTypeMenu()
-        switch alertType {
-        case .priceReached, .priceIncreased, .priceDecreased:
-            inputTitleLabel.text = "Price (USD)"
-        case .percentageIncreased, .percentageDecreased:
-            inputTitleLabel.text = R.string.localizable.value()
-        }
         switch alertType {
         case .priceReached, .priceIncreased, .priceDecreased, .percentageIncreased:
             for button in presetPercentageStackView.arrangedSubviews {
@@ -190,14 +201,15 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
         let isValid = switch alertType {
         case .priceReached:
-            value != token.decimalUSDPrice && value >= token.decimalUSDPrice / 1000 && value <= token.decimalUSDPrice * 1000
+            value != market.decimalPrice && value >= market.decimalPrice / 1000 && value <= market.decimalPrice * 1000
         case .priceIncreased:
-            value > token.decimalUSDPrice && value <= token.decimalUSDPrice * 1000
+            value > market.decimalPrice && value <= market.decimalPrice * 1000
         case .priceDecreased:
-            value < token.decimalUSDPrice && value >= token.decimalUSDPrice / 1000
+            value < market.decimalPrice && value >= market.decimalPrice / 1000
         case .percentageIncreased, .percentageDecreased:
             value >= 0.01 && value <= 10
         }
+        inputTextField.textColor = isValid ? R.color.text() : R.color.error_red()
         invalidPriceLabel.isHidden = isValid
         addAlertButton.isEnabled = isValid
     }

@@ -12,15 +12,10 @@ final class ReloadMarketAlertsJob: AsynchronousJob {
             switch result {
             case let .success(alerts):
                 if !alerts.isEmpty {
-                    let allAssetIDs = Array(Set(alerts.map(\.coinID)))
-                    let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: allAssetIDs)
-                    if !missingAssetIDs.isEmpty {
-                        switch SafeAPI.assets(ids: missingAssetIDs) {
-                        case .success(let tokens):
-                            TokenDAO.shared.save(assets: tokens)
-                        case .failure(let error):
-                            Logger.general.error(category: "ReloadMarketAlerts", message: "\(error)")
-                        }
+                    let allCoinIDs = Array(Set(alerts.map(\.coinID)))
+                    let inexistCoinIDs = MarketDAO.shared.inexistCoinIDs(in: allCoinIDs)
+                    if !inexistCoinIDs.isEmpty {
+                        // FIXME: Load missing markets
                     }
                 }
                 MarketAlertDAO.shared.replace(alerts: alerts)

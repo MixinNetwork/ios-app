@@ -23,6 +23,14 @@ public final class MarketAlertDAO: UserDatabaseDAO {
         }
     }
     
+    public func update(alertID: String, status: MarketAlert.Status) {
+        db.update(
+            MarketAlert.self,
+            assignments: [MarketAlert.column(of: .status).set(to: status.rawValue)],
+            where: MarketAlert.column(of: .alertID) == alertID
+        )
+    }
+    
     public func replace(alerts: [MarketAlert]) {
         db.write { db in
             try db.execute(sql: "DELETE FROM market_alerts")
@@ -33,6 +41,10 @@ public final class MarketAlertDAO: UserDatabaseDAO {
                 }
             }
         }
+    }
+    
+    public func deleteAlert(id: String) {
+        db.delete(MarketAlert.self, where: MarketAlert.column(of: .alertID) == id)
     }
     
 }

@@ -48,9 +48,9 @@ extension MarketAlert {
     
 }
 
-extension MarketAlert: Codable, PersistableRecord {
+extension MarketAlert: Codable, PersistableRecord, DatabaseColumnConvertible {
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case alertID = "alert_id"
         case coinID = "coin_id"
         case type = "type"

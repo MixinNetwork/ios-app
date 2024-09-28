@@ -188,12 +188,19 @@ extension MarketAlertViewController: UITableViewDelegate {
 
 extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
     
-    func marketAlertTokenCell(_ cell: MarketAlertTokenCell, wantsToPerform action: MarketAlert.Action, to alert: MarketAlert) {
+    func marketAlertTokenCell(
+        _ cell: MarketAlertTokenCell,
+        wantsToPerform action: MarketAlert.Action,
+        to alert: MarketAlert
+    ) {
         guard let section = tableView.indexPath(for: cell)?.section else {
             return
         }
         let viewModel = viewModels[section]
-        guard let row = viewModel.alerts.firstIndex(where: { $0.alert.alertID == alert.alertID }) else {
+        let row = viewModel.alerts.firstIndex {
+            $0.alert.alertID == alert.alertID
+        }
+        guard let row else {
             return
         }
         let hud = Hud()
@@ -203,14 +210,23 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
             case .success:
                 switch action {
                 case .pause:
-                    hud.set(style: .notification, text: "Paused")
+                    DispatchQueue.global().async {
+                        MarketAlertDAO.shared.update(alertID: alert.alertID, status: .paused)
+                    }
+                    hud.set(style: .notification, text: R.string.localizable.paused())
                     viewModel.alerts[row].alert.status = .paused
                     self.tableView.reloadSections(IndexSet(integer: section), with: .none)
                 case .resume:
-                    hud.set(style: .notification, text: "Resumed")
+                    DispatchQueue.global().async {
+                        MarketAlertDAO.shared.update(alertID: alert.alertID, status: .running)
+                    }
+                    hud.set(style: .notification, text: R.string.localizable.resumed())
                     viewModel.alerts[row].alert.status = .running
                     self.tableView.reloadSections(IndexSet(integer: section), with: .none)
                 case .delete:
+                    DispatchQueue.global().async {
+                        MarketAlertDAO.shared.deleteAlert(id: alert.alertID)
+                    }
                     hud.set(style: .notification, text: R.string.localizable.deleted())
                     viewModel.alerts.remove(at: row)
                     if viewModel.alerts.isEmpty {

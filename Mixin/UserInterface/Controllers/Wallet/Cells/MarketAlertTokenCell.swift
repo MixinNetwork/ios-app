@@ -64,13 +64,19 @@ final class MarketAlertTokenCell: UITableViewCell {
             }
             alertViews.removeLast(-numberOfButtonsToBeAdded)
         }
-        for (i, alert) in viewModel.alerts.enumerated() {
+        for (i, viewModel) in viewModel.alerts.enumerated() {
             let cell = alertViews[i]
-            cell.iconImageView.image = alert.icon
-            cell.titleLabel.text = alert.title
-            cell.subtitleLabel.text = alert.subtitle
+            cell.iconImageView.image = viewModel.icon
+            cell.titleLabel.text = viewModel.title
+            cell.titleLabel.textColor = switch viewModel.alert.status {
+            case .running:
+                R.color.text()
+            case .paused:
+                R.color.text_tertiary()
+            }
+            cell.subtitleLabel.text = viewModel.subtitle
             cell.actionButton.tag = i
-            cell.actionButton.menu = UIMenu(children: alertActions(alert: alert.alert))
+            cell.actionButton.menu = UIMenu(children: alertActions(alert: viewModel.alert))
         }
     }
     

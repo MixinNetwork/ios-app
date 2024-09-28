@@ -29,6 +29,7 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
         super.viewDidLoad()
         if let decimalValue = Decimal(string: alert.value, locale: .enUSPOSIX) {
             inputTextField.text = formatter.string(decimal: decimalValue)
+            validateInput()
         }
         addAlertButton.setTitle(R.string.localizable.edit_alert(), for: .normal)
     }

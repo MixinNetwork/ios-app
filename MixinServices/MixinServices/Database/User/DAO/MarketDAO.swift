@@ -80,6 +80,17 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [assetID])
     }
     
+    public func inexistCoinIDs(in coinIDs: [String]) -> [String] {
+        let query: GRDB.SQL = """
+        WITH q(id) AS (VALUES \(coinIDs))
+        SELECT q.id FROM q LEFT JOIN tokens t ON q.id = t.asset_id WHERE t.asset_id IS NULL
+        """
+        return try! db.read { (db) -> [String] in
+            let (sql, arguments) = try query.build(db)
+            return try String.fetchAll(db, sql: sql, arguments: arguments)
+        }
+    }
+    
     public func priceHistory(coinID: String, period: PriceHistoryPeriod) -> PriceHistoryStorage? {
         let sql = """
         SELECT hp.*

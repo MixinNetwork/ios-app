@@ -25,6 +25,7 @@
                 <outlet property="invalidPriceLabel" destination="P18-cP-Gbd" id="OW8-Rb-F97"/>
                 <outlet property="localCurrencyValueLabel" destination="Wt5-Kh-oUr" id="PvO-fx-prI"/>
                 <outlet property="presetPercentageStackView" destination="VCi-vC-jal" id="i4L-Rx-Taa"/>
+                <outlet property="scrollView" destination="6Nm-5L-a9z" id="XAd-pb-e8e"/>
                 <outlet property="tokenNameLabel" destination="7B7-0Z-p5r" id="jB9-UP-94k"/>
                 <outlet property="tokenPriceLabel" destination="Yfl-Pg-M8C" id="58c-cT-tqV"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -35,7 +36,7 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="6Nm-5L-a9z">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="6Nm-5L-a9z">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="suA-KE-RaA">

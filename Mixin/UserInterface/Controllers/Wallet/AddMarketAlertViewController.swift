@@ -3,6 +3,7 @@ import MixinServices
 
 class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var iconImageView: PlainTokenIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var tokenPriceLabel: UILabel!
@@ -34,6 +35,9 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     var alertType: MarketAlert.AlertType = .priceReached {
         didSet {
+            guard isViewLoaded else {
+                return
+            }
             switch alertType {
             case .priceReached, .priceIncreased, .priceDecreased:
                 inputTitleLabel.text = R.string.localizable.price_in_currency("USD")
@@ -42,6 +46,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             }
         }
     }
+    
     var alertFrequency: MarketAlert.AlertFrequency = .once
     
     var decimalInputValue: Decimal? {
@@ -101,11 +106,18 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             button.addTarget(self, action: #selector(loadPresetPercentage(_:)), for: .touchUpInside)
         }
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
     
     override func layout(for keyboardFrame: CGRect) {
         let keyboardHeight = view.bounds.height - keyboardFrame.origin.y
         addAlertButtonBottomConstraint.constant = keyboardHeight + 12
+        scrollView.contentInset.bottom = keyboardHeight
         view.layoutIfNeeded()
     }
     
@@ -141,6 +153,33 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
     }
     
+    func validateInput() {
+        guard let value = decimalInputValue else {
+            invalidPriceLabel.isHidden = true
+            addAlertButton.isEnabled = false
+            return
+        }
+        let isValid = switch alertType {
+        case .priceReached:
+            value != coin.decimalPrice && value >= coin.decimalPrice / 1000 && value <= coin.decimalPrice * 1000
+        case .priceIncreased:
+            value > coin.decimalPrice && value <= coin.decimalPrice * 1000
+        case .priceDecreased:
+            value < coin.decimalPrice && value >= coin.decimalPrice / 1000
+        case .percentageIncreased, .percentageDecreased:
+            value >= 0.01 && value <= 10
+        }
+        inputTextField.textColor = isValid ? R.color.text() : R.color.error_red()
+        invalidPriceLabel.isHidden = isValid
+        addAlertButton.isEnabled = isValid
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        addAlertButtonBottomConstraint.constant = 12
+        scrollView.contentInset.bottom = 0
+        view.layoutIfNeeded()
+    }
+    
     @objc private func loadPresetPercentage(_ sender: UIButton) {
         let percentage = changePercentages[sender.tag]
         let value = switch alertType {
@@ -149,7 +188,12 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         case .percentageIncreased, .percentageDecreased:
             percentage * 100
         }
-        inputTextField.text = formatter.string(from: value as NSDecimalNumber)
+        let roundedValue = withUnsafePointer(to: value) { value in
+            var roundedValue = Decimal()
+            NSDecimalRound(&roundedValue, value, 2, .plain)
+            return roundedValue
+        }
+        inputTextField.text = formatter.string(from: roundedValue as NSDecimalNumber)
         validateInput()
     }
     
@@ -191,27 +235,6 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         self.alertFrequency = frequency
         alertFrequencyLabel.text = alertFrequency.description
         reloadAlertFrequencyMenu()
-    }
-    
-    private func validateInput() {
-        guard let value = decimalInputValue else {
-            invalidPriceLabel.isHidden = true
-            addAlertButton.isEnabled = false
-            return
-        }
-        let isValid = switch alertType {
-        case .priceReached:
-            value != coin.decimalPrice && value >= coin.decimalPrice / 1000 && value <= coin.decimalPrice * 1000
-        case .priceIncreased:
-            value > coin.decimalPrice && value <= coin.decimalPrice * 1000
-        case .priceDecreased:
-            value < coin.decimalPrice && value >= coin.decimalPrice / 1000
-        case .percentageIncreased, .percentageDecreased:
-            value >= 0.01 && value <= 10
-        }
-        inputTextField.textColor = isValid ? R.color.text() : R.color.error_red()
-        invalidPriceLabel.isHidden = isValid
-        addAlertButton.isEnabled = isValid
     }
     
 }

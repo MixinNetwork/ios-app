@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eJ4-B3-pZp" userLabel="Expanded Content View">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="106"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QI4-QJ-Hed" userLabel="Token Info View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
@@ -66,16 +66,16 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="280" placeholderIntrinsicHeight="0.0" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Bpm-XA-qfW">
-                                <rect key="frame" x="0.0" y="90" width="320" height="0.0"/>
+                                <rect key="frame" x="0.0" y="69" width="320" height="0.0"/>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="Bpm-XA-qfW" firstAttribute="leading" secondItem="eJ4-B3-pZp" secondAttribute="leading" id="4iu-Cx-IbD"/>
-                            <constraint firstItem="Bpm-XA-qfW" firstAttribute="top" secondItem="QI4-QJ-Hed" secondAttribute="bottom" constant="16" id="8st-Sp-BKN"/>
+                            <constraint firstItem="Bpm-XA-qfW" firstAttribute="top" secondItem="QI4-QJ-Hed" secondAttribute="bottom" constant="-5" id="8st-Sp-BKN"/>
                             <constraint firstItem="QI4-QJ-Hed" firstAttribute="leading" secondItem="eJ4-B3-pZp" secondAttribute="leading" id="SAQ-qQ-d8g"/>
                             <constraint firstItem="QI4-QJ-Hed" firstAttribute="top" secondItem="eJ4-B3-pZp" secondAttribute="top" id="ZrW-4A-MPk"/>
-                            <constraint firstAttribute="bottom" secondItem="Bpm-XA-qfW" secondAttribute="bottom" constant="16" id="cdy-qs-EXA"/>
+                            <constraint firstAttribute="bottom" secondItem="Bpm-XA-qfW" secondAttribute="bottom" constant="11" id="cdy-qs-EXA"/>
                             <constraint firstAttribute="trailing" secondItem="QI4-QJ-Hed" secondAttribute="trailing" id="kjc-EO-tMt"/>
                             <constraint firstAttribute="trailing" secondItem="Bpm-XA-qfW" secondAttribute="trailing" id="m9r-gk-X5c"/>
                         </constraints>

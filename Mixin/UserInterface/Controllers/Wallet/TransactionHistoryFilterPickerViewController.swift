@@ -16,9 +16,11 @@ class TransactionHistoryFilterPickerViewController: UIViewController {
     
     private(set) var isShowingSelections = false
     
-    private let trayView = R.nib.authenticationPreviewDoubleButtonTrayView(withOwner: nil)!
-    
     var searchingKeyword: String?
+    
+    var usesTrayView: Bool {
+        true
+    }
     
     var isSearching: Bool {
         searchingKeyword != nil
@@ -44,12 +46,19 @@ class TransactionHistoryFilterPickerViewController: UIViewController {
         )
         searchBoxView.textField.delegate = self
         
-        trayWrapperView.addSubview(trayView)
-        trayView.snp.makeEdgesEqualToSuperview()
-        trayView.leftButton.setTitle(R.string.localizable.reset(), for: .normal)
-        trayView.leftButton.addTarget(self, action: #selector(reset(_:)), for: .touchUpInside)
-        trayView.rightButton.setTitle(R.string.localizable.apply(), for: .normal)
-        trayView.rightButton.addTarget(self, action: #selector(apply(_:)), for: .touchUpInside)
+        if usesTrayView {
+            let trayView = R.nib.authenticationPreviewDoubleButtonTrayView(withOwner: nil)!
+            trayWrapperView.addSubview(trayView)
+            trayView.snp.makeEdgesEqualToSuperview()
+            trayView.leftButton.setTitle(R.string.localizable.reset(), for: .normal)
+            trayView.leftButton.addTarget(self, action: #selector(reset(_:)), for: .touchUpInside)
+            trayView.rightButton.setTitle(R.string.localizable.apply(), for: .normal)
+            trayView.rightButton.addTarget(self, action: #selector(apply(_:)), for: .touchUpInside)
+        } else {
+            trayWrapperView.snp.makeConstraints { make in
+                make.height.equalTo(0)
+            }
+        }
     }
     
     @IBAction func cancel(_ sender: Any) {
@@ -93,14 +102,18 @@ class TransactionHistoryFilterPickerViewController: UIViewController {
         view.layoutIfNeeded()
     }
     
-    func hideSelections() {
+    func hideSelections(animated: Bool) {
         guard isShowingSelections else {
             return
         }
         isShowingSelections = false
         hideSelectionConstraint.priority = .defaultHigh
         showSelectionConstraint.priority = .defaultLow
-        UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
+        } else {
+            view.layoutIfNeeded()
+        }
     }
     
     func showSelections(animated: Bool) {

@@ -21,7 +21,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var addAlertButtonBottomConstraint: NSLayoutConstraint!
     
-    let market: Market
+    let coin: MarketAlertCoin
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -52,8 +52,8 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         -0.2, -0.1, -0.05, 0.05, 0.1, 0.2
     ]
     
-    init(market: Market) {
-        self.market = market
+    init(coin: MarketAlertCoin) {
+        self.coin = coin
         let nib = R.nib.addMarketAlertView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -62,8 +62,8 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(market: Market) -> ContainerViewController {
-        let alert = AddMarketAlertViewController(market: market)
+    static func contained(coin: MarketAlertCoin) -> ContainerViewController {
+        let alert = AddMarketAlertViewController(coin: coin)
         let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.add_alert())
         container.loadViewIfNeeded()
         container.view.backgroundColor = R.color.background_secondary()
@@ -73,9 +73,9 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        iconImageView.setIcon(market: market)
-        tokenNameLabel.text = market.name
-        tokenPriceLabel.text = R.string.localizable.current_price(market.localizedUSDPrice)
+        iconImageView.setIcon(coin: coin)
+        tokenNameLabel.text = coin.name
+        tokenPriceLabel.text = R.string.localizable.current_price(coin.localizedUSDPrice)
         alertTypeTitleLabel.text = R.string.localizable.alert_type()
         alertTypeLabel.text = alertType.description
         reloadAlertTypeMenu()
@@ -84,7 +84,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         alertFrequencyLabel.text = alertFrequency.description
         reloadAlertFrequencyMenu()
         alertFrequencyButton.showsMenuAsPrimaryAction = true
-        inputTextField.text = formatter.string(from: market.decimalPrice as NSDecimalNumber)
+        inputTextField.text = formatter.string(from: coin.decimalPrice as NSDecimalNumber)
         inputTextField.becomeFirstResponder()
         validateInput()
         invalidPriceLabel.text = R.string.localizable.price_cannot_be_current()
@@ -123,7 +123,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
         addAlertButton.isBusy = true
         RouteAPI.addMarketAlert(
-            coinID: market.coinID,
+            coinID: coin.coinID,
             type: alertType,
             frequency: alertFrequency,
             value: value
@@ -145,7 +145,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         let percentage = changePercentages[sender.tag]
         let value = switch alertType {
         case .priceReached, .priceIncreased, .priceDecreased:
-            market.decimalPrice * (1 + percentage)
+            coin.decimalPrice * (1 + percentage)
         case .percentageIncreased, .percentageDecreased:
             percentage * 100
         }
@@ -201,11 +201,11 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
         let isValid = switch alertType {
         case .priceReached:
-            value != market.decimalPrice && value >= market.decimalPrice / 1000 && value <= market.decimalPrice * 1000
+            value != coin.decimalPrice && value >= coin.decimalPrice / 1000 && value <= coin.decimalPrice * 1000
         case .priceIncreased:
-            value > market.decimalPrice && value <= market.decimalPrice * 1000
+            value > coin.decimalPrice && value <= coin.decimalPrice * 1000
         case .priceDecreased:
-            value < market.decimalPrice && value >= market.decimalPrice / 1000
+            value < coin.decimalPrice && value >= coin.decimalPrice / 1000
         case .percentageIncreased, .percentageDecreased:
             value >= 0.01 && value <= 10
         }

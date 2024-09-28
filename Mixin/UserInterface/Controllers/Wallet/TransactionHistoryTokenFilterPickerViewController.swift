@@ -148,7 +148,7 @@ extension TransactionHistoryTokenFilterPickerViewController: UITableViewDelegate
             collectionView.deleteItems(at: [indexPath])
         }
         if selectedAssetIDs.isEmpty {
-            hideSelections()
+            hideSelections(animated: true)
         }
     }
     
@@ -184,7 +184,7 @@ extension TransactionHistoryTokenFilterPickerViewController: SelectedItemCellDel
             tableView.deselectRow(at: indexPath, animated: true)
         }
         if selectedAssetIDs.isEmpty {
-            hideSelections()
+            hideSelections(animated: true)
         }
     }
     

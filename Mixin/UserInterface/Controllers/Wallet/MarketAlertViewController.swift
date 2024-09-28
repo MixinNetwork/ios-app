@@ -8,14 +8,21 @@ final class MarketAlertViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     private let headerReuseIdentifier = "h"
-    private let market: Market
+    private let coin: MarketAlertCoin
     
     private var coins: [MarketAlertCoin]
     private var viewModels: [MarketAlertViewModel] = []
     
     init(market: Market) {
-        self.market = market
-        self.coins = [MarketAlertCoin(coinID: market.coinID, name: market.name, symbol: market.symbol, iconURL: market.iconURL, currentPrice: market.currentPrice)]
+        let coin = MarketAlertCoin(
+            coinID: market.coinID,
+            name: market.name,
+            symbol: market.symbol,
+            iconURL: market.iconURL,
+            currentPrice: market.currentPrice
+        )
+        self.coin = coin
+        self.coins = [coin]
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,11 +62,12 @@ final class MarketAlertViewController: UIViewController {
     
     @IBAction func addAlert(_ sender: BusyButton) {
         sender.isBusy = true
-        NotificationManager.shared.requestAuthorization { [market] isAuthorized in
+        NotificationManager.shared.requestAuthorization { isAuthorized in
             sender.isBusy = false
             if isAuthorized {
-                let addAlert = AddMarketAlertViewController.contained(market: market)
-                self.navigationController?.pushViewController(addAlert, animated: true)
+                let picker = MarketAlertCoinPickerViewController()
+                picker.delegate = self
+                self.present(picker, animated: true)
             } else {
                 let alert = UIAlertController(
                     title: R.string.localizable.turn_on_notifications(),
@@ -225,13 +233,23 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
     }
     
     func marketAlertTokenCell(_ cell: MarketAlertTokenCell, wantsToEdit alert: MarketAlert) {
-        let editor = EditMarketAlertViewController.contained(market: market, alert: alert)
+        let editor = EditMarketAlertViewController.contained(coin: coin, alert: alert)
         navigationController?.pushViewController(editor, animated: true)
     }
     
 }
 
 extension MarketAlertViewController: MarketAlertCoinPickerViewController.Delegate {
+    
+    func marketAlertCoinPickerViewController(
+        _ controller: MarketAlertCoinPickerViewController,
+        didPickCoin coin: MarketAlertCoin
+    ) {
+        dismiss(animated: true) {
+            let addAlert = AddMarketAlertViewController.contained(coin: coin)
+            self.navigationController?.pushViewController(addAlert, animated: true)
+        }
+    }
     
     func marketAlertCoinPickerViewController(
         _ controller: MarketAlertCoinPickerViewController,

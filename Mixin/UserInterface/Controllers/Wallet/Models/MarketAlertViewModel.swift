@@ -49,14 +49,14 @@ extension MarketAlertViewModel {
                 self.icon = R.image.market_alert_decrease()!
             }
             if let value = Decimal(string: alert.value, locale: .enUSPOSIX) {
-                let localizedValue = switch alert.type {
-                case .priceReached, .priceIncreased, .priceDecreased:
+                let localizedValue = switch alert.type.valueType {
+                case .absolute:
                     CurrencyFormatter.localizedString(
                         from: value,
                         format: .fiatMoneyPrice,
                         sign: .never
                     )
-                case .percentageIncreased, .percentageDecreased:
+                case .percentage:
                     NumberFormatter.percentage.string(decimal: value) ?? alert.value
                 }
                 self.title = switch alert.type {
@@ -69,7 +69,7 @@ extension MarketAlertViewModel {
                 case .percentageIncreased:
                     "\(R.string.localizable.alert_type_percentage_increased()) >= \(localizedValue)"
                 case .percentageDecreased:
-                    "\(R.string.localizable.alert_type_percentage_decreased()) <= \(localizedValue)"
+                    "\(R.string.localizable.alert_type_percentage_decreased()) >= \(localizedValue)"
                 }
             } else {
                 self.title = ""

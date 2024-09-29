@@ -33,6 +33,11 @@ extension MarketAlert {
         case constant
     }
     
+    public enum AlertValueType {
+        case absolute
+        case percentage
+    }
+    
     public enum AlertType: String, CaseIterable, Codable {
         
         case priceReached = "price_reached"
@@ -49,6 +54,15 @@ extension MarketAlert {
                     .increasing
             case .priceDecreased, .percentageDecreased:
                     .decreasing
+            }
+        }
+        
+        public var valueType: AlertValueType {
+            switch self {
+            case .priceReached, .priceIncreased, .priceDecreased:
+                    .absolute
+            case .percentageIncreased, .percentageDecreased:
+                    .percentage
             }
         }
         

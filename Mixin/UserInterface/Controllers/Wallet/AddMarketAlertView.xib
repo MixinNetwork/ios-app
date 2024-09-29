@@ -28,6 +28,7 @@
                 <outlet property="invalidPriceLabel" destination="P18-cP-Gbd" id="OW8-Rb-F97"/>
                 <outlet property="localCurrencyValueLabel" destination="Wt5-Kh-oUr" id="PvO-fx-prI"/>
                 <outlet property="presetPercentageStackView" destination="VCi-vC-jal" id="i4L-Rx-Taa"/>
+                <outlet property="presetPercentageWrapperView" destination="I6e-6h-LJT" id="hhC-5t-74c"/>
                 <outlet property="scrollView" destination="6Nm-5L-a9z" id="XAd-pb-e8e"/>
                 <outlet property="tokenNameLabel" destination="7B7-0Z-p5r" id="jB9-UP-94k"/>
                 <outlet property="tokenPriceLabel" destination="Yfl-Pg-M8C" id="58c-cT-tqV"/>
@@ -170,8 +171,7 @@
                                                 </stackView>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GaG-gW-z6k">
                                                     <rect key="frame" x="0.0" y="0.0" width="353" height="74"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <connections>
                                                         <action selector="beginInput:" destination="-1" eventType="touchUpInside" id="PFk-NM-7Yb"/>
                                                     </connections>
@@ -206,14 +206,14 @@
                                             <rect key="frame" x="0.0" y="172" width="353" height="50"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="288" placeholderIntrinsicHeight="26" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="VCi-vC-jal">
-                                                    <rect key="frame" x="32.666666666666657" y="0.0" width="288" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="288" height="50"/>
                                                 </stackView>
                                             </subviews>
                                             <color key="backgroundColor" name="background_secondary"/>
                                             <constraints>
-                                                <constraint firstItem="VCi-vC-jal" firstAttribute="centerX" secondItem="I6e-6h-LJT" secondAttribute="centerX" id="86R-cR-tzT"/>
-                                                <constraint firstItem="VCi-vC-jal" firstAttribute="top" secondItem="I6e-6h-LJT" secondAttribute="top" id="RBN-TU-IVU"/>
-                                                <constraint firstAttribute="bottom" secondItem="VCi-vC-jal" secondAttribute="bottom" id="XoP-fU-ce9"/>
+                                                <constraint firstItem="VCi-vC-jal" firstAttribute="centerY" secondItem="I6e-6h-LJT" secondAttribute="centerY" id="6d0-zC-l8F"/>
+                                                <constraint firstItem="VCi-vC-jal" firstAttribute="leading" secondItem="I6e-6h-LJT" secondAttribute="leading" id="I7a-4F-nNj"/>
+                                                <constraint firstItem="VCi-vC-jal" firstAttribute="height" secondItem="I6e-6h-LJT" secondAttribute="height" priority="999" id="ySI-In-Lol"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sqj-39-PES">
@@ -299,7 +299,7 @@
                     <viewLayoutGuide key="contentLayoutGuide" id="QHy-8J-RsN"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="Sxy-ki-g8m"/>
                 </scrollView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FJu-FL-ACe" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FJu-FL-ACe" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="132.66666666666666" y="776" width="127.99999999999997" height="42"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="128" id="QBh-xY-ulB"/>

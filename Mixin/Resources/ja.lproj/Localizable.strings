@@ -437,7 +437,6 @@
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "新しい電話番号を入力してください";
 "enter_pin_to_delete_account" = "アカウントを削除するためにPINコードを入力してください";
-"enter_price" = "Enter price";
 "enter_your_anonymous_number" = "Enter your anonymous number";
 "enter_your_emergency_contact_mixin_id" = "あなたの緊急連絡先のMixin IDを入力してください";
 "enter_your_new_pin" = "Enter your new PIN";
@@ -825,7 +824,6 @@
 "preparing_progress" = "準備中...(%@)";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
-"price_cannot_be_current" = "The set price cannot be the current price";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_in_currency" = "Price (%@)";

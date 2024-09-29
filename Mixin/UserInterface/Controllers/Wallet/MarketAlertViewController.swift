@@ -63,9 +63,15 @@ final class MarketAlertViewController: UIViewController {
         NotificationManager.shared.requestAuthorization { isAuthorized in
             sender.isBusy = false
             if isAuthorized {
-                let picker = MarketAlertCoinPickerViewController()
-                picker.delegate = self
-                self.present(picker, animated: true)
+                if self.coins.count == 1 {
+                    let coin = self.coins[0]
+                    let addAlert = AddMarketAlertViewController.contained(coin: coin)
+                    self.navigationController?.pushViewController(addAlert, animated: true)
+                } else {
+                    let picker = MarketAlertCoinPickerViewController()
+                    picker.delegate = self
+                    self.present(picker, animated: true)
+                }
             } else {
                 let alert = UIAlertController(
                     title: R.string.localizable.turn_on_notifications(),

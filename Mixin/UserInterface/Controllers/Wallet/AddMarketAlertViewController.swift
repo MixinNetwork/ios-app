@@ -17,6 +17,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var inputTrailingLabel: UILabel!
     @IBOutlet weak var localCurrencyValueLabel: UILabel!
     @IBOutlet weak var invalidPriceLabel: UILabel!
+    @IBOutlet weak var presetPercentageWrapperView: UIView!
     @IBOutlet weak var presetPercentageStackView: UIStackView!
     @IBOutlet weak var alertFrequencyTitleLabel: UILabel!
     @IBOutlet weak var alertFrequencyLabel: UILabel!
@@ -49,6 +50,10 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     var decimalInputValue: Decimal? {
         Decimal(string: inputTextField.text ?? "", locale: .current)
+    }
+    
+    var initialInput: String? {
+        formatter.string(from: coin.decimalPrice as NSDecimalNumber)
     }
     
     private let changePercentages: [Decimal] = [
@@ -87,10 +92,9 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         reloadAlertFrequencyMenu()
         alertFrequencyButton.showsMenuAsPrimaryAction = true
         reloadInputTitle()
-        inputTextField.text = formatter.string(from: coin.decimalPrice as NSDecimalNumber)
+        inputTextField.placeholder = zeroWith2Fractions
+        inputTextField.text = initialInput
         inputTextField.becomeFirstResponder()
-        validateInput()
-        invalidPriceLabel.text = R.string.localizable.price_cannot_be_current()
         for (i, percentage) in changePercentages.enumerated() {
             let button = PresetPercentageButton(type: .system)
             let title = NumberFormatter.percentage.string(decimal: percentage)
@@ -99,7 +103,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             button.setTitleColor(R.color.text(), for: .normal)
             button.tag = i
             button.layer.masksToBounds = true
-            button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+            button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 9, bottom: 8, right: 9)
             presetPercentageStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(loadPresetPercentage(_:)), for: .touchUpInside)
         }
@@ -138,10 +142,10 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         guard let decimalInputValue else {
             return
         }
-        let requestValue = switch alertType {
-        case .priceReached, .priceIncreased, .priceDecreased:
+        let requestValue = switch alertType.valueType {
+        case .absolute:
             decimalInputValue
-        case .percentageIncreased, .percentageDecreased:
+        case .percentage:
             decimalInputValue / 100
         }
         formatter.locale = .enUSPOSIX
@@ -179,9 +183,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
         let invalidDescription: String? = switch alertType {
         case .priceReached:
-            if value == coin.decimalPrice {
-                R.string.localizable.price_cannot_be_current()
-            } else if value < coin.decimalPrice / 100 {
+            if value < coin.decimalPrice / 100 {
                 R.string.localizable.price_too_less("1/100")
             } else if value > coin.decimalPrice * 100 {
                 R.string.localizable.price_too_large("100")
@@ -250,10 +252,10 @@ extension AddMarketAlertViewController {
     
     @objc private func loadPresetPercentage(_ sender: UIButton) {
         let percentage = changePercentages[sender.tag]
-        let value = switch alertType {
-        case .priceReached, .priceIncreased, .priceDecreased:
+        let value = switch alertType.valueType {
+        case .absolute:
             coin.decimalPrice * (1 + percentage)
-        case .percentageIncreased, .percentageDecreased:
+        case .percentage:
             percentage * 100
         }
         let roundedValue = withUnsafePointer(to: value) { value in
@@ -266,10 +268,10 @@ extension AddMarketAlertViewController {
     }
     
     private func reloadInputTitle() {
-        switch alertType {
-        case .priceReached, .priceIncreased, .priceDecreased:
+        switch alertType.valueType {
+        case .absolute:
             inputTitleLabel.text = R.string.localizable.price_in_currency("USD")
-        case .percentageIncreased, .percentageDecreased:
+        case .percentage:
             inputTitleLabel.text = R.string.localizable.alert_value()
         }
     }
@@ -283,41 +285,51 @@ extension AddMarketAlertViewController {
     }
     
     private func switchToType(_ type: MarketAlert.AlertType) {
+        if self.alertType.valueType != type.valueType {
+            inputTextField.text = nil
+        }
         self.alertType = type
         alertTypeLabel.text = type.description
         reloadAlertTypeMenu()
         let center = changePercentages.firstIndex(where: { $0 > 0 }) ?? 0
-        switch type.displayType {
-        case .increasing:
-            for button in presetPercentageStackView.arrangedSubviews.prefix(center) {
-                button.isHidden = true
-            }
-            for button in presetPercentageStackView.arrangedSubviews.suffix(center) {
-                button.isHidden = false
-            }
-        case .decreasing:
-            for button in presetPercentageStackView.arrangedSubviews.prefix(center) {
-                button.isHidden = false
-            }
-            for button in presetPercentageStackView.arrangedSubviews.suffix(center) {
-                button.isHidden = true
-            }
-        case .constant:
+        switch type {
+        case .priceReached:
+            presetPercentageWrapperView.isHidden = false
             for button in presetPercentageStackView.arrangedSubviews {
                 button.isHidden = false
             }
+        case .priceIncreased:
+            presetPercentageWrapperView.isHidden = false
+            for button in presetPercentageStackView.arrangedSubviews.prefix(center) {
+                button.isHidden = true
+            }
+            for button in presetPercentageStackView.arrangedSubviews.suffix(center) {
+                button.isHidden = false
+            }
+        case .priceDecreased:
+            presetPercentageWrapperView.isHidden = false
+            for button in presetPercentageStackView.arrangedSubviews.prefix(center) {
+                button.isHidden = false
+            }
+            for button in presetPercentageStackView.arrangedSubviews.suffix(center) {
+                button.isHidden = true
+            }
+        case .percentageIncreased:
+            presetPercentageWrapperView.isHidden = true
+        case .percentageDecreased:
+            presetPercentageWrapperView.isHidden = true
         }
-        switch type {
-        case .percentageIncreased, .percentageDecreased:
-            inputContentStackView.spacing = 2
-            inputTextField.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            inputTrailingLabel.text = "%"
-            inputTrailingLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        default:
+        switch type.valueType {
+        case .absolute:
             inputContentStackView.spacing = 8
             inputTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
             inputTrailingLabel.text = nil
             inputTrailingLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        case .percentage:
+            inputContentStackView.spacing = 2
+            inputTextField.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            inputTrailingLabel.text = "%"
+            inputTrailingLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         }
         validateInput()
     }

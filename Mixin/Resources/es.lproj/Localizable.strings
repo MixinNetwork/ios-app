@@ -437,7 +437,6 @@
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Introduce tu nuevo número de teléfono";
 "enter_pin_to_delete_account" = "Introduce tu PIN para eliminar tu cuenta";
-"enter_price" = "Enter price";
 "enter_your_anonymous_number" = "Enter your anonymous number";
 "enter_your_emergency_contact_mixin_id" = "Introduce tu contacto de emergencia Mixin ID";
 "enter_your_new_pin" = "Introduce tu nuevo PIN";
@@ -825,7 +824,6 @@
 "preparing_progress" = "Preparando...(%@)";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
-"price_cannot_be_current" = "The set price cannot be the current price";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_in_currency" = "Price (%@)";

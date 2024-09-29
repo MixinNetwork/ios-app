@@ -5,6 +5,20 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
     
     private let alert: MarketAlert
     
+    override var initialInput: String? {
+        if let decimalValue = Decimal(string: alert.value, locale: .enUSPOSIX) {
+            let value = switch alertType {
+            case .percentageDecreased, .percentageIncreased:
+                decimalValue * 100
+            default:
+                decimalValue
+            }
+            return formatter.string(decimal: value)
+        } else {
+            return nil
+        }
+    }
+    
     init(coin: MarketAlertCoin, alert: MarketAlert) {
         self.alert = alert
         super.init(coin: coin)
@@ -27,16 +41,6 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let decimalValue = Decimal(string: alert.value, locale: .enUSPOSIX) {
-            let value = switch alertType {
-            case .percentageDecreased, .percentageIncreased:
-                decimalValue * 100
-            default:
-                decimalValue
-            }
-            inputTextField.text = formatter.string(decimal: value)
-            validateInput()
-        }
         addAlertButton.setTitle(R.string.localizable.edit_alert(), for: .normal)
     }
     
@@ -44,10 +48,10 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
         guard let decimalInputValue else {
             return
         }
-        let requestValue = switch alertType {
-        case .priceReached, .priceIncreased, .priceDecreased:
+        let requestValue = switch alertType.valueType {
+        case .absolute:
             decimalInputValue
-        case .percentageIncreased, .percentageDecreased:
+        case .percentage:
             decimalInputValue / 100
         }
         formatter.locale = .enUSPOSIX

@@ -28,18 +28,33 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if let decimalValue = Decimal(string: alert.value, locale: .enUSPOSIX) {
-            inputTextField.text = formatter.string(decimal: decimalValue)
+            let value = switch alertType {
+            case .percentageDecreased, .percentageIncreased:
+                decimalValue * 100
+            default:
+                decimalValue
+            }
+            inputTextField.text = formatter.string(decimal: value)
             validateInput()
         }
         addAlertButton.setTitle(R.string.localizable.edit_alert(), for: .normal)
     }
     
     override func addAlert(_ sender: Any) {
+        guard let decimalInputValue else {
+            return
+        }
+        let requestValue = switch alertType {
+        case .priceReached, .priceIncreased, .priceDecreased:
+            decimalInputValue
+        case .percentageIncreased, .percentageDecreased:
+            decimalInputValue / 100
+        }
         formatter.locale = .enUSPOSIX
         defer {
             formatter.locale = .current
         }
-        guard let decimalInputValue, let value = formatter.string(decimal: decimalInputValue) else {
+        guard let value = formatter.string(decimal: requestValue) else {
             return
         }
         let newAlert = alert.replacing(type: alertType, frequency: alertFrequency, value: value)

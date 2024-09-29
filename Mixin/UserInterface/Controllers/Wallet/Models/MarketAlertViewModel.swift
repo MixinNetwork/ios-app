@@ -3,18 +3,18 @@ import MixinServices
 
 final class MarketAlertViewModel {
     
-    let coinID: String
-    let iconURL: URL?
-    let name: String
+    let coin: MarketAlertCoin
     let description: String
     var alerts: [AlertViewModel]
     
     var isExpanded = false
     
+    var iconURL: URL? {
+        URL(string: coin.iconURL)
+    }
+    
     init(coin: MarketAlertCoin, alerts: [MarketAlert]) {
-        self.coinID = coin.coinID
-        self.iconURL = URL(string: coin.iconURL)
-        self.name = coin.name
+        self.coin = coin
         if let price = Decimal(string: coin.currentPrice, locale: .enUSPOSIX) {
             let usdPrice = CurrencyFormatter.localizedString(
                 from: price,
@@ -67,9 +67,9 @@ extension MarketAlertViewModel {
                 case .priceDecreased:
                     "\(R.string.localizable.price()) <= \(localizedValue)"
                 case .percentageIncreased:
-                    "\(R.string.localizable.alert_type_price_increased()) >= \(localizedValue)"
+                    "\(R.string.localizable.alert_type_percentage_increased()) >= \(localizedValue)"
                 case .percentageDecreased:
-                    "\(R.string.localizable.alert_type_price_decreased()) <= \(localizedValue)"
+                    "\(R.string.localizable.alert_type_percentage_decreased()) <= \(localizedValue)"
                 }
             } else {
                 self.title = ""

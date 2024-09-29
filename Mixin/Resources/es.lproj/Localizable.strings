@@ -82,6 +82,7 @@
 "alert_type_price_decreased" = "Price Decreased";
 "alert_type_price_increased" = "Price Increased";
 "alert_type_price_reached" = "Price Reached";
+"alert_value" = "Value";
 "all" = "Todo";
 "all_conversations" = "Todas las conversaciones";
 "all_dates" = "All Dates";
@@ -824,9 +825,15 @@
 "preparing_progress" = "Preparando...(%@)";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
-"price_cannot_be_current" = "The set price cannot be the current price.";
+"price_cannot_be_current" = "The set price cannot be the current price";
 "price_data_unavailable" = "Price data unavailable";
+"price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_in_currency" = "Price (%@)";
+"price_increase_invalid" = "The price increase must be greater than %1$@ and less than %2$@";
+"price_must_greater_than_current" = "The set price must be greater than the current price";
+"price_must_less_than_current" = "The set price must be less than the current price";
+"price_too_large" = "The set price must be less than %@ times the current price";
+"price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "Privacidad";
 "privacy_policy" = "Política de privacidad";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";

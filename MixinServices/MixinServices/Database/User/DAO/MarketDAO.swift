@@ -80,7 +80,7 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [assetID])
     }
     
-    public func inexistCoinIDs(in coinIDs: [String]) -> [String] {
+    public func inexistCoinIDs(in coinIDs: Set<String>) -> [String] {
         let values = coinIDs.map({ "('\($0)')" }).joined(separator: ",")
         return db.select(with: """
             WITH c(id) AS (VALUES \(values))
@@ -146,6 +146,19 @@ public final class MarketDAO: UserDatabaseDAO {
             """
             let favorableMarket = try FavorableMarket.fetchOne(db, sql: sql, arguments: [market.coinID])
             return favorableMarket
+        }
+    }
+    
+    public func save(markets: [Market]) {
+        try? db.writeAndReturnError { db in
+            try markets.save(db)
+            let now = Date().toUTCString()
+            let ids: [MarketID] = markets.flatMap { market in
+                market.assetIDs?.map { assetID in
+                    MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
+                } ?? []
+            }
+            try ids.save(db)
         }
     }
     

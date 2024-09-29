@@ -8,7 +8,6 @@ final class MarketAlertViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     private let headerReuseIdentifier = "h"
-    private let coin: MarketAlertCoin
     
     private var coins: [MarketAlertCoin]
     private var viewModels: [MarketAlertViewModel] = []
@@ -21,7 +20,6 @@ final class MarketAlertViewController: UIViewController {
             iconURL: market.iconURL,
             currentPrice: market.currentPrice
         )
-        self.coin = coin
         self.coins = [coin]
         super.init(nibName: nil, bundle: nil)
     }
@@ -228,17 +226,19 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
                         MarketAlertDAO.shared.deleteAlert(id: alert.alertID)
                     }
                     hud.set(style: .notification, text: R.string.localizable.deleted())
-                    viewModel.alerts.remove(at: row)
-                    if viewModel.alerts.isEmpty {
-                        self.viewModels.remove(at: section)
-                        self.tableView.deleteSections(IndexSet(integer: section), with: .none)
-                        self.tableView.checkEmpty(
-                            dataCount: self.viewModels.count,
-                            text: R.string.localizable.no_alerts(),
-                            photo: R.image.emptyIndicator.ic_data()!
-                        )
-                    } else {
-                        self.tableView.reloadSections(IndexSet(integer: section), with: .none)
+                    UIView.performWithoutAnimation {
+                        viewModel.alerts.remove(at: row)
+                        if viewModel.alerts.isEmpty {
+                            self.viewModels.remove(at: section)
+                            self.tableView.deleteSections(IndexSet(integer: section), with: .none)
+                            self.tableView.checkEmpty(
+                                dataCount: self.viewModels.count,
+                                text: R.string.localizable.no_alerts(),
+                                photo: R.image.emptyIndicator.ic_data()!
+                            )
+                        } else {
+                            self.tableView.reloadSections(IndexSet(integer: section), with: .none)
+                        }
                     }
                 }
             case .failure(let error):
@@ -248,7 +248,11 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
         }
     }
     
-    func marketAlertTokenCell(_ cell: MarketAlertTokenCell, wantsToEdit alert: MarketAlert) {
+    func marketAlertTokenCell(
+        _ cell: MarketAlertTokenCell,
+        wantsToEdit alert: MarketAlert,
+        coin: MarketAlertCoin
+    ) {
         let editor = EditMarketAlertViewController.contained(coin: coin, alert: alert)
         navigationController?.pushViewController(editor, animated: true)
     }

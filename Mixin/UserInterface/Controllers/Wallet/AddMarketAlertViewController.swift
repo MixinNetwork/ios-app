@@ -10,8 +10,11 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var alertTypeTitleLabel: UILabel!
     @IBOutlet weak var alertTypeLabel: UILabel!
     @IBOutlet weak var alertTypeButton: UIButton!
+    @IBOutlet weak var beginInputButton: UIButton!
     @IBOutlet weak var inputTitleLabel: UILabel!
+    @IBOutlet weak var inputContentStackView: UIStackView!
     @IBOutlet weak var inputTextField: UITextField!
+    @IBOutlet weak var inputTrailingLabel: UILabel!
     @IBOutlet weak var localCurrencyValueLabel: UILabel!
     @IBOutlet weak var invalidPriceLabel: UILabel!
     @IBOutlet weak var presetPercentageStackView: UIStackView!
@@ -38,12 +41,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             guard isViewLoaded else {
                 return
             }
-            switch alertType {
-            case .priceReached, .priceIncreased, .priceDecreased:
-                inputTitleLabel.text = R.string.localizable.price_in_currency("USD")
-            case .percentageIncreased, .percentageDecreased:
-                inputTitleLabel.text = R.string.localizable.value()
-            }
+            reloadInputTitle()
         }
     }
     
@@ -82,13 +80,13 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         tokenNameLabel.text = coin.name
         tokenPriceLabel.text = R.string.localizable.current_price(coin.localizedUSDPrice)
         alertTypeTitleLabel.text = R.string.localizable.alert_type()
-        alertTypeLabel.text = alertType.description
         reloadAlertTypeMenu()
         alertTypeButton.showsMenuAsPrimaryAction = true
         alertFrequencyTitleLabel.text = R.string.localizable.alert_frequency()
         alertFrequencyLabel.text = alertFrequency.description
         reloadAlertFrequencyMenu()
         alertFrequencyButton.showsMenuAsPrimaryAction = true
+        reloadInputTitle()
         inputTextField.text = formatter.string(from: coin.decimalPrice as NSDecimalNumber)
         inputTextField.becomeFirstResponder()
         validateInput()
@@ -101,11 +99,18 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             button.setTitleColor(R.color.text(), for: .normal)
             button.tag = i
             button.layer.masksToBounds = true
-            button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+            button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
             presetPercentageStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(loadPresetPercentage(_:)), for: .touchUpInside)
         }
+        switchToType(alertType)
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),
@@ -121,16 +126,29 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         view.layoutIfNeeded()
     }
     
+    @IBAction func beginInput(_ sender: Any) {
+        inputTextField.becomeFirstResponder()
+    }
+    
     @IBAction func detectInput(_ sender: Any) {
         validateInput()
     }
     
     @IBAction func addAlert(_ sender: Any) {
+        guard let decimalInputValue else {
+            return
+        }
+        let requestValue = switch alertType {
+        case .priceReached, .priceIncreased, .priceDecreased:
+            decimalInputValue
+        case .percentageIncreased, .percentageDecreased:
+            decimalInputValue / 100
+        }
         formatter.locale = .enUSPOSIX
         defer {
             formatter.locale = .current
         }
-        guard let decimalInputValue, let value = formatter.string(decimal: decimalInputValue) else {
+        guard let value = formatter.string(decimal: requestValue) else {
             return
         }
         addAlertButton.isBusy = true
@@ -159,25 +177,75 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             addAlertButton.isEnabled = false
             return
         }
-        let isValid = switch alertType {
+        let invalidDescription: String? = switch alertType {
         case .priceReached:
-            value != coin.decimalPrice && value >= coin.decimalPrice / 1000 && value <= coin.decimalPrice * 1000
+            if value == coin.decimalPrice {
+                R.string.localizable.price_cannot_be_current()
+            } else if value < coin.decimalPrice / 100 {
+                R.string.localizable.price_too_less("1/100")
+            } else if value > coin.decimalPrice * 100 {
+                R.string.localizable.price_too_large("100")
+            } else {
+                nil
+            }
         case .priceIncreased:
-            value > coin.decimalPrice && value <= coin.decimalPrice * 1000
+            if value <= coin.decimalPrice {
+                R.string.localizable.price_must_greater_than_current()
+            } else if value > coin.decimalPrice * 100 {
+                R.string.localizable.price_too_large("100")
+            } else {
+                nil
+            }
         case .priceDecreased:
-            value < coin.decimalPrice && value >= coin.decimalPrice / 1000
-        case .percentageIncreased, .percentageDecreased:
-            value >= 0.01 && value <= 10
+            if value >= coin.decimalPrice {
+                R.string.localizable.price_must_less_than_current()
+            } else if value < coin.decimalPrice / 100 {
+                R.string.localizable.price_too_less("1/100")
+            } else {
+                nil
+            }
+        case .percentageIncreased:
+            if value < 0.001 || value > 1000 {
+                R.string.localizable.price_increase_invalid("10%", "1000%")
+            } else {
+                nil
+            }
+        case .percentageDecreased:
+            if value < 0.001 || value > 1000 {
+                R.string.localizable.price_decrease_invalid("10%", "1000%")
+            } else {
+                nil
+            }
         }
+        let isValid = invalidDescription == nil
         inputTextField.textColor = isValid ? R.color.text() : R.color.error_red()
+        invalidPriceLabel.text = invalidDescription
         invalidPriceLabel.isHidden = isValid
         addAlertButton.isEnabled = isValid
     }
     
-    @objc func keyboardWillHide(_ notification: Notification) {
+}
+
+extension AddMarketAlertViewController {
+    
+    private final class PresetPercentageButton: OutlineButton {
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            layer.cornerRadius = bounds.height / 2
+        }
+        
+    }
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        beginInputButton.isHidden = true
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
         addAlertButtonBottomConstraint.constant = 12
         scrollView.contentInset.bottom = 0
         view.layoutIfNeeded()
+        beginInputButton.isHidden = false
     }
     
     @objc private func loadPresetPercentage(_ sender: UIButton) {
@@ -197,57 +265,75 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         validateInput()
     }
     
+    private func reloadInputTitle() {
+        switch alertType {
+        case .priceReached, .priceIncreased, .priceDecreased:
+            inputTitleLabel.text = R.string.localizable.price_in_currency("USD")
+        case .percentageIncreased, .percentageDecreased:
+            inputTitleLabel.text = R.string.localizable.alert_value()
+        }
+    }
+    
     private func reloadAlertTypeMenu() {
         alertTypeButton.menu = UIMenu(children: MarketAlert.AlertType.allCases.map { type in
             UIAction(title: type.description, state: type == alertType ? .on : .off) { [weak self] _ in
-                self?.swith(to: type)
+                self?.switchToType(type)
             }
         })
     }
     
-    private func swith(to type: MarketAlert.AlertType) {
+    private func switchToType(_ type: MarketAlert.AlertType) {
         self.alertType = type
         alertTypeLabel.text = type.description
         reloadAlertTypeMenu()
-        switch alertType {
-        case .priceReached, .priceIncreased, .priceDecreased, .percentageIncreased:
+        let center = changePercentages.firstIndex(where: { $0 > 0 }) ?? 0
+        switch type.displayType {
+        case .increasing:
+            for button in presetPercentageStackView.arrangedSubviews.prefix(center) {
+                button.isHidden = true
+            }
+            for button in presetPercentageStackView.arrangedSubviews.suffix(center) {
+                button.isHidden = false
+            }
+        case .decreasing:
+            for button in presetPercentageStackView.arrangedSubviews.prefix(center) {
+                button.isHidden = false
+            }
+            for button in presetPercentageStackView.arrangedSubviews.suffix(center) {
+                button.isHidden = true
+            }
+        case .constant:
             for button in presetPercentageStackView.arrangedSubviews {
                 button.isHidden = false
             }
-        case .percentageDecreased:
-            let numberOfNegativeValues = changePercentages.firstIndex(where: { $0 >= 0 }) ?? 0
-            for button in presetPercentageStackView.arrangedSubviews.prefix(numberOfNegativeValues) {
-                button.isHidden = true
-            }
+        }
+        switch type {
+        case .percentageIncreased, .percentageDecreased:
+            inputContentStackView.spacing = 2
+            inputTextField.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            inputTrailingLabel.text = "%"
+            inputTrailingLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        default:
+            inputContentStackView.spacing = 8
+            inputTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            inputTrailingLabel.text = nil
+            inputTrailingLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         }
         validateInput()
     }
     
-    private func reloadAlertFrequencyMenu() {
-        alertFrequencyButton.menu = UIMenu(children: MarketAlert.AlertFrequency.allCases.map { frequency in
-            UIAction(title: frequency.description, state: frequency == alertFrequency ? .on : .off) { [weak self] _ in
-                self?.swith(to: frequency)
-            }
-        })
-    }
-    
-    private func swith(to frequency: MarketAlert.AlertFrequency) {
+    private func switchToFrequencey(_ frequency: MarketAlert.AlertFrequency) {
         self.alertFrequency = frequency
         alertFrequencyLabel.text = alertFrequency.description
         reloadAlertFrequencyMenu()
     }
     
-}
-
-extension AddMarketAlertViewController {
-    
-    private final class PresetPercentageButton: OutlineButton {
-        
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            layer.cornerRadius = bounds.height / 2
-        }
-        
+    private func reloadAlertFrequencyMenu() {
+        alertFrequencyButton.menu = UIMenu(children: MarketAlert.AlertFrequency.allCases.map { frequency in
+            UIAction(title: frequency.description, state: frequency == alertFrequency ? .on : .off) { [weak self] _ in
+                self?.switchToFrequencey(frequency)
+            }
+        })
     }
     
 }

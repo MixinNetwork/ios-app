@@ -4,8 +4,16 @@ import MixinServices
 final class MarketAlertTokenCell: UITableViewCell {
     
     protocol Delegate: AnyObject {
-        func marketAlertTokenCell(_ cell: MarketAlertTokenCell, wantsToPerform action: MarketAlert.Action, to alert: MarketAlert)
-        func marketAlertTokenCell(_ cell: MarketAlertTokenCell, wantsToEdit alert: MarketAlert)
+        func marketAlertTokenCell(
+            _ cell: MarketAlertTokenCell,
+            wantsToPerform action: MarketAlert.Action,
+            to alert: MarketAlert
+        )
+        func marketAlertTokenCell(
+            _ cell: MarketAlertTokenCell,
+            wantsToEdit alert: MarketAlert,
+            coin: MarketAlertCoin
+        )
     }
     
     @IBOutlet weak var expandedContentView: UIView!
@@ -49,7 +57,7 @@ final class MarketAlertTokenCell: UITableViewCell {
     
     private func load(viewModel: MarketAlertViewModel) {
         iconImageView.setIcon(tokenIconURL: viewModel.iconURL)
-        titleLabel.text = viewModel.name
+        titleLabel.text = viewModel.coin.name
         subtitleLabel.text = viewModel.description
         let numberOfButtonsToBeAdded = viewModel.alerts.count - alertViews.count
         if numberOfButtonsToBeAdded > 0 {
@@ -95,28 +103,34 @@ final class MarketAlertTokenCell: UITableViewCell {
                 self.delegate?.marketAlertTokenCell(self, wantsToPerform: .resume, to: alert)
             }
         }
-        return [
-            statusAction,
-            UIAction(
+        
+        var actions: [UIAction] = [statusAction]
+        if let coin = viewModel?.coin {
+            actions.append(UIAction(
                 title: R.string.localizable.edit(),
                 image: R.image.action_edit()
             ) { [weak self] _ in
                 guard let self else {
                     return
                 }
-                self.delegate?.marketAlertTokenCell(self, wantsToEdit: alert)
-            },
-            UIAction(
-                title: R.string.localizable.delete(),
-                image: R.image.conversation.ic_action_delete(),
-                attributes: .destructive
-            ) { [weak self] _ in
-                guard let self else {
-                    return
+                if let coin = viewModel?.coin {
+                    
                 }
-                self.delegate?.marketAlertTokenCell(self, wantsToPerform: .delete, to: alert)
+                self.delegate?.marketAlertTokenCell(self, wantsToEdit: alert, coin: coin)
+            })
+        }
+        actions.append(UIAction(
+            title: R.string.localizable.delete(),
+            image: R.image.conversation.ic_action_delete(),
+            attributes: .destructive
+        ) { [weak self] _ in
+            guard let self else {
+                return
             }
-        ]
+            self.delegate?.marketAlertTokenCell(self, wantsToPerform: .delete, to: alert)
+        })
+        
+        return actions
     }
     
 }

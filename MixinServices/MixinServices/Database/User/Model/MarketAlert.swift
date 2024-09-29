@@ -27,12 +27,31 @@ public struct MarketAlert {
 
 extension MarketAlert {
     
+    public enum AlertDisplayType {
+        case increasing
+        case decreasing
+        case constant
+    }
+    
     public enum AlertType: String, CaseIterable, Codable {
+        
         case priceReached = "price_reached"
         case priceIncreased = "price_increased"
         case priceDecreased = "price_decreased"
         case percentageIncreased = "percentage_increased"
         case percentageDecreased = "percentage_decreased"
+        
+        public var displayType: AlertDisplayType {
+            switch self {
+            case .priceReached:
+                    .constant
+            case .priceIncreased, .percentageIncreased:
+                    .increasing
+            case .priceDecreased, .percentageDecreased:
+                    .decreasing
+            }
+        }
+        
     }
     
     public enum AlertFrequency: String, CaseIterable, Codable {

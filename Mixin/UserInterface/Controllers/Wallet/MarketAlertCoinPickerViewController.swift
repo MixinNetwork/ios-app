@@ -29,7 +29,7 @@ final class MarketAlertCoinPickerViewController: TransactionHistoryFilterPickerV
     private var searchResults: [MarketAlertCoin] = []
     
     override var usesTrayView: Bool {
-        false
+        allowsMultipleSelection
     }
     
     private var coinModels: [MarketAlertCoin] {

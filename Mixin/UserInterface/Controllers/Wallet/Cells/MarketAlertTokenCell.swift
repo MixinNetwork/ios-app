@@ -66,15 +66,7 @@ final class MarketAlertTokenCell: UITableViewCell {
         }
         for (i, viewModel) in viewModel.alerts.enumerated() {
             let cell = alertViews[i]
-            cell.iconImageView.image = viewModel.icon
-            cell.titleLabel.text = viewModel.title
-            cell.titleLabel.textColor = switch viewModel.alert.status {
-            case .running:
-                R.color.text()
-            case .paused:
-                R.color.text_tertiary()
-            }
-            cell.subtitleLabel.text = viewModel.subtitle
+            cell.load(viewModel: viewModel)
             cell.actionButton.tag = i
             cell.actionButton.menu = UIMenu(children: alertActions(alert: viewModel.alert))
         }

@@ -9,6 +9,12 @@ final class MarketColorTintedImageView: UIImageView {
         }
     }
     
+    override var tintColor: UIColor! {
+        willSet {
+            marketColor = nil
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         NotificationCenter.default.addObserver(

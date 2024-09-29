@@ -3,7 +3,36 @@ import MixinServices
 
 final class MarketAlertViewModel {
     
-    struct Alert {
+    let coinID: String
+    let iconURL: URL?
+    let name: String
+    let description: String
+    var alerts: [AlertViewModel]
+    
+    var isExpanded = false
+    
+    init(coin: MarketAlertCoin, alerts: [MarketAlert]) {
+        self.coinID = coin.coinID
+        self.iconURL = URL(string: coin.iconURL)
+        self.name = coin.name
+        if let price = Decimal(string: coin.currentPrice, locale: .enUSPOSIX) {
+            let usdPrice = CurrencyFormatter.localizedString(
+                from: price,
+                format: .fiatMoneyPrice,
+                sign: .never
+            )
+            self.description = R.string.localizable.current_price(usdPrice)
+        } else {
+            self.description = ""
+        }
+        self.alerts = alerts.map(AlertViewModel.init(alert:))
+    }
+    
+}
+
+extension MarketAlertViewModel {
+    
+    struct AlertViewModel {
         
         let icon: UIImage
         let title: String
@@ -11,12 +40,12 @@ final class MarketAlertViewModel {
         var alert: MarketAlert
         
         init(alert: MarketAlert) {
-            switch alert.type {
-            case .priceReached:
+            switch alert.type.displayType {
+            case .constant:
                 self.icon = R.image.market_alert_volume()!
-            case .priceIncreased, .percentageIncreased:
+            case .increasing:
                 self.icon = R.image.market_alert_increase()!
-            case .priceDecreased, .percentageDecreased:
+            case .decreasing:
                 self.icon = R.image.market_alert_decrease()!
             }
             if let value = Decimal(string: alert.value, locale: .enUSPOSIX) {
@@ -49,31 +78,6 @@ final class MarketAlertViewModel {
             self.alert = alert
         }
         
-    }
-    
-    let coinID: String
-    let iconURL: URL?
-    let name: String
-    let description: String
-    var alerts: [Alert]
-    
-    var isExpanded = false
-    
-    init(coin: MarketAlertCoin, alerts: [MarketAlert]) {
-        self.coinID = coin.coinID
-        self.iconURL = URL(string: coin.iconURL)
-        self.name = coin.name
-        if let price = Decimal(string: coin.currentPrice, locale: .enUSPOSIX) {
-            let usdPrice = CurrencyFormatter.localizedString(
-                from: price,
-                format: .fiatMoneyPrice,
-                sign: .never
-            )
-            self.description = R.string.localizable.current_price(usdPrice)
-        } else {
-            self.description = ""
-        }
-        self.alerts = alerts.map(Alert.init(alert:))
     }
     
 }

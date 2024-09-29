@@ -37,8 +37,8 @@ public final class TokenDAO: UserDatabaseDAO {
     public func inexistAssetIDs(in assetIDs: [String]) -> [String] {
         let values = assetIDs.map({ "('\($0)')" }).joined(separator: ",")
         return db.select(with: """
-          WITH q(id) AS (VALUES \(values))
-          SELECT q.id FROM q LEFT JOIN tokens t ON q.id = t.asset_id WHERE t.asset_id IS NULL
+            WITH q(id) AS (VALUES \(values))
+            SELECT q.id FROM q LEFT JOIN tokens t ON q.id = t.asset_id WHERE t.asset_id IS NULL
         """)
     }
     

@@ -74,7 +74,7 @@
 "alert_key_group_text_message" = "%@傳送一條訊息";
 "alert_key_group_transcript_message" = "%@分享一個聊天記錄";
 "alert_key_group_video_message" = "%@傳送一個影片";
-"alert_limit_exceeded" = "所有幣種的價格提醒總數不得超過 %d。";
+"alert_limit_exceeded" = "所有幣種的價格提醒總數不得超過 %d 個。";
 "alert_per_asset_limit_exceeded" = "每個交易對最多可建立 %d 個價格提醒。";
 "alert_type" = "預警型別";
 "alert_type_percentage_decreased" = "24 小時跌幅";

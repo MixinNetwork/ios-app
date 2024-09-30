@@ -84,6 +84,7 @@
 "alert_type_price_reached" = "Price Reached";
 "alert_value" = "Value";
 "all" = "すべて";
+"all_alert" = "All Alert";
 "all_conversations" = "すべてのチャットルーム";
 "all_dates" = "All Dates";
 "all_photos" = "全ての画像";

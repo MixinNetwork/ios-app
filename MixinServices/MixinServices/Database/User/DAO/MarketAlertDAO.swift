@@ -15,6 +15,10 @@ public final class MarketAlertDAO: UserDatabaseDAO {
         db.select(where: coinIDs.contains(Market.column(of: .coinID)))
     }
     
+    public func alertExists(coinID: String) -> Bool {
+        db.recordExists(in: MarketAlert.self, where: MarketAlert.column(of: .coinID) == coinID)
+    }
+    
     public func save(alert: MarketAlert) {
         db.save(alert) { _ in
             DispatchQueue.main.async {

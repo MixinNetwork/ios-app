@@ -6,6 +6,7 @@ final class TokenPriceChartCell: UITableViewCell {
     protocol Delegate: AnyObject {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
         func tokenPriceChartCellWantsToSwap(_ cell: TokenPriceChartCell)
+        func tokenPriceChartCellWantsToShowAlert(_ cell: TokenPriceChartCell)
         func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell)
     }
     
@@ -13,6 +14,7 @@ final class TokenPriceChartCell: UITableViewCell {
         
         case swap
         case alert
+        case addAlert
         
         var title: String {
             switch self {
@@ -20,6 +22,8 @@ final class TokenPriceChartCell: UITableViewCell {
                 R.string.localizable.swap()
             case .alert:
                 R.string.localizable.alert()
+            case .addAlert:
+                R.string.localizable.add_alert()
             }
         }
         
@@ -41,6 +45,21 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var tokenActionViewBottomConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
+    
+    var tokenActions: [TokenAction] = [] {
+        didSet {
+            if tokenActions.isEmpty {
+                tokenActionView.isHidden = true
+                periodSelectorScrollViewBottomConstraint.priority = .defaultHigh
+                tokenActionViewBottomConstraint.priority = .defaultLow
+            } else {
+                tokenActionView.isHidden = false
+                tokenActionView.actions = tokenActions.map(\.title)
+                periodSelectorScrollViewBottomConstraint.priority = .defaultLow
+                tokenActionViewBottomConstraint.priority = .defaultHigh
+            }
+        }
+    }
     
     private weak var unavailableView: UIView?
     
@@ -78,7 +97,6 @@ final class TokenPriceChartCell: UITableViewCell {
             periodSelectorStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(changePeriod(_:)), for: .touchUpInside)
         }
-        tokenActionView.actions = TokenAction.allCases.map(\.title)
         tokenActionView.delegate = self
     }
     
@@ -132,17 +150,6 @@ final class TokenPriceChartCell: UITableViewCell {
         changeLabel.marketColor = .byValue(change)
     }
     
-    func setTokenActionsHidden(_ hidden: Bool) {
-        tokenActionView.isHidden = hidden
-        if hidden {
-            periodSelectorScrollViewBottomConstraint.priority = .defaultHigh
-            tokenActionViewBottomConstraint.priority = .defaultLow
-        } else {
-            periodSelectorScrollViewBottomConstraint.priority = .defaultLow
-            tokenActionViewBottomConstraint.priority = .defaultHigh
-        }
-    }
-    
     @objc private func changePeriod(_ sender: UIButton) {
         setPeriodSelection(index: sender.tag)
         chartView.points = []
@@ -157,11 +164,12 @@ final class TokenPriceChartCell: UITableViewCell {
 extension TokenPriceChartCell: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        let action = TokenAction(rawValue: index)!
-        switch action {
+        switch tokenActions[index] {
         case .swap:
             delegate?.tokenPriceChartCellWantsToSwap(self)
         case .alert:
+            delegate?.tokenPriceChartCellWantsToShowAlert(self)
+        case .addAlert:
             delegate?.tokenPriceChartCellWantsToAddAlert(self)
         }
     }

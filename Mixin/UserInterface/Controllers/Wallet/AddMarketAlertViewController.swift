@@ -168,7 +168,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
                 DispatchQueue.global().async {
                     MarketAlertDAO.shared.save(alert: alert)
                 }
-                self?.navigationController?.popViewController(animated: true)
+                self?.manipulateNavigationStack()
             case .failure(let error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
@@ -224,6 +224,32 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         invalidPriceLabel.text = invalidDescription
         invalidPriceLabel.isHidden = isValid
         addAlertButton.isEnabled = isValid
+    }
+    
+    private func manipulateNavigationStack() {
+        guard let navigationController else {
+            return
+        }
+        var controllers = navigationController.viewControllers
+        var goesToAllMarketAlerts = false
+        controllers.removeAll { controller in
+            if let container = controller as? ContainerViewController {
+                if container.viewController is AllMarketAlertsViewController {
+                    goesToAllMarketAlerts = true
+                }
+                return container.viewController is MarketAlertViewController
+                || container.viewController is AddMarketAlertViewController
+            } else {
+                return false
+            }
+        }
+        let alerts = if goesToAllMarketAlerts {
+            AllMarketAlertsViewController.contained()
+        } else {
+            CoinMarketAlertsViewController.contained(coin: coin)
+        }
+        controllers.append(alerts)
+        navigationController.setViewControllers(controllers, animated: true)
     }
     
 }

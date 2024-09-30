@@ -16,6 +16,7 @@ final class MarketViewController: UIViewController {
     private var viewModel: MarketViewModel
     private var chartPeriod: PriceHistoryPeriod = .day
     private var chartPoints: [ChartView.Point]?
+    private var hasAlert = true
     
     private var tokenPriceChartCell: TokenPriceChartCell? {
         let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
@@ -128,11 +129,13 @@ final class MarketViewController: UIViewController {
                 guard let market = MarketDAO.shared.market(assetID: id) else {
                     return
                 }
+                let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
                 DispatchQueue.main.sync {
                     guard let self else {
                         return
                     }
                     self.market = market
+                    self.hasAlert = hasAlert
                     self.viewModel.update(market: market, tokens: [initialToken])
                     self.tableView.reloadData()
                     self.reloadTokens(market: market)
@@ -142,12 +145,14 @@ final class MarketViewController: UIViewController {
             RouteAPI.markets(id: id, queue: .global()) { [weak self] result in
                 switch result {
                 case .success(let market):
+                    let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
                     if let market = MarketDAO.shared.save(market: market) {
                         DispatchQueue.main.async {
                             guard let self else {
                                 return
                             }
                             self.market = market
+                            self.hasAlert = hasAlert
                             let tokens = self.tokens ?? [initialToken]
                             self.viewModel.update(market: market, tokens: tokens)
                             self.tableView.reloadData()
@@ -427,7 +432,15 @@ extension MarketViewController: UITableViewDataSource {
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
-            cell.setTokenActionsHidden(market == nil)
+            if market == nil {
+                cell.tokenActions = []
+            } else {
+                if hasAlert {
+                    cell.tokenActions = [.swap, .alert]
+                } else {
+                    cell.tokenActions = [.swap, .addAlert]
+                }
+            }
             cell.delegate = self
             cell.chartView.delegate = self
             return cell
@@ -637,12 +650,22 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         }
     }
     
+    func tokenPriceChartCellWantsToShowAlert(_ cell: TokenPriceChartCell) {
+        guard let market else {
+            return
+        }
+        let coin = MarketAlertCoin(market: market)
+        let alert = CoinMarketAlertsViewController.contained(coin: coin)
+        navigationController?.pushViewController(alert, animated: true)
+    }
+    
     func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell) {
         guard let market else {
             return
         }
-        let alert = MarketAlertViewController.contained(market: market)
-        self.navigationController?.pushViewController(alert, animated: true)
+        let coin = MarketAlertCoin(market: market)
+        let addAlert = AddMarketAlertViewController.contained(coin: coin)
+        navigationController?.pushViewController(addAlert, animated: true)
     }
     
 }

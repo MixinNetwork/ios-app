@@ -771,6 +771,9 @@
 		942D90F12B05F8FE00E81358 /* WithdrawFeeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942D90EF2B05F8FE00E81358 /* WithdrawFeeCell.xib */; };
 		942D90F32B0606C700E81358 /* WithdrawFeeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90F22B0606C700E81358 /* WithdrawFeeItem.swift */; };
 		942D90F82B06145F00E81358 /* TouchEventBypassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90F72B06145F00E81358 /* TouchEventBypassView.swift */; };
+		942DB9A52CAA9C8600FFCB40 /* CoinMarketAlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */; };
+		942DB9A72CAA9C8F00FFCB40 /* AllMarketAlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */; };
+		942DB9A92CAAA14900FFCB40 /* AllAlertsTopActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942DB9A82CAAA14900FFCB40 /* AllAlertsTopActionView.xib */; };
 		942F25BD274903550040E585 /* WebPImageDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942F25BC274903550040E585 /* WebPImageDecoder.swift */; };
 		942F4729299CDF1800528759 /* URLSessionWebSocketFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942F4728299CDF1800528759 /* URLSessionWebSocketFactory.swift */; };
 		942F472B299CDF8100528759 /* Web3SignerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942F472A299CDF8100528759 /* Web3SignerFactory.swift */; };
@@ -966,7 +969,6 @@
 		9487233A2C9DF6380034BCB0 /* AddMarketAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */; };
 		948723432C9E0D8D0034BCB0 /* MarketAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */; };
 		9487234B2C9EE7150034BCB0 /* TransferAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9487234A2C9EE7150034BCB0 /* TransferAction.swift */; };
-		9487235C2C9F37AE0034BCB0 /* MarketAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9487235B2C9F37AE0034BCB0 /* MarketAlertView.xib */; };
 		94881FA82AD035C300CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA72AD035C300CA7A29 /* RswiftLibrary */; };
 		94881FAA2AD035CC00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA92AD035CC00CA7A29 /* RswiftLibrary */; };
 		94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FAB2AD035ED00CA7A29 /* RswiftLibrary */; };
@@ -2168,6 +2170,9 @@
 		942D90EF2B05F8FE00E81358 /* WithdrawFeeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawFeeCell.xib; sourceTree = "<group>"; };
 		942D90F22B0606C700E81358 /* WithdrawFeeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeItem.swift; sourceTree = "<group>"; };
 		942D90F72B06145F00E81358 /* TouchEventBypassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchEventBypassView.swift; sourceTree = "<group>"; };
+		942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinMarketAlertsViewController.swift; sourceTree = "<group>"; };
+		942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMarketAlertsViewController.swift; sourceTree = "<group>"; };
+		942DB9A82CAAA14900FFCB40 /* AllAlertsTopActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllAlertsTopActionView.xib; sourceTree = "<group>"; };
 		942F25BC274903550040E585 /* WebPImageDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoder.swift; sourceTree = "<group>"; };
 		942F4728299CDF1800528759 /* URLSessionWebSocketFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionWebSocketFactory.swift; sourceTree = "<group>"; };
 		942F472A299CDF8100528759 /* Web3SignerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SignerFactory.swift; sourceTree = "<group>"; };
@@ -2380,7 +2385,6 @@
 		948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddMarketAlertView.xib; sourceTree = "<group>"; };
 		948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertViewModel.swift; sourceTree = "<group>"; };
 		9487234A2C9EE7150034BCB0 /* TransferAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAction.swift; sourceTree = "<group>"; };
-		9487235B2C9F37AE0034BCB0 /* MarketAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertView.xib; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
@@ -4162,6 +4166,7 @@
 				946331BF2C622C1100C54B76 /* TransactionHistoryRecipientFilterView.swift */,
 				946331C12C622C3500C54B76 /* TransactionHistoryDateFilterView.swift */,
 				94CB84D52C6A65C200135641 /* ChartView.swift */,
+				942DB9A82CAAA14900FFCB40 /* AllAlertsTopActionView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4704,8 +4709,9 @@
 				942BA99A2C689FA10096CCC3 /* MarketViewController.swift */,
 				94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */,
 				9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */,
-				9487235B2C9F37AE0034BCB0 /* MarketAlertView.xib */,
 				94960DA12C929D3C00FB17E2 /* MarketAlertViewController.swift */,
+				942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */,
+				942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */,
 				948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */,
 				948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */,
 				94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */,
@@ -5290,6 +5296,7 @@
 				94B1E56B2C4A05BF00A2349F /* SwapAssetChangeCell.xib in Resources */,
 				7C11E34A281BF4BC00D3362B /* ic_time_animation_dark@2x.gif in Resources */,
 				945138B82C6622F600839CBB /* TokenMarketCell.xib in Resources */,
+				942DB9A92CAAA14900FFCB40 /* AllAlertsTopActionView.xib in Resources */,
 				7BDFAE942559165800296F8B /* CompactAssetCell.xib in Resources */,
 				94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */,
 				948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */,
@@ -5324,7 +5331,6 @@
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				7BAB3058247E8248005D6C3F /* call.caf in Resources */,
-				9487235C2C9F37AE0034BCB0 /* MarketAlertView.xib in Resources */,
 				946C9CC72BCAA2CB00407203 /* Web3AccountHeaderView.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				944C61F42B6BF97B00C7DF06 /* PaymentUserGroupCell.xib in Resources */,
@@ -5986,6 +5992,7 @@
 				7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */,
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
+				942DB9A72CAA9C8F00FFCB40 /* AllMarketAlertsViewController.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
@@ -6401,6 +6408,7 @@
 				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
 				94DD69302C90305000B3D089 /* MarketColorTintedImageView.swift in Sources */,
 				7C695D56285B25AB0042177C /* SpotlightManager.swift in Sources */,
+				942DB9A52CAA9C8600FFCB40 /* CoinMarketAlertsViewController.swift in Sources */,
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,

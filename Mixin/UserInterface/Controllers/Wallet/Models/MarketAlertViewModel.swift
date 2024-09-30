@@ -21,7 +21,7 @@ final class MarketAlertViewModel {
                 format: .fiatMoneyPrice,
                 sign: .never
             )
-            self.description = R.string.localizable.current_price(usdPrice)
+            self.description = R.string.localizable.current_price(usdPrice + " USD")
         } else {
             self.description = ""
         }
@@ -55,7 +55,7 @@ extension MarketAlertViewModel {
                         from: value,
                         format: .fiatMoneyPrice,
                         sign: .never
-                    )
+                    ) + " USD"
                 case .percentage:
                     NumberFormatter.percentage.string(decimal: value) ?? alert.value
                 }

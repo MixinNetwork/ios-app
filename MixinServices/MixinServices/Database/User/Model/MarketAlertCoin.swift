@@ -33,4 +33,14 @@ public class MarketAlertCoin: Decodable, MixinFetchableRecord {
         self.currentPrice = currentPrice
     }
     
+    public convenience init(market: Market) {
+        self.init(
+            coinID: market.coinID,
+            name: market.name,
+            symbol: market.symbol,
+            iconURL: market.iconURL,
+            currentPrice: market.currentPrice
+        )
+    }
+    
 }

@@ -1,48 +1,27 @@
 import UIKit
 import MixinServices
 
-final class MarketAlertViewController: UIViewController {
+class MarketAlertViewController: UIViewController {
     
-    @IBOutlet weak var assetFilterView: TransactionHistoryAssetFilterView!
-    @IBOutlet weak var addAlertButton: BusyButton!
-    @IBOutlet weak var tableView: UITableView!
+    weak var tableView: UITableView!
     
     private let headerReuseIdentifier = "h"
     
-    private var coins: [MarketAlertCoin]
     private var viewModels: [MarketAlertViewModel] = []
     
-    init(market: Market) {
-        let coin = MarketAlertCoin(
-            coinID: market.coinID,
-            name: market.name,
-            symbol: market.symbol,
-            iconURL: market.iconURL,
-            currentPrice: market.currentPrice
-        )
-        self.coins = [coin]
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("Storyboard is not supported")
-    }
-    
-    static func contained(market: Market) -> ContainerViewController {
-        let alert = MarketAlertViewController(market: market)
-        let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.alert())
-        container.loadViewIfNeeded()
-        container.view.backgroundColor = R.color.background_secondary()
-        container.navigationBar.backgroundColor = R.color.background_secondary()
-        return container
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = R.color.background_secondary()
+        let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView.backgroundColor = R.color.background_secondary()
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        view.addSubview(tableView)
+        self.tableView = tableView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        assetFilterView.reloadData(coins: coins)
-        assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
-        addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
-        addAlertButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14, weight: .medium), adjustForContentSize: true)
         tableView.register(R.nib.marketAlertTokenCell)
         tableView.dataSource = self
         tableView.delegate = self
@@ -58,54 +37,24 @@ final class MarketAlertViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
-    @IBAction func addAlert(_ sender: BusyButton) {
-        sender.isBusy = true
-        NotificationManager.shared.requestAuthorization { isAuthorized in
-            sender.isBusy = false
-            if isAuthorized {
-                if self.coins.count == 1 {
-                    let coin = self.coins[0]
-                    let addAlert = AddMarketAlertViewController.contained(coin: coin)
-                    self.navigationController?.pushViewController(addAlert, animated: true)
-                } else {
-                    let picker = MarketAlertCoinPickerViewController()
-                    picker.delegate = self
-                    self.present(picker, animated: true)
-                }
-            } else {
-                let alert = UIAlertController(
-                    title: R.string.localizable.turn_on_notifications(),
-                    message: R.string.localizable.price_alert_notification_permission(),
-                    preferredStyle: .alert
-                )
-                alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
-                alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { _ in
-                    UIApplication.shared.openNotificationSettings()
-                }))
-                self.present(alert, animated: true)
-            }
-        }
+    @objc func reloadFromLocal() {
+        
     }
     
-    @objc private func pickTokens(_ sender: Any) {
-        let picker = MarketAlertCoinPickerViewController(selectedCoins: coins)
-        picker.delegate = self
-        present(picker, animated: true)
+    func requestTurnOnNotifications() {
+        let alert = UIAlertController(
+            title: R.string.localizable.turn_on_notifications(),
+            message: R.string.localizable.price_alert_notification_permission(),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { _ in
+            UIApplication.shared.openNotificationSettings()
+        }))
+        present(alert, animated: true)
     }
     
-    @objc private func reloadFromLocal() {
-        let ids = coins.map(\.coinID)
-        DispatchQueue.global().async {
-            let alerts = if ids.isEmpty {
-                MarketAlertDAO.shared.allMarketAlerts()
-            } else {
-                MarketAlertDAO.shared.marketAlerts(coinIDs: ids)
-            }
-            self.updateViewModels(alerts: alerts)
-        }
-    }
-    
-    private func updateViewModels(alerts: [MarketAlert]) {
+    func reloadData(alerts: [MarketAlert]) {
         assert(!Thread.isMainThread)
         let viewModels: [MarketAlertViewModel]
         if alerts.isEmpty {
@@ -263,29 +212,6 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
     ) {
         let editor = EditMarketAlertViewController.contained(coin: coin, alert: alert)
         navigationController?.pushViewController(editor, animated: true)
-    }
-    
-}
-
-extension MarketAlertViewController: MarketAlertCoinPickerViewController.Delegate {
-    
-    func marketAlertCoinPickerViewController(
-        _ controller: MarketAlertCoinPickerViewController,
-        didPickCoin coin: MarketAlertCoin
-    ) {
-        dismiss(animated: true) {
-            let addAlert = AddMarketAlertViewController.contained(coin: coin)
-            self.navigationController?.pushViewController(addAlert, animated: true)
-        }
-    }
-    
-    func marketAlertCoinPickerViewController(
-        _ controller: MarketAlertCoinPickerViewController,
-        didPickCoins coins: [MarketAlertCoin]
-    ) {
-        assetFilterView.reloadData(coins: coins)
-        self.coins = coins
-        reloadFromLocal()
     }
     
 }

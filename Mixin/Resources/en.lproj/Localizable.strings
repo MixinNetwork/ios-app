@@ -84,6 +84,7 @@
 "alert_type_price_reached" = "Price Reached";
 "alert_value" = "Value";
 "all" = "All";
+"all_alert" = "All Alert";
 "all_conversations" = "All Conversations";
 "all_dates" = "All Dates";
 "all_photos" = "All Photos";

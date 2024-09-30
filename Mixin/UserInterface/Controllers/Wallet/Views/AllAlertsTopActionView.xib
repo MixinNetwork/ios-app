@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AllMarketAlertsViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="addAlertButton" destination="9cL-aw-58S" id="QZA-gg-y3o"/>
+                <outlet property="assetFilterView" destination="cTB-4P-2TQ" id="BFT-qt-Awf"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7J7-4k-BUr">
+            <rect key="frame" x="0.0" y="0.0" width="353" height="40"/>
+            <subviews>
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="81" placeholderIntrinsicHeight="40" translatesAutoresizingMaskIntoConstraints="NO" id="cTB-4P-2TQ" customClass="TransactionHistoryAssetFilterView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="1" width="81" height="38"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="9cL-aw-58S" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="267" y="0.0" width="86" height="40"/>
+                    <inset key="contentEdgeInsets" minX="12" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    <inset key="imageEdgeInsets" minX="-8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="Add Alert" image="Wallet/ic_add"/>
+                    <connections>
+                        <action selector="addAlert:" destination="-1" eventType="touchUpInside" id="tEO-MJ-gy1"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="9cL-aw-58S" firstAttribute="top" secondItem="7J7-4k-BUr" secondAttribute="top" id="7Ug-78-403"/>
+                <constraint firstItem="cTB-4P-2TQ" firstAttribute="leading" secondItem="7J7-4k-BUr" secondAttribute="leading" id="GPL-Cg-AWA"/>
+                <constraint firstAttribute="trailing" secondItem="9cL-aw-58S" secondAttribute="trailing" id="MJi-aw-mae"/>
+                <constraint firstAttribute="bottom" secondItem="9cL-aw-58S" secondAttribute="bottom" id="Wk8-7K-2qv"/>
+                <constraint firstItem="cTB-4P-2TQ" firstAttribute="top" secondItem="7J7-4k-BUr" secondAttribute="top" constant="1" id="YyV-jP-DeO"/>
+                <constraint firstAttribute="bottom" secondItem="cTB-4P-2TQ" secondAttribute="bottom" constant="1" id="w7H-HT-Uvs"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-47" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Wallet/ic_add" width="10" height="10"/>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

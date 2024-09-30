@@ -132,6 +132,17 @@ final class TokenPriceChartCell: UITableViewCell {
         changeLabel.marketColor = .byValue(change)
     }
     
+    func setTokenActionsHidden(_ hidden: Bool) {
+        tokenActionView.isHidden = hidden
+        if hidden {
+            periodSelectorScrollViewBottomConstraint.priority = .defaultHigh
+            tokenActionViewBottomConstraint.priority = .defaultLow
+        } else {
+            periodSelectorScrollViewBottomConstraint.priority = .defaultLow
+            tokenActionViewBottomConstraint.priority = .defaultHigh
+        }
+    }
+    
     @objc private func changePeriod(_ sender: UIButton) {
         setPeriodSelection(index: sender.tag)
         chartView.points = []

@@ -427,7 +427,7 @@ extension MarketViewController: UITableViewDataSource {
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
-            cell.tokenActionView.isHidden = market == nil
+            cell.setTokenActionsHidden(market == nil)
             cell.delegate = self
             cell.chartView.delegate = self
             return cell

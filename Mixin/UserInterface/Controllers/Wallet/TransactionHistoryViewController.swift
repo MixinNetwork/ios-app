@@ -6,7 +6,7 @@ final class TransactionHistoryViewController: UIViewController {
     @IBOutlet weak var filtersScrollView: UIScrollView!
     @IBOutlet weak var typeFilterView: TransactionHistoryTypeFilterView!
     @IBOutlet weak var assetFilterView: TransactionHistoryAssetFilterView!
-    @IBOutlet weak var recipientFilterView: TransactionHistoryRecipientFilterView!
+    @IBOutlet weak var recipientFilterView: TransactionHistoryOpponentFilterView!
     @IBOutlet weak var dateFilterView: TransactionHistoryDateFilterView!
     @IBOutlet weak var tableView: UITableView!
     

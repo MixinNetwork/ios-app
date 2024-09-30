@@ -717,6 +717,7 @@
 "now_an_addmin" = "%@現在是管理員";
 "number_of_assets" = "%d 資產";
 "number_of_days" = "%d天";
+"number_of_opponents" = "%d 收發人";
 "number_of_recipients" = "%d 收款人";
 "off" = "關閉";
 "ok" = "好的";
@@ -737,6 +738,7 @@
 "open_url" = "開啟連結";
 "opening_balance" = "期初餘額";
 "operation_failed" = "操作失敗，請稍後重試";
+"opponents" = "收發人";
 "optimize_database" = "最佳化查詢索引";
 "optimized" = "已最佳化";
 "other" = "其他";

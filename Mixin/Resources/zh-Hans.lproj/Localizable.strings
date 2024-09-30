@@ -717,6 +717,7 @@
 "now_an_addmin" = "%@现在是管理员";
 "number_of_assets" = "%d 资产";
 "number_of_days" = "%d天";
+"number_of_opponents" = "%d 收发人";
 "number_of_recipients" = "%d 收款人";
 "off" = "关闭";
 "ok" = "好的";
@@ -737,6 +738,7 @@
 "open_url" = "打开链接";
 "opening_balance" = "期初余额";
 "operation_failed" = "操作失败，请稍后重试";
+"opponents" = "收发人";
 "optimize_database" = "优化查询索引";
 "optimized" = "已优化";
 "other" = "其他";

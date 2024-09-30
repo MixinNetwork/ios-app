@@ -717,6 +717,7 @@
 "now_an_addmin" = "%@ теперь администратор";
 "number_of_assets" = "%d Assets";
 "number_of_days" = "%d Days";
+"number_of_opponents" = "%d Opponents";
 "number_of_recipients" = "%d Recipients";
 "off" = "Выключенный";
 "ok" = "OK";
@@ -737,6 +738,7 @@
 "open_url" = "Открыть URL";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "Операция не удалась, повторите попытку позже";
+"opponents" = "Opponents";
 "optimize_database" = "Оптимизировать базу данных";
 "optimized" = "Оптимизировано";
 "other" = "Другой";

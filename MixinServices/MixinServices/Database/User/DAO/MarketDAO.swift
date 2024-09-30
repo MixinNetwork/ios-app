@@ -15,21 +15,36 @@ public final class MarketDAO: UserDatabaseDAO {
         order: Market.OrderingExpression,
         limit: Market.Limit?
     ) -> [FavorableMarket] {
+        let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
+            if key == .marketCapRank {
+                nil // `market_cap_rank` is selected from `market_cap_ranks`
+            } else {
+                "m." + key.rawValue
+            }
+        }
         var sql = """
-        SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        SELECT \(marketColumns.joined(separator: ", ")),
+            mcr.market_cap_rank,
+            ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
-            INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
+        
         """
         switch category {
         case .all:
-            break
+            sql.append("""
+            INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
+            ORDER BY CAST(mcr.market_cap_rank AS REAL) ASC
+            """)
         case .favorite:
-            sql += "\nWHERE mf.is_favored"
+            sql.append("""
+            LEFT JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
+            WHERE mf.is_favored
+            ORDER BY mf.created_at ASC
+            """)
         }
-        sql += "\nORDER BY CAST(m.market_cap AS REAL) DESC"
         if let count = limit?.count {
-            sql += "\nLIMIT \(count)"
+            sql.append("\nLIMIT \(count)")
         }
         var results: [FavorableMarket] = db.select(with: sql)
         
@@ -162,18 +177,13 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func replaceMarkets(with markets: [Market], completion: @escaping () -> Void) {
+    public func save(markets: [Market], completion: @escaping () -> Void) {
         let now = Date().toUTCString()
-        let rankStorages = markets.map(\.rankStorage)
-        let ids: [MarketID] = markets.reduce(into: []) { result, market in
-            guard let assetIDs = market.assetIDs else {
-                return
-            }
-            let ids: [MarketID] = assetIDs.reduce(into: []) { result, assetID in
-                let id = MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
-                result.append(id)
-            }
-            result.append(contentsOf: ids)
+        let rankStorages = markets.compactMap(\.rankStorage)
+        let ids: [MarketID] = markets.flatMap { market in
+            market.assetIDs?.map { assetID in
+                MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
+            } ?? []
         }
         db.write { db in
             try markets.save(db)

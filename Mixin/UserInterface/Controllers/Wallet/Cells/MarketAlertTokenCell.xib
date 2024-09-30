@@ -56,13 +56,24 @@
                                             </imageView>
                                         </subviews>
                                     </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjJ-IS-uNe">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <connections>
+                                            <action selector="toggleExpansion:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Cee-qa-b3f"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="PjJ-IS-uNe" secondAttribute="trailing" id="4hw-fD-eqQ"/>
                                     <constraint firstAttribute="bottom" secondItem="cub-wh-8sa" secondAttribute="bottom" constant="16" id="Ff5-qv-Sk3"/>
+                                    <constraint firstItem="PjJ-IS-uNe" firstAttribute="top" secondItem="QI4-QJ-Hed" secondAttribute="top" id="PC0-Ve-FL0"/>
                                     <constraint firstItem="cub-wh-8sa" firstAttribute="top" secondItem="QI4-QJ-Hed" secondAttribute="top" constant="16" id="UTf-w8-N6K"/>
                                     <constraint firstAttribute="trailing" secondItem="cub-wh-8sa" secondAttribute="trailing" constant="26" id="Y3k-I7-bBp"/>
+                                    <constraint firstAttribute="bottom" secondItem="PjJ-IS-uNe" secondAttribute="bottom" id="bQS-Ya-FvK"/>
                                     <constraint firstItem="cub-wh-8sa" firstAttribute="leading" secondItem="QI4-QJ-Hed" secondAttribute="leading" constant="20" id="etZ-9q-yqX"/>
+                                    <constraint firstItem="PjJ-IS-uNe" firstAttribute="leading" secondItem="QI4-QJ-Hed" secondAttribute="leading" id="hqU-yd-Pef"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="280" placeholderIntrinsicHeight="0.0" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Bpm-XA-qfW">
@@ -112,7 +123,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

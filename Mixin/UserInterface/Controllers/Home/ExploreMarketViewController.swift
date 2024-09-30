@@ -120,7 +120,7 @@ final class ExploreMarketViewController: UIViewController {
         guard let coinID = notification.userInfo?[MarketDAO.coinIDUserInfoKey] as? String else {
             return
         }
-        guard markets.contains(where: { $0.coinID == coinID }) else {
+        guard category == .favorite || markets.contains(where: { $0.coinID == coinID }) else {
             return
         }
         reloadMarkets(overwrites: true)
@@ -469,7 +469,7 @@ extension ExploreMarketViewController {
             RouteAPI.markets(category: .all, queue: .global()) { [refreshInterval] result in
                 switch result {
                 case let .success(markets):
-                    MarketDAO.shared.replaceMarkets(with: markets) {
+                    MarketDAO.shared.save(markets: markets) {
                         Logger.general.debug(category: "MarketPeriodicRequester", message: "Markets saved")
                         DispatchQueue.main.async {
                             self.onSuccess?()

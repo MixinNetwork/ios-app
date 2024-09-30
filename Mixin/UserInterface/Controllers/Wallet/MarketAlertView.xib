@@ -50,7 +50,7 @@
                         <constraint firstItem="Kzl-Sj-MS3" firstAttribute="top" secondItem="Iik-rk-YUR" secondAttribute="top" constant="1" id="pnf-45-ZJK"/>
                     </constraints>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="insetGrouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="1aR-54-iPw">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="insetGrouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="1aR-54-iPw">
                     <rect key="frame" x="0.0" y="103" width="393" height="749"/>
                     <color key="backgroundColor" name="background_secondary"/>
                 </tableView>

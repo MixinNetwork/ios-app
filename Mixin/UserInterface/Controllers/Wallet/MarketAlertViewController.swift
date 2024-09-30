@@ -178,8 +178,14 @@ extension MarketAlertViewController: UITableViewDelegate {
         nil
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
+}
+
+extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
+    
+    func marketAlertTokenCellWantsToToggleExpansion(_ cell: MarketAlertTokenCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
         tableView.beginUpdates()
         // `cell.viewModel` is passed by reference. When the viewModel changes, it will cause the cell’s
         // content height to adjust accordingly. See `MarketAlertTokenCell.systemLayoutSizeFitting`
@@ -187,10 +193,6 @@ extension MarketAlertViewController: UITableViewDelegate {
         viewModels[indexPath.section].isExpanded.toggle()
         tableView.endUpdates()
     }
-    
-}
-
-extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
     
     func marketAlertTokenCell(
         _ cell: MarketAlertTokenCell,

@@ -4,6 +4,9 @@ import MixinServices
 final class MarketAlertTokenCell: UITableViewCell {
     
     protocol Delegate: AnyObject {
+        func marketAlertTokenCellWantsToToggleExpansion(
+            _ cell: MarketAlertTokenCell
+        )
         func marketAlertTokenCell(
             _ cell: MarketAlertTokenCell,
             wantsToPerform action: MarketAlert.Action,
@@ -53,6 +56,10 @@ final class MarketAlertTokenCell: UITableViewCell {
                 verticalFittingPriority: verticalFittingPriority
             )
         }
+    }
+    
+    @IBAction func toggleExpansion(_ sender: Any) {
+        delegate?.marketAlertTokenCellWantsToToggleExpansion(self)
     }
     
     private func load(viewModel: MarketAlertViewModel) {

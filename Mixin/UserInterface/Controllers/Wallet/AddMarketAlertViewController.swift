@@ -311,12 +311,10 @@ extension AddMarketAlertViewController {
     }
     
     private func switchToType(_ type: MarketAlert.AlertType) {
-        if self.alertType.valueType != type.valueType {
-            inputTextField.text = nil
-        }
         self.alertType = type
         alertTypeLabel.text = type.description
         reloadAlertTypeMenu()
+        inputTextField.text = nil
         let center = changePercentages.firstIndex(where: { $0 > 0 }) ?? 0
         switch type {
         case .priceReached:

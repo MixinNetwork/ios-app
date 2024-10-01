@@ -897,7 +897,7 @@
 		946331B12C6227D500C54B76 /* TransactionHistoryFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */; };
 		946331B62C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */; };
 		946331BB2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */; };
-		946331C02C622C1100C54B76 /* TransactionHistoryRecipientFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331BF2C622C1100C54B76 /* TransactionHistoryRecipientFilterView.swift */; };
+		946331C02C622C1100C54B76 /* TransactionHistoryOpponentFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331BF2C622C1100C54B76 /* TransactionHistoryOpponentFilterView.swift */; };
 		946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331C12C622C3500C54B76 /* TransactionHistoryDateFilterView.swift */; };
 		946331CB2C626FEE00C54B76 /* TransactionHistoryFilterPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946331CA2C626FEE00C54B76 /* TransactionHistoryFilterPickerView.xib */; };
 		946331CC2C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331C92C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift */; };
@@ -2313,7 +2313,7 @@
 		946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryFilterView.swift; sourceTree = "<group>"; };
 		946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryTypeFilterView.swift; sourceTree = "<group>"; };
 		946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryAssetFilterView.swift; sourceTree = "<group>"; };
-		946331BF2C622C1100C54B76 /* TransactionHistoryRecipientFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryRecipientFilterView.swift; sourceTree = "<group>"; };
+		946331BF2C622C1100C54B76 /* TransactionHistoryOpponentFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryOpponentFilterView.swift; sourceTree = "<group>"; };
 		946331C12C622C3500C54B76 /* TransactionHistoryDateFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryDateFilterView.swift; sourceTree = "<group>"; };
 		946331C92C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryFilterPickerViewController.swift; sourceTree = "<group>"; };
 		946331CA2C626FEE00C54B76 /* TransactionHistoryFilterPickerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryFilterPickerView.xib; sourceTree = "<group>"; };
@@ -4163,7 +4163,7 @@
 				946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */,
 				946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */,
 				946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */,
-				946331BF2C622C1100C54B76 /* TransactionHistoryRecipientFilterView.swift */,
+				946331BF2C622C1100C54B76 /* TransactionHistoryOpponentFilterView.swift */,
 				946331C12C622C3500C54B76 /* TransactionHistoryDateFilterView.swift */,
 				94CB84D52C6A65C200135641 /* ChartView.swift */,
 				942DB9A82CAAA14900FFCB40 /* AllAlertsTopActionView.xib */,
@@ -6305,7 +6305,7 @@
 				9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,
-				946331C02C622C1100C54B76 /* TransactionHistoryRecipientFilterView.swift in Sources */,
+				946331C02C622C1100C54B76 /* TransactionHistoryOpponentFilterView.swift in Sources */,
 				942FB8952C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift in Sources */,
 				94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */,
 				941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */,

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TransactionHistoryRecipientFilterView: TransactionHistoryFilterView {
+final class TransactionHistoryOpponentFilterView: TransactionHistoryFilterView {
     
     private let iconsStackView = UIStackView()
     private let maxIconCount = 10
@@ -36,20 +36,20 @@ final class TransactionHistoryRecipientFilterView: TransactionHistoryFilterView 
         }
         switch (users.count, addresses.count) {
         case (0, 0):
-            label.text = R.string.localizable.recipients()
+            label.text = R.string.localizable.opponents()
         case (1, 0):
             label.text = users[0].fullName
         case (0, 1):
             let full = addresses[0].fullRepresentation
             label.text = Address.truncatedRepresentation(string: full, prefixCount: 3, suffixCount: 3)
         default:
-            label.text = R.string.localizable.number_of_recipients(users.count + addresses.count)
+            label.text = R.string.localizable.number_of_opponents(users.count + addresses.count)
         }
     }
     
     override func loadSubviews() {
         super.loadSubviews()
-        label.text = R.string.localizable.recipients()
+        label.text = R.string.localizable.opponents()
         iconsStackView.axis = .horizontal
         iconsStackView.spacing = 0
         contentStackView.insertArrangedSubview(iconsStackView, at: 0)

@@ -736,6 +736,7 @@
 "now_an_addmin" = "%@は管理者です";
 "number_of_assets" = "%d Assets";
 "number_of_days" = "%d Days";
+"number_of_opponents" = "%d Opponents";
 "number_of_recipients" = "%d Recipients";
 "off" = "オフ";
 "ok" = "OK";
@@ -756,6 +757,7 @@
 "open_url" = "URLを開く";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
+"opponents" = "Opponents";
 "optimize_database" = "データベースの最適化";
 "optimized" = "最適化済みです";
 "other" = "その他";

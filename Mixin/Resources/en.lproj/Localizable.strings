@@ -736,6 +736,7 @@
 "now_an_addmin" = "%@ now an admin";
 "number_of_assets" = "%d Assets";
 "number_of_days" = "%d Days";
+"number_of_opponents" = "%d Opponents";
 "number_of_recipients" = "%d Recipients";
 "off" = "Off";
 "ok" = "OK";
@@ -756,6 +757,7 @@
 "open_url" = "Open URL";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "The operation failed, please try again later";
+"opponents" = "Opponents";
 "optimize_database" = "Optimize Database";
 "optimized" = "Optimized";
 "other" = "Other";

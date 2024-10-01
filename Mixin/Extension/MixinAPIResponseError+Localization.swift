@@ -37,6 +37,10 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_invalid_quote_amount()
         case .noAvailableQuote:
             return R.string.localizable.error_no_available_quote()
+        case .tooManyAlerts:
+            return R.string.localizable.alert_limit_exceeded(100)
+        case .tooManyAlertsForAsset:
+            return R.string.localizable.alert_per_asset_limit_exceeded(10)
         case .invalidPhoneNumber:
             return R.string.localizable.error_phone_invalid_format()
         case .invalidPhoneVerificationCode:

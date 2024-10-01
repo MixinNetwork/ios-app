@@ -865,6 +865,34 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("market_alerts") { db in
+            let sqls = [
+                """
+                CREATE TABLE IF NOT EXISTS `market_cap_ranks` (
+                    `coin_id` TEXT NOT NULL,
+                    `market_cap_rank` TEXT NOT NULL,
+                    `updated_at` TEXT NOT NULL,
+                    PRIMARY KEY(`coin_id`)
+                )
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS `market_alerts` (
+                    `alert_id` TEXT NOT NULL,
+                    `coin_id` TEXT NOT NULL,
+                    `type` TEXT NOT NULL,
+                    `frequency` TEXT NOT NULL,
+                    `status` TEXT NOT NULL,
+                    `value` TEXT NOT NULL,
+                    `created_at` TEXT NOT NULL,
+                    PRIMARY KEY(`alert_id`)
+                )
+                """
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
         return migrator
     }
     

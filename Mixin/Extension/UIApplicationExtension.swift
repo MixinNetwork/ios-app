@@ -65,6 +65,17 @@ extension UIApplication {
         UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
     }
     
+    public func openNotificationSettings() {
+        let url = if #available(iOS 16.0, *)  {
+            URL(string: UIApplication.openNotificationSettingsURLString)
+        } else {
+            URL(string: UIApplication.openSettingsURLString)
+        }
+        if let url {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+    
     public func openAppStorePage() {
         openURL(url: "itms-apps://itunes.apple.com/us/app/id1322324266")
     }

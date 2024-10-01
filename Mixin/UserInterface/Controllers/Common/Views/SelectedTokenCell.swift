@@ -5,8 +5,7 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconView.sd_cancelCurrentImageLoad()
-        iconView.image = nil
+        iconView.prepareForReuse()
     }
     
     func load(address: AddressItem) {
@@ -23,6 +22,11 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
     func load(token: TokenItem) {
         iconView.setIcon(token: token)
         nameLabel.text = token.symbol
+    }
+    
+    func load(coin: MarketAlertCoin) {
+        iconView.setIcon(coin: coin)
+        nameLabel.text = coin.symbol
     }
     
 }

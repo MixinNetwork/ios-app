@@ -8,6 +8,7 @@
 "acknowledgements" = "謝辞";
 "add" = "追加";
 "add_address" = "アドレスに追加";
+"add_alert" = "Add Alert";
 "add_bot" = "ミニアプリを追加";
 "add_by_id_or_phone_number" = "Mixin IDか電話番号で追加";
 "add_by_phone_contacts" = "スマホの連絡先から追加";
@@ -39,6 +40,11 @@
 "admin" = "管理者";
 "agree_hint" = "%@と%@に同意し次へ進む";
 "albums" = "アルバム";
+"alert" = "Alert";
+"alert_frequency" = "Frequency";
+"alert_frequency_daily" = "Once a day";
+"alert_frequency_every" = "Continuously";
+"alert_frequency_once" = "Only once";
 "alert_key_contact_audio_call_cancelled_message" = "キャンセル";
 "alert_key_contact_audio_call_message" = "グループ通話に招待されました";
 "alert_key_contact_audio_message" = "音声メッセージが届きました";
@@ -68,7 +74,17 @@
 "alert_key_group_text_message" = "%@がメッセージを送信しました";
 "alert_key_group_transcript_message" = "%@がメッセージ履歴を共有しました";
 "alert_key_group_video_message" = "%@が動画を送信しました";
+"alert_limit_exceeded" = "The total number of price alerts for all currencies cannot exceed %d.";
+"alert_per_asset_limit_exceeded" = "You can create a maximum of %d price alerts for each trading pair.";
+"alert_type" = "Alert Type";
+"alert_type_percentage_decreased" = "Percentage Decreased";
+"alert_type_percentage_increased" = "Percentage Increased";
+"alert_type_price_decreased" = "Price Decreased";
+"alert_type_price_increased" = "Price Increased";
+"alert_type_price_reached" = "Price Reached";
+"alert_value" = "Value";
 "all" = "すべて";
+"all_alert" = "All Alert";
 "all_conversations" = "すべてのチャットルーム";
 "all_dates" = "All Dates";
 "all_photos" = "全ての画像";
@@ -319,6 +335,7 @@
 "currency_code" = "コード";
 "current_language" = "日本語";
 "current_location" = "現在の位置";
+"current_price" = "Current price: %@";
 "current_selected" = "選択";
 "current_version" = "Version: %@";
 "custom_time" = "日時";
@@ -399,6 +416,7 @@
 "duplication_reminder" = "You transferred %1$@ to the recipient %2$@ ago.";
 "edit" = "編集";
 "edit_address" = "%@アドレスを修正";
+"edit_alert" = "Edit Alert";
 "edit_biography" = "自己紹介文を変更";
 "edit_circle_name" = "グループリスト名を編集";
 "edit_conversations" = "チャットルームを編集";
@@ -683,6 +701,7 @@
 "new_update_available_desc" = "We update the app regularly so we can make it better for you";
 "new_wallet_hint" = "簡単に仮想通貨をやり取りできるウォレットを作成しよう！";
 "next" = "次へ";
+"no_alerts" = "NO ALERTS";
 "no_audio" = "音声メッセージがありません";
 "no_authorizations" = "権限がありません";
 "no_blocked_users" = "ブロック済みのユーザーはいません";
@@ -744,6 +763,8 @@
 "owner" = "オーナー";
 "participants" = "参加者";
 "participants_count" = "%@人のメンバー";
+"pause" = "一時停止";
+"paused" = "Paused";
 "pay" = "Pay";
 "pay_paid" = "この支払いリンクはすでに使用済みです。重複して支払いを行うことはできません。";
 "pay_with_biometry_type" = "%@で支払う";
@@ -803,7 +824,15 @@
 "preparing" = "準備中...";
 "preparing_progress" = "準備中...(%@)";
 "price" = "Price";
+"price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
 "price_data_unavailable" = "Price data unavailable";
+"price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
+"price_in_currency" = "Price (%@)";
+"price_increase_invalid" = "The price increase must be greater than %1$@ and less than %2$@";
+"price_must_greater_than_current" = "The set price must be greater than the current price";
+"price_must_less_than_current" = "The set price must be less than the current price";
+"price_too_large" = "The set price must be less than %@ times the current price";
+"price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "プライバシー";
 "privacy_policy" = "プライバシーポリシー";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -882,6 +911,8 @@
 "restoring" = "...の復元を準備中";
 "restoring_chat_progress" = "Restoring Chat (%@%%)";
 "restoring_progress" = "%@を復元しています";
+"resume" = "Resume";
+"resumed" = "Resumed";
 "retry" = "リトライ";
 "return_to_merchant_description" = "Merchant payment is complete. You can opt to return to the merchant or stay in Mixin.";
 "review" = "Review";

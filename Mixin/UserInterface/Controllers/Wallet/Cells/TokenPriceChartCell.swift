@@ -7,6 +7,25 @@ final class TokenPriceChartCell: UITableViewCell {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
     }
     
+    enum TokenAction: Int, CaseIterable {
+        
+        case swap
+        case alert
+        case addAlert
+        
+        var title: String {
+            switch self {
+            case .swap:
+                R.string.localizable.swap()
+            case .alert:
+                R.string.localizable.alert()
+            case .addAlert:
+                R.string.localizable.add_alert()
+            }
+        }
+        
+    }
+    
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var rankLabel: InsetLabel!
@@ -16,10 +35,28 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var chartView: ChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var periodSelectorStackView: UIStackView!
+    @IBOutlet weak var tokenActionView: PillActionView!
     
     @IBOutlet weak var periodSelectorHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var periodSelectorScrollViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var tokenActionViewBottomConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
+    
+    var tokenActions: [TokenAction] = [] {
+        didSet {
+            if tokenActions.isEmpty {
+                tokenActionView.isHidden = true
+                periodSelectorScrollViewBottomConstraint.priority = .defaultHigh
+                tokenActionViewBottomConstraint.priority = .defaultLow
+            } else {
+                tokenActionView.isHidden = false
+                tokenActionView.actions = tokenActions.map(\.title)
+                periodSelectorScrollViewBottomConstraint.priority = .defaultLow
+                tokenActionViewBottomConstraint.priority = .defaultHigh
+            }
+        }
+    }
     
     private weak var unavailableView: UIView?
     
@@ -117,6 +154,10 @@ final class TokenPriceChartCell: UITableViewCell {
         let period = PriceHistoryPeriod.allCases[sender.tag]
         delegate?.tokenPriceChartCell(self, didSelectPeriod: period)
     }
+    
+}
+
+extension TokenPriceChartCell {
     
     private func showUnavailableView() {
         let unavailableView: UIView

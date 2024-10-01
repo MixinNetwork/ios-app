@@ -16,6 +16,7 @@ final class MarketViewController: UIViewController {
     private var viewModel: MarketViewModel
     private var chartPeriod: PriceHistoryPeriod = .day
     private var chartPoints: [ChartView.Point]?
+    private var hasAlert = true
     
     private var tokenPriceChartCell: TokenPriceChartCell? {
         let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
@@ -128,11 +129,13 @@ final class MarketViewController: UIViewController {
                 guard let market = MarketDAO.shared.market(assetID: id) else {
                     return
                 }
+                let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
                 DispatchQueue.main.sync {
                     guard let self else {
                         return
                     }
                     self.market = market
+                    self.hasAlert = hasAlert
                     self.viewModel.update(market: market, tokens: [initialToken])
                     self.tableView.reloadData()
                     self.reloadTokens(market: market)
@@ -142,12 +145,14 @@ final class MarketViewController: UIViewController {
             RouteAPI.markets(id: id, queue: .global()) { [weak self] result in
                 switch result {
                 case .success(let market):
+                    let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
                     if let market = MarketDAO.shared.save(market: market) {
                         DispatchQueue.main.async {
                             guard let self else {
                                 return
                             }
                             self.market = market
+                            self.hasAlert = hasAlert
                             let tokens = self.tokens ?? [initialToken]
                             self.viewModel.update(market: market, tokens: tokens)
                             self.tableView.reloadData()
@@ -373,6 +378,34 @@ final class MarketViewController: UIViewController {
         }
     }
     
+    // `completion` is not called on failure
+    private func pickSingleToken(completion: @escaping (TokenItem) -> Void) {
+        guard let tokens else {
+            return
+        }
+        if tokens.count == 1 {
+            completion(tokens[0])
+        } else if tokens.count > 1, let name = market?.name {
+            let selector = MarketTokenSelectorViewController(name: name, tokens: tokens) { index in
+                completion(tokens[index])
+            }
+            present(selector, animated: true)
+        }
+    }
+    
+    private func requestTurnOnNotifications() {
+        let alert = UIAlertController(
+            title: R.string.localizable.turn_on_notifications(),
+            message: R.string.localizable.price_alert_notification_permission(),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { _ in
+            UIApplication.shared.openNotificationSettings()
+        }))
+        present(alert, animated: true)
+    }
+    
 }
 
 extension MarketViewController: UITableViewDataSource {
@@ -412,8 +445,18 @@ extension MarketViewController: UITableViewDataSource {
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
+            if market == nil {
+                cell.tokenActions = []
+            } else {
+                if hasAlert {
+                    cell.tokenActions = [.swap, .alert]
+                } else {
+                    cell.tokenActions = [.swap, .addAlert]
+                }
+            }
             cell.delegate = self
             cell.chartView.delegate = self
+            cell.tokenActionView.delegate = self
             return cell
         case .stats:
             switch StatsRow(rawValue: indexPath.row)! {
@@ -548,24 +591,13 @@ extension MarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
-            func showTokenViewController(token: TokenItem) {
-                let pushingToken = (pushingViewController as? TokenViewController)?.token
+            pickSingleToken { token in
+                let pushingToken = (self.pushingViewController as? TokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
-                    navigationController?.popViewController(animated: true)
+                    self.navigationController?.popViewController(animated: true)
                 } else {
                     let controller = TokenViewController.contained(token: token)
-                    navigationController?.pushViewController(controller, animated: true)
-                }
-            }
-            
-            if let tokens {
-                if tokens.count == 1 {
-                    showTokenViewController(token: tokens[0])
-                } else if tokens.count > 1, let name = market?.name {
-                    let selector = MarketTokenSelectorViewController(name: name, tokens: tokens) { index in
-                        showTokenViewController(token: tokens[index])
-                    }
-                    present(selector, animated: true)
+                    self.navigationController?.pushViewController(controller, animated: true)
                 }
             }
         default:
@@ -623,6 +655,67 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         chartPoints = nil
         self.chartPeriod = period
         reloadPriceChart(period: period)
+    }
+    
+    func tokenPriceChartCellWantsToShowAlert(_ cell: TokenPriceChartCell) {
+        guard let market else {
+            return
+        }
+        let coin = MarketAlertCoin(market: market)
+        let alert = CoinMarketAlertsViewController.contained(coin: coin)
+        navigationController?.pushViewController(alert, animated: true)
+    }
+    
+    func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell) {
+        guard let market else {
+            return
+        }
+        let coin = MarketAlertCoin(market: market)
+        let addAlert = AddMarketAlertViewController.contained(coin: coin)
+        navigationController?.pushViewController(addAlert, animated: true)
+    }
+    
+}
+
+extension MarketViewController: PillActionView.Delegate {
+    
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        guard let actions = tokenPriceChartCell?.tokenActions else {
+            return
+        }
+        switch actions[index] {
+        case .swap:
+            pickSingleToken { token in
+                let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
+                self.navigationController?.pushViewController(swap, animated: true)
+            }
+        case .alert:
+            guard let market else {
+                return
+            }
+            NotificationManager.shared.requestAuthorization { isAuthorized in
+                if isAuthorized {
+                    let coin = MarketAlertCoin(market: market)
+                    let alert = CoinMarketAlertsViewController.contained(coin: coin)
+                    self.navigationController?.pushViewController(alert, animated: true)
+                } else {
+                    self.requestTurnOnNotifications()
+                }
+            }
+        case .addAlert:
+            guard let market else {
+                return
+            }
+            NotificationManager.shared.requestAuthorization { isAuthorized in
+                if isAuthorized {
+                    let coin = MarketAlertCoin(market: market)
+                    let addAlert = AddMarketAlertViewController.contained(coin: coin)
+                    self.navigationController?.pushViewController(addAlert, animated: true)
+                } else {
+                    self.requestTurnOnNotifications()
+                }
+            }
+        }
     }
     
 }

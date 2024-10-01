@@ -8,6 +8,7 @@
 "acknowledgements" = "Acknowledgements";
 "add" = "Add";
 "add_address" = "Add address";
+"add_alert" = "Add Alert";
 "add_bot" = "Add Bot";
 "add_by_id_or_phone_number" = "Add by Mixin ID or Phone number";
 "add_by_phone_contacts" = "Add by Phone Contacts";
@@ -39,6 +40,11 @@
 "admin" = "Admin";
 "agree_hint" = "By proceeding, you agree to the %@ and %@.";
 "albums" = "Albums";
+"alert" = "Alert";
+"alert_frequency" = "Frequency";
+"alert_frequency_daily" = "Once a day";
+"alert_frequency_every" = "Continuously";
+"alert_frequency_once" = "Only once";
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 "alert_key_contact_audio_message" = "sent you an audio";
@@ -68,7 +74,17 @@
 "alert_key_group_text_message" = "%@ sent a message";
 "alert_key_group_transcript_message" = "%@ sent a transcript";
 "alert_key_group_video_message" = "%@ sent a video";
+"alert_limit_exceeded" = "The total number of price alerts for all currencies cannot exceed %d.";
+"alert_per_asset_limit_exceeded" = "You can create a maximum of %d price alerts for each trading pair.";
+"alert_type" = "Alert Type";
+"alert_type_percentage_decreased" = "Percentage Decreased";
+"alert_type_percentage_increased" = "Percentage Increased";
+"alert_type_price_decreased" = "Price Decreased";
+"alert_type_price_increased" = "Price Increased";
+"alert_type_price_reached" = "Price Reached";
+"alert_value" = "Value";
 "all" = "All";
+"all_alert" = "All Alert";
 "all_conversations" = "All Conversations";
 "all_dates" = "All Dates";
 "all_photos" = "All Photos";
@@ -319,6 +335,7 @@
 "currency_code" = "Code";
 "current_language" = "English";
 "current_location" = "Current Location";
+"current_price" = "Current price: %@";
 "current_selected" = "Current Selected";
 "current_version" = "Version: %@";
 "custom_time" = "Custom Time";
@@ -399,6 +416,7 @@
 "duplication_reminder" = "You transferred %1$@ to the recipient %2$@ ago.";
 "edit" = "Edit";
 "edit_address" = "Edit %@ Address";
+"edit_alert" = "Edit Alert";
 "edit_biography" = "Edit Biography";
 "edit_circle_name" = "Edit Circle Name";
 "edit_conversations" = "Edit Conversations";
@@ -683,6 +701,7 @@
 "new_update_available_desc" = "We update the app regularly so we can make it better for you";
 "new_wallet_hint" = "Create your first digital wallet, all your digital assets in one wallet, easy send and receive cryptocurrency.";
 "next" = "Next";
+"no_alerts" = "NO ALERTS";
 "no_audio" = "NO AUDIO";
 "no_authorizations" = "NO AUTHORIZATIONS";
 "no_blocked_users" = "No blocked users";
@@ -744,6 +763,8 @@
 "owner" = "Owner";
 "participants" = "Participants";
 "participants_count" = "%@ PARTICIPANTS";
+"pause" = "Pause";
+"paused" = "Paused";
 "pay" = "Pay";
 "pay_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "pay_with_biometry_type" = "Pay with %@";
@@ -803,7 +824,15 @@
 "preparing" = "Preparing...";
 "preparing_progress" = "Preparing...(%@)";
 "price" = "Price";
+"price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
 "price_data_unavailable" = "Price data unavailable";
+"price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
+"price_in_currency" = "Price (%@)";
+"price_increase_invalid" = "The price increase must be greater than %1$@ and less than %2$@";
+"price_must_greater_than_current" = "The set price must be greater than the current price";
+"price_must_less_than_current" = "The set price must be less than the current price";
+"price_too_large" = "The set price must be less than %@ times the current price";
+"price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
@@ -882,6 +911,8 @@
 "restoring" = "Restoring...";
 "restoring_chat_progress" = "Restoring Chat (%@%%)";
 "restoring_progress" = "Restoring %@";
+"resume" = "Resume";
+"resumed" = "Resumed";
 "retry" = "Retry";
 "return_to_merchant_description" = "Merchant payment is complete. You can opt to return to the merchant or stay in Mixin.";
 "review" = "Review";

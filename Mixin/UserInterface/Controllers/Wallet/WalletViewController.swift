@@ -39,6 +39,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
         reloadData()
+        let job = ReloadMarketAlertsJob()
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     override func viewWillAppear(_ animated: Bool) {

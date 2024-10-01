@@ -57,7 +57,12 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
         symbolLabel.text = market.name
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
         symbolLabel.text = market.symbol
-        rankLabel.text = market.marketCapRank
+        if let rank = market.marketCapRank {
+            rankLabel.text = rank
+            rankLabel.isHidden = false
+        } else {
+            rankLabel.isHidden = true
+        }
         marketCapLabel.text = market.localizedMarketCap
         priceLabel.text = market.localizedPrice
         switch changePeriod {

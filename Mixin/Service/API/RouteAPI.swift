@@ -62,6 +62,14 @@ final class RouteAPI {
         request(method: .get, path: "/markets/" + id, queue: queue, completion: completion)
     }
     
+    static func markets(
+        ids: [String],
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Market]>) -> Void
+    ) {
+        request(method: .post, path: "/markets/fetch", with: ids, queue: queue, completion: completion)
+    }
+    
     static func favoriteMarket(
         coinID: String,
         completion: @escaping (MixinAPI.Result<Empty>) -> Void
@@ -86,6 +94,67 @@ final class RouteAPI {
             method: .get,
             path: "/markets/\(id)/price-history?type=\(period.rawValue)",
             queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func addMarketAlert(
+        coinID: String,
+        type: MarketAlert.AlertType,
+        frequency: MarketAlert.AlertFrequency,
+        value: String,
+        completion: @escaping (MixinAPI.Result<MarketAlert>) -> Void
+    ) {
+        let parameters = [
+            "coin_id": coinID,
+            "type": type.rawValue,
+            "frequency": frequency.rawValue,
+            "value": value
+        ]
+        request(
+            method: .post,
+            path: "/prices/alerts",
+            with: parameters,
+            completion: completion
+        )
+    }
+    
+    static func postAction(
+        alertID: String,
+        action: MarketAlert.Action,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/prices/alerts/\(alertID)?action=\(action.rawValue)",
+            completion: completion
+        )
+    }
+    
+    static func updateMarketAlert(
+        alert: MarketAlert,
+        completion: @escaping (MixinAPI.Result<MarketAlert>) -> Void
+    ) {
+        let parameters = [
+            "type": alert.type.rawValue,
+            "frequency": alert.frequency.rawValue,
+            "value": alert.value
+        ]
+        request(
+            method: .post,
+            path: "/prices/alerts/\(alert.alertID)?action=update",
+            with: parameters,
+            completion: completion
+        )
+    }
+    
+    static func marketAlerts(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[MarketAlert]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/prices/alerts",
             completion: completion
         )
     }

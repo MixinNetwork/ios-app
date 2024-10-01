@@ -334,7 +334,7 @@ extension TransactionHistoryRecipientFilterPickerViewController: UITableViewDele
                 collectionView.deleteItems(at: [indexPath])
             }
             if selectedUserIDs.isEmpty {
-                hideSelections()
+                hideSelections(animated: true)
             }
         case .address:
             let address = addressModels[indexPath.row]
@@ -345,7 +345,7 @@ extension TransactionHistoryRecipientFilterPickerViewController: UITableViewDele
                 collectionView.deleteItems(at: [indexPath])
             }
             if selectedAddressIDs.isEmpty {
-                hideSelections()
+                hideSelections(animated: true)
             }
         }
     }
@@ -403,7 +403,7 @@ extension TransactionHistoryRecipientFilterPickerViewController: SelectedItemCel
                     tableView.deselectRow(at: indexPath, animated: true)
                 }
                 if selectedUserIDs.isEmpty {
-                    hideSelections()
+                    hideSelections(animated: true)
                 }
             }
         case .address:
@@ -416,7 +416,7 @@ extension TransactionHistoryRecipientFilterPickerViewController: SelectedItemCel
                     tableView.deselectRow(at: indexPath, animated: true)
                 }
                 if selectedAddressIDs.isEmpty {
-                    hideSelections()
+                    hideSelections(animated: true)
                 }
             }
         }

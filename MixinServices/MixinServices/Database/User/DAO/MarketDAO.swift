@@ -15,20 +15,36 @@ public final class MarketDAO: UserDatabaseDAO {
         order: Market.OrderingExpression,
         limit: Market.Limit?
     ) -> [FavorableMarket] {
+        let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
+            if key == .marketCapRank {
+                nil // `market_cap_rank` is selected from `market_cap_ranks`
+            } else {
+                "m." + key.rawValue
+            }
+        }
         var sql = """
-        SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        SELECT \(marketColumns.joined(separator: ", ")),
+            mcr.market_cap_rank,
+            ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
+        
         """
         switch category {
         case .all:
-            break
+            sql.append("""
+            INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
+            ORDER BY CAST(mcr.market_cap_rank AS REAL) ASC
+            """)
         case .favorite:
-            sql += "\nWHERE mf.is_favored"
+            sql.append("""
+            LEFT JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
+            WHERE mf.is_favored
+            ORDER BY mf.created_at ASC
+            """)
         }
-        sql += "\nORDER BY CAST(m.market_cap AS REAL) DESC"
         if let count = limit?.count {
-            sql += "\nLIMIT \(count)"
+            sql.append("\nLIMIT \(count)")
         }
         var results: [FavorableMarket] = db.select(with: sql)
         
@@ -79,6 +95,14 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [assetID])
     }
     
+    public func inexistCoinIDs(in coinIDs: Set<String>) -> [String] {
+        let values = coinIDs.map({ "('\($0)')" }).joined(separator: ",")
+        return db.select(with: """
+            WITH c(id) AS (VALUES \(values))
+            SELECT c.id FROM c LEFT JOIN markets m ON c.id = m.coin_id WHERE m.coin_id IS NULL
+        """)
+    }
+    
     public func priceHistory(coinID: String, period: PriceHistoryPeriod) -> PriceHistoryStorage? {
         let sql = """
         SELECT hp.*
@@ -100,18 +124,25 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [assetID, period.rawValue])
     }
     
+    public func allMarketAlertCoins() -> [MarketAlertCoin] {
+        db.select(with: "SELECT m.coin_id, m.name, m.symbol, m.icon_url, m.current_price FROM markets m")
+    }
+    
+    public func marketAlertCoins(coinIDs ids: [String]) -> [MarketAlertCoin] {
+        guard !ids.isEmpty else {
+            return allMarketAlertCoins()
+        }
+        var query: GRDB.SQL = """
+            SELECT m.coin_id, m.name, m.symbol, m.icon_url, m.current_price
+            FROM markets m
+            WHERE m.coin_id IN \(ids)
+        """
+        return db.select(with: query)
+    }
+    
     public func save(market: Market) -> FavorableMarket? {
         try? db.writeAndReturnError { db in
-            // When a single Market object is requested, its `marketCapRank` may differ from
-            // the value in the `markets` table. This can result in duplicate ranks when
-            // querying the market list. To avoid this issue, retrieve the known rank for
-            // this record and overwrite it.
-            let existedRank: String? = try Market
-                .select(Market.column(of: .marketCapRank))
-                .filter(Market.column(of: .coinID) == market.coinID)
-                .fetchOne(db)
-            let rankReplacedMarket = market.replacingMarketCapRank(with: existedRank ?? "")
-            try rankReplacedMarket.save(db)
+            try market.save(db)
             if let assetIDs = market.assetIDs, !assetIDs.isEmpty {
                 let now = Date().toUTCString()
                 let ids: [MarketID] = assetIDs.reduce(into: []) { result, assetID in
@@ -133,22 +164,32 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func replaceMarkets(with markets: [Market], completion: @escaping () -> Void) {
+    public func save(markets: [Market]) {
+        try? db.writeAndReturnError { db in
+            try markets.save(db)
+            let now = Date().toUTCString()
+            let ids: [MarketID] = markets.flatMap { market in
+                market.assetIDs?.map { assetID in
+                    MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
+                } ?? []
+            }
+            try ids.save(db)
+        }
+    }
+    
+    public func save(markets: [Market], completion: @escaping () -> Void) {
         let now = Date().toUTCString()
-        let ids: [MarketID] = markets.reduce(into: []) { result, market in
-            guard let assetIDs = market.assetIDs else {
-                return
-            }
-            let ids: [MarketID] = assetIDs.reduce(into: []) { result, assetID in
-                let id = MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
-                result.append(id)
-            }
-            result.append(contentsOf: ids)
+        let rankStorages = markets.compactMap(\.rankStorage)
+        let ids: [MarketID] = markets.flatMap { market in
+            market.assetIDs?.map { assetID in
+                MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
+            } ?? []
         }
         db.write { db in
-            try db.execute(sql: "DELETE FROM markets")
-            try ids.save(db)
             try markets.save(db)
+            try db.execute(sql: "DELETE FROM market_cap_ranks")
+            try rankStorages.save(db)
+            try ids.save(db)
             db.afterNextTransaction { _ in
                 completion()
             }

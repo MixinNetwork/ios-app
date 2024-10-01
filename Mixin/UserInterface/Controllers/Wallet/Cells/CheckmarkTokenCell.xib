@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,19 +17,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ec4-5f-fH5" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="20" y="24" width="16" height="16"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="16" id="Du6-3m-D5Q"/>
-                            <constraint firstAttribute="width" constant="16" id="h62-LD-8gl"/>
-                        </constraints>
-                    </view>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="fQp-VG-Fkw">
-                        <rect key="frame" x="56" y="10" width="244" height="50"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="fQp-VG-Fkw">
+                        <rect key="frame" x="20" y="10" width="280" height="50"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ec4-5f-fH5" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="17" width="16" height="16"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="Du6-3m-D5Q"/>
+                                    <constraint firstAttribute="width" constant="16" id="h62-LD-8gl"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FfB-0b-swA" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                <rect key="frame" x="32" y="3" width="44" height="44"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="FfB-0b-swA" secondAttribute="height" id="4Ma-nU-XrJ"/>
@@ -42,7 +42,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" axis="vertical" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="ZIv-2K-xNn">
-                                <rect key="frame" x="60" y="0.0" width="184" height="41.333333333333336"/>
+                                <rect key="frame" x="92" y="4.3333333333333321" width="188" height="41.333333333333343"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="FCB-Uz-hJ3">
                                         <rect key="frame" x="0.0" y="0.0" width="33" height="19.333333333333332"/>
@@ -69,7 +69,7 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Bitcoin Cash" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3kv-NT-sbb">
-                                        <rect key="frame" x="0.0" y="24.333333333333336" width="81" height="17"/>
+                                        <rect key="frame" x="0.0" y="24.333333333333329" width="81" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text_tertiary"/>
                                         <nil key="highlightedColor"/>
@@ -86,10 +86,8 @@
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="fQp-VG-Fkw" secondAttribute="bottom" constant="10" id="Eqz-Ht-Cyt"/>
                     <constraint firstAttribute="trailing" secondItem="fQp-VG-Fkw" secondAttribute="trailing" constant="20" id="GUS-qy-2hA"/>
-                    <constraint firstItem="Ec4-5f-fH5" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="JVj-BY-8py"/>
                     <constraint firstItem="fQp-VG-Fkw" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="TEo-jL-XjG"/>
-                    <constraint firstItem="fQp-VG-Fkw" firstAttribute="leading" secondItem="Ec4-5f-fH5" secondAttribute="trailing" constant="20" id="dWZ-sB-9y0"/>
-                    <constraint firstItem="Ec4-5f-fH5" firstAttribute="centerY" secondItem="FfB-0b-swA" secondAttribute="centerY" id="uOC-Pg-FYh"/>
+                    <constraint firstItem="fQp-VG-Fkw" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="Wai-en-tcv"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
@@ -115,7 +113,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

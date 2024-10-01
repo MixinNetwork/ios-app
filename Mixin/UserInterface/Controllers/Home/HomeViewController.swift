@@ -217,7 +217,7 @@ class HomeViewController: UIViewController {
     @IBAction func bulletinContinueAction(_ sender: Any) {
         switch bulletinContent {
         case .notification:
-            UIApplication.openAppSettings()
+            UIApplication.shared.openNotificationSettings()
         case .emergencyContact:
             let vc = EmergencyContactViewController.instance()
             navigationController?.pushViewController(vc, animated: true)

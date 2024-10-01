@@ -121,6 +121,12 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(beginInput(_:)),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
     }
     
     override func layout(for keyboardFrame: CGRect) {

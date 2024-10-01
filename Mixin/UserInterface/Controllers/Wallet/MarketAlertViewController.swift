@@ -33,8 +33,6 @@ class MarketAlertViewController: UIViewController {
             object: nil
         )
         reloadFromLocal()
-        let job = ReloadMarketAlertsJob()
-        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @objc func reloadFromLocal() {

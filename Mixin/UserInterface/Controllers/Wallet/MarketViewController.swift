@@ -393,6 +393,19 @@ final class MarketViewController: UIViewController {
         }
     }
     
+    private func requestTurnOnNotifications() {
+        let alert = UIAlertController(
+            title: R.string.localizable.turn_on_notifications(),
+            message: R.string.localizable.price_alert_notification_permission(),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { _ in
+            UIApplication.shared.openNotificationSettings()
+        }))
+        present(alert, animated: true)
+    }
+    
 }
 
 extension MarketViewController: UITableViewDataSource {
@@ -443,6 +456,7 @@ extension MarketViewController: UITableViewDataSource {
             }
             cell.delegate = self
             cell.chartView.delegate = self
+            cell.tokenActionView.delegate = self
             return cell
         case .stats:
             switch StatsRow(rawValue: indexPath.row)! {
@@ -643,13 +657,6 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         reloadPriceChart(period: period)
     }
     
-    func tokenPriceChartCellWantsToSwap(_ cell: TokenPriceChartCell) {
-        pickSingleToken { token in
-            let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
-            self.navigationController?.pushViewController(swap, animated: true)
-        }
-    }
-    
     func tokenPriceChartCellWantsToShowAlert(_ cell: TokenPriceChartCell) {
         guard let market else {
             return
@@ -666,6 +673,49 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         let coin = MarketAlertCoin(market: market)
         let addAlert = AddMarketAlertViewController.contained(coin: coin)
         navigationController?.pushViewController(addAlert, animated: true)
+    }
+    
+}
+
+extension MarketViewController: PillActionView.Delegate {
+    
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        guard let actions = tokenPriceChartCell?.tokenActions else {
+            return
+        }
+        switch actions[index] {
+        case .swap:
+            pickSingleToken { token in
+                let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
+                self.navigationController?.pushViewController(swap, animated: true)
+            }
+        case .alert:
+            guard let market else {
+                return
+            }
+            NotificationManager.shared.requestAuthorization { isAuthorized in
+                if isAuthorized {
+                    let coin = MarketAlertCoin(market: market)
+                    let alert = CoinMarketAlertsViewController.contained(coin: coin)
+                    self.navigationController?.pushViewController(alert, animated: true)
+                } else {
+                    self.requestTurnOnNotifications()
+                }
+            }
+        case .addAlert:
+            guard let market else {
+                return
+            }
+            NotificationManager.shared.requestAuthorization { isAuthorized in
+                if isAuthorized {
+                    let coin = MarketAlertCoin(market: market)
+                    let addAlert = AddMarketAlertViewController.contained(coin: coin)
+                    self.navigationController?.pushViewController(addAlert, animated: true)
+                } else {
+                    self.requestTurnOnNotifications()
+                }
+            }
+        }
     }
     
 }

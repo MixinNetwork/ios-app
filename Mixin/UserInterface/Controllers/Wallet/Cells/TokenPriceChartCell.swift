@@ -5,9 +5,6 @@ final class TokenPriceChartCell: UITableViewCell {
     
     protocol Delegate: AnyObject {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
-        func tokenPriceChartCellWantsToSwap(_ cell: TokenPriceChartCell)
-        func tokenPriceChartCellWantsToShowAlert(_ cell: TokenPriceChartCell)
-        func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell)
     }
     
     enum TokenAction: Int, CaseIterable {
@@ -97,7 +94,6 @@ final class TokenPriceChartCell: UITableViewCell {
             periodSelectorStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(changePeriod(_:)), for: .touchUpInside)
         }
-        tokenActionView.delegate = self
     }
     
     func setPeriodSelection(period: PriceHistoryPeriod) {
@@ -157,21 +153,6 @@ final class TokenPriceChartCell: UITableViewCell {
         loadingIndicatorView.startAnimating()
         let period = PriceHistoryPeriod.allCases[sender.tag]
         delegate?.tokenPriceChartCell(self, didSelectPeriod: period)
-    }
-    
-}
-
-extension TokenPriceChartCell: PillActionView.Delegate {
-    
-    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        switch tokenActions[index] {
-        case .swap:
-            delegate?.tokenPriceChartCellWantsToSwap(self)
-        case .alert:
-            delegate?.tokenPriceChartCellWantsToShowAlert(self)
-        case .addAlert:
-            delegate?.tokenPriceChartCellWantsToAddAlert(self)
-        }
     }
     
 }

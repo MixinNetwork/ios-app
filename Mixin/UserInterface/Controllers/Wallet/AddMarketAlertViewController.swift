@@ -81,20 +81,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        iconImageView.setIcon(coin: coin)
-        tokenNameLabel.text = coin.name
-        tokenPriceLabel.text = R.string.localizable.current_price(coin.localizedUSDPrice)
-        alertTypeTitleLabel.text = R.string.localizable.alert_type()
-        reloadAlertTypeMenu()
-        alertTypeButton.showsMenuAsPrimaryAction = true
-        alertFrequencyTitleLabel.text = R.string.localizable.alert_frequency()
-        alertFrequencyLabel.text = alertFrequency.description
-        reloadAlertFrequencyMenu()
-        alertFrequencyButton.showsMenuAsPrimaryAction = true
-        reloadInputTitle()
-        inputTextField.placeholder = zeroWith2Fractions
-        inputTextField.text = initialInput
-        inputTextField.becomeFirstResponder()
+        
         for (i, percentage) in changePercentages.enumerated() {
             let button = PresetPercentageButton(type: .system)
             let title = NumberFormatter.percentage.string(decimal: percentage)
@@ -107,7 +94,20 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             presetPercentageStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(loadPresetPercentage(_:)), for: .touchUpInside)
         }
-        switchToType(alertType)
+        
+        iconImageView.setIcon(coin: coin)
+        tokenNameLabel.text = coin.name
+        tokenPriceLabel.text = R.string.localizable.current_price(coin.localizedUSDPrice)
+        alertTypeTitleLabel.text = R.string.localizable.alert_type()
+        alertTypeButton.showsMenuAsPrimaryAction = true
+        switchToType(alertType, replacingInputWith: initialInput)
+        alertFrequencyTitleLabel.text = R.string.localizable.alert_frequency()
+        alertFrequencyLabel.text = alertFrequency.description
+        alertFrequencyButton.showsMenuAsPrimaryAction = true
+        reloadAlertFrequencyMenu()
+        reloadInputTitle()
+        inputTextField.placeholder = zeroWith2Fractions
+        inputTextField.becomeFirstResponder()
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
         NotificationCenter.default.addObserver(
             self,
@@ -311,16 +311,16 @@ extension AddMarketAlertViewController {
     private func reloadAlertTypeMenu() {
         alertTypeButton.menu = UIMenu(children: MarketAlert.AlertType.allCases.map { type in
             UIAction(title: type.description, state: type == alertType ? .on : .off) { [weak self] _ in
-                self?.switchToType(type)
+                self?.switchToType(type, replacingInputWith: nil)
             }
         })
     }
     
-    private func switchToType(_ type: MarketAlert.AlertType) {
+    private func switchToType(_ type: MarketAlert.AlertType, replacingInputWith inputText: String?) {
         self.alertType = type
         alertTypeLabel.text = type.description
         reloadAlertTypeMenu()
-        inputTextField.text = nil
+        inputTextField.text = inputText
         let center = changePercentages.firstIndex(where: { $0 > 0 }) ?? 0
         switch type {
         case .priceReached:

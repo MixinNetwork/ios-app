@@ -7,11 +7,11 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
     
     override var initialInput: String? {
         if let decimalValue = Decimal(string: alert.value, locale: .enUSPOSIX) {
-            let value = switch alertType {
-            case .percentageDecreased, .percentageIncreased:
-                decimalValue * 100
-            default:
+            let value = switch alertType.valueType {
+            case .absolute:
                 decimalValue
+            case .percentage:
+                decimalValue * 100
             }
             return formatter.string(decimal: value)
         } else {

@@ -8,6 +8,7 @@ class MarketAlertViewController: UIViewController {
     private let headerReuseIdentifier = "h"
     
     private var viewModels: [MarketAlertViewModel] = []
+    private var expandedCoinIDs: Set<String> = []
     
     override func loadView() {
         view = UIView()
@@ -29,7 +30,7 @@ class MarketAlertViewController: UIViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadFromLocal),
-            name: MarketAlertDAO.didSaveNotification,
+            name: MarketAlertDAO.didChangeNotification,
             object: nil
         )
         reloadFromLocal()
@@ -37,19 +38,6 @@ class MarketAlertViewController: UIViewController {
     
     @objc func reloadFromLocal() {
         
-    }
-    
-    func requestTurnOnNotifications() {
-        let alert = UIAlertController(
-            title: R.string.localizable.turn_on_notifications(),
-            message: R.string.localizable.price_alert_notification_permission(),
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
-        alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { _ in
-            UIApplication.shared.openNotificationSettings()
-        }))
-        present(alert, animated: true)
     }
     
     func reloadData(alerts: [MarketAlert]) {
@@ -73,9 +61,11 @@ class MarketAlertViewController: UIViewController {
                 }
                 return MarketAlertViewModel(coin: coin, alerts: alertsForCurrentToken)
             }
-            viewModels.first?.isExpanded = true
         }
         DispatchQueue.main.async {
+            if self.expandedCoinIDs.isEmpty, let viewModel = viewModels.first {
+                self.expandedCoinIDs.insert(viewModel.coin.coinID)
+            }
             self.viewModels = viewModels
             self.tableView.reloadData()
             self.tableView.checkEmpty(
@@ -100,7 +90,9 @@ extension MarketAlertViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.market_alert_token, for: indexPath)!
-        cell.viewModel = viewModels[indexPath.section]
+        let viewModel = viewModels[indexPath.section]
+        cell.viewModel = viewModel
+        cell.isExpanded = expandedCoinIDs.contains(viewModel.coin.coinID)
         cell.delegate = self
         return cell
     }
@@ -130,14 +122,16 @@ extension MarketAlertViewController: UITableViewDelegate {
 extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
     
     func marketAlertTokenCellWantsToToggleExpansion(_ cell: MarketAlertTokenCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else {
-            return
-        }
         tableView.beginUpdates()
-        // `cell.viewModel` is passed by reference. When the viewModel changes, it will cause the cell’s
-        // content height to adjust accordingly. See `MarketAlertTokenCell.systemLayoutSizeFitting`
-        // for more details
-        viewModels[indexPath.section].isExpanded.toggle()
+        cell.isExpanded.toggle()
+        if let indexPath = tableView.indexPath(for: cell) {
+            let viewModel = viewModels[indexPath.section]
+            if cell.isExpanded {
+                expandedCoinIDs.insert(viewModel.coin.coinID)
+            } else {
+                expandedCoinIDs.remove(viewModel.coin.coinID)
+            }
+        }
         tableView.endUpdates()
     }
     
@@ -146,16 +140,6 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
         wantsToPerform action: MarketAlert.Action,
         to alert: MarketAlert
     ) {
-        guard let section = tableView.indexPath(for: cell)?.section else {
-            return
-        }
-        let viewModel = viewModels[section]
-        let row = viewModel.alerts.firstIndex {
-            $0.alert.alertID == alert.alertID
-        }
-        guard let row else {
-            return
-        }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         RouteAPI.postAction(alertID: alert.alertID, action: action) { result in
@@ -167,34 +151,16 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
                         MarketAlertDAO.shared.update(alertID: alert.alertID, status: .paused)
                     }
                     hud.set(style: .notification, text: R.string.localizable.paused())
-                    viewModel.alerts[row].alert.status = .paused
-                    self.tableView.reloadSections(IndexSet(integer: section), with: .none)
                 case .resume:
                     DispatchQueue.global().async {
                         MarketAlertDAO.shared.update(alertID: alert.alertID, status: .running)
                     }
                     hud.set(style: .notification, text: R.string.localizable.resumed())
-                    viewModel.alerts[row].alert.status = .running
-                    self.tableView.reloadSections(IndexSet(integer: section), with: .none)
                 case .delete:
                     DispatchQueue.global().async {
                         MarketAlertDAO.shared.deleteAlert(id: alert.alertID)
                     }
                     hud.set(style: .notification, text: R.string.localizable.deleted())
-                    UIView.performWithoutAnimation {
-                        viewModel.alerts.remove(at: row)
-                        if viewModel.alerts.isEmpty {
-                            self.viewModels.remove(at: section)
-                            self.tableView.deleteSections(IndexSet(integer: section), with: .none)
-                            self.tableView.checkEmpty(
-                                dataCount: self.viewModels.count,
-                                text: R.string.localizable.no_alerts(),
-                                photo: R.image.emptyIndicator.ic_data()!
-                            )
-                        } else {
-                            self.tableView.reloadSections(IndexSet(integer: section), with: .none)
-                        }
-                    }
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)

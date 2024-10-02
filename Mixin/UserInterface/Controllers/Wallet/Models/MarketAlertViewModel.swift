@@ -7,8 +7,6 @@ final class MarketAlertViewModel {
     let description: String
     var alerts: [AlertViewModel]
     
-    var isExpanded = false
-    
     var iconURL: URL? {
         URL(string: coin.iconURL)
     }

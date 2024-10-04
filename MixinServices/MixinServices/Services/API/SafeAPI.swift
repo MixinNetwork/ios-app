@@ -82,29 +82,37 @@ public final class SafeAPI: MixinAPI {
 extension SafeAPI {
     
     public static func assets(ids: Set<String>) async throws -> [Token] {
-        try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+        let tokens: [RawToken] = try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+        return tokens.map(\.asToken)
     }
     
     public static func assets(ids: [String]) async throws -> [Token] {
-        try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+        let tokens: [RawToken] = try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+        return tokens.map(\.asToken)
     }
     
     public static func assets() async throws -> [Token] {
-        try await request(method: .get, path: "/safe/assets")
+        let tokens: [RawToken] = try await request(method: .get, path: "/safe/assets")
+        return tokens.map(\.asToken)
     }
     
     public static func assets(id: String) async throws -> Token {
-        try await request(method: .get, path: "/safe/assets/\(id)")
+        let token: RawToken = try await request(method: .get, path: "/safe/assets/\(id)")
+        return token.asToken
     }
     
     public static func assets(id: String) -> MixinAPI.Result<Token> {
-        request(method: .get, path: "/safe/assets/\(id)")
+        let result: MixinAPI.Result<RawToken> = request(method: .get, path: "/safe/assets/\(id)")
+        return result.map(\.asToken)
     }
     
     public static func assets<EncodableStringSequence: Sequence<String> & Encodable>(
         ids: EncodableStringSequence
     ) -> MixinAPI.Result<[Token]> {
-        request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+        let results: MixinAPI.Result<[RawToken]> = request(method: .post, path: "/safe/assets/fetch", parameters: ids)
+        return results.map { tokens in
+            tokens.map(\.asToken)
+        }
     }
     
 }

@@ -40,6 +40,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var footerInfoLabel: UILabel!
     @IBOutlet weak var footerInfoProgressView: CircularProgressView!
+    @IBOutlet weak var footerSpacingView: UIView!
     @IBOutlet weak var swapPriceButton: UIButton!
     
     @IBOutlet weak var swapBackgroundView: UIView!
@@ -125,38 +126,6 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         sendAmountTextField.becomeFirstResponder()
     }
     
-    func hideFooterInfoLabel() {
-        footerInfoLabel.isHidden = true
-    }
-    
-    func showFooterInfoLabel(style: AdditionalInfoStyle, text: String) {
-        switch style {
-        case .info:
-            footerInfoLabel.textColor = R.color.text_tertiary()
-        case .error:
-            footerInfoLabel.textColor = R.color.red()
-        }
-        footerInfoLabel.text = text
-        footerInfoLabel.isHidden = false
-    }
-    
-    func hideFooterInfoProgress() {
-        footerInfoProgressView.isHidden = true
-    }
-    
-    func showFooterInfoProgress(progress: Double) {
-        footerInfoProgressView.isHidden = false
-        footerInfoProgressView.setProgress(progress, animationDuration: nil)
-    }
-    
-    func hidePriceSwapping() {
-        swapPriceButton.isHidden = true
-    }
-    
-    func showPriceSwapping() {
-        swapPriceButton.isHidden = false
-    }
-    
     func reportClientOutdated() {
         let alert = UIAlertController(
             title: R.string.localizable.update_mixin(),
@@ -171,6 +140,47 @@ class SwapViewController: KeyboardBasedLayoutViewController {
             self.navigationController?.popViewController(animated: true)
         }))
         self.present(alert, animated: true)
+    }
+    
+}
+
+extension SwapViewController {
+    
+    enum Footer {
+        case calculating
+        case error(String)
+        case price(String)
+    }
+    
+    func setFooter(_ footer: Footer?) {
+        switch footer {
+        case .calculating:
+            footerInfoLabel.textColor = R.color.text_tertiary()
+            footerInfoLabel.text = R.string.localizable.calculating()
+            footerInfoLabel.isHidden = false
+            footerInfoProgressView.isHidden = true
+            footerSpacingView.isHidden = true
+            swapPriceButton.isHidden = true
+        case .error(let description):
+            footerInfoLabel.textColor = R.color.red()
+            footerInfoLabel.text = description
+            footerInfoLabel.isHidden = false
+            footerInfoProgressView.isHidden = true
+            footerSpacingView.isHidden = true
+            swapPriceButton.isHidden = true
+        case .price(let price):
+            footerInfoLabel.textColor = R.color.text_tertiary()
+            footerInfoLabel.text = price
+            footerInfoLabel.isHidden = false
+            footerInfoProgressView.isHidden = false
+            footerSpacingView.isHidden = false
+            swapPriceButton.isHidden = false
+        case nil:
+            footerInfoLabel.isHidden = true
+            footerInfoProgressView.isHidden = true
+            footerSpacingView.isHidden = true
+            swapPriceButton.isHidden = true
+        }
     }
     
 }

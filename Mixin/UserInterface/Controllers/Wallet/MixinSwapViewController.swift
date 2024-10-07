@@ -218,9 +218,7 @@ extension MixinSwapViewController: UITextFieldDelegate {
 extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
     
     func swapQuotePeriodicRequesterWillUpdate(_ requester: SwapQuotePeriodicRequester) {
-        showFooterInfoLabel(style: .info, text: R.string.localizable.calculating())
-        hideFooterInfoProgress()
-        hidePriceSwapping()
+        setFooter(.calculating)
         reviewButton.isEnabled = false
     }
     
@@ -236,8 +234,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
             )
             updateReceiveValueLabel()
             updateCurrentPriceRepresentation()
-            showFooterInfoProgress(progress: 1)
-            showPriceSwapping()
+            footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
                 && quote.sendAmount <= quote.sendToken.decimalBalance
         case .failure(let error):
@@ -252,9 +249,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 "\(error)"
             }
             Logger.general.debug(category: "Web3Swap", message: description)
-            showFooterInfoLabel(style: .error, text: description)
-            hideFooterInfoProgress()
-            hidePriceSwapping()
+            setFooter(.error(description))
         }
     }
     
@@ -368,7 +363,8 @@ extension MixinSwapViewController {
                 self.sendLoadingIndicator.stopAnimating()
                 self.receiveLoadingIndicator.stopAnimating()
                 if let missingAssetSymbol {
-                    self.showFooterInfoLabel(style: .error, text: R.string.localizable.swap_not_supported(missingAssetSymbol))
+                    let description = R.string.localizable.swap_not_supported(missingAssetSymbol)
+                    self.setFooter(.error(description))
                 }
             }
         }
@@ -448,8 +444,8 @@ extension MixinSwapViewController {
         guard let quote else {
             return
         }
-        let price = quote.priceRepresentation(unit: priceUnit)
-        showFooterInfoLabel(style: .info, text: price)
+        let priceRepresentation = quote.priceRepresentation(unit: priceUnit)
+        setFooter(.price(priceRepresentation))
     }
     
     private func scheduleNewRequesterIfAvailable() {
@@ -466,14 +462,10 @@ extension MixinSwapViewController {
             let sendToken,
             let receiveToken
         else {
-            hideFooterInfoLabel()
-            hideFooterInfoProgress()
-            hidePriceSwapping()
+            setFooter(nil)
             return
         }
-        showFooterInfoLabel(style: .info, text: R.string.localizable.calculating())
-        hideFooterInfoProgress()
-        hidePriceSwapping()
+        setFooter(.calculating)
         let requester = SwapQuotePeriodicRequester(sendToken: sendToken,
                                                    sendAmount: sendAmount,
                                                    receiveToken: receiveToken.token,

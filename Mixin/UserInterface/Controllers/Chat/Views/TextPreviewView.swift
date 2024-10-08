@@ -38,7 +38,7 @@ final class TextPreviewView: UIView {
     private var attributes: [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 9
-        return [.font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 24)),
+        return [.font: UIFont.systemFont(ofSize: 24),
                 .paragraphStyle: paragraphStyle]
     }
     
@@ -66,15 +66,28 @@ final class TextPreviewView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        textView.layoutManager.ensureLayout(for: textView.textContainer)
-        let textRect = textView.layoutManager.usedRect(for: textView.textContainer)
+        let textRect: CGRect
+        if #available(iOS 16.0, *),
+           let manager = textView.textLayoutManager,
+           let nsDocumentRange = manager.textContentManager?.documentRange
+        {
+            manager.ensureLayout(for: nsDocumentRange)
+            textRect = manager.usageBoundsForTextContainer
+        } else {
+            textView.layoutManager.ensureLayout(for: textView.textContainer)
+            textRect = textView.layoutManager.usedRect(for: textView.textContainer)
+        }
         let emptySpace = textView.bounds.size.height - ceil(textRect.height)
         let topInset = floor(max(0, emptySpace / 2.5)) // Place text a little bit above the center line for better view
         textView.contentInset.top = topInset
+        
+        let isMultilined: Bool
         if let font = textView.font {
-            let numberOfLines = Int(textRect.height / font.lineHeight)
-            textView.textAlignment = numberOfLines == 1 ? .center : .natural
+            isMultilined = Int(textRect.height / font.lineHeight) > 1
+        } else {
+            isMultilined = true
         }
+        textView.textAlignment = isMultilined ? .natural : .center
     }
     
     func show(on superview: UIView) {

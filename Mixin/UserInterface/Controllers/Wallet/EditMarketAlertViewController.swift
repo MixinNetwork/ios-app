@@ -21,9 +21,7 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
     
     init(coin: MarketAlertCoin, alert: MarketAlert) {
         self.alert = alert
-        super.init(coin: coin)
-        self.alertType = alert.type
-        self.alertFrequency = alert.frequency
+        super.init(coin: coin, type: alert.type, frequency: alert.frequency)
     }
     
     required init?(coder: NSCoder) {

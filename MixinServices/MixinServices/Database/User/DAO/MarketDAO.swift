@@ -24,7 +24,7 @@ public final class MarketDAO: UserDatabaseDAO {
         }
         var sql = """
         SELECT \(marketColumns.joined(separator: ", ")),
-            mcr.market_cap_rank,
+            ifnull(mcr.market_cap_rank, m.market_cap_rank) AS \(Market.CodingKeys.marketCapRank.rawValue),
             ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
@@ -34,7 +34,7 @@ public final class MarketDAO: UserDatabaseDAO {
         case .all:
             sql.append("""
             INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
-            ORDER BY CAST(mcr.market_cap_rank AS REAL) ASC
+            ORDER BY CAST(ifnull(mcr.market_cap_rank, m.market_cap_rank) AS REAL) ASC
             """)
         case .favorite:
             sql.append("""
@@ -200,15 +200,26 @@ public final class MarketDAO: UserDatabaseDAO {
         db.save(history)
     }
     
-    public func replaceFavoredMarkets(
-        with favoredMarkets: [FavoredMarket],
-        completion: @escaping () -> Void
-    ) {
+    public func saveFavoriteMarkets(markets: [Market], completion: (() -> Void)?) {
         db.write { db in
+            try markets.insert(db, onConflict: .ignore)
+            
+            let distantPast = Date.distantPast.toUTCString()
+            let favoredMarkets = try markets.map { market in
+                let createdAt = try String.fetchOne(
+                    db,
+                    sql: "SELECT created_at FROM market_favored WHERE coin_id = ?",
+                    arguments: [market.coinID]
+                ) ?? distantPast
+                return FavoredMarket(coinID: market.coinID, isFavored: true, createdAt: createdAt)
+            }
             try db.execute(sql: "DELETE FROM market_favored")
             try favoredMarkets.save(db)
-            db.afterNextTransaction { _ in
-                completion()
+            
+            if let completion {
+                db.afterNextTransaction { _ in
+                    completion()
+                }
             }
         }
     }

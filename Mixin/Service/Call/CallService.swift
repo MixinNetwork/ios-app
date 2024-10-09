@@ -124,7 +124,7 @@ class CallService: NSObject {
             return
         }
         guard adapter is CallKitAdapter else {
-            AccountAPI.updateSession(voipToken: .remove)
+            AccountAPI.updateSession(voipToken: .remove, completion: nil)
             Logger.call.info(category: "CallService", message: "PushKit invalidated")
             return
         }
@@ -132,7 +132,7 @@ class CallService: NSObject {
         registry.desiredPushTypes = [.voIP]
         registry.delegate = self
         if let token = registry.pushToken(for: .voIP)?.hexEncodedString() {
-            AccountAPI.updateSession(voipToken: .token(token))
+            AccountAPI.updateSession(voipToken: .token(token), completion: nil)
             Logger.call.info(category: "CallService", message: "PushKit registered")
         }
         self.pushRegistry = registry
@@ -212,7 +212,7 @@ extension CallService: PKPushRegistryDelegate {
             return
         }
         let token = pushCredentials.token.hexEncodedString()
-        AccountAPI.updateSession(voipToken: .token(token))
+        AccountAPI.updateSession(voipToken: .token(token), completion: nil)
         Logger.call.info(category: "CallService", message: "PushKit registered")
     }
     
@@ -308,7 +308,7 @@ extension CallService: PKPushRegistryDelegate {
         guard type == .voIP, registry.pushToken(for: .voIP) == nil else {
             return
         }
-        AccountAPI.updateSession(voipToken: .remove)
+        AccountAPI.updateSession(voipToken: .remove, completion: nil)
         Logger.call.info(category: "CallService", message: "PushKit invalidated")
     }
     

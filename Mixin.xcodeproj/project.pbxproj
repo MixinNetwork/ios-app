@@ -931,6 +931,7 @@
 		94668E2B2CB50C6F00558755 /* MarketAlertParameterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94668E2A2CB50C6F00558755 /* MarketAlertParameterCell.xib */; };
 		94668E2C2CB50C6F00558755 /* MarketAlertParameterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94668E292CB50C6F00558755 /* MarketAlertParameterCell.swift */; };
 		94668E2E2CB5308500558755 /* AlertFrequencySelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94668E2D2CB5308200558755 /* AlertFrequencySelectorViewController.swift */; };
+		94668E3F2CB68C1E00558755 /* PushNotificationDiagnostic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94668E3E2CB68C1700558755 /* PushNotificationDiagnostic.swift */; };
 		9466A1322C40152F001CD7DE /* AppButtonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9466A1312C40152F001CD7DE /* AppButtonDelegate.swift */; };
 		946983B029D1A36400E73428 /* NetworkFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */; };
 		946983B429D2A0DE00E73428 /* NetworkFeeOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */; };
@@ -2352,6 +2353,7 @@
 		94668E292CB50C6F00558755 /* MarketAlertParameterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertParameterCell.swift; sourceTree = "<group>"; };
 		94668E2A2CB50C6F00558755 /* MarketAlertParameterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertParameterCell.xib; sourceTree = "<group>"; };
 		94668E2D2CB5308200558755 /* AlertFrequencySelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertFrequencySelectorViewController.swift; sourceTree = "<group>"; };
+		94668E3E2CB68C1700558755 /* PushNotificationDiagnostic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationDiagnostic.swift; sourceTree = "<group>"; };
 		9466A1312C40152F001CD7DE /* AppButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonDelegate.swift; sourceTree = "<group>"; };
 		946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeSelectorViewController.swift; sourceTree = "<group>"; };
 		946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOptionCell.swift; sourceTree = "<group>"; };
@@ -3802,6 +3804,7 @@
 		94B8D186266E412B00F43CBB /* Diagnose */ = {
 			isa = PBXGroup;
 			children = (
+				94668E3E2CB68C1700558755 /* PushNotificationDiagnostic.swift */,
 				94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */,
 				94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */,
 				94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */,
@@ -6797,6 +6800,7 @@
 				940EF8B52C8AE74D000AD1C6 /* ShareMarketViewController.swift in Sources */,
 				945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */,
 				94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */,
+				94668E3F2CB68C1E00558755 /* PushNotificationDiagnostic.swift in Sources */,
 				94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */,
 				946331E22C638B8200C54B76 /* TransactionHistoryRecipientFilterPickerViewController.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,

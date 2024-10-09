@@ -63,17 +63,9 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     }
     
     @IBAction func addAlert(_ sender: BusyButton) {
-        sender.isBusy = true
-        NotificationManager.shared.requestAuthorization { isAuthorized in
-            sender.isBusy = false
-            if isAuthorized {
-                let picker = MarketAlertCoinPickerViewController()
-                picker.delegate = self
-                self.present(picker, animated: true)
-            } else {
-                self.requestTurnOnNotifications()
-            }
-        }
+        let picker = MarketAlertCoinPickerViewController()
+        picker.delegate = self
+        self.present(picker, animated: true)
     }
     
     @objc private func pickTokens(_ sender: Any) {

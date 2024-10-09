@@ -26,6 +26,8 @@ final class MarketAlertTokenCell: UITableViewCell {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var alertsStackView: UIStackView!
     
+    var isExpanded = false
+    
     var viewModel: MarketAlertViewModel? {
         didSet {
             if let viewModel {
@@ -43,7 +45,7 @@ final class MarketAlertTokenCell: UITableViewCell {
         withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
         verticalFittingPriority: UILayoutPriority
     ) -> CGSize {
-        if let viewModel, viewModel.isExpanded {
+        if isExpanded {
             expandedContentView.systemLayoutSizeFitting(
                 targetSize,
                 withHorizontalFittingPriority: horizontalFittingPriority,
@@ -119,9 +121,6 @@ final class MarketAlertTokenCell: UITableViewCell {
             ) { [weak self] _ in
                 guard let self else {
                     return
-                }
-                if let coin = viewModel?.coin {
-                    
                 }
                 self.delegate?.marketAlertTokenCell(self, wantsToEdit: alert, coin: coin)
             })

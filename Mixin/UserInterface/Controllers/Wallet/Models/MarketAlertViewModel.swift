@@ -7,8 +7,6 @@ final class MarketAlertViewModel {
     let description: String
     var alerts: [AlertViewModel]
     
-    var isExpanded = false
-    
     var iconURL: URL? {
         URL(string: coin.iconURL)
     }
@@ -40,14 +38,7 @@ extension MarketAlertViewModel {
         var alert: MarketAlert
         
         init(alert: MarketAlert) {
-            switch alert.type.displayType {
-            case .constant:
-                self.icon = R.image.market_alert_volume()!
-            case .increasing:
-                self.icon = R.image.market_alert_increase()!
-            case .decreasing:
-                self.icon = R.image.market_alert_decrease()!
-            }
+            self.icon = alert.type.displayType.icon
             if let value = Decimal(string: alert.value, locale: .enUSPOSIX) {
                 let localizedValue = switch alert.type.valueType {
                 case .absolute:
@@ -59,22 +50,11 @@ extension MarketAlertViewModel {
                 case .percentage:
                     NumberFormatter.percentage.string(decimal: value) ?? alert.value
                 }
-                self.title = switch alert.type {
-                case .priceReached:
-                    "\(R.string.localizable.price()) = \(localizedValue)"
-                case .priceIncreased:
-                    "\(R.string.localizable.price()) >= \(localizedValue)"
-                case .priceDecreased:
-                    "\(R.string.localizable.price()) <= \(localizedValue)"
-                case .percentageIncreased:
-                    "\(R.string.localizable.alert_type_percentage_increased()) >= \(localizedValue)"
-                case .percentageDecreased:
-                    "\(R.string.localizable.alert_type_percentage_decreased()) >= \(localizedValue)"
-                }
+                self.title = alert.type.valueRepresentation(value: localizedValue)
             } else {
                 self.title = ""
             }
-            self.subtitle = alert.frequency.description
+            self.subtitle = alert.frequency.name
             self.alert = alert
         }
         

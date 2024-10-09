@@ -69,9 +69,9 @@ extension MarketAlert {
     }
     
     public enum AlertFrequency: String, CaseIterable, Codable {
-        case every
-        case daily
         case once
+        case daily
+        case every
     }
     
     public enum Status: String, Codable {

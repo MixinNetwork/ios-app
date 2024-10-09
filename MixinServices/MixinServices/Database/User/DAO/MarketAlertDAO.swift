@@ -5,7 +5,7 @@ public final class MarketAlertDAO: UserDatabaseDAO {
     
     public static let shared = MarketAlertDAO()
     
-    public static let didSaveNotification = Notification.Name("one.mixin.service.MarketAlertDAO.Save")
+    public static let didChangeNotification = Notification.Name("one.mixin.service.MarketAlertDAO.Change")
     
     public func allMarketAlerts() -> [MarketAlert] {
         db.selectAll()
@@ -22,7 +22,7 @@ public final class MarketAlertDAO: UserDatabaseDAO {
     public func save(alert: MarketAlert) {
         db.save(alert) { _ in
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Self.didSaveNotification, object: self)
+                NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
             }
         }
     }
@@ -32,7 +32,11 @@ public final class MarketAlertDAO: UserDatabaseDAO {
             MarketAlert.self,
             assignments: [MarketAlert.column(of: .status).set(to: status.rawValue)],
             where: MarketAlert.column(of: .alertID) == alertID
-        )
+        ) { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
+            }
+        }
     }
     
     public func replace(alerts: [MarketAlert]) {
@@ -41,14 +45,18 @@ public final class MarketAlertDAO: UserDatabaseDAO {
             try alerts.save(db)
             db.afterNextTransaction { _ in
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Self.didSaveNotification, object: self)
+                    NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
                 }
             }
         }
     }
     
     public func deleteAlert(id: String) {
-        db.delete(MarketAlert.self, where: MarketAlert.column(of: .alertID) == id)
+        db.delete(MarketAlert.self, where: MarketAlert.column(of: .alertID) == id) { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
+            }
+        }
     }
     
 }

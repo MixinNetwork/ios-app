@@ -60,16 +60,8 @@ final class CoinMarketAlertsViewController: MarketAlertViewController {
     }
     
     @objc private func addAlert(_ sender: RoundedButton) {
-        sender.isBusy = true
-        NotificationManager.shared.requestAuthorization { isAuthorized in
-            sender.isBusy = false
-            if isAuthorized {
-                let addAlert = AddMarketAlertViewController.contained(coin: self.coin)
-                self.navigationController?.pushViewController(addAlert, animated: true)
-            } else {
-                self.requestTurnOnNotifications()
-            }
-        }
+        let addAlert = AddMarketAlertViewController.contained(coin: self.coin)
+        self.navigationController?.pushViewController(addAlert, animated: true)
     }
     
 }

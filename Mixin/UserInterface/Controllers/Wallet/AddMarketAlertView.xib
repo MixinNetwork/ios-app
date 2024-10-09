@@ -13,10 +13,8 @@
             <connections>
                 <outlet property="addAlertButton" destination="FJu-FL-ACe" id="NMe-kc-opF"/>
                 <outlet property="addAlertButtonBottomConstraint" destination="7kx-ol-E0F" id="Be6-tE-TpL"/>
-                <outlet property="alertFrequencyButton" destination="LwI-DO-bK1" id="0fi-nN-N0D"/>
                 <outlet property="alertFrequencyLabel" destination="VRI-DD-sNt" id="WJJ-mZ-0gw"/>
                 <outlet property="alertFrequencyTitleLabel" destination="w6t-zD-N4H" id="VTj-TP-RKI"/>
-                <outlet property="alertTypeButton" destination="Rp6-yg-u1q" id="aqJ-OT-RtU"/>
                 <outlet property="alertTypeLabel" destination="tiJ-gl-RaF" id="lI4-WN-ubU"/>
                 <outlet property="alertTypeTitleLabel" destination="8Zy-0M-Ws8" id="DjR-7X-UBo"/>
                 <outlet property="beginInputButton" destination="GaG-gW-z6k" id="h6L-kG-0UN"/>
@@ -114,6 +112,9 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rp6-yg-u1q" customClass="MenuTriggerButton" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="353" height="78"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <connections>
+                                                        <action selector="pickAlertType:" destination="-1" eventType="touchUpInside" id="Xge-ai-AP9"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" name="background"/>
@@ -252,6 +253,9 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LwI-DO-bK1" customClass="MenuTriggerButton" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="353" height="78"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <connections>
+                                                        <action selector="pickAlertFrequency:" destination="-1" eventType="touchUpInside" id="YpA-Ts-c3s"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" name="background"/>

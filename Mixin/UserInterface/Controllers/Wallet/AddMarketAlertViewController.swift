@@ -9,7 +9,6 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var tokenPriceLabel: UILabel!
     @IBOutlet weak var alertTypeTitleLabel: UILabel!
     @IBOutlet weak var alertTypeLabel: UILabel!
-    @IBOutlet weak var alertTypeButton: UIButton!
     @IBOutlet weak var beginInputButton: UIButton!
     @IBOutlet weak var inputTitleLabel: UILabel!
     @IBOutlet weak var inputContentStackView: UIStackView!
@@ -21,7 +20,6 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var presetPercentageStackView: UIStackView!
     @IBOutlet weak var alertFrequencyTitleLabel: UILabel!
     @IBOutlet weak var alertFrequencyLabel: UILabel!
-    @IBOutlet weak var alertFrequencyButton: UIButton!
     @IBOutlet weak var addAlertButton: RoundedButton!
     
     @IBOutlet weak var addAlertButtonBottomConstraint: NSLayoutConstraint!
@@ -37,7 +35,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         return formatter
     }()
     
-    var alertType: MarketAlert.AlertType = .priceReached {
+    var alertType: MarketAlert.AlertType {
         didSet {
             guard isViewLoaded else {
                 return
@@ -46,7 +44,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    var alertFrequency: MarketAlert.AlertFrequency = .once
+    var alertFrequency: MarketAlert.AlertFrequency
     
     var decimalInputValue: Decimal? {
         Decimal(string: inputTextField.text ?? "", locale: .current)
@@ -60,8 +58,14 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         -0.2, -0.1, -0.05, 0.05, 0.1, 0.2
     ]
     
-    init(coin: MarketAlertCoin) {
+    init(
+        coin: MarketAlertCoin,
+        type: MarketAlert.AlertType = .priceReached,
+        frequency: MarketAlert.AlertFrequency = .every
+    ) {
         self.coin = coin
+        self.alertType = type
+        self.alertFrequency = frequency
         let nib = R.nib.addMarketAlertView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -81,20 +85,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        iconImageView.setIcon(coin: coin)
-        tokenNameLabel.text = coin.name
-        tokenPriceLabel.text = R.string.localizable.current_price(coin.localizedUSDPrice)
-        alertTypeTitleLabel.text = R.string.localizable.alert_type()
-        reloadAlertTypeMenu()
-        alertTypeButton.showsMenuAsPrimaryAction = true
-        alertFrequencyTitleLabel.text = R.string.localizable.alert_frequency()
-        alertFrequencyLabel.text = alertFrequency.description
-        reloadAlertFrequencyMenu()
-        alertFrequencyButton.showsMenuAsPrimaryAction = true
-        reloadInputTitle()
-        inputTextField.placeholder = zeroWith2Fractions
-        inputTextField.text = initialInput
-        inputTextField.becomeFirstResponder()
+        
         for (i, percentage) in changePercentages.enumerated() {
             let button = PresetPercentageButton(type: .system)
             let title = NumberFormatter.percentage.string(decimal: percentage)
@@ -107,7 +98,17 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             presetPercentageStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(loadPresetPercentage(_:)), for: .touchUpInside)
         }
-        switchToType(alertType)
+        
+        iconImageView.setIcon(coin: coin)
+        tokenNameLabel.text = coin.name
+        tokenPriceLabel.text = R.string.localizable.current_price(coin.localizedUSDPrice)
+        alertTypeTitleLabel.text = R.string.localizable.alert_type()
+        switchToType(alertType, replacingInputWith: initialInput)
+        alertFrequencyTitleLabel.text = R.string.localizable.alert_frequency()
+        alertFrequencyLabel.text = alertFrequency.name
+        reloadInputTitle()
+        inputTextField.placeholder = zeroWith2Fractions
+        inputTextField.becomeFirstResponder()
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
         NotificationCenter.default.addObserver(
             self,
@@ -142,6 +143,21 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
     @IBAction func detectInput(_ sender: Any) {
         validateInput()
+    }
+    
+    @IBAction func pickAlertType(_ sender: Any) {
+        let selector = AlertTypeSelectorViewController(selected: alertType) { type in
+            self.switchToType(type, replacingInputWith: nil)
+        }
+        present(selector, animated: true)
+    }
+    
+    @IBAction func pickAlertFrequency(_ sender: Any) {
+        let selector = AlertFrequencySelectorViewController(
+            selection: alertFrequency,
+            onSelected: self.switchToFrequencey(_:)
+        )
+        present(selector, animated: true)
     }
     
     @IBAction func addAlert(_ sender: Any) {
@@ -308,19 +324,10 @@ extension AddMarketAlertViewController {
         }
     }
     
-    private func reloadAlertTypeMenu() {
-        alertTypeButton.menu = UIMenu(children: MarketAlert.AlertType.allCases.map { type in
-            UIAction(title: type.description, state: type == alertType ? .on : .off) { [weak self] _ in
-                self?.switchToType(type)
-            }
-        })
-    }
-    
-    private func switchToType(_ type: MarketAlert.AlertType) {
+    private func switchToType(_ type: MarketAlert.AlertType, replacingInputWith inputText: String?) {
         self.alertType = type
-        alertTypeLabel.text = type.description
-        reloadAlertTypeMenu()
-        inputTextField.text = nil
+        alertTypeLabel.text = type.name
+        inputTextField.text = inputText
         let center = changePercentages.firstIndex(where: { $0 > 0 }) ?? 0
         switch type {
         case .priceReached:
@@ -366,16 +373,7 @@ extension AddMarketAlertViewController {
     
     private func switchToFrequencey(_ frequency: MarketAlert.AlertFrequency) {
         self.alertFrequency = frequency
-        alertFrequencyLabel.text = alertFrequency.description
-        reloadAlertFrequencyMenu()
-    }
-    
-    private func reloadAlertFrequencyMenu() {
-        alertFrequencyButton.menu = UIMenu(children: MarketAlert.AlertFrequency.allCases.map { frequency in
-            UIAction(title: frequency.description, state: frequency == alertFrequency ? .on : .off) { [weak self] _ in
-                self?.switchToFrequencey(frequency)
-            }
-        })
+        alertFrequencyLabel.text = alertFrequency.name
     }
     
 }

@@ -78,6 +78,10 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         )
     }
     
+    deinit {
+        reporter.report(event: .swap, userInfo: ["swap_step": "swap_end"])
+    }
+    
     override func layout(for keyboardFrame: CGRect) {
         let keyboardHeight = view.bounds.height - keyboardFrame.origin.y
         reviewButtonWrapperBottomConstrait.constant = keyboardHeight

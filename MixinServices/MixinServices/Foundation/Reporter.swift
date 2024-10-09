@@ -13,6 +13,7 @@ open class Reporter {
         case sendSticker
         case openApp
         case cancelAudioRecording
+        case swap
         
         public var name: String {
             switch self {
@@ -26,6 +27,8 @@ open class Reporter {
                 return "open_app"
             case .cancelAudioRecording:
                 return "cancel_audio_record"
+            case .swap:
+                return "swap"
             }
         }
     }

@@ -1240,6 +1240,7 @@ extension UrlWindow {
                     preview.manipulateNavigationStackOnFinished = true
                 default:
                     preview.manipulateNavigationStackOnFinished = false
+                    reporter.report(event: .swap, userInfo: ["swap_step": "swap_start"])
                 }
                 homeContainer.present(preview, animated: true)
             }

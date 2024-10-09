@@ -59,6 +59,7 @@ final class MixinSwapViewController: SwapViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        reporter.report(event: .swap, userInfo: ["swap_step": "swap_start", "source": "mixin"])
         updateSendView(token: nil)
         updateReceiveView(token: nil)
         reloadTokens()
@@ -77,6 +78,7 @@ final class MixinSwapViewController: SwapViewController {
         let balance = sendToken.decimalBalance as NSDecimalNumber
         sendAmountTextField.text = userInputSimulationFormatter.string(from: balance)
         sendAmountEditingChanged(sender)
+        reporter.report(event: .swap, userInfo: ["swap_step": "click_send_max"])
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -84,6 +86,7 @@ final class MixinSwapViewController: SwapViewController {
             return
         }
         let selector = Web3TransferTokenSelectorViewController<TokenItem>()
+        selector.logFrom = "choose_send_asset"
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.token.assetID {
                 self.swapSendingReceiving(sender)
@@ -101,6 +104,7 @@ final class MixinSwapViewController: SwapViewController {
             return
         }
         let selector = Web3TransferTokenSelectorViewController<BalancedSwappableToken>()
+        selector.logFrom = "choose_receive_asset"
         selector.onSelected = { token in
             if token.token.assetID == self.sendToken?.assetID {
                 self.swapSendingReceiving(sender)
@@ -138,6 +142,8 @@ final class MixinSwapViewController: SwapViewController {
                 .send
         }
         updateCurrentPriceRepresentation()
+        
+        reporter.report(event: .swap, userInfo: ["swap_step": "click_switch_pair"])
     }
     
     override func review(_ sender: RoundedButton) {
@@ -247,6 +253,10 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 error.localizedDescription
             default:
                 "\(error)"
+            }
+            
+            if let errorCode = (error as? MixinAPIResponseError)?.code {
+                reporter.report(event: .swap, userInfo: ["swap_step": "swap_error", "route_error": errorCode])
             }
             Logger.general.debug(category: "Web3Swap", message: description)
             setFooter(.error(description))

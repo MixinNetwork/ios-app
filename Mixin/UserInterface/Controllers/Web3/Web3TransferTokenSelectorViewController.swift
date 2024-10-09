@@ -8,6 +8,8 @@ final class Web3TransferTokenSelectorViewController<Token: Web3TransferableToken
     private var allTokens: [Token] = []
     private var searchResults: [Token] = []
     
+    var logFrom: String?
+    
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
         transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
@@ -27,6 +29,14 @@ final class Web3TransferTokenSelectorViewController<Token: Web3TransferableToken
         searchResults = allTokens.filter { token in
             token.symbol.lowercased().contains(keyword)
             || token.name.lowercased().contains(keyword)
+        }
+    }
+    
+    override func cancelAction(_ sender: Any) {
+        super.cancelAction(sender)
+        
+        if let logFrom {
+            reporter.report(event: .swap, userInfo: ["swap_step": logFrom, "choose_asset" : "cancel"])
         }
     }
     
@@ -65,6 +75,12 @@ final class Web3TransferTokenSelectorViewController<Token: Web3TransferableToken
         tableView.deselectRow(at: indexPath, animated: true)
         let token = isSearching ? searchResults[indexPath.row] : allTokens[indexPath.row]
         onSelected?(token)
+        
+        
+        if let logFrom {
+            let logAction = isSearching ? "search_click" : "direct_click"
+            reporter.report(event: .swap, userInfo: ["swap_step": logFrom, "choose_asset" : logAction])
+        }
         dismiss(animated: true, completion: nil)
     }
     

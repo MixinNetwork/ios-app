@@ -61,6 +61,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                 }
             }
         case .swap(let context):
+            reporter.report(event: .swap, userInfo: ["swap_step": "swap_review"])
             tableHeaderView.setIcon(sendToken: token, receiveToken: context.receiveToken)
         }
         
@@ -187,6 +188,22 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         reloadData(with: rows)
     }
     
+    override func close(_ sender: Any) {
+        super.close(sender)
+        
+        if case .swap = context {
+            reporter.report(event: .swap, userInfo: ["swap_step": "cancel_review"])
+        }
+    }
+    
+    override func confirm(_ sender: Any) {
+        super.confirm(sender)
+        
+        if case .swap = context {
+            reporter.report(event: .swap, userInfo: ["swap_step": "confirm_review"])
+        }
+    }
+    
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
@@ -219,6 +236,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                     case .swap:
                         layoutTableHeaderView(title: R.string.localizable.sending_success(),
                                               subtitle: R.string.localizable.swap_message_success())
+                        reporter.report(event: .swap, userInfo: ["swap_step": "transfer_success"])
                     case .inscription(let context):
                         switch context.operation {
                         case .transfer:
@@ -281,6 +299,9 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                                                  rightTitle: R.string.localizable.retry(),
                                                  rightAction: #selector(confirm(_:)),
                                                  animation: .vertical)
+                        if case .swap = context {
+                            reporter.report(event: .swap, userInfo: ["swap_step": "transfer_failed"])
+                        }
                     default:
                         loadSingleButtonTrayView(title: R.string.localizable.got_it(),
                                                  action: #selector(close(_:)))

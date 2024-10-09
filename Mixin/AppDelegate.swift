@@ -136,7 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         PushNotificationDiagnostic.global.token = .sent(Date())
-        AccountAPI.updateSession(deviceToken: deviceToken.hexEncodedString()) { result in
+        AccountAPI.updateSession(notificationToken: deviceToken.hexEncodedString()) { result in
             switch result {
             case .success:
                 PushNotificationDiagnostic.global.registration = .success(Date())

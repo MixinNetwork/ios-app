@@ -63,7 +63,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         }
         if let account = LoginManager.shared.account {
             let user = UserItem.createUser(from: account)
-            rows.append(.senders([user], threshold: nil))
+            rows.append(.senders([user], multisigSigners: nil, threshold: nil))
         }
         rows.append(.amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         if operation.isFeeTokenDifferent {

@@ -7,32 +7,57 @@ protocol PaymentUserGroupCellDelegate: AnyObject {
 
 final class PaymentUserGroupCell: UITableViewCell {
     
+    enum CheckmarkCondition {
+        case never
+        case byUserID(Set<String>)
+    }
+    
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var captionLabel: UILabel!
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     
     weak var delegate: PaymentUserGroupCellDelegate?
     
-    var users: [UserItem] = [] {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
+    private var users: [UserItem] = []
+    private var checkmarkCondition: CheckmarkCondition = .never
     
-    private var networkSwitchViewContentSizeObserver: NSKeyValueObservation?
+    private weak var collectionView: UICollectionView!
+    private weak var collectionViewHeightConstraint: NSLayoutConstraint!
+    
+    private var collectionViewContentSizeObserver: NSKeyValueObservation?
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(32))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(32))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            return NSCollectionLayoutSection(group: group)
+        }
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.isScrollEnabled = false
+        contentStackView.addArrangedSubview(collectionView)
+        let collectionViewHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 30)
+        collectionViewHeightConstraint.isActive = true
         collectionView.register(R.nib.paymentUserCell)
         collectionView.dataSource = self
         collectionView.delegate = self
-        networkSwitchViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
+        collectionViewContentSizeObserver = collectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
             guard let newValue = change.newValue, let self else {
                 return
             }
             self.collectionViewHeightConstraint.constant = newValue.height
             self.invalidateIntrinsicContentSize()
         }
+        self.collectionView = collectionView
+        self.collectionViewHeightConstraint = collectionViewHeightConstraint
+    }
+    
+    func reloadUsers(with users: [UserItem], checkmarkCondition: CheckmarkCondition) {
+        self.users = users
+        self.checkmarkCondition = checkmarkCondition
+        collectionView.reloadData()
     }
     
 }
@@ -48,9 +73,16 @@ extension PaymentUserGroupCell: UICollectionViewDataSource {
         let user = users[indexPath.item]
         let badgeImage = user.badgeImage
         cell.avatarImageView.setImage(with: user)
-        cell.usernameLabel.text = "\(user.fullName) (\(user.identityNumber))"
+        cell.usernameLabel.text = user.fullName
+        cell.identityNumberLabel.text = "(\(user.identityNumber))"
         cell.badgeImageView.image = badgeImage
         cell.badgeImageView.isHidden = badgeImage == nil
+        switch checkmarkCondition {
+        case .never:
+            cell.checkmark = nil
+        case .byUserID(let ids):
+            cell.checkmark = ids.contains(user.userId) ? .yes : .no
+        }
         return cell
     }
     

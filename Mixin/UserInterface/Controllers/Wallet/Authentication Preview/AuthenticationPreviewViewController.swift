@@ -10,9 +10,9 @@ class AuthenticationPreviewViewController: UIViewController {
     var canDismissInteractively = true
     var onDismiss: (() -> Void)?
     
-    private var rows: [Row] = []
-    
+    private(set) var rows: [Row] = []
     private(set) var trayView: UIView?
+    
     private var trayViewBottomConstraint: NSLayoutConstraint?
     private var trayViewCenterXConstraint: NSLayoutConstraint?
     
@@ -196,7 +196,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.setPrimaryLabel(usesBoldFont: false)
             cell.trailingContent = nil
             return cell
-        case let .senders(users, threshold):
+        case let .senders(users, multisigSigners, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
             cell.captionLabel.text = if let threshold {
                 if users.count > 1 {
@@ -207,7 +207,11 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             } else {
                 R.string.localizable.sender().uppercased()
             }
-            cell.users = users
+            if let signers = multisigSigners {
+                cell.reloadUsers(with: users, checkmarkCondition: .byUserID(signers))
+            } else {
+                cell.reloadUsers(with: users, checkmarkCondition: .never)
+            }
             cell.delegate = self
             return cell
         case let .receivers(users, threshold):
@@ -221,7 +225,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             } else {
                 R.string.localizable.receiver().uppercased()
             }
-            cell.users = users
+            cell.reloadUsers(with: users, checkmarkCondition: .never)
             cell.delegate = self
             return cell
         case let .mainnetReceiver(address):
@@ -370,7 +374,7 @@ extension AuthenticationPreviewViewController {
         case boldInfo(caption: Caption, content: String)
         case doubleLineInfo(caption: Caption, primary: String, secondary: String)
         case receivingAddress(value: String, label: String?)
-        case senders([UserItem], threshold: Int32?)
+        case senders([UserItem], multisigSigners: Set<String>?, threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
         case web3Message(caption: String, message: String)

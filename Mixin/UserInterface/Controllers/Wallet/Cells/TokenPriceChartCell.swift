@@ -119,14 +119,14 @@ final class TokenPriceChartCell: UITableViewCell {
     }
     
     func updatePriceAndChange(price: String?, points: [ChartView.Point]?) {
+        priceLabel.text = price
         guard let points, points.count >= 2 else {
-            priceLabel.text = price
             changeLabel.alpha = 0
             return
         }
         let base = points[0]
         let now = points[points.count - 1]
-        updatePriceAndChange(base: base, now: now)
+        updateChange(base: base, now: now)
     }
     
     func updatePriceAndChange(base: ChartView.Point, now: ChartView.Point) {
@@ -136,14 +136,7 @@ final class TokenPriceChartCell: UITableViewCell {
             sign: .never,
             symbol: .currencySymbol
         )
-        let change = (now.value - base.value) / base.value
-        if let changePercentage = NumberFormatter.percentage.string(decimal: change) {
-            changeLabel.text = changePercentage
-            changeLabel.alpha = 1
-        } else {
-            changeLabel.alpha = 0
-        }
-        changeLabel.marketColor = .byValue(change)
+        updateChange(base: base, now: now)
     }
     
     @objc private func changePeriod(_ sender: UIButton) {
@@ -181,6 +174,17 @@ extension TokenPriceChartCell {
     private func hideUnavailableView() {
         unavailableView?.isHidden = true
         periodSelectorStackView.isHidden = false
+    }
+    
+    private func updateChange(base: ChartView.Point, now: ChartView.Point) {
+        let change = (now.value - base.value) / base.value
+        if let changePercentage = NumberFormatter.percentage.string(decimal: change) {
+            changeLabel.text = changePercentage
+            changeLabel.alpha = 1
+        } else {
+            changeLabel.alpha = 0
+        }
+        changeLabel.marketColor = .byValue(change)
     }
     
     private func setPeriodSelection(index: Int) {

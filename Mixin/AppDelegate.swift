@@ -9,6 +9,7 @@ import FirebaseCrashlytics
 import SDWebImage
 import SDWebImageLottieCoder
 import SDWebImageSVGKitPlugin
+import AppsFlyerLib
 import MixinServices
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -123,6 +124,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         pendingShortcutItem = nil
+        
+        AppsFlyerLib.shared().start()
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
@@ -303,6 +306,10 @@ extension AppDelegate {
             } else {
                 Logger.general.info(category: "Signal", message: log)
             }
+        }
+        
+        if let appInstanceId = Analytics.appInstanceID() {
+            AppsFlyerLib.shared().customData = ["app_instance_id": appInstanceId]
         }
     }
     

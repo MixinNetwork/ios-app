@@ -8,6 +8,9 @@ PODS:
   - AppCenter/Core (5.0.5)
   - AppCenter/Crashes (5.0.5):
     - AppCenter/Core
+  - AppsFlyerFramework (6.15.3):
+    - AppsFlyerFramework/Main (= 6.15.3)
+  - AppsFlyerFramework/Main (6.15.3)
   - CocoaLumberjack (3.8.5):
     - CocoaLumberjack/Core (= 3.8.5)
   - CocoaLumberjack/Core (3.8.5)
@@ -165,6 +168,7 @@ PODS:
   - MixinServices (0.1.0):
     - Alamofire
     - AppCenter
+    - AppsFlyerFramework
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
@@ -174,6 +178,7 @@ PODS:
   - MixinServices/Tests (0.1.0):
     - Alamofire
     - AppCenter
+    - AppsFlyerFramework
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
@@ -229,6 +234,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AppCenter
+    - AppsFlyerFramework
     - CocoaLumberjack
     - Firebase
     - FirebaseABTesting
@@ -284,6 +290,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   AppCenter: 994875ea7941b9e168babb98299f900a94bcef13
+  AppsFlyerFramework: ad7ff0d22aa36c7f8cc4f71a5424e19b89ccb8ae
   CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
   Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
   FirebaseABTesting: 2104d957ce33888a3d6f3bde298cdee376dde8f1
@@ -305,7 +312,7 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
-  MixinServices: 8f784a1ffb2a30d774c227e53bb4db95305474f0
+  MixinServices: 8246e4a921a8e7a4477e644fd05cbc63fade74d9
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PhoneNumberKit: fca23e22dcd17f602577f177bdd502512190e52e
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47

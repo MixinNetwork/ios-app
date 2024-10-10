@@ -465,14 +465,18 @@ extension MixinSwapViewController {
             setFooter(nil)
             return
         }
-        setFooter(.calculating)
-        let requester = SwapQuotePeriodicRequester(sendToken: sendToken,
-                                                   sendAmount: sendAmount,
-                                                   receiveToken: receiveToken.token,
-                                                   slippage: 0.01)
-        requester.delegate = self
-        self.requester = requester
-        requester.start(delay: 1)
+        if sendAmount > sendToken.decimalBalance {
+            setFooter(.error(R.string.localizable.insufficient_balance()))
+        } else {
+            setFooter(.calculating)
+            let requester = SwapQuotePeriodicRequester(sendToken: sendToken,
+                                                       sendAmount: sendAmount,
+                                                       receiveToken: receiveToken.token,
+                                                       slippage: 0.01)
+            requester.delegate = self
+            self.requester = requester
+            requester.start(delay: 1)
+        }
     }
     
 }

@@ -19,6 +19,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Delete Spotlight Index", accessory: .none),
         ]),
+        SettingsSection(footer: PushNotificationDiagnostic.global.description, rows: [
+            SettingsRow(title: "Repair Push Notification", accessory: .none),
+        ]),
         SettingsSection(rows: [
             SettingsRow(title: "UTXO", accessory: .disclosure),
         ]),
@@ -40,13 +43,21 @@ class DiagnoseViewController: SettingsTableViewController {
 #endif
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(rtcLogEnabledDidSwitch(_:)),
-                                               name: SettingsRow.accessoryDidChangeNotification,
-                                               object: dataSource.sections[1].rows[0])
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(rtcLogEnabledDidSwitch(_:)),
+            name: SettingsRow.accessoryDidChangeNotification,
+            object: dataSource.sections[1].rows[0]
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadPushNotificationStatus(_:)),
+            name: PushNotificationDiagnostic.statusDidUpdateNotification,
+            object: nil
+        )
     }
     
-    @objc func rtcLogEnabledDidSwitch(_ notification: Notification) {
+    @objc private func rtcLogEnabledDidSwitch(_ notification: Notification) {
         guard let row = notification.object as? SettingsRow else {
             return
         }
@@ -54,6 +65,10 @@ class DiagnoseViewController: SettingsTableViewController {
             return
         }
         CallService.shared.isWebRTCLogEnabled = isOn
+    }
+    
+    @objc private func reloadPushNotificationStatus(_ notification: Notification) {
+        dataSource.sections[5].footer = PushNotificationDiagnostic.global.description
     }
     
 }
@@ -85,16 +100,18 @@ extension DiagnoseViewController: UITableViewDelegate {
                 showAutoHiddenHud(style: .error, text: "Not Available")
             }
         case (5, 0):
+            NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
+        case (6, 0):
             let container = ContainerViewController.instance(viewController: UTXODiagnosticViewController(), title: "UTXO")
             navigationController?.pushViewController(container, animated: true)
-        case (6, 0):
+        case (7, 0):
             let container = ContainerViewController.instance(viewController: Web3DiagnosticViewController(), title: "Web3")
             navigationController?.pushViewController(container, animated: true)
-        case (7, 0):
+        case (8, 0):
             InscriptionContentSession.sessionConfiguration.urlCache?.removeAllCachedResponses()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
 #if DEBUG
-        case (8, 0):
+        case (9, 0):
             let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
             navigationController?.pushViewController(container, animated: true)
 #endif

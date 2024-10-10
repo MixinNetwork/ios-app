@@ -1,14 +1,27 @@
 import Foundation
 
-public struct SessionRequest: Encodable {
+public struct SessionRequest {
     
     let platform = "iOS"
-    let platform_version = "" + UIDevice.current.systemVersion
-    let package_name = Bundle.main.bundleIdentifier
-    let app_version = Bundle.main.shortVersionString
-    let notification_token: String
-    let voip_token: String
-    let device_check_token: String
+    let platformVersion = "" + UIDevice.current.systemVersion
+    let packageName = Bundle.main.bundleIdentifier
+    let appVersion = Bundle.main.shortVersionString
+    let notificationToken: String?
+    let voipToken: String?
+    let deviceCheckToken: String?
     
 }
 
+extension SessionRequest: Encodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case platform
+        case platformVersion = "platform_version"
+        case packageName = "package_name"
+        case appVersion = "app_version"
+        case notificationToken = "notification_token"
+        case voipToken = "voip_token"
+        case deviceCheckToken = "device_check_token"
+    }
+    
+}

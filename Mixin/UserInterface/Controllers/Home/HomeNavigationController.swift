@@ -51,7 +51,15 @@ class HomeNavigationController: UINavigationController {
         self.delegate = self
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed && LoginManager.shared.isLoggedIn {
             reporter.registerUserInformation()
-            checkDevice()
+            DCDevice.current.generateToken { (data, error) in
+                guard let token = data?.base64EncodedString() else {
+                    return
+                }
+                guard LoginManager.shared.isLoggedIn else {
+                    return
+                }
+                AccountAPI.updateSession(deviceCheckToken: token, completion: nil)
+            }
             Logger.general.info(category: "HomeNavigationController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
             if UIApplication.shared.applicationState == .active {
                 WebSocketService.shared.connect(firstConnect: true)
@@ -145,19 +153,6 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
 }
 
 extension HomeNavigationController {
-    
-    private func checkDevice() {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        DCDevice.current.generateToken { (data, error) in
-            guard let token = data?.base64EncodedString() else {
-                return
-            }
-
-            AccountAPI.updateSession(deviceCheckToken: token)
-        }
-    }
     
     private func updateNavigationBar() {
         guard #unavailable(iOS 15.0) else {

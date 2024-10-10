@@ -2,7 +2,7 @@ import Foundation
 import UserNotifications
 import MixinServices
 
-class NotificationManager: NSObject {
+final class NotificationManager: NSObject {
     
     static let shared = NotificationManager()
     
@@ -21,9 +21,14 @@ class NotificationManager: NSObject {
     
     func registerForRemoteNotificationsIfAuthorized() {
         requestAuthorization { (isAuthorized) in
-            self.notificationWasAuthorized = isAuthorized
-            if isAuthorized {
-                DispatchQueue.main.async(execute: UIApplication.shared.registerForRemoteNotifications)
+            DispatchQueue.main.async {
+                self.notificationWasAuthorized = isAuthorized
+                if isAuthorized {
+                    PushNotificationDiagnostic.global.token = .requested(Date())
+                    UIApplication.shared.registerForRemoteNotifications()
+                } else {
+                    PushNotificationDiagnostic.global.token = .unauthorized
+                }
             }
         }
     }
@@ -192,7 +197,10 @@ extension NotificationManager {
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             let isAuthorized = [.authorized, .provisional].contains(settings.authorizationStatus)
             if isAuthorized {
-                DispatchQueue.main.async(execute: UIApplication.shared.registerForRemoteNotifications)
+                DispatchQueue.main.async {
+                    PushNotificationDiagnostic.global.token = .requested(Date())
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
             }
         }
     }

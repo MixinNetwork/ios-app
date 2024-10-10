@@ -135,7 +135,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AccountAPI.updateSession(deviceToken: deviceToken.hexEncodedString())
+        PushNotificationDiagnostic.global.token = .sent(Date())
+        AccountAPI.updateSession(notificationToken: deviceToken.hexEncodedString()) { result in
+            switch result {
+            case .success:
+                PushNotificationDiagnostic.global.registration = .success(Date())
+            case .failure(let error):
+                PushNotificationDiagnostic.global.registration = .failed(error)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                    guard LoginManager.shared.isLoggedIn else {
+                        return
+                    }
+                    self?.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+                }
+            }
+        }
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: any Error) {
+        PushNotificationDiagnostic.global.token = .failed(error)
     }
     
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

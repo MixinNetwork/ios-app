@@ -128,10 +128,19 @@ public final class AccountAPI: MixinAPI {
         request(method: .post, path: "/me", parameters: param, completion: completion)
     }
     
-    public static func updateSession(deviceToken: String? = nil, voipToken: VoIPToken? = nil, deviceCheckToken: String? = nil) {
-        let sessionRequest = SessionRequest(notification_token: deviceToken ?? "", voip_token: voipToken?.value ?? "", device_check_token: deviceCheckToken ?? "")
-        request(method: .post, path: Path.session, parameters: sessionRequest) { (result: MixinAPI.Result<Account>) in
-            
+    public static func updateSession(
+        notificationToken: String? = nil,
+        voipToken: VoIPToken? = nil,
+        deviceCheckToken: String? = nil,
+        completion: ((MixinAPI.Result<Account>) -> Void)?
+    ) {
+        let sessionRequest = SessionRequest(
+            notificationToken: notificationToken,
+            voipToken: voipToken?.value,
+            deviceCheckToken: deviceCheckToken
+        )
+        request(method: .post, path: Path.session, parameters: sessionRequest) { result in
+            completion?(result)
         }
     }
     

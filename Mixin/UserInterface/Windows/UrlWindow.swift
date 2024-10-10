@@ -1277,7 +1277,7 @@ extension UrlWindow {
                     switch safe.operation {
                     case let .transaction(transaction):
                         token = syncToken(assetID: transaction.assetID, hud: hud)
-                    case let .recovery(recovery):
+                    case .recovery:
                         DispatchQueue.main.async {
                             hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                             hud.scheduleAutoHidden()
@@ -1331,6 +1331,7 @@ extension UrlWindow {
                         amount: amount,
                         sendersThreshold: response.sendersThreshold,
                         senders: senders,
+                        signers: response.signers,
                         receiversThreshold: receiver.threshold,
                         receivers: receiverMembers,
                         rawTransaction: response.rawTransaction,

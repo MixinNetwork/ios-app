@@ -24,7 +24,7 @@ public struct SafeMultisigResponse: Decodable {
     public let sendersThreshold: Int32
     public let senders: [String]
     public let receivers: [Receiver]
-    public let signers: [String]
+    public let signers: Set<String>
     public let rawTransaction: String
     public let views: [String]?
     public let revokedBy: String?

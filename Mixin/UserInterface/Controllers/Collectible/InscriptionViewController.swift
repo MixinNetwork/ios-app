@@ -388,7 +388,7 @@ extension InscriptionViewController: UITableViewDataSource {
             }
             cell.captionLabel.text = caption
             cell.captionLabel.textColor = UIColor(displayP3RgbValue: 0x999999)
-            cell.users = users
+            cell.reloadUsers(with: users, checkmarkCondition: .never)
             cell.delegate = self
             return cell
         case let .traits(traits):

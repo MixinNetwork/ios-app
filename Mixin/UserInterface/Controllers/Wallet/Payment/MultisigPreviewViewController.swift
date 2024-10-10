@@ -29,6 +29,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     private let amount: Decimal
     private let sendersThreshold: Int32
     private let senders: [UserItem]
+    private let signers: Set<String>
     private let receiversThreshold: Int32
     private let receivers: [UserItem]
     private let rawTransaction: String
@@ -44,6 +45,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         amount: Decimal,
         sendersThreshold: Int32,
         senders: [UserItem],
+        signers: Set<String>,
         receiversThreshold: Int32,
         receivers: [UserItem],
         rawTransaction: String,
@@ -58,6 +60,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         self.amount = amount
         self.sendersThreshold = sendersThreshold
         self.senders = senders
+        self.signers = signers
         self.receiversThreshold = receiversThreshold
         self.receivers = receivers
         self.rawTransaction = rawTransaction
@@ -150,14 +153,19 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 if !transaction.note.isEmpty {
                     rows.append(.info(caption: .note, content: transaction.note))
                 }
-            case .recovery(let recovery):
+            case .recovery:
                 break
             }
         } else {
+            let signers: Set<String>? = if self.senders.count == 1 {
+                nil
+            } else {
+                self.signers
+            }
             rows = [
                 .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: true),
                 .receivers(receivers, threshold: receiversThreshold),
-                .senders(senders, threshold: sendersThreshold),
+                .senders(senders, multisigSigners: signers, threshold: sendersThreshold),
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
                 .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
                 .info(caption: .network, content: token.depositNetworkName ?? ""),
@@ -276,6 +284,23 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                         }
                     }
                     layoutTableHeaderView(title: title, subtitle: subtitle)
+                    if safe == nil {
+                        let rows: [Row] = rows.map { row in
+                            switch row {
+                            case .senders(let users, var signers, let threshold):
+                                switch action {
+                                case .sign:
+                                    signers?.insert(myUserId)
+                                case .revoke:
+                                    signers?.remove(myUserId)
+                                }
+                                return .senders(users, multisigSigners: signers, threshold: threshold)
+                            default:
+                                return row
+                            }
+                        }
+                        reloadData(with: rows)
+                    }
                     tableView.setContentOffset(.zero, animated: true)
                     loadSingleButtonTrayView(title: R.string.localizable.done(),
                                              action: #selector(close(_:)))

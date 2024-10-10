@@ -160,7 +160,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         }
         if let account = LoginManager.shared.account {
             let user = UserItem.createUser(from: account)
-            rows.append(.senders([user], threshold: senderThreshold))
+            rows.append(.senders([user], multisigSigners: nil, threshold: senderThreshold))
         }
         
         switch context {

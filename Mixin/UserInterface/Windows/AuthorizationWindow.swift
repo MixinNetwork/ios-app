@@ -115,7 +115,7 @@ extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
             view.loadingIndicator.stopAnimating()
             switch result {
             case let .success(response):
-                AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 self.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: R.string.localizable.authorized())
                 self.dismissPopupController(animated: true)

@@ -85,7 +85,7 @@ class PayWindow: BottomSheetView {
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
             return false
         }
-        guard let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate, -date.timeIntervalSinceNow < AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval else {
+        guard let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate, -date.timeIntervalSinceNow < AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval else {
             return false
         }
         guard BiometryType.payment != .none else {
@@ -585,7 +585,7 @@ extension PayWindow: PinFieldDelegate {
 
     private func successHandler() {
         if !isAutoFillPIN {
-            AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+            AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
         }
         loadingView.stopAnimating()
         pinView.isHidden = true

@@ -83,7 +83,7 @@ class TIPActionViewController: UIViewController {
                                                 legacyPIN: nil,
                                                 forRecover: false,
                                                 progressHandler: showProgress)
-                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     try await TIP.registerToSafe(pin: pin)
                     await MainActor.run {
                         finish()
@@ -120,7 +120,7 @@ class TIPActionViewController: UIViewController {
                         Keychain.shared.storePIN(pin: new)
                     }
                     AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     await MainActor.run {
                         finish()
                     }
@@ -143,7 +143,7 @@ class TIPActionViewController: UIViewController {
                                                 legacyPIN: pin,
                                                 forRecover: false,
                                                 progressHandler: showProgress)
-                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     try await TIP.registerToSafe(pin: pin)
                     await MainActor.run {
                         finish()

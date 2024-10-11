@@ -118,7 +118,7 @@ final class TokenPriceChartCell: UITableViewCell {
         }
     }
     
-    func updatePriceAndChange(price: String?, points: [ChartView.Point]?) {
+    func updatePriceAndChangeByMarket(price: String?, points: [ChartView.Point]?) {
         priceLabel.text = price
         guard let points, points.count >= 2 else {
             changeLabel.alpha = 0
@@ -129,7 +129,7 @@ final class TokenPriceChartCell: UITableViewCell {
         updateChange(base: base, now: now)
     }
     
-    func updatePriceAndChange(base: ChartView.Point, now: ChartView.Point) {
+    func updatePriceAndChangeByChart(base: ChartView.Point, now: ChartView.Point) {
         priceLabel.text = CurrencyFormatter.localizedString(
             from: now.value * Currency.current.decimalRate,
             format: .fiatMoneyPrice,

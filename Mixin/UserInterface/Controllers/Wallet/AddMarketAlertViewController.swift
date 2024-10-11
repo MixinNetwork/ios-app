@@ -54,7 +54,9 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         formatter.string(from: coin.decimalPrice as NSDecimalNumber)
     }
     
-    private let changePercentages: [Decimal] = [
+    private let increasePrecentageLimitation = PercentageLimitation(min: 0.0001, max: 10)
+    private let decreasePrecentageLimitation = PercentageLimitation(min: 0.0001, max: 0.9999)
+    private let presetChangePercentages: [Decimal] = [
         -0.2, -0.1, -0.05, 0.05, 0.1, 0.2
     ]
     
@@ -86,7 +88,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        for (i, percentage) in changePercentages.enumerated() {
+        for (i, percentage) in presetChangePercentages.enumerated() {
             let button = PresetPercentageButton(type: .system)
             let title = NumberFormatter.percentage.string(decimal: percentage)
             button.setTitle(title, for: .normal)
@@ -229,14 +231,20 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
                 nil
             }
         case .percentageIncreased:
-            if value < 0.001 || value > 1000 {
-                R.string.localizable.price_increase_invalid("10%", "1000%")
+            if !increasePrecentageLimitation.contains(value: value / 100) {
+                R.string.localizable.price_increase_invalid(
+                    increasePrecentageLimitation.minRepresentation,
+                    increasePrecentageLimitation.maxRepresentation
+                )
             } else {
                 nil
             }
         case .percentageDecreased:
-            if value < 0.001 || value > 1000 {
-                R.string.localizable.price_decrease_invalid("10%", "1000%")
+            if !decreasePrecentageLimitation.contains(value: value / 100) {
+                R.string.localizable.price_increase_invalid(
+                    decreasePrecentageLimitation.minRepresentation,
+                    decreasePrecentageLimitation.maxRepresentation
+                )
             } else {
                 nil
             }
@@ -287,6 +295,25 @@ extension AddMarketAlertViewController {
         
     }
     
+    private struct PercentageLimitation {
+        
+        let min: Decimal
+        let max: Decimal
+        
+        var minRepresentation: String {
+            NumberFormatter.percentage.string(decimal: min) ?? "\(min)"
+        }
+        
+        var maxRepresentation: String {
+            NumberFormatter.percentage.string(decimal: max) ?? "\(max)"
+        }
+        
+        func contains(value: Decimal) -> Bool {
+            value >= min && value <= max
+        }
+        
+    }
+    
     @objc private func keyboardWillShow(_ notification: Notification) {
         beginInputButton.isHidden = true
     }
@@ -299,7 +326,7 @@ extension AddMarketAlertViewController {
     }
     
     @objc private func loadPresetPercentage(_ sender: UIButton) {
-        let percentage = changePercentages[sender.tag]
+        let percentage = presetChangePercentages[sender.tag]
         let value = switch alertType.valueType {
         case .absolute:
             coin.decimalPrice * (1 + percentage)
@@ -328,7 +355,7 @@ extension AddMarketAlertViewController {
         self.alertType = type
         alertTypeLabel.text = type.name
         inputTextField.text = inputText
-        let center = changePercentages.firstIndex(where: { $0 > 0 }) ?? 0
+        let center = presetChangePercentages.firstIndex(where: { $0 > 0 }) ?? 0
         switch type {
         case .priceReached:
             presetPercentageWrapperView.isHidden = false

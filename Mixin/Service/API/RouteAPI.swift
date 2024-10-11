@@ -126,7 +126,8 @@ final class RouteAPI {
     ) {
         request(
             method: .post,
-            path: "/prices/alerts/\(alertID)?action=\(action.rawValue)",
+            path: "/prices/alerts/\(alertID)",
+            with: ["action": action.rawValue],
             completion: completion
         )
     }
@@ -136,13 +137,14 @@ final class RouteAPI {
         completion: @escaping (MixinAPI.Result<MarketAlert>) -> Void
     ) {
         let parameters = [
+            "action": "update",
             "type": alert.type.rawValue,
             "frequency": alert.frequency.rawValue,
             "value": alert.value
         ]
         request(
             method: .post,
-            path: "/prices/alerts/\(alert.alertID)?action=update",
+            path: "/prices/alerts/\(alert.alertID)",
             with: parameters,
             completion: completion
         )
@@ -155,6 +157,7 @@ final class RouteAPI {
         request(
             method: .get,
             path: "/prices/alerts",
+            queue: queue,
             completion: completion
         )
     }

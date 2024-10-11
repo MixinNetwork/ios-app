@@ -285,6 +285,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                     }
                     layoutTableHeaderView(title: title, subtitle: subtitle)
                     if safe == nil {
+                        // Update checkmark of myself after changes
                         let rows: [Row] = rows.map { row in
                             switch row {
                             case .senders(let users, var signers, let threshold):

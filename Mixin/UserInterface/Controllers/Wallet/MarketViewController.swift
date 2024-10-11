@@ -329,9 +329,9 @@ final class MarketViewController: UIViewController {
         if let cell = tokenPriceChartCell {
             cell.updateChart(points: points)
             if let market {
-                cell.updatePriceAndChange(price: market.localizedPrice, points: points)
+                cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: points)
             } else if let token = tokens?.first {
-                cell.updatePriceAndChange(price: token.localizedFiatMoneyPrice, points: points)
+                cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: points)
             }
         }
     }
@@ -435,12 +435,12 @@ extension MarketViewController: UITableViewDataSource {
                 cell.titleLabel.text = market.name
                 cell.rankLabel.text = market.numberedRank
                 cell.tokenIconView.setIcon(market: market)
-                cell.updatePriceAndChange(price: market.localizedPrice, points: chartPoints)
+                cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: chartPoints)
             } else if let token = tokens?.first {
                 cell.titleLabel.text = token.name
                 cell.rankLabel.text = nil
                 cell.tokenIconView.setIcon(token: token)
-                cell.updatePriceAndChange(price: token.localizedFiatMoneyPrice, points: chartPoints)
+                cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: chartPoints)
             }
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
@@ -631,7 +631,7 @@ extension MarketViewController: ChartView.Delegate {
         guard let base = view.points.first else {
             return
         }
-        tokenPriceChartCell?.updatePriceAndChange(base: base, now: point)
+        tokenPriceChartCell?.updatePriceAndChangeByChart(base: base, now: point)
     }
     
     func chartViewDidCancelSelection(_ view: ChartView) {
@@ -640,10 +640,10 @@ extension MarketViewController: ChartView.Delegate {
         }
         if let market {
             cell.tokenIconView.setIcon(market: market)
-            cell.updatePriceAndChange(price: market.localizedPrice, points: chartPoints)
+            cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: chartPoints)
         } else if let token = tokens?.first {
             cell.tokenIconView.setIcon(token: token)
-            cell.updatePriceAndChange(price: token.localizedFiatMoneyPrice, points: chartPoints)
+            cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: chartPoints)
         }
     }
     

@@ -157,6 +157,7 @@ final class RouteAPI {
         request(
             method: .get,
             path: "/prices/alerts",
+            queue: queue,
             completion: completion
         )
     }

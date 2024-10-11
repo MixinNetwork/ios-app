@@ -174,7 +174,7 @@ final class InscriptionViewController: UIViewController {
     private func viewOnExplorer(_ action: UIAlertAction) {
         guard
             let hash = output?.transactionHash,
-            let url = URL(string: "https://viewblock.io/mixin/tx/\(hash)")
+            let url = URL(string: "https://mixin.space/tx/\(hash)")
         else {
             return
         }

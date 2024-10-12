@@ -12,10 +12,20 @@ final class TokenViewController: UIViewController {
     
     private var performSendOnAppear: Bool
     private var transactionRows: [TransactionRow] = []
+    private var market: MarketResult
     private var chartPoints: [ChartView.Point]?
     
-    private init(token: TokenItem, performSendOnAppear: Bool = false) {
+    private init(
+        token: TokenItem,
+        market: Market? = nil,
+        performSendOnAppear: Bool = false
+    ) {
         self.token = token
+        self.market = if let market {
+            .some(market)
+        } else {
+            .unknown
+        }
         self.performSendOnAppear = performSendOnAppear
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,8 +38,12 @@ final class TokenViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    static func contained(token: TokenItem, performSendOnAppear: Bool = false) -> ContainerViewController {
-        let controller = TokenViewController(token: token, performSendOnAppear: performSendOnAppear)
+    static func contained(
+        token: TokenItem,
+        market: Market? = nil,
+        performSendOnAppear: Bool = false
+    ) -> ContainerViewController {
+        let controller = TokenViewController(token: token, market: market, performSendOnAppear: performSendOnAppear)
         return ContainerViewController.instance(viewController: controller, title: token.name)
     }
     
@@ -73,14 +87,21 @@ final class TokenViewController: UIViewController {
         center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishNotification, object: nil)
         reloadSnapshots()
         
+        let reloadMarketFromLocal = market.value == nil
         DispatchQueue.global().async { [id=token.assetID, weak self] in
-            if let storage = MarketDAO.shared.priceHistory(assetID: id, period: .day),
-               let prices = PriceHistory(storage: storage)?.chartViewPoints()
-            {
+            if reloadMarketFromLocal, let market = MarketDAO.shared.market(assetID: id) {
                 DispatchQueue.main.sync {
-                    self?.reloadChart(prices)
+                    self?.reloadMarket(result: .some(market))
                 }
             }
+            if let storage = MarketDAO.shared.priceHistory(assetID: id, period: .day),
+               let points = PriceHistory(storage: storage)?.chartViewPoints()
+            {
+                DispatchQueue.main.sync {
+                    self?.reloadChart(points)
+                }
+            }
+            self?.loadMarketsFromRemote(assetID: id)
             RouteAPI.priceHistory(id: id, period: .day, queue: .global()) { result in
                 switch result {
                 case .success(let price):
@@ -180,6 +201,23 @@ extension TokenViewController {
         case content
     }
     
+    private enum MarketResult {
+        
+        case unknown
+        case invalid
+        case some(Market)
+        
+        var value: Market? {
+            switch self {
+            case .some(let market):
+                market
+            default:
+                nil
+            }
+        }
+        
+    }
+    
     private enum TransactionRow {
         
         case title
@@ -235,10 +273,38 @@ extension TokenViewController {
         }
     }
     
+    private func reloadMarket(result: MarketResult) {
+        self.market = result
+        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
     private func reloadChart(_ points: [ChartView.Point]) {
         self.chartPoints = points
         let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
         tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    private func loadMarketsFromRemote(assetID: String) {
+        RouteAPI.markets(id: assetID, queue: .global()) { [weak self] result in
+            switch result {
+            case .success(let market):
+                if let market = MarketDAO.shared.save(market: market) {
+                    DispatchQueue.main.async {
+                        self?.reloadMarket(result: .some(market))
+                    }
+                }
+            case .failure(.response(.notFound)):
+                DispatchQueue.main.async {
+                    self?.reloadMarket(result: .invalid)
+                }
+            case .failure(let error):
+                Logger.general.debug(category: "MarketView", message: "\(error)")
+                DispatchQueue.global().asyncAfter(deadline: .now() + 3) { [weak self] in
+                    self?.loadMarketsFromRemote(assetID: assetID)
+                }
+            }
+        }
     }
     
     private func reloadSnapshots() {
@@ -371,7 +437,28 @@ extension TokenViewController: UITableViewDataSource {
                 return cell
             case .content:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_market, for: indexPath)!
-                cell.reloadData(token: token, points: chartPoints)
+                if let market = market.value {
+                    cell.priceLabel.text = market.localizedPrice
+                } else {
+                    cell.priceLabel.text = token.localizedFiatMoneyPrice
+                }
+                if let points = chartPoints, points.count >= 2 {
+                    let firstValue = points[0].value
+                    let lastValue = points[points.count - 1].value
+                    let change = (lastValue - firstValue) / firstValue
+                    cell.changeLabel.text = NumberFormatter.percentage.string(decimal: change)
+                    cell.changeLabel.marketColor = .byValue(change)
+                    cell.chartView.points = points
+                } else {
+                    if let market = market.value {
+                        cell.changeLabel.text = market.localizedPriceChangePercentage7D
+                        cell.changeLabel.marketColor = .byValue(market.decimalPriceChangePercentage7D)
+                    } else {
+                        cell.changeLabel.text = token.localizedUSDChange
+                        cell.changeLabel.marketColor = .byValue(token.decimalUSDChange)
+                    }
+                    cell.chartView.points = []
+                }
                 return cell
             }
         case .transactions:

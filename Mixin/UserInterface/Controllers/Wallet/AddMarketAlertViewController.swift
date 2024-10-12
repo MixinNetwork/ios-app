@@ -140,6 +140,9 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func beginInput(_ sender: Any) {
+        guard presentedViewController == nil else {
+            return
+        }
         inputTextField.becomeFirstResponder()
     }
     

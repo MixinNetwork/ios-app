@@ -44,7 +44,7 @@
 "alert_frequency" = "Frequency";
 "alert_frequency_daily" = "Once a day";
 "alert_frequency_daily_description" = "Receive an alert once per day when the trigger event occurs";
-"alert_frequency_every" = "Continuously";
+"alert_frequency_every" = "Always";
 "alert_frequency_every_description" = "Receive an alert on every trigger event";
 "alert_frequency_once" = "Only once";
 "alert_frequency_once_description" = "Receive an alert only on first trigger event";

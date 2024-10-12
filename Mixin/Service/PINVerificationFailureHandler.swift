@@ -17,6 +17,7 @@ enum PINVerificationFailureHandler {
         case MixinAPIResponseError.tooManyRequests:
             completion(R.string.localizable.error_pin_check_too_many_request())
         case .incorrectPin:
+            AppGroupUserDefaults.Wallet.lastPINVerifiedDate = nil
             AccountAPI.logs(category: .incorrectPin, limit: 5) { (result) in
                 switch result {
                 case let .success(logs):

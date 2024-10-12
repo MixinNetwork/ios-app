@@ -194,6 +194,19 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             case .success(let alert):
                 DispatchQueue.global().async {
                     MarketAlertDAO.shared.save(alert: alert)
+                    
+                    let relationship = UserDAO.shared.relationship(id: BotUserID.marketAlerts)
+                    switch relationship {
+                    case .ME, .FRIEND:
+                        break
+                    case .STRANGER, .BLOCKING, .none:
+                        switch UserAPI.addFriend(userId: BotUserID.marketAlerts, fullName: nil) {
+                        case let .success(user):
+                            UserDAO.shared.updateUsers(users: [user])
+                        case let .failure(error):
+                            break
+                        }
+                    }
                 }
                 self?.manipulateNavigationStack()
             case .failure(let error):

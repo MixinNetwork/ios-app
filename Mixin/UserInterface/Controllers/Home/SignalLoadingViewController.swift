@@ -6,7 +6,7 @@ class SignalLoadingViewController: UIViewController {
     
     private var isUsernameJustInitialized = false
     
-    private var newUserInitialBots: [InitializeBotJob.Bot] {
+    private var newUserInitialBots: [String] {
         guard let account = LoginManager.shared.account else {
             return []
         }
@@ -14,13 +14,13 @@ class SignalLoadingViewController: UIViewController {
             return []
         }
         return [
-            InitializeBotJob.Bot(userId: MixinBot.mixinBots.id, fullname: MixinBot.mixinBots.name),
-            InitializeBotJob.Bot(userId: MixinBot.mixinData.id, fullname: MixinBot.mixinData.name),
+            BotUserID.mixinBots,
+            BotUserID.mixinData,
         ]
     }
     
-    private var allUsersInitialBots: [InitializeBotJob.Bot] {
-        [InitializeBotJob.Bot(userId: MixinBot.teamMixin.id, fullname: MixinBot.teamMixin.name)]
+    private var allUsersInitialBots: [String] {
+        [BotUserID.teamMixin]
     }
     
     class func instance(isUsernameJustInitialized: Bool) -> SignalLoadingViewController {
@@ -247,16 +247,16 @@ class SignalLoadingViewController: UIViewController {
         let vc = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
         AppDelegate.current.mainWindow.rootViewController = vc
         if vc is HomeContainerViewController {
-            initialize(bots: allUsersInitialBots)
+            initialize(botUserIDs: allUsersInitialBots)
             if isUsernameJustInitialized {
-                initialize(bots: newUserInitialBots)
+                initialize(botUserIDs: newUserInitialBots)
             }
         }
     }
     
-    private func initialize(bots: [InitializeBotJob.Bot]) {
-        for bot in bots {
-            let job = InitializeBotJob(bot: bot)
+    private func initialize(botUserIDs: [String]) {
+        for id in botUserIDs {
+            let job = InitializeBotJob(userID: id)
             ConcurrentJobQueue.shared.addJob(job: job)
         }
     }

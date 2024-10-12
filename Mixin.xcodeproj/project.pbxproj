@@ -599,7 +599,7 @@
 		7C5DFE34284F3EA3008733FC /* UserCenterTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */; };
 		7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */; };
 		7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */; };
-		7C651D8F29F68277003331A4 /* MixinBot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C651D8E29F68277003331A4 /* MixinBot.swift */; };
+		7C651D8F29F68277003331A4 /* BotUserID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C651D8E29F68277003331A4 /* BotUserID.swift */; };
 		7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */; };
 		7C695D56285B25AB0042177C /* SpotlightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C695D55285B25AB0042177C /* SpotlightManager.swift */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
@@ -2003,7 +2003,7 @@
 		7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCenterTableHeaderView.swift; sourceTree = "<group>"; };
 		7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountAbortWindow.swift; sourceTree = "<group>"; };
 		7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountAbortWindow.xib; sourceTree = "<group>"; };
-		7C651D8E29F68277003331A4 /* MixinBot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinBot.swift; sourceTree = "<group>"; };
+		7C651D8E29F68277003331A4 /* BotUserID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotUserID.swift; sourceTree = "<group>"; };
 		7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
 		7C695D55285B25AB0042177C /* SpotlightManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightManager.swift; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
@@ -4274,7 +4274,7 @@
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
 				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,
-				7C651D8E29F68277003331A4 /* MixinBot.swift */,
+				7C651D8E29F68277003331A4 /* BotUserID.swift */,
 				945D867A2C21754A0066C61D /* CGSize+Constants.swift */,
 			);
 			path = Constants;
@@ -6173,7 +6173,7 @@
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
-				7C651D8F29F68277003331A4 /* MixinBot.swift in Sources */,
+				7C651D8F29F68277003331A4 /* BotUserID.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
 				5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,

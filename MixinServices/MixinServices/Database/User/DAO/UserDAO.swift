@@ -84,6 +84,15 @@ public final class UserDAO: UserDatabaseDAO {
         return verified ?? false
     }
     
+    public func relationship(id: String) -> Relationship? {
+        let value: String? = db.select(with: "SELECT relationship FROM users WHERE user_id = ?", arguments: [id])
+        return if let value {
+            Relationship(rawValue: value)
+        } else {
+            nil
+        }
+    }
+    
     public func isUserFriendOrMe(id: String) -> Bool {
         db.select(with: "SELECT 1 FROM users WHERE user_id = ? AND relationship IN ('FRIEND', 'ME')", arguments: [id]) ?? false
     }

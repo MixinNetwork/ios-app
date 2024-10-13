@@ -27,18 +27,15 @@ final class PaymentUserGroupCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(32))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(32))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            return NSCollectionLayoutSection(group: group)
-        }
+        var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+        configuration.backgroundColor = R.color.background()
+        configuration.showsSeparators = false
+        let layout: UICollectionViewCompositionalLayout = .list(using: configuration)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
         contentStackView.addArrangedSubview(collectionView)
-        let collectionViewHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 30)
+        let collectionViewHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 32)
         collectionViewHeightConstraint.isActive = true
         collectionView.register(R.nib.paymentUserCell)
         collectionView.dataSource = self
@@ -47,8 +44,13 @@ final class PaymentUserGroupCell: UITableViewCell {
             guard let newValue = change.newValue, let self else {
                 return
             }
-            self.collectionViewHeightConstraint.constant = newValue.height
-            self.invalidateIntrinsicContentSize()
+            // Dispatch to break an infinite loop on iOS 14
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.collectionViewHeightConstraint.constant = newValue.height
+                    self.invalidateIntrinsicContentSize()
+                }
+            }
         }
         self.collectionView = collectionView
         self.collectionViewHeightConstraint = collectionViewHeightConstraint

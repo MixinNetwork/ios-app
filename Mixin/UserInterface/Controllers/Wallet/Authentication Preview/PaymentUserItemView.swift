@@ -1,7 +1,7 @@
 import UIKit
 import SDWebImage
 
-final class PaymentUserCell: UICollectionViewCell {
+final class PaymentUserItemView: UIView {
     
     enum Checkmark {
         case yes
@@ -13,6 +13,7 @@ final class PaymentUserCell: UICollectionViewCell {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var identityNumberLabel: UILabel!
     @IBOutlet weak var badgeImageView: SDAnimatedImageView!
+    @IBOutlet weak var button: UIButton!
     
     var checkmark: Checkmark? {
         didSet {

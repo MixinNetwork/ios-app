@@ -154,6 +154,8 @@ final class MixinSwapViewController: SwapViewController {
             source: quote.source,
             slippage: 0.01
         )
+        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
+        ConcurrentJobQueue.shared.addJob(job: job)
         RouteAPI.swap(request: request) { [weak self] response in
             guard self != nil else {
                 return

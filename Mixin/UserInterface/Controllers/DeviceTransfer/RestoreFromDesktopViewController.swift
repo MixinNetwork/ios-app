@@ -92,7 +92,7 @@ extension RestoreFromDesktopViewController {
         }
         Logger.general.info(category: "RestoreFromDesktop", message: "Start send pull command")
         let conversationId = ParticipantDAO.shared.randomSuccessConversationID()
-            ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
+        ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: BotUserID.teamMixin)
         SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId) { success in
             Logger.general.info(category: "RestoreFromDesktopViewController", message: "Send Pull command: \(success)")
             completion(success)

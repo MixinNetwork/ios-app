@@ -122,7 +122,7 @@ extension TransferToDesktopViewController {
                 return
             }
             let conversationId = ParticipantDAO.shared.randomSuccessConversationID()
-                ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: MixinBot.teamMixin.id)
+            ?? ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: BotUserID.teamMixin)
             SendMessageService.shared.sendDeviceTransferCommand(content, conversationId: conversationId, sessionId: sessionId) { [weak self] success in
                 Logger.general.info(category: "TransferToDesktop", message: "Send push command: \(success)")
                 if !success, let self {

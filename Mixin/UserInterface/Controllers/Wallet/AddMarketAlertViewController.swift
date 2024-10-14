@@ -140,6 +140,9 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func beginInput(_ sender: Any) {
+        guard presentedViewController == nil else {
+            return
+        }
         inputTextField.becomeFirstResponder()
     }
     
@@ -191,6 +194,8 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             case .success(let alert):
                 DispatchQueue.global().async {
                     MarketAlertDAO.shared.save(alert: alert)
+                    let job = AddBotIfNotFriendJob(userID: BotUserID.marketAlerts)
+                    ConcurrentJobQueue.shared.addJob(job: job)
                 }
                 self?.manipulateNavigationStack()
             case .failure(let error):

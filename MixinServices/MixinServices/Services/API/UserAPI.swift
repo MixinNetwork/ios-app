@@ -77,7 +77,7 @@ public final class UserAPI: MixinAPI {
         return request(method: .get, path: Path.search(keyword: keyword))
     }
     
-    public static func addFriend(userId: String, fullName: String) -> MixinAPI.Result<UserResponse> {
+    public static func addFriend(userId: String, fullName: String?) -> MixinAPI.Result<UserResponse> {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: fullName, action: .ADD)
         return request(method: .post, path: Path.relationships, parameters: relationshipRequest)
     }

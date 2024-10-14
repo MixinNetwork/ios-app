@@ -44,7 +44,7 @@
 "alert_frequency" = "预警频率";
 "alert_frequency_daily" = "每日一次";
 "alert_frequency_daily_description" = "仅每日首次触发时预警";
-"alert_frequency_every" = "重复提醒";
+"alert_frequency_every" = "持续提醒";
 "alert_frequency_every_description" = "每次触发都预警";
 "alert_frequency_once" = "仅提醒一次";
 "alert_frequency_once_description" = "仅第一次触发时预警";

@@ -137,7 +137,9 @@ final class MixinSwapViewController: SwapViewController {
         case .receive:
                 .send
         }
-        updateCurrentPriceRepresentation()
+        if let quote {
+            updateCurrentPriceRepresentation(quote: quote)
+        }
     }
     
     override func review(_ sender: RoundedButton) {
@@ -233,7 +235,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 sign: .never
             )
             updateReceiveValueLabel()
-            updateCurrentPriceRepresentation()
+            updateCurrentPriceRepresentation(quote: quote)
             footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
                 && quote.sendAmount <= quote.sendToken.decimalBalance
@@ -440,10 +442,7 @@ extension MixinSwapViewController {
         )
     }
     
-    private func updateCurrentPriceRepresentation() {
-        guard let quote else {
-            return
-        }
+    private func updateCurrentPriceRepresentation(quote: SwapQuote) {
         let priceRepresentation = quote.priceRepresentation(unit: priceUnit)
         setFooter(.price(priceRepresentation))
     }
@@ -463,20 +462,24 @@ extension MixinSwapViewController {
             let receiveToken
         else {
             setFooter(nil)
+            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
             return
         }
         if sendAmount > sendToken.decimalBalance {
-            setFooter(.error(R.string.localizable.insufficient_balance()))
+            reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
         } else {
-            setFooter(.calculating)
-            let requester = SwapQuotePeriodicRequester(sendToken: sendToken,
-                                                       sendAmount: sendAmount,
-                                                       receiveToken: receiveToken.token,
-                                                       slippage: 0.01)
-            requester.delegate = self
-            self.requester = requester
-            requester.start(delay: 1)
+            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
         }
+        setFooter(.calculating)
+        let requester = SwapQuotePeriodicRequester(
+            sendToken: sendToken,
+            sendAmount: sendAmount,
+            receiveToken: receiveToken.token,
+            slippage: 0.01
+        )
+        requester.delegate = self
+        self.requester = requester
+        requester.start(delay: 1)
     }
     
 }

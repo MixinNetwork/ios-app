@@ -28,21 +28,18 @@ public final class MarketDAO: UserDatabaseDAO {
             ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
-        
         """
         switch category {
         case .all:
-            sql.append("""
-            INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
-            ORDER BY CAST(ifnull(mcr.market_cap_rank, m.market_cap_rank) AS REAL) ASC
-            """)
+            sql.append("\nINNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id")
         case .favorite:
             sql.append("""
+            
             LEFT JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
             WHERE mf.is_favored
-            ORDER BY mf.created_at ASC
             """)
         }
+        sql.append("\nORDER BY CAST(ifnull(mcr.market_cap_rank, m.market_cap_rank) AS REAL) ASC")
         if let count = limit?.count {
             sql.append("\nLIMIT \(count)")
         }

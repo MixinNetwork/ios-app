@@ -591,12 +591,12 @@ extension MarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
-            pickSingleToken { token in
+            pickSingleToken { [market] token in
                 let pushingToken = (self.pushingViewController as? TokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    let controller = TokenViewController.contained(token: token)
+                    let controller = TokenViewController.contained(token: token, market: market)
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }

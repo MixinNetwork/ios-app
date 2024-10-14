@@ -785,6 +785,7 @@
 		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
 		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
 		94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94317D062AFBE57200FDC9C9 /* MemoCell.xib */; };
+		9433C2F42CBCFB530066CEA3 /* AddNonFriendBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433C2F32CBCFB530066CEA3 /* AddNonFriendBotJob.swift */; };
 		94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF52862F302009C9147 /* libopusfile.xcframework */; };
 		94341BFA2862F302009C9147 /* libopus.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF62862F302009C9147 /* libopus.xcframework */; };
 		94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF72862F302009C9147 /* libopusenc.xcframework */; };
@@ -2190,6 +2191,7 @@
 		94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		94317D052AFBE57200FDC9C9 /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
 		94317D062AFBE57200FDC9C9 /* MemoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MemoCell.xib; sourceTree = "<group>"; };
+		9433C2F32CBCFB530066CEA3 /* AddNonFriendBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNonFriendBotJob.swift; sourceTree = "<group>"; };
 		94341BF52862F302009C9147 /* libopusfile.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusfile.xcframework; sourceTree = "<group>"; };
 		94341BF62862F302009C9147 /* libopus.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopus.xcframework; sourceTree = "<group>"; };
 		94341BF72862F302009C9147 /* libopusenc.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusenc.xcframework; sourceTree = "<group>"; };
@@ -5009,6 +5011,7 @@
 				DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */,
 				947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */,
 				842347ED2695BA6400009A39 /* InitializeBotJob.swift */,
+				9433C2F32CBCFB530066CEA3 /* AddNonFriendBotJob.swift */,
 				94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */,
 				94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */,
 				94428D632CA24F6E00157E93 /* ReloadMarketAlertsJob.swift */,
@@ -5982,6 +5985,7 @@
 				94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */,
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
 				7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */,
+				9433C2F42CBCFB530066CEA3 /* AddNonFriendBotJob.swift in Sources */,
 				94E1D44E29E9393C00511267 /* DeviceTransferServer.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
 				94350E3B2BCFE8C5007283B7 /* DecimalButton.swift in Sources */,

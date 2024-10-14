@@ -1,9 +1,9 @@
 import Foundation
 import MixinServices
 
-final class InitializeBotJob: BaseJob {
+class InitializeBotJob: BaseJob {
     
-    private let userID: String
+    let userID: String
     
     init(userID: String) {
         self.userID = userID
@@ -15,6 +15,7 @@ final class InitializeBotJob: BaseJob {
     
     override func run() throws {
         guard !userID.isEmpty, UUID(uuidString: userID) != nil else {
+            assertionFailure("Invalid user id")
             return
         }
         switch UserAPI.addFriend(userId: userID, fullName: nil) {

@@ -194,15 +194,8 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             case .success(let alert):
                 DispatchQueue.global().async {
                     MarketAlertDAO.shared.save(alert: alert)
-                    
-                    let relationship = UserDAO.shared.relationship(id: BotUserID.marketAlerts)
-                    switch relationship {
-                    case .ME, .FRIEND:
-                        break
-                    case .STRANGER, .BLOCKING, .none:
-                        let job = InitializeBotJob(userID: BotUserID.marketAlerts)
-                        ConcurrentJobQueue.shared.addJob(job: job)
-                    }
+                    let job = AddBotIfNotFriendJob(userID: BotUserID.marketAlerts)
+                    ConcurrentJobQueue.shared.addJob(job: job)
                 }
                 self?.manipulateNavigationStack()
             case .failure(let error):

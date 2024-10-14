@@ -200,12 +200,8 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
                     case .ME, .FRIEND:
                         break
                     case .STRANGER, .BLOCKING, .none:
-                        switch UserAPI.addFriend(userId: BotUserID.marketAlerts, fullName: nil) {
-                        case let .success(user):
-                            UserDAO.shared.updateUsers(users: [user])
-                        case let .failure(error):
-                            break
-                        }
+                        let job = InitializeBotJob(userID: BotUserID.marketAlerts)
+                        ConcurrentJobQueue.shared.addJob(job: job)
                     }
                 }
                 self?.manipulateNavigationStack()

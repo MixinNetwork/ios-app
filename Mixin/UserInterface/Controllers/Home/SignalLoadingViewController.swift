@@ -6,19 +6,6 @@ class SignalLoadingViewController: UIViewController {
     
     private var isUsernameJustInitialized = false
     
-    private var newUserInitialBots: [String] {
-        guard let account = LoginManager.shared.account else {
-            return []
-        }
-        guard ["+971", "+91"].contains(where: account.phone.hasPrefix) else {
-            return []
-        }
-        return [
-            BotUserID.mixinBots,
-            BotUserID.mixinData,
-        ]
-    }
-    
     private var allUsersInitialBots: [String] {
         [BotUserID.teamMixin]
     }
@@ -247,17 +234,10 @@ class SignalLoadingViewController: UIViewController {
         let vc = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
         AppDelegate.current.mainWindow.rootViewController = vc
         if vc is HomeContainerViewController {
-            initialize(botUserIDs: allUsersInitialBots)
-            if isUsernameJustInitialized {
-                initialize(botUserIDs: newUserInitialBots)
+            for id in allUsersInitialBots {
+                let job = InitializeBotJob(userID: id)
+                ConcurrentJobQueue.shared.addJob(job: job)
             }
-        }
-    }
-    
-    private func initialize(botUserIDs: [String]) {
-        for id in botUserIDs {
-            let job = InitializeBotJob(userID: id)
-            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     

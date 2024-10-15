@@ -45,7 +45,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
-        navigationItem.title = " "
+        navigationItem.title = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
         tableView.register(SearchHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)

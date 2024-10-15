@@ -52,7 +52,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
-        navigationItem.title = " "
+        navigationItem.title = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
         cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.cancelSearching(_:)), for: .touchUpInside)
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)

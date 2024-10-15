@@ -32,6 +32,7 @@ class SearchNavigationViewController: UINavigationController {
             appearance.backgroundColor = backgroundColor
             appearance.shadowImage = image
             appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.clear]
             navigationBar.standardAppearance = appearance
             navigationBar.scrollEdgeAppearance = appearance
         } else {

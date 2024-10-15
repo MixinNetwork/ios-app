@@ -6,7 +6,7 @@ final class MarketViewController: UIViewController {
     private weak var tableView: UITableView!
     private weak var pushingViewController: UIViewController?
     
-    private let id: ID
+    private let id: Identifier
     private let initialToken: TokenItem?
     private let favoriteButton = UIButton(type: .system)
     private let shareButton = UIButton(type: .system)
@@ -17,6 +17,7 @@ final class MarketViewController: UIViewController {
     private var chartPeriod: PriceHistoryPeriod = .day
     private var chartPoints: [ChartView.Point]?
     private var hasAlert = true
+    private var requester: MarketPeriodicRequester!
     
     private var tokenPriceChartCell: TokenPriceChartCell? {
         let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
@@ -116,64 +117,38 @@ final class MarketViewController: UIViewController {
         self.tableView = tableView
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.reloadData()
         
         if chartPoints == nil {
             reloadPriceChart(period: chartPeriod)
         }
+        
         if let market {
-            reloadTokens(market: market)
+            viewModel.update(market: market, tokens: [])
+            tableView.reloadData()
             updateFavoriteButtonImage()
-        } else if let initialToken, case let .asset(id) = id {
-            DispatchQueue.global().async { [weak self] in
-                guard let market = MarketDAO.shared.market(assetID: id) else {
-                    return
-                }
-                let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
-                DispatchQueue.main.sync {
-                    guard let self else {
-                        return
-                    }
-                    self.market = market
-                    self.hasAlert = hasAlert
-                    self.viewModel.update(market: market, tokens: [initialToken])
-                    self.tableView.reloadData()
-                    self.reloadTokens(market: market)
-                    self.updateFavoriteButtonImage()
-                }
-            }
-            RouteAPI.markets(id: id, queue: .global()) { [weak self] result in
-                switch result {
-                case .success(let market):
-                    let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
-                    if let market = MarketDAO.shared.save(market: market) {
-                        DispatchQueue.main.async {
-                            guard let self else {
-                                return
-                            }
-                            self.market = market
-                            self.hasAlert = hasAlert
-                            let tokens = self.tokens ?? [initialToken]
-                            self.viewModel.update(market: market, tokens: tokens)
-                            self.tableView.reloadData()
-                            self.updateFavoriteButtonImage()
-                        }
-                    }
-                case .failure(.response(.notFound)):
-                    DispatchQueue.main.async {
-                        guard let self else {
-                            return
-                        }
-                        self.market = nil
-                        self.viewModel.updateWithMarketNotFound()
-                        self.tableView.reloadData()
-                        self.updateFavoriteButtonImage()
-                    }
-                case .failure(let error):
-                    Logger.general.debug(category: "MarketView", message: "\(error)")
-                }
-            }
         }
+        reloadFromLocal()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadFromLocal),
+            name: MarketDAO.didUpdateNotification,
+            object: nil
+        )
+        requester = MarketPeriodicRequester(id: id.value, onNotFound: { [weak self] in
+            guard let self else {
+                return
+            }
+            self.market = nil
+            self.viewModel.updateWithMarketNotFound()
+            self.tableView.reloadData()
+            self.updateFavoriteButtonImage()
+        })
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
+        requester.start()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -183,6 +158,11 @@ final class MarketViewController: UIViewController {
         } else {
             tableView.contentInset.bottom = 0
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        requester.pause()
     }
     
     @objc private func toggleFavorite(_ sender: Any) {
@@ -273,6 +253,32 @@ final class MarketViewController: UIViewController {
         let croppedImage = UIImage(cgImage: cgImage)
         let share = ShareMarketViewController(symbol: market.symbol, image: croppedImage)
         present(share, animated: true)
+    }
+    
+    @objc private func reloadFromLocal() {
+        DispatchQueue.global().async { [weak self, id] in
+            let market = switch id {
+            case .coin(let coinID):
+                MarketDAO.shared.market(coinID: coinID)
+            case .asset(let assetID):
+                MarketDAO.shared.market(assetID: assetID)
+            }
+            guard let market else {
+                return
+            }
+            let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
+            DispatchQueue.main.sync {
+                guard let self else {
+                    return
+                }
+                self.market = market
+                self.hasAlert = hasAlert
+                self.viewModel.update(market: market, tokens: [])
+                self.tableView.reloadData()
+                self.reloadTokens(market: market)
+                self.updateFavoriteButtonImage()
+            }
+        }
     }
     
     private func updateFavoriteButtonImage() {
@@ -496,7 +502,8 @@ extension MarketViewController: UITableViewDataSource {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.my_balance()
-                cell.disclosureIndicatorView.isHidden = false
+                cell.subtitle = nil
+                cell.disclosureIndicatorView.isHidden = tokens?.isEmpty ?? true
                 return cell
             case .content:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_my_balance, for: indexPath)!
@@ -722,7 +729,7 @@ extension MarketViewController: PillActionView.Delegate {
 
 extension MarketViewController {
     
-    private enum ID {
+    private enum Identifier {
         
         case coin(String)
         case asset(String)
@@ -1072,6 +1079,80 @@ extension MarketViewController {
             
             self.marketInfos = Info.marketInfos(market: market)
             self.infos = basicInfos + marketInfos
+        }
+        
+    }
+    
+    private final class MarketPeriodicRequester {
+        
+        private static var lastReloadingDate: Date = .distantPast
+        
+        private let id: String
+        private let refreshInterval: TimeInterval = 30
+        private let onNotFound: () -> Void
+        
+        private var isRunning = false
+        
+        private weak var timer: Timer?
+        
+        init(id: String, onNotFound: @escaping () -> Void) {
+            self.id = id
+            self.onNotFound = onNotFound
+        }
+        
+        func start() {
+            assert(Thread.isMainThread)
+            guard !isRunning else {
+                return
+            }
+            isRunning = true
+            let delay = Self.lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
+            if delay <= 0 {
+                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load now")
+                requestData()
+            } else {
+                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load after \(delay)s")
+                timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+                    self?.requestData()
+                }
+            }
+        }
+        
+        func pause() {
+            assert(Thread.isMainThread)
+            Logger.general.debug(category: "MarketPeriodicRequester", message: "Pause loading")
+            isRunning = false
+            timer?.invalidate()
+        }
+        
+        private func requestData() {
+            assert(Thread.isMainThread)
+            timer?.invalidate()
+            Logger.general.debug(category: "MarketPeriodicRequester", message: "Request data")
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
+            RouteAPI.markets(id: id, queue: .global()) { [refreshInterval, onNotFound] result in
+                switch result {
+                case let .success(market):
+                    MarketDAO.shared.save(market: market)
+                    Logger.general.debug(category: "MarketPeriodicRequester", message: "Saved")
+                    DispatchQueue.main.async {
+                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reload after \(refreshInterval)s")
+                        Self.lastReloadingDate = Date()
+                        self.timer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: false) { [weak self] _ in
+                            self?.requestData()
+                        }
+                    }
+                case .failure(.response(.notFound)):
+                    DispatchQueue.main.async(execute: onNotFound)
+                case let .failure(error):
+                    Logger.general.debug(category: "MarketPeriodicRequester", message: "\(error)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self.requestData()
+                    }
+                }
+            }
         }
         
     }

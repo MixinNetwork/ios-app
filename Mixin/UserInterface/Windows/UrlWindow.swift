@@ -987,6 +987,16 @@ class UrlWindow {
     }
     
     class func checkMarket(id: String) {
+        let market = if UUID.isValidUUIDString(id) {
+            MarketDAO.shared.market(assetID: id)
+        } else {
+            MarketDAO.shared.market(coinID: id)
+        }
+        if let market {
+            let viewController = MarketViewController.contained(market: market, pushingViewController: nil)
+            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+            return
+        }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         RouteAPI.markets(id: id, queue: .global()) { result in

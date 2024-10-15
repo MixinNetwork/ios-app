@@ -416,7 +416,7 @@ extension ExploreMarketViewController {
         
         private let category: Market.Category
         private let modelName: String
-        private let refreshInterval: TimeInterval = 5 * .minute
+        private let refreshInterval: TimeInterval = 30
         
         private var isRunning = false
         private var onSuccess: (() -> Void)?

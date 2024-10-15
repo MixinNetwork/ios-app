@@ -103,7 +103,7 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         navigationTitleLabel?.textColor = R.color.text()!
         let rightButton = UIBarButtonItem(customView: iconView)
         rightButton.width = 44
-        navigationItem.title = " "
+        navigationItem.title = ""
         navigationItem.titleView = navigationTitleLabel
         navigationItem.rightBarButtonItem = rightButton
     }

@@ -132,7 +132,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                                             legacyPIN: nil,
                                             forRecover: false,
                                             progressHandler: nil)
-                AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 try await TIP.registerToSafe(pin: pin)
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
                 await MainActor.run(body: onSuccess)
@@ -193,7 +193,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     Keychain.shared.storePIN(pin: new)
                 }
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-                AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {

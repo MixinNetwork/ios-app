@@ -174,7 +174,7 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
                 switch result {
                 case .success:
                     Logger.tip.info(category: "TIPFullscreenInput", message: "PIN verified")
-                    AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                    AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     let next = TIPFullscreenInputViewController(action: .change(fromLegacy, .input(old: pin)))
                     self.navigationController?.pushViewController(next, animated: true)
                 case let .failure(error):

@@ -80,7 +80,7 @@ class LoginConfirmWindow: BottomSheetView {
                     switch result {
                     case .success:
                         if !self.isAutoFillPIN {
-                            AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                            AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                         }
                         self.dismissView()
                         showAutoHiddenHud(style: .notification, text: R.string.localizable.logined())

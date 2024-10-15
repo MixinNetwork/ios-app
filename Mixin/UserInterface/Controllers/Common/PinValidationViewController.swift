@@ -64,7 +64,7 @@ class PinValidationViewController: UIViewController {
                 self.loadingIndicator.stopAnimating()
                 let interval = min(PeriodicPinVerificationInterval.max, AppGroupUserDefaults.Wallet.periodicPinVerificationInterval * 2)
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = interval
-                AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 self.onSuccess?(pin)
                 self.dismiss(animated: true, completion: nil)
             case let .failure(error):

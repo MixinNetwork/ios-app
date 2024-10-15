@@ -48,7 +48,7 @@ final class AuthenticationViewController: UIViewController {
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
             return false
         }
-        guard let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate else {
+        guard let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate else {
             return false
         }
         return -date.timeIntervalSinceNow < AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval
@@ -416,7 +416,7 @@ extension AuthenticationViewController {
             return
         }
         authenticate(with: pinField.text, onSuccess: {
-            AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+            AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
             self.addEnableBiometricAuthButtonIfNeeded()
         })
     }

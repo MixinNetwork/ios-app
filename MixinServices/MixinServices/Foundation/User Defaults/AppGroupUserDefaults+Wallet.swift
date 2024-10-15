@@ -5,7 +5,7 @@ extension AppGroupUserDefaults {
     public enum Wallet {
         
         enum Key: String, CaseIterable {
-            case lastPinVerifiedDate = "last_pin_verified_date"
+            case lastPINVerifiedDate = "last_pin_verified_date"
             case periodicPinVerificationInterval = "periodic_pin_verification_interval"
             
             case payWithBiometricAuthentication = "pay_with_biometric_auth"
@@ -23,8 +23,8 @@ extension AppGroupUserDefaults {
             case outputSequencesReloaded = "output_sequences_reloaded"
         }
         
-        @Default(namespace: .wallet, key: Key.lastPinVerifiedDate, defaultValue: nil)
-        public static var lastPinVerifiedDate: Date?
+        @Default(namespace: .wallet, key: Key.lastPINVerifiedDate, defaultValue: nil)
+        public static var lastPINVerifiedDate: Date?
         
         @Default(namespace: .wallet, key: Key.periodicPinVerificationInterval, defaultValue: 0)
         public static var periodicPinVerificationInterval: TimeInterval
@@ -48,7 +48,7 @@ extension AppGroupUserDefaults {
         public static var areOutputSequencesReloaded: Bool
         
         internal static func migrate() {
-            lastPinVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)
+            lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)
             periodicPinVerificationInterval = WalletUserDefault.shared.checkPinInterval
             
             payWithBiometricAuthentication = WalletUserDefault.shared.isBiometricPay

@@ -132,7 +132,7 @@ final class HomeTabBarController: UIViewController {
             switch TIP.status {
             case .ready, .needsMigrate:
                 let shouldValidatePIN: Bool
-                if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
+                if let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate {
                     shouldValidatePIN = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
                 } else {
                     AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min

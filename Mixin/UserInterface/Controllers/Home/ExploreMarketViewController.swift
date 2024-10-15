@@ -406,13 +406,12 @@ extension ExploreMarketViewController {
     
     private final class MarketPeriodicRequester {
         
-        private static var lastReloadingDate: Date = .distantPast
-        
         private let category: Market.Category
         private let modelName: String
         private let refreshInterval: TimeInterval = 30
         
         private var isRunning = false
+        private var lastReloadingDate: Date = .distantPast
         
         private weak var timer: Timer?
         
@@ -432,21 +431,19 @@ extension ExploreMarketViewController {
                 return
             }
             isRunning = true
-            let delay = Self.lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
+            let delay = lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
             if delay <= 0 {
-                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName) now")
+                Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) now")
                 requestData()
             } else {
-                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName) after \(delay)s")
-                timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
-                    self?.requestData()
-                }
+                Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) after \(delay)s")
+                scheduleNextRequestIfRunning(timeInterval: delay)
             }
         }
         
         func pause() {
             assert(Thread.isMainThread)
-            Logger.general.debug(category: "MarketPeriodicRequester", message: "Pause loading \(modelName)")
+            Logger.general.debug(category: "ExploreMarketRequester", message: "Pause loading \(modelName)")
             isRunning = false
             timer?.invalidate()
         }
@@ -454,11 +451,11 @@ extension ExploreMarketViewController {
         private func requestData() {
             assert(Thread.isMainThread)
             timer?.invalidate()
-            Logger.general.debug(category: "MarketPeriodicRequester", message: "Request \(modelName)")
+            Logger.general.debug(category: "ExploreMarketRequester", message: "Request \(modelName)")
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
-            RouteAPI.markets(category: category, queue: .global()) { [refreshInterval, category, modelName] result in
+            RouteAPI.markets(category: category, queue: .global()) { [weak self, refreshInterval, category, modelName] result in
                 switch result {
                 case let .success(markets):
                     switch category {
@@ -467,20 +464,29 @@ extension ExploreMarketViewController {
                     case .favorite:
                         MarketDAO.shared.replaceFavoriteMarkets(markets: markets)
                     }
-                    Logger.general.debug(category: "MarketPeriodicRequester", message: "Saved \(markets.count) \(modelName)")
+                    Logger.general.debug(category: "ExploreMarketRequester", message: "Saved \(markets.count) \(modelName)")
                     DispatchQueue.main.async {
-                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reload \(modelName) after \(refreshInterval)s")
-                        Self.lastReloadingDate = Date()
-                        self.timer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: false) { [weak self] _ in
-                            self?.requestData()
+                        Logger.general.debug(category: "ExploreMarketRequester", message: "Reload \(modelName) after \(refreshInterval)s")
+                        if let self {
+                            self.lastReloadingDate = Date()
+                            self.scheduleNextRequestIfRunning(timeInterval: refreshInterval)
                         }
                     }
                 case let .failure(error):
-                    Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName): \(error)")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        self.requestData()
+                    Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName): \(error)")
+                    DispatchQueue.main.async {
+                        self?.scheduleNextRequestIfRunning(timeInterval: 3)
                     }
                 }
+            }
+        }
+        
+        private func scheduleNextRequestIfRunning(timeInterval: TimeInterval) {
+            guard isRunning else {
+                return
+            }
+            timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [weak self] _ in
+                self?.requestData()
             }
         }
         

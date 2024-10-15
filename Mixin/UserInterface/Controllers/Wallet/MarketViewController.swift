@@ -1085,13 +1085,12 @@ extension MarketViewController {
     
     private final class MarketPeriodicRequester {
         
-        private static var lastReloadingDate: Date = .distantPast
-        
         private let id: String
         private let refreshInterval: TimeInterval = 30
         private let onNotFound: () -> Void
         
         private var isRunning = false
+        private var lastReloadingDate: Date = .distantPast
         
         private weak var timer: Timer?
         
@@ -1106,12 +1105,12 @@ extension MarketViewController {
                 return
             }
             isRunning = true
-            let delay = Self.lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
+            let delay = lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
             if delay <= 0 {
-                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load now")
+                Logger.general.debug(category: "MarketRequester", message: "Load now")
                 requestData()
             } else {
-                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load after \(delay)s")
+                Logger.general.debug(category: "MarketRequester", message: "Load after \(delay)s")
                 timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
                     self?.requestData()
                 }
@@ -1120,7 +1119,7 @@ extension MarketViewController {
         
         func pause() {
             assert(Thread.isMainThread)
-            Logger.general.debug(category: "MarketPeriodicRequester", message: "Pause loading")
+            Logger.general.debug(category: "MarketRequester", message: "Pause loading")
             isRunning = false
             timer?.invalidate()
         }
@@ -1128,7 +1127,7 @@ extension MarketViewController {
         private func requestData() {
             assert(Thread.isMainThread)
             timer?.invalidate()
-            Logger.general.debug(category: "MarketPeriodicRequester", message: "Request data")
+            Logger.general.debug(category: "MarketRequester", message: "Request data")
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
@@ -1136,10 +1135,10 @@ extension MarketViewController {
                 switch result {
                 case let .success(market):
                     MarketDAO.shared.save(market: market)
-                    Logger.general.debug(category: "MarketPeriodicRequester", message: "Saved")
+                    Logger.general.debug(category: "MarketRequester", message: "Saved")
                     DispatchQueue.main.async {
-                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reload after \(refreshInterval)s")
-                        Self.lastReloadingDate = Date()
+                        Logger.general.debug(category: "MarketRequester", message: "Reload after \(refreshInterval)s")
+                        self.lastReloadingDate = Date()
                         self.timer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: false) { [weak self] _ in
                             self?.requestData()
                         }
@@ -1147,7 +1146,7 @@ extension MarketViewController {
                 case .failure(.response(.notFound)):
                     DispatchQueue.main.async(execute: onNotFound)
                 case let .failure(error):
-                    Logger.general.debug(category: "MarketPeriodicRequester", message: "\(error)")
+                    Logger.general.debug(category: "MarketRequester", message: "\(error)")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         self.requestData()
                     }

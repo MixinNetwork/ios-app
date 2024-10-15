@@ -67,10 +67,12 @@ final class TextPreviewView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         let textRect: CGRect
-        if #available(iOS 16.0, *),
+        if #available(iOS 18.0, *),
            let manager = textView.textLayoutManager,
            let nsDocumentRange = manager.textContentManager?.documentRange
         {
+            // No menu presents after text selected on iOS 18 with TextKit1
+            // Certain single-lined text breaks out of bounds on iOS 17 with TextKit2
             manager.ensureLayout(for: nsDocumentRange)
             textRect = manager.usageBoundsForTextContainer
         } else {

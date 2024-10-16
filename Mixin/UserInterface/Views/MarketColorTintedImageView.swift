@@ -3,15 +3,15 @@ import MixinServices
 
 final class MarketColorTintedImageView: UIImageView {
     
-    var marketColor: MarketColor? {
-        didSet {
-            reloadTintColor()
-        }
-    }
-    
     override var tintColor: UIColor! {
         willSet {
             marketColor = nil
+        }
+    }
+    
+    var marketColor: MarketColor? {
+        didSet {
+            reloadTintColor()
         }
     }
     

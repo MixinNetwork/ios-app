@@ -81,6 +81,19 @@ public final class MarketDAO: UserDatabaseDAO {
         return results
     }
     
+    public func markets(keyword: String, limit: Int?) -> [FavorableMarket] {
+        var sql = """
+        SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        FROM markets m
+            LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
+        WHERE (m.name LIKE :keyword OR m.symbol LIKE :keyword)
+        """
+        if let limit {
+            sql += "\nLIMIT \(limit)"
+        }
+        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
+    }
+    
     public func market(coinID: String) -> FavorableMarket? {
         let sql = """
         SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)

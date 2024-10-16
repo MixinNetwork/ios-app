@@ -37,12 +37,23 @@ final class ExploreViewController: UIViewController {
         }
         segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
         collectionView(segmentsCollectionView, didSelectItemAt: indexPath)
-        NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently), name: dismissSearchNotification, object: nil)
     }
     
     @IBAction func searchApps(_ sender: Any) {
-        let searchViewController = ExploreSearchViewController(users: exploreBotsViewController.allUsers)
-        presentSearch(with: searchViewController)
+        let searchViewController = ExploreAggregatedSearchViewController()
+        let navigationController = SearchNavigationViewController(
+            navigationBarClass: SearchNavigationBar.self,
+            toolbarClass: nil
+        )
+        navigationController.viewControllers = [searchViewController]
+        searchViewController.cancelButton.addTarget(
+            self,
+            action: #selector(cancelSearching(_:)),
+            for: .touchUpInside
+        )
+        presentSearch(with: navigationController)
+        searchViewController.searchTextField.becomeFirstResponder()
     }
     
     @IBAction func scanQRCode(_ sender: Any) {
@@ -52,6 +63,39 @@ final class ExploreViewController: UIViewController {
     @IBAction func openSettings(_ sender: Any) {
         let settings = SettingsViewController.instance()
         navigationController?.pushViewController(settings, animated: true)
+    }
+    
+    @objc func cancelSearching(_ sender: Any) {
+        hideSearch(endEditing: true, animate: true)
+    }
+    
+    @objc private func cancelSearchingSilently(_ notification: Notification) {
+        hideSearch(endEditing: false, animate: false)
+    }
+    
+    func hideSearch(endEditing: Bool, animate: Bool) {
+        guard let searchViewController, let searchViewCenterYConstraint, searchViewController.parent != nil else {
+            return
+        }
+        if endEditing {
+            searchViewController.view.endEditing(true)
+        }
+        searchViewCenterYConstraint.constant = hiddenSearchTopMargin
+        let layout = {
+            self.view.layoutIfNeeded()
+            searchViewController.view.alpha = 0
+        }
+        let remove = { (_: Bool) in
+            searchViewController.willMove(toParent: nil)
+            searchViewController.view.removeFromSuperview()
+            searchViewController.removeFromParent()
+        }
+        if animate {
+            UIView.animate(withDuration: 0.3, animations: layout, completion: remove)
+        } else {
+            layout()
+            remove(true)
+        }
     }
     
     func perform(action: ExploreAction) {
@@ -112,21 +156,6 @@ final class ExploreViewController: UIViewController {
                 MixinWebViewController.presentInstance(with: .init(conversationId: "", app: app), asChildOf: home)
             }
             reporter.report(event: .openApp, userInfo: ["source": "Explore", "identityNumber": app.appNumber])
-        }
-    }
-    
-    @objc func dismissSearch() {
-        guard let searchViewController, let searchViewCenterYConstraint, searchViewController.parent != nil else {
-            return
-        }
-        searchViewCenterYConstraint.constant = hiddenSearchTopMargin
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-            searchViewController.view.alpha = 0
-        } completion: { _ in
-            searchViewController.willMove(toParent: nil)
-            searchViewController.view.removeFromSuperview()
-            searchViewController.removeFromParent()
         }
     }
     

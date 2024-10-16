@@ -1,10 +1,8 @@
 import UIKit
 import MixinServices
 
-protocol HomeSearchViewController {
+protocol HomeSearchViewController: SearchNavigationControllerChild {
     var searchTextField: UITextField! { get }
-    var wantsNavigationSearchBox: Bool { get }
-    var navigationSearchBoxInsets: UIEdgeInsets { get }
 }
 
 extension HomeSearchViewController where Self: UIViewController {
@@ -27,26 +25,6 @@ extension HomeSearchViewController where Self: UIViewController {
     
     var homeNavigationController: UINavigationController? {
         return homeViewController?.navigationController
-    }
-    
-    var searchNavigationController: SearchNavigationViewController? {
-        return navigationController as? SearchNavigationViewController
-    }
-    
-    var cancelButtonRightMargin: CGFloat {
-        return 20
-    }
-    
-    var backButtonWidth: CGFloat {
-        return 54
-    }
-    
-    var navigationSearchBoxView: SearchBoxView! {
-        return searchNavigationController?.searchNavigationBar.searchBoxView
-    }
-    
-    var searchTextField: UITextField! {
-        return navigationSearchBoxView.textField
     }
     
     func pushViewController(keyword: String?, result: SearchResult) {

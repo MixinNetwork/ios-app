@@ -86,7 +86,8 @@ final class QuickAccessSearchResult {
             }
         case let .link(url, _):
             if let home = UIApplication.homeContainerViewController?.homeTabBarController {
-                MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: home)
+                let context = MixinWebViewController.Context(conversationId: "", initialUrl: url, saveAsRecentSearch: true)
+                MixinWebViewController.presentInstance(with: context, asChildOf: home)
             }
             completion(nil)
         }

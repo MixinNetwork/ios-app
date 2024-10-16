@@ -10,7 +10,7 @@ class SearchNavigationViewController: UINavigationController {
         super.viewDidLoad()
         searchNavigationBar.searchBoxView.textField.delegate = self
         prepareNavigationBar()
-        if let vc = viewControllers.first as? HomeSearchViewController {
+        if let vc = viewControllers.first as? SearchNavigationControllerChild {
             searchNavigationBar.layoutSearchBoxView(insets: vc.navigationSearchBoxInsets)
         }
     }
@@ -45,7 +45,7 @@ class SearchNavigationViewController: UINavigationController {
 
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         super.pushViewController(viewController, animated: animated)
-        if let vc = viewController as? (UIViewController & HomeSearchViewController) {
+        if let vc = viewController as? (UIViewController & SearchNavigationControllerChild) {
             vc.transitionCoordinator?.animateAlongsideTransition(in: self.searchNavigationBar, animation: { (_) in
                 if vc.wantsNavigationSearchBox {
                     self.searchNavigationBar.layoutSearchBoxView(insets: vc.navigationSearchBoxInsets)
@@ -59,7 +59,7 @@ class SearchNavigationViewController: UINavigationController {
     
     override func popViewController(animated: Bool) -> UIViewController? {
         let popped = super.popViewController(animated: true)
-        if let vc = topViewController as? (UIViewController & HomeSearchViewController) {
+        if let vc = topViewController as? (UIViewController & SearchNavigationControllerChild) {
             vc.transitionCoordinator?.animateAlongsideTransition(in: self.searchNavigationBar, animation: { (_) in
                 if vc.wantsNavigationSearchBox {
                     self.searchNavigationBar.layoutSearchBoxView(insets: vc.navigationSearchBoxInsets)

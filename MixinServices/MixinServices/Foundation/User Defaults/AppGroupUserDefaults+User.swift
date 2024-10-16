@@ -43,6 +43,7 @@ extension AppGroupUserDefaults {
             case homeApp = "home_app"
             case clips = "clips"
             case assetSearchHistory = "asset_search_history"
+            case recentSearches = "recent_searches"
             
             case emergencyContactBulletinDismissalDate = "emergency_contact_bulletin_dismissal_date"
             case initializePINBulletinDismissalDate = "initialize_pin_bulletin_dismissal_date"
@@ -83,8 +84,10 @@ extension AppGroupUserDefaults {
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
         public static let marketColorAppearanceDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.MarketColorAppearanceChange")
+        public static let recentSearchesDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.RecentSearchesChange")
         
         private static let maxNumberOfAssetSearchHistory = 2
+        private static let maxNumberOfRecentSearches = 4
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version
@@ -197,6 +200,13 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.assetSearchHistory, defaultValue: [])
         public private(set) static var assetSearchHistory: [String]
         
+        @Default(namespace: .user, key: Key.recentSearches, defaultValue: [])
+        private static var recentSearchItems: [Data] {
+            didSet {
+                NotificationCenter.default.post(onMainThread: recentSearchesDidChangeNotification, object: self)
+            }
+        }
+        
         @Default(namespace: .user, key: Key.emergencyContactBulletinDismissalDate, defaultValue: nil)
         public static var emergencyContactBulletinDismissalDate: Date?
         
@@ -278,6 +288,10 @@ extension AppGroupUserDefaults {
             }
         }
         
+        public static var recentSearches: [RecentSearch] {
+            recentSearchItems.compactMap(RecentSearch.init(rawValue:))
+        }
+        
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12
             var ids = recentlyUsedAppIds
@@ -305,6 +319,22 @@ extension AppGroupUserDefaults {
             var history = assetSearchHistory
             history.insert(id, at: 0)
             AppGroupUserDefaults.User.assetSearchHistory = Array(history.prefix(maxNumberOfAssetSearchHistory))
+        }
+        
+        public static func insertRecentSearch(_ item: RecentSearch) {
+            var items = recentSearchItems
+            
+            let data = item.rawValue
+            if let index = items.firstIndex(of: data) {
+                items.remove(at: index)
+            }
+            items.insert(data, at: 0)
+            
+            recentSearchItems = items
+        }
+        
+        public static func removeAllRecentSearches() {
+            recentSearchItems = []
         }
         
         internal static func migrate() {

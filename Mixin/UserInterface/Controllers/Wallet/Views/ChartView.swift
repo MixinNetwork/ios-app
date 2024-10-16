@@ -59,7 +59,7 @@ final class ChartView: UIView {
     
     private var lastLayoutBounds: CGRect?
     private var drawingPoints: [CGPoint] = []
-    private var color: MarketColor = .arbitrary(.clear)
+    private var color: MarketColor = .rising
     private var extremumAnnotationLayers: [CALayer] = []
     private var extremumAnnotationViews: [UIView] = []
     

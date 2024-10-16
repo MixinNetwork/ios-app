@@ -1,11 +1,10 @@
 import UIKit
 import MixinServices
 
-enum MarketColor {
+enum MarketColor: Codable {
     
     case rising
     case falling
-    case arbitrary(UIColor)
     
     var uiColor: UIColor {
         switch self {
@@ -23,8 +22,6 @@ enum MarketColor {
             case .redUpGreenDown:
                 R.color.market_green()!
             }
-        case .arbitrary(let color):
-            color
         }
     }
     

@@ -7,6 +7,7 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public static let favoriteNotification = Notification.Name("one.mixin.service.MarketDAO.Favorite")
     public static let unfavoriteNotification = Notification.Name("one.mixin.service.MarketDAO.Unfavorite")
+    public static let didUpdateNotification = Notification.Name("one.mixin.service.MarketDAO.Update")
     
     public static let coinIDUserInfoKey = "cid"
     
@@ -80,6 +81,17 @@ public final class MarketDAO: UserDatabaseDAO {
         return results
     }
     
+    public func market(coinID: String) -> FavorableMarket? {
+        let sql = """
+        SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        FROM markets m
+            LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
+        WHERE m.coin_id = ?
+        LIMIT 1
+        """
+        return db.select(with: sql, arguments: [coinID])
+    }
+    
     public func market(assetID: String) -> FavorableMarket? {
         let sql = """
         SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
@@ -137,6 +149,7 @@ public final class MarketDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
+    @discardableResult
     public func save(market: Market) -> FavorableMarket? {
         try? db.writeAndReturnError { db in
             try market.save(db)
@@ -149,6 +162,15 @@ public final class MarketDAO: UserDatabaseDAO {
                 try ids.save(db)
             }
             
+            db.afterNextTransaction { _ in
+                DispatchQueue.global().async {
+                    NotificationCenter.default.post(
+                        name: Self.didUpdateNotification,
+                        object: self,
+                        userInfo: [Self.coinIDUserInfoKey: market.coinID]
+                    )
+                }
+            }
             let sql = """
             SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
             FROM markets m
@@ -171,10 +193,16 @@ public final class MarketDAO: UserDatabaseDAO {
                 } ?? []
             }
             try ids.save(db)
+            
+            db.afterNextTransaction { _ in
+                DispatchQueue.global().async {
+                    NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
+                }
+            }
         }
     }
     
-    public func save(markets: [Market], completion: @escaping () -> Void) {
+    public func saveMarketsAndReplaceRanks(markets: [Market]) {
         let now = Date().toUTCString()
         let rankStorages = markets.compactMap(\.rankStorage)
         let ids: [MarketID] = markets.flatMap { market in
@@ -187,17 +215,16 @@ public final class MarketDAO: UserDatabaseDAO {
             try db.execute(sql: "DELETE FROM market_cap_ranks")
             try rankStorages.save(db)
             try ids.save(db)
+            
             db.afterNextTransaction { _ in
-                completion()
+                DispatchQueue.global().async {
+                    NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
+                }
             }
         }
     }
     
-    public func savePriceHistory(_ history: PriceHistoryStorage) {
-        db.save(history)
-    }
-    
-    public func saveFavoriteMarkets(markets: [Market], completion: (() -> Void)?) {
+    public func replaceFavoriteMarkets(markets: [Market]) {
         db.write { db in
             try markets.insert(db, onConflict: .ignore)
             
@@ -213,12 +240,16 @@ public final class MarketDAO: UserDatabaseDAO {
             try db.execute(sql: "DELETE FROM market_favored")
             try favoredMarkets.save(db)
             
-            if let completion {
-                db.afterNextTransaction { _ in
-                    completion()
+            db.afterNextTransaction { _ in
+                DispatchQueue.global().async {
+                    NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
                 }
             }
         }
+    }
+    
+    public func savePriceHistory(_ history: PriceHistoryStorage) {
+        db.save(history)
     }
     
     public func favorite(coinID: String, sendNotification: Bool) {

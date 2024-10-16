@@ -81,19 +81,17 @@ final class ExploreMarketViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        marketsRequester = MarketPeriodicRequester(category: .all) { [weak self] in
-            self?.reloadMarkets(changing: .all, overwrites: true)
-        }
-        favoritesRequester = MarketPeriodicRequester(category: .favorite) { [weak self] in
-            self?.reloadMarkets(changing: .favorite, overwrites: true)
-        }
+        reloadGlobalMarket(overwrites: false)
+        reloadMarketsFromLocal()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAll(_:)), name: Currency.currentCurrencyDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(propertiesDatabaseDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.favoriteNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.unfavoriteNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadMarketsFromLocal), name: MarketDAO.didUpdateNotification, object: nil)
         
-        reloadGlobalMarket(overwrites: false)
-        reloadMarkets(changing: nil, overwrites: false)
+        marketsRequester = MarketPeriodicRequester(category: .all)
+        favoritesRequester = MarketPeriodicRequester(category: .favorite)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,7 +109,7 @@ final class ExploreMarketViewController: UIViewController {
     
     @objc private func reloadAll(_ notification: Notification) {
         reloadGlobalMarket(overwrites: true)
-        reloadMarkets(changing: nil, overwrites: true)
+        reloadMarketsFromLocal()
     }
     
     @objc private func propertiesDatabaseDidUpdate(_ notification: Notification) {
@@ -128,32 +126,14 @@ final class ExploreMarketViewController: UIViewController {
         guard category == .favorite || markets.contains(where: { $0.coinID == coinID }) else {
             return
         }
-        reloadMarkets(changing: nil, overwrites: true)
+        reloadMarketsFromLocal()
     }
     
-    private func reloadGlobalMarket(overwrites: Bool) {
-        DispatchQueue.global().async { [weak self] in
-            guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
-                return
-            }
-            DispatchQueue.main.async {
-                guard let self, self.globalMarketViewModels.isEmpty || overwrites else {
-                    return
-                }
-                self.globalMarketViewModels = GlobalMarketViewModel.viewModels(market: market)
-                self.collectionView.reloadData()
-            }
-        }
-    }
-    
-    private func reloadMarkets(changing: Market.Category?, overwrites: Bool) {
+    @objc private func reloadMarketsFromLocal() {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self] in
-                self?.reloadMarkets(changing: changing, overwrites: overwrites)
+                self?.reloadMarketsFromLocal()
             }
-            return
-        }
-        guard changing == nil || self.category == changing else {
             return
         }
         DispatchQueue.global().async { [weak self, category, order, limit] in
@@ -161,7 +141,6 @@ final class ExploreMarketViewController: UIViewController {
             DispatchQueue.main.async {
                 guard
                     let self,
-                    self.markets.isEmpty || overwrites,
                     self.category == category,
                     self.order == order,
                     self.limit == limit
@@ -174,6 +153,21 @@ final class ExploreMarketViewController: UIViewController {
                 case .favorite:
                     self.favoriteMarkets = markets
                 }
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    
+    private func reloadGlobalMarket(overwrites: Bool) {
+        DispatchQueue.global().async { [weak self] in
+            guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let self, self.globalMarketViewModels.isEmpty || overwrites else {
+                    return
+                }
+                self.globalMarketViewModels = GlobalMarketViewModel.viewModels(market: market)
                 self.collectionView.reloadData()
             }
         }
@@ -285,12 +279,12 @@ extension ExploreMarketViewController: ExploreMarketHeaderView.Delegate {
     ) {
         self.category = category
         self.limit = limit
-        reloadMarkets(changing: nil, overwrites: true)
+        reloadMarketsFromLocal()
     }
     
     func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression) {
         self.order = order
-        reloadMarkets(changing: nil, overwrites: true)
+        reloadMarketsFromLocal()
     }
     
 }
@@ -412,18 +406,16 @@ extension ExploreMarketViewController {
     
     private final class MarketPeriodicRequester {
         
-        private static var lastReloadingDate: Date = .distantPast
-        
         private let category: Market.Category
         private let modelName: String
-        private let refreshInterval: TimeInterval = 5 * .minute
+        private let refreshInterval: TimeInterval = 30
         
         private var isRunning = false
-        private var onSuccess: (() -> Void)?
+        private var lastReloadingDate: Date = .distantPast
         
         private weak var timer: Timer?
         
-        init(category: Market.Category, onSuccess: @escaping () -> Void) {
+        init(category: Market.Category) {
             self.category = category
             self.modelName = switch category {
             case .all:
@@ -431,7 +423,6 @@ extension ExploreMarketViewController {
             case .favorite:
                 "favorites"
             }
-            self.onSuccess = onSuccess
         }
         
         func start() {
@@ -440,21 +431,19 @@ extension ExploreMarketViewController {
                 return
             }
             isRunning = true
-            let delay = Self.lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
+            let delay = lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
             if delay <= 0 {
-                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName) now")
+                Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) now")
                 requestData()
             } else {
-                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName) after \(delay)s")
-                timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
-                    self?.requestData()
-                }
+                Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) after \(delay)s")
+                scheduleNextRequestIfRunning(timeInterval: delay)
             }
         }
         
         func pause() {
             assert(Thread.isMainThread)
-            Logger.general.debug(category: "MarketPeriodicRequester", message: "Pause loading \(modelName)")
+            Logger.general.debug(category: "ExploreMarketRequester", message: "Pause loading \(modelName)")
             isRunning = false
             timer?.invalidate()
         }
@@ -462,41 +451,42 @@ extension ExploreMarketViewController {
         private func requestData() {
             assert(Thread.isMainThread)
             timer?.invalidate()
-            Logger.general.debug(category: "MarketPeriodicRequester", message: "Request \(modelName)")
+            Logger.general.debug(category: "ExploreMarketRequester", message: "Request \(modelName)")
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
-            RouteAPI.markets(category: category, queue: .global()) { [refreshInterval, category, modelName] result in
+            RouteAPI.markets(category: category, queue: .global()) { [weak self, refreshInterval, category, modelName] result in
                 switch result {
                 case let .success(markets):
                     switch category {
                     case .all:
-                        MarketDAO.shared.save(markets: markets) {
-                            DispatchQueue.main.async {
-                                self.onSuccess?()
-                            }
-                        }
+                        MarketDAO.shared.saveMarketsAndReplaceRanks(markets: markets)
                     case .favorite:
-                        MarketDAO.shared.saveFavoriteMarkets(markets: markets) {
-                            DispatchQueue.main.async {
-                                self.onSuccess?()
-                            }
-                        }
+                        MarketDAO.shared.replaceFavoriteMarkets(markets: markets)
                     }
-                    Logger.general.debug(category: "MarketPeriodicRequester", message: "Saved \(markets.count) \(modelName)")
+                    Logger.general.debug(category: "ExploreMarketRequester", message: "Saved \(markets.count) \(modelName)")
                     DispatchQueue.main.async {
-                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reload \(modelName) after \(refreshInterval)s")
-                        Self.lastReloadingDate = Date()
-                        self.timer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: false) { [weak self] _ in
-                            self?.requestData()
+                        Logger.general.debug(category: "ExploreMarketRequester", message: "Reload \(modelName) after \(refreshInterval)s")
+                        if let self {
+                            self.lastReloadingDate = Date()
+                            self.scheduleNextRequestIfRunning(timeInterval: refreshInterval)
                         }
                     }
                 case let .failure(error):
-                    Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName): \(error)")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        self.requestData()
+                    Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName): \(error)")
+                    DispatchQueue.main.async {
+                        self?.scheduleNextRequestIfRunning(timeInterval: 3)
                     }
                 }
+            }
+        }
+        
+        private func scheduleNextRequestIfRunning(timeInterval: TimeInterval) {
+            guard isRunning else {
+                return
+            }
+            timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [weak self] _ in
+                self?.requestData()
             }
         }
         

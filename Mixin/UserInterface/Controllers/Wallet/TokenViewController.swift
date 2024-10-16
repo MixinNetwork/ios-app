@@ -87,9 +87,10 @@ final class TokenViewController: UIViewController {
         center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishNotification, object: nil)
         reloadSnapshots()
         
-        let reloadMarketFromLocal = market.value == nil
+        center.addObserver(self, selector: #selector(reloadMarket(_:)), name: MarketDAO.didUpdateNotification, object: nil)
+        
         DispatchQueue.global().async { [id=token.assetID, weak self] in
-            if reloadMarketFromLocal, let market = MarketDAO.shared.market(assetID: id) {
+            if let market = MarketDAO.shared.market(assetID: id) {
                 DispatchQueue.main.sync {
                     self?.reloadMarket(result: .some(market))
                 }
@@ -179,6 +180,17 @@ final class TokenViewController: UIViewController {
     @objc private func inscriptionDidRefresh(_ notification: Notification) {
         // Not the best approach, but since inscriptions don’t refresh frequently, simply reload it.
         reloadSnapshots()
+    }
+    
+    @objc private func reloadMarket(_ notification: Notification) {
+        DispatchQueue.global().async { [id=token.assetID, weak self] in
+            guard let market = MarketDAO.shared.market(assetID: id) else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.reloadMarket(result: .some(market))
+            }
+        }
     }
     
 }

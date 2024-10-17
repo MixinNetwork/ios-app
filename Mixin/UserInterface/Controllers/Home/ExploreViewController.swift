@@ -47,6 +47,7 @@ final class ExploreViewController: UIViewController {
             toolbarClass: nil
         )
         navigationController.viewControllers = [searchViewController]
+        navigationController.searchNavigationBar.searchBoxView.textField.clearButtonMode = .always
         searchViewController.cancelButton.addTarget(
             self,
             action: #selector(cancelSearching(_:)),

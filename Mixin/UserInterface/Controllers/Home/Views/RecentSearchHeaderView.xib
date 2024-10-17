@@ -28,7 +28,7 @@
                     </constraints>
                     <color key="tintColor" name="text_tertiary"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                    <state key="normal" image="Conversation/ic_selection_action_delete"/>
+                    <state key="normal" image="Conversation/ic_action_delete"/>
                     <connections>
                         <action selector="sendAction:" destination="opv-l3-ZOQ" eventType="touchUpInside" id="STc-lG-qtj"/>
                     </connections>
@@ -49,7 +49,7 @@
         </collectionReusableView>
     </objects>
     <resources>
-        <image name="Conversation/ic_selection_action_delete" width="22" height="22"/>
+        <image name="Conversation/ic_action_delete" width="24" height="24"/>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

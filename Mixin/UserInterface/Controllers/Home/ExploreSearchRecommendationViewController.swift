@@ -27,10 +27,22 @@ final class ExploreSearchRecommendationViewController: UIViewController {
         collectionView.register(R.nib.recentSearchHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
         collectionView.dataSource = self
         collectionView.delegate = self
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: AppGroupUserDefaults.User.recentSearchesDidChangeNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: MarketDAO.didUpdateNotification,
+            object: nil
+        )
         reloadData()
     }
     
-    private func reloadData() {
+    @objc private func reloadData() {
         DispatchQueue.global().async {
             let searches = AppGroupUserDefaults.User.recentSearches
             let viewModels: [RecentSearchViewModel] = searches.compactMap { item in
@@ -47,6 +59,8 @@ final class ExploreSearchRecommendationViewController: UIViewController {
                     } else {
                         nil
                     }
+                case let .link(title, url):
+                        .link(title: title, url: url)
                 }
             }
             DispatchQueue.main.async {
@@ -77,7 +91,9 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDataSource 
             cell.tokenIconView.isHidden = true
             cell.avatarImageView.isHidden = false
         case .link:
-            break
+            cell.tokenIconView.image = R.image.recent_search_link()
+            cell.tokenIconView.isHidden = false
+            cell.avatarImageView.isHidden = true
         }
         cell.titleLabel.text = viewModel.title
         cell.subtitleLabel.text = viewModel.subtitle
@@ -114,8 +130,11 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDelegate {
             parent.pushMarketViewController(market: market)
         case let .user(item):
             parent.pushConversationViewController(userItem: item)
-        case .link:
-            break
+        case let .link(url):
+            if let home = UIApplication.homeContainerViewController?.homeTabBarController {
+                let context = MixinWebViewController.Context(conversationId: "", initialUrl: url, saveAsRecentSearch: true)
+                MixinWebViewController.presentInstance(with: context, asChildOf: home)
+            }
         }
     }
     
@@ -180,7 +199,7 @@ extension ExploreSearchRecommendationViewController {
             )
         }
         
-        static func link(url: URL, title: String) -> RecentSearchViewModel {
+        static func link(title: String, url: URL) -> RecentSearchViewModel {
             RecentSearchViewModel(
                 content: .link(url),
                 title: title,

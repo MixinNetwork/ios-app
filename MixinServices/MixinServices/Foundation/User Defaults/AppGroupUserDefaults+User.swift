@@ -329,6 +329,9 @@ extension AppGroupUserDefaults {
                 items.remove(at: index)
             }
             items.insert(data, at: 0)
+            if items.count > maxNumberOfRecentSearches {
+                items.removeLast(items.count - maxNumberOfRecentSearches)
+            }
             
             recentSearchItems = items
         }

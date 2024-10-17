@@ -93,7 +93,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     
     @objc private func searchKeyword(_ sender: Any) {
         guard let keyword = trimmedKeyword?.lowercased() else {
-            cancelSearchOperations()
+            queue.cancelAllOperations()
             quickAccess = nil
             lastKeyword = nil
             navigationSearchBoxView.isBusy = false
@@ -106,7 +106,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
             return
         }
         quickAccess?.cancelPreviousPerformRequest()
-        cancelSearchOperations()
+        queue.cancelAllOperations()
         navigationSearchBoxView.isBusy = true
         let limit = maxResultsCount + 1
         let op = BlockOperation()
@@ -141,10 +141,6 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
             }
         }
         queue.addOperation(op)
-    }
-    
-    private func cancelSearchOperations() {
-        queue.operations.forEach { $0.cancel() }
     }
     
     private func isSectionEmpty(_ section: Section) -> Bool {

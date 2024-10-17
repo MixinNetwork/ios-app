@@ -506,12 +506,14 @@ extension MixinWebViewController {
         guard !hasSavedAsRecentSearch else {
             return
         }
-        guard let title = webView.title, !title.isEmpty else {
+        guard var title = webView.title, !title.isEmpty else {
             return
         }
-        DispatchQueue.global().async {
-            
+        if title.count > 50 {
+            title = title.prefix(49) + "…"
         }
+        let item: RecentSearch = .link(title: title, url: context.initialUrl)
+        AppGroupUserDefaults.User.insertRecentSearch(item)
     }
     
     private func loadNormalUrl() {

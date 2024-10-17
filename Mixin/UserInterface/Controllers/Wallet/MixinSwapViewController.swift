@@ -301,16 +301,11 @@ extension MixinSwapViewController {
             }
             
             let swappableTokenItems = TokenDAO.shared.tokenItems(with: swappableAssetIDs)
-            let swappableTokensMap = swappableTokenItems.reduce(into: [:]) { result, item in
-                result[item.assetID] = item
-            }
             
-            let sendTokens = swappableAssetIDs.compactMap { id in
-                if let token = swappableTokensMap[id], token.decimalBalance > 0 {
-                    return token
-                } else {
-                    return nil
-                }
+            let sendTokens = swappableTokenItems.sorted { (one, another) in
+                let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
+                let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
+                return left > right
             }
             let sendToken = if let id = arbitrarySendAssetID, let token = sendTokens.first(where: { $0.assetID == id }) {
                 token
@@ -320,6 +315,9 @@ extension MixinSwapViewController {
                 })
             }
             
+            let swappableTokensMap = swappableTokenItems.reduce(into: [:]) { result, item in
+                result[item.assetID] = item
+            }
             let receiveTokens = swappableTokens.map { token in
                 if let item = swappableTokensMap[token.assetID] {
                     return BalancedSwappableToken(token: token, balance: item.decimalBalance, usdPrice: item.decimalUSDPrice)

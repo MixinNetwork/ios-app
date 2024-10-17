@@ -104,10 +104,12 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
     }
     
     @objc private func searchAction(_ sender: Any) {
-        cancelOperation()
+        queue.cancelAllOperations()
         guard let keyword = trimmedKeyword else {
             models = []
             tableView.reloadData()
+            tableView.tableHeaderView?.isHidden = true
+            tableView.removeEmptyIndicator()
             lastKeyword = nil
             navigationSearchBoxView.isBusy = false
             return
@@ -137,15 +139,17 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
                 }
                 self.models = models
                 self.tableView.reloadData()
+                self.tableView.checkEmpty(
+                    dataCount: models.count,
+                    text: R.string.localizable.no_results(),
+                    photo: R.image.emptyIndicator.ic_search_result()!
+                )
+                self.tableView.tableHeaderView?.isHidden = models.isEmpty
                 self.lastKeyword = keyword
                 self.navigationSearchBoxView?.isBusy = false
             }
         }
         queue.addOperation(op)
-    }
-    
-    private func cancelOperation() {
-        queue.cancelAllOperations()
     }
     
 }

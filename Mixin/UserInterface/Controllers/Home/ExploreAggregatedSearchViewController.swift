@@ -53,7 +53,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         navigationItem.title = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
         
-        let tableView = UITableView(frame: view.bounds, style: .plain)
+        let tableView = UITableView(frame: view.bounds, style: .grouped)
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         self.tableView = tableView

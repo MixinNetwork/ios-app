@@ -503,7 +503,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
 extension MixinWebViewController {
     
     private func saveAsRecentSearchIfNeeded() {
-        guard !hasSavedAsRecentSearch else {
+        guard !hasSavedAsRecentSearch && context.saveAsRecentSearch else {
             return
         }
         guard var title = webView.title, !title.isEmpty else {
@@ -514,6 +514,7 @@ extension MixinWebViewController {
         }
         let item: RecentSearch = .link(title: title, url: context.initialUrl)
         AppGroupUserDefaults.User.insertRecentSearch(item)
+        hasSavedAsRecentSearch = true
     }
     
     private func loadNormalUrl() {

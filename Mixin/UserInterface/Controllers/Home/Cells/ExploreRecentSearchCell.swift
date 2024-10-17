@@ -11,6 +11,11 @@ final class ExploreRecentSearchCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.borderWidth = 1
         updateBorderColor()
+        contentView.snp.makeConstraints { make in
+            // XXX: Otherwise it breaks out the layout width
+            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 40)
+        }
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
     }
     
     override func layoutSubviews() {

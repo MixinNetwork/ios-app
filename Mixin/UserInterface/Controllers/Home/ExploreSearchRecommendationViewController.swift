@@ -3,13 +3,31 @@ import MixinServices
 
 final class ExploreSearchRecommendationViewController: UIViewController {
     
-    private let layout = LeftAlignedCollectionViewFlowLayout()
-    
     private var viewModels: [RecentSearchViewModel] = []
     
     private weak var collectionView: UICollectionView!
     
     override func loadView() {
+        let layout = UICollectionViewCompositionalLayout { [weak self] section, environment in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(113), heightDimension: .estimated(48))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(48))
+            let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+            group.interItemSpacing = .fixed(16)
+            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+            let section = NSCollectionLayoutSection(group: group)
+            if let self, !self.viewModels.isEmpty {
+                section.boundarySupplementaryItems = [
+                    NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(56)),
+                        elementKind: UICollectionView.elementKindSectionHeader,
+                        alignment: .top
+                    )
+                ]
+            }
+            section.interGroupSpacing = 12
+            return section
+        }
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         self.collectionView = collectionView
         self.view = collectionView
@@ -17,9 +35,6 @@ final class ExploreSearchRecommendationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        layout.minimumInteritemSpacing = 16
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .onDrag
         collectionView.backgroundColor = R.color.background()
@@ -150,18 +165,6 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDelegate {
             }
         case let .dapp(app):
             parent?.presentDapp(app: app)
-        }
-    }
-    
-}
-
-extension ExploreSearchRecommendationViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if viewModels.isEmpty {
-            .zero
-        } else {
-            CGSize(width: collectionView.bounds.width, height: 56)
         }
     }
     

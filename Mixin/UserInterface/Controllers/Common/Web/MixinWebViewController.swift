@@ -83,6 +83,7 @@ class MixinWebViewController: WebViewController {
     
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
+    private var hasSavedAsRecentSearch = false
     
     private var web3ProviderScripts: [WKUserScript]? {
         let evmConfig: Script.EVMConfig? = {
@@ -501,12 +502,28 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
 
 extension MixinWebViewController {
     
+    private func saveAsRecentSearchIfNeeded() {
+        guard !hasSavedAsRecentSearch && context.saveAsRecentSearch else {
+            return
+        }
+        guard var title = webView.title, !title.isEmpty else {
+            return
+        }
+        if title.count > 50 {
+            title = title.prefix(49) + "…"
+        }
+        let item: RecentSearch = .link(title: title, url: context.initialUrl)
+        AppGroupUserDefaults.User.insertRecentSearch(item)
+        hasSavedAsRecentSearch = true
+    }
+    
     private func loadNormalUrl() {
         webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
-            guard let weakSelf = self, case .webPage = weakSelf.context.style else {
+            guard let self, case .webPage = self.context.style else {
                 return
             }
-            self?.titleLabel.text = webView.title
+            self.titleLabel.text = webView.title
+            self.saveAsRecentSearchIfNeeded()
         })
         loadURL(url: context.initialUrl, fraudulentWarning: .byWhitelist)
     }
@@ -921,7 +938,8 @@ extension MixinWebViewController {
         let conversationId: String
         let initialUrl: URL
         let isShareable: Bool?
-
+        let saveAsRecentSearch: Bool
+        
         var style: Style
         var isImmersive: Bool
         var extraParams: [String: String] = [:]
@@ -951,15 +969,17 @@ extension MixinWebViewController {
             }
             self.initialUrl = URL(string: app.homeUri) ?? .blank
             self.isShareable = shareable
+            self.saveAsRecentSearch = false
             self.style = .app(app: app, isHomeUrl: true)
             self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
             self.extraParams = extraParams
         }
         
-        init(conversationId: String, initialUrl: URL, shareable: Bool? = nil) {
+        init(conversationId: String, initialUrl: URL, shareable: Bool? = nil, saveAsRecentSearch: Bool = false) {
             self.conversationId = conversationId
             self.initialUrl = initialUrl
             self.isShareable = shareable
+            self.saveAsRecentSearch = saveAsRecentSearch
             self.style = .webPage
             self.isImmersive = false
         }
@@ -968,6 +988,7 @@ extension MixinWebViewController {
             self.conversationId = conversationId
             self.initialUrl = url
             self.isShareable = shareable
+            self.saveAsRecentSearch = false
             self.style = .app(app: app, isHomeUrl: false)
             self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }

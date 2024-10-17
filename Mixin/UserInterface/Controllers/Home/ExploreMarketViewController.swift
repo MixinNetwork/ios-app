@@ -218,7 +218,12 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
             cell.captionLabel.text = info.caption
             cell.primaryLabel.text = info.primary
             cell.secondaryLabel.text = info.secondary
-            cell.secondaryLabel.marketColor = info.secondaryColor
+            switch info.secondaryColor {
+            case .market(let color):
+                cell.secondaryLabel.marketColor = color
+            case .arbitrary(let color):
+                cell.secondaryLabel.textColor = color
+            }
             return cell
         case .coins:
             let markets = switch category {
@@ -362,10 +367,15 @@ extension ExploreMarketViewController {
     
     private struct GlobalMarketViewModel {
         
+        enum Color {
+            case market(MarketColor)
+            case arbitrary(UIColor)
+        }
+        
         let caption: String
         let primary: String?
         let secondary: String?
-        let secondaryColor: MarketColor
+        let secondaryColor: Color
         
         static func viewModels(market: GlobalMarket) -> [GlobalMarketViewModel] {
             [
@@ -378,7 +388,7 @@ extension ExploreMarketViewController {
                     secondary: NumberFormatter.percentage.string(
                         decimal: market.marketCapChangePercentage / 100
                     ),
-                    secondaryColor: .byValue(market.marketCapChangePercentage)
+                    secondaryColor: .market(.byValue(market.marketCapChangePercentage))
                 ),
                 GlobalMarketViewModel(
                     caption: R.string.localizable.volume_24h(),
@@ -389,7 +399,7 @@ extension ExploreMarketViewController {
                     secondary: NumberFormatter.percentage.string(
                         decimal: market.volumeChangePercentage / 100
                     ),
-                    secondaryColor: .byValue(market.volumeChangePercentage)
+                    secondaryColor: .market(.byValue(market.volumeChangePercentage))
                 ),
                 GlobalMarketViewModel(
                     caption: R.string.localizable.dominance(),

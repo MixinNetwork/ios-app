@@ -28,7 +28,7 @@ final class PlainTokenIconView: UIImageView {
     
     func setIcon(web3Token token: Web3Token) {
         if let url = URL(string: token.iconURL) {
-            setIcon(tokenIconURL: URL(string: token.iconURL))
+            setIcon(tokenIconURL: url)
         } else {
             image = R.image.unknown_session()
         }
@@ -36,7 +36,7 @@ final class PlainTokenIconView: UIImageView {
     
     func setIcon(token: SwappableToken) {
         if let url = token.iconURL {
-            setIcon(tokenIconURL: token.iconURL)
+            setIcon(tokenIconURL: url)
         } else {
             image = R.image.unknown_session()
         }

@@ -111,6 +111,21 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: ["escaped": "%\(keyword.sqlEscaped)%", "raw": keyword])
     }
     
+    public func getAppUsers(keyword: String, limit: Int?) -> [UserItem] {
+        var sql = """
+        \(Self.sqlQueryColumns)
+        WHERE u.relationship = 'FRIEND'
+            AND u.app_id IS NOT NULL
+            AND u.identity_number > '0'
+            AND ((u.full_name LIKE :escaped ESCAPE '/') OR (u.identity_number LIKE :escaped ESCAPE '/') OR (u.phone LIKE :escaped ESCAPE '/'))
+        ORDER BY u.identity_number = :raw COLLATE NOCASE OR u.full_name = :raw COLLATE NOCASE DESC
+        """
+        if let limit = limit {
+            sql += "\nLIMIT \(limit)"
+        }
+        return db.select(with: sql, arguments: ["escaped": "%\(keyword.sqlEscaped)%", "raw": keyword])
+    }
+    
     public func getFriendUser(withAppId id: String) -> User? {
         let condition: SQLSpecificExpressible = User.column(of: .appId) == id
             && User.column(of: .relationship) == Relationship.FRIEND.rawValue

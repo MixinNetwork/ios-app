@@ -512,7 +512,12 @@ extension MarketViewController: UITableViewDataSource {
                     cell.periodLabel.text = balance.period
                     cell.valueLabel.text = balance.value
                     cell.changeLabel.text = balance.change
-                    cell.changeLabel.marketColor = balance.changeColor
+                    switch balance.changeColor {
+                    case .market(let color):
+                        cell.changeLabel.marketColor = color
+                    case .arbitrary(let color):
+                        cell.changeLabel.textColor = color
+                    }
                 }
                 return cell
             }
@@ -933,13 +938,18 @@ extension MarketViewController {
         
         struct Balance {
             
+            enum Color {
+                case market(MarketColor)
+                case arbitrary(UIColor)
+            }
+            
             let balance: String
             let period: String
             let value: String
             let change: String
-            let changeColor: MarketColor
+            let changeColor: Color
             
-            init(balance: String, period: String, value: String, change: String, changeColor: MarketColor) {
+            init(balance: String, period: String, value: String, change: String, changeColor: Color) {
                 self.balance = balance
                 self.period = period
                 self.value = value
@@ -947,7 +957,7 @@ extension MarketViewController {
                 self.changeColor = changeColor
             }
             
-            func replacing(change: String, changeColor: MarketColor) -> Balance {
+            func replacing(change: String, changeColor: Color) -> Balance {
                 Balance(
                     balance: self.balance,
                     period: self.period,
@@ -1039,9 +1049,8 @@ extension MarketViewController {
                 }
                 
                 var change: String
-                let changeColor: MarketColor
+                let changeColor: Balance.Color
                 if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
-                    changeColor = .byValue(priceChange24H)
                     change = CurrencyFormatter.localizedString(
                         from: priceChange24H * balance * Currency.current.decimalRate,
                         format: .fiatMoneyPrice,
@@ -1053,6 +1062,7 @@ extension MarketViewController {
                     {
                         change += " (\(percent))"
                     }
+                    changeColor = .market(.byValue(priceChange24H))
                 } else {
                     change = ""
                     changeColor = .arbitrary(.clear)

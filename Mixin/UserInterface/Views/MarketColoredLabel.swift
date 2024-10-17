@@ -3,6 +3,12 @@ import MixinServices
 
 final class MarketColoredLabel: InsetLabel {
     
+    override var textColor: UIColor! {
+        willSet {
+            marketColor = nil
+        }
+    }
+    
     var marketColor: MarketColor? {
         didSet {
             reloadTextColor()

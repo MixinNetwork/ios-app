@@ -16,7 +16,7 @@ final class Web3BrowserViewController: UIViewController {
     
     init(kind: Web3Chain.Kind) {
         self.kind = kind
-        let nib = R.nib.exploreSearchView
+        let nib = R.nib.web3BrowserView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
@@ -40,7 +40,7 @@ final class Web3BrowserViewController: UIViewController {
     
     @IBAction func cancelSearching(_ sender: Any) {
         searchBoxView.textField.resignFirstResponder()
-        (parent as? ExploreViewController)?.dismissSearch()
+        (parent as? ExploreViewController)?.cancelSearching(sender)
     }
     
     @objc private func searchKeyword(_ sender: Any) {
@@ -105,9 +105,7 @@ extension Web3BrowserViewController: UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_dapp, for: indexPath)!
             let result = searchResults[indexPath.row]
-            cell.iconImageView.sd_setImage(with: result.iconURL)
-            cell.nameLabel.text = result.name
-            cell.hostLabel.text = result.host
+            cell.load(dapp: result)
             return cell
         }
     }

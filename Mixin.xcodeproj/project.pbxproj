@@ -802,7 +802,6 @@
 		943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */; };
 		943B5EAB2B600D77001C1F6E /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943B5EAA2B600D77001C1F6E /* AppCell.swift */; };
 		943BC65D2BCD1BAF003FA778 /* QuickAccessResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC65C2BCD1BAF003FA778 /* QuickAccessResultCell.xib */; };
-		943BC6632BCD1FF4003FA778 /* Web3BrowserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC6622BCD1FF4003FA778 /* Web3BrowserView.xib */; };
 		943BC6642BCD1FF4003FA778 /* Web3BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC6612BCD1FF4003FA778 /* Web3BrowserViewController.swift */; };
 		943BC66F2BCD7227003FA778 /* Web3NoAssetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC66E2BCD7227003FA778 /* Web3NoAssetView.xib */; };
 		943BC6782BCE99BC003FA778 /* CollectiblesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */; };
@@ -822,6 +821,7 @@
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
+		9447A7362CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */; };
 		944A5A722C2604F70021460C /* CollectibleCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */; };
 		944A5A772C2605720021460C /* CollectibleCollectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */; };
 		944A5A7C2C260D220021460C /* CollectibleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944A5A7B2C260D220021460C /* CollectibleCollectionViewController.swift */; };
@@ -942,6 +942,13 @@
 		946B9FBC2B0493E800DB4DC1 /* WalletHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */; };
 		946C9CC72BCAA2CB00407203 /* Web3AccountHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946C9CC62BCAA2CB00407203 /* Web3AccountHeaderView.xib */; };
 		946C9CCC2BCAA5C300407203 /* Web3AccountHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946C9CCB2BCAA5C300407203 /* Web3AccountHeaderView.swift */; };
+		946E055A2CBE52FF004B264E /* ExploreRecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */; };
+		946E055B2CBE52FF004B264E /* ExploreRecentSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */; };
+		946E05732CBE7CFB004B264E /* MarketCoinCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05712CBE7CFB004B264E /* MarketCoinCell.swift */; };
+		946E05742CBE7CFB004B264E /* MarketCoinCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E05722CBE7CFB004B264E /* MarketCoinCell.xib */; };
+		946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */; };
+		946E059D2CBFD846004B264E /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05992CBFD841004B264E /* ExploreSearchViewController.swift */; };
+		946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */; };
 		946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */; };
 		946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
@@ -1010,8 +1017,8 @@
 		94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */; };
 		94B0B7462BECD4DE00346AF4 /* CollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */; };
 		94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */; };
-		94B13FC22B5ED5F9001333BE /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */; };
-		94B13FC32B5ED5F9001333BE /* ExploreSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */; };
+		94B13FC22B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */; };
+		94B13FC32B5ED5F9001333BE /* Web3BrowserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B13FC12B5ED5F9001333BE /* Web3BrowserView.xib */; };
 		94B1E5582C4920C800A2349F /* Web3SwapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B1E5572C4920C800A2349F /* Web3SwapViewController.swift */; };
 		94B1E55D2C49222100A2349F /* MixinSwapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */; };
 		94B1E56B2C4A05BF00A2349F /* SwapAssetChangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B1E56A2C4A05BF00A2349F /* SwapAssetChangeCell.xib */; };
@@ -1100,6 +1107,8 @@
 		94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */; };
 		94D72C1F27A293CE00E328F0 /* PINAPITestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */; };
 		94D72C2127A2944600E328F0 /* PINAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C2027A2944600E328F0 /* PINAPITest.swift */; };
+		94D7E8532CC025420020BC24 /* RecentSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D7E8522CC025360020BC24 /* RecentSearchHeaderView.swift */; };
+		94D7E8582CC025760020BC24 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D7E8572CC025760020BC24 /* RecentSearchHeaderView.xib */; };
 		94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */; };
 		94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */; };
 		94D9DF5C25F889C600FC2F28 /* BulletinContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */; };
@@ -2209,7 +2218,6 @@
 		943B5EAA2B600D77001C1F6E /* AppCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		943BC65C2BCD1BAF003FA778 /* QuickAccessResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QuickAccessResultCell.xib; sourceTree = "<group>"; };
 		943BC6612BCD1FF4003FA778 /* Web3BrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3BrowserViewController.swift; sourceTree = "<group>"; };
-		943BC6622BCD1FF4003FA778 /* Web3BrowserView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3BrowserView.xib; sourceTree = "<group>"; };
 		943BC66E2BCD7227003FA778 /* Web3NoAssetView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3NoAssetView.xib; sourceTree = "<group>"; };
 		943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectiblesViewController.swift; sourceTree = "<group>"; };
 		943BC6792BCE9A17003FA778 /* CollectiblesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectiblesView.xib; sourceTree = "<group>"; };
@@ -2228,6 +2236,7 @@
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
 		94463C52298D690F00E63547 /* AuthenticationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureView.swift; sourceTree = "<group>"; };
+		9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchRecommendationViewController.swift; sourceTree = "<group>"; };
 		944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCollectionHeaderView.swift; sourceTree = "<group>"; };
 		944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectibleCollectionHeaderView.xib; sourceTree = "<group>"; };
 		944A5A7B2C260D220021460C /* CollectibleCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCollectionViewController.swift; sourceTree = "<group>"; };
@@ -2365,6 +2374,13 @@
 		946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHintView.xib; sourceTree = "<group>"; };
 		946C9CC62BCAA2CB00407203 /* Web3AccountHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AccountHeaderView.xib; sourceTree = "<group>"; };
 		946C9CCB2BCAA5C300407203 /* Web3AccountHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AccountHeaderView.swift; sourceTree = "<group>"; };
+		946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreRecentSearchCell.swift; sourceTree = "<group>"; };
+		946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreRecentSearchCell.xib; sourceTree = "<group>"; };
+		946E05712CBE7CFB004B264E /* MarketCoinCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketCoinCell.swift; sourceTree = "<group>"; };
+		946E05722CBE7CFB004B264E /* MarketCoinCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketCoinCell.xib; sourceTree = "<group>"; };
+		946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchCategoryViewController.swift; sourceTree = "<group>"; };
+		946E05992CBFD841004B264E /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
+		946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationControllerChild.swift; sourceTree = "<group>"; };
 		946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverRawTransactionJob.swift; sourceTree = "<group>"; };
 		946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationProgressView.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
@@ -2428,8 +2444,8 @@
 		94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonsViewModel.swift; sourceTree = "<group>"; };
 		94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCell.swift; sourceTree = "<group>"; };
 		94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectibleCell.xib; sourceTree = "<group>"; };
-		94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
-		94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreSearchView.xib; sourceTree = "<group>"; };
+		94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAggregatedSearchViewController.swift; sourceTree = "<group>"; };
+		94B13FC12B5ED5F9001333BE /* Web3BrowserView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3BrowserView.xib; sourceTree = "<group>"; };
 		94B1E5572C4920C800A2349F /* Web3SwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SwapViewController.swift; sourceTree = "<group>"; };
 		94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSwapViewController.swift; sourceTree = "<group>"; };
 		94B1E5692C4A05BF00A2349F /* SwapAssetChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapAssetChangeCell.swift; sourceTree = "<group>"; };
@@ -2518,6 +2534,8 @@
 		94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelFactory.swift; sourceTree = "<group>"; };
 		94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITestView.swift; sourceTree = "<group>"; };
 		94D72C2027A2944600E328F0 /* PINAPITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITest.swift; sourceTree = "<group>"; };
+		94D7E8522CC025360020BC24 /* RecentSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchHeaderView.swift; sourceTree = "<group>"; };
+		94D7E8572CC025760020BC24 /* RecentSearchHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchHeaderView.xib; sourceTree = "<group>"; };
 		94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContentView.swift; sourceTree = "<group>"; };
 		94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BulletinContentView.xib; sourceTree = "<group>"; };
@@ -3267,6 +3285,8 @@
 				94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */,
 				943BC66E2BCD7227003FA778 /* Web3NoAssetView.xib */,
 				94619F1E2C8DA6CA00C58829 /* GradientView.swift */,
+				94D7E8572CC025760020BC24 /* RecentSearchHeaderView.xib */,
+				94D7E8522CC025360020BC24 /* RecentSearchHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3928,7 +3948,7 @@
 				943BC7002BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift */,
 				9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */,
 				9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */,
-				943BC6622BCD1FF4003FA778 /* Web3BrowserView.xib */,
+				94B13FC12B5ED5F9001333BE /* Web3BrowserView.xib */,
 				943BC6612BCD1FF4003FA778 /* Web3BrowserViewController.swift */,
 				94350E362BCFE8C5007283B7 /* InputAmountView.xib */,
 				94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */,
@@ -4463,6 +4483,7 @@
 				94B61EC22B344A7A00BD39AF /* HomeTabBarController.swift */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
 				7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */,
+				946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */,
 				7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */,
 				946575AE2BC9672800C4C4F4 /* QuickAccessSearchResult.swift */,
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
@@ -4485,8 +4506,10 @@
 				94B5776E2B5E555B00AE576E /* ExploreView.xib */,
 				94B577692B5E554800AE576E /* ExploreViewController.swift */,
 				94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */,
-				94B13FC12B5ED5F9001333BE /* ExploreSearchView.xib */,
-				94B13FC02B5ED5F9001333BE /* ExploreSearchViewController.swift */,
+				946E05992CBFD841004B264E /* ExploreSearchViewController.swift */,
+				94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */,
+				9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */,
+				946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */,
 				944BC2D72C7DAFEA008700A8 /* ExploreMarketViewController.swift */,
 				940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */,
 				940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */,
@@ -4923,6 +4946,10 @@
 				944BC2EC2C7E17BA008700A8 /* ExploreMarketTokenCell.xib */,
 				944BC2EB2C7E17BA008700A8 /* ExploreMarketTokenCell.swift */,
 				9464B2752C81DFBB00588EE6 /* WatchlistEmptyCell.xib */,
+				946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */,
+				946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */,
+				946E05722CBE7CFB004B264E /* MarketCoinCell.xib */,
+				946E05712CBE7CFB004B264E /* MarketCoinCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -5299,6 +5326,7 @@
 				940EE2982C9DDD24001A52FA /* MarketAlertItemView.xib in Resources */,
 				9401A6082BDAA74A00679686 /* Web3AccountCell.xib in Resources */,
 				94C359F728B506D40010F53C /* TIPFullscreenInputView.xib in Resources */,
+				946E055B2CBE52FF004B264E /* ExploreRecentSearchCell.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */,
 				947EFA932B9AEAF600A53551 /* TokenTableHeaderView.xib in Resources */,
@@ -5384,12 +5412,11 @@
 				944C61022B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib in Resources */,
 				94D0FF362BEB1BD700E3947F /* InscriptionContentView.xib in Resources */,
 				94CF1F3F2BA1EC0400BC52C1 /* Web3DappCell.xib in Resources */,
-				943BC6632BCD1FF4003FA778 /* Web3BrowserView.xib in Resources */,
 				7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
 				52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
-				94B13FC32B5ED5F9001333BE /* ExploreSearchView.xib in Resources */,
+				94B13FC32B5ED5F9001333BE /* Web3BrowserView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
@@ -5400,6 +5427,7 @@
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */,
+				946E05742CBE7CFB004B264E /* MarketCoinCell.xib in Resources */,
 				7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */,
 				94F2375D2C691D5C0057D1AB /* TokenPriceChartCell.xib in Resources */,
 				944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */,
@@ -5408,6 +5436,7 @@
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
 				941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */,
 				940D10B52C5CC3380071E36D /* NoTransactionIndicatorCell.xib in Resources */,
+				94D7E8582CC025760020BC24 /* RecentSearchHeaderView.xib in Resources */,
 				94CD47162BECACED00A3DE10 /* InscriptionActionCell.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* captcha.html in Resources */,
 				7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */,
@@ -5906,6 +5935,7 @@
 				7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */,
 				9412AF4E2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
+				94D7E8532CC025420020BC24 /* RecentSearchHeaderView.swift in Sources */,
 				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */,
@@ -5919,6 +5949,7 @@
 				941979562BA47782002BA19F /* Web3MessageCell.swift in Sources */,
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
+				946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */,
 				9415D4A32BCBEF6800C78A75 /* Web3DepositViewController.swift in Sources */,
@@ -5941,6 +5972,7 @@
 				94CD47172BECACED00A3DE10 /* InscriptionActionCell.swift in Sources */,
 				94C199732A1CA9430098EDB3 /* DeviceTransferError.swift in Sources */,
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
+				946E059D2CBFD846004B264E /* ExploreSearchViewController.swift in Sources */,
 				9401A57C2BD960F600679686 /* Web3Chain.swift in Sources */,
 				7C54078F296BDD7B0082368C /* FontSizeSlider.swift in Sources */,
 				7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */,
@@ -6044,6 +6076,7 @@
 				94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */,
 				94960DA42C929D3C00FB17E2 /* MarketAlertViewController.swift in Sources */,
 				7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */,
+				946E055A2CBE52FF004B264E /* ExploreRecentSearchCell.swift in Sources */,
 				94D0FF312BEB1BC900E3947F /* InscriptionContentView.swift in Sources */,
 				E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */,
 				7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */,
@@ -6348,6 +6381,7 @@
 				7CFC1C8A29E78DBE00A290D5 /* RestoreFromCloudViewController.swift in Sources */,
 				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
+				946E05732CBE7CFB004B264E /* MarketCoinCell.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
 				948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */,
 				942D90F02B05F8FE00E81358 /* WithdrawFeeCell.swift in Sources */,
@@ -6517,6 +6551,7 @@
 				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7CEB736829DBCE44006FB5B2 /* DeviceTransferPinMessage.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
+				946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */,
 				DFC0ECFA23BB610C0091E7AC /* GiphyAPI.swift in Sources */,
 				944A5A722C2604F70021460C /* CollectibleCollectionHeaderView.swift in Sources */,
 				94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */,
@@ -6680,6 +6715,7 @@
 				94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */,
 				940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
+				9447A7362CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
 				7BEB97182366CF42002DB190 /* MessageFontSet.swift in Sources */,
@@ -6722,7 +6758,7 @@
 				94A40C472B2781AF0028BC02 /* TransferPaymentOperation.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
-				94B13FC22B5ED5F9001333BE /* ExploreSearchViewController.swift in Sources */,
+				94B13FC22B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift in Sources */,
 				7B66AC072428D72000869DBD /* PostWebViewController.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
 				6001E88C2B0B7140006A053A /* DeviceTransferToken.swift in Sources */,

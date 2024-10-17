@@ -49,18 +49,29 @@ final class ExploreSearchRecommendationViewController: UIViewController {
                 switch item {
                 case let .market(coinID):
                     if let market = MarketDAO.shared.market(coinID: coinID) {
-                        .market(market)
+                       return .market(market)
                     } else {
-                        nil
+                        return nil
                     }
                 case let .app(userID):
                     if let item = UserDAO.shared.getUser(userId: userID) {
-                        .user(item)
+                        return .user(item)
                     } else {
-                        nil
+                        return nil
                     }
                 case let .link(title, url):
-                        .link(title: title, url: url)
+                    return .link(title: title, url: url)
+                case let .dapp(name):
+                    let dapp = DispatchQueue.main.sync {
+                        Web3Chain.all.flatMap(\.dapps)
+                    }.first { dapp in
+                        dapp.name == name
+                    }
+                    if let dapp {
+                        return .dapp(app: dapp)
+                    } else {
+                        return nil
+                    }
                 }
             }
             DispatchQueue.main.async {
@@ -94,6 +105,10 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDataSource 
             cell.tokenIconView.image = R.image.recent_search_link()
             cell.tokenIconView.isHidden = false
             cell.avatarImageView.isHidden = true
+        case let .dapp(app):
+            cell.tokenIconView.sd_setImage(with: app.iconURL)
+            cell.tokenIconView.isHidden = false
+            cell.avatarImageView.isHidden = true
         }
         cell.titleLabel.text = viewModel.title
         cell.subtitleLabel.text = viewModel.subtitle
@@ -121,20 +136,20 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        guard let parent = parent as? ExploreAggregatedSearchViewController else {
-            return
-        }
+        let parent = parent as? ExploreAggregatedSearchViewController
         let viewModel = viewModels[indexPath.item]
         switch viewModel.content {
         case let .market(market):
-            parent.pushMarketViewController(market: market)
+            parent?.pushMarketViewController(market: market)
         case let .user(item):
-            parent.pushConversationViewController(userItem: item)
+            parent?.pushConversationViewController(userItem: item)
         case let .link(url):
             if let home = UIApplication.homeContainerViewController?.homeTabBarController {
                 let context = MixinWebViewController.Context(conversationId: "", initialUrl: url, saveAsRecentSearch: true)
                 MixinWebViewController.presentInstance(with: context, asChildOf: home)
             }
+        case let .dapp(app):
+            parent?.presentDapp(app: app)
         }
     }
     
@@ -174,6 +189,7 @@ extension ExploreSearchRecommendationViewController {
             case market(FavorableMarket)
             case user(UserItem)
             case link(URL)
+            case dapp(Web3Dapp)
         }
         
         let content: Content
@@ -204,6 +220,15 @@ extension ExploreSearchRecommendationViewController {
                 content: .link(url),
                 title: title,
                 subtitle: url.host ?? url.absoluteString,
+                subtitleColor: nil
+            )
+        }
+        
+        static func dapp(app: Web3Dapp) -> RecentSearchViewModel {
+            RecentSearchViewModel(
+                content: .dapp(app),
+                title: app.name,
+                subtitle: app.host,
                 subtitleColor: nil
             )
         }

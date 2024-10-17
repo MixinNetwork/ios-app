@@ -37,4 +37,13 @@ extension ExploreSearchViewController where Self: UIViewController {
         AppGroupUserDefaults.User.insertRecentSearch(.app(userID: userItem.userId))
     }
     
+    func presentDapp(app: Web3Dapp) {
+        guard let container = UIApplication.homeContainerViewController?.homeTabBarController else {
+            return
+        }
+        let context = MixinWebViewController.Context(conversationId: "", initialUrl: app.homeURL)
+        MixinWebViewController.presentInstance(with: context, asChildOf: container)
+        AppGroupUserDefaults.User.insertRecentSearch(.dapp(name: app.name))
+    }
+    
 }

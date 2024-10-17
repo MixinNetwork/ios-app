@@ -105,9 +105,7 @@ extension Web3BrowserViewController: UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_dapp, for: indexPath)!
             let result = searchResults[indexPath.row]
-            cell.iconImageView.sd_setImage(with: result.iconURL)
-            cell.nameLabel.text = result.name
-            cell.hostLabel.text = result.host
+            cell.load(dapp: result)
             return cell
         }
     }

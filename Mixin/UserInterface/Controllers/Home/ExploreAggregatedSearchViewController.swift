@@ -8,6 +8,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         case quickAccess
         case asset
         case bot
+        case dapp
     }
     
     private enum ReuseId {
@@ -35,6 +36,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     private var quickAccess: QuickAccessSearchResult?
     private var assetSearchResults: [FavorableMarket] = []
     private var botSearchResults: [UserSearchResult] = []
+    private var dappSearchResults: [Web3Dapp] = []
     private var lastKeyword: String?
     
     init() {
@@ -64,6 +66,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         tableView.register(R.nib.quickAccessResultCell)
         tableView.register(R.nib.marketCoinCell)
         tableView.register(R.nib.peerCell)
+        tableView.register(R.nib.web3DappCell)
         tableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         tableView.dataSource = self
         tableView.delegate = self
@@ -119,9 +122,22 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
             let assetSearchResults = MarketDAO.shared.markets(keyword: keyword, limit: limit)
             let botSearchResults = UserDAO.shared.getAppUsers(keyword: keyword, limit: limit)
                 .map { user in UserSearchResult(user: user, keyword: keyword) }
+            let dappSearchResults: [Web3Dapp]
+            if keyword.count < 3 {
+                dappSearchResults = []
+            } else {
+                let dapps = DispatchQueue.main.sync {
+                    Web3Chain.all.flatMap(\.dapps)
+                }
+                let uniqueDapps = Array(Set(dapps))
+                dappSearchResults = uniqueDapps.filter { dapp in
+                    dapp.matches(keyword: keyword)
+                }
+            }
             let dataCount = (quickAccess == nil ? 0 : 1)
             + assetSearchResults.count
             + botSearchResults.count
+            + dappSearchResults.count
             DispatchQueue.main.sync {
                 guard !op.isCancelled else {
                     return
@@ -130,6 +146,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
                 self.lastKeyword = keyword
                 self.assetSearchResults = assetSearchResults
                 self.botSearchResults = botSearchResults
+                self.dappSearchResults = dappSearchResults
                 self.tableView.reloadData()
                 self.tableView.checkEmpty(
                     dataCount: dataCount,
@@ -151,6 +168,8 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
             assetSearchResults.isEmpty
         case .bot:
             botSearchResults.isEmpty
+        case .dapp:
+            dappSearchResults.isEmpty
         }
     }
     
@@ -162,7 +181,22 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         case .asset:
             !showTopResult
         case .bot:
-            !showTopResult && botSearchResults.isEmpty
+            !showTopResult && assetSearchResults.isEmpty
+        case .dapp:
+            !showTopResult && assetSearchResults.isEmpty && botSearchResults.isEmpty
+        }
+    }
+    
+    private func showsFooter(section: Section) -> Bool {
+        switch section {
+        case .quickAccess:
+            false
+        case .asset:
+            !assetSearchResults.isEmpty && !botSearchResults.isEmpty
+        case .bot:
+            !botSearchResults.isEmpty && !dappSearchResults.isEmpty
+        case .dapp:
+            false
         }
     }
     
@@ -178,6 +212,8 @@ extension ExploreAggregatedSearchViewController: UITableViewDataSource {
             min(maxResultsCount, assetSearchResults.count)
         case .bot:
             min(maxResultsCount, botSearchResults.count)
+        case .dapp:
+            dappSearchResults.count
         }
     }
     
@@ -198,6 +234,11 @@ extension ExploreAggregatedSearchViewController: UITableViewDataSource {
             let result = botSearchResults[indexPath.row]
             cell.render(result: result)
             cell.peerInfoView.avatarImageView.hasShadow = false
+            return cell
+        case .dapp:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_dapp, for: indexPath)!
+            let result = dappSearchResults[indexPath.row]
+            cell.load(dapp: result)
             return cell
         }
     }
@@ -224,7 +265,7 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
         return switch section {
         case .quickAccess:
             .leastNormalMagnitude
-        case .asset, .bot:
+        case .asset, .bot, .dapp:
             if isSectionEmpty(section) {
                 .leastNormalMagnitude
             } else {
@@ -235,11 +276,10 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         let section = Section(rawValue: section)!
-        return switch section {
-        case .quickAccess, .bot:
+        return if showsFooter(section: section) {
+            SearchFooterView.height
+        } else {
             .leastNormalMagnitude
-        case .asset:
-            isSectionEmpty(section) ? .leastNormalMagnitude : SearchFooterView.height
         }
     }
     
@@ -264,23 +304,23 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
                 view.label.text = R.string.localizable.bots_title()
                 view.button.isHidden = botSearchResults.count <= maxResultsCount
                 return view
+            case .dapp:
+                view.label.text = "dApps"
+                view.button.isHidden = true
+                return view
             }
         }
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let section = Section(rawValue: section)!
-        switch section {
-        case .quickAccess, .bot:
+        if showsFooter(section: section) {
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SearchFooterView
+            view.shadowView.backgroundColor = R.color.background_secondary()
+            view.tag = section.rawValue
+            return view
+        } else {
             return nil
-        case .asset:
-            if isSectionEmpty(section) {
-                return nil
-            } else {
-                let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SearchFooterView
-                view.shadowView.backgroundColor = R.color.background_secondary()
-                return view
-            }
         }
     }
     
@@ -301,6 +341,9 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
         case .bot:
             let item = botSearchResults[indexPath.row]
             pushConversationViewController(userItem: item.user)
+        case .dapp:
+            let app = dappSearchResults[indexPath.row]
+            presentDapp(app: app)
         }
     }
     
@@ -321,6 +364,8 @@ extension ExploreAggregatedSearchViewController: SearchHeaderViewDelegate {
             viewController = .init(category: .asset)
         case .bot:
             viewController = .init(category: .bot)
+        case .dapp:
+            return
         }
         searchNavigationController?.pushViewController(viewController, animated: true)
     }

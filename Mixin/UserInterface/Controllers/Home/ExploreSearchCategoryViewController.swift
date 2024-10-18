@@ -8,10 +8,6 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         case bot
     }
     
-    private enum ReuseId {
-        static let header = "header"
-    }
-    
     let cancelButton = SearchCancelButton()
     
     var wantsNavigationSearchBox: Bool {

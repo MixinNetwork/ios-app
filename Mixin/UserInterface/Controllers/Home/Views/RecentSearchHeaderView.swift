@@ -14,7 +14,7 @@ final class RecentSearchHeaderView: UICollectionReusableView {
     override func awakeFromNib() {
         super.awakeFromNib()
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        label.text = "Recent Searches"
+        label.text = R.string.localizable.recent_searches()
     }
     
     @IBAction func sendAction(_ sender: Any) {

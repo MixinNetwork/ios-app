@@ -2,6 +2,7 @@ import Foundation
 import AppCenter
 import AppCenterAnalytics
 import AppCenterCrashes
+import AppsFlyerLib
 
 open class Reporter {
     
@@ -39,11 +40,18 @@ open class Reporter {
     }
 
     open func configure() {
-        guard let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any], let key = keys["AppCenter"] as? String else {
+        guard let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any] else {
             return
         }
         
-        AppCenter.start(withAppSecret: key, services: [Analytics.self, Crashes.self])
+        if let appCenterKey = keys["AppCenter"] as? String {
+            AppCenter.start(withAppSecret: appCenterKey, services: [Analytics.self, Crashes.self])
+        }
+        
+        if let appsFlyerKeys = keys["AppCenter"] as? [String: String], let appID = appsFlyerKeys["AppID"], let devKey = appsFlyerKeys["DevKey"] {
+            AppsFlyerLib.shared().appsFlyerDevKey = devKey
+            AppsFlyerLib.shared().appleAppID = appID
+        }
         
         if !isAppExtension, Crashes.hasCrashedInLastSession, let report = Crashes.lastSessionCrashReport {
             Logger.general.info(category: "LastCrash", message: "Signal: \(report.signal), exception: \(report.exceptionName ?? "(null)"), reason: \(report.exceptionReason ?? "(null)")")
@@ -55,6 +63,8 @@ open class Reporter {
             return
         }
         AppCenter.userId = account.userID
+        
+        AppsFlyerLib.shared().customerUserID = account.userID
     }
     
     open func report(event: Event, userInfo: UserInfo? = nil) {

@@ -34,6 +34,7 @@ Mixin Core Services.
   s.dependency 'SocketRocket'
   s.dependency 'GRDB.swift'
   s.dependency 'Sodium'
+  s.dependency 'AppsFlyerFramework'
 
   s.test_spec 'Tests' do |tests|
     tests.source_files = 'MixinServicesTests/**/*'

@@ -16,8 +16,6 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         static let footer = "f"
     }
     
-    let cancelButton = SearchCancelButton()
-    
     weak var tableView: UITableView!
     
     var wantsNavigationSearchBox: Bool {
@@ -28,6 +26,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         UIEdgeInsets(top: 0, left: 20, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
     }
     
+    private let cancelButton = SearchCancelButton()
     private let queue = OperationQueue()
     private let recommendationViewController = ExploreSearchRecommendationViewController()
     private let maxResultsCount = 3
@@ -52,6 +51,13 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         
         navigationItem.title = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        if let exploreViewController {
+            cancelButton.addTarget(
+                exploreViewController,
+                action: #selector(ExploreViewController.cancelSearching(_:)),
+                for: .touchUpInside
+            )
+        }
         
         let tableView = UITableView(frame: view.bounds, style: .grouped)
         view.addSubview(tableView)

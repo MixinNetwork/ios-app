@@ -71,7 +71,10 @@ extension RocketWebSocket: SRWebSocketDelegate {
         Logger.general.error(category: "RocketWebSocket", message: "Websocket failed with: \(err), host: \(MixinHost.webSocket)")
 
         if (nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504)
-            || (nsError.domain == NSPOSIXErrorDomain && nsError.code == 61) || nsError.domain == SRWebSocketErrorDomain {
+            || (nsError.domain == NSPOSIXErrorDomain && nsError.code == 61)
+            || nsError.domain == SRWebSocketErrorDomain
+            || (nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorTimedOut)
+        {
             // Connection time out or refused
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: true)
         } else {

@@ -8,8 +8,6 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         case bot
     }
     
-    let cancelButton = SearchCancelButton()
-    
     var wantsNavigationSearchBox: Bool {
         true
     }
@@ -20,6 +18,7 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
     
     private let category: Category
     private let queue = OperationQueue()
+    private let cancelButton = SearchCancelButton()
     
     private var lastKeyword: String?
     private var lastSearchFieldText: String?
@@ -41,6 +40,13 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         
         navigationItem.title = ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        if let exploreViewController {
+            cancelButton.addTarget(
+                exploreViewController,
+                action: #selector(ExploreViewController.cancelSearching(_:)),
+                for: .touchUpInside
+            )
+        }
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
         view.addSubview(tableView)

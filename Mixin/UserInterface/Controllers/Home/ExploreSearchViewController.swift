@@ -19,6 +19,10 @@ extension ExploreSearchViewController where Self: UIViewController {
         }
     }
     
+    var exploreViewController: ExploreViewController? {
+        parent?.parent as? ExploreViewController
+    }
+    
     func pushMarketViewController(market: FavorableMarket) {
         guard let navigationController = UIApplication.homeNavigationController else {
             return

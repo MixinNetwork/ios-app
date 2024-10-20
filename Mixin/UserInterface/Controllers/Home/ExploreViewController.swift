@@ -48,11 +48,6 @@ final class ExploreViewController: UIViewController {
         )
         navigationController.viewControllers = [searchViewController]
         navigationController.searchNavigationBar.searchBoxView.textField.clearButtonMode = .always
-        searchViewController.cancelButton.addTarget(
-            self,
-            action: #selector(cancelSearching(_:)),
-            for: .touchUpInside
-        )
         presentSearch(with: navigationController)
         searchViewController.searchTextField.becomeFirstResponder()
     }

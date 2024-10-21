@@ -152,7 +152,8 @@ final class MixinSwapViewController: SwapViewController {
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,
             source: quote.source,
-            slippage: 0.01
+            slippage: 0.01,
+            payload: quote.payload
         )
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -175,8 +176,7 @@ final class MixinSwapViewController: SwapViewController {
                 }
                 let context = Payment.SwapContext(
                     receiveToken: quote.receiveToken,
-                    receiveAmount: receiveAmount,
-                    source: quote.source
+                    receiveAmount: receiveAmount
                 )
                 let source: UrlWindow.Source = .swap(context: context) { description in
                     if let description {

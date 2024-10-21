@@ -86,7 +86,12 @@ final class SwapQuotePeriodicRequester {
                     self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .failure(error))
                     return
                 }
-                let quote = SwapQuote(draft: quoteDraft, receiveAmount: receiveAmount, source: response.source)
+                let quote = SwapQuote(
+                    draft: quoteDraft,
+                    receiveAmount: receiveAmount,
+                    source: response.source,
+                    payload: response.payload
+                )
                 self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .success(quote))
                 self.scheduleCountDownTimer()
             case .failure(.httpTransport(.explicitlyCancelled)):

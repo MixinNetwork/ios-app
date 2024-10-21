@@ -8,5 +8,6 @@ struct QuoteResponse: Decodable {
     let outAmount: String
     let slippage: Int
     let source: RouteTokenSource
+    let payload: String
     
 }

@@ -83,7 +83,7 @@ final class Web3SwapViewController: SwapViewController {
                 receiveToken: receiveToken.token,
                 source: .solana,
                 slippage: 0.01
-            )
+            ) // Review if web3 swapping needs `payload` too
         else {
             return
         }

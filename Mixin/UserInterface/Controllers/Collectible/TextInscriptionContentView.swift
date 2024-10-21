@@ -44,7 +44,7 @@ final class TextInscriptionContentView: UIView {
             label.text = nil
             textContentRequest = InscriptionContentSession
                 .request(textContentURL)
-                .responseString() { [weak self] response in
+                .responseString(encoding: .utf8) { [weak self] response in
                     switch response.result {
                     case let .success(content):
                         guard let self else {

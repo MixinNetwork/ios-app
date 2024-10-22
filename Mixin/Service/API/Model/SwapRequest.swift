@@ -10,6 +10,7 @@ struct SwapRequest: Encodable {
     let slippage: Int
     let source: RouteTokenSource
     let referral: String?
+    let payload: String?
     
     static func web3(
         sendToken: Web3Token,
@@ -35,7 +36,8 @@ struct SwapRequest: Encodable {
             outputMint: receiveToken.address,
             slippage: Slippage(decimal: slippage).integral,
             source: source,
-            referral: sendAddress
+            referral: sendAddress,
+            payload: nil
         )
     }
     
@@ -44,7 +46,8 @@ struct SwapRequest: Encodable {
         sendAmount: Decimal,
         receiveToken: SwappableToken,
         source: RouteTokenSource,
-        slippage: Decimal
+        slippage: Decimal,
+        payload: String
     ) -> SwapRequest {
         SwapRequest(
             payer: myUserId,
@@ -53,7 +56,8 @@ struct SwapRequest: Encodable {
             outputMint: receiveToken.assetID,
             slippage: Slippage(decimal: slippage).integral,
             source: source,
-            referral: nil
+            referral: nil,
+            payload: payload
         )
     }
     

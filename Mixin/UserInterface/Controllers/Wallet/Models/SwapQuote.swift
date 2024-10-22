@@ -5,6 +5,7 @@ final class SwapQuote: SwapQuoteDraft {
     
     let receiveAmount: Decimal
     let source: RouteTokenSource
+    let payload: String
     
     override var description: String {
         "<SwapQuote \(sendAmount)\(sendToken.symbol) -> \(receiveAmount)\(receiveToken.symbol)>"
@@ -12,16 +13,18 @@ final class SwapQuote: SwapQuoteDraft {
     
     init(
         sendToken: TokenItem, sendAmount: Decimal, receiveToken: SwappableToken,
-        receiveAmount: Decimal, source: RouteTokenSource
+        receiveAmount: Decimal, source: RouteTokenSource, payload: String
     ) {
         self.receiveAmount = receiveAmount
         self.source = source
+        self.payload = payload
         super.init(sendToken: sendToken, sendAmount: sendAmount, receiveToken: receiveToken)
     }
     
-    init(draft: SwapQuoteDraft, receiveAmount: Decimal, source: RouteTokenSource) {
+    init(draft: SwapQuoteDraft, receiveAmount: Decimal, source: RouteTokenSource, payload: String) {
         self.receiveAmount = receiveAmount
         self.source = source
+        self.payload = payload
         super.init(
             sendToken: draft.sendToken,
             sendAmount: draft.sendAmount,
@@ -38,7 +41,13 @@ extension SwapQuote {
         case receive
     }
     
-    func priceRepresentation(unit: PriceUnit) -> String {
+    static func priceRepresentation(
+        sendToken: TokenItem,
+        sendAmount: Decimal,
+        receiveToken: SwappableToken,
+        receiveAmount: Decimal,
+        unit: PriceUnit
+    ) -> String {
         switch unit {
         case .send:
             let price = CurrencyFormatter.localizedString(
@@ -55,6 +64,16 @@ extension SwapQuote {
             )
             return "1 \(receiveToken.symbol) ≈ \(price) \(sendToken.symbol)"
         }
+    }
+    
+    func priceRepresentation(unit: PriceUnit) -> String {
+        Self.priceRepresentation(
+            sendToken: sendToken,
+            sendAmount: sendAmount,
+            receiveToken: receiveToken,
+            receiveAmount: receiveAmount,
+            unit: unit
+        )
     }
     
 }

@@ -15,5 +15,6 @@ public enum ChainID {
     public static let arbitrum = "d0688ff7-6656-4a79-bd5f-d764bfa9bc46"
     public static let optimism = "62d5b01f-24ee-4c96-8214-8e04981d05f2"
     public static let solana = "64692c23-8971-4cf4-84a7-4dd1271dd887"
+    public static let base = "3fb612c5-6844-3979-ae4a-5a84e79da870"
     
 }

@@ -61,6 +61,8 @@ extension SwappableToken {
             "Polygon"
         case ChainID.solana:
             "Solana"
+        case ChainID.base:
+            "Base"
         default:
             nil
         }

@@ -47,6 +47,8 @@ extension SwappableToken {
         switch chain.chainID {
         case ChainID.bnbSmartChain:
             "BEP-20"
+        case ChainID.base:
+            "Base"
         case assetID:
             nil
         case ChainID.ethereum:
@@ -61,8 +63,6 @@ extension SwappableToken {
             "Polygon"
         case ChainID.solana:
             "Solana"
-        case ChainID.base:
-            "Base"
         default:
             nil
         }

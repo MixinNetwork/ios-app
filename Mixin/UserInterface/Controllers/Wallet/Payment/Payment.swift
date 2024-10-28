@@ -183,11 +183,6 @@ extension Payment {
                     preconditions = [
                         NoPendingTransactionPrecondition(token: token),
                         AlreadyPaidPrecondition(traceID: traceID),
-                        DuplicationPrecondition(operation: .transfer(opponent),
-                                                token: token,
-                                                tokenAmount: tokenAmount,
-                                                fiatMoneyAmount: fiatMoneyAmount,
-                                                memo: memo),
                         LargeAmountPrecondition(token: token,
                                                 tokenAmount: tokenAmount,
                                                 fiatMoneyAmount: fiatMoneyAmount),

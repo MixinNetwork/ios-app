@@ -134,8 +134,19 @@ extension PostWebViewController {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
-        let filename = (pageTitle ?? R.string.localizable.post()) + ExtensionName.pdf.withDot
-        let url = cacheURL.appendingPathComponent(filename)
+        let filename: String
+        if let pageTitle {
+            let invalidCharacters = CharacterSet(charactersIn: ":/\\")
+                .union(.illegalCharacters)
+                .union(.controlCharacters)
+                .union(.symbols)
+                .union(.newlines)
+            filename = pageTitle.components(separatedBy: invalidCharacters).joined(separator: "_")
+        } else {
+            filename = R.string.localizable.post()
+        }
+        Logger.general.debug(category: "PostPDFRenderer", message: "Using filename: \(filename)")
+        let url = cacheURL.appendingPathComponent(filename + ExtensionName.pdf.withDot)
         let pageBounds = CGRect(x: 0, y: 0, width: 612, height: 792) // 8.5 by 11 inches according to UIGraphicsBeginPDFContextToFile(_:_:_:)
         let renderer = WebViewRenderer(webView: webView, pageBounds: pageBounds)
         

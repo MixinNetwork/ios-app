@@ -239,7 +239,7 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public func replaceFavoriteMarkets(markets: [Market]) {
         db.write { db in
-            try markets.insert(db, onConflict: .ignore)
+            try markets.insert(db, onConflict: .replace)
             
             let distantPast = Date.distantPast.toUTCString()
             let favoredMarkets = try markets.map { market in

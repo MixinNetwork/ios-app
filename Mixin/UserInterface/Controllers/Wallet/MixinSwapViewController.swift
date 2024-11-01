@@ -13,14 +13,22 @@ final class MixinSwapViewController: SwapViewController {
     private var sendTokens: [TokenItem]?
     private var sendToken: TokenItem? {
         didSet {
-            updateSendView(token: sendToken)
+            if let sendToken {
+                self.updateSendView(style: .token(sendToken))
+            } else {
+                self.updateSendView(style: .selectable)
+            }
         }
     }
     
     private var receiveTokens: [BalancedSwappableToken]?
     private var receiveToken: BalancedSwappableToken? {
         didSet {
-            updateReceiveView(token: receiveToken)
+            if let receiveToken {
+                updateReceiveView(style: .token(receiveToken))
+            } else {
+                updateReceiveView(style: .selectable)
+            }
         }
     }
     
@@ -59,8 +67,8 @@ final class MixinSwapViewController: SwapViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateSendView(token: nil)
-        updateReceiveView(token: nil)
+        updateSendView(style: .loading)
+        updateReceiveView(style: .loading)
         reloadTokens()
         sendAmountTextField.delegate = self
     }
@@ -267,6 +275,18 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
 
 extension MixinSwapViewController {
     
+    private enum SendTokenSelectorStyle {
+        case loading
+        case selectable
+        case token(TokenItem)
+    }
+    
+    private enum ReceiveTokenSelectorStyle {
+        case loading
+        case selectable
+        case token(BalancedSwappableToken)
+    }
+    
     private func reloadTokens() {
         RouteAPI.swappableTokens(source: .mixin) { [weak self] result in
             switch result {
@@ -307,12 +327,14 @@ extension MixinSwapViewController {
                 let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
                 return left > right
             }
-            let sendToken = if let id = arbitrarySendAssetID, let token = sendTokens.first(where: { $0.assetID == id }) {
-                token
+            let sendToken: TokenItem? = if let id = arbitrarySendAssetID {
+                sendTokens.first { token in
+                    token.assetID == id
+                }
             } else {
-                sendTokens.first(where: { token in
+                sendTokens.first { token in
                     token.assetID != arbitraryReceiveAssetID
-                })
+                }
             }
             
             let swappableTokensMap = swappableTokenItems.reduce(into: [:]) { result, item in
@@ -327,20 +349,24 @@ extension MixinSwapViewController {
                     return BalancedSwappableToken(token: token, balance: 0, usdPrice: 0)
                 }
             }
-            let receiveToken: BalancedSwappableToken?
-            if let id = arbitraryReceiveAssetID,
-               id != sendToken?.assetID,
-               let token = receiveTokens.first(where: { $0.token.assetID == id })
-            {
-                receiveToken = token
+            let receiveToken: BalancedSwappableToken? = if let id = arbitraryReceiveAssetID {
+                if id == sendToken?.assetID {
+                    nil
+                } else {
+                    receiveTokens.first { token in
+                        token.token.assetID == id
+                    }
+                }
             } else {
-                receiveToken = receiveTokens.first { token in
+                receiveTokens.first { token in
                     token.token.assetID != sendToken?.assetID
                 }
             }
             
             let missingAssetID: String?
-            if let id = arbitrarySendAssetID, sendToken?.assetID != id {
+            if let id = arbitrarySendAssetID, id == arbitraryReceiveAssetID {
+                missingAssetID = nil
+            } else if let id = arbitrarySendAssetID, sendToken?.assetID != id {
                 missingAssetID = id
             } else if let id = arbitraryReceiveAssetID, receiveToken?.token.assetID != id {
                 missingAssetID = id
@@ -362,8 +388,6 @@ extension MixinSwapViewController {
                 self.sendToken = sendToken
                 self.receiveTokens = receiveTokens
                 self.receiveToken = receiveToken
-                self.sendLoadingIndicator.stopAnimating()
-                self.receiveLoadingIndicator.stopAnimating()
                 if let missingAssetSymbol {
                     let description = R.string.localizable.swap_not_supported(missingAssetSymbol)
                     self.setFooter(.error(description))
@@ -372,10 +396,26 @@ extension MixinSwapViewController {
         }
     }
     
-    private func updateSendView(token: TokenItem?) {
-        if let token {
+    private func updateSendView(style: SendTokenSelectorStyle) {
+        switch style {
+        case .loading:
+            sendTokenStackView.alpha = 0
+            sendIconView.isHidden = false
+            sendLoadingIndicator.startAnimating()
+        case .selectable:
+            sendTokenStackView.alpha = 1
+            sendBalanceLabel.text = nil
+            sendIconView.isHidden = true
+            sendIconView.prepareForReuse()
+            sendIconView.image = nil
+            sendSymbolLabel.text = R.string.localizable.select_token()
+            sendNetworkLabel.alpha = 0 // Keeps the height
+            sendLoadingIndicator.stopAnimating()
+        case .token(let token):
+            sendTokenStackView.alpha = 1
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
+            sendIconView.isHidden = false
             sendIconView.setIcon(token: token)
             sendSymbolLabel.text = token.symbol
             if let network = token.chain?.name {
@@ -384,12 +424,7 @@ extension MixinSwapViewController {
             } else {
                 sendNetworkLabel.alpha = 0 // Keeps the height
             }
-        } else {
-            sendBalanceLabel.text = nil
-            sendIconView.prepareForReuse()
-            sendIconView.image = nil
-            sendSymbolLabel.text = R.string.localizable.select_token()
-            sendNetworkLabel.alpha = 0 // Keeps the height
+            sendLoadingIndicator.stopAnimating()
         }
         updateSendValueLabel()
     }
@@ -411,20 +446,31 @@ extension MixinSwapViewController {
         )
     }
     
-    private func updateReceiveView(token: BalancedSwappableToken?) {
-        if let token {
-            let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-            receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
-            receiveIconView.setIcon(token: token.token)
-            receiveSymbolLabel.text = token.symbol
-            receiveNetworkLabel.text = token.token.chain.name
-            receiveNetworkLabel.alpha = 1
-        } else {
+    private func updateReceiveView(style: ReceiveTokenSelectorStyle) {
+        switch style {
+        case .loading:
+            receiveStackView.alpha = 0
+            receiveIconView.isHidden = false
+            receiveLoadingIndicator.startAnimating()
+        case .selectable:
+            receiveStackView.alpha = 1
             receiveBalanceLabel.text = nil
+            receiveIconView.isHidden = true
             receiveIconView.prepareForReuse()
             receiveIconView.image = nil
             receiveSymbolLabel.text = R.string.localizable.select_token()
             receiveNetworkLabel.alpha = 0 // Keeps the height
+            receiveLoadingIndicator.stopAnimating()
+        case .token(let token):
+            receiveStackView.alpha = 1
+            let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
+            receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
+            receiveIconView.isHidden = false
+            receiveIconView.setIcon(token: token.token)
+            receiveSymbolLabel.text = token.symbol
+            receiveNetworkLabel.text = token.token.chain.name
+            receiveNetworkLabel.alpha = 1
+            receiveLoadingIndicator.stopAnimating()
         }
         updateReceiveValueLabel()
     }

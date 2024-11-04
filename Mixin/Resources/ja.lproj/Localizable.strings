@@ -527,7 +527,7 @@
 "floating" = "フローティング";
 "floats_allows_up_to_count" = "フロート数の上限 %d";
 "follow_us_on_facebook" = "FacebookでMixinをフォロー";
-"follow_us_on_twitter" = "TwitterでMixinをフォロー";
+"follow_us_on_x" = "XでMixinをフォロー";
 "forward" = "転送";
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "free" = "FREE";

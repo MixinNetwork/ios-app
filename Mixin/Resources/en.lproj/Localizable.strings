@@ -527,7 +527,7 @@
 "floating" = "Floating";
 "floats_allows_up_to_count" = "Floats allows up to %d ones";
 "follow_us_on_facebook" = "Follow us on Facebook";
-"follow_us_on_twitter" = "Follow us on Twitter";
+"follow_us_on_x" = "Follow us on X";
 "forward" = "Forward";
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "free" = "FREE";

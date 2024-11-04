@@ -527,7 +527,7 @@
 "floating" = "浮窗";
 "floats_allows_up_to_count" = "最多支持 %d 个浮窗";
 "follow_us_on_facebook" = "关注我们的 Facebook";
-"follow_us_on_twitter" = "关注我们的 Twitter";
+"follow_us_on_x" = "关注我们的 X";
 "forward" = "转发";
 "fourth_pin_confirm_hint" = "这是最后一次确认 PIN，记住：PIN 丢失将永远无法找回！";
 "free" = "免手续费";

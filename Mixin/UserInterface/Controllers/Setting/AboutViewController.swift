@@ -6,7 +6,7 @@ class AboutViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.follow_us_on_twitter(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.follow_us_on_x(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.follow_us_on_facebook(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.help_center(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.terms_of_service(), accessory: .disclosure),
@@ -52,7 +52,7 @@ extension AboutViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            UIApplication.shared.openURL(url: "https://twitter.com/MixinMessenger")
+            UIApplication.shared.openURL(url: "https://x.com/intent/follow?screen_name=MixinMessenger")
         case 1:
             UIApplication.shared.openURL(url: "https://fb.com/MixinMessenger")
         case 2:

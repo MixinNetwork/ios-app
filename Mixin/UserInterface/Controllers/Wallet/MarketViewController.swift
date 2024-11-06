@@ -692,19 +692,20 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
 extension MarketViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        guard let actions = tokenPriceChartCell?.tokenActions else {
+        guard let market, let actions = tokenPriceChartCell?.tokenActions else {
             return
         }
         switch actions[index] {
         case .swap:
-            pickSingleToken { token in
-                let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
-                self.navigationController?.pushViewController(swap, animated: true)
+            if tokens == nil {
+                alert(R.string.localizable.swap_not_supported(market.symbol))
+            } else {
+                pickSingleToken { token in
+                    let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
+                    self.navigationController?.pushViewController(swap, animated: true)
+                }
             }
         case .alert:
-            guard let market else {
-                return
-            }
             NotificationManager.shared.requestAuthorization { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)
@@ -715,9 +716,6 @@ extension MarketViewController: PillActionView.Delegate {
                 }
             }
         case .addAlert:
-            guard let market else {
-                return
-            }
             NotificationManager.shared.requestAuthorization { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)

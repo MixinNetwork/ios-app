@@ -218,7 +218,7 @@ final class ChartView: UIView {
         var maxIndex = 0
         var minIndex = 0
         for (i, point) in points.enumerated() {
-            if point.value > points[maxIndex].value {
+            if point.value >= points[maxIndex].value {
                 maxIndex = i
             } else if point.value < points[minIndex].value {
                 minIndex = i
@@ -234,11 +234,21 @@ final class ChartView: UIView {
         let a = (maxY - minY) / (maxV - minV)
         let b = maxY - a * maxV
         let xUnit = bounds.width / CGFloat(points.count)
-        let drawingPoints = points.enumerated().map { (i, point) in
-            let v = (point.value as NSDecimalNumber).doubleValue
-            let y = a * v + b
-            let x = CGFloat(i) * xUnit // TODO: Calculate with `Point.date`
-            return CGPoint(x: x, y: y)
+        let hasSignificantSlope = a.isFinite && b.isFinite
+        let drawingPoints: [CGPoint]
+        if hasSignificantSlope {
+            drawingPoints = points.enumerated().map { (i, point) in
+                let x = CGFloat(i) * xUnit // TODO: Calculate with `Point.date`
+                let v = (point.value as NSDecimalNumber).doubleValue
+                let y = a * v + b
+                return CGPoint(x: x, y: y)
+            }
+        } else {
+            let y = minY + (maxY - minY) * 3 / 4
+            drawingPoints = points.enumerated().map { (i, point) in
+                let x = CGFloat(i) * xUnit // TODO: Calculate with `Point.date`
+                return CGPoint(x: x, y: y)
+            }
         }
         let linePath = CGMutablePath()
         linePath.move(to: drawingPoints[0])
@@ -300,8 +310,13 @@ final class ChartView: UIView {
                 let minLabel = AnnotationLabel(text: text, color: color)
                 addSubview(minLabel)
                 minLabel.snp.makeConstraints { make in
-                    make.top.equalToSuperview()
-                        .offset(minDotLayer.frame.maxY)
+                    if hasSignificantSlope {
+                        make.top.equalToSuperview()
+                            .offset(minDotLayer.frame.maxY)
+                    } else {
+                        make.bottom.equalTo(snp.top)
+                            .offset(minDotLayer.frame.minY)
+                    }
                     make.centerX.equalTo(snp.leading)
                         .offset(minDotLayer.position.x)
                         .priority(.high)

@@ -911,10 +911,10 @@ extension MarketViewController {
                     low24H = nil
                 }
                 let marketCap: String?
-                if let value = Decimal(string: market.marketCap, locale: .enUSPOSIX) {
+                if let value = Decimal(string: market.marketCap, locale: .enUSPOSIX), !value.isZero {
                     marketCap = NamedLargeNumberFormatter.string(number: value, currencyPrefix: true)
                 } else {
-                    marketCap = nil
+                    marketCap = notApplicable
                 }
                 let fiatMoneyVolume24H: String?
                 if let totalVolume = Decimal(string: market.totalVolume, locale: .enUSPOSIX) {

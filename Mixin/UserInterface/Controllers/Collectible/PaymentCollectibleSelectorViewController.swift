@@ -6,6 +6,7 @@ final class PaymentCollectibleSelectorViewController: PopupSelectorViewControlle
     private let receiver: UserItem
     private let collectionHash: String
     private let collectionIconImageView = UIImageView()
+    private let searchBoxView = SearchBoxView()
     
     private var inscriptions: [InscriptionOutput] = []
     private var inscriptionSearchResults: [InscriptionOutput]?
@@ -18,6 +19,8 @@ final class PaymentCollectibleSelectorViewController: PopupSelectorViewControlle
         self.receiver = receiver
         self.collectionHash = collectionHash
         super.init()
+        transitioningDelegate = nil
+        modalPresentationStyle = .automatic
     }
     
     required init?(coder: NSCoder) {
@@ -26,11 +29,7 @@ final class PaymentCollectibleSelectorViewController: PopupSelectorViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 72
-        tableView.register(R.nib.paymentCollectibleCell)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
+        
         titleView.contentStackView.insertArrangedSubview(collectionIconImageView, at: 0)
         collectionIconImageView.backgroundColor = R.color.background()
         collectionIconImageView.snp.makeConstraints { make in
@@ -44,6 +43,28 @@ final class PaymentCollectibleSelectorViewController: PopupSelectorViewControlle
         }()
         titleView.titleLabel.text = R.string.localizable.send_collectible()
         titleView.subtitleLabel.text = nil
+        
+        view.addSubview(searchBoxView)
+        searchBoxView.snp.makeConstraints { make in
+            make.top.equalTo(titleView.snp.bottom)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(44)
+        }
+        searchBoxView.textField.addTarget(self, action: #selector(searchCollectible(_:)), for: .editingChanged)
+        searchBoxView.textField.placeholder = "ID"
+        searchBoxView.textField.keyboardType = .asciiCapableNumberPad
+        tableViewTopConstraint.constant = 54
+        
+        tableView.rowHeight = 70
+        tableView.register(R.nib.paymentCollectibleCell)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
+        tableView.isScrollEnabled = true
+        tableView.alwaysBounceVertical = true
+        tableView.keyboardDismissMode = .onDrag
+        
         DispatchQueue.global().async { [collectionHash, weak self] in
             let inscriptions = InscriptionDAO.shared.inscriptionOutputs(collectionHash: collectionHash)
             let collection = InscriptionDAO.shared.collection(hash: collectionHash)
@@ -69,11 +90,32 @@ final class PaymentCollectibleSelectorViewController: PopupSelectorViewControlle
     }
     
     override func updatePreferredContentHeight() {
-        guard let presentingViewController else {
-            super.updatePreferredContentHeight()
+        // We're using UIModalPresentationStyle.automatic, better do nothing to preferredContentSize
+    }
+    
+    @objc func searchCollectible(_ textField: UITextField) {
+        defer {
+            tableView.reloadData()
+            tableView.checkEmpty(
+                dataCount: items.count,
+                text: R.string.localizable.no_collectibles(),
+                photo: R.image.inscription_relief()!
+            )
+        }
+        let trimmedLowercaseKeyword = (textField.text ?? "")
+            .trimmingCharacters(in: .whitespaces)
+            .lowercased()
+        guard !trimmedLowercaseKeyword.isEmpty else {
+            inscriptionSearchResults = nil
             return
         }
-        preferredContentSize.height = presentingViewController.view.bounds.height - presentingViewController.view.safeAreaInsets.top
+        guard let sequence = UInt64(trimmedLowercaseKeyword) else {
+            inscriptionSearchResults = []
+            return
+        }
+        inscriptionSearchResults = inscriptions.filter { item in
+            item.inscription?.sequence == sequence
+        }
     }
     
 }

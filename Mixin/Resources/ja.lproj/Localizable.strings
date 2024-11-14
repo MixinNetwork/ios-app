@@ -987,6 +987,7 @@
 "send" = "送る";
 "send_as_file" = "ファイルとして送信する";
 "send_as_files" = "複数ファイルとして送信する";
+"send_collectible" = "Send Collectible";
 "send_item" = "アイテムを一つ送信";
 "send_item_count" = "%d件を送信";
 "send_message" = "メッセージを送信";

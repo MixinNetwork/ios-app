@@ -6,6 +6,7 @@ struct SafePaymentURL {
     enum Request {
         case prefilled(assetID: String, amount: Decimal)
         case inscription(hash: String)
+        case inscriptionCollection(hash: String)
         case notDetermined(assetID: String?, amount: Decimal?)
     }
     
@@ -17,9 +18,12 @@ struct SafePaymentURL {
     let redirection: URL?
     let reference: String?
     let inscription: String?
+    let inscriptionCollection: String?
     
     var request: Request {
-        if let inscription {
+        if let inscriptionCollection {
+            .inscriptionCollection(hash: inscriptionCollection)
+        } else if let inscription {
             .inscription(hash: inscription)
         } else if let asset, let amount {
             .prefilled(assetID: asset, amount: amount)
@@ -125,6 +129,7 @@ struct SafePaymentURL {
         self.redirection = redirection
         self.reference = queries["reference"]
         self.inscription = inscription
+        self.inscriptionCollection = queries["inscription_collection"]
     }
     
 }

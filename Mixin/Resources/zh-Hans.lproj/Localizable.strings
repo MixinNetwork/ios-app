@@ -987,6 +987,7 @@
 "send" = "发送";
 "send_as_file" = "发送为文件";
 "send_as_files" = "发送为文件";
+"send_collectible" = "发送藏品";
 "send_item" = "发送 1 项";
 "send_item_count" = "发送 %d 项";
 "send_message" = "发消息";

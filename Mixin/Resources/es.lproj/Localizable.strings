@@ -987,6 +987,7 @@
 "send" = "Enviar";
 "send_as_file" = "Enviar como Archivo";
 "send_as_files" = "Enviar como archivos";
+"send_collectible" = "Send Collectible";
 "send_item" = "Enviar 1 artículo";
 "send_item_count" = "Enviar %d elementos";
 "send_message" = "Enviar mensaje";

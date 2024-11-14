@@ -1205,6 +1205,17 @@ extension UrlWindow {
                                        token: token,
                                        memo: paymentURL.memo,
                                        context: context)
+            case let .inscriptionCollection(hash):
+                DispatchQueue.main.async {
+                    guard case let .user(receiver) = destination else {
+                        completion("Invalid Destination")
+                        return
+                    }
+                    completion(nil)
+                    let selector = PaymentCollectibleSelectorViewController(receiver: receiver, collectionHash: hash)
+                    UIApplication.homeNavigationController?.present(selector, animated: true)
+                }
+                return
             case let .prefilled(assetID, amount):
                 let token = syncToken(assetID: assetID) { errorDescription in
                     completion(errorDescription)

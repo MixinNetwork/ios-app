@@ -1068,6 +1068,9 @@
 		94C93C8E2C94880600A31591 /* P2PKH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C882C94880600A31591 /* P2PKH.swift */; };
 		94C93C8F2C94880600A31591 /* RIPEMD160.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C892C94880600A31591 /* RIPEMD160.swift */; };
 		94C93C902C94880600A31591 /* TIP+Web3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C8A2C94880600A31591 /* TIP+Web3.swift */; };
+		94CA5C512CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CA5C502CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift */; };
+		94CA5C572CE5F5F80086C484 /* PaymentCollectibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CA5C562CE5F5F80086C484 /* PaymentCollectibleCell.xib */; };
+		94CA5C582CE5F5F80086C484 /* PaymentCollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CA5C552CE5F5F80086C484 /* PaymentCollectibleCell.swift */; };
 		94CB84D62C6A65C200135641 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB84D52C6A65C200135641 /* ChartView.swift */; };
 		94CB85CF2C6B43A900135641 /* TokenMyBalanceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */; };
 		94CB85D02C6B43A900135641 /* TokenMyBalanceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CB85CE2C6B43A900135641 /* TokenMyBalanceCell.xib */; };
@@ -2495,6 +2498,9 @@
 		94C93C882C94880600A31591 /* P2PKH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P2PKH.swift; sourceTree = "<group>"; };
 		94C93C892C94880600A31591 /* RIPEMD160.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RIPEMD160.swift; sourceTree = "<group>"; };
 		94C93C8A2C94880600A31591 /* TIP+Web3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TIP+Web3.swift"; sourceTree = "<group>"; };
+		94CA5C502CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectibleSelectorViewController.swift; sourceTree = "<group>"; };
+		94CA5C552CE5F5F80086C484 /* PaymentCollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectibleCell.swift; sourceTree = "<group>"; };
+		94CA5C562CE5F5F80086C484 /* PaymentCollectibleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCollectibleCell.xib; sourceTree = "<group>"; };
 		94CB84D52C6A65C200135641 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMyBalanceCell.swift; sourceTree = "<group>"; };
 		94CB85CE2C6B43A900135641 /* TokenMyBalanceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMyBalanceCell.xib; sourceTree = "<group>"; };
@@ -3642,6 +3648,9 @@
 				942FB8942C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift */,
 				942FB8962C8AE09000C8025C /* ShareInscriptionViewController.swift */,
 				9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */,
+				94CA5C562CE5F5F80086C484 /* PaymentCollectibleCell.xib */,
+				94CA5C552CE5F5F80086C484 /* PaymentCollectibleCell.swift */,
+				94CA5C502CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift */,
 			);
 			path = Collectible;
 			sourceTree = "<group>";
@@ -5465,6 +5474,7 @@
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				949A3686261D9C5C004251B2 /* post.css in Resources */,
 				7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */,
+				94CA5C572CE5F5F80086C484 /* PaymentCollectibleCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				946331CB2C626FEE00C54B76 /* TransactionHistoryFilterPickerView.xib in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
@@ -6044,6 +6054,7 @@
 				7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */,
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
+				94CA5C512CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift in Sources */,
 				942DB9A72CAA9C8F00FFCB40 /* AllMarketAlertsViewController.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
@@ -6702,6 +6713,7 @@
 				94CEEAC3277E06A9001E7A24 /* Calendar+Convenience.swift in Sources */,
 				94B1E55D2C49222100A2349F /* MixinSwapViewController.swift in Sources */,
 				DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */,
+				94CA5C582CE5F5F80086C484 /* PaymentCollectibleCell.swift in Sources */,
 				DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */,
 				7B9A18182428939A00187693 /* PageControlView.swift in Sources */,
 				E0E32604238E2EC900D1188A /* BorderedAvatarImageView.swift in Sources */,

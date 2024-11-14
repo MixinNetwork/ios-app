@@ -57,6 +57,11 @@ public final class InscriptionDAO: UserDatabaseDAO {
         db.select(with: SQL.selector + " AND o.inscription_hash = ?", arguments: [hash])
     }
     
+    public func inscriptionOutputs(collectionHash hash: String) -> [InscriptionOutput] {
+        let sql = SQL.selector + " AND c.collection_hash = ? \nORDER BY i.sequence ASC"
+        return db.select(with: sql, arguments: [hash])
+    }
+    
     public func allInscriptionOutputs(collectionHash: String? = nil, sortedBy order: CollectibleDisplayOrdering) -> [InscriptionOutput] {
         var sql = SQL.selector + " AND o.inscription_hash IS NOT NULL"
         let arguments: StatementArguments

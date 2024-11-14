@@ -987,6 +987,7 @@
 "send" = "Отправить";
 "send_as_file" = "Отправить как файл";
 "send_as_files" = "Отправить как файлы";
+"send_collectible" = "Send Collectible";
 "send_item" = "Отправить 1 элемент";
 "send_item_count" = "Отправить %d элементов";
 "send_message" = "Отправить сообщение";

@@ -131,7 +131,6 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "asset_key" = "Ключ актива";
-"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
 "assets" = "Assets";
@@ -611,6 +610,7 @@
 "later" = "Потом";
 "learn_more" = "Узнать больше";
 "leave_message_to_team_mixin" = "Leave a message to Team Mixin";
+"legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Светлое";
 "line_busy" = "Линия занята";

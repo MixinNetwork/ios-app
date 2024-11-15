@@ -108,7 +108,9 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(HiddenTokensViewController.instance(), animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.legacy_network(), style: .default, handler: performAssetMigration(_:)))
+        if hasAssetInLegacyNetwork {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.legacy_network(), style: .default, handler: performAssetMigration(_:)))
+        }
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
     }

@@ -131,7 +131,6 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "asset_key" = "資産のキー";
-"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "資産が存在しません";
 "asset_type" = "資産タイプ";
 "assets" = "Assets";
@@ -611,6 +610,7 @@
 "later" = "後で";
 "learn_more" = "こちら";
 "leave_message_to_team_mixin" = "Leave a message to Team Mixin";
+"legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "ダーク";
 "line_busy" = "お話中です";

@@ -131,7 +131,6 @@
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失敗";
 "asset_key" = "資產標識";
-"asset_migration_hint" = "您還有資產在舊的 Mixin 網路，點選檢視。";
 "asset_not_found" = "找不到該資產";
 "asset_type" = "資產型別";
 "assets" = "資產";
@@ -611,6 +610,7 @@
 "later" = "稍後";
 "learn_more" = "瞭解更多";
 "leave_message_to_team_mixin" = "給 Mixin 客服留言";
+"legacy_network" = "舊網路";
 "legacy_network_transfer_hint" = "當前轉賬使用的是舊網路";
 "light" = "淺色";
 "line_busy" = "忙線未接聽";

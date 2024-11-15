@@ -131,7 +131,6 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "asset_key" = "Clave de activo";
-"asset_migration_hint" = "You have assets in the legacy network, please view here.";
 "asset_not_found" = "Activo no encontrado.";
 "asset_type" = "Tipo de activo";
 "assets" = "Assets";
@@ -611,6 +610,7 @@
 "later" = "Más tarde";
 "learn_more" = "Obtener más información";
 "leave_message_to_team_mixin" = "Leave a message to Team Mixin";
+"legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Claro";
 "line_busy" = "Linea ocupada";

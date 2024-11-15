@@ -16,6 +16,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     private var isSearchViewControllerPreloaded = false
     private var tokens = [TokenItem]()
     private var sendableTokens = [TokenItem]()
+    private var hasAssetInLegacyNetwork = false
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -49,17 +50,9 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
             navigationController.setNavigationBarHidden(true, animated: true)
         }
         DispatchQueue.global().async {
-            let canMigrateAssets = AssetDAO.shared.hasPositiveBalancedAssets()
+            let hasAssetInLegacyNetwork = AssetDAO.shared.hasPositiveBalancedAssets()
             DispatchQueue.main.async {
-                if canMigrateAssets {
-                    self.tableHeaderView.insertMigrationButtonIfNeeded { button in
-                        button.addTarget(self, action: #selector(self.performAssetMigration(_:)), for: .touchUpInside)
-                    }
-                } else {
-                    self.tableHeaderView.removeMigrationButton()
-                }
-                self.tableHeaderView.sizeToFit()
-                self.tableView.tableHeaderView = self.tableHeaderView // Update tableView's layout after resizing
+                self.hasAssetInLegacyNetwork = hasAssetInLegacyNetwork
             }
         }
     }
@@ -115,6 +108,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(HiddenTokensViewController.instance(), animated: true)
         }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.legacy_network(), style: .default, handler: performAssetMigration(_:)))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
     }
@@ -296,7 +290,7 @@ extension WalletViewController {
         tableHeaderView.showSnowfallEffect = showSnowfall
     }
     
-    @objc private func performAssetMigration(_ sender: Any) {
+    private func performAssetMigration(_ sender: Any) {
         let botUserID = "84c9dfb1-bfcf-4cb4-8404-cc5a1354005b"
         let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: botUserID)
         let hud = Hud()

@@ -37,11 +37,12 @@ final class WalletConnectService {
         Networking.configure(groupIdentifier: appGroupIdentifier,
                              projectId: MixinKeys.walletConnect,
                              socketFactory: StarscreamFactory())
+        let redirect = try! AppMetadata.Redirect(native: "mixin://", universal: nil)
         let meta = AppMetadata(name: walletName,
                                description: walletDescription,
                                url: URL.mixinMessenger.absoluteString,
                                icons: [],
-                               redirect: .init(native: "mixin://", universal: nil))
+                               redirect: redirect)
         Web3Wallet.configure(metadata: meta, crypto: Web3CryptoProvider())
         Web3Wallet.instance.sessionsPublisher
             .receive(on: DispatchQueue.main)
@@ -187,7 +188,7 @@ extension WalletConnectService {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
-                    try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .upsupportedEvents)
+                    try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedEvents)
                 }
                 return
             }

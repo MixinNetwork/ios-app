@@ -43,7 +43,7 @@ class SolanaTransferOperation: Web3TransferOperation {
     }
     
     func fee(for transaction: Solana.Transaction) async throws -> Fee? {
-        let lamportsPerSignature = try await client.getRecentBlockhash().lamportsPerSignature
+        let lamportsPerSignature: UInt64 = 5000
         guard let tokenCount = transaction.fee(lamportsPerSignature: lamportsPerSignature) else {
             return nil
         }
@@ -57,7 +57,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         do {
             Logger.web3.info(category: "SolanaTransfer", message: "Start")
             let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
-            let recentBlockhash = try await client.getRecentBlockhash().blockhash
+            let recentBlockhash = try await client.getLatestBlockhash()
             Logger.web3.info(category: "SolanaTransfer", message: "Using blockhash: \(recentBlockhash)")
             guard let blockhash = Data(base58EncodedString: recentBlockhash) else {
                 throw SigningError.invalidBlockhash

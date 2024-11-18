@@ -3,11 +3,6 @@ import Alamofire
 
 struct SolanaRPCClient {
     
-    struct RecentBlockhash {
-        let blockhash: String
-        let lamportsPerSignature: UInt64
-    }
-    
     struct ResponseError: Error, Decodable, CustomStringConvertible {
         
         struct Data: Decodable {
@@ -66,19 +61,12 @@ struct SolanaRPCClient {
         return value != nil
     }
     
-    func getRecentBlockhash() async throws -> RecentBlockhash {
+    func getLatestBlockhash() async throws -> String {
         
         struct Result: Decodable {
             
             struct Value: Decodable {
-                
-                struct FeeCalculator: Decodable {
-                    let lamportsPerSignature: UInt64
-                }
-                
                 let blockhash: String
-                let feeCalculator: FeeCalculator
-                
             }
             
             let value: Value
@@ -86,12 +74,11 @@ struct SolanaRPCClient {
         }
         
         let response: Response<Result> = try await post(
-            method: "getRecentBlockhash",
+            method: "getLatestBlockhash",
             params: nil
         )
         let value = try response.getResult().value
-        return RecentBlockhash(blockhash: value.blockhash,
-                               lamportsPerSignature: value.feeCalculator.lamportsPerSignature)
+        return value.blockhash
     }
     
     func sendTransaction(signedTransaction: String) async throws -> String {

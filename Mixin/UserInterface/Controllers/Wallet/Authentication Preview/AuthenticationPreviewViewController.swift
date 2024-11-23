@@ -320,7 +320,6 @@ extension AuthenticationPreviewViewController {
         case receiver
         case collectible
         case price
-        case slippage
         case from
         case safe
         case note
@@ -355,8 +354,6 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.collectible()
             case .price:
                 R.string.localizable.price()
-            case .slippage:
-                R.string.localizable.slippage()
             case .from:
                 R.string.localizable.from()
             case .safe:

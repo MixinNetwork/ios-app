@@ -137,7 +137,6 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                         unit: .receive
                     )
                 ),
-                .info(caption: .slippage, content: "1%"),
                 .amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
             ]
         case .inscription(let context):

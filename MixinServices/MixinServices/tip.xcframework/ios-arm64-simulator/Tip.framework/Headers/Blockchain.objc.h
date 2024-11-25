@@ -11,8 +11,52 @@
 #include "Universe.objc.h"
 
 
+@protocol BlockchainKeccakState;
+@class BlockchainKeccakState;
+
+@protocol BlockchainKeccakState <NSObject>
+- (long)blockSize;
+- (BOOL)read:(NSData* _Nullable)p0 ret0_:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
+- (void)reset;
+- (long)size;
+- (NSData* _Nullable)sum:(NSData* _Nullable)b;
+- (BOOL)write:(NSData* _Nullable)p0 n:(long* _Nullable)n error:(NSError* _Nullable* _Nullable)error;
+@end
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinSegwitAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinTaprootAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEthereumAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT BOOL BlockchainIsMnemonicValid(NSString* _Nullable mnemonic);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainMnemonicChecksumWord(NSString* _Nullable words, long prefixLen);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainMnemonicToMasterKey(NSString* _Nullable mnemonic, NSError* _Nullable* _Nullable error);
+
+/**
+ * NewKeccakState creates a new KeccakState
+ */
+FOUNDATION_EXPORT id<BlockchainKeccakState> _Nullable BlockchainNewKeccakState(void);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainNewMnemonic(NSData* _Nullable entropy, NSError* _Nullable* _Nullable error);
+
+@class BlockchainKeccakState;
+
+@interface BlockchainKeccakState : NSObject <goSeqRefInterface, BlockchainKeccakState> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (long)blockSize;
+- (BOOL)read:(NSData* _Nullable)p0 ret0_:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
+- (void)reset;
+- (long)size;
+- (NSData* _Nullable)sum:(NSData* _Nullable)b;
+- (BOOL)write:(NSData* _Nullable)p0 n:(long* _Nullable)n error:(NSError* _Nullable* _Nullable)error;
+@end
 
 #endif

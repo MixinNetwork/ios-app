@@ -3,7 +3,7 @@ import MixinServices
 
 class BackupViewController: SettingsTableViewController {
     
-    private let backupActionRow = SettingsRow(title: R.string.localizable.back_up_now())
+    private let backupActionRow = SettingsRow(title: R.string.localizable.start_backup())
     private let backupFilesRow = SettingsRow(title: R.string.localizable.include_files(),
                                              accessory: .switch(isOn: AppGroupUserDefaults.User.backupFiles))
     private let backupVideosRow = SettingsRow(title: R.string.localizable.include_videos(),
@@ -102,7 +102,7 @@ class BackupViewController: SettingsTableViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.updateActionSectionFooter()
             self.backupActionRow.accessory = .none
-            self.backupActionRow.title = R.string.localizable.back_up_now()
+            self.backupActionRow.title = R.string.localizable.start_backup()
             if case let .switch(isOn, _) = self.backupFilesRow.accessory {
                 self.backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: true)
             }

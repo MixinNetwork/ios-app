@@ -111,7 +111,7 @@ class TIPIntroViewController: IntroViewController {
         lazy var linksMap: [NSRange: URL] = {
             let range = (description as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
             if range.location != NSNotFound && range.length != 0 {
-                return [range: URL.pinTIP]
+                return [range: URL.tip]
             } else {
                 return [:]
             }

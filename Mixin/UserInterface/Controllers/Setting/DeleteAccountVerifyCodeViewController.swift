@@ -3,15 +3,22 @@ import MixinServices
 
 final class DeleteAccountVerifyCodeViewController: VerificationCodeViewController {
     
-    private var context: VerifyNumberContext!
+    private var context: DeleteAccountContext
     
-    deinit {
-        CaptchaManager.shared.clean()
+    private lazy var captcha = Captcha(viewController: self)
+    
+    init(context: DeleteAccountContext) {
+        self.context = context
+        super.init()
     }
-     
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = R.string.localizable.landing_validation_title(context.numberRepresentation)
+        titleLabel.text = R.string.localizable.landing_validation_title(context.phoneNumber)
     }
     
     override func verificationCodeFieldEditingChanged(_ sender: Any) {
@@ -28,19 +35,22 @@ final class DeleteAccountVerifyCodeViewController: VerificationCodeViewControlle
     }
     
     override func requestVerificationCode(captchaToken token: CaptchaToken?) {
-        AccountAPI.sendCode(to: context.number, captchaToken: token, purpose: .deactivated) { [weak self] (result) in
-            guard let weakSelf = self else {
+        AccountAPI.deactivateVerifications(
+            phoneNumber: context.phoneNumber,
+            captchaToken: token
+        ) { [weak self] (result) in
+            guard let self else {
                 return
             }
             switch result {
             case .success(let verification):
-                weakSelf.context.verificationId = verification.id
-                weakSelf.resendButton.isBusy = false
-                weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
+                self.context.verificationID = verification.id
+                self.resendButton.isBusy = false
+                self.resendButton.beginCountDown(self.resendInterval)
             case let.failure(error):
                 switch error {
                 case .requiresCaptcha:
-                    CaptchaManager.shared.validate(on: weakSelf) { (result) in
+                    self.captcha.validate { [weak self] (result) in
                         switch result {
                         case .success(let token):
                             self?.requestVerificationCode(captchaToken: token)
@@ -49,19 +59,18 @@ final class DeleteAccountVerifyCodeViewController: VerificationCodeViewControlle
                         }
                     }
                 default:
-                    weakSelf.alert(error.localizedDescription)
-                    weakSelf.resendButton.isBusy = false
+                    self.alert(error.localizedDescription)
+                    self.resendButton.isBusy = false
                 }
             }
         }
     }
     
-    class func instance(context: VerifyNumberContext) -> UIViewController {
-        let vc = DeleteAccountVerifyCodeViewController()
-        vc.context = context
+    class func instance(context: DeleteAccountContext) -> UIViewController {
+        let vc = DeleteAccountVerifyCodeViewController(context: context)
         return ContainerViewController.instance(viewController: vc, title: "")
     }
-
+    
 }
 
 extension DeleteAccountVerifyCodeViewController {
@@ -70,22 +79,24 @@ extension DeleteAccountVerifyCodeViewController {
         isBusy = true
         verificationCodeField.resignFirstResponder()
         let code = verificationCodeField.text
-        AccountAPI.deactiveVerification(verificationId: context.verificationId, code: code) { [weak self] (result) in
-            guard let weakSelf = self else {
+        AccountAPI.deactiveVerification(verificationID: context.verificationID, code: code) { [weak self] (result) in
+            guard let self else {
                 return
             }
             switch result {
             case .success:
-                DeleteAccountConfirmWindow.instance(context: weakSelf.context).presentPopupControllerAnimated()
+                DeleteAccountConfirmWindow
+                    .instance(verificationID: self.context.verificationID)
+                    .presentPopupControllerAnimated()
             case let .failure(error):
-                weakSelf.verificationCodeField.clear()
+                self.verificationCodeField.clear()
                 PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
                     self?.alert(description, cancelHandler: { _ in
                         self?.verificationCodeField.becomeFirstResponder()
                     })
                 }
             }
-            weakSelf.isBusy = false
+            self.isBusy = false
         }
     }
     

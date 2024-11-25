@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BackupMnemonicsWarningViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="backupButton" destination="bbv-un-HDR" id="Ajm-QQ-jC6"/>
+                <outlet property="cancelButton" destination="QqA-dc-GUA" id="DyJ-Xj-fK2"/>
+                <outlet property="contentStackView" destination="wTN-kn-4aa" id="grI-wy-x6g"/>
+                <outlet property="descriptionLabel" destination="DmG-Tf-8J0" id="4IG-nT-YGT"/>
+                <outlet property="titleLabel" destination="QAi-Yf-gTa" id="ta2-QX-k85"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="496"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="wTN-kn-4aa">
+                    <rect key="frame" x="36" y="58" width="321" height="396"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="mnemonic_phrase" translatesAutoresizingMaskIntoConstraints="NO" id="Xri-jI-w8T">
+                            <rect key="frame" x="112.66666666666666" y="0.0" width="96" height="96"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="96" id="KJb-Xg-eS3"/>
+                                <constraint firstAttribute="width" secondItem="Xri-jI-w8T" secondAttribute="height" id="Oed-u7-I1T"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="Backup Mnemonic Phrase" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QAi-Yf-gTa">
+                            <rect key="frame" x="41.666666666666686" y="120" width="238" height="24"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DmG-Tf-8J0">
+                            <rect key="frame" x="160.66666666666666" y="168" width="0.0" height="106"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="700" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbv-un-HDR" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="298" width="321" height="30"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title=""/>
+                            <connections>
+                                <action selector="backup:" destination="-1" eventType="touchUpInside" id="SIi-sh-nXa"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="700" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QqA-dc-GUA">
+                            <rect key="frame" x="145.66666666666666" y="352" width="30" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="jcF-fL-Wi5"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="">
+                                <color key="titleColor" name="theme"/>
+                            </state>
+                            <connections>
+                                <action selector="cancelBackup:" destination="-1" eventType="touchUpInside" id="LnG-mZ-fDo"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="bbv-un-HDR" firstAttribute="width" secondItem="wTN-kn-4aa" secondAttribute="width" id="HIb-aB-ats"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="wTN-kn-4aa" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="1pp-1e-tHQ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="wTN-kn-4aa" secondAttribute="bottom" constant="8" id="EWd-xG-x62"/>
+                <constraint firstItem="wTN-kn-4aa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="58" id="Tvh-U4-OB4"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="wTN-kn-4aa" secondAttribute="trailing" constant="36" id="hX0-eQ-sUg"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="44" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="mnemonic_phrase" width="76" height="72"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

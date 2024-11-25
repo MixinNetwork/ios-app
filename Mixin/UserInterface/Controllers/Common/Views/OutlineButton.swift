@@ -8,7 +8,7 @@ class OutlineButton: UIButton {
         }
     }
     
-    @IBInspectable var normalOutlineColor: UIColor = R.color.collectible_outline()! {
+    @IBInspectable var normalOutlineColor: UIColor = R.color.outline_primary()! {
         didSet {
             updateColors()
         }

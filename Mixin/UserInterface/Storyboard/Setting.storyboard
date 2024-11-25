@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -663,238 +663,15 @@
             </objects>
             <point key="canvasLocation" x="1477.5999999999999" y="2089.2053973013494"/>
         </scene>
-        <!--Emergency Tips View Controller-->
-        <scene sceneID="blm-MZ-Vnn">
-            <objects>
-                <viewController storyboardIdentifier="emergency_tips" id="n2f-rG-ufN" customClass="EmergencyTipsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="2gO-e6-olN">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Swr-M8-nCZ">
-                                <rect key="frame" x="0.0" y="368.33333333333326" width="393" height="496.66666666666674"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_emergency_contact" translatesAutoresizingMaskIntoConstraints="NO" id="mGo-Ey-I7z">
-                                        <rect key="frame" x="162.66666666666666" y="70" width="68" height="68"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Emergency Contact" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ug6-5I-fh2">
-                                        <rect key="frame" x="30" y="162.00000000000006" width="333" height="21.666666666666657"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <color key="textColor" name="text"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_contact"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1jz-c0-1oi">
-                                        <rect key="frame" x="30" y="199.66666666666669" width="333" height="94"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0LO-fL-fXU">
-                                                <rect key="frame" x="0.0" y="0.0" width="333" height="50.333333333333336"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" name="text"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_emergency_content"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attention: the Emergency Contact cannot help you to recover PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFl-dr-mNd">
-                                                <rect key="frame" x="1.6666666666666572" y="60.333333333333371" width="329.66666666666674" height="33.666666666666657"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" name="red"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_emergency_warning"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstItem="Ug6-5I-fh2" firstAttribute="top" secondItem="mGo-Ey-I7z" secondAttribute="bottom" constant="24" id="2O5-hM-LXk"/>
-                                    <constraint firstItem="mGo-Ey-I7z" firstAttribute="centerX" secondItem="Swr-M8-nCZ" secondAttribute="centerX" id="ERG-XE-BE0"/>
-                                    <constraint firstAttribute="trailing" secondItem="Ug6-5I-fh2" secondAttribute="trailing" constant="30" id="TPP-HF-ir7"/>
-                                    <constraint firstItem="1jz-c0-1oi" firstAttribute="top" secondItem="Ug6-5I-fh2" secondAttribute="bottom" constant="16" id="gIz-73-spU"/>
-                                    <constraint firstAttribute="trailing" secondItem="1jz-c0-1oi" secondAttribute="trailing" constant="30" id="ii4-8E-eqm"/>
-                                    <constraint firstItem="1jz-c0-1oi" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="jyq-Jz-Fvf"/>
-                                    <constraint firstItem="Ug6-5I-fh2" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="sct-RZ-5Qe"/>
-                                    <constraint firstItem="mGo-Ey-I7z" firstAttribute="top" secondItem="Swr-M8-nCZ" secondAttribute="top" constant="70" id="zen-uN-OW6" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                                                <real key="value" value="30"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </constraint>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="13"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EVy-Pe-t5v" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="146.66666666666666" y="718" width="100" height="50"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
-                                <state key="normal" title="Got it">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="got_it"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="nextAction:" destination="n2f-rG-ufN" eventType="touchUpInside" id="B6H-Cm-TZL"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="jVc-6A-6FU"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="jVc-6A-6FU" firstAttribute="bottom" secondItem="EVy-Pe-t5v" secondAttribute="bottom" constant="50" id="2Ia-oJ-Zgt" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                                        <real key="value" value="20"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
-                            <constraint firstItem="Swr-M8-nCZ" firstAttribute="leading" secondItem="2gO-e6-olN" secondAttribute="leading" id="You-IM-PiS"/>
-                            <constraint firstAttribute="trailing" secondItem="Swr-M8-nCZ" secondAttribute="trailing" id="YzS-nT-cvR"/>
-                            <constraint firstAttribute="bottom" secondItem="Swr-M8-nCZ" secondAttribute="bottom" constant="-13" id="agm-h2-GfF"/>
-                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="centerX" secondItem="jVc-6A-6FU" secondAttribute="centerX" id="fg7-zR-SFr"/>
-                            <constraint firstItem="Swr-M8-nCZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jVc-6A-6FU" secondAttribute="top" id="uuS-pY-hAF"/>
-                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="top" secondItem="1jz-c0-1oi" secondAttribute="bottom" constant="56" id="yVI-a5-eFg" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                                        <real key="value" value="30"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OYK-dT-qE1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="774" y="-45"/>
-        </scene>
-        <!--View Emergency Contact View Controller-->
-        <scene sceneID="4gH-26-Svb">
-            <objects>
-                <viewController storyboardIdentifier="view_emergency_contact" id="lUn-sO-6eU" customClass="ViewEmergencyContactViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="gcZ-3Y-ihg">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FDX-sC-Sht" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="298" width="393" height="20"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="jNT-NR-Vwx"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="NO"/>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D2a-Mp-pEf">
-                                <rect key="frame" x="0.0" y="59" width="393" height="239"/>
-                                <subviews>
-                                    <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6zk-Vb-EO5" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="151.66666666666666" y="50" width="90" height="90"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="90" id="E2d-LR-p4z"/>
-                                            <constraint firstAttribute="width" constant="90" id="jKk-uh-ViF"/>
-                                        </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="45"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
-                                                <real key="value" value="36"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Uz2-gj-C4K">
-                                        <rect key="frame" x="16" y="150" width="361" height="40"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z6f-fP-ZdN">
-                                                <rect key="frame" x="0.0" y="0.0" width="361" height="21.666666666666668"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                <color key="textColor" name="text"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin ID: 000000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DPa-Qv-fEF">
-                                                <rect key="frame" x="0.0" y="25.666666666666654" width="361" height="14.333333333333332"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" name="text_tertiary"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="239" id="308-KE-Rhj"/>
-                                    <constraint firstItem="Uz2-gj-C4K" firstAttribute="leading" secondItem="D2a-Mp-pEf" secondAttribute="leading" constant="16" id="6zu-2B-RaS"/>
-                                    <constraint firstItem="Uz2-gj-C4K" firstAttribute="top" secondItem="6zk-Vb-EO5" secondAttribute="bottom" constant="10" id="aKO-p1-8rm"/>
-                                    <constraint firstAttribute="trailing" secondItem="Uz2-gj-C4K" secondAttribute="trailing" constant="16" id="g0l-le-Irq"/>
-                                    <constraint firstItem="6zk-Vb-EO5" firstAttribute="top" secondItem="D2a-Mp-pEf" secondAttribute="top" constant="50" id="ghN-PA-c53"/>
-                                    <constraint firstItem="6zk-Vb-EO5" firstAttribute="centerX" secondItem="D2a-Mp-pEf" secondAttribute="centerX" id="hg9-64-ZLO"/>
-                                </constraints>
-                            </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vrR-3W-Ttc" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="20" y="310" width="353" height="522"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="EDw-Hw-M5N"/>
-                        <color key="backgroundColor" name="background_secondary"/>
-                        <constraints>
-                            <constraint firstItem="vrR-3W-Ttc" firstAttribute="leading" secondItem="gcZ-3Y-ihg" secondAttribute="leading" constant="20" id="6SU-9U-HwE"/>
-                            <constraint firstItem="D2a-Mp-pEf" firstAttribute="leading" secondItem="gcZ-3Y-ihg" secondAttribute="leading" id="E6x-Hv-927"/>
-                            <constraint firstItem="FDX-sC-Sht" firstAttribute="top" secondItem="D2a-Mp-pEf" secondAttribute="bottom" id="G0t-XS-ME1"/>
-                            <constraint firstItem="vrR-3W-Ttc" firstAttribute="top" secondItem="D2a-Mp-pEf" secondAttribute="bottom" constant="12" id="TUq-jo-e03"/>
-                            <constraint firstAttribute="trailing" secondItem="vrR-3W-Ttc" secondAttribute="trailing" constant="20" id="W1M-Tx-T9G"/>
-                            <constraint firstAttribute="bottom" secondItem="vrR-3W-Ttc" secondAttribute="bottom" constant="20" id="iOJ-IM-5fb"/>
-                            <constraint firstItem="FDX-sC-Sht" firstAttribute="leading" secondItem="gcZ-3Y-ihg" secondAttribute="leading" id="kOA-cr-mEj"/>
-                            <constraint firstAttribute="trailing" secondItem="FDX-sC-Sht" secondAttribute="trailing" id="let-TT-HpA"/>
-                            <constraint firstAttribute="trailing" secondItem="D2a-Mp-pEf" secondAttribute="trailing" id="ogy-Sr-J9b"/>
-                            <constraint firstItem="D2a-Mp-pEf" firstAttribute="top" secondItem="EDw-Hw-M5N" secondAttribute="top" id="q4x-yd-fLZ"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="avatarImageView" destination="6zk-Vb-EO5" id="zbg-Rv-Ia2"/>
-                        <outlet property="descriptionTextView" destination="vrR-3W-Ttc" id="Pon-aP-BpL"/>
-                        <outlet property="idLabel" destination="DPa-Qv-fEF" id="rdx-Nn-8c2"/>
-                        <outlet property="nameLabel" destination="z6f-fP-ZdN" id="3gp-l1-Uzu"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="wbQ-pi-JdR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1468" y="-45"/>
-        </scene>
     </scenes>
     <resources>
         <image name="Conversation/ic_photo" width="20" height="20"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
-        <image name="ic_emergency_contact" width="68" height="68"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="background_secondary">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_wallpaper">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -902,14 +679,11 @@
         <namedColor name="green">
             <color red="0.36470588235294116" green="0.73725490196078436" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="red">
-            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

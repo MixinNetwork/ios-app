@@ -37,7 +37,7 @@ public class Ed25519PrivateKey {
         self.key = key
     }
     
-    func signature(for data: Data) throws -> Data {
+    public func signature(for data: Data) throws -> Data {
         try key.signature(for: data)
     }
     

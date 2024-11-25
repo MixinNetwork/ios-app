@@ -76,35 +76,146 @@ public final class AccountAPI: MixinAPI {
     }
     
     @discardableResult
-    public static func sendCode(to phoneNumber: String, captchaToken: CaptchaToken?, purpose: VerificationPurpose, completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void) -> Request? {
-        var param = ["phone": phoneNumber,
-                     "purpose": purpose.rawValue]
-        switch captchaToken {
-        case let .reCaptcha(token):
-            param["g_recaptcha_response"] = token
-        case let .hCaptcha(token):
-            param["hcaptcha_response"] = token
-        default:
-            break
-        }
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            param["package_name"] = bundleIdentifier
-        }
-        return request(method: .post, path: Path.verifications, parameters: param, options: .authIndependent, completion: completion)
+    public static func sessionVerifications(
+        phoneNumber: String,
+        captchaToken: CaptchaToken?,
+        completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void
+    ) -> Request? {
+        let parameters = VerificationRequest.session(
+            phone: phoneNumber,
+            captchaToken: captchaToken
+        )
+        return request(
+            method: .post,
+            path: Path.verifications,
+            parameters: parameters,
+            options: .authIndependent,
+            completion: completion
+        )
     }
     
-    public static func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .post, path: Path.verifications(id: verificationId), parameters: accountRequest, options: .authIndependent, completion: completion)
+    @discardableResult
+    public static func anonymousSessionVerifications(
+        publicKey: Data,
+        message: Data,
+        signature: Data,
+        captchaToken: CaptchaToken?,
+        completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void
+    ) -> Request? {
+        let parameters = VerificationRequest.anonymousSession(
+            publicKey: publicKey,
+            message: message,
+            signature: signature,
+            captchaToken: captchaToken
+        )
+        return request(
+            method: .post,
+            path: Path.verifications,
+            parameters: parameters,
+            options: .authIndependent,
+            completion: completion
+        )
     }
     
-    public static func changePhoneNumber(verificationID: String, code: String, pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
+    @discardableResult
+    public static func phoneVerifications(
+        phoneNumber: String,
+        base64Salt: String,
+        captchaToken: CaptchaToken?,
+        completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void
+    ) -> Request? {
+        var parameters = VerificationRequest.changePhoneNumber(
+            phone: phoneNumber,
+            base64Salt: base64Salt,
+            captchaToken: captchaToken
+        )
+        return request(
+            method: .post,
+            path: Path.verifications,
+            parameters: parameters,
+            completion: completion
+        )
+    }
+    
+    @discardableResult
+    public static func deactivateVerifications(
+        phoneNumber: String,
+        captchaToken: CaptchaToken?,
+        completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void
+    ) -> Request? {
+        var parameters = VerificationRequest.deactivate(
+            phoneNumber: phoneNumber,
+            captchaToken: captchaToken
+        )
+        return request(
+            method: .post,
+            path: Path.verifications,
+            parameters: parameters,
+            completion: completion
+        )
+    }
+    
+    public static func login(
+        verificationId: String,
+        code: String,
+        registrationID: Int,
+        sessionSecret: String,
+        completion: @escaping (MixinAPI.Result<Account>) -> Void
+    ) {
+        let parameters = VerificationRequest.session(
+            code: code,
+            registrationID: registrationID,
+            sessionSecret: sessionSecret
+        )
+        request(
+            method: .post,
+            path: Path.verifications(id: verificationId),
+            parameters: parameters,
+            options: .authIndependent,
+            completion: completion
+        )
+    }
+    
+    public static func login(
+        verificationID: String,
+        masterSignature: Data,
+        registrationID: Int,
+        sessionSecret: Data,
+        completion: @escaping (MixinAPI.Result<Account>) -> Void
+    ) {
+        let parameters = VerificationRequest.anonymousSession(
+            masterSignature: masterSignature,
+            registrationID: registrationID,
+            sessionSecret: sessionSecret
+        )
+        request(
+            method: .post,
+            path: Path.verifications(id: verificationID),
+            parameters: parameters,
+            options: .authIndependent,
+            completion: completion
+        )
+    }
+    
+    public static func changePhoneNumber(
+        verificationID: String,
+        code: String,
+        pin: String,
+        salt: String,
+        completion: @escaping (MixinAPI.Result<Account>) -> Void
+    ) {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.updatePhoneNumber(verificationID: verificationID, code: code)
         }, onFailure: completion) { pin in
-            let accountRequest = AccountRequest(code: code, registrationId: nil, pin: pin, sessionSecret: nil)
+            let parameters = [
+                "purpose": VerificationPurpose.phone.rawValue,
+                "code": code,
+                "pin": pin,
+                "salt_base64": salt,
+            ]
             self.request(method: .post,
                          path: Path.verifications(id: verificationID),
-                         parameters: accountRequest,
+                         parameters: parameters,
                          options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }
@@ -206,20 +317,36 @@ public final class AccountAPI: MixinAPI {
         request(method: .post, path: Path.logout, parameters: ["session_id": sessionId], completion: completion)
     }
     
-    public static func deactiveVerification(verificationId: String, code: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        let parameters = ["code": code, "purpose": VerificationPurpose.deactivated.rawValue]
+    public static func deactiveVerification(
+        verificationID: String,
+        code: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
         request(method: .post,
-                path: Path.verifications(id: verificationId),
-                parameters: parameters,
+                path: Path.verifications(id: verificationID),
+                parameters: VerificationRequest.deactivate(code: code),
                 options: .disableRetryOnRequestSigningTimeout,
                 completion: completion)
     }
     
-    public static func deactiveAccount(pin: String, verificationID: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+    public static func deactiveAccount(
+        pin: String,
+        verificationID: String?,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
         PINEncryptor.encrypt(pin: pin, tipBody: {
-            try TIPBody.deactivateUser(phoneVerificationID: verificationID)
+            if let verificationID {
+                try TIPBody.deactivateUser(verificationID: verificationID)
+            } else {
+                try TIPBody.deactivateUser(userID: myUserId)
+            }
         }, onFailure: completion) { (encryptedPin) in
-            let parameters = ["pin_base64": encryptedPin, "verification_id": verificationID]
+            var parameters = [
+                "pin_base64": encryptedPin,
+            ]
+            if let verificationID {
+                parameters["verification_id"] = verificationID
+            }
             request(method: .post,
                     path: Path.deactivate,
                     parameters: parameters,
@@ -227,5 +354,28 @@ public final class AccountAPI: MixinAPI {
                     completion: completion)
         }
     }
-
+    
+    public static func exportSalt(
+        pin: String,
+        userID: String,
+        masterPublicKey: String,
+        masterSignature: String,
+        completion: @escaping (MixinAPI.Result<Account>) -> Void
+    ) {
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.exportPrivate(userID: userID)
+        }, onFailure: completion) { (pin) in
+            let parameters = [
+                "pin_base64": pin,
+                "master_public_hex": masterPublicKey,
+                "master_signature_hex": masterSignature,
+            ]
+            request(method: .post,
+                    path: "/me/salt_export",
+                    parameters: parameters,
+                    options: .disableRetryOnRequestSigningTimeout,
+                    completion: completion)
+        }
+    }
+    
 }

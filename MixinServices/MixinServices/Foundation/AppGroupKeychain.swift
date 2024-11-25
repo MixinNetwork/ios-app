@@ -9,6 +9,7 @@ public enum AppGroupKeychain {
         static let ephemeralSeed = Data([0x03]) as NSData
         static let tipPriv = Data([0x04]) as NSData
         static let salt = Data([0x05]) as NSData
+        static let mnemonics = Data([0x06]) as NSData
     }
     
     @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.deviceID])
@@ -29,12 +30,16 @@ public enum AppGroupKeychain {
     @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.salt])
     public static var encryptedSalt: Data?
     
+    @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.mnemonics])
+    public static var mnemonics: Data?
+    
     public static func removeItemsForCurrentSession() {
         sessionSecret = nil
         pinToken = nil
         ephemeralSeed = nil
         encryptedTIPPriv = nil
         encryptedSalt = nil
+        mnemonics = nil
     }
     
 }

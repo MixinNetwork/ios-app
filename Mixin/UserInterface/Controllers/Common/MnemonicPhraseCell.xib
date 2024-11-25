@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="mnemonic_phrase" id="Wac-z0-cRp" customClass="MnemonicPhraseCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="84" height="46"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="TuY-1h-aNK">
+                <rect key="frame" x="0.0" y="0.0" width="84" height="46"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n8e-Oz-Uz2">
+                        <rect key="frame" x="6" y="7" width="72" height="32"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7Y-3i-llF">
+                                <rect key="frame" x="16" y="16" width="40" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="a7Y-3i-llF" firstAttribute="centerY" secondItem="n8e-Oz-Uz2" secondAttribute="centerY" id="D7J-WQ-Wwe"/>
+                            <constraint firstAttribute="trailing" secondItem="a7Y-3i-llF" secondAttribute="trailing" constant="16" id="UMb-qv-bHU"/>
+                            <constraint firstAttribute="height" constant="32" id="ZpV-PC-e7r"/>
+                            <constraint firstItem="a7Y-3i-llF" firstAttribute="leading" secondItem="n8e-Oz-Uz2" secondAttribute="leading" constant="16" id="mZi-kQ-UqQ"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" name="keyboard_background_14"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="n8e-Oz-Uz2" secondAttribute="trailing" constant="6" id="Grk-6v-Xhg"/>
+                    <constraint firstItem="n8e-Oz-Uz2" firstAttribute="leading" secondItem="TuY-1h-aNK" secondAttribute="leading" constant="6" id="NbQ-Be-GQC"/>
+                    <constraint firstItem="n8e-Oz-Uz2" firstAttribute="top" secondItem="TuY-1h-aNK" secondAttribute="top" constant="7" id="rOA-Ei-2ri"/>
+                    <constraint firstAttribute="bottom" secondItem="n8e-Oz-Uz2" secondAttribute="bottom" constant="7" id="vBK-2a-KaV"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" name="keyboard_background_14"/>
+            <connections>
+                <outlet property="label" destination="a7Y-3i-llF" id="AI9-KO-i0d"/>
+                <outlet property="labelBackgroundView" destination="n8e-Oz-Uz2" id="tdn-iP-Axv"/>
+            </connections>
+            <point key="canvasLocation" x="-130" y="-38"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="keyboard_background_14">
+            <color red="0.83529411764705885" green="0.84313725490196079" blue="0.86274509803921573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

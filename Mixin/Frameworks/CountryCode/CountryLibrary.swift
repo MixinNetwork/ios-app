@@ -1,7 +1,7 @@
 import Foundation
 import CoreTelephony
 
-class CountryLibrary {
+final class CountryLibrary {
     
     let countries: [Country]
     let deviceCountry: Country

@@ -2,7 +2,7 @@ import UIKit
 import LocalAuthentication
 import MixinServices
 
-class WalletViewController: UIViewController, MixinNavigationAnimating {
+class WalletViewController: UIViewController, MixinNavigationAnimating, MnemonicsBackupChecking {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: WalletHeaderView!
@@ -208,7 +208,9 @@ extension WalletViewController: PillActionView.Delegate {
             controller.showEmptyHintIfNeeded = false
             controller.searchResultsFromServer = true
             controller.tokens = tokens
-            present(controller, animated: true, completion: nil)
+            withMnemonicsBackupChecked {
+                self.present(controller, animated: true, completion: nil)
+            }
         case .swap:
             let swap = MixinSwapViewController.contained(sendAssetID: nil, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)

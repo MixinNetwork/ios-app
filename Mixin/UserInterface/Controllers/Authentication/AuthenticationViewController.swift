@@ -104,15 +104,38 @@ final class AuthenticationViewController: UIViewController {
             view.addSubview(intentViewController.view)
             intentViewController.view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
             intentViewController.view.setContentHuggingPriority(.defaultLow, for: .vertical)
+            if intent.options.contains(.viewUnderPINField) {
+                titleStackView.snp.makeConstraints { make in
+                    make.bottom.equalTo(pinFieldWrapperView.snp.top)
+                }
+            } else {
+                pinFieldWrapperView.snp.makeConstraints { make in
+                    make.bottom.equalTo(keyboardPlaceholderView.snp.top)
+                        .offset(-10)
+                        .priority(.almostRequired)
+                }
+            }
             intentViewController.view.snp.makeConstraints({ (make) in
-                make.top.equalTo(titleStackView.snp.bottom)
                 make.leading.trailing.equalToSuperview()
-                make.bottom.equalTo(pinFieldWrapperView.snp.top)
+                if intent.options.contains(.viewUnderPINField) {
+                    make.top.equalTo(pinFieldWrapperView.snp.bottom)
+                    make.bottom.equalTo(keyboardPlaceholderView.snp.top)
+                        .offset(-10)
+                        .priority(.almostRequired)
+                } else {
+                    make.top.equalTo(titleStackView.snp.bottom)
+                    make.bottom.equalTo(pinFieldWrapperView.snp.top)
+                }
             })
             intentViewController.didMove(toParent: self)
         } else {
             titleStackView.snp.makeConstraints { make in
                 make.bottom.equalTo(pinFieldWrapperView.snp.top)
+            }
+            pinFieldWrapperView.snp.makeConstraints { make in
+                make.bottom.equalTo(keyboardPlaceholderView.snp.top)
+                    .offset(-10)
+                    .priority(.almostRequired)
             }
         }
         

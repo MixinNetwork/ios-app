@@ -89,7 +89,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         super.viewDidLoad()
         
         for (i, percentage) in presetChangePercentages.enumerated() {
-            let button = PresetPercentageButton(type: .system)
+            let button = RoundOutlineButton(type: .system)
             let title = NumberFormatter.percentage.string(decimal: percentage)
             button.setTitle(title, for: .normal)
             button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 12, weight: .medium), adjustForContentSize: true)
@@ -290,15 +290,6 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
 }
 
 extension AddMarketAlertViewController {
-    
-    private final class PresetPercentageButton: OutlineButton {
-        
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            layer.cornerRadius = bounds.height / 2
-        }
-        
-    }
     
     private struct PercentageLimitation {
         

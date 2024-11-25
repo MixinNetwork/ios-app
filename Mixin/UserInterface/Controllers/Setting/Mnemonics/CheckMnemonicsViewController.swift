@@ -1,0 +1,103 @@
+import UIKit
+import MixinServices
+
+final class CheckMnemonicsViewController: InputMnemonicsViewController {
+    
+    private enum CheckingError: Error {
+        case mismatched
+    }
+    
+    private let mnemonics: Mnemonics
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    init(mnemonics: Mnemonics) {
+        self.mnemonics = mnemonics
+        super.init()
+    }
+    
+    static func contained(mnemonics: Mnemonics) -> ContainerViewController {
+        let viewController = CheckMnemonicsViewController(mnemonics: mnemonics)
+        let container = ContainerViewController.instance(viewController: viewController, title: "")
+        return container
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        titleLabel.text = R.string.localizable.check_mnemonic_phrase()
+        descriptionLabel.text = R.string.localizable.check_mnemonic_phrase_desc()
+        addTextFields(count: mnemonics.phrases.count)
+        for textField in textFields {
+            if textField.tag == mnemonics.phrases.count - 1 {
+                textField.returnKeyType = .done
+            } else {
+                textField.returnKeyType = .next
+            }
+            textField.clearButtonMode = .whileEditing
+            textField.delegate = self
+        }
+        addSpacerIntoInputFields()
+        addButtonIntoInputFields(
+            image: R.image.explore.web3_send_delete()!,
+            title: R.string.localizable.clear(),
+            action: #selector(emptyPhrases(_:))
+        )
+        confirmButton.setTitle(R.string.localizable.complete(), for: .normal)
+        confirmButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .semibold), adjustForContentSize: true)
+        confirmButton.isEnabled = false
+        NotificationCenter.default.addObserver(self, selector: #selector(detectPhrases(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func confirm(_ sender: Any) {
+        do {
+            let inputMnemonics = try Mnemonics(phrases: textFieldPhrases)
+            if inputMnemonics == mnemonics {
+                let alert = UIAlertController(
+                    title: R.string.localizable.backup_mnemonic_successfully(),
+                    message: nil,
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: { _ in
+                    guard let navigationController = self.navigationController else {
+                        return
+                    }
+                    var viewControllers = navigationController.viewControllers
+                    viewControllers.removeLast(2)
+                    navigationController.setViewControllers(viewControllers, animated: true)
+                }))
+                present(alert, animated: true)
+            } else {
+                throw CheckingError.mismatched
+            }
+        } catch {
+            let alert = UIAlertController(
+                title: R.string.localizable.mnemonics_mismatched(),
+                message: nil,
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
+            present(alert, animated: true)
+        }
+    }
+    
+    @objc private func emptyPhrases(_ sender: Any) {
+        for textField in textFields {
+            textField.text = nil
+        }
+        detectPhrases(sender)
+    }
+    
+    @objc private func detectPhrases(_ sender: Any) {
+        let phrases = textFields.map { textField in
+            textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        }
+        if phrases.contains(where: \.isEmpty) {
+            confirmButton.isEnabled = false
+        } else {
+            confirmButton.isEnabled = true
+        }
+    }
+    
+}

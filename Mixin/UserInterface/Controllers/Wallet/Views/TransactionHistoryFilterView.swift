@@ -6,7 +6,7 @@ class TransactionHistoryFilterView: UIView {
     let label = UILabel()
     let button = UIButton()
     
-    private let outlineColor = R.color.collectible_outline()!
+    private let outlineColor = R.color.outline_primary()!
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TokenViewController: UIViewController {
+final class TokenViewController: UIViewController, MnemonicsBackupChecking {
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
     private let transactionsCount = 20
@@ -597,7 +597,9 @@ extension TokenViewController: PillActionView.Delegate {
             send()
         case .receive:
             let deposit = DepositViewController.instance(token: token)
-            navigationController?.pushViewController(deposit, animated: true)
+            withMnemonicsBackupChecked {
+                self.navigationController?.pushViewController(deposit, animated: true)
+            }
         case .swap:
             let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)

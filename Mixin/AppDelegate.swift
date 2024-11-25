@@ -21,7 +21,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
     
+    // Even if the app is deleted, some items like the App Group Keychain will remain in the system.
+    // When a user uninstalls and reinstalls, they usually expect a completely fresh environment.
+    // Checking this value allows for the necessary adjustments to meet that expectation.
+    private var isFirstLaunch: Bool? = nil
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        updateFirstLaunch(isProtectedDataAvailable: application.isProtectedDataAvailable)
         FirebaseApp.configure()
         MixinService.callMessageCoordinator = CallService.shared
         reporterClass = CrashlyticalReporter.self
@@ -165,16 +171,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
-        if AppGroupUserDefaults.firstLaunchDate == nil {
-            AppGroupUserDefaults.firstLaunchDate = Date()
-        }
-        guard LoginManager.shared.account == nil else {
-            return
-        }
-        LoginManager.shared.reloadAccountFromUserDefaults()
-        configAnalytics()
-        if LoginManager.shared.isLoggedIn && !(mainWindow.rootViewController is HomeContainerViewController) {
-            checkLogin()
+        updateFirstLaunch(isProtectedDataAvailable: true)
+        if LoginManager.shared.account == nil {
+            LoginManager.shared.reloadAccountFromUserDefaults()
+            configAnalytics()
+            if LoginManager.shared.isLoggedIn && !(mainWindow.rootViewController is HomeContainerViewController) {
+                checkLogin()
+            }
         }
     }
     
@@ -268,9 +271,11 @@ extension AppDelegate {
         UNUserNotificationCenter.current().removeAllNotifications()
         UIApplication.shared.unregisterForRemoteNotifications()
         
+        mainWindow.endEditing(true)
         let oldRootViewController = mainWindow.rootViewController
-        mainWindow.rootViewController = LoginNavigationController.instance()
+        mainWindow.rootViewController = LoginNavigationController()
         oldRootViewController?.navigationController?.removeFromParent()
+        SignalProtocol.shared.initSignal()
     }
     
     @objc func handleClockSkew() {
@@ -285,6 +290,18 @@ extension AppDelegate {
 
 extension AppDelegate {
     
+    private func updateFirstLaunch(isProtectedDataAvailable: Bool) {
+        guard isProtectedDataAvailable else {
+            return
+        }
+        if AppGroupUserDefaults.firstLaunchDate == nil {
+            isFirstLaunch = true
+            AppGroupUserDefaults.firstLaunchDate = Date()
+        } else {
+            isFirstLaunch = false
+        }
+    }
+    
     private func checkLogin() {
         mainWindow.backgroundColor = .black
         if LoginManager.shared.isLoggedIn {
@@ -296,7 +313,20 @@ extension AppDelegate {
             }
         } else {
             if UIApplication.shared.isProtectedDataAvailable {
-                mainWindow.rootViewController = LoginNavigationController.instance()
+                SignalProtocol.shared.initSignal()
+                let navigationController = LoginNavigationController()
+                mainWindow.rootViewController = navigationController
+                if isFirstLaunch ?? false {
+                    AppGroupKeychain.removeItemsForCurrentSession()
+                }
+                if let entropy = AppGroupKeychain.mnemonics, let mnemonics = try? Mnemonics(entropy: entropy) {
+                    var viewControllers = navigationController.viewControllers
+                    viewControllers.append(contentsOf: [
+                        SignUpViewController(),
+                        LoginWithMnemonicViewController(action: .signIn(mnemonics))
+                    ])
+                    navigationController.setViewControllers(viewControllers, animated: false)
+                }
             } else {
                 mainWindow.rootViewController = R.storyboard.launchScreen.instantiateInitialViewController()
             }
@@ -308,9 +338,6 @@ extension AppDelegate {
     private func configAnalytics() {
         guard UIApplication.shared.isProtectedDataAvailable else {
             return
-        }
-        if AppGroupUserDefaults.firstLaunchDate == nil {
-            AppGroupUserDefaults.firstLaunchDate = Date()
         }
         AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
         reporter.registerUserInformation()

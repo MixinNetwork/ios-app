@@ -24,3 +24,5 @@ public let zeroWith2Fractions = {
     formatter.locale = .current
     return formatter.string(from: 0) ?? "0\(currentDecimalSeparator)00"
 }()
+
+public let anonymousCallingCode = "XIN"

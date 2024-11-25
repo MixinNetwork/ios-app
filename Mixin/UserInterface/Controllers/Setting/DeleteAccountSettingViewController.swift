@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class DeleteAccountSettingViewController: SettingsTableViewController {
+final class DeleteAccountSettingViewController: SettingsTableViewController, LogoutHandler {
     
     private let tableHeaderView = R.nib.deleteAccountTableHeaderView(withOwner: nil)!
     private let dataSource = SettingsDataSource(sections: [
@@ -9,13 +9,12 @@ final class DeleteAccountSettingViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.delete_my_account(), titleStyle: .destructive)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.change_number_instead())
+            SettingsRow(title: R.string.localizable.log_out_instead()),
+            SettingsRow(title: R.string.localizable.change_number_instead()),
         ])
     ])
     
-    deinit {
-        CaptchaManager.shared.clean()
-    }
+    private lazy var captcha = Captcha(viewController: self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +50,17 @@ extension DeleteAccountSettingViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch TIP.status {
         case .ready, .needsMigrate:
-            indexPath.section == 0 ? verifyPIN() : changeNumber()
+            switch indexPath.section {
+            case 0:
+                verifyPIN()
+            default:
+                switch indexPath.row {
+                case 0:
+                    presentLogoutConfirmationAlert()
+                default:
+                    changeNumber()
+                }
+            }
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             present(tip, animated: true)
@@ -82,7 +91,7 @@ extension DeleteAccountSettingViewController {
                     return
                 }
                 if assets.isEmpty {
-                    self.verifyNumber()
+                    self.presentVerificationConfirmation()
                 } else {
                     self.presentDeleteAccountHintWindow(assets: assets)
                 }
@@ -91,20 +100,36 @@ extension DeleteAccountSettingViewController {
     }
     
     private func changeNumber() {
-        let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
-        vc.modalPresentationStyle = .overFullScreen
-        present(vc, animated: true, completion: nil)
+        let verify = ChangeNumberPINValidationViewController.contained()
+        navigationController?.pushViewController(verify, animated: true)
     }
     
-    private func verifyNumber() {
-        guard let phone = LoginManager.shared.account?.phone else {
+    private func presentVerificationConfirmation() {
+        guard let account = LoginManager.shared.account else {
             return
         }
-        let controller = UIAlertController(title: R.string.localizable.setting_delete_account_send(phone), message: nil, preferredStyle: .alert)
+        let message: String?
+        let phoneNumber: String?
+        if let phone = account.phone, !account.isAnonymous {
+            message = R.string.localizable.setting_delete_account_send(phone)
+            phoneNumber = phone
+        } else {
+            message = nil
+            phoneNumber = nil
+        }
+        let controller = UIAlertController(title: R.string.localizable.delete_my_account(), message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .default, handler: nil))
-        controller.addAction(UIAlertAction(title: R.string.localizable.continue(), style: .default, handler: { _ in
-            self.requestVerificationCode(for: phone, captchaToken: nil)
-        }))
+        if let phoneNumber {
+            controller.addAction(UIAlertAction(title: R.string.localizable.continue(), style: .default, handler: { _ in
+                self.requestVerificationCode(for: phoneNumber, captchaToken: nil)
+            }))
+        } else {
+            controller.addAction(UIAlertAction(title: R.string.localizable.delete(), style: .destructive, handler: { _ in
+                DeleteAccountConfirmWindow
+                    .instance(verificationID: nil)
+                    .presentPopupControllerAnimated()
+            }))
+        }
         present(controller, animated: true, completion: nil)
     }
     
@@ -117,7 +142,7 @@ extension DeleteAccountSettingViewController {
     private func presentDeleteAccountHintWindow(assets: [TokenItem]) {
         let window = DeleteAccountHintWindow.instance()
         window.onViewWallet = presentWallet
-        window.onContinue = verifyNumber
+        window.onContinue = presentVerificationConfirmation
         window.render(assets: assets)
         window.presentPopupControllerAnimated()
     }
@@ -130,26 +155,29 @@ extension DeleteAccountSettingViewController {
     private func requestVerificationCode(for phone: String, captchaToken token: CaptchaToken?) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        AccountAPI.sendCode(to: phone, captchaToken: token, purpose: .deactivated) { [weak self] (result) in
-            guard let weakSelf = self else {
+        AccountAPI.deactivateVerifications(phoneNumber: phone, captchaToken: token) { [weak self] (result) in
+            guard let self else {
                 return
             }
             hud.hide()
             switch result {
             case .success(let verification):
-                let context = VerifyNumberContext(code: "", verificationId: verification.id, number: phone, numberRepresentation: phone)
+                let context = DeleteAccountContext(phoneNumber: phone, verificationID: verification.id)
                 let vc = DeleteAccountVerifyCodeViewController.instance(context: context)
-                weakSelf.navigationController?.pushViewController(vc, animated: true)
+                self.navigationController?.pushViewController(vc, animated: true)
             case let .failure(error):
                 switch error {
                 case .requiresCaptcha:
-                    CaptchaManager.shared.validate(on: weakSelf) { (result) in
-                        if case .success(let token) = result {
+                    self.captcha.validate { [weak self] (result) in
+                        switch result {
+                        case .success(let token):
                             self?.requestVerificationCode(for: phone, captchaToken: token)
+                        case .cancel, .timedOut:
+                            hud.hide()
                         }
                     }
                 default:
-                    weakSelf.alert(error.localizedDescription)
+                    self.alert(error.localizedDescription)
                 }
             }
         }

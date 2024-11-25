@@ -110,13 +110,17 @@ class LogViewController: UIViewController {
         case "ACTIVITY_PHONE_MODIFICATION":
             return (R.string.localizable.phone_number_change(), R.string.localizable.your_phone_number_has_been_changed())
         case "ACTIVITY_LOGIN_BY_PHONE":
-            return (R.string.localizable.sign_in(), R.string.localizable.sign_with_phone_number())
+            return (R.string.localizable.sign_in(), R.string.localizable.sign_with_mobile_number())
         case "ACTIVITY_LOGIN_BY_EMERGENCY_CONTACT":
             return (R.string.localizable.sign_in(), R.string.localizable.sign_with_emergency_contact())
         case "ACTIVITY_LOGIN_FROM_DESKTOP":
             return (R.string.localizable.sign_in(), R.string.localizable.desktop_on_hint())
         case "ACTIVITY_PIN_CREATION":
             return (R.string.localizable.pin_creation(), R.string.localizable.your_pin_has_been_created())
+        case "USER_EXPORT_PRIVATE":
+            return (R.string.localizable.export_mnemonic_phrase(), R.string.localizable.export())
+        case "UPGRADE_SAFE":
+            return (R.string.localizable.upgrade_safe(), R.string.localizable.upgrade_safe())
         default:
             return (code, code)
         }

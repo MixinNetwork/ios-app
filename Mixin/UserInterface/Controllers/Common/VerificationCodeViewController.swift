@@ -17,8 +17,13 @@ class VerificationCodeViewController: ContinueButtonViewController {
         }
     }
     
-    convenience init() {
-        self.init(nib: R.nib.verificationCodeView)
+    init() {
+        let nib = R.nib.verificationCodeView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
@@ -55,7 +60,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        super.viewDidDisappear(animated)
         resendButton.releaseTimer()
     }
     

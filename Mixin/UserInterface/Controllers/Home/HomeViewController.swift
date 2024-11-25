@@ -7,7 +7,6 @@ class HomeViewController: UIViewController {
     private enum BulletinDetectInterval {
         static let notificationAuthorization: TimeInterval = 2 * .day
         static let emergencyContact: TimeInterval = 7 * .day
-        static let initializePIN: TimeInterval = .day
         static let appUpdate: TimeInterval = .day
     }
     
@@ -157,18 +156,18 @@ class HomeViewController: UIViewController {
             let alert = UIAlertController(title: R.string.localizable.setting_emergency_change_mobile(), message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .default, handler: { (_) in
-                let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
-                self.present(vc, animated: true, completion: nil)
+                let verify = ChangeNumberPINValidationViewController.contained()
+                self.navigationController?.pushViewController(verify, animated: true)
             }))
             present(alert, animated: true, completion: nil)
         }
-        if let account = LoginManager.shared.account, !account.hasSafe {
-            let register = RegisterToSafeViewController()
-            let authentication = AuthenticationViewController(intent: register)
-            present(authentication, animated: true)
-        } else {
+        if AppGroupUserDefaults.User.isTIPInitialized {
             ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
             ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+        } else {
+            let initialization = InitializeTIPViewController()
+            let authentication = AuthenticationViewController(intent: initialization)
+            present(authentication, animated: true)
         }
     }
     
@@ -216,16 +215,14 @@ class HomeViewController: UIViewController {
     
     @IBAction func bulletinContinueAction(_ sender: Any) {
         switch bulletinContent {
+        case .backupMnemonics:
+            let introduction = ExportMnemonicPhrasesIntroductionViewController.contained()
+            navigationController?.pushViewController(introduction, animated: true)
         case .notification:
             UIApplication.shared.openNotificationSettings()
         case .emergencyContact:
-            let vc = EmergencyContactViewController.instance()
+            let vc = AddRecoveryContactViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
-        case .initializePIN:
-            UIApplication.homeContainerViewController?.homeTabBarController.switchTo(child: .wallet)
-        case .migrateToTIP:
-            let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
-            present(tip, animated: true)
         case .appUpdate:
             UIApplication.shared.openAppStorePage()
         case .none:
@@ -235,14 +232,12 @@ class HomeViewController: UIViewController {
     
     @IBAction func bulletinDismissAction(_ sender: Any) {
         switch bulletinContent {
+        case .backupMnemonics:
+            break
         case .notification:
             AppGroupUserDefaults.notificationBulletinDismissalDate = Date()
         case .emergencyContact:
             AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate = Date()
-        case .initializePIN:
-            AppGroupUserDefaults.User.initializePINBulletinDismissalDate = Date()
-        case .migrateToTIP:
-            return
         case .appUpdate:
             AppGroupUserDefaults.appUpdateBulletinDismissalDate = Date()
         case .none:
@@ -765,30 +760,26 @@ extension HomeViewController {
                 }
             }
             
+            guard let account = LoginManager.shared.account else {
+                return
+            }
+            
             var content: BulletinContent?
             
-            let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
-            if !userJustDismissedNotificationBulletin, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .denied {
-                content = .notification
+            if account.isAnonymous, !account.hasSaltExported {
+                content = .backupMnemonics
             }
             
             if content == nil {
-                switch TIP.status {
-                case .needsInitialize:
-                    let userJustDismissedInitializePINBulletin = isDate(AppGroupUserDefaults.User.initializePINBulletinDismissalDate, fallsInto: BulletinDetectInterval.initializePIN)
-                    if !userJustDismissedInitializePINBulletin {
-                        content = .initializePIN
-                    }
-                case .needsMigrate:
-                    break
-                case .ready, .unknown:
-                    break
+                let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
+                if !userJustDismissedNotificationBulletin, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .denied {
+                    content = .notification
                 }
             }
-
-            if content == nil {
+            
+            if content == nil, !account.isAnonymous {
                 let checkWalletBalance = await MainActor.run {
-                    if LoginManager.shared.account?.hasEmergencyContact ?? false {
+                    if account.hasEmergencyContact {
                         // User has emergency contact set
                         return false
                     } else if isDate(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, fallsInto: BulletinDetectInterval.emergencyContact) {
@@ -824,7 +815,7 @@ extension HomeViewController {
             if content == nil {
                 let userJustDismissedUpdateBulletin = isDate(AppGroupUserDefaults.appUpdateBulletinDismissalDate, fallsInto: BulletinDetectInterval.appUpdate)
                 if !userJustDismissedUpdateBulletin,
-                   let latestVersion = LoginManager.shared.account?.system?.messenger.version,
+                   let latestVersion = account.system?.messenger.version,
                    let currentVersion = Bundle.main.shortVersion,
                    currentVersion < latestVersion
                 {

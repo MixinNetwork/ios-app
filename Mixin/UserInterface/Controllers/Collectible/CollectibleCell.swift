@@ -7,7 +7,7 @@ final class CollectibleCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
-    private let outlineColor = R.color.collectible_outline()!
+    private let outlineColor = R.color.outline_primary()!
     
     private weak var textContentView: TextInscriptionContentView?
     

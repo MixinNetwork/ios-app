@@ -37,13 +37,17 @@ public final class SafeAPI: MixinAPI {
         publicKey: String,
         signature: String,
         pin: String,
-        salt: String
+        salt: String,
+        masterPublicKey: String,
+        masterSignature: String
     ) async throws -> Account {
         let body = [
             "public_key": publicKey,
             "signature": signature,
             "pin_base64": pin,
-            "salt_base64": salt
+            "salt_base64": salt,
+            "master_public_hex": masterPublicKey,
+            "master_signature_hex": masterSignature,
         ]
         return try await request(method: .post, path: "/safe/users", parameters: body)
     }

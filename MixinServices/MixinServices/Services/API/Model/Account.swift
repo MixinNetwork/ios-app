@@ -25,7 +25,7 @@ public struct Account {
     public let fullName: String
     public let biography: String
     public let avatarURL: String
-    public let phone: String
+    public let phone: String?
     public let authenticationToken: String
     public let codeID: String
     public let codeURL: String
@@ -35,6 +35,7 @@ public struct Account {
     public let acceptConversationSource: String
     public let acceptSearchSource: String
     public let hasPIN: Bool
+    public let saltExportedAt: String
     public var hasEmergencyContact: Bool
     public let pinToken: String
     public let fiatCurrency: String
@@ -47,6 +48,22 @@ public struct Account {
     public var salt: String?
     public let membership: User.Membership?
     public let system: System?
+    
+    public var isAnonymous: Bool {
+        if let phone {
+            phone.hasPrefix("+" + anonymousCallingCode)
+        } else {
+            true
+        }
+    }
+    
+    public var hasSaltExported: Bool {
+        if let date = DateFormatter.iso8601Full.date(from: saltExportedAt) {
+            date.timeIntervalSince1970 >= 0
+        } else {
+            false
+        }
+    }
     
 }
 
@@ -70,6 +87,7 @@ extension Account: Codable {
         case acceptConversationSource = "accept_conversation_source"
         case acceptSearchSource = "accept_search_source"
         case hasPIN = "has_pin"
+        case saltExportedAt = "salt_exported_at"
         case hasEmergencyContact = "has_emergency_contact"
         case pinToken = "pin_token"
         case fiatCurrency = "fiat_currency"
@@ -93,7 +111,7 @@ extension Account: Codable {
         fullName = try container.decodeIfPresent(String.self, forKey: .fullName) ?? ""
         biography = try container.decodeIfPresent(String.self, forKey: .biography) ?? ""
         avatarURL = try container.decodeIfPresent(String.self, forKey: .avatarURL) ?? ""
-        phone = try container.decodeIfPresent(String.self, forKey: .phone) ?? ""
+        phone = try container.decodeIfPresent(String.self, forKey: .phone)
         authenticationToken = try container.decodeIfPresent(String.self, forKey: .authenticationToken) ?? ""
         codeID = try container.decodeIfPresent(String.self, forKey: .codeID) ?? ""
         codeURL = try container.decodeIfPresent(String.self, forKey: .codeURL) ?? ""
@@ -103,6 +121,7 @@ extension Account: Codable {
         acceptConversationSource = try container.decodeIfPresent(String.self, forKey: .acceptConversationSource) ?? ""
         acceptSearchSource = try container.decodeIfPresent(String.self, forKey: .acceptSearchSource) ?? ""
         hasPIN = try container.decodeIfPresent(Bool.self, forKey: .hasPIN) ?? false
+        saltExportedAt = try container.decodeIfPresent(String.self, forKey: .saltExportedAt) ?? ""
         hasEmergencyContact = try container.decodeIfPresent(Bool.self, forKey: .hasEmergencyContact) ?? false
         pinToken = try container.decodeIfPresent(String.self, forKey: .pinToken) ?? ""
         fiatCurrency = try container.decodeIfPresent(String.self, forKey: .fiatCurrency) ?? ""

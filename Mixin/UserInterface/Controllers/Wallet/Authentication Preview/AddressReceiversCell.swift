@@ -68,7 +68,7 @@ final class AddressReceiversCell: UITableViewCell {
                 let labelLabel = InsetLabel()
                 labelLabel.contentInset = UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 10)
                 labelLabel.font = .systemFont(ofSize: 12)
-                labelLabel.backgroundColor = R.color.address_label_background()
+                labelLabel.backgroundColor = R.color.background_quaternary()
                 labelLabel.textColor = R.color.text_secondary()
                 labelLabel.text = label
                 addSubview(labelLabel)

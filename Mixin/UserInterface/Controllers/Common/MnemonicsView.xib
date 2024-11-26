@@ -15,6 +15,7 @@
                 <outlet property="contentViewHeightConstraint" destination="0Dn-GX-pFL" id="nWo-OB-Dpj"/>
                 <outlet property="descriptionLabel" destination="jht-Ts-f1m" id="e6g-jF-CpW"/>
                 <outlet property="footerStackView" destination="oeT-of-Ux9" id="V7B-kk-F3O"/>
+                <outlet property="footerStackViewBottomConstraint" destination="HrP-Jr-PT5" id="8hj-ex-K9w"/>
                 <outlet property="inputStackView" destination="Xcc-Jk-NaY" id="6tq-83-qXI"/>
                 <outlet property="inputStackViewTopConstraint" destination="uQW-57-lmF" id="dgr-Eg-iRG"/>
                 <outlet property="scrollView" destination="r8a-QO-4SP" id="xca-en-Zkt"/>
@@ -78,7 +79,7 @@
                                 <constraint firstAttribute="trailing" secondItem="oeT-of-Ux9" secondAttribute="trailing" constant="32" id="ASO-Cn-VgD"/>
                                 <constraint firstAttribute="bottom" secondItem="5LI-do-zfN" secondAttribute="bottom" constant="30" id="C6b-qr-GyR"/>
                                 <constraint firstItem="ls4-VZ-udn" firstAttribute="top" secondItem="z1U-Vr-8X1" secondAttribute="bottom" constant="30" id="HfV-ar-bkO"/>
-                                <constraint firstItem="5LI-do-zfN" firstAttribute="top" relation="greaterThanOrEqual" secondItem="oeT-of-Ux9" secondAttribute="bottom" constant="30" id="HrP-Jr-PT5"/>
+                                <constraint firstItem="5LI-do-zfN" firstAttribute="top" relation="greaterThanOrEqual" secondItem="oeT-of-Ux9" secondAttribute="bottom" constant="20" id="HrP-Jr-PT5"/>
                                 <constraint firstItem="oeT-of-Ux9" firstAttribute="leading" secondItem="bJV-RG-GkT" secondAttribute="leading" constant="32" id="OPa-oa-sch"/>
                                 <constraint firstAttribute="trailing" secondItem="5LI-do-zfN" secondAttribute="trailing" constant="36" id="Zdv-PR-JUf"/>
                                 <constraint firstItem="5LI-do-zfN" firstAttribute="leading" secondItem="bJV-RG-GkT" secondAttribute="leading" constant="36" id="dcQ-oB-LFC"/>
@@ -124,7 +125,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

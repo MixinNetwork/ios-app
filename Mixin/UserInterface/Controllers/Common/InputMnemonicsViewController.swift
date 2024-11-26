@@ -38,13 +38,9 @@ class InputMnemonicsViewController: MnemonicsViewController {
             words = []
         }
         if words.isEmpty {
-            if textField.inputAccessoryView != nil {
-                hideInputAccessoryView(textField: textField)
-            }
+            hideInputAccessoryView(textField: textField)
         } else {
-            if textField.inputAccessoryView == nil {
-                showInputAccessoryView(textField: textField)
-            }
+            showInputAccessoryView(textField: textField)
             mnemonicsInputAccessoryView.reloadData(words: words)
         }
     }

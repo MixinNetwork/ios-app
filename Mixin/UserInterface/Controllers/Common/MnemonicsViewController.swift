@@ -13,6 +13,7 @@ class MnemonicsViewController: UIViewController {
     
     @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputStackViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var footerStackViewBottomConstraint: NSLayoutConstraint!
     
     var textFields: [UITextField] = []
     

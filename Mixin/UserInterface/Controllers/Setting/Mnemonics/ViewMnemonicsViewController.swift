@@ -48,6 +48,7 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
             footerStackView.addArrangedSubview(label)
             label.text = text
         }
+        footerStackViewBottomConstraint.constant = 30
         confirmButton.setTitle(R.string.localizable.check_backup(), for: .normal)
         confirmButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .semibold), adjustForContentSize: true)
     }

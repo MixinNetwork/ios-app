@@ -1,6 +1,6 @@
 "about" = "關於";
 "access_contacts_hint" = "同步通訊錄到 Mixin 發現更多好友";
-"access_dapps_defi_projects" = "訪問 dApps 或 DeFi 專案";
+"access_dapps_defi_projects" = "訪問 apps 或 DeFi 專案";
 "access_denied" = "禁止訪問";
 "access_to_contacts" = "訪問通訊錄";
 "account" = "賬號";
@@ -1380,10 +1380,10 @@
 "web3_message_request" = "訊息簽名";
 "web3_no_asset" = "沒有資產";
 "web3_signing" = "正在簽名";
-"web3_signing_data_success" = "資料已簽名併發送成功，請返回 dApp 繼續操作。";
+"web3_signing_data_success" = "資料已簽名併發送成功，請返回 app 繼續操作。";
 "web3_signing_failed" = "簽名失敗";
-"web3_signing_message_success" = "訊息已簽名併發送成功，請返回 dApp 繼續操作。";
-"web3_signing_transaction_success" = "交易已簽名併發送成功，請返回 dApp 繼續操作。";
+"web3_signing_message_success" = "訊息已簽名併發送成功，請返回 app 繼續操作。";
+"web3_signing_transaction_success" = "交易已簽名併發送成功，請返回 app 繼續操作。";
 "web3_signing_warning" = "我們無法驗證此請求，在傳送此請求之前，請確保您信任此應用程式。";
 "web3_transaction_request" = "交易簽名";
 "weekly" = "每週";
@@ -1426,4 +1426,4 @@
 "your_phone_number_has_been_changed" = "更換手機號";
 "your_pin_has_been_changed" = "修改 PIN";
 "your_pin_has_been_created" = "PIN 已建立";
-"ytd" = "年初至今";
+"ytd" = "今年";

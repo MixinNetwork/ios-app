@@ -7,12 +7,10 @@ final class LogoutValidationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textView.attributedText = .linkedMoreInfo(
-            content: R.string.localizable.logout_description,
-            font: .preferredFont(forTextStyle: .callout),
-            color: R.color.text()!,
-            moreInfoURL: .tip // FIXME: Which URL?
-        )
+        textView.textAlignment = .center
+        textView.font = .preferredFont(forTextStyle: .callout)
+        textView.textColor = R.color.text()
+        textView.text = R.string.localizable.logout_description()
     }
     
 }

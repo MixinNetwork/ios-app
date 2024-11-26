@@ -112,6 +112,7 @@
 "alert_value" = "数值";
 "all" = "全部";
 "all_alert" = "所有价格预警";
+"all_assets_will_be_lost" = "所有资产将无法取回";
 "all_conversations" = "所有会话";
 "all_dates" = "所有日期";
 "all_photos" = "所有照片";
@@ -679,7 +680,7 @@
 "login_desktop_first" = "请先登录桌面端";
 "logined" = "已登录";
 "logout_confirmation" = "你确定要退出登录？";
-"logout_description" = "退出登录不会影响您 Mixin 钱包的资产安全，阅读文档了解%@。";
+"logout_description" = "退出账号不会影响当前账号的资产安全，也不会删除当前账号的聊天记录。";
 "logout_title" = "输入 PIN 退出登录";
 "logs" = "日志";
 "lost_your_mobile_number" = "手机丢失？";
@@ -1093,7 +1094,7 @@
 "set_up_pin_answer_2" = "我将无法访问我的帐户和资金。";
 "set_up_pin_desc" = "Mixin Messenger 的 MPC 钱包基于去中心化密钥协议 TIP 构建，PIN 是密钥分片之一。钱包完整的密钥只存在当前设备的 TEE 安全环境中。阅读文档以了解%@。";
 "set_up_pin_desc_1" = "为您的钱包设置 6 位数的 PIN";
-"set_up_pin_desc_2" = "请再次确认您的 6 位密码";
+"set_up_pin_desc_2" = "请再次确认您的 6 位数的 PIN";
 "set_up_pin_instruction_1" = "请在稳定的网络环境下完成操作。";
 "set_up_pin_instruction_2" = "请保持应用在前台运行，设置过程中请勿强制退出。";
 "set_up_pin_instruction_3" = "该过程开始后无法取消。请记住 6 位数字 PIN，如果过程意外中止，请重新输入。";

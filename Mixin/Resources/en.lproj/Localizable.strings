@@ -112,6 +112,7 @@
 "alert_value" = "Value";
 "all" = "All";
 "all_alert" = "All Alert";
+"all_assets_will_be_lost" = "All assets will be lost";
 "all_conversations" = "All Conversations";
 "all_dates" = "All Dates";
 "all_photos" = "All Photos";
@@ -679,7 +680,7 @@
 "login_desktop_first" = "Please log in to the desktop first";
 "logined" = "Logged in";
 "logout_confirmation" = "Are you sure you want to log out?";
-"logout_description" = "Logging out will not affect your assets in Mixin wallet. Read the documentation to %@.";
+"logout_description" = "Logging out will not compromise asset security, nor will it delete chat history.";
 "logout_title" = "Enter your PIN to log out";
 "logs" = "Logs";
 "lost_your_mobile_number" = "Lost your mobile number?";

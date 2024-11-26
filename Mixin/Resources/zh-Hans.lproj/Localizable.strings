@@ -718,7 +718,7 @@
 "mnemonic_phrase_instruction_1" = "创建账号生成的 13 个助记词仅用于 Mixin Network 相关产品。";
 "mnemonic_phrase_instruction_2" = "助记词将关联到由您管理的 MPC 钱包的一个密钥分片。";
 "mnemonic_phrase_take_long" = "这应该不会花太长时间。";
-"mnemonic_phrase_tip_1" = "·存放在保险箱或安全的地方。";
+"mnemonic_phrase_tip_1" = "·存放在保险箱或安全的地方";
 "mnemonic_phrase_tip_2" = "·不要在网络上发送";
 "mnemonics_mismatched" = "助记词不符";
 "mobile_contacts" = "通讯录";

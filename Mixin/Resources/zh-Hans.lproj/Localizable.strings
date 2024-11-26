@@ -1092,8 +1092,8 @@
 "set_up_pin_answer_1" = "我可以稍后恢复我的帐户。";
 "set_up_pin_answer_2" = "我将无法访问我的帐户和资金。";
 "set_up_pin_desc" = "Mixin Messenger 的 MPC 钱包基于去中心化密钥协议 TIP 构建，PIN 是密钥分片之一。钱包完整的密钥只存在当前设备的 TEE 安全环境中。阅读文档以了解%@。";
-"set_up_pin_desc_1" = "为您的钱包设置6位数的PIN";
-"set_up_pin_desc_2" = "请再次确认您的6位密码";
+"set_up_pin_desc_1" = "为您的钱包设置 6 位数的 PIN";
+"set_up_pin_desc_2" = "请再次确认您的 6 位密码";
 "set_up_pin_instruction_1" = "请在稳定的网络环境下完成操作。";
 "set_up_pin_instruction_2" = "请保持应用在前台运行，设置过程中请勿强制退出。";
 "set_up_pin_instruction_3" = "该过程开始后无法取消。请记住 6 位数字 PIN，如果过程意外中止，请重新输入。";

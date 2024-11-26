@@ -1,6 +1,6 @@
 "about" = "Mixinについて";
 "access_contacts_hint" = "MixinはあなたのアドレスをMixinサーバーに同期させ、Mixinユーザーを自動追加します";
-"access_dapps_defi_projects" = "Access dApps and DeFi projects.";
+"access_dapps_defi_projects" = "Access apps and DeFi projects.";
 "access_denied" = "アクセスが拒否されました";
 "access_to_contacts" = "連絡先へのアクセス";
 "account" = "アカウント";
@@ -401,7 +401,7 @@
 "date_format_week_date" = "yyyy年MM月d日（E）";
 "days_count_short" = "%dD";
 "declined" = "拒否";
-"decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
+"decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for apps you trust.";
 "delete" = "削除";
 "delete_account_detail_hint" = "ローカルメッセージとiCloudにバックアップされた内容は削除されません";
 "delete_account_hint" = "アカウント情報とプロフィール画像を削除します";
@@ -1288,7 +1288,7 @@
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
 "unlock" = "Unlock";
 "unlock_web3_account" = "Unlock %@ Account";
-"unlock_web3_account_agreement" = "It is recommended to transfer assets back to more secured Mixin wallet as soon as interactions with dApps are completed.";
+"unlock_web3_account_agreement" = "It is recommended to transfer assets back to more secured Mixin wallet as soon as interactions with apps are completed.";
 "unlock_web3_account_agreement_1" = "Your assets in %@ account and Mixin wallet are isolated but managed using the same PIN.";
 "unlock_web3_account_agreement_2" = "Asset transfers between your %@ account and Mixin wallet incur network fees.";
 "unlock_web3_account_agreement_3" = "Unlocking your %1$@ account will also automatically unlock EVM accounts such as %2$@, %3$@ and others.";
@@ -1380,11 +1380,11 @@
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";
-"web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
+"web3_signing_data_success" = "The data has been signed and sent successfully, please return to app to continue.";
 "web3_signing_failed" = "Signing Failed";
-"web3_signing_message_success" = "The message has been signed and sent successfully, please return to dApp to continue.";
-"web3_signing_transaction_success" = "The transaction has been signed and sent successfully, please return to dApp to continue.";
-"web3_signing_warning" = "We cannot verify this request; please ensure you trust this dApp before proceeding with the request.";
+"web3_signing_message_success" = "The message has been signed and sent successfully, please return to app to continue.";
+"web3_signing_transaction_success" = "The transaction has been signed and sent successfully, please return to app to continue.";
+"web3_signing_warning" = "We cannot verify this request; please ensure you trust this app before proceeding with the request.";
 "web3_transaction_request" = "Transaction Request";
 "weekly" = "週";
 "weeks" = "週間";
@@ -1394,7 +1394,7 @@
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fiとデータ通信";
 "withdraw_address" = "アドレス";
-"withdraw_all_of_token_warning" = "This dApp can withdraw all your %@.";
+"withdraw_all_of_token_warning" = "This app can withdraw all your %@.";
 "withdrawal" = "出金";
 "withdrawal_addr_has_memo_or_tag" = "宛先タグやID番号やメモがない場合は、「%@」に設定することができます。";
 "withdrawal_addr_new" = "新しい%@アドレス";

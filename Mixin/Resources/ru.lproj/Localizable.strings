@@ -1,6 +1,6 @@
 "about" = "Про";
 "access_contacts_hint" = "Mixin синхронизирует вашу адресную книгу с серверами Mixin, чтобы помочь вам связаться с другими пользователями Mixin.";
-"access_dapps_defi_projects" = "Access dApps and DeFi projects.";
+"access_dapps_defi_projects" = "Access apps and DeFi projects.";
 "access_denied" = "В доступе отказано";
 "access_to_contacts" = "Доступ к контактам";
 "account" = "Аккаунт";
@@ -401,7 +401,7 @@
 "date_format_week_date" = "EEE, d MMMM yyyy";
 "days_count_short" = "%dD";
 "declined" = "Отклоненный";
-"decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for dApps you trust.";
+"decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for apps you trust.";
 "delete" = "Удалить";
 "delete_account_detail_hint" = "Локальные сообщения и резервные копии iCloud не будут удаляться автоматически";
 "delete_account_hint" = "Удалить информацию об учетной записи и фото профиля";
@@ -1288,7 +1288,7 @@
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
 "unlock" = "Unlock";
 "unlock_web3_account" = "Unlock %@ Account";
-"unlock_web3_account_agreement" = "It is recommended to transfer assets back to more secured Mixin wallet as soon as interactions with dApps are completed.";
+"unlock_web3_account_agreement" = "It is recommended to transfer assets back to more secured Mixin wallet as soon as interactions with apps are completed.";
 "unlock_web3_account_agreement_1" = "Your assets in %@ account and Mixin wallet are isolated but managed using the same PIN.";
 "unlock_web3_account_agreement_2" = "Asset transfers between your %@ account and Mixin wallet incur network fees.";
 "unlock_web3_account_agreement_3" = "Unlocking your %1$@ account will also automatically unlock EVM accounts such as %2$@, %3$@ and others.";
@@ -1380,11 +1380,11 @@
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";
-"web3_signing_data_success" = "The data has been signed and sent successfully, please return to dApp to continue.";
+"web3_signing_data_success" = "The data has been signed and sent successfully, please return to app to continue.";
 "web3_signing_failed" = "Signing Failed";
-"web3_signing_message_success" = "The message has been signed and sent successfully, please return to dApp to continue.";
-"web3_signing_transaction_success" = "The transaction has been signed and sent successfully, please return to dApp to continue.";
-"web3_signing_warning" = "We cannot verify this request; please ensure you trust this dApp before proceeding with the request.";
+"web3_signing_message_success" = "The message has been signed and sent successfully, please return to app to continue.";
+"web3_signing_transaction_success" = "The transaction has been signed and sent successfully, please return to app to continue.";
+"web3_signing_warning" = "We cannot verify this request; please ensure you trust this app before proceeding with the request.";
 "web3_transaction_request" = "Transaction Request";
 "weekly" = "Еженедельно";
 "weeks" = "недели";
@@ -1394,7 +1394,7 @@
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi и сотовая связь";
 "withdraw_address" = "Адрес";
-"withdraw_all_of_token_warning" = "This dApp can withdraw all your %@.";
+"withdraw_all_of_token_warning" = "This app can withdraw all your %@.";
 "withdrawal" = "Вывести";
 "withdrawal_addr_has_memo_or_tag" = "Тег назначения или номер ID или заметки. Если нет, вы можете установить это %@.";
 "withdrawal_addr_new" = "Новый адрес %@";

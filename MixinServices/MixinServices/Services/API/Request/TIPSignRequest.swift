@@ -38,6 +38,7 @@ struct TIPSignRequest: Encodable {
     let watcher: String
     let action = "SIGN"
     
+    @MainActor
     init(id: String, userSk: TipScalar, signer: TIPSigner, ephemeral: Data, watcher: Data, nonce: UInt64, grace: UInt64, assignee: Data?) throws {
         var error: NSError?
         guard let signerPk = TipPubKeyFromBase58(signer.identity, &error), error == nil else {

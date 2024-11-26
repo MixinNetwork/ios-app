@@ -225,7 +225,7 @@ final class CollectiblesViewController: UIViewController {
     
     private func updateOutlineColors() {
         contentSegmentedControl.layer.borderColor = R.color
-            .collectible_outline()!
+            .outline_primary()!
             .resolvedColor(with: traitCollection)
             .cgColor
         sortButton.updateColors()

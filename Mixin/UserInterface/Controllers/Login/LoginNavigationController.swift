@@ -1,36 +1,40 @@
 import UIKit
-import MixinServices
 
-class LoginNavigationController: LoneBackButtonNavigationController {
+final class LoginNavigationController: UINavigationController {
     
-    class func instance() -> LoginNavigationController {
-        let vc = LoginMobileNumberViewController()
-        let navigationController = LoginNavigationController(rootViewController: vc)
-        return navigationController
+    init() {
+        let onboarding = OnboardingViewController()
+        super.init(rootViewController: onboarding)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        SignalProtocol.shared.initSignal()
-    }
-    
-    override func updateBackButtonAlpha(animated: Bool) {
-        let alpha: CGFloat
-        if viewControllers.last is LoginMobileNumberViewController || viewControllers.last is UsernameViewController {
-            alpha = 0
+        
+        let backIndicatorImage = R.image.navigation_back()
+        let backgroundColor = R.color.background()
+        if #available(iOS 15.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = backgroundColor
+            appearance.shadowColor = nil
+            appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+            appearance.backButtonAppearance = {
+                let appearance = UIBarButtonItemAppearance()
+                appearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+                return appearance
+            }()
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
         } else {
-            alpha = 1
+            navigationBar.backgroundColor = backgroundColor
+            navigationBar.backIndicatorImage = backIndicatorImage
+            navigationBar.backIndicatorTransitionMaskImage = backIndicatorImage
         }
-        guard abs(backButton.alpha - alpha) > 0.1 else {
-            return
-        }
-        if animated {
-            UIView.animate(withDuration: 0.25) {
-                self.backButton.alpha = alpha
-            }
-        } else {
-            backButton.alpha = alpha
-        }
+        navigationBar.tintColor = R.color.icon_tint()
     }
     
 }

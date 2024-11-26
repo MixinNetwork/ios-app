@@ -349,11 +349,11 @@ extension UserProfileViewController {
     @objc func changeNumber() {
         switch TIP.status {
         case .ready, .needsMigrate:
-            let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
+            let verify = ChangeNumberPINValidationViewController.contained()
             if parent != nil {
-                present(vc, animated: true)
+                navigationController?.pushViewController(verify, animated: true)
             } else {
-                dismissAndPresent(vc)
+                dismissAndPush(verify)
             }
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .changePhone)
@@ -728,6 +728,11 @@ extension UserProfileViewController {
         }
         
         if isMe {
+            let phoneTitle = if user.isAnonymous {
+                R.string.localizable.add_mobile_number()
+            } else {
+                R.string.localizable.change_phone_number()
+            }
             let groups = [
                 [ProfileMenuItem(title: R.string.localizable.edit_name(),
                                  subtitle: nil,
@@ -745,7 +750,7 @@ extension UserProfileViewController {
                                  subtitle: nil,
                                  style: [],
                                  action: #selector(changeAvatarWithLibrary))],
-                [ProfileMenuItem(title: R.string.localizable.change_phone_number(),
+                [ProfileMenuItem(title: phoneTitle,
                                  subtitle: user.phone,
                                  style: [],
                                  action: #selector(changeNumber))]

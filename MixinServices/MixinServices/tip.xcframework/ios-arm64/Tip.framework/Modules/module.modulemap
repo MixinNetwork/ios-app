@@ -2,8 +2,8 @@ framework module "TIP" {
 	header "ref.h"
     header "Tip.objc.h"
     header "Kernel.objc.h"
-    header "Ed25519.objc.h"
     header "Blockchain.objc.h"
+    header "Ed25519.objc.h"
     header "Universe.objc.h"
     header "TIP.h"
 

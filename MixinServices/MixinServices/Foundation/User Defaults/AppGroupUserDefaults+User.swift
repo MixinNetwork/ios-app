@@ -10,6 +10,7 @@ extension AppGroupUserDefaults {
             case lastUpdateOrInstallDate = "last_update_or_install_date"
             case lastUpdateOrInstallVersion = "last_update_or_install_version"
             
+            case isTIPInitialized = "tip_initialized"
             case hasShownRecallTips = "session_secret"
             case hasPerformedTransfer = "has_performed_transfer"
             
@@ -46,7 +47,6 @@ extension AppGroupUserDefaults {
             case recentSearches = "recent_searches"
             
             case emergencyContactBulletinDismissalDate = "emergency_contact_bulletin_dismissal_date"
-            case initializePINBulletinDismissalDate = "initialize_pin_bulletin_dismissal_date"
             
             case lockScreenTimeout = "lock_screen_timeout_interval"
             case lockScreenWithBiometricAuthentication = "lock_screen_with_biometric_authentication"
@@ -111,6 +111,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.hasShownRecallTips, defaultValue: false)
         public static var hasShownRecallTips: Bool
+        
+        @Default(namespace: .user, key: Key.isTIPInitialized, defaultValue: false)
+        public static var isTIPInitialized: Bool
         
         @Default(namespace: .user, key: Key.hasPerformedTransfer, defaultValue: false)
         public static var hasPerformedTransfer: Bool
@@ -209,9 +212,6 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.emergencyContactBulletinDismissalDate, defaultValue: nil)
         public static var emergencyContactBulletinDismissalDate: Date?
-        
-        @Default(namespace: .user, key: Key.initializePINBulletinDismissalDate, defaultValue: nil)
-        public static var initializePINBulletinDismissalDate: Date?
         
         @Default(namespace: .user, key: Key.lockScreenWithBiometricAuthentication, defaultValue: false)
         public static var lockScreenWithBiometricAuthentication: Bool

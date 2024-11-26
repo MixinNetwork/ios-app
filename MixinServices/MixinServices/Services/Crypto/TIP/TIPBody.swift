@@ -24,8 +24,12 @@ enum TIPBody {
         try hashData("TIP:ADDRESS:REMOVE:", addressID)
     }
     
-    static func deactivateUser(phoneVerificationID: String) throws -> Data {
-        try hashData("TIP:USER:DEACTIVATE:", phoneVerificationID)
+    static func deactivateUser(userID: String) throws -> Data {
+        try hashData("TIP:USER:DEACTIVATE:", userID)
+    }
+    
+    static func deactivateUser(verificationID: String) throws -> Data {
+        try hashData("TIP:USER:DEACTIVATE:", verificationID)
     }
     
     static func createEmergencyContact(verificationID: String, code: String) throws -> Data {
@@ -82,6 +86,10 @@ enum TIPBody {
     
     static func registerSequencer(userID: String, publicKey: String) throws -> Data {
         try hashData("SEQUENCER:REGISTER:", userID, publicKey)
+    }
+    
+    static func exportPrivate(userID: String) throws -> Data {
+        try hashData("TIP:USER:EXPORT:PRIVATE:", userID)
     }
     
     @inline(__always)

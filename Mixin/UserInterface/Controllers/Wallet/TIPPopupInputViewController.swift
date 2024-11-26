@@ -133,7 +133,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                                             forRecover: false,
                                             progressHandler: nil)
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                try await TIP.registerToSafe(pin: pin)
+                try await TIP.initializeIfNeeded(account: nil, pin: pin)
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
                 await MainActor.run(body: onSuccess)
             } catch {
@@ -173,8 +173,6 @@ class TIPPopupInputViewController: PinValidationViewController {
                                                 legacyPIN: old,
                                                 forRecover: false,
                                                 progressHandler: nil)
-                    try await TIP.registerToSafe(pin: new)
-                    Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
                 } else {
                     let isCounterBalanced: Bool
                     switch action {
@@ -189,6 +187,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                                                 failedSigners: failedSigners,
                                                 progressHandler: nil)
                 }
+                try await TIP.initializeIfNeeded(account: nil, pin: new)
                 if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                     Keychain.shared.storePIN(pin: new)
                 }

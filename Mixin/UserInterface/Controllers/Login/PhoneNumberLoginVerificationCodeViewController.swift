@@ -1,6 +1,6 @@
 import UIKit
 
-class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewController {
+final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewController {
     
     private let helpButton = UIButton(type: .custom)
     
@@ -47,6 +47,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     }
     
     @objc func helpAction() {
+        let context = self.context
         let alert = UIAlertController(title: R.string.localizable.help(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cant_receive_the_code(), style: .default, handler: { (_) in
             let url = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360024114492")!
@@ -54,8 +55,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
         }))
         if context.hasEmergencyContact {
             alert.addAction(UIAlertAction(title: R.string.localizable.lost_your_mobile_number(), style: .destructive, handler: { (_) in
-                let vc = EmergencyContactIdVerificationViewController()
-                vc.context = self.context
+                let vc = RecoveryContactIDVerificationViewController(context: context)
                 self.navigationController?.pushViewController(vc, animated: true)
             }))
         }

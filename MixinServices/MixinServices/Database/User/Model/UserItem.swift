@@ -125,6 +125,14 @@ extension UserItem {
         return identityNumber != "0"
     }
     
+    public var isAnonymous: Bool {
+        if let phone {
+            phone.hasPrefix("+" + anonymousCallingCode)
+        } else {
+            true
+        }
+    }
+    
     public var notificationUserInfo: [String: String] {
         var userInfo = [
             UNNotificationContent.UserInfoKey.ownerUserId: userId,

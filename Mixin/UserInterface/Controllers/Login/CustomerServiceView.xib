@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CustomerServiceViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="titleView" destination="EgL-AT-NQ2" id="5Xa-Xb-8Cv"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="webView" destination="l81-qH-HQ8" id="bVW-W6-sZR"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EgL-AT-NQ2" customClass="PopupTitleView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="59" width="393" height="70"/>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="6lx-fS-hZ7"/>
+                    </constraints>
+                </view>
+                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l81-qH-HQ8">
+                    <rect key="frame" x="0.0" y="129" width="393" height="723"/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <wkWebViewConfiguration key="configuration">
+                        <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                        <wkPreferences key="preferences"/>
+                    </wkWebViewConfiguration>
+                </wkWebView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="l81-qH-HQ8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="CQA-h7-ehv"/>
+                <constraint firstAttribute="bottom" secondItem="l81-qH-HQ8" secondAttribute="bottom" id="G3O-hn-PsP"/>
+                <constraint firstItem="EgL-AT-NQ2" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="KSa-Bn-6Rl"/>
+                <constraint firstItem="EgL-AT-NQ2" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Xh8-Wi-gxy"/>
+                <constraint firstItem="l81-qH-HQ8" firstAttribute="top" secondItem="EgL-AT-NQ2" secondAttribute="bottom" id="lga-9T-jCe"/>
+                <constraint firstAttribute="trailing" secondItem="l81-qH-HQ8" secondAttribute="trailing" id="suj-3A-Nsb"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="EgL-AT-NQ2" secondAttribute="trailing" id="vQb-aK-UxN"/>
+            </constraints>
+            <point key="canvasLocation" x="136.64122137404578" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

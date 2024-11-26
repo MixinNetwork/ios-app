@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="9" id="qJp-BG-wMW" customClass="LoginSeparatorLineView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="303" height="24"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JbZ-D3-3t6">
+                    <rect key="frame" x="0.0" y="11.666666666666666" width="117.66666666666667" height="1"/>
+                    <color key="backgroundColor" name="outline_primary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="XnG-r2-ABe"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EYT-2h-hai">
+                    <rect key="frame" x="126.66666666666669" y="0.0" width="50" height="24"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="text_tertiary"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q0w-qr-zra">
+                    <rect key="frame" x="185.66666666666666" y="11.666666666666666" width="117.33333333333334" height="1"/>
+                    <color key="backgroundColor" name="outline_primary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="1V8-kv-9yU"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="JbZ-D3-3t6" firstAttribute="width" secondItem="Q0w-qr-zra" secondAttribute="width" id="pqC-jZ-ILL"/>
+            </constraints>
+            <connections>
+                <outlet property="label" destination="EYT-2h-hai" id="RLw-rp-dAx"/>
+            </connections>
+            <point key="canvasLocation" x="52" y="-122"/>
+        </stackView>
+    </objects>
+    <resources>
+        <namedColor name="outline_primary">
+            <color red="0.89803921568627454" green="0.90980392156862744" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

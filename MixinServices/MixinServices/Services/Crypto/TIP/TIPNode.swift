@@ -332,14 +332,16 @@ public enum TIPNode {
         grace: UInt64,
         assignee: Data?
     ) async throws -> TIPSignResponseData {
-        let request = try TIPSignRequest(id: requestID,
-                                         userSk: userSk,
-                                         signer: signer,
-                                         ephemeral: ephemeral,
-                                         watcher: watcher,
-                                         nonce: nonce,
-                                         grace: grace,
-                                         assignee: assignee)
+        let request = try await TIPSignRequest(
+            id: requestID,
+            userSk: userSk,
+            signer: signer,
+            ephemeral: ephemeral,
+            watcher: watcher,
+            nonce: nonce,
+            grace: grace,
+            assignee: assignee
+        )
         let response = try await TIPAPI.sign(url: signer.apiURL, request: request)
         switch response {
         case .failure(let response):

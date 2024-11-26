@@ -12,7 +12,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
     @IBOutlet weak var textLabelTrailingConstraint: NSLayoutConstraint!
     
     private var lastViewWidth: CGFloat = 0
-    private var context: VerifyNumberContext!
+    private var verificationID: String?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -59,9 +59,9 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         dismissPopupController(animated: true)
     }
     
-    class func instance(context: VerifyNumberContext) -> DeleteAccountConfirmWindow {
+    class func instance(verificationID: String?) -> DeleteAccountConfirmWindow {
         let window = R.nib.deleteAccountConfirmWindow(withOwner: self)!
-        window.context = context
+        window.verificationID = verificationID
         return window
     }
     
@@ -85,7 +85,7 @@ extension DeleteAccountConfirmWindow: PinFieldDelegate {
     func inputFinished(pin: String) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        AccountAPI.deactiveAccount(pin: pin, verificationID: context.verificationId) { [weak self] (result) in
+        AccountAPI.deactiveAccount(pin: pin, verificationID: verificationID) { [weak self] (result) in
             hud.hide()
             guard let weakSelf = self else {
                 return

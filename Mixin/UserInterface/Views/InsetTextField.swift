@@ -1,23 +1,34 @@
 import UIKit
 
-class InsetTextField: UITextField {
+final class InsetTextField: UITextField {
     
-    private let inset: CGFloat = 16
+    var insets: UIEdgeInsets {
+        didSet {
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+    
+    init(frame: CGRect, insets: UIEdgeInsets) {
+        self.insets = insets
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.insets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        super.init(coder: coder)
+    }
     
     override func textRect(forBounds bounds: CGRect) -> CGRect {
-        let rect = super.textRect(forBounds: bounds)
-        return CGRect(x: rect.origin.x + inset,
-                      y: rect.origin.y,
-                      width: rect.width - inset * 2,
-                      height: rect.height)
+        super.textRect(forBounds: bounds).inset(by: insets)
+    }
+    
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        super.placeholderRect(forBounds: bounds).inset(by: insets)
     }
     
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
-        let rect = super.editingRect(forBounds: bounds)
-        return CGRect(x: rect.origin.x + inset,
-                      y: rect.origin.y,
-                      width: rect.width - inset * 2,
-                      height: rect.height)
+        super.editingRect(forBounds: bounds).inset(by: insets)
     }
     
 }

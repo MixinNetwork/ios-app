@@ -8,7 +8,7 @@ final class SecuritySettingViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.pin(), accessory: .disclosure),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.emergency_contact(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.recovery_kit(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.authorizations(), accessory: .disclosure)
@@ -50,7 +50,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
         case 1:
             switch TIP.status {
             case .ready, .needsMigrate:
-                vc = EmergencyContactViewController.instance()
+                vc = RecoveryKitViewController.instance()
             case .needsInitialize:
                 let tip = TIPNavigationViewController(intent: .create, destination: nil)
                 present(tip, animated: true)

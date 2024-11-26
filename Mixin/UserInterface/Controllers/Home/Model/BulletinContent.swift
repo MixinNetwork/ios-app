@@ -1,9 +1,8 @@
 import Foundation
 
 enum BulletinContent {
+    case backupMnemonics
     case notification
     case emergencyContact
-    case initializePIN
-    case migrateToTIP
     case appUpdate
 }

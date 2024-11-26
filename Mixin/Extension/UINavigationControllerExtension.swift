@@ -36,4 +36,11 @@ extension UINavigationController {
         setViewControllers(viewControllers, animated: true)
     }
     
+    func pushViewController(replacingCurrent viewController: UIViewController, animated: Bool) {
+        var viewControllers = self.viewControllers
+        viewControllers.removeLast()
+        viewControllers.append(viewController)
+        setViewControllers(viewControllers, animated: animated)
+    }
+    
 }

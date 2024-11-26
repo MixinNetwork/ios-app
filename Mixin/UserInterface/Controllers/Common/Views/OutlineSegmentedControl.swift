@@ -82,7 +82,7 @@ final class OutlineSegmentedControl: UIControl {
             buttons.append(button)
             if index != 0 {
                 let separator = UIView()
-                separator.backgroundColor = R.color.collectible_outline()
+                separator.backgroundColor = R.color.outline_primary()
                 separator.isUserInteractionEnabled = false
                 addSubview(separator)
                 separator.snp.makeConstraints { make in
@@ -102,7 +102,7 @@ final class OutlineSegmentedControl: UIControl {
     }
     
     private func updateBorderColor() {
-        layer.borderColor = R.color.collectible_outline()!
+        layer.borderColor = R.color.outline_primary()!
             .resolvedColor(with: traitCollection)
             .cgColor
     }

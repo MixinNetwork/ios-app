@@ -95,11 +95,11 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
                 let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
                 navigationController.pushViewController(withBackChat: transfer)
             case .changePhone:
-                let verify = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
-                navigationController.present(verify, animated: true)
+                let verify = ChangeNumberPINValidationViewController()
+                navigationController.pushViewController(verify, animated: true)
             case .setEmergencyContact:
-                let verify = VerifyPinNavigationController(rootViewController: EmergencyContactVerifyPinViewController())
-                navigationController.present(verify, animated: true)
+                let verify = RecoveryContactVerifyPINViewController.contained()
+                navigationController.pushViewController(verify, animated: true)
             case .none:
                 break
             }

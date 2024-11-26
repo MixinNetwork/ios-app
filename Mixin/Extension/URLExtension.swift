@@ -11,7 +11,7 @@ extension URL {
     static let aboutEncryption = URL(string: "https://mixin.one/pages/1000007")!
     static let emergencyContact = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360029154692")!
     static let unknownCategory = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360043776071")!
-    static let pinTIP = URL(string: "https://tip.id")!
+    static let tip = URL(string: "https://tip.id")!
     static let deleteAccount = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/4414170627988")!
     static let expiredMessage = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/5127869180564")!
     static let deposit = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")!

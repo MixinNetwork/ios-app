@@ -22,7 +22,7 @@ class VerifyPinNavigationController: LoneBackButtonNavigationController {
     
     override func updateBackButtonAlpha(animated: Bool) {
         let backButtonAlpha: CGFloat
-        if viewControllers.last is VerifyPinViewController {
+        if viewControllers.last is FullscreenPINValidationViewController {
             backButtonAlpha = 0
         } else {
             backButtonAlpha = 1

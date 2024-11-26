@@ -134,5 +134,3 @@ public final class LoginManager {
     }
     
 }
-
-

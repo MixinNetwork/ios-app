@@ -10,6 +10,11 @@ class BulletinContentView: UIView {
     var content: BulletinContent? = nil {
         didSet {
             switch content {
+            case .backupMnemonics:
+                titleLabel.text = R.string.localizable.backup_mnemonic_phrase()
+                descriptionLabel.text = R.string.localizable.backup_mnemonic_phrase_desc()
+                continueButton.setTitle(R.string.localizable.backup_now(), for: .normal)
+                closeButton.isHidden = true
             case .notification:
                 titleLabel.text = R.string.localizable.turn_on_notifications()
                 descriptionLabel.text = R.string.localizable.notification_content()
@@ -20,16 +25,6 @@ class BulletinContentView: UIView {
                 descriptionLabel.text = R.string.localizable.setting_emergency_content()
                 continueButton.setTitle(R.string.localizable.settings(), for: .normal)
                 closeButton.isHidden = false
-            case .initializePIN:
-                titleLabel.text = R.string.localizable.get_a_new_wallet()
-                descriptionLabel.text = R.string.localizable.new_wallet_hint()
-                continueButton.setTitle(R.string.localizable.continue(), for: .normal)
-                closeButton.isHidden = false
-            case .migrateToTIP:
-                titleLabel.text = R.string.localizable.upgrade_tip()
-                descriptionLabel.text = R.string.localizable.tip_introduction()
-                continueButton.setTitle(R.string.localizable.upgrade(), for: .normal)
-                closeButton.isHidden = true
             case .appUpdate:
                 titleLabel.text = R.string.localizable.new_update_available()
                 descriptionLabel.text = R.string.localizable.new_update_available_desc()

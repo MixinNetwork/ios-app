@@ -1,42 +1,121 @@
 import Foundation
 
-public struct AccountRequest: Codable {
+public enum VerificationRequest {
     
-    public let code: String?
-    public let registrationId: Int?
-    public let platform: String = "iOS"
-    public let platformVersion: String = UIDevice.current.systemVersion
-    public let appVersion: String
-    public let packageName: String = Bundle.main.bundleIdentifier ?? ""
-    public let purpose: String
-    public var pin: String?
-    public let sessionSecret: String?
+    private static let generalValues = [
+        "platform": "iOS",
+        "platform_version": UIDevice.current.systemVersion,
+        "app_version": Bundle.main.shortVersionString,
+        "package_name": Bundle.main.bundleIdentifier ?? "",
+    ]
     
-    enum CodingKeys: String, CodingKey {
-        case code
-        case registrationId = "registration_id"
-        case platform
-        case platformVersion = "platform_version"
-        case appVersion = "app_version"
-        case packageName = "package_name"
-        case purpose
-        case pin = "pin_base64"
-        case sessionSecret = "session_secret"
+}
+
+extension VerificationRequest {
+    
+    public static func session(
+        phone: String,
+        captchaToken: CaptchaToken?
+    ) -> [String: Any] {
+        var values: [String: Any] = generalValues
+        values["purpose"] = VerificationPurpose.session.rawValue
+        values["phone"] = phone
+        if let (key, value) = captchaToken?.keyValuePair {
+            values[key] = value
+        }
+        return values
     }
     
-    public init(code: String?, registrationId: Int?, pin: String?, sessionSecret: String?) {
-        self.code = code
-        self.registrationId = registrationId
-        self.appVersion = Bundle.main.shortVersionString
-        self.purpose = pin == nil ? VerificationPurpose.session.rawValue : VerificationPurpose.phone.rawValue
-        self.pin = pin
-        self.sessionSecret = sessionSecret
+    public static func session(
+        code: String,
+        registrationID: Int,
+        sessionSecret: String
+    ) -> [String: Any] {
+        var values: [String: Any] = generalValues
+        values["purpose"] = VerificationPurpose.session.rawValue
+        values["code"] = code
+        values["registration_id"] = registrationID
+        values["session_secret"] = sessionSecret
+        return values
     }
     
 }
 
-public enum VerificationPurpose: String {
-    case session = "SESSION"
-    case phone = "PHONE"
-    case deactivated = "DEACTIVATED"
+extension VerificationRequest {
+    
+    public static func anonymousSession(
+        publicKey: Data,
+        message: Data,
+        signature: Data,
+        captchaToken: CaptchaToken?
+    ) -> [String: Any] {
+        var values: [String: Any] = generalValues
+        values["purpose"] = VerificationPurpose.anonymousSession.rawValue
+        values["master_public_hex"] = publicKey.hexEncodedString()
+        values["master_message_hex"] = message.hexEncodedString()
+        values["master_signature_hex"] = signature.hexEncodedString()
+        if let (key, value) = captchaToken?.keyValuePair {
+            values[key] = value
+        }
+        return values
+    }
+    
+    public static func anonymousSession(
+        masterSignature: Data,
+        registrationID: Int,
+        sessionSecret: Data
+    ) -> [String: Any] {
+        var values: [String: Any] = generalValues
+        values["purpose"] = VerificationPurpose.anonymousSession.rawValue
+        values["master_signature_hex"] = masterSignature.hexEncodedString()
+        values["registration_id"] = registrationID
+        values["session_secret"] = sessionSecret.base64EncodedString()
+        return values
+    }
+    
+}
+
+extension VerificationRequest {
+    
+    public static func changePhoneNumber(
+        phone: String,
+        base64Salt: String,
+        captchaToken: CaptchaToken?
+    ) -> [String: Any] {
+        var values: [String: Any] = generalValues
+        values["purpose"] = VerificationPurpose.phone.rawValue
+        values["phone"] = phone
+        values["salt_base64"] = base64Salt
+        if let (key, value) = captchaToken?.keyValuePair {
+            values[key] = value
+        }
+        return values
+    }
+    
+}
+
+extension VerificationRequest {
+    
+    public static func deactivate(
+        phoneNumber: String,
+        captchaToken: CaptchaToken?
+    ) -> [String: Any] {
+        var values: [String: Any] = generalValues
+        values["purpose"] = VerificationPurpose.deactivate.rawValue
+        values["phone"] = phoneNumber
+        if let (key, value) = captchaToken?.keyValuePair {
+            values[key] = value
+        }
+        return values
+    }
+    
+    public static func deactivate(
+        code: String
+    ) -> [String: Any] {
+        var values: [String: Any] = generalValues
+        values["purpose"] = VerificationPurpose.deactivate.rawValue
+        values["code"] = code
+        return values
+    }
+    
 }

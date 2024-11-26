@@ -1,6 +1,7 @@
 import Foundation
+import MixinServices
 
-class Country: NSObject {
+final class Country: NSObject {
     
     static let us = {
         let locale = Locale.current as NSLocale
@@ -8,7 +9,11 @@ class Country: NSObject {
         return Country(callingCode: "1", isoRegionCode: "US", localizedName: localizedName)
     }()
     
-    static let anonymous = Country(callingCode: "XIN", isoRegionCode: "XIN", localizedName: "Mixin")
+    static let anonymous = Country(
+        callingCode: anonymousCallingCode,
+        isoRegionCode: anonymousCallingCode,
+        localizedName: "Mixin"
+    )
     
     let callingCode: String
     let isoRegionCode: String

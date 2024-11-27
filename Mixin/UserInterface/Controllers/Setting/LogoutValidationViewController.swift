@@ -42,12 +42,22 @@ extension LogoutValidationViewController: AuthenticationIntent {
         didInput pin: String,
         completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
     ) {
+        guard let sessionID = LoginManager.shared.account?.sessionID else {
+            return
+        }
         AccountAPI.verify(pin: pin) { result in
             switch result {
             case .success:
-                completion(.success)
-                controller.presentingViewController?.dismiss(animated: true) {
-                    LoginManager.shared.logout(reason: "User")
+                AccountAPI.logoutSession(sessionId: sessionID) { result in
+                    switch result {
+                    case .success:
+                        completion(.success)
+                        controller.presentingViewController?.dismiss(animated: true) {
+                            LoginManager.shared.logout(reason: "User")
+                        }
+                    case .failure(let error):
+                        completion(.failure(error: error, retry: .inputPINAgain))
+                    }
                 }
             case .failure(let error):
                 completion(.failure(error: error, retry: .inputPINAgain))

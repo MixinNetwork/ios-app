@@ -160,9 +160,9 @@ public class AssetExportSession {
                 }
             }
             let audioTracks = asset.tracks(withMediaType: .audio)
-            if !audioTracks.isEmpty {
+            if let track = audioTracks.first {
                 // Audio output
-                let audioOutput = AVAssetReaderAudioMixOutput(audioTracks: audioTracks, audioSettings: nil)
+                let audioOutput = AVAssetReaderAudioMixOutput(audioTracks: [track], audioSettings: nil)
                 audioOutput.alwaysCopiesSampleData = false
                 if reader.canAdd(audioOutput) {
                     reader.add(audioOutput)
@@ -243,8 +243,10 @@ public class AssetExportSession {
             return
         }
         if writer.status == .failed {
+            Logger.general.debug(category: "AssetExportSession", message: "Writer: \(writer.error)")
             complete()
         } else if reader.status == .failed {
+            Logger.general.debug(category: "AssetExportSession", message: "Reader: \(reader.error)")
             writer.cancelWriting()
             complete()
         } else {
@@ -254,9 +256,15 @@ public class AssetExportSession {
 
     private func complete() {
         if writer.status == .failed || writer.status == .cancelled {
-            try? FileManager.default.removeItem(at: outputURL)
+            do {
+                try FileManager.default.removeItem(at: outputURL)
+                Logger.general.debug(category: "AssetExportSession", message: "Deleted \(outputURL)")
+            } catch {
+                Logger.general.debug(category: "AssetExportSession", message: "Removing: \(error)")
+            }
             status = .failed
         } else {
+            Logger.general.debug(category: "AssetExportSession", message: "Success")
             status = .completed
         }
         completionHandler?()

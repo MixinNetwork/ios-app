@@ -238,7 +238,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         if AVPictureInPictureController.isPictureInPictureSupported(), let controller = avPipController ?? AVPictureInPictureController(playerLayer: videoView.playerView.layer) {
             controller.delegate = self
             // [_AVPictureInPictureController setCanStartPictureInPictureAutomaticallyFromInline:] not working on macOS 11.6 (disguised as iOS 14.7)
-            if #available(iOS 14.2, *), !ProcessInfo.processInfo.isiOSAppOnMac {
+            if !ProcessInfo.processInfo.isiOSAppOnMac {
                 // Seems not working here. Don't know the reason
                 controller.canStartPictureInPictureAutomaticallyFromInline = item.category == .live
             }

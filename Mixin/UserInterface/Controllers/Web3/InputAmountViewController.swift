@@ -165,7 +165,6 @@ class InputAmountViewController: UIViewController {
 
 extension InputAmountViewController {
     
-    @available(iOS 13.4, *)
     private enum Key {
         
         case backspace

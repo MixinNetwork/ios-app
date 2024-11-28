@@ -192,7 +192,6 @@ extension PhotoInputViewController: PHPhotoLibraryChangeObserver {
     
 }
 
-@available(iOS 14, *)
 extension PhotoInputViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {

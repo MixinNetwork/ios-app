@@ -159,7 +159,6 @@ extension StickerManagerViewController: PhotoAssetPickerDelegate {
 }
 
 // MARK: - PHPickerViewControllerDelegate
-@available(iOS 14, *)
 extension StickerManagerViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {

@@ -104,29 +104,23 @@ final class TabBar: UIView {
         
         for (index, item) in items.enumerated() {
             let button = buttons[index]
-            if #available(iOS 15.0, *) {
-                button.configurationUpdateHandler = { button in
-                    let textAttributes: [NSAttributedString.Key: Any] = [
-                        .font: UIFont.systemFont(ofSize: 10, weight: .medium),
-                        .foregroundColor: R.color.text()!,
-                    ]
-                    var config: UIButton.Configuration = .plain()
-                    config.baseBackgroundColor = .clear
-                    config.imagePlacement = .top
-                    config.imagePadding = 3
-                    if button.state.contains(.selected) {
-                        config.image = item.selectedImage
-                        config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
-                    } else {
-                        config.image = item.image
-                        config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
-                    }
-                    button.configuration = config
+            button.configurationUpdateHandler = { button in
+                let textAttributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: 10, weight: .medium),
+                    .foregroundColor: R.color.text()!,
+                ]
+                var config: UIButton.Configuration = .plain()
+                config.baseBackgroundColor = .clear
+                config.imagePlacement = .top
+                config.imagePadding = 3
+                if button.state.contains(.selected) {
+                    config.image = item.selectedImage
+                    config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
+                } else {
+                    config.image = item.image
+                    config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
                 }
-            } else {
-                button.setImage(item.image, for: .normal)
-                button.setImage(item.selectedImage, for: .selected)
-                button.setImage(item.selectedImage, for: [.highlighted, .selected])
+                button.configuration = config
             }
             button.tag = index
             button.isSelected = false

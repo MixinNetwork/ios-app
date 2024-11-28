@@ -35,31 +35,29 @@ final class TokenActionView: UIView {
         
         for (index, action) in TokenAction.allCases.enumerated() {
             let button = UIButton(type: .system)
-            if #available(iOS 15.0, *) {
-                button.configuration = {
-                    let textAttributes: [NSAttributedString.Key: Any] = [
-                        .font: UIFont.systemFont(ofSize: 12, weight: .medium),
-                        .foregroundColor: R.color.text()!,
-                    ]
-                    let (image, title) = switch action {
-                    case .receive:
-                        (R.image.token_action_receive(), R.string.localizable.receive())
-                    case .send:
-                        (R.image.token_action_send(), R.string.localizable.caption_send())
-                    case .swap:
-                        (R.image.token_action_swap(), R.string.localizable.swap())
-                    }
-                    var config: UIButton.Configuration = .plain()
-                    config.baseBackgroundColor = .clear
-                    config.imagePlacement = .top
-                    config.imagePadding = 8
-                    config.image = image
-                    config.attributedTitle = AttributedString(title, attributes: .init(textAttributes))
-                    return config
-                }()
-                button.tag = index
-                button.addTarget(self, action: #selector(performAction(_:)), for: .touchUpInside)
-            }
+            button.configuration = {
+                let textAttributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: 12, weight: .medium),
+                    .foregroundColor: R.color.text()!,
+                ]
+                let (image, title) = switch action {
+                case .receive:
+                    (R.image.token_action_receive(), R.string.localizable.receive())
+                case .send:
+                    (R.image.token_action_send(), R.string.localizable.caption_send())
+                case .swap:
+                    (R.image.token_action_swap(), R.string.localizable.swap())
+                }
+                var config: UIButton.Configuration = .plain()
+                config.baseBackgroundColor = .clear
+                config.imagePlacement = .top
+                config.imagePadding = 8
+                config.image = image
+                config.attributedTitle = AttributedString(title, attributes: .init(textAttributes))
+                return config
+            }()
+            button.tag = index
+            button.addTarget(self, action: #selector(performAction(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
         }
     }

@@ -89,7 +89,7 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
             Logger.tip.info(category: "TIPNavigation", message: "Dismiss to: \(String(describing: destination))")
             switch destination {
             case .wallet:
-                let wallet = R.storyboard.wallet.wallet()!
+                let wallet = WalletViewController()
                 navigationController.pushViewController(withBackRoot: wallet)
             case let .transfer(user):
                 let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))

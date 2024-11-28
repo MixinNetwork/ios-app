@@ -20,7 +20,7 @@ final class HomeTabBarController: UIViewController {
     
     private let homeViewController = R.storyboard.home.home()!
     
-    private lazy var walletViewController = R.storyboard.wallet.wallet()!
+    private lazy var walletViewController = WalletViewController()
     private lazy var collectiblesViewController = CollectiblesViewController()
     private lazy var exploreViewController = ExploreViewController()
     

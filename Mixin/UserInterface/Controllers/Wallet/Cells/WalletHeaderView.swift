@@ -11,7 +11,7 @@ class WalletHeaderView: InfiniteTopView {
     
     @IBOutlet weak var assetChartWrapperView: UIView!
     @IBOutlet weak var assetChartView: BarChartView!
-    @IBOutlet weak var transferActionView: PillActionView!
+    @IBOutlet weak var actionView: TokenActionView!
     
     @IBOutlet weak var leftAssetWrapperView: UIView!
     @IBOutlet weak var leftAssetSymbolLabel: UILabel!
@@ -127,7 +127,7 @@ class WalletHeaderView: InfiniteTopView {
             }
         }
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
-        contentHeight = usdBalanceIsMoreThanZero ? 232 : 180
+        contentHeight = usdBalanceIsMoreThanZero ? 293 : 241
         fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)

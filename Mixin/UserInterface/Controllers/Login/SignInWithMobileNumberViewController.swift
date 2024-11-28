@@ -7,6 +7,8 @@ final class SignInWithMobileNumberViewController: SignUpWithMobileNumberViewCont
     private let mnemonicLoginButton = StyledButton(type: .system)
     private let signupButton = StyledButton(type: .system)
     
+    private var isBusy = false
+    
     override func setupView() {
         navigationItem.rightBarButtonItems = [
             .customerService(target: self, action: #selector(presentCustomerService(_:))),
@@ -43,6 +45,7 @@ final class SignInWithMobileNumberViewController: SignUpWithMobileNumberViewCont
     }
     
     override func updateViews(isBusy: Bool) {
+        self.isBusy = isBusy
         super.updateViews(isBusy: isBusy)
         isBusy ? hideOtherOptions() : showOtherOptions()
     }
@@ -69,7 +72,9 @@ final class SignInWithMobileNumberViewController: SignUpWithMobileNumberViewCont
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
-        showOtherOptions()
+        if !isBusy && presentedViewController == nil {
+            showOtherOptions()
+        }
     }
     
     private func hideOtherOptions() {

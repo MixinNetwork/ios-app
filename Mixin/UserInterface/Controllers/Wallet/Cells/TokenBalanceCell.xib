@@ -23,10 +23,10 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jJ2-vj-o2Z" customClass="TokenActionView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="10" y="135" width="300" height="105"/>
+                        <rect key="frame" x="10" y="164" width="300" height="72"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="105" id="5O4-gc-DWm"/>
+                            <constraint firstAttribute="height" constant="72" id="5O4-gc-DWm"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -49,7 +49,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LGR-WS-qOo">
-                        <rect key="frame" x="16" y="20" width="214" height="95"/>
+                        <rect key="frame" x="16" y="20" width="214" height="114"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nBW-zl-agW">
                                 <rect key="frame" x="0.0" y="0.0" width="214" height="17"/>
@@ -67,7 +67,7 @@
                                 <color key="textColor" name="text"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="≈ $0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BQg-pE-NkN">
-                                <rect key="frame" x="0.0" y="67" width="214" height="28"/>
+                                <rect key="frame" x="0.0" y="67" width="214" height="47"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="text_quaternary"/>
                                 <nil key="highlightedColor"/>
@@ -80,13 +80,13 @@
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="jJ2-vj-o2Z" secondAttribute="bottom" constant="20" id="Ie6-Y9-zhQ"/>
+                    <constraint firstAttribute="bottom" secondItem="jJ2-vj-o2Z" secondAttribute="bottom" constant="24" id="Ie6-Y9-zhQ"/>
                     <constraint firstAttribute="trailing" secondItem="7dS-Lp-6Ei" secondAttribute="trailing" constant="26" id="M9H-DM-jCQ"/>
                     <constraint firstItem="7dS-Lp-6Ei" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="UIO-iQ-hHT"/>
                     <constraint firstItem="LGR-WS-qOo" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="UVv-Jt-RuC"/>
                     <constraint firstItem="jJ2-vj-o2Z" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="Vqy-d8-QzM"/>
                     <constraint firstAttribute="trailing" secondItem="jJ2-vj-o2Z" secondAttribute="trailing" constant="10" id="fh0-FP-789"/>
-                    <constraint firstItem="jJ2-vj-o2Z" firstAttribute="top" secondItem="LGR-WS-qOo" secondAttribute="bottom" constant="20" id="gXf-rJ-5As"/>
+                    <constraint firstItem="jJ2-vj-o2Z" firstAttribute="top" secondItem="LGR-WS-qOo" secondAttribute="bottom" constant="30" id="gXf-rJ-5As"/>
                     <constraint firstItem="7dS-Lp-6Ei" firstAttribute="leading" secondItem="LGR-WS-qOo" secondAttribute="trailing" constant="16" id="grG-JI-hs3"/>
                     <constraint firstItem="LGR-WS-qOo" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="rrk-Bj-fUr"/>
                 </constraints>

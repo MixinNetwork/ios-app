@@ -12,11 +12,19 @@ final class DepositViewController: UIViewController {
     @IBOutlet weak var warningLabel: UILabel!
     
     private let usdtNetworks: OrderedDictionary<String, String> = [
-        AssetID.ethereumUSDT:   "ERC-20",
+        AssetID.erc20USDT:      "ERC-20",
         AssetID.tronUSDT:       "TRON(TRC-20)",
         AssetID.polygonUSDT:    "Polygon",
         AssetID.bep20USDT:      "BEP-20",
         AssetID.solanaUSDT:     "Solana",
+    ]
+    
+    private let usdcNetworks: OrderedDictionary<String, String> = [
+        AssetID.erc20USDC:      "ERC-20",
+        AssetID.solanaUSDC:     "Solana",
+        AssetID.baseUSDC:       "Base",
+        AssetID.polygonUSDC:    "Polygon",
+        AssetID.bep20USDC:      "BEP-20",
     ]
     
     private let initialToken: TokenItem
@@ -25,7 +33,7 @@ final class DepositViewController: UIViewController {
     private var depositSuspendedView: DepositSuspendedView?
     
     private var networkSwitchViewContentSizeObserver: NSKeyValueObservation?
-    private var switchableNetworks: [String] = []
+    private var switchableNetworks: OrderedDictionary<String, String> = [:]
     
     private var task: Task<Void, Error>?
     private var displayingToken: TokenItem?
@@ -56,8 +64,18 @@ final class DepositViewController: UIViewController {
         task = Task { [initialToken] in
             try await self.reloadData(token: initialToken)
         }
+        let selectedNetworkIndex: Int?
         if let index = usdtNetworks.index(forKey: initialToken.assetID) {
-            switchableNetworks = usdtNetworks.values.elements
+            selectedNetworkIndex = index
+            switchableNetworks = usdtNetworks
+        } else if let index = usdcNetworks.index(forKey: initialToken.assetID) {
+            selectedNetworkIndex = index
+            switchableNetworks = usdcNetworks
+        } else {
+            selectedNetworkIndex = nil
+            switchableNetworks = [:]
+        }
+        if let index = selectedNetworkIndex {
             let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
             contentStackView.insertArrangedSubview(switchView, at: 0)
             let collectionView: UICollectionView = switchView.collectionView
@@ -136,7 +154,7 @@ extension DepositViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.compact_deposit_network, for: indexPath)!
-        cell.label.text = switchableNetworks[indexPath.item]
+        cell.label.text = switchableNetworks.values[indexPath.item]
         return cell
     }
     
@@ -149,7 +167,7 @@ extension DepositViewController: UICollectionViewDataSource {
 extension DepositViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let id = usdtNetworks.elements[indexPath.item].key
+        let id = switchableNetworks.keys[indexPath.item]
         let previousTask = self.task
         addAddressGeneratingView()
         task = Task.detached { [weak self] in

@@ -39,7 +39,7 @@ final class ExternalTransferTests: XCTestCase {
         let c2 = try! ExternalTransfer(string: "ethereum:pay-0xdAC17F958D2ee523a2206206994597C13D831ec7@1/transfer?address=0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc&uint256=2e7&gasPrice=14",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c2,
-                    assetID: AssetID.ethereumUSDT,
+                    assetID: AssetID.erc20USDT,
                     destination: "0x00d02d4A148bCcc66C6de20C4EB1CbAB4298cDcc",
                     resolvedAmount: nil,
                     memo: nil)
@@ -92,7 +92,7 @@ final class ExternalTransferTests: XCTestCase {
         let c9 = try! ExternalTransfer(string: "ethereum:0x752420f80e0A6158f06c00A864Ff220503EB502a?amount=68.255292&label=R2PY8P&uuid=UHTR42MTTBSORZEB&req-asset=0xdAC17F958D2ee523a2206206994597C13D831ec7",
                                        assetIDFinder: mockAssetIDFinder(_:))
         assertEqual(transfer: c9,
-                    assetID: AssetID.ethereumUSDT,
+                    assetID: AssetID.erc20USDT,
                     destination: "0x752420f80e0A6158f06c00A864Ff220503EB502a",
                     resolvedAmount: "68.255292",
                     memo: nil)
@@ -180,7 +180,7 @@ extension ExternalTransferTests {
     func mockAssetIDFinder(_ key: String) -> String? {
         switch key {
         case "0xdAC17F958D2ee523a2206206994597C13D831ec7":
-            return AssetID.ethereumUSDT
+            return AssetID.erc20USDT
         case "0xA974c709cFb4566686553a20790685A47acEAA33":
             return AssetID.xin
         case "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174":

@@ -170,7 +170,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HiG-RA-iTn">
-                                                <rect key="frame" x="0.0" y="84" width="393" height="64"/>
+                                                <rect key="frame" x="0.0" y="84" width="393" height="92"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nnC-KZ-wtp" customClass="BarChartView" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="20" y="0.0" width="353" height="4"/>
@@ -245,13 +245,13 @@
                                                                                     <constraint firstAttribute="width" constant="3" id="rMg-cy-mmV"/>
                                                                                 </constraints>
                                                                             </imageView>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KkY-RC-Ufs">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KkY-RC-Ufs">
                                                                                 <rect key="frame" x="8" y="-0.33333333333334281" width="24" height="14.333333333333334"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                 <color key="textColor" name="text_tertiary"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibO-Ij-Kqi">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibO-Ij-Kqi">
                                                                                 <rect key="frame" x="38" y="-0.33333333333334281" width="25.333333333333329" height="14.333333333333334"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                 <color key="textColor" name="text_tertiary"/>
@@ -290,13 +290,13 @@
                                                                                     <constraint firstAttribute="height" constant="9" id="qnI-Dg-KFe"/>
                                                                                 </constraints>
                                                                             </imageView>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nSe-fh-KGl">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nSe-fh-KGl">
                                                                                 <rect key="frame" x="8" y="-0.33333333333334281" width="24" height="14.333333333333334"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                 <color key="textColor" name="text_tertiary"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" ambiguous="YES" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xe4-Kb-CmC">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="77%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xe4-Kb-CmC">
                                                                                 <rect key="frame" x="38" y="-0.33333333333334281" width="25.333333333333329" height="14.333333333333334"/>
                                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                                 <color key="textColor" name="text_tertiary"/>
@@ -339,10 +339,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hoN-kY-hyg" customClass="TokenActionView" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="10" y="148" width="373" height="105"/>
+                                                <rect key="frame" x="10" y="176" width="373" height="72"/>
                                                 <color key="backgroundColor" name="background"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="105" id="bfV-zz-R9R"/>
+                                                    <constraint firstAttribute="height" constant="72" id="bfV-zz-R9R"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -358,7 +358,7 @@
                                             <constraint firstItem="hoN-kY-hyg" firstAttribute="leading" secondItem="gLw-SR-o33" secondAttribute="leading" constant="10" id="90R-cL-m7r"/>
                                             <constraint firstAttribute="trailing" secondItem="HiG-RA-iTn" secondAttribute="trailing" id="Hc9-IG-t6X"/>
                                             <constraint firstItem="HiG-RA-iTn" firstAttribute="top" secondItem="wfH-x8-9UF" secondAttribute="bottom" constant="23" id="VBX-xa-5rx"/>
-                                            <constraint firstAttribute="bottom" secondItem="hoN-kY-hyg" secondAttribute="bottom" constant="19" id="VdY-wp-JRc"/>
+                                            <constraint firstAttribute="bottom" secondItem="hoN-kY-hyg" secondAttribute="bottom" constant="24" id="VdY-wp-JRc"/>
                                             <constraint firstItem="HiG-RA-iTn" firstAttribute="leading" secondItem="gLw-SR-o33" secondAttribute="leading" id="b2Y-Om-cgP"/>
                                             <constraint firstItem="iyO-8M-e2l" firstAttribute="centerX" secondItem="gLw-SR-o33" secondAttribute="centerX" id="eO6-JE-LuT"/>
                                             <constraint firstItem="iyO-8M-e2l" firstAttribute="top" secondItem="gLw-SR-o33" secondAttribute="top" id="nOs-ZR-O6m"/>

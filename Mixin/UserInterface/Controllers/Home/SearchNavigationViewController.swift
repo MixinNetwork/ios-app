@@ -26,21 +26,14 @@ class SearchNavigationViewController: UINavigationController {
         let backIndicatorImage = R.image.ic_search_back()
         let backgroundColor = R.color.background()
         let image = backgroundColor!.image
-        if #available(iOS 15.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = backgroundColor
-            appearance.shadowImage = image
-            appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
-            appearance.titleTextAttributes = [.foregroundColor: UIColor.clear]
-            navigationBar.standardAppearance = appearance
-            navigationBar.scrollEdgeAppearance = appearance
-        } else {
-            navigationBar.setBackgroundImage(image, for: .default)
-            navigationBar.shadowImage = image
-            navigationBar.backIndicatorImage = backIndicatorImage
-            navigationBar.backIndicatorTransitionMaskImage = backIndicatorImage
-        }
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = backgroundColor
+        appearance.shadowImage = image
+        appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.clear]
+        navigationBar.standardAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
     }
 
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {

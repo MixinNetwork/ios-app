@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
         // [_UIAppearance setSectionHeaderTopPadding:] not working on macOS 11.6 (disguised as iOS 14.7)
-        if #available(iOS 15.0, *), !ProcessInfo.processInfo.isiOSAppOnMac {
+        if !ProcessInfo.processInfo.isiOSAppOnMac {
             UITableView.appearance().sectionHeaderTopPadding = 0
         }
         checkLogin()

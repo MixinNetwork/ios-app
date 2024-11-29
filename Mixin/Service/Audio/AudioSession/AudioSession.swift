@@ -118,20 +118,11 @@ class AudioSession {
         switch type {
         case .began:
             let reason: AudioSession.InterruptionReason
-            if #available(iOS 14.5, *) {
-                if let rawValue = notification.userInfo?[AVAudioSessionInterruptionReasonKey] as? AVAudioSession.InterruptionReason.RawValue {
-                    let avReason = AVAudioSession.InterruptionReason(rawValue: rawValue) ?? .default
-                    reason = AudioSession.InterruptionReason(reason: avReason)
-                } else {
-                    reason = .default
-                }
+            if let rawValue = notification.userInfo?[AVAudioSessionInterruptionReasonKey] as? AVAudioSession.InterruptionReason.RawValue {
+                let avReason = AVAudioSession.InterruptionReason(rawValue: rawValue) ?? .default
+                reason = AudioSession.InterruptionReason(reason: avReason)
             } else {
-                let wasSuspended = notification.userInfo?[AVAudioSessionInterruptionWasSuspendedKey] as? Bool ?? false
-                if wasSuspended {
-                    reason = .appWasSuspended
-                } else {
-                    reason = .default
-                }
+                reason = .default
             }
             Logger.general.debug(category: "AudioSession", message: "Began interruption with reason: \(reason)")
             currentClient?.audioSessionDidBeganInterruption(self, reason: reason)

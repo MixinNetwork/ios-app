@@ -1010,10 +1010,13 @@
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
 		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
+		948664DD2CF85B490032B9BE /* TokenActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948664DC2CF85B440032B9BE /* TokenActionView.swift */; };
+		948664FD2CF867DC0032B9BE /* WalletView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948664FC2CF867DC0032B9BE /* WalletView.xib */; };
+		948668A42CF912B20032B9BE /* BadgeDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948668A32CF912910032B9BE /* BadgeDotView.swift */; };
 		948723392C9DF6380034BCB0 /* AddMarketAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */; };
 		9487233A2C9DF6380034BCB0 /* AddMarketAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */; };
 		948723432C9E0D8D0034BCB0 /* MarketAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */; };
-		9487234B2C9EE7150034BCB0 /* TransferAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9487234A2C9EE7150034BCB0 /* TransferAction.swift */; };
+		9487234B2C9EE7150034BCB0 /* TokenAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9487234A2C9EE7150034BCB0 /* TokenAction.swift */; };
 		94881FA82AD035C300CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA72AD035C300CA7A29 /* RswiftLibrary */; };
 		94881FAA2AD035CC00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA92AD035CC00CA7A29 /* RswiftLibrary */; };
 		94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FAB2AD035ED00CA7A29 /* RswiftLibrary */; };
@@ -2492,10 +2495,13 @@
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		948664DC2CF85B440032B9BE /* TokenActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenActionView.swift; sourceTree = "<group>"; };
+		948664FC2CF867DC0032B9BE /* WalletView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletView.xib; sourceTree = "<group>"; };
+		948668A32CF912910032B9BE /* BadgeDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeDotView.swift; sourceTree = "<group>"; };
 		948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarketAlertViewController.swift; sourceTree = "<group>"; };
 		948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddMarketAlertView.xib; sourceTree = "<group>"; };
 		948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertViewModel.swift; sourceTree = "<group>"; };
-		9487234A2C9EE7150034BCB0 /* TransferAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAction.swift; sourceTree = "<group>"; };
+		9487234A2C9EE7150034BCB0 /* TokenAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAction.swift; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
@@ -3103,7 +3109,7 @@
 				94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */,
 				94428E472CA3435300157E93 /* SwapQuote.swift */,
 				94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */,
-				9487234A2C9EE7150034BCB0 /* TransferAction.swift */,
+				9487234A2C9EE7150034BCB0 /* TokenAction.swift */,
 				948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */,
 			);
 			path = Models;
@@ -3234,6 +3240,7 @@
 				944BC2D22C7C71B4008700A8 /* OutlineSegmentedControl.swift */,
 				94428D382CA245BA00157E93 /* MenuTriggerButton.swift */,
 				943CAA072CC6A83F00346677 /* StyledButton.swift */,
+				948668A32CF912910032B9BE /* BadgeDotView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4354,6 +4361,7 @@
 				94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */,
 				9459693828B28FF8006F5421 /* TIPActionView.xib */,
 				7CCE65A628D69D1D00FE944A /* PillActionView.swift */,
+				948664DC2CF85B440032B9BE /* TokenActionView.swift */,
 				94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */,
 				94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */,
 				94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */,
@@ -4895,6 +4903,7 @@
 				DF736F881FC08B67001DB063 /* Cells */,
 				94BE6E922BA0622B00CE65A3 /* Authentication Preview */,
 				94F952512AE60CED0025B995 /* Payment */,
+				948664FC2CF867DC0032B9BE /* WalletView.xib */,
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
 				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
@@ -5717,6 +5726,7 @@
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
 				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,
+				948664FD2CF867DC0032B9BE /* WalletView.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				947B36B325DEB79100146111 /* PlaylistView.xib in Resources */,
@@ -6508,6 +6518,7 @@
 				7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				7C4733A128533EB800ECD293 /* PhoneContactSearchResult.swift in Sources */,
+				948668A42CF912B20032B9BE /* BadgeDotView.swift in Sources */,
 				94C8C4842C11A1A100993027 /* Web3API.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
@@ -6647,6 +6658,7 @@
 				7CF5929627979CBB00015495 /* DeleteAccountVerifyPinWindow.swift in Sources */,
 				9402A2912C2B7F67006E71FA /* InscriptionContentSession.swift in Sources */,
 				942F472B299CDF8100528759 /* Web3SignerFactory.swift in Sources */,
+				948664DD2CF85B490032B9BE /* TokenActionView.swift in Sources */,
 				94062C622AE8CA9100ADAE87 /* SnapshotColumnCell.swift in Sources */,
 				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
 				7B3CDA6424FFDD1D003A3E80 /* FavoriteStickerCell.swift in Sources */,
@@ -6680,7 +6692,7 @@
 				94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,
-				9487234B2C9EE7150034BCB0 /* TransferAction.swift in Sources */,
+				9487234B2C9EE7150034BCB0 /* TokenAction.swift in Sources */,
 				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				944BC2EE2C7E17BA008700A8 /* ExploreMarketTokenCell.swift in Sources */,
@@ -7338,7 +7350,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.15.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -7395,7 +7407,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;

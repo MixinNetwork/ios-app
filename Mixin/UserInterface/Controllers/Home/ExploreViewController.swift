@@ -8,6 +8,8 @@ final class ExploreViewController: UIViewController {
     
     private let hiddenSearchTopMargin: CGFloat = -28
     
+    private var showBadgeOnMarket = false
+    
     private lazy var exploreBotsViewController = ExploreBotsViewController()
     private lazy var exploreMarketViewController = ExploreMarketViewController()
     private lazy var evmViewController = ExploreEVMViewController()
@@ -38,6 +40,21 @@ final class ExploreViewController: UIViewController {
         segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
         collectionView(segmentsCollectionView, didSelectItemAt: indexPath)
         NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently), name: dismissSearchNotification, object: nil)
+        DispatchQueue.global().async {
+            let hasReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
+            DispatchQueue.main.async {
+                guard !hasReviewed else {
+                    return
+                }
+                let indexPath = IndexPath(item: Segment.markets.rawValue, section: 0)
+                if self.segmentsCollectionView.indexPathsForSelectedItems?.first == indexPath {
+                    self.markMarketReviewed()
+                } else {
+                    self.showBadgeOnMarket = true
+                    self.reloadItemKeepingSelection(at: indexPath)
+                }
+            }
+        }
     }
     
     @IBAction func searchApps(_ sender: Any) {
@@ -172,6 +189,12 @@ extension ExploreViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
         cell.label.text = Segment.allCases[indexPath.item].name
+        switch Segment(rawValue: indexPath.item) {
+        case .markets:
+            cell.badgeView.isHidden = !showBadgeOnMarket
+        default:
+            cell.badgeView.isHidden = true
+        }
         return cell
     }
     
@@ -194,6 +217,11 @@ extension ExploreViewController: UICollectionViewDelegate {
         case .bots:
             switchToChild(exploreBotsViewController)
         case .markets:
+            if showBadgeOnMarket {
+                showBadgeOnMarket = false
+                reloadItemKeepingSelection(at: indexPath)
+                markMarketReviewed()
+            }
             switchToChild(exploreMarketViewController)
         case .evm:
             switchToChild(evmViewController)
@@ -212,6 +240,13 @@ extension ExploreViewController: HomeTabBarControllerChild {
     func viewControllerDidSwitchToFront() {
         if let controller = selectedViewController as? ExploreWeb3ViewController {
             controller.reloadAccountIfUnlocked()
+        } else if let controller = selectedViewController, controller is ExploreMarketViewController {
+            if showBadgeOnMarket {
+                showBadgeOnMarket = false
+                let indexPath = IndexPath(item: Segment.markets.rawValue, section: 0)
+                reloadItemKeepingSelection(at: indexPath)
+                markMarketReviewed()
+            }
         }
     }
     
@@ -257,6 +292,22 @@ extension ExploreViewController {
         contentContainerView.addSubview(newChild.view)
         newChild.view.snp.makeEdgesEqualToSuperview()
         newChild.didMove(toParent: self)
+    }
+    
+    private func markMarketReviewed() {
+        DispatchQueue.global().async {
+            PropertiesDAO.shared.set(true, forKey: .hasMarketReviewed)
+        }
+    }
+    
+    private func reloadItemKeepingSelection(at indexPath: IndexPath) {
+        UIView.performWithoutAnimation {
+            let selectedIndexPath = segmentsCollectionView.indexPathsForSelectedItems?.first
+            segmentsCollectionView.reloadItems(at: [indexPath])
+            if let indexPath = selectedIndexPath {
+                segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+            }
+        }
     }
     
 }

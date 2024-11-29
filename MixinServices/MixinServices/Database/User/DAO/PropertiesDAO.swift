@@ -7,10 +7,12 @@ public final class PropertiesDAO: UserDatabaseDAO {
     
     public enum Key: String {
         case iterator
-        case snapshotOffset = "snapshot_offset"
-        case evmAddress     = "evm_address"
-        case solanaAddress  = "solana_address"
-        case globalMarket   = "global_market"
+        case snapshotOffset     = "snapshot_offset"
+        case evmAddress         = "evm_address"
+        case solanaAddress      = "solana_address"
+        case globalMarket       = "global_market"
+        case hasSwapReviewed    = "has_viewed_swap"
+        case hasMarketReviewed  = "has_viewed_market"
     }
     
     public enum Change {

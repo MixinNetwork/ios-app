@@ -437,7 +437,6 @@ extension TokenViewController: UITableViewDataSource {
         case .balance:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_balance, for: indexPath)!
             cell.reloadData(token: token)
-            cell.actionView.actions = TransferAction.allCases.map(\.title)
             cell.actionView.delegate = self
             cell.delegate = self
             return cell
@@ -588,18 +587,17 @@ extension TokenViewController: UITableViewDelegate {
     
 }
 
-extension TokenViewController: PillActionView.Delegate {
+extension TokenViewController: TokenActionView.Delegate {
     
-    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        let action = TransferAction(rawValue: index)!
+    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
-        case .send:
-            send()
         case .receive:
             let deposit = DepositViewController.instance(token: token)
             withMnemonicsBackupChecked {
                 self.navigationController?.pushViewController(deposit, animated: true)
             }
+        case .send:
+            send()
         case .swap:
             let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)

@@ -3,6 +3,7 @@ import UIKit
 final class ExploreSegmentCell: UICollectionViewCell {
     
     @IBOutlet weak var label: InsetLabel!
+    @IBOutlet weak var badgeView: BadgeDotView!
     
     override var isSelected: Bool {
         didSet {

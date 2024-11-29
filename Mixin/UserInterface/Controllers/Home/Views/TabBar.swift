@@ -12,6 +12,7 @@ final class TabBar: UIView {
         let image: UIImage
         let selectedImage: UIImage
         let text: String
+        var badge: Bool
     }
     
     override var intrinsicContentSize: CGSize {
@@ -43,6 +44,7 @@ final class TabBar: UIView {
     private let horizontalMargin: CGFloat = 20
     
     private var buttons: [UIButton] = []
+    private var badgeViews: [UIView] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -102,37 +104,48 @@ final class TabBar: UIView {
             buttons.removeLast(-numberOfButtonsToBeAdded)
         }
         
+        for badgeView in badgeViews {
+            badgeView.removeFromSuperview()
+        }
+        badgeViews.removeAll()
+        
         for (index, item) in items.enumerated() {
             let button = buttons[index]
-            if #available(iOS 15.0, *) {
-                button.configurationUpdateHandler = { button in
-                    let textAttributes: [NSAttributedString.Key: Any] = [
-                        .font: UIFont.systemFont(ofSize: 10, weight: .medium),
-                        .foregroundColor: R.color.text()!,
-                    ]
-                    var config: UIButton.Configuration = .plain()
-                    config.baseBackgroundColor = .clear
-                    config.imagePlacement = .top
-                    config.imagePadding = 3
-                    if button.state.contains(.selected) {
-                        config.image = item.selectedImage
-                        config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
-                    } else {
-                        config.image = item.image
-                        config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
-                    }
-                    button.configuration = config
+            button.configurationUpdateHandler = { button in
+                let textAttributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: 10, weight: .medium),
+                    .foregroundColor: R.color.text()!,
+                ]
+                var config: UIButton.Configuration = .plain()
+                config.baseBackgroundColor = .clear
+                config.imagePlacement = .top
+                config.imagePadding = 3
+                if button.state.contains(.selected) {
+                    config.image = item.selectedImage
+                    config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
+                } else {
+                    config.image = item.image
+                    config.attributedTitle = AttributedString(item.text, attributes: .init(textAttributes))
                 }
-            } else {
-                button.setImage(item.image, for: .normal)
-                button.setImage(item.selectedImage, for: .selected)
-                button.setImage(item.selectedImage, for: [.highlighted, .selected])
+                button.configuration = config
             }
             button.tag = index
-            button.isSelected = false
+            button.isSelected = index == selectedIndex
+            
+            if item.badge {
+                let badge = UIView()
+                badge.backgroundColor = R.color.error_red()
+                badge.layer.cornerRadius = 4
+                badge.layer.masksToBounds = true
+                addSubview(badge)
+                badgeViews.append(badge)
+                badge.snp.makeConstraints { make in
+                    make.width.height.equalTo(8)
+                    make.top.equalToSuperview().offset(4)
+                    make.leading.equalTo(button.snp.centerX).offset(12)
+                }
+            }
         }
-        
-        selectedIndex = nil
     }
     
 }

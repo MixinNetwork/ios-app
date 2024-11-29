@@ -148,7 +148,7 @@ extension DeleteAccountSettingViewController {
     }
     
     private func presentWallet() {
-        let wallet = R.storyboard.wallet.wallet()!
+        let wallet = WalletViewController()
         navigationController?.pushViewController(wallet, animated: true)
     }
     

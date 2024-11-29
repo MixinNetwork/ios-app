@@ -1,7 +1,7 @@
 install! 'cocoapods',
 :generate_multiple_pod_projects => true
 
-platform :ios, '14.0'
+platform :ios, '15.0'
 
 def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'

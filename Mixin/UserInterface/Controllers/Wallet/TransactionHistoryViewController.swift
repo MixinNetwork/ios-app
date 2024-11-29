@@ -21,7 +21,6 @@ final class TransactionHistoryViewController: UIViewController {
     private var filter = SafeSnapshot.Filter()
     private var order: SafeSnapshot.Order = .newest
     private var dataSource: DiffableDataSource!
-    private var sectionTitles: [DateRepresentation] = []
     private var tokens: [String: TokenItem] = [:] // Key is asset id
     private var items: [SnapshotID: SafeSnapshotItem] = [:]
     
@@ -286,11 +285,7 @@ extension TransactionHistoryViewController: UITableViewDelegate {
         switch order {
         case .newest, .oldest:
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier) as! AssetHeaderView
-            if #available(iOS 15.0, *) {
-                view.label.text = dataSource.sectionIdentifier(for: section)
-            } else {
-                view.label.text = sectionTitles[section]
-            }
+            view.label.text = dataSource.sectionIdentifier(for: section)
             return view
         case .mostValuable, .biggestAmount:
             return nil
@@ -675,7 +670,6 @@ extension TransactionHistoryViewController {
                     return
                 }
                 controller.order = order
-                controller.sectionTitles = dataSnapshot.sectionIdentifiers
                 switch behavior {
                 case .reload, .reloadVisibleItems:
                     controller.items = items.reduce(into: [:]) { results, item in
@@ -692,11 +686,7 @@ extension TransactionHistoryViewController {
                     controller.firstItem = nil
                     Logger.general.debug(category: "TxnLoader", message: "Going to table top by reloading")
                     controller.tableView.setContentOffset(.zero, animated: false)
-                    if #available(iOS 15.0, *) {
-                        controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
-                    } else {
-                        controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
-                    }
+                    controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                 case .reloadVisibleItems:
                     controller.withTableViewContentOffsetManaged {
                         if let item = items.first {
@@ -708,11 +698,7 @@ extension TransactionHistoryViewController {
                             controller.firstItem = nil
                             Logger.general.debug(category: "TxnLoader", message: "Previous canary cleared")
                         }
-                        if #available(iOS 15.0, *) {
-                            controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
-                        } else {
-                            controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
-                        }
+                        controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                     }
                 case .prepend:
                     controller.withTableViewContentOffsetManaged {

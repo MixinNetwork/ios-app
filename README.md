@@ -8,4 +8,4 @@ Mixin iOS messenger, wallet and light node to the Mixin Network
 - Xcode 16
 
 ### Deployment target
-- iOS 14.0
+- iOS 15.0

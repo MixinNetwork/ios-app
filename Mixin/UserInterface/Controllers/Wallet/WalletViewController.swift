@@ -2,7 +2,7 @@ import UIKit
 import LocalAuthentication
 import MixinServices
 
-class WalletViewController: UIViewController, MixinNavigationAnimating, MnemonicsBackupChecking {
+final class WalletViewController: UIViewController, MixinNavigationAnimating, MnemonicsBackupChecking {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: WalletHeaderView!
@@ -11,7 +11,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating, Mnemonic
     
     private var searchCenterYConstraint: NSLayoutConstraint?
     private var searchViewController: WalletSearchViewController?
-    private var lastSelectedAction: TransferAction?
+    private var lastSelectedAction: TokenAction?
 
     private var isSearchViewControllerPreloaded = false
     private var tokens = [TokenItem]()
@@ -24,8 +24,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating, Mnemonic
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableHeaderView.transferActionView.actions = TransferAction.allCases.map(\.title)
-        tableHeaderView.transferActionView.delegate = self
+        tableHeaderView.actionView.delegate = self
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
         tableView.tableFooterView = UIView()
@@ -42,6 +41,14 @@ class WalletViewController: UIViewController, MixinNavigationAnimating, Mnemonic
         reloadData()
         let job = ReloadMarketAlertsJob()
         ConcurrentJobQueue.shared.addJob(job: job)
+        DispatchQueue.global().async {
+            let hasReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
+            if !hasReviewed {
+                DispatchQueue.main.async {
+                    self.tableHeaderView.actionView.badgeOnSwap = true
+                }
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -188,10 +195,9 @@ extension WalletViewController: UITableViewDelegate {
     
 }
 
-extension WalletViewController: PillActionView.Delegate {
+extension WalletViewController: TokenActionView.Delegate {
     
-    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        let action = TransferAction(rawValue: index)!
+    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         lastSelectedAction = action
         switch action {
         case .send:
@@ -199,7 +205,7 @@ extension WalletViewController: PillActionView.Delegate {
             controller.delegate = self
             controller.showEmptyHintIfNeeded = true
             controller.searchResultsFromServer = false
-            controller.tokens = tokens.filter { $0.balance != "0" }
+            controller.tokens = tokens.filter { $0.decimalBalance != 0 }
             controller.sendableAssets = sendableTokens
             present(controller, animated: true, completion: nil)
         case .receive:
@@ -212,8 +218,12 @@ extension WalletViewController: PillActionView.Delegate {
                 self.present(controller, animated: true, completion: nil)
             }
         case .swap:
+            tableHeaderView.actionView.badgeOnSwap = false
             let swap = MixinSwapViewController.contained(sendAssetID: nil, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)
+            DispatchQueue.global().async {
+                PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)
+            }
         }
     }
     

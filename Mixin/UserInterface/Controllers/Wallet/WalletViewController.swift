@@ -41,6 +41,14 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
         reloadData()
         let job = ReloadMarketAlertsJob()
         ConcurrentJobQueue.shared.addJob(job: job)
+        DispatchQueue.global().async {
+            let hasReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
+            if !hasReviewed {
+                DispatchQueue.main.async {
+                    self.tableHeaderView.actionView.badgeOnSwap = true
+                }
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -210,8 +218,12 @@ extension WalletViewController: TokenActionView.Delegate {
                 self.present(controller, animated: true, completion: nil)
             }
         case .swap:
+            tableHeaderView.actionView.badgeOnSwap = false
             let swap = MixinSwapViewController.contained(sendAssetID: nil, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)
+            DispatchQueue.global().async {
+                PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)
+            }
         }
     }
     

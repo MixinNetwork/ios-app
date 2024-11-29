@@ -7,7 +7,7 @@ protocol HomeTabBarControllerChild {
 
 final class HomeTabBarController: UIViewController {
     
-    enum ChildID: Int {
+    enum ChildID: Int, CaseIterable {
         case chat = 0
         case wallet = 1
         case collectibles = 2
@@ -29,24 +29,42 @@ final class HomeTabBarController: UIViewController {
         
         tabBar.tintColor = R.color.icon_tint()
         tabBar.backgroundColor = .background
-        tabBar.items = [
-            TabBar.Item(id: ChildID.chat.rawValue,
-                        image: R.image.home_tab_chat()!,
-                        selectedImage: R.image.home_tab_chat_selected()!,
-                        text: R.string.localizable.chat()),
-            TabBar.Item(id: ChildID.wallet.rawValue,
-                        image: R.image.home_tab_wallet()!,
-                        selectedImage: R.image.home_tab_wallet_selected()!,
-                        text: R.string.localizable.wallet()),
-            TabBar.Item(id: ChildID.collectibles.rawValue,
-                        image: R.image.home_tab_collectibles()!,
-                        selectedImage: R.image.home_tab_collectibles_selected()!,
-                        text: R.string.localizable.collectibles()),
-            TabBar.Item(id: ChildID.more.rawValue,
-                        image: R.image.home_tab_more()!,
-                        selectedImage: R.image.home_tab_more_selected()!,
-                        text: R.string.localizable.more()),
-        ]
+        tabBar.items = ChildID.allCases.map { id in
+            switch id {
+            case .chat:
+                TabBar.Item(
+                    id: id.rawValue,
+                    image: R.image.home_tab_chat()!,
+                    selectedImage: R.image.home_tab_chat_selected()!,
+                    text: R.string.localizable.chat(),
+                    badge: false
+                )
+            case .wallet:
+                TabBar.Item(
+                    id: id.rawValue,
+                    image: R.image.home_tab_wallet()!,
+                    selectedImage: R.image.home_tab_wallet_selected()!,
+                    text: R.string.localizable.wallet(),
+                    badge: false
+                )
+            case .collectibles:
+                TabBar.Item(
+                    id: id.rawValue,
+                    image: R.image.home_tab_collectibles()!,
+                    selectedImage: R.image.home_tab_collectibles_selected()!,
+                    text: R.string.localizable.collectibles(),
+                    badge: false
+                )
+            case .more:
+                TabBar.Item(
+                    id: id.rawValue,
+                    image: R.image.home_tab_more()!,
+                    selectedImage: R.image.home_tab_more_selected()!,
+                    text: R.string.localizable.more(),
+                    badge: false
+                )
+            }
+        }
         tabBar.selectedIndex = 0
         tabBar.delegate = self
         updateTabBarShadow(resolveColorUsing: traitCollection)
@@ -60,6 +78,22 @@ final class HomeTabBarController: UIViewController {
         }
         
         switchToChildAfterValidated(with: .chat)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(propertiesDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
+        DispatchQueue.global().async {
+            let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
+            let hasMarketReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
+            DispatchQueue.main.async {
+                var items = self.tabBar.items
+                if !hasSwapReviewed {
+                    items[ChildID.wallet.rawValue].badge = true
+                }
+                if !hasMarketReviewed {
+                    items[ChildID.more.rawValue].badge = true
+                }
+                self.tabBar.items = items
+            }
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -75,6 +109,27 @@ final class HomeTabBarController: UIViewController {
         }
         tabBar.selectedIndex = index
         switchToChildAfterValidated(with: child)
+    }
+    
+    @objc private func propertiesDidUpdate(_ notification: Notification) {
+        if let change = notification.userInfo?[PropertiesDAO.Key.hasSwapReviewed] as? PropertiesDAO.Change {
+            let hasReviewed = switch change {
+            case .saved(let newValue):
+                (newValue as? Bool) ?? false
+            case .removed:
+                false
+            }
+            tabBar.items[ChildID.wallet.rawValue].badge = !hasReviewed
+        }
+        if let change = notification.userInfo?[PropertiesDAO.Key.hasMarketReviewed] as? PropertiesDAO.Change {
+            let hasReviewed = switch change {
+            case .saved(let newValue):
+                (newValue as? Bool) ?? false
+            case .removed:
+                false
+            }
+            tabBar.items[ChildID.more.rawValue].badge = !hasReviewed
+        }
     }
     
     private func updateTabBarShadow(resolveColorUsing traitCollection: UITraitCollection) {

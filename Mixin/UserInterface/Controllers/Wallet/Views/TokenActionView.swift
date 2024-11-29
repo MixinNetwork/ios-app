@@ -6,7 +6,22 @@ final class TokenActionView: UIView {
         func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction)
     }
     
+    var badgeOnSwap = false {
+        didSet {
+            if badgeOnSwap {
+                showBadgeViewOnSwapButton()
+            } else {
+                badgeView?.removeFromSuperview()
+                badgeView = nil
+            }
+        }
+    }
+    
     weak var delegate: Delegate?
+    
+    private var buttons: [UIButton] = []
+    
+    private weak var badgeView: BadgeDotView?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -59,7 +74,22 @@ final class TokenActionView: UIView {
             button.tag = index
             button.addTarget(self, action: #selector(performAction(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
+            buttons.append(button)
         }
+    }
+    
+    private func showBadgeViewOnSwapButton() {
+        guard badgeView == nil, let imageView = buttons[TokenAction.swap.rawValue].imageView else {
+            return
+        }
+        let badgeView = BadgeDotView()
+        badgeView.backgroundColor = R.color.background()
+        addSubview(badgeView)
+        badgeView.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.top)
+            make.trailing.equalTo(imageView.snp.trailing)
+        }
+        self.badgeView = badgeView
     }
     
 }

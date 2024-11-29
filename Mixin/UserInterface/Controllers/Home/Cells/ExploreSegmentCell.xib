@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -24,21 +24,31 @@
                         <color key="textColor" name="text"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="8" placeholderIntrinsicHeight="8" translatesAutoresizingMaskIntoConstraints="NO" id="4bP-ZF-pvP" customClass="BadgeDotView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="78" y="0.0" width="8" height="8"/>
+                        <color key="backgroundColor" name="background"/>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="wzq-xa-agh" secondAttribute="trailing" constant="5" id="9WS-SG-vu1"/>
                     <constraint firstItem="wzq-xa-agh" firstAttribute="leading" secondItem="SSS-bE-ORu" secondAttribute="leading" constant="5" id="D1r-iP-Q82"/>
+                    <constraint firstItem="4bP-ZF-pvP" firstAttribute="trailing" secondItem="wzq-xa-agh" secondAttribute="trailing" id="Jh2-5g-gjB"/>
                     <constraint firstItem="wzq-xa-agh" firstAttribute="top" secondItem="SSS-bE-ORu" secondAttribute="top" id="fhA-dd-bbz"/>
                     <constraint firstAttribute="bottom" secondItem="wzq-xa-agh" secondAttribute="bottom" id="hNi-RG-200"/>
+                    <constraint firstItem="4bP-ZF-pvP" firstAttribute="top" secondItem="wzq-xa-agh" secondAttribute="top" id="jAU-KA-06a"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>
+                <outlet property="badgeView" destination="4bP-ZF-pvP" id="PUn-hj-ZCF"/>
                 <outlet property="label" destination="wzq-xa-agh" id="1Ix-Bx-nx7"/>
             </connections>
             <point key="canvasLocation" x="115" y="-137"/>
         </collectionViewCell>
     </objects>
     <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

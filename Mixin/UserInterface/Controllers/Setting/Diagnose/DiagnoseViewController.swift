@@ -31,6 +31,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.clear_cache(), accessory: .disclosure),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Reset View Badges", accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -110,8 +113,12 @@ extension DiagnoseViewController: UITableViewDelegate {
         case (8, 0):
             InscriptionContentSession.sessionConfiguration.urlCache?.removeAllCachedResponses()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
-#if DEBUG
         case (9, 0):
+            PropertiesDAO.shared.removeValue(forKey: .hasSwapReviewed)
+            PropertiesDAO.shared.removeValue(forKey: .hasMarketReviewed)
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
+#if DEBUG
+        case (10, 0):
             let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
             navigationController?.pushViewController(container, animated: true)
 #endif

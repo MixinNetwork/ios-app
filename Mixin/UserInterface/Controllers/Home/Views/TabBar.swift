@@ -12,6 +12,7 @@ final class TabBar: UIView {
         let image: UIImage
         let selectedImage: UIImage
         let text: String
+        var badge: Bool
     }
     
     override var intrinsicContentSize: CGSize {
@@ -43,6 +44,7 @@ final class TabBar: UIView {
     private let horizontalMargin: CGFloat = 20
     
     private var buttons: [UIButton] = []
+    private var badgeViews: [UIView] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -102,6 +104,11 @@ final class TabBar: UIView {
             buttons.removeLast(-numberOfButtonsToBeAdded)
         }
         
+        for badgeView in badgeViews {
+            badgeView.removeFromSuperview()
+        }
+        badgeViews.removeAll()
+        
         for (index, item) in items.enumerated() {
             let button = buttons[index]
             button.configurationUpdateHandler = { button in
@@ -123,10 +130,22 @@ final class TabBar: UIView {
                 button.configuration = config
             }
             button.tag = index
-            button.isSelected = false
+            button.isSelected = index == selectedIndex
+            
+            if item.badge {
+                let badge = UIView()
+                badge.backgroundColor = R.color.error_red()
+                badge.layer.cornerRadius = 4
+                badge.layer.masksToBounds = true
+                addSubview(badge)
+                badgeViews.append(badge)
+                badge.snp.makeConstraints { make in
+                    make.width.height.equalTo(8)
+                    make.top.equalToSuperview().offset(4)
+                    make.leading.equalTo(button.snp.centerX).offset(12)
+                }
+            }
         }
-        
-        selectedIndex = nil
     }
     
 }

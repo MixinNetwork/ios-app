@@ -97,7 +97,9 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
                                           animated: false,
                                           scrollPosition: .left)
         
-        layoutSubviews(isTextViewEditing: false)
+        UIView.performWithoutAnimation {
+            layoutSubviews(isTextViewEditing: false)
+        }
     }
     
     override func layout(for keyboardFrame: CGRect) {

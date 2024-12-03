@@ -56,8 +56,12 @@ class PickerViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.rightButton.isEnabled = true
-        container?.titleLabel.text = collection?.localizedTitle
+        title = collection?.localizedTitle
+        navigationItem.rightBarButtonItem = .button(
+            title: R.string.localizable.cancel(),
+            target: self,
+            action: #selector(cancel(_:))
+        )
         let collection = self.collection
         let showImageOnly = self.showImageOnly
         DispatchQueue.global().async { [weak self] in
@@ -100,6 +104,10 @@ class PickerViewController: UIViewController, MixinNavigationAnimating {
         }
     }
     
+    @objc private func cancel(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
     private func stopAcitivityIndicator() {
         activityIndicator.stopAnimating()
         showActivityIndicatorWrapperConstraint.priority = .defaultLow
@@ -107,22 +115,6 @@ class PickerViewController: UIViewController, MixinNavigationAnimating {
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
-    }
-    
-}
-
-extension PickerViewController: ContainerViewControllerDelegate {
-
-    func barLeftButtonTappedAction() {
-        navigationController?.popViewController(animated: true)
-    }
-
-    func textBarRightButton() -> String? {
-        return R.string.localizable.cancel()
-    }
-
-    func barRightButtonTappedAction() {
-        dismiss(animated: true, completion: nil)
     }
     
 }
@@ -195,7 +187,7 @@ extension PickerViewController: PHPhotoLibraryChangeObserver {
         DispatchQueue.main.sync {
             if let collection = collection, let albumChanges = changeInstance.changeDetails(for: collection), let newCollection = albumChanges.objectAfterChanges {
                 self.collection = newCollection
-                container?.titleLabel.text = newCollection.localizedTitle
+                self.title = newCollection.localizedTitle
             }
             if let changes = changeInstance.changeDetails(for: assets) {
                 assets = changes.fetchResultAfterChanges

@@ -71,6 +71,7 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     override func viewDidLoad() {
+        title = R.string.localizable.profile()
         size = isMe ? .unavailable : .compressed
         closeButton.isHidden = parent != nil
         titleViewHeightConstraint.constant = isMe ? 48 : 70
@@ -277,7 +278,7 @@ extension UserProfileViewController {
     }
     
     @objc func editFavoriteApps() {
-        let vc = EditFavoriteAppsViewController.instance()
+        let vc = EditFavoriteAppsViewController()
         if parent != nil {
             navigationController?.pushViewController(vc, animated: true)
         } else {
@@ -338,7 +339,7 @@ extension UserProfileViewController {
     }
     
     @objc func editMyBiography() {
-        let vc = BiographyViewController.instance(user: user)
+        let vc = BiographyViewController(user: user)
         if parent != nil {
             navigationController?.pushViewController(vc, animated: true)
         } else {
@@ -349,7 +350,7 @@ extension UserProfileViewController {
     @objc func changeNumber() {
         switch TIP.status {
         case .ready, .needsMigrate:
-            let verify = ChangeNumberPINValidationViewController.contained()
+            let verify = ChangeNumberPINValidationViewController()
             if parent != nil {
                 navigationController?.pushViewController(verify, animated: true)
             } else {
@@ -391,7 +392,7 @@ extension UserProfileViewController {
     @objc func transfer() {
         switch TIP.status {
         case .ready, .needsMigrate:
-            let viewController = TransferOutViewController.instance(token: nil, to: .contact(user))
+            let viewController = TransferOutViewController(token: nil, to: .contact(user))
             dismissAndPush(viewController)
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .transfer(user: user))
@@ -440,19 +441,19 @@ extension UserProfileViewController {
     @objc func searchConversation() {
         let vc = InConversationSearchViewController()
         vc.load(user: user, conversationId: conversationId)
-        let container = ContainerViewController.instance(viewController: vc, title: user.fullName)
-        dismissAndPush(container)
+        vc.title = user.fullName
+        dismissAndPush(vc)
     }
     
     @objc func showSharedMedia() {
         let vc = R.storyboard.chat.shared_media()!
         vc.conversationId = conversationId
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.shared_media())
-        dismissAndPush(container)
+        vc.title = R.string.localizable.shared_media()
+        dismissAndPush(vc)
     }
     
     @objc func showTransactions() {
-        let history = TransactionHistoryViewController.contained(user: user)
+        let history = TransactionHistoryViewController(user: user)
         dismissAndPush(history)
     }
     
@@ -567,7 +568,7 @@ extension UserProfileViewController {
     
     @objc func editExpiredMessageDuration() {
         func dismissAndPushController(expireIn: Int64) {
-            let controller = ExpiredMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
+            let controller = ExpiredMessageViewController(conversationId: conversationId, expireIn: expireIn)
             dismissAndPush(controller)
         }
         if let expireIn = conversationExpireIn {

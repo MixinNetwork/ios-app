@@ -92,13 +92,13 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
                 let wallet = WalletViewController()
                 navigationController.pushViewController(withBackRoot: wallet)
             case let .transfer(user):
-                let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+                let transfer = TransferOutViewController(token: nil, to: .contact(user))
                 navigationController.pushViewController(withBackChat: transfer)
             case .changePhone:
                 let verify = ChangeNumberPINValidationViewController()
                 navigationController.pushViewController(verify, animated: true)
             case .setEmergencyContact:
-                let verify = RecoveryContactVerifyPINViewController.contained()
+                let verify = RecoveryContactVerifyPINViewController()
                 navigationController.pushViewController(verify, animated: true)
             case .none:
                 break

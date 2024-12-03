@@ -2,12 +2,6 @@ import UIKit
 
 final class ExportMnemonicPhrasesIntroductionViewController: IntroductionViewController {
     
-    static func contained() -> ContainerViewController {
-        let viewController = ExportMnemonicPhrasesIntroductionViewController()
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = R.image.mnemonic_phrase()
@@ -41,7 +35,7 @@ final class ExportMnemonicPhrasesIntroductionViewController: IntroductionViewCon
     }
     
     @objc private func showPhrases(_ sender: Any) {
-        let next = ExportMnemonicPhrasesValidationViewController.contained()
+        let next = ExportMnemonicPhrasesValidationViewController()
         navigationController?.pushViewController(replacingCurrent: next, animated: true)
     }
     

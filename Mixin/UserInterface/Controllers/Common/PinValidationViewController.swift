@@ -54,7 +54,11 @@ class PinValidationViewController: UIViewController {
     
     @IBAction func showLogs(_ sender: Any) {
         let logs = LogViewController.instance(category: .all)
-        present(logs, animated: true)
+        let navigationController = UINavigationController(rootViewController: logs)
+        navigationController.navigationBar.standardAppearance = .general
+        navigationController.navigationBar.scrollEdgeAppearance = .general
+        navigationController.navigationBar.tintColor = R.color.icon_tint()
+        present(navigationController, animated: true)
     }
     
     func validate(pin: String) {

@@ -18,14 +18,9 @@ final class ExportMnemonicPhrasesViewController: SettingsTableViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    class func contained() -> UIViewController {
-        let vc = ExportMnemonicPhrasesViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.mnemonic_phrase())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.mnemonic_phrase()
         tableHeaderView.imageView.image = R.image.mnemonic_phrase()
         tableHeaderView.textViewTopConstraint.constant = 36
         tableHeaderView.textView.attributedText = .linkedMoreInfo(
@@ -59,7 +54,7 @@ extension ExportMnemonicPhrasesViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch TIP.status {
         case .ready, .needsMigrate:
-            let introduction = ExportMnemonicPhrasesIntroductionViewController.contained()
+            let introduction = ExportMnemonicPhrasesIntroductionViewController()
             navigationController?.pushViewController(replacingCurrent: introduction, animated: true)
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)

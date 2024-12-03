@@ -24,6 +24,7 @@ final class Web3ReceiveSourceViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.receive()
         view.addSubview(tableView)
         tableView.backgroundColor = R.color.background()
         tableView.snp.makeEdgesEqualToSuperview()
@@ -76,8 +77,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
                 let input = WithdrawInputAmountViewController(tokenItem: token,
                                                               web3WalletAddress: self.address,
                                                               web3WalletChainName: chain.name)
-                let container = ContainerViewController.instance(viewController: input, title: R.string.localizable.send())
-                self.navigationController?.pushViewController(container, animated: true)
+                self.navigationController?.pushViewController(input, animated: true)
             }
             present(selector, animated: true)
             let chainIDs = kind.chains.compactMap(\.mixinChainID)
@@ -89,8 +89,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
             }
         case .address:
             let deposit = Web3DepositViewController(kind: kind, address: address)
-            let container = ContainerViewController.instance(viewController: deposit, title: R.string.localizable.receive())
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(deposit, animated: true)
         }
     }
     

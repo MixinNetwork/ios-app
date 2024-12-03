@@ -28,8 +28,7 @@ final class ExploreSolanaViewController: ExploreWeb3ViewController {
             return
         }
         let swap = Web3SwapViewController(address: address, tokens: tokens)
-        let container = ContainerViewController.instance(viewController: swap, title: R.string.localizable.swap())
-        navigationController?.pushViewController(container, animated: true)
+        navigationController?.pushViewController(swap, animated: true)
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {

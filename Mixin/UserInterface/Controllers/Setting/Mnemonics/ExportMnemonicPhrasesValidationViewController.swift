@@ -13,12 +13,6 @@ final class ExportMnemonicPhrasesValidationViewController: FullscreenPINValidati
     
     private weak var errorDescriptionLabel: UILabel?
     
-    static func contained() -> ContainerViewController {
-        let viewController = ExportMnemonicPhrasesValidationViewController()
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func continueAction(_ sender: Any) {
         isBusy = true
         let pin = pinField.text
@@ -43,7 +37,7 @@ final class ExportMnemonicPhrasesValidationViewController: FullscreenPINValidati
                     case .success(let account):
                         LoginManager.shared.setAccount(account)
                         if let self {
-                            let reveal = ViewMnemonicsViewController.contained(mnemonics: mnemonics)
+                            let reveal = ViewMnemonicsViewController(mnemonics: mnemonics)
                             self.navigationController?.pushViewController(replacingCurrent: reveal, animated: true)
                         }
                     case .failure(let error):

@@ -189,8 +189,7 @@ extension HomeContainerViewController {
     
     private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
         let sharedMedia = homeNavigationController.viewControllers
-            .compactMap({ $0 as? ContainerViewController })
-            .compactMap({ $0.viewController as? SharedMediaViewController })
+            .compactMap({ $0 as? SharedMediaViewController })
             .first(where: { $0.conversationId == conversationId })?
             .children
             .compactMap({ $0 as? SharedMediaMediaViewController })

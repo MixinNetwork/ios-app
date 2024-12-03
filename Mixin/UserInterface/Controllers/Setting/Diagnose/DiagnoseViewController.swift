@@ -38,6 +38,7 @@ class DiagnoseViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.diagnose()
 #if DEBUG
         let tipSection = SettingsSection(rows: [
             SettingsRow(title: "TIP", accessory: .disclosure),
@@ -81,13 +82,9 @@ extension DiagnoseViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
-            let container = ContainerViewController.instance(viewController: DatabaseDiagnosticViewController(),
-                                                             title: R.string.localizable.database_access())
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(DatabaseDiagnosticViewController(), animated: true)
         case (2, 0):
-            let container = ContainerViewController.instance(viewController: AttachmentDiagnosticViewController(),
-                                                             title: R.string.localizable.clear_cache())
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(AttachmentDiagnosticViewController(), animated: true)
         case (3, 0):
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
@@ -105,11 +102,9 @@ extension DiagnoseViewController: UITableViewDelegate {
         case (5, 0):
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
         case (6, 0):
-            let container = ContainerViewController.instance(viewController: UTXODiagnosticViewController(), title: "UTXO")
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(UTXODiagnosticViewController(), animated: true)
         case (7, 0):
-            let container = ContainerViewController.instance(viewController: Web3DiagnosticViewController(), title: "Web3")
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(Web3DiagnosticViewController(), animated: true)
         case (8, 0):
             InscriptionContentSession.sessionConfiguration.urlCache?.removeAllCachedResponses()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
@@ -119,8 +114,7 @@ extension DiagnoseViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
 #if DEBUG
         case (10, 0):
-            let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(TIPDiagnosticViewController(), animated: true)
 #endif
         default:
             break

@@ -136,15 +136,15 @@ extension GroupProfileViewController {
     @objc func showSharedMedia() {
         let vc = R.storyboard.chat.shared_media()!
         vc.conversationId = conversation.conversationId
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.shared_media())
-        dismissAndPush(container)
+        vc.title = R.string.localizable.shared_media()
+        dismissAndPush(vc)
     }
     
     @objc func searchConversation() {
         let vc = InConversationSearchViewController()
         vc.load(group: conversation)
-        let container = ContainerViewController.instance(viewController: vc, title: conversation.name)
-        dismissAndPush(container)
+        vc.title = conversation.name
+        dismissAndPush(vc)
     }
     
     @objc func editAnnouncement() {
@@ -240,7 +240,7 @@ extension GroupProfileViewController {
         guard isAdmin else {
             return
         }
-        let controller = ExpiredMessageViewController.instance(conversationId: conversationId, expireIn: conversation.expireIn)
+        let controller = ExpiredMessageViewController(conversationId: conversationId, expireIn: conversation.expireIn)
         dismissAndPush(controller)
     }
     

@@ -14,12 +14,6 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
         super.init()
     }
     
-    static func contained(mnemonics: Mnemonics) -> ContainerViewController {
-        let viewController = ViewMnemonicsViewController(mnemonics: mnemonics)
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.write_down_mnemonic_phrase()
@@ -65,7 +59,7 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
     }
     
     override func confirm(_ sender: Any) {
-        let check = CheckMnemonicsViewController.contained(mnemonics: mnemonics)
+        let check = CheckMnemonicsViewController(mnemonics: mnemonics)
         navigationController?.pushViewController(check, animated: true)
     }
     

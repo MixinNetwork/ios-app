@@ -38,13 +38,13 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
         ]),
     ])
     
-    class func instance() -> UIViewController {
-        let vc = UserCenterViewController()
-        return ContainerViewController.instance(viewController: vc, title:"")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.leftBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_close(),
+            target: self,
+            action: #selector(close(_:))
+        )
         tableView.tableHeaderView = R.nib.userCenterTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
@@ -53,6 +53,10 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
                                                selector: #selector(reloadAccount),
                                                name: LoginManager.accountDidChangeNotification,
                                                object: nil)
+    }
+    
+    @objc private func close(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
     
 }
@@ -70,8 +74,7 @@ extension UserCenterViewController: UITableViewDelegate {
                     return
                 }
                 let user = UserItem.createUser(from: account)
-                controller = ContainerViewController.instance(viewController: UserProfileViewController(user: user),
-                                                              title: R.string.localizable.profile())
+                controller = UserProfileViewController(user: user)
             case 1:
                 showMyQrCode()
                 return
@@ -89,12 +92,12 @@ extension UserCenterViewController: UITableViewDelegate {
         case 2:
             switch indexPath.row {
             case 0:
-                controller = AddContactViewController.instance()
+                controller = AddContactViewController()
             default:
                 controller = ContactViewController.instance()
             }
         default:
-            controller = SettingsViewController.instance()
+            controller = SettingsViewController()
         }
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -134,14 +137,6 @@ extension UserCenterViewController {
                                           description: R.string.localizable.transfer_qrcode_prompt(),
                                           centerContent: .receiveMoney({ $0.setImage(with: account) }))
         present(qrCode, animated: true)
-    }
-    
-}
-
-extension UserCenterViewController: ContainerViewControllerDelegate {
-    
-    func imageBarLeftButton() -> UIImage? {
-        R.image.ic_title_close()
     }
     
 }

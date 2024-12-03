@@ -14,6 +14,11 @@ final class TransferReceiverViewController: UserItemPeerViewController<PeerCell>
         fatalError("Storyboard not supported")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = R.string.localizable.send_to_title()
+    }
+    
     override func catalog(users: [UserItem]) -> (titles: [String], models: [UserItem]) {
         let transferReceiver = users.filter({ (user) -> Bool in
             if user.isBot {

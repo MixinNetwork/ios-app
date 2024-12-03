@@ -7,22 +7,25 @@ final class ExpiredMessageViewController: SettingsTableViewController {
         SettingsRow(title: option.title, accessory: .none)
     }
     
-    private var currentExpireIn: Int64 = 0
-    private var conversationId = ""
+    private let conversationId: String
+    private var currentExpireIn: Int64
     
     private lazy var section = SettingsRadioSection(rows: rows)
     private lazy var dataSource = SettingsDataSource(sections: [section])
     
-    class func instance(conversationId: String, expireIn: Int64) -> UIViewController {
-        let vc = ExpiredMessageViewController()
-        vc.conversationId = conversationId
-        vc.currentExpireIn = expireIn
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.disappearing_message())
-        return container
+    init(conversationId: String, expireIn: Int64) {
+        self.conversationId = conversationId
+        self.currentExpireIn = expireIn
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.disappearing_message()
         tableView.tableHeaderView = R.nib.expiredMessageTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView

@@ -18,25 +18,27 @@ class LogViewController: UIViewController {
     class func instance(category: AccountAPI.LogCategory) -> UIViewController {
         let vc = R.storyboard.wallet.logs()!
         vc.category = category
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.logs())
-        return container
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.logs()
+        if navigationController?.presentingViewController != nil {
+            navigationItem.leftBarButtonItem = .tintedIcon(
+                image: R.image.ic_title_close(),
+                target: self,
+                action: #selector(close(_:))
+            )
+        }
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         fetchLogs()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if navigationController != nil {
-            container?.leftButton.setImage(R.image.ic_title_back(), for: .normal)
-        } else if presentingViewController != nil {
-            container?.leftButton.setImage(R.image.ic_title_close(), for: .normal)
-        }
+    @objc private func close(_ sender: Any) {
+        navigationController?.presentingViewController?.dismiss(animated: true)
     }
     
     private func fetchLogs(offset: String? = nil) {
@@ -161,18 +163,6 @@ extension LogViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-}
-
-extension LogViewController: ContainerViewControllerDelegate {
-    
-    func barLeftButtonTappedAction() {
-        if let navigationController {
-            navigationController.popViewController(animated: true)
-        } else if let presentingViewController {
-            presentingViewController.dismiss(animated: true)
-        }
     }
     
 }

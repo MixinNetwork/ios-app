@@ -76,8 +76,7 @@ class ExploreWeb3ViewController: UIViewController {
             }
             let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
             let selector = Web3SendingDestinationViewController(payment: payment)
-            let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.address())
-            self.navigationController?.pushViewController(container, animated: true)
+            self.navigationController?.pushViewController(selector, animated: true)
         }
         present(selector, animated: true)
     }
@@ -87,8 +86,7 @@ class ExploreWeb3ViewController: UIViewController {
             return
         }
         let source = Web3ReceiveSourceViewController(kind: kind, address: address)
-        let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
-        navigationController?.pushViewController(container, animated: true)
+        navigationController?.pushViewController(source, animated: true)
     }
     
     @objc private func browse(_ sender: Any) {
@@ -226,8 +224,7 @@ extension ExploreWeb3ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if let address, let token = tokens?[indexPath.row] {
             let viewController = Web3TokenViewController(kind: kind, address: address, token: token)
-            let container = ContainerViewController.instance(viewController: viewController, title: token.name)
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(viewController, animated: true)
         }
     }
     

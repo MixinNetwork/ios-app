@@ -267,7 +267,8 @@ extension ExploreMarketViewController: UICollectionViewDelegate {
                 favoriteMarkets
             }
             if let market = markets?[indexPath.item] {
-                let controller = MarketViewController.contained(market: market, pushingViewController: self)
+                let controller = MarketViewController(market: market)
+                controller.pushingViewController = self
                 navigationController?.pushViewController(controller, animated: true)
             }
         }

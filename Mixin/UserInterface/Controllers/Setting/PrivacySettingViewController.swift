@@ -22,13 +22,9 @@ final class PrivacySettingViewController: SettingsTableViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    class func instance() -> UIViewController {
-        let vc = PrivacySettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.privacy())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.privacy()
         if BiometryType.lockScreen != .none {
             dataSource.insertSection(screenLockSection, at: 2, animation: .none)
         }
@@ -96,16 +92,16 @@ extension PrivacySettingViewController: UITableViewDelegate {
             if indexPath.row == 0 {
                 vc = BlockedUsersViewController.instance()
             } else {
-                vc = ConversationSettingViewController.instance()
+                vc = ConversationSettingViewController()
             }
         case 1:
             if indexPath.row == 0 {
-                vc = PhoneNumberSettingViewController.instance()
+                vc = PhoneNumberSettingViewController()
             } else {
-                vc = PhoneContactsSettingViewController.instance()
+                vc = PhoneContactsSettingViewController()
             }
         default:
-            vc = ScreenLockSettingViewController.instance()
+            vc = ScreenLockSettingViewController()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

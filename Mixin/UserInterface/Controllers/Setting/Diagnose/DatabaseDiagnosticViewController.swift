@@ -14,6 +14,7 @@ class DatabaseDiagnosticViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.database_access()
         databaseSwitcher.selectedSegmentIndex = 1
         changeDatabase(self)
     }

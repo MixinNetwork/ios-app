@@ -11,15 +11,11 @@ class RestoreFromPhoneViewController: DeviceTransferSettingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.restore_from_another_phone()
         tableHeaderView.imageView.image = R.image.setting.ic_transfer_phone()
         tableHeaderView.label.attributedText = makeDescription()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-    }
-    
-    class func instance() -> UIViewController {
-        let vc = RestoreFromPhoneViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.restore_from_another_phone())
     }
     
 }

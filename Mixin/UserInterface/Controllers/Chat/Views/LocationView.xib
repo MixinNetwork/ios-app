@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,13 +23,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="VkP-p5-8St">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <rect key="frame" x="0.0" y="48" width="414" height="848"/>
                 </mapView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Onh-4t-Ori" customClass="LocationTableWrapperView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <rect key="frame" x="0.0" y="48" width="414" height="848"/>
                     <subviews>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" style="grouped" separatorStyle="none" rowHeight="62" estimatedRowHeight="62" sectionHeaderHeight="7" estimatedSectionHeaderHeight="7" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="B7f-5h-4L5">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="848"/>
                             <color key="backgroundColor" name="background"/>
                         </tableView>
                     </subviews>
@@ -42,18 +42,18 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <viewLayoutGuide key="safeArea" id="I12-qE-llk"/>
+            <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="Onh-4t-Ori" secondAttribute="trailing" id="0Pi-p5-cfp"/>
+                <constraint firstItem="I12-qE-llk" firstAttribute="top" secondItem="Onh-4t-Ori" secondAttribute="top" id="5fc-gp-LKU"/>
                 <constraint firstAttribute="bottom" secondItem="Onh-4t-Ori" secondAttribute="bottom" id="9ET-Ae-JAW"/>
                 <constraint firstItem="VkP-p5-8St" firstAttribute="leading" secondItem="PJf-0q-OB7" secondAttribute="leading" id="Al0-Yo-PjQ"/>
-                <constraint firstItem="Onh-4t-Ori" firstAttribute="top" secondItem="PJf-0q-OB7" secondAttribute="top" id="D6T-Z3-YDe"/>
                 <constraint firstItem="Onh-4t-Ori" firstAttribute="leading" secondItem="PJf-0q-OB7" secondAttribute="leading" id="H1H-sl-DCo"/>
-                <constraint firstItem="VkP-p5-8St" firstAttribute="top" secondItem="PJf-0q-OB7" secondAttribute="top" id="LLk-Ae-CTQ"/>
+                <constraint firstItem="I12-qE-llk" firstAttribute="top" secondItem="VkP-p5-8St" secondAttribute="top" id="Zz3-ZS-t0Z"/>
                 <constraint firstAttribute="bottom" secondItem="VkP-p5-8St" secondAttribute="bottom" id="dQZ-6a-u0B"/>
                 <constraint firstAttribute="trailing" secondItem="VkP-p5-8St" secondAttribute="trailing" id="jqi-es-pJ6"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="I12-qE-llk"/>
             <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
         </view>
     </objects>

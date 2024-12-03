@@ -24,6 +24,7 @@ class LegacyTransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.transaction()
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         assetIconView.setIcon(asset: asset)
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
@@ -89,16 +90,7 @@ class LegacyTransactionViewController: UIViewController {
         let vc = R.storyboard.wallet.transaction()!
         vc.asset = asset
         vc.snapshot = snapshot
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.transaction())
-        return container
-    }
-    
-}
-
-extension LegacyTransactionViewController: ContainerViewControllerDelegate {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
+        return vc
     }
     
 }

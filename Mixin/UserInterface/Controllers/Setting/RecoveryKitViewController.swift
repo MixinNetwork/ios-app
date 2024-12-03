@@ -14,13 +14,9 @@ final class RecoveryKitViewController: SettingsTableViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    class func instance() -> UIViewController {
-        let vc = RecoveryKitViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.recovery_kit())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.recovery_kit()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: LoginManager.accountDidChangeNotification, object: nil)
         tableHeaderView.imageView.image = R.image.recovery_header()
         tableHeaderView.textView.attributedText = .walletIntroduction()
@@ -96,17 +92,17 @@ extension RecoveryKitViewController: UITableViewDelegate {
         let viewController = switch indexPath.row {
         case 0:
             if let number = account.phone, !account.isAnonymous {
-                ChangeMobileNumberViewController.contained(phoneNumber: number)
+                ChangeMobileNumberViewController(phoneNumber: number)
             } else {
-                AddMobileNumberViewController.instance()
+                AddMobileNumberViewController()
             }
         case 1:
-            ExportMnemonicPhrasesViewController.contained()
+            ExportMnemonicPhrasesViewController()
         default:
             if account.hasEmergencyContact {
-                ViewRecoveryContactViewController.instance()
+                ViewRecoveryContactViewController()
             } else {
-                AddRecoveryContactViewController.instance()
+                AddRecoveryContactViewController()
             }
         }
         navigationController?.pushViewController(viewController, animated: true)

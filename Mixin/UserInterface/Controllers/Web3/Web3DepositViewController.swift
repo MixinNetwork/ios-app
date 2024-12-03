@@ -24,6 +24,7 @@ final class Web3DepositViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.receive()
         qrCodeView.setContent(address, size: qrCodeView.frame.size)
         qrCodeView.setDefaultCornerCurve()
         addressLabel.text = address

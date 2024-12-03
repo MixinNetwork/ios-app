@@ -443,13 +443,9 @@ class PayWindow: BottomSheetView {
             return
         }
         var viewControllers = navigationController.viewControllers.filter { (viewController) -> Bool in
-            if let container = viewController as? ContainerViewController {
-                return !(container.viewController is LegacyTransferOutViewController)
-            } else {
-                return true
-            }
+            !(viewController is LegacyTransferOutViewController)
         }
-        viewControllers.append(PinSettingsViewController.instance())
+        viewControllers.append(PinSettingsViewController())
         navigationController.setViewControllers(viewControllers, animated: true)
     }
     

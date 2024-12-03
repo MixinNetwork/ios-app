@@ -3,12 +3,6 @@ import MixinServices
 
 final class RecoveryContactIntroduction2ViewController: IntroductionViewController {
     
-    static func contained() -> ContainerViewController {
-        let viewController = RecoveryContactIntroduction2ViewController()
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = R.image.recovery_contact()
@@ -36,7 +30,7 @@ final class RecoveryContactIntroduction2ViewController: IntroductionViewControll
     }
     
     @objc private func continueToNext(_ sender: Any) {
-        let next = RecoveryContactVerifyPINViewController.contained()
+        let next = RecoveryContactVerifyPINViewController()
         navigationController?.pushViewController(replacingCurrent: next, animated: true)
     }
     

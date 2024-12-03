@@ -11,25 +11,19 @@ class PhotoAssetPickerNavigationController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        interactivePopGestureRecognizer?.delegate = self
+        view.backgroundColor = R.color.background()
+        navigationBar.standardAppearance = .general
+        navigationBar.scrollEdgeAppearance = .general
+        navigationBar.tintColor = R.color.icon_tint()
     }
     
     class func instance(pickerDelegate: PhotoAssetPickerDelegate?, showImageOnly: Bool = false, scrollToOffset: CGPoint = CGPoint.zero) -> UIViewController {
-        let vc = R.storyboard.photo.instantiateInitialViewController()!
+        let vc = PhotoAssetPickerNavigationController()
         vc.pickerDelegate = pickerDelegate
         let albums = AlbumViewController.instance(showImageOnly: showImageOnly)
         let picker = PickerViewController.instance(showImageOnly: showImageOnly, scrollToOffset: scrollToOffset)
-        let pickerContainer = ContainerViewController.instance(viewController: picker, title: "")
-        vc.viewControllers = [albums, pickerContainer]
+        vc.viewControllers = [albums, picker]
         return vc
-    }
-    
-}
-
-extension PhotoAssetPickerNavigationController: UIGestureRecognizerDelegate {
-    
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
     }
     
 }

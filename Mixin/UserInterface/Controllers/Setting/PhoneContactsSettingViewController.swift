@@ -23,14 +23,9 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    class func instance() -> UIViewController {
-        let vc = PhoneContactsSettingViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_contacts())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.phone_contacts()
         tableView.tableHeaderView = R.nib.phoneContactsSettingTableHeaderView(withOwner: nil)
         reloadData()
         dataSource.tableViewDelegate = self

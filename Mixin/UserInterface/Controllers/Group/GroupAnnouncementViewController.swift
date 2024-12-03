@@ -9,6 +9,11 @@ class GroupAnnouncementViewController: AnnouncementViewController {
         return conversation.announcement
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = R.string.localizable.group_description()
+    }
+    
     override func saveAction(_ sender: Any) {
         guard !saveButton.isBusy else {
             return
@@ -29,8 +34,7 @@ class GroupAnnouncementViewController: AnnouncementViewController {
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = GroupAnnouncementViewController()
         vc.conversation = conversation
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.group_description())
-        return container
+        return vc
     }
     
 }

@@ -53,9 +53,6 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let navigationController, !navigationController.isNavigationBarHidden {
-            navigationController.setNavigationBarHidden(true, animated: true)
-        }
         DispatchQueue.global().async {
             let hasAssetInLegacyNetwork = AssetDAO.shared.hasPositiveBalancedAssets()
             DispatchQueue.main.async {
@@ -109,7 +106,7 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
             self.reloadPendingDeposits()
-            let history = TransactionHistoryViewController.contained()
+            let history = TransactionHistoryViewController()
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
@@ -167,7 +164,7 @@ extension WalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = TokenViewController.contained(token: token)
+        let viewController = TokenViewController(token: token)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -219,7 +216,7 @@ extension WalletViewController: TokenActionView.Delegate {
             }
         case .swap:
             tableHeaderView.actionView.badgeOnSwap = false
-            let swap = MixinSwapViewController.contained(sendAssetID: nil, receiveAssetID: nil)
+            let swap = MixinSwapViewController(sendAssetID: nil, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)
             DispatchQueue.global().async {
                 PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)
@@ -238,9 +235,9 @@ extension WalletViewController: TransferSearchViewControllerDelegate {
         let controller: UIViewController
         switch action {
         case .send:
-            controller = TokenViewController.contained(token: token, performSendOnAppear: true)
+            controller = TokenViewController(token: token, performSendOnAppear: true)
         case .receive:
-            controller = DepositViewController.instance(token: token)
+            controller = DepositViewController(token: token)
         case .swap:
             return
         }

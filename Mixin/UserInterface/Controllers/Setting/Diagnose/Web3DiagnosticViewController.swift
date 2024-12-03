@@ -14,6 +14,7 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Web3"
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }

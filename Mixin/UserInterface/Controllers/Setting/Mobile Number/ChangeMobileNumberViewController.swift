@@ -20,14 +20,9 @@ final class ChangeMobileNumberViewController: SettingsTableViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    static func contained(phoneNumber: String) -> ContainerViewController {
-        let viewController = ChangeMobileNumberViewController(phoneNumber: phoneNumber)
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.mobile_number()
         tableHeaderView.imageView.image = R.image.mobile_number()
         tableHeaderView.textView.attributedText = {
             let moreInfo = R.string.localizable.more_information()
@@ -71,7 +66,7 @@ extension ChangeMobileNumberViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let introduction = MobileNumberIntroductionViewController.contained(action: .change)
+        let introduction = MobileNumberIntroductionViewController(action: .change)
         navigationController?.pushViewController(introduction, animated: true)
     }
     

@@ -18,14 +18,10 @@ final class Web3TransactionViewController: RowListViewController {
         fatalError("Storyboard is not supported")
     }
     
-    class func instance(web3Token token: Web3Token, transaction: Web3Transaction) -> UIViewController {
-        let snapshot = Web3TransactionViewController(token: token, transaction: transaction)
-        let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = R.string.localizable.transaction()
         
         let tableHeaderView = R.nib.web3TransactionHeaderView(withOwner: nil)!
         tableHeaderView.render(transaction: transaction)

@@ -26,6 +26,7 @@ class TIPDiagnosticViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "TIP"
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self,

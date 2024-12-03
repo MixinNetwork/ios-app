@@ -27,7 +27,8 @@ extension ExploreSearchViewController where Self: UIViewController {
         guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-        let viewController = MarketViewController.contained(market: market, pushingViewController: self)
+        let viewController = MarketViewController(market: market)
+        viewController.pushingViewController = self
         navigationController.pushViewController(viewController, animated: true)
         AppGroupUserDefaults.User.insertRecentSearch(.market(coinID: market.coinID))
     }

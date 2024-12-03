@@ -56,17 +56,9 @@ final class MixinSwapViewController: SwapViewController {
         fatalError("Storyboard not supported")
     }
     
-    static func contained(sendAssetID: String?, receiveAssetID: String?) -> ContainerViewController {
-        let swap = MixinSwapViewController(sendAssetID: sendAssetID, receiveAssetID: receiveAssetID)
-        let container = ContainerViewController.instance(viewController: swap, title: R.string.localizable.swap())
-        container.loadViewIfNeeded()
-        container.view.backgroundColor = R.color.background_secondary()
-        container.navigationBar.backgroundColor = R.color.background_secondary()
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.swap()
         updateSendView(style: .loading)
         updateReceiveView(style: .loading)
         reloadTokens()
@@ -198,6 +190,14 @@ final class MixinSwapViewController: SwapViewController {
                 sender.isBusy = false
             }
         }
+    }
+    
+}
+
+extension MixinSwapViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
     }
     
 }

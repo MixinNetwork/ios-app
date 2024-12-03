@@ -38,6 +38,8 @@ final class DepositViewController: UIViewController {
     private var task: Task<Void, Error>?
     private var displayingToken: TokenItem?
     
+    private weak var titleView: NavigationTitleView!
+    
     init(token: TokenItem) {
         self.initialToken = token
         let nib = R.nib.depositView
@@ -52,15 +54,21 @@ final class DepositViewController: UIViewController {
         task?.cancel()
     }
     
-    class func instance(token: TokenItem) -> UIViewController {
-        let deposit = DepositViewController(token: token)
-        return ContainerViewController.instance(viewController: deposit, title: R.string.localizable.deposit())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.deposit()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_titlebar_help(),
+            target: self,
+            action: #selector(help(_:))
+        )
+        let titleView = NavigationTitleView(
+            title: R.string.localizable.deposit(),
+            subtitle: initialToken.symbol
+        )
+        self.titleView = titleView
+        navigationItem.titleView = titleView
         addAddressGeneratingView()
-        container?.setSubtitle(subtitle: initialToken.symbol)
         task = Task { [initialToken] in
             try await self.reloadData(token: initialToken)
         }
@@ -108,19 +116,7 @@ final class DepositViewController: UIViewController {
         navigationController.setViewControllers(viewControllers, animated: true)
     }
     
-}
-
-extension DepositViewController: ContainerViewControllerDelegate {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.ic_titlebar_help()
-    }
-    
-    func barRightButtonTappedAction() {
+    @objc private func help(_ sender: Any) {
         UIApplication.shared.openURL(url: .deposit)
     }
     
@@ -268,7 +264,7 @@ extension DepositViewController {
                 guard let self, let localEntry else {
                     return
                 }
-                self.container?.setSubtitle(subtitle: token.symbol)
+                self.titleView.subtitle = token.symbol
                 self.displayingToken = token
                 self.updateViews(token: token, entry: localEntry)
                 self.removeAddressGeneratingView()

@@ -11,15 +11,11 @@ class RestoreFromCloudViewController: DeviceTransferSettingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.restore_from_icloud()
         tableHeaderView.imageView.image = R.image.setting.ic_restore_cloud()
         tableHeaderView.label.text = R.string.localizable.restore_chat_history_hint()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-    }
-    
-    class func instance() -> UIViewController {
-        let controller = RestoreFromCloudViewController()
-        return ContainerViewController.instance(viewController: controller, title: R.string.localizable.restore_from_icloud())
     }
     
 }

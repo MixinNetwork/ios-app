@@ -156,7 +156,7 @@ class HomeViewController: UIViewController {
             let alert = UIAlertController(title: R.string.localizable.setting_emergency_change_mobile(), message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .default, handler: { (_) in
-                let verify = ChangeNumberPINValidationViewController.contained()
+                let verify = ChangeNumberPINValidationViewController()
                 self.navigationController?.pushViewController(verify, animated: true)
             }))
             present(alert, animated: true, completion: nil)
@@ -200,7 +200,7 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func contactsAction(_ sender: Any) {
-        navigationController?.pushViewController(UserCenterViewController.instance(), animated: true)
+        navigationController?.pushViewController(UserCenterViewController(), animated: true)
     }
     
     @IBAction func guideAction(_ sender: Any) {
@@ -216,12 +216,12 @@ class HomeViewController: UIViewController {
     @IBAction func bulletinContinueAction(_ sender: Any) {
         switch bulletinContent {
         case .backupMnemonics:
-            let introduction = ExportMnemonicPhrasesIntroductionViewController.contained()
+            let introduction = ExportMnemonicPhrasesIntroductionViewController()
             navigationController?.pushViewController(introduction, animated: true)
         case .notification:
             UIApplication.shared.openNotificationSettings()
         case .emergencyContact:
-            let vc = AddRecoveryContactViewController.instance()
+            let vc = AddRecoveryContactViewController()
             navigationController?.pushViewController(vc, animated: true)
         case .appUpdate:
             UIApplication.shared.openAppStorePage()

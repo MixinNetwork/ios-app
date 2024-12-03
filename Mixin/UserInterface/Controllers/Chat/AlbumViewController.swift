@@ -1,15 +1,30 @@
 import UIKit
 import Photos
 
-class AlbumViewController: UITableViewController {
-
+final class AlbumViewController: UITableViewController {
+    
     private var allAlbums = [SmartAlbum]()
     private var showImageOnly = false
     
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        container?.leftButton.tintColor = R.color.icon_tint()
-        container?.leftButton.setImage(R.image.ic_title_close(), for: .normal)
+    class func instance(showImageOnly: Bool = false) -> UIViewController {
+        let vc = R.storyboard.photo.album()!
+        vc.loadAlbums()
+        vc.showImageOnly = showImageOnly
+        return vc
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = R.string.localizable.albums()
+        navigationItem.leftBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_close(),
+            target: self,
+            action: #selector(close(_:))
+        )
+    }
+    
+    @objc private func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     private func loadAlbums() {
@@ -35,30 +50,15 @@ class AlbumViewController: UITableViewController {
             }
         }
     }
-
-    class func instance(showImageOnly: Bool = false) -> UIViewController {
-        let vc = R.storyboard.photo.album()!
-        vc.loadAlbums()
-        vc.showImageOnly = showImageOnly
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.albums())
-    }
-
-}
-
-extension AlbumViewController: ContainerViewControllerDelegate {
-
-    func barLeftButtonTappedAction() {
-        navigationController?.dismiss(animated: true, completion: nil)
-    }
     
 }
 
 extension AlbumViewController {
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return allAlbums.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell_identifier_album") as! AlbumCell
         let album = allAlbums[indexPath.row]
@@ -73,35 +73,35 @@ extension AlbumViewController {
         cell.countLabel.text = "\(album.assetCount)"
         return cell
     }
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let album = allAlbums[indexPath.row]
-        let pickerViewController = PickerViewController.instance(collection: album.assetCollection, showImageOnly: showImageOnly, scrollToOffset: CGPoint.zero)
-        let vc = ContainerViewController.instance(viewController: pickerViewController, title: album.title)
-        navigationController?.pushViewController(vc, animated: true)
+        let picker = PickerViewController.instance(collection: album.assetCollection, showImageOnly: showImageOnly, scrollToOffset: CGPoint.zero)
+        picker.title = album.title
+        navigationController?.pushViewController(picker, animated: true)
     }
-
+    
 }
 
 class AlbumCell: ModernSelectedBackgroundCell {
-
+    
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
-
+    
     var requestId: PHImageRequestID = -1
     var localIdentifier: String!
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         PHCachingImageManager.default().cancelImageRequest(requestId)
     }
-
+    
 }
 
 fileprivate struct SmartAlbum {
-
+    
     let title: String
     let assetCount: Int
     let identifier: String
@@ -110,7 +110,7 @@ fileprivate struct SmartAlbum {
     let assetCollection: PHAssetCollection
     let lastAsset: PHAsset
     let order: Int
-
+    
     init?(collection: PHAssetCollection, isCameraRoll: Bool = false) {
         let assets = PHAsset.fetchAssets(in: collection, options: nil)
         guard let lastAsset = assets.lastObject else {
@@ -153,4 +153,5 @@ fileprivate struct SmartAlbum {
         self.assetCollection = collection
         self.lastAsset = lastAsset
     }
+    
 }

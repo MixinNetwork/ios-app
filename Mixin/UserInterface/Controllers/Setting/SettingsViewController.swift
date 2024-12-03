@@ -43,13 +43,9 @@ class SettingsViewController: SettingsTableViewController {
         ])
     ])
     
-    class func instance() -> UIViewController {
-        let vc = SettingsViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.settings())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.settings()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -65,18 +61,18 @@ extension SettingsViewController: UITableViewDelegate {
         case 0:
             switch indexPath.row {
             case 0:
-                vc = AccountSettingViewController.instance()
+                vc = AccountSettingViewController()
             case 1:
-                vc = ChatsViewController.instance()
+                vc = ChatsViewController()
             case 2:
-                vc = NotificationAndConfirmationSettingsViewController.instance()
+                vc = NotificationAndConfirmationSettingsViewController()
             default:
-                vc = DataAndStorageSettingsViewController.instance()
+                vc = DataAndStorageSettingsViewController()
             }
         case 1:
-            vc = AppearanceSettingsViewController.instance()
+            vc = AppearanceSettingsViewController()
         case 2:
-            vc = DesktopViewController.instance()
+            vc = DesktopViewController()
         case 3:
             if indexPath.row == 0 {
                 if let user = UserDAO.shared.getUser(identityNumber: "7000") {
@@ -91,7 +87,7 @@ extension SettingsViewController: UITableViewDelegate {
                 return
             }
         default:
-            vc = AboutViewController.instance()
+            vc = AboutViewController()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

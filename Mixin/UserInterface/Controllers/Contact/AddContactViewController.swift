@@ -13,13 +13,9 @@ class AddContactViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.add_contact()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-    }
-    
-    class func instance() -> UIViewController {
-        let vc = AddContactViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_contact())
     }
     
 }
@@ -30,11 +26,11 @@ extension AddContactViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            let controller = AddPeopleViewController.instance()
+            let controller = R.storyboard.contact.add_people()!
             navigationController?.pushViewController(controller, animated: true)
         case 1:
             if ContactsManager.shared.authorization == .authorized {
-                let controller = PhoneContactViewController.instance()
+                let controller = PhoneContactViewController()
                 navigationController?.pushViewController(controller, animated: true)
             } else {
                 requestPhoneContactAuthorization()
@@ -82,7 +78,7 @@ extension AddContactViewController {
                         }
                     })
                     DispatchQueue.main.async {
-                        let controller = PhoneContactViewController.instance()
+                        let controller = PhoneContactViewController()
                         self.navigationController?.pushViewController(controller, animated: true)
                     }
                 })

@@ -3,13 +3,13 @@ import MixinServices
 
 final class MarketViewController: UIViewController {
     
+    weak var pushingViewController: UIViewController?
+    
     private weak var tableView: UITableView!
-    private weak var pushingViewController: UIViewController?
+    private weak var favoriteBarButtonItem: UIBarButtonItem!
     
     private let id: Identifier
     private let initialToken: TokenItem?
-    private let favoriteButton = UIButton(type: .system)
-    private let shareButton = UIButton(type: .system)
     
     private var market: FavorableMarket?
     private var tokens: [TokenItem]?
@@ -24,7 +24,7 @@ final class MarketViewController: UIViewController {
         return tableView.cellForRow(at: indexPath) as? TokenPriceChartCell
     }
     
-    private init(token: TokenItem, chartPoints: [ChartView.Point]?) {
+    init(token: TokenItem, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
         self.initialToken = token
         self.market = nil
@@ -32,9 +32,10 @@ final class MarketViewController: UIViewController {
         self.viewModel = MarketViewModel(token: token)
         self.chartPoints = chartPoints
         super.init(nibName: nil, bundle: nil)
+        self.title = token.symbol
     }
     
-    private init(market: FavorableMarket) {
+    init(market: FavorableMarket) {
         self.id = .coin(market.coinID)
         self.initialToken = nil
         self.market = market
@@ -42,60 +43,26 @@ final class MarketViewController: UIViewController {
         self.viewModel = MarketViewModel(market: market)
         self.chartPoints = nil
         super.init(nibName: nil, bundle: nil)
+        self.title = market.symbol
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(
-        token: TokenItem,
-        chartPoints: [ChartView.Point]?,
-        pushingViewController: UIViewController?
-    ) -> ContainerViewController {
-        let controller = MarketViewController(token: token, chartPoints: chartPoints)
-        controller.pushingViewController = pushingViewController
-        return ContainerViewController.instance(viewController: controller, title: token.symbol)
-    }
-    
-    static func contained(
-        market: FavorableMarket,
-        pushingViewController: UIViewController?
-    ) -> ContainerViewController {
-        let controller = MarketViewController(market: market)
-        controller.pushingViewController = pushingViewController
-        return ContainerViewController.instance(viewController: controller, title: market.symbol)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let container {
-            container.view.backgroundColor = R.color.background_secondary()
-            container.navigationBar.backgroundColor = R.color.background_secondary()
-            container.rightButton.removeFromSuperview()
-            
-            favoriteButton.addTarget(self, action: #selector(toggleFavorite(_:)), for: .touchUpInside)
-            shareButton.setImage(R.image.ic_share(), for: .normal)
-            shareButton.tintColor = R.color.icon_tint()
-            shareButton.addTarget(self, action: #selector(shareMarket(_:)), for: .touchUpInside)
-            let stackView = UIStackView(arrangedSubviews: [favoriteButton, shareButton])
-            stackView.axis = .horizontal
-            stackView.spacing = 10
-            container.navigationBar.addSubview(stackView)
-            container.titleLeadingConstraint.constant = 54
-            container.titleTrailingConstraint.constant = 98
-            stackView.snp.makeConstraints { make in
-                make.top.bottom.equalToSuperview()
-                make.trailing.equalToSuperview().offset(-10)
-            }
-            favoriteButton.snp.makeConstraints { make in
-                make.width.height.equalTo(44)
-            }
-            shareButton.snp.makeConstraints { make in
-                make.width.height.equalTo(44)
-            }
-        }
+        let favoriteBarButtonItem: UIBarButtonItem = .tintedIcon(
+            image: nil,
+            target: self,
+            action: #selector(toggleFavorite(_:))
+        )
+        navigationItem.rightBarButtonItems = [
+            .tintedIcon(image: R.image.ic_share(), target: self, action: #selector(shareMarket(_:))),
+            favoriteBarButtonItem,
+        ]
+        self.favoriteBarButtonItem = favoriteBarButtonItem
         
         let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.backgroundColor = R.color.background_secondary()
@@ -282,19 +249,20 @@ final class MarketViewController: UIViewController {
     }
     
     private func updateFavoriteButtonImage() {
-        let image: UIImage?
+        guard let item = favoriteBarButtonItem else {
+            return
+        }
         if let market {
             if market.isFavorite {
-                image = R.image.market_favorite_solid()?.withRenderingMode(.alwaysTemplate)
-                favoriteButton.tintColor = R.color.theme()
+                item.image = R.image.market_favorite_solid()?.withRenderingMode(.alwaysTemplate)
+                item.tintColor = R.color.theme()
             } else {
-                image = R.image.market_favorite_hollow()?.withRenderingMode(.alwaysTemplate)
-                favoriteButton.tintColor = R.color.icon_tint()
+                item.image = R.image.market_favorite_hollow()?.withRenderingMode(.alwaysTemplate)
+                item.tintColor = R.color.icon_tint()
             }
         } else {
-            image = nil
+            item.image = nil
         }
-        favoriteButton.setImage(image, for: .normal)
     }
     
     private func reloadPriceChart(period: PriceHistoryPeriod) {
@@ -410,6 +378,14 @@ final class MarketViewController: UIViewController {
             UIApplication.shared.openNotificationSettings()
         }))
         present(alert, animated: true)
+    }
+    
+}
+
+extension MarketViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
     }
     
 }
@@ -608,7 +584,7 @@ extension MarketViewController: UITableViewDelegate {
                 if token.assetID == pushingToken?.assetID {
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    let controller = TokenViewController.contained(token: token, market: market)
+                    let controller = TokenViewController(token: token, market: market)
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }
@@ -674,7 +650,7 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
             return
         }
         let coin = MarketAlertCoin(market: market)
-        let alert = CoinMarketAlertsViewController.contained(coin: coin)
+        let alert = CoinMarketAlertsViewController(coin: coin)
         navigationController?.pushViewController(alert, animated: true)
     }
     
@@ -683,7 +659,7 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
             return
         }
         let coin = MarketAlertCoin(market: market)
-        let addAlert = AddMarketAlertViewController.contained(coin: coin)
+        let addAlert = AddMarketAlertViewController(coin: coin)
         navigationController?.pushViewController(addAlert, animated: true)
     }
     
@@ -701,7 +677,7 @@ extension MarketViewController: PillActionView.Delegate {
                 alert(R.string.localizable.swap_not_supported(market.symbol))
             } else {
                 pickSingleToken { token in
-                    let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
+                    let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: nil)
                     self.navigationController?.pushViewController(swap, animated: true)
                 }
             }
@@ -709,7 +685,7 @@ extension MarketViewController: PillActionView.Delegate {
             NotificationManager.shared.requestAuthorization { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)
-                    let alert = CoinMarketAlertsViewController.contained(coin: coin)
+                    let alert = CoinMarketAlertsViewController(coin: coin)
                     self.navigationController?.pushViewController(alert, animated: true)
                 } else {
                     self.requestTurnOnNotifications()
@@ -719,7 +695,7 @@ extension MarketViewController: PillActionView.Delegate {
             NotificationManager.shared.requestAuthorization { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)
-                    let addAlert = AddMarketAlertViewController.contained(coin: coin)
+                    let addAlert = AddMarketAlertViewController(coin: coin)
                     self.navigationController?.pushViewController(addAlert, animated: true)
                 } else {
                     self.requestTurnOnNotifications()

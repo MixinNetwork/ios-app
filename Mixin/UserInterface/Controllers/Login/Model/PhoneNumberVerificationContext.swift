@@ -5,7 +5,7 @@ struct PhoneNumberVerificationContext {
     
     let phoneNumber: String
     let displayPhoneNumber: String
-    let deactivatedAt: String?
+    let deactivation: Deactivation?
     
     var verificationID: String
     var hasEmergencyContact: Bool

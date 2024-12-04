@@ -638,7 +638,7 @@
 "joined_in" = "Присоединился к %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "Этикетка";
-"landing_delete_content" = "Ваш аккаунт будет удален %@. Если вы продолжите входить в систему, запрос на удаление вашего аккаунта будет отменен.";
+"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
 "landing_validation_title" = "Введите 4-значный код, отправленный вам на %@.";
 "language" = "Язык";

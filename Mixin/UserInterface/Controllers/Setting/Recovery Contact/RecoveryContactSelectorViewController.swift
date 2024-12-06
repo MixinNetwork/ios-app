@@ -15,7 +15,6 @@ final class RecoveryContactSelectorViewController: UserItemPeerViewController<Pe
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.select_emergency_contact()
-        // FIXME: Hide back button
     }
     
     override func catalog(users: [UserItem]) -> (titles: [String], models: [UserItem]) {

@@ -22,7 +22,6 @@ class AboutViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.about()
         tableView.tableHeaderView = R.nib.aboutTableHeaderView(withOwner: self)
         versionLabel.text = Bundle.main.fullVersion
         dataSource.tableViewDelegate = self

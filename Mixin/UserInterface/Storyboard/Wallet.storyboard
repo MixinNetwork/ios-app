@@ -109,7 +109,7 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="4FZ-87-yjF"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="hg6-2u-DnI" firstAttribute="top" secondItem="uhb-p1-3GT" secondAttribute="top" id="3Pn-2Z-QPe"/>
                             <constraint firstItem="4FZ-87-yjF" firstAttribute="trailing" secondItem="hg6-2u-DnI" secondAttribute="trailing" id="7uy-xe-Xmo"/>
@@ -185,7 +185,7 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
                                                             <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
@@ -195,7 +195,7 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
@@ -294,7 +294,7 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ZLy-1n-Cdi"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="n3U-Zp-vXX" firstAttribute="top" secondItem="cl2-IT-9lz" secondAttribute="top" id="06n-RF-ZaO"/>
                             <constraint firstAttribute="bottom" secondItem="n3U-Zp-vXX" secondAttribute="bottom" id="6gP-RW-NNd"/>
@@ -539,7 +539,7 @@
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="zXi-mJ-veG"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="2gW-rd-zVj" firstAttribute="bottom" secondItem="zXi-mJ-veG" secondAttribute="bottom" id="05A-Hc-Zym"/>
                             <constraint firstItem="2gW-rd-zVj" firstAttribute="leading" secondItem="zXi-mJ-veG" secondAttribute="leading" id="1Ka-aG-M1E"/>
@@ -1056,7 +1056,7 @@
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="T0j-7M-FHy"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="ckF-ii-wPq" firstAttribute="leading" secondItem="T0j-7M-FHy" secondAttribute="leading" id="0Xg-M9-bV4"/>
                             <constraint firstItem="T0j-7M-FHy" firstAttribute="trailing" secondItem="rn4-tn-OhQ" secondAttribute="trailing" id="4B7-9N-E47"/>

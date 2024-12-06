@@ -36,11 +36,17 @@ class PreviewWallpaperViewController: UIViewController {
     class func instance(scope: Wallpaper.Scope) -> UIViewController {
         let vc = R.storyboard.setting.preview_wallpaper()!
         vc.scope = scope
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.background_preview())
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.background_preview()
+        navigationItem.rightBarButtonItem = .button(
+            title: R.string.localizable.set(),
+            target: self,
+            action: #selector(setWallpaper(_:))
+        )
         let wallpaper = Wallpaper.wallpaper(for: scope)
         let index: Int
         switch wallpaper {
@@ -54,24 +60,15 @@ class PreviewWallpaperViewController: UIViewController {
         let indexPath = indexPath(for: index)
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
         loadImage(for: indexPath)
-        container?.rightButton.isEnabled = true
     }
     
-}
-
-extension PreviewWallpaperViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
+    @objc private func setWallpaper(_ sender: Any) {
         guard let indexPath = collectionView.indexPathsForSelectedItems?.first else {
             return
         }
         let index = wallpaperIndex(from: indexPath)
         Wallpaper.save(wallpapers[index], for: scope)
         navigationController?.popViewController(animated: true)
-    }
-    
-    func textBarRightButton() -> String? {
-        R.string.localizable.set()
     }
     
 }

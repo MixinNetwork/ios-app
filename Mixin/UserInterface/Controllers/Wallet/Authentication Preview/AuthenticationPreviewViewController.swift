@@ -477,7 +477,7 @@ extension AuthenticationPreviewViewController {
             if let viewController = viewControllers.first {
                 viewControllers = [viewController]
             }
-            viewControllers.append(PinSettingsViewController.instance())
+            viewControllers.append(PinSettingsViewController())
             navigationController.setViewControllers(viewControllers, animated: true)
         }
     }

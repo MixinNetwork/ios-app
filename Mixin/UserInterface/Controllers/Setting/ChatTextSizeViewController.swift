@@ -34,6 +34,12 @@ class ChatTextSizeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.chat_text_size()
+        navigationItem.rightBarButtonItem = .button(
+            title: R.string.localizable.set(),
+            target: self,
+            action: #selector(setFontSize(_:))
+        )
         view.backgroundColor = .white
         wallpaperImageView.wallpaper = .symbol
         textSizeSwitch.onTintColor = .theme
@@ -41,8 +47,6 @@ class ChatTextSizeViewController: UIViewController {
         fontSizeSlider.updateFontSize(chatFontSizeBefore)
         fontSizeSlider.updateUserInteraction(enabled: !useSystemFontBefore, animated: false)
         fontSizeSlider.addTarget(self, action: #selector(fontSizeChanged), for: .valueChanged)
-        container?.titleLabel.font = .systemFont(ofSize: 16)
-        container?.rightButton.titleLabel?.font = .systemFont(ofSize: 16)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -56,7 +60,7 @@ class ChatTextSizeViewController: UIViewController {
     class func instance(fontSizeDidChange: @escaping (() -> Void)) -> UIViewController {
         let vc = R.storyboard.setting.chat_text_size()!
         vc.fontSizeDidChange = fontSizeDidChange
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_text_size())
+        return vc
     }
     
     @IBAction func switchAction(_ sender: Any) {
@@ -71,23 +75,10 @@ class ChatTextSizeViewController: UIViewController {
         tableView.reloadData()
     }
     
-}
-
-extension ChatTextSizeViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
+    @objc private func setFontSize(_ sender: Any) {
         isConfirmed = true
         fontSizeDidChange?()
         navigationController?.popViewController(animated: true)
-    }
-    
-    func textBarRightButton() -> String? {
-        R.string.localizable.set()
-    }
-    
-    func prepareBar(rightButton: StateResponsiveButton) {
-        rightButton.setTitleColor(.systemTint, for: .normal)
-        rightButton.isEnabled = true
     }
     
 }

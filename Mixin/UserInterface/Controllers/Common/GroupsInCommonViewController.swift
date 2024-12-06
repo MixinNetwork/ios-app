@@ -11,8 +11,8 @@ final class GroupsInCommonViewController: UIViewController {
     class func instance(userId: String) -> UIViewController {
         let vc = GroupsInCommonViewController()
         vc.userId = userId
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.groups_in_common())
-        return container
+        vc.title = R.string.localizable.groups_in_common()
+        return vc
     }
     
     override func viewDidLoad() {

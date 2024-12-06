@@ -2,13 +2,27 @@ import UIKit
 import MixinServices
 
 class BiographyViewController: AnnouncementViewController {
-
-    private var user: UserItem!
-
+    
+    private let user: UserItem
+    
     override var announcement: String {
         return user.biography
     }
-
+    
+    init(user: UserItem) {
+        self.user = user
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = R.string.localizable.edit_biography()
+    }
+    
     override func saveAction(_ sender: Any) {
         guard !saveButton.isBusy else {
             return
@@ -24,12 +38,5 @@ class BiographyViewController: AnnouncementViewController {
             }
         }
     }
-
-    class func instance(user: UserItem) -> UIViewController {
-        let vc = BiographyViewController()
-        vc.user = user
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.edit_biography())
-        return container
-    }
-
+    
 }

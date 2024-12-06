@@ -15,7 +15,7 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
     private var market: MarketResult
     private var chartPoints: [ChartView.Point]?
     
-    private init(
+    init(
         token: TokenItem,
         market: Market? = nil,
         performSendOnAppear: Bool = false
@@ -38,23 +38,19 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
         NotificationCenter.default.removeObserver(self)
     }
     
-    static func contained(
-        token: TokenItem,
-        market: Market? = nil,
-        performSendOnAppear: Bool = false
-    ) -> ContainerViewController {
-        let controller = TokenViewController(token: token, market: market, performSendOnAppear: performSendOnAppear)
-        return ContainerViewController.instance(viewController: controller, title: token.name)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let container {
-            container.setSubtitle(subtitle: token.depositNetworkName)
-            container.view.backgroundColor = R.color.background_secondary()
-            container.navigationBar.backgroundColor = R.color.background_secondary()
-        }
+        title = token.name
+        navigationItem.titleView = NavigationTitleView(
+            title: token.name,
+            subtitle: token.depositNetworkName
+        )
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_more(),
+            target: self,
+            action: #selector(showMoreActions(_:))
+        )
         
         let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.backgroundColor = R.color.background_secondary()
@@ -191,6 +187,14 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
                 self?.reloadMarket(result: .some(market))
             }
         }
+    }
+    
+}
+
+extension TokenViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
     }
     
 }
@@ -365,27 +369,22 @@ extension TokenViewController {
                 navigationController.pushViewController(address, animated: true)
             case .contact:
                 let selector = TransferReceiverViewController()
-                let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.send_to_title())
-                selector.onSelect = { (user) in
-                    let transfer = TransferOutViewController.instance(token: token, to: .contact(user))
+                selector.onSelect = { [weak selector] (user) in
+                    let transfer = TransferOutViewController(token: token, to: .contact(user))
                     var viewControllers = navigationController.viewControllers
-                    if let index = viewControllers.lastIndex(where: { $0 == container }) {
+                    if let index = viewControllers.lastIndex(where: { $0 == selector }) {
                         viewControllers.remove(at: index)
                     }
                     viewControllers.append(transfer)
                     navigationController.setViewControllers(viewControllers, animated: true)
                 }
-                navigationController.pushViewController(container, animated: true)
+                navigationController.pushViewController(selector, animated: true)
             }
         }
         present(selector, animated: true, completion: nil)
     }
     
-}
-
-extension TokenViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
+    @objc private func showMoreActions(_ sender: Any) {
         let token = self.token
         let wasHidden = token.isHidden
         let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
@@ -403,10 +402,6 @@ extension TokenViewController: ContainerViewControllerDelegate {
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.ic_title_more()
     }
     
 }
@@ -554,17 +549,14 @@ extension TokenViewController: UITableViewDelegate {
         case .balance:
             break
         case .market:
-            let market = MarketViewController.contained(
-                token: token,
-                chartPoints: chartPoints,
-                pushingViewController: self
-            )
+            let market = MarketViewController(token: token, chartPoints: chartPoints)
+            market.pushingViewController = self
             navigationController?.pushViewController(market, animated: true)
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {
             case .title, .viewAll:
-                let history = TransactionHistoryViewController.contained(token: token)
+                let history = TransactionHistoryViewController(token: token)
                 navigationController?.pushViewController(history, animated: true)
             case .transaction(let snapshot):
                 let inscriptionItem: InscriptionItem? = if let hash = snapshot.inscriptionHash {
@@ -572,7 +564,7 @@ extension TokenViewController: UITableViewDelegate {
                 } else {
                     nil
                 }
-                let viewController = SafeSnapshotViewController.instance(
+                let viewController = SafeSnapshotViewController(
                     token: token,
                     snapshot: snapshot,
                     messageID: nil,
@@ -592,14 +584,14 @@ extension TokenViewController: TokenActionView.Delegate {
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
         case .receive:
-            let deposit = DepositViewController.instance(token: token)
+            let deposit = DepositViewController(token: token)
             withMnemonicsBackupChecked {
                 self.navigationController?.pushViewController(deposit, animated: true)
             }
         case .send:
             send()
         case .swap:
-            let swap = MixinSwapViewController.contained(sendAssetID: token.assetID, receiveAssetID: nil)
+            let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)
         }
     }
@@ -633,8 +625,7 @@ extension TokenViewController: TokenBalanceCellDelegate {
     
     func tokenBalanceCellWantsToRevealOutputs(_ cell: TokenBalanceCell) {
         let outputs = OutputsViewController(token: token)
-        let container = ContainerViewController.instance(viewController: outputs, title: "Outputs")
-        navigationController?.pushViewController(container, animated: true)
+        navigationController?.pushViewController(outputs, animated: true)
     }
     
 }

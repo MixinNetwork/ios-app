@@ -1,17 +1,33 @@
 import UIKit
 import WebKit
 
-class FileSendViewController: UIViewController, MixinNavigationAnimating {
-
+final class FileSendViewController: UIViewController, MixinNavigationAnimating {
+    
     private var documentUrl: URL!
     private var webView : WKWebView!
     
     private weak var conversationInputViewController: ConversationInputViewController!
     
+    class func instance(documentUrl: URL, conversationInputViewController: ConversationInputViewController) -> UIViewController {
+        let vc = FileSendViewController()
+        vc.documentUrl = documentUrl
+        vc.conversationInputViewController = conversationInputViewController
+        vc.title = documentUrl.lastPathComponent.substring(endChar:  ".")
+        return vc
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.leftButton.tintColor = R.color.icon_tint()
-        container?.leftButton.setImage(R.image.ic_title_close(), for: .normal)
+        navigationItem.leftBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_close(),
+            target: self,
+            action: #selector(close(_:))
+        )
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.conversation.ic_send(),
+            target: self,
+            action: #selector(send(_:))
+        )
         let config = WKWebViewConfiguration()
         config.mediaTypesRequiringUserActionForPlayback = .all
         webView = WKWebView(frame: self.view.frame, configuration: config)
@@ -21,28 +37,17 @@ class FileSendViewController: UIViewController, MixinNavigationAnimating {
         })
         webView.loadFileURL(documentUrl, allowingReadAccessTo: documentUrl)
     }
-
-    class func instance(documentUrl: URL, conversationInputViewController: ConversationInputViewController) -> UIViewController {
-        let vc = FileSendViewController()
-        vc.documentUrl = documentUrl
-        vc.conversationInputViewController = conversationInputViewController
-        return ContainerViewController.instance(viewController: vc, title: documentUrl.lastPathComponent.substring(endChar:  "."))
+    
+    @objc private func close(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
-
-}
-
-extension FileSendViewController: ContainerViewControllerDelegate {
-
-    func barRightButtonTappedAction() {
+    
+    @objc private func send(_ sender: Any) {
         guard let url = documentUrl else {
             return
         }
         conversationInputViewController?.sendFile(url: url)
         navigationController?.popViewController(animated: true)
     }
-
-    func imageBarRightButton() -> UIImage? {
-        return R.image.conversation.ic_send()
-    }
-
+    
 }

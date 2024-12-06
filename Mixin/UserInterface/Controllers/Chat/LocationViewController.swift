@@ -16,16 +16,18 @@ class LocationViewController: UIViewController {
             tableWrapperMaskView.frame.height
         }
         set {
-            tableWrapperMaskView.frame = CGRect(x: 0,
-                                                y: view.bounds.height - newValue,
-                                                width: view.bounds.width,
-                                                height: newValue)
+            tableWrapperMaskView.frame = CGRect(
+                x: 0,
+                y: view.bounds.height - view.safeAreaInsets.top - newValue,
+                width: view.bounds.width,
+                height: newValue
+            )
             mapView.layoutMargins.bottom = newValue - view.safeAreaInsets.bottom
         }
     }
     
     var minTableWrapperMaskHeight: CGFloat {
-        view.bounds.height / 2
+        view.bounds.height / 2 - view.safeAreaInsets.top
     }
     
     private let tableWrapperMaskView = UIView()
@@ -33,7 +35,7 @@ class LocationViewController: UIViewController {
     private var lastViewHeight: CGFloat = 0
     
     private var maxTableWrapperMaskHeight: CGFloat {
-        max(view.bounds.height - 160, minTableWrapperMaskHeight)
+        max(view.bounds.height - view.safeAreaInsets.top - 160, minTableWrapperMaskHeight)
     }
     
     convenience init() {
@@ -78,8 +80,10 @@ class LocationViewController: UIViewController {
     
     func resetTableWrapperMaskHeightAndHeaderView() {
         tableWrapperMaskHeight = minTableWrapperMaskHeight
-        let headerSize = CGSize(width: tableView.frame.width,
-                                height: view.bounds.height - minTableWrapperMaskHeight)
+        let headerSize = CGSize(
+            width: tableView.frame.width,
+            height: view.bounds.height - view.safeAreaInsets.top - minTableWrapperMaskHeight
+        )
         tableHeaderView.frame = CGRect(origin: .zero, size: headerSize)
         tableView.tableHeaderView = tableHeaderView
     }

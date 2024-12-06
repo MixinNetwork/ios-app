@@ -56,8 +56,10 @@ class LegacyTransferOutViewController: KeyboardBasedLayoutViewController {
         case .contact(let user):
             targetUser = user
             opponentImageView.setImage(with: user)
-            container?.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
-            container?.titleLabel.text = R.string.localizable.send_to_title() + " " + user.fullName
+            navigationItem.titleView = NavigationTitleView(
+                title: user.isCreatedByMessenger ? user.identityNumber : user.userId,
+                subtitle: R.string.localizable.send_to_title() + " " + user.fullName
+            )
         }
         
         if self.asset != nil {
@@ -319,33 +321,9 @@ class LegacyTransferOutViewController: KeyboardBasedLayoutViewController {
         let vc = R.storyboard.wallet.send()!
         vc.opponent = type
         vc.asset = asset
-        let container = ContainerViewController.instance(viewController: vc, title: "")
-        return container
+        return vc
     }
     
-}
-
-extension LegacyTransferOutViewController: ContainerViewControllerDelegate {
-
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
-    }
-
-    func barRightButtonTappedAction() {
-        switch opponent! {
-        case let .contact(user):
-            let history = TransactionHistoryViewController.contained(user: user)
-            navigationController?.pushViewController(history, animated: true)
-        }
-    }
-
-    func imageBarRightButton() -> UIImage? {
-        switch opponent {
-        default:
-            return R.image.ic_title_transaction()
-        }
-    }
-
 }
 
 extension LegacyTransferOutViewController: UITextFieldDelegate {

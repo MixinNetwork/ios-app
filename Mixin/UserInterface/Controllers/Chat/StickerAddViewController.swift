@@ -22,19 +22,28 @@ class StickerAddViewController: UIViewController {
     private var source: Source?
     private var uploadPNGData = false
     
+    private weak var rightBarButton: BusyButton?
+    
     class func instance(source: Source) -> UIViewController {
         let vc = R.storyboard.chat.sticker_add()!
         vc.source = source
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_sticker())
+        vc.title = R.string.localizable.add_sticker()
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .busyButton(
+            title: R.string.localizable.save(),
+            target: self,
+            action: #selector(save(_:))
+        )
+        rightBarButton = navigationItem.rightBarButtonItem?.customView as? BusyButton
         switch source {
         case .message(let item):
             uploadPNGData = item.mediaMimeType == "image/png"
             let updateRightButton: SDExternalCompletionBlock = { [weak self] (image, error, _, _) in
-                self?.container?.rightButton.isEnabled = image != nil
+                self?.rightBarButton?.isEnabled = image != nil
             }
             if let assetUrl = item.assetUrl {
                 let context = [SDWebImageContextOption.animatedImageClass: SDAnimatedImage.self]
@@ -66,7 +75,7 @@ class StickerAddViewController: UIViewController {
                         return
                     }
                     self.previewImageView.image = image
-                    self.container?.rightButton.isEnabled = true
+                    self.rightBarButton?.isEnabled = true
                 }
             } else {
                 if let uti = asset.uniformTypeIdentifier {
@@ -79,30 +88,21 @@ class StickerAddViewController: UIViewController {
                         return
                     }
                     self.previewImageView.image = image
-                    self.container?.rightButton.isEnabled = true
+                    self.rightBarButton?.isEnabled = true
                 }
             }
         case .image(let image):
             uploadPNGData = false
             previewImageView.image = image
-            container?.rightButton.isEnabled = true
+            rightBarButton?.isEnabled = true
         case .none:
             assertionFailure("No image is loaded")
             break
         }
     }
     
-}
-
-extension StickerAddViewController: ContainerViewControllerDelegate {
-    
-    func prepareBar(rightButton: StateResponsiveButton) {
-        rightButton.setTitleColor(.systemTint, for: .normal)
-        rightButton.isEnabled = false
-    }
-    
-    func barRightButtonTappedAction() {
-        guard let rightButton = container?.rightButton, !rightButton.isBusy else {
+    @objc private func save(_ sender: BusyButton) {
+        guard let rightButton = rightBarButton, !rightButton.isBusy else {
             return
         }
         guard let image = previewImageView.image else {
@@ -131,16 +131,12 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         }
     }
     
-    func textBarRightButton() -> String? {
-        R.string.localizable.save()
-    }
-    
 }
 
 extension StickerAddViewController {
     
     private func showMalformedAlert() {
-        container?.rightButton.isBusy = false
+        rightBarButton?.isBusy = false
         let title = R.string.localizable.sticker_add_requirements("\(minDataCount / bytesPerKiloByte)", "\(maxDataCount / bytesPerKiloByte)", "\(Int(minStickerLength))", "\(Int(maxStickerLength))")
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: nil))
@@ -148,7 +144,7 @@ extension StickerAddViewController {
     }
     
     private func showFailureAlert() {
-        container?.rightButton.isBusy = false
+        rightBarButton?.isBusy = false
         showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
     }
     
@@ -205,7 +201,7 @@ extension StickerAddViewController {
                     }
                 }
             case let .failure(error):
-                self?.container?.rightButton.isBusy = false
+                self?.rightBarButton?.isBusy = false
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         })

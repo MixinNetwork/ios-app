@@ -15,6 +15,7 @@ class AcknowledgementViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = acknowledgement.title
         let textView = UITextView()
         view.addSubview(textView)
         textView.snp.makeConstraints { make in

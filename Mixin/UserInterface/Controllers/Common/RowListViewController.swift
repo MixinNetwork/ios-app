@@ -18,6 +18,11 @@ class RowListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.customer_service(),
+            target: self,
+            action: #selector(customerService(_:))
+        )
         tableView.backgroundColor = .background
         tableView.separatorStyle = .none
         tableView.register(R.nib.snapshotColumnCell)
@@ -54,20 +59,7 @@ class RowListViewController: UIViewController {
         }
     }
     
-}
-
-
-extension RowListViewController: ContainerViewControllerDelegate {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.customer_service()
-    }
-    
-    func barRightButtonTappedAction() {
+    @objc private func customerService(_ sender: Any) {
         if let user = UserDAO.shared.getUser(identityNumber: "7000") {
             let conversation = ConversationViewController.instance(ownerUser: user)
             navigationController?.pushViewController(withBackRoot: conversation)

@@ -27,13 +27,9 @@ class PhoneNumberSettingViewController: SettingsTableViewController {
         }
     }
     
-    class func instance() -> UIViewController {
-        let vc = PhoneNumberSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_number())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.phone_number()
         section.setAccessory(.checkmark, forRowAt: currentSelectedRowIndex)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView

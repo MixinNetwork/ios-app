@@ -20,6 +20,15 @@ class AuthorizationsViewController<ContentViewController: UIViewController>: UIV
         return controller
     }()
     
+    init() {
+        let nib = R.nib.authorizationsView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBoxView.textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)

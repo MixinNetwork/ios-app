@@ -79,12 +79,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    class func instance(token: TokenItem?, to opponent: Opponent) -> UIViewController {
-        let controller = TransferOutViewController(token: token, to: opponent)
-        let container = ContainerViewController.instance(viewController: controller, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tokenSelectorView.button.addTarget(self, action: #selector(switchToken(_:)), for: .touchUpInside)
@@ -93,32 +87,42 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
         switch opponent {
         case .contact(let user):
+            navigationItem.titleView = NavigationTitleView(
+                title: user.isCreatedByMessenger ? user.identityNumber : user.userId,
+                subtitle: R.string.localizable.send_to(user.fullName)
+            )
+            navigationItem.rightBarButtonItem = .tintedIcon(
+                image: R.image.ic_title_transaction(),
+                target: self,
+                action: #selector(showTransactionHistory(_:))
+            )
             opponentImageView.isHidden = false
             contentStackView.setCustomSpacing(12, after: opponentImageView)
             opponentImageView.setImage(with: user)
-            if let container {
-                container.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
-                container.titleLabel.text = R.string.localizable.send_to(user.fullName)
-            }
             memoView.isHidden = false
             withdrawFeeWrapperView.isHidden = true
         case .address(let address):
+            navigationItem.titleView = NavigationTitleView(
+                title: R.string.localizable.send_to(address.label),
+                subtitle: address.compactRepresentation
+            )
+            navigationItem.rightBarButtonItem = .tintedIcon(
+                image: R.image.ic_title_transaction(),
+                target: self,
+                action: #selector(showTransactionHistory(_:))
+            )
             opponentImageView.isHidden = true
-            if let container {
-                container.titleLabel.text = R.string.localizable.send_to(address.label)
-                container.setSubtitle(subtitle: address.compactRepresentation)
-            }
             memoView.isHidden = true
             withdrawFeeWrapperView.isHidden = false
             if let token {
                 reloadWithdrawFee(with: token, address: address)
             }
         case .mainnet(let address):
+            navigationItem.titleView = NavigationTitleView(
+                title: R.string.localizable.send(),
+                subtitle: Address.compactRepresentation(of: address)
+            )
             opponentImageView.isHidden = true
-            if let container {
-                container.titleLabel.text = R.string.localizable.send()
-                container.setSubtitle(subtitle: Address.compactRepresentation(of: address))
-            }
             memoView.isHidden = true
             withdrawFeeWrapperView.isHidden = false
             withdrawFeeView.networkFeeLabel.text = "0"
@@ -336,6 +340,23 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountEditingChanged(sender)
     }
     
+    @objc private func showTransactionHistory(_ sender: Any) {
+        switch opponent {
+        case let .contact(user):
+            let history = TransactionHistoryViewController(user: user)
+            navigationController?.pushViewController(history, animated: true)
+        case let .address(address):
+            // TODO: Reduce database access
+            if let item = AddressDAO.shared.addressItem(id: address.addressId) {
+                let history = TransactionHistoryViewController(address: item)
+                navigationController?.pushViewController(history, animated: true)
+            }
+            break
+        case .mainnet:
+            break
+        }
+    }
+
     @objc private func switchToken(_ sender: Any) {
         guard !tokenSelectorView.accessoryImageView.isHidden else {
             return
@@ -512,40 +533,6 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-}
-
-extension TransferOutViewController: ContainerViewControllerDelegate {
-
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
-    }
-
-    func barRightButtonTappedAction() {
-        switch opponent {
-        case let .contact(user):
-            let history = TransactionHistoryViewController.contained(user: user)
-            navigationController?.pushViewController(history, animated: true)
-        case let .address(address):
-            // TODO: Reduce database access
-            if let item = AddressDAO.shared.addressItem(id: address.addressId) {
-                let history = TransactionHistoryViewController.contained(address: item)
-                navigationController?.pushViewController(history, animated: true)
-            }
-            break
-        case .mainnet:
-            break
-        }
-    }
-
-    func imageBarRightButton() -> UIImage? {
-        switch opponent {
-        case .contact, .address:
-            return R.image.ic_title_transaction()
-        default:
-            return nil
-        }
-    }
-
 }
 
 extension TransferOutViewController: UITextFieldDelegate {

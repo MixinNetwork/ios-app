@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,7 +23,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Os9-OT-ppk">
-                    <rect key="frame" x="20" y="0.0" width="374" height="622"/>
+                    <rect key="frame" x="20" y="48" width="374" height="570"/>
                     <color key="backgroundColor" name="background_input"/>
                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </string>
                     <color key="textColor" name="text"/>
@@ -31,7 +31,7 @@
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
                 <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BkP-Za-gmw" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="162" y="702" width="90" height="46"/>
+                    <rect key="frame" x="159.5" y="698" width="95" height="50"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                     <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
                     <state key="normal" title="Save">
@@ -77,9 +77,9 @@
                 <constraint firstItem="0F8-nf-Eax" firstAttribute="top" secondItem="BkP-Za-gmw" secondAttribute="bottom" constant="20" id="Rto-fS-TJi"/>
                 <constraint firstItem="Eza-P2-erW" firstAttribute="trailing" secondItem="Os9-OT-ppk" secondAttribute="trailing" constant="20" id="cCd-mK-Ja3"/>
                 <constraint firstAttribute="trailing" secondItem="0F8-nf-Eax" secondAttribute="trailing" id="cJJ-Bz-Xcv"/>
+                <constraint firstItem="Eza-P2-erW" firstAttribute="top" secondItem="Os9-OT-ppk" secondAttribute="top" id="dEP-EL-ESW"/>
                 <constraint firstAttribute="bottom" secondItem="0F8-nf-Eax" secondAttribute="bottom" id="g1A-lA-Dg8"/>
                 <constraint firstItem="0F8-nf-Eax" firstAttribute="leading" secondItem="xbJ-a9-MH8" secondAttribute="leading" id="hk2-mt-u06"/>
-                <constraint firstItem="Os9-OT-ppk" firstAttribute="top" secondItem="xbJ-a9-MH8" secondAttribute="top" id="ie8-MB-cE7"/>
             </constraints>
             <point key="canvasLocation" x="137.68115942028987" y="153.34821428571428"/>
         </view>

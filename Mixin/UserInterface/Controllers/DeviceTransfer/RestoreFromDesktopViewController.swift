@@ -15,16 +15,12 @@ class RestoreFromDesktopViewController: DeviceTransferSettingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.restore_from_pc()
         tableHeaderView.imageView.image = R.image.setting.ic_restore_desktop()
         tableHeaderView.label.text = R.string.localizable.restore_from_pc_tip()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self, selector: #selector(deviceTransfer(_:)), name: ReceiveMessageService.deviceTransferNotification, object: nil)
-    }
-    
-    class func instance() -> UIViewController {
-        let vc = RestoreFromDesktopViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.restore_from_pc())
     }
     
 }

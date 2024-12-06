@@ -11,6 +11,7 @@ class BlockedUsersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.blocked_users()
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -43,9 +44,7 @@ class BlockedUsersViewController: UIViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = R.storyboard.setting.block()!
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.blocked_users())
-        return container
+        R.storyboard.setting.block()!
     }
     
 }

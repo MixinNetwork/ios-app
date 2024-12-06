@@ -322,8 +322,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             return
         }
         let sharedMedia = UIApplication.homeNavigationController?.viewControllers
-            .compactMap({ $0 as? ContainerViewController })
-            .compactMap({ $0.viewController as? SharedMediaViewController })
+            .compactMap({ $0 as? SharedMediaViewController })
             .first
         if let sharedMedia {
             sharedMedia.navigationController?.popViewController(animated: false)

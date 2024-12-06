@@ -328,13 +328,13 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                             viewControllers.removeLast()
                         }
                         viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
-                    } else if let container = viewControllers.last as? ContainerViewController, container.viewController is TransferOutViewController {
+                    } else if viewControllers.last is TransferOutViewController {
                         viewControllers.removeLast()
                     }
                 }
                 navigation.setViewControllers(viewControllers, animated: false)
             case .multisig, .mainnet:
-                if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is TransferOutViewController {
+                if viewControllers.last is TransferOutViewController {
                     viewControllers.removeLast()
                 }
                 navigation.setViewControllers(viewControllers, animated: false)
@@ -343,7 +343,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         switch context {
         case .swap:
-            if let lastViewController = viewControllers.last as? ContainerViewController, lastViewController.viewController is SwapViewController {
+            if viewControllers.last is SwapViewController {
                 viewControllers.removeLast()
             }
             navigation.setViewControllers(viewControllers, animated: false)

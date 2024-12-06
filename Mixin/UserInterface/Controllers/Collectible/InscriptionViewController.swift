@@ -323,6 +323,14 @@ final class InscriptionViewController: UIViewController {
     
 }
 
+extension InscriptionViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .hide
+    }
+    
+}
+
 extension InscriptionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -489,8 +497,7 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
         }
         let payment: Payment = .inscription(traceID: traceID, token: token, memo: "", context: context)
         let selector = TransferReceiverViewController()
-        let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.send_to_title())
-        selector.onSelect = { (user) in
+        selector.onSelect = { [weak selector] (user) in
             cell.sendButton.isBusy = true
             payment.checkPreconditions(
                 transferTo: .user(user),
@@ -511,13 +518,13 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
                                                             amountDisplay: .byToken,
                                                             redirection: nil)
                 navigationController.present(preview, animated: true) {
-                    if navigationController.viewControllers.last == container {
+                    if navigationController.viewControllers.last == selector {
                         navigationController.popViewController(animated: false)
                     }
                 }
             }
         }
-        navigationController.pushViewController(container, animated: true)
+        navigationController.pushViewController(selector, animated: true)
     }
     
     func inscriptionActionCellRequestToShare(_ cell: InscriptionActionCell) {

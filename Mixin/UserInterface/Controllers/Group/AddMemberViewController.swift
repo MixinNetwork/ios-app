@@ -19,16 +19,21 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     class func instance(appendingMembersToConversationId conversationId: String? = nil) -> UIViewController {
         let vc = AddMemberViewController()
         vc.conversationId = conversationId
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.send_to_title())
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.titleView = NavigationTitleView(title: R.string.localizable.add_participants())
+        let rightButtonTitle = if isAppendingMembersToAnExistedGroup {
+            R.string.localizable.done()
+        } else {
+            R.string.localizable.next()
+        }
+        navigationItem.rightBarButtonItem = .busyButton(title: rightButtonTitle, target: self, action: #selector(addMember(_:)))
+        navigationItem.rightBarButtonItem?.isEnabled = false
         searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         tableView.allowsMultipleSelection = true
-        container?.subtitleLabel.isHidden = false
-        updateSubtitle()
-        container?.titleLabel.text = R.string.localizable.add_participants()
     }
     
     override func initData() {
@@ -177,12 +182,14 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     
     private func selectionsDidChange() {
         updateSubtitle()
-        container?.rightButton.isEnabled = !selectedUsers.isEmpty
+        navigationItem.rightBarButtonItem?.isEnabled = !selectedUsers.isEmpty
     }
     
     private func updateSubtitle() {
-        let subtitle = "\(selectedUsers.count + alreadyInGroupUserIds.count)/\(maxGroupMemberCount)"
-        container?.subtitleLabel.text = subtitle
+        guard let titleView = navigationItem.titleView as? NavigationTitleView else {
+            return
+        }
+        titleView.subtitle = "\(selectedUsers.count + alreadyInGroupUserIds.count)/\(maxGroupMemberCount)"
     }
     
     private func user(at indexPath: IndexPath) -> UserItem {
@@ -193,27 +200,15 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         }
     }
     
-}
-
-extension AddMemberViewController: ContainerViewControllerDelegate {
-    
-    func textBarRightButton() -> String? {
-        if isAppendingMembersToAnExistedGroup {
-            return R.string.localizable.done()
-        } else {
-            return R.string.localizable.next()
-        }
-    }
-    
-    func barRightButtonTappedAction() {
+    @objc private func addMember(_ sender: BusyButton) {
         if let conversationId = conversationId {
             let userIds = selectedUsers.map { $0.userId }
-            container?.rightButton.isBusy = true
+            sender.isBusy = true
             ConversationAPI.addParticipant(conversationId: conversationId, participantUserIds: userIds, completion: { [weak self] (result) in
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.container?.rightButton.isBusy = false
+                sender.isBusy = false
                 switch result {
                 case .success:
                     weakSelf.navigationController?.popViewController(animated: true)

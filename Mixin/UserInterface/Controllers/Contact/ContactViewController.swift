@@ -8,12 +8,19 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
     class func instance(showAddContactButton: Bool = true) -> UIViewController {
         let controller = ContactViewController()
         controller.showAddContactButton = showAddContactButton
-        let title = showAddContactButton ? R.string.localizable.contacts() : R.string.localizable.new_chat()
-        return ContainerViewController.instance(viewController: controller, title: title)
+        controller.title = showAddContactButton ? R.string.localizable.contacts() : R.string.localizable.new_chat()
+        return controller
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if showAddContactButton {
+            navigationItem.rightBarButtonItem = .tintedIcon(
+                image: R.image.ic_user_add_contact(),
+                target: self,
+                action: #selector(addContact(_:))
+            )
+        }
         searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(usersDidChange),
@@ -86,6 +93,11 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
         isSearching ? nil : sectionTitles
     }
     
+    @objc private func addContact(_ sender: Any) {
+        let controller = AddContactViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     @objc private func usersDidChange() {
         if isSearching {
             queue.cancelAllOperations()
@@ -127,19 +139,6 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
             }
         }
         queue.addOperation(operation)
-    }
-    
-}
-
-extension ContactViewController: ContainerViewControllerDelegate {
-    
-    func imageBarRightButton() -> UIImage? {
-        showAddContactButton ? R.image.ic_user_add_contact() : nil
-    }
-    
-    func barRightButtonTappedAction() {
-        let controller = AddContactViewController.instance()
-        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

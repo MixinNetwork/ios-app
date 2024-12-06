@@ -22,15 +22,11 @@ final class EditFavoriteAppsViewController: PeerViewController<[User], FavoriteA
         }
     }
     
-    class func instance() -> UIViewController {
-        let editor = EditFavoriteAppsViewController()
-        return ContainerViewController.instance(viewController: editor, title: R.string.localizable.my_favorite_bots())
-    }
-    
     override func viewDidLoad() {
         models = [[User]](repeating: [], count: Section.allCases.count)
         searchResults = [[AppUserSearchResult]](repeating: [], count: Section.allCases.count)
         super.viewDidLoad()
+        title = R.string.localizable.my_favorite_bots()
         tableView.rowHeight = 70
         tableView.estimatedSectionHeaderHeight = 94
         tableView.register(EditFavoriteAppsHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseID)

@@ -32,18 +32,14 @@ class HomeNavigationController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let backIndicatorImage = R.image.ic_search_back()
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = R.color.background_secondary()
-        appearance.shadowColor = nil
-        appearance.shadowImage = nil
-        appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
-        navigationBar.standardAppearance = appearance
-        navigationBar.scrollEdgeAppearance = appearance
+        
+        view.backgroundColor = R.color.background()
+        navigationBar.standardAppearance = .general
+        navigationBar.scrollEdgeAppearance = .general
+        navigationBar.tintColor = R.color.icon_tint()
+        
         self.interactivePopGestureRecognizer?.isEnabled = true
         self.interactivePopGestureRecognizer?.delegate = self
-        self.isNavigationBarHidden = true
         self.delegate = self
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed && LoginManager.shared.isLoggedIn {
             reporter.registerUserInformation()
@@ -91,13 +87,35 @@ class HomeNavigationController: UINavigationController {
 
 extension HomeNavigationController: UINavigationControllerDelegate {
     
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        let style = (viewController as? NavigationBarStyling)?.navigationBarStyle ?? .normal
+        switch style {
+        case .normal:
+            if navigationController.isNavigationBarHidden {
+                navigationController.setNavigationBarHidden(false, animated: animated)
+            }
+            if navigationController.navigationBar.standardAppearance != .general {
+                navigationController.navigationBar.standardAppearance = .general
+                navigationController.navigationBar.scrollEdgeAppearance = .general
+            }
+        case .secondaryBackground:
+            if navigationController.isNavigationBarHidden {
+                navigationController.setNavigationBarHidden(false, animated: animated)
+            }
+            if navigationController.navigationBar.standardAppearance != .secondaryBackgroundColor {
+                navigationController.navigationBar.standardAppearance = .secondaryBackgroundColor
+                navigationController.navigationBar.scrollEdgeAppearance = .secondaryBackgroundColor
+            }
+        case .hide:
+            if !navigationController.isNavigationBarHidden {
+                navigationController.setNavigationBarHidden(true, animated: animated)
+            }
+        }
+    }
+    
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if operation == .push {
-            var targetVC = toVC
-            if toVC is ContainerViewController {
-                targetVC = (toVC as! ContainerViewController).viewController
-            }
-            if let targetVC = targetVC as? MixinNavigationAnimating {
+            if let targetVC = toVC as? MixinNavigationAnimating {
                 switch targetVC.pushAnimation {
                 case .push:
                     return nil
@@ -107,11 +125,7 @@ extension HomeNavigationController: UINavigationControllerDelegate {
                 }
             }
         } else if operation == .pop {
-            var targetVC = fromVC
-            if fromVC is ContainerViewController {
-                targetVC = (fromVC as! ContainerViewController).viewController
-            }
-            if let targetVC = targetVC as? MixinNavigationAnimating {
+            if let targetVC = fromVC as? MixinNavigationAnimating {
                 switch targetVC.popAnimation {
                 case .pop:
                     return nil
@@ -137,6 +151,20 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
         } else {
             return true
         }
+    }
+    
+}
+
+extension HomeNavigationController {
+    
+    enum NavigationBarStyle {
+        case normal
+        case secondaryBackground
+        case hide
+    }
+    
+    protocol NavigationBarStyling {
+        var navigationBarStyle: NavigationBarStyle { get }
     }
     
 }

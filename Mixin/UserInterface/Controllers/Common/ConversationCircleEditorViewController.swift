@@ -30,12 +30,17 @@ class ConversationCircleEditorViewController: UITableViewController {
         vc.conversationId = conversationId
         vc.ownerId = ownerId
         vc.subordinateCircles = subordinateCircles
-        let title = R.string.localizable.circle_title(name)
-        return ContainerViewController.instance(viewController: vc, title: title)
+        vc.title = R.string.localizable.circle_title(name)
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_add(),
+            target: self,
+            action: #selector(addCircle(_:))
+        )
         let tableHeaderView = UIView()
         tableHeaderView.backgroundColor = .background
         tableHeaderView.frame.size.height = 15
@@ -189,18 +194,6 @@ extension ConversationCircleEditorViewController {
         } else {
             return nil
         }
-    }
-    
-}
-
-extension ConversationCircleEditorViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        addCircle(self)
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.ic_title_add()
     }
     
 }

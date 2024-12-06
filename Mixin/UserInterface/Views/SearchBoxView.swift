@@ -17,6 +17,10 @@ class SearchBoxView: UIView, XibDesignable {
         prepare()
     }
     
+    override var intrinsicContentSize: CGSize {
+        CGSize(width: UIView.layoutFittingExpandedSize.width, height: 40)
+    }
+    
     var isBusy = false {
         didSet {
             textFieldLeftView.isBusy = isBusy

@@ -25,7 +25,11 @@ class ClearStorageViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        navigationItem.rightBarButtonItem = .busyButton(
+            title: R.string.localizable.clear(),
+            target: self,
+            action: #selector(confirmClear(_:))
+        )
         tableView.tableFooterView = UIView()
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
@@ -56,21 +60,12 @@ class ClearStorageViewController: UITableViewController {
     class func instance(conversation: ConversationStorageUsage) -> UIViewController {
         let vc = R.storyboard.setting.clear_storage()!
         vc.conversation = conversation
-        let container = ContainerViewController.instance(viewController: vc, title: conversation.getConversationName())
-        return container
+        vc.title = conversation.getConversationName()
+        return vc
     }
-
-}
-
-extension ClearStorageViewController: ContainerViewControllerDelegate {
-
-    func prepareBar(rightButton: StateResponsiveButton) {
-        rightButton.isEnabled = true
-        rightButton.setTitleColor(.systemTint, for: .normal)
-    }
-
-    func barRightButtonTappedAction() {
-        guard let rightButton = container?.rightButton, !rightButton.isBusy else {
+    
+    @objc private func confirmClear(_ button: BusyButton) {
+        guard !button.isBusy else {
             return
         }
 
@@ -101,18 +96,18 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
         }
         let alc = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: R.string.localizable.clear(), style: .destructive, handler: { [weak self](_) in
-            self?.clearAction()
+            self?.clearAction(button: button)
         }))
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
-
-    private func clearAction() {
+    
+    private func clearAction(button: BusyButton) {
         let clearPhotos = isClearPhotos && categorys["_IMAGE"]?.messageCount ?? 0 > 0
         let clearVideos = isClearVideos && categorys["_VIDEO"]?.messageCount ?? 0 > 0
         let clearAudios = isClearAudios && categorys["_AUDIO"]?.messageCount ?? 0 > 0
         let clearFiles = isClearFiles && categorys["_DATA"]?.messageCount ?? 0 > 0
-        container?.rightButton.isBusy = true
+        button.isBusy = true
 
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
@@ -145,10 +140,6 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
         }
     }
     
-    func textBarRightButton() -> String? {
-        return R.string.localizable.clear()
-    }
-
 }
 
 extension ClearStorageViewController {
@@ -188,7 +179,7 @@ extension ClearStorageViewController {
             break
         }
         tableView.reloadRows(at: [indexPath], with: .none)
-        container?.rightButton.isEnabled = isClearPhotos || isClearVideos || isClearAudios || isClearFiles
+        navigationItem.rightBarButtonItem?.isEnabled = isClearPhotos || isClearVideos || isClearAudios || isClearFiles
     }
 
 }

@@ -67,7 +67,7 @@ class UrlWindow {
                 return true
             case let .swap(input, output):
                 if let navigationController = UIApplication.homeNavigationController {
-                    let swap = MixinSwapViewController.contained(sendAssetID: input, receiveAssetID: output)
+                    let swap = MixinSwapViewController(sendAssetID: input, receiveAssetID: output)
                     navigationController.pushViewController(swap, animated: true)
                 }
                 return true
@@ -993,7 +993,7 @@ class UrlWindow {
             MarketDAO.shared.market(coinID: id)
         }
         if let market {
-            let viewController = MarketViewController.contained(market: market, pushingViewController: nil)
+            let viewController = MarketViewController(market: market)
             UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
             return
         }
@@ -1005,7 +1005,7 @@ class UrlWindow {
                 if let market = MarketDAO.shared.save(market: market) {
                     DispatchQueue.main.async {
                         hud.hide()
-                        let viewController = MarketViewController.contained(market: market, pushingViewController: nil)
+                        let viewController = MarketViewController(market: market)
                         UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
                     }
                 } else {
@@ -1132,12 +1132,12 @@ extension UrlWindow {
                     let transfer: UIViewController
                     switch destination {
                     case .user(let user):
-                        transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+                        transfer = TransferOutViewController(token: nil, to: .contact(user))
                     case .multisig:
                         completion(R.string.localizable.invalid_payment_link())
                         return
                     case .mainnet(let address):
-                        transfer = TransferOutViewController.instance(token: nil, to: .mainnet(address))
+                        transfer = TransferOutViewController(token: nil, to: .mainnet(address))
                     }
                     completion(nil)
                     UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)

@@ -865,7 +865,12 @@ class ConversationViewController: UIViewController {
                         return
                     }
                     DispatchQueue.main.async {
-                        let viewController = SafeSnapshotViewController.instance(token: token, snapshot: snapshot, messageID: message.messageId, inscription: message.inscription)
+                        let viewController = SafeSnapshotViewController(
+                            token: token,
+                            snapshot: snapshot,
+                            messageID: message.messageId,
+                            inscription: message.inscription
+                        )
                         self?.navigationController?.pushViewController(viewController, animated: true)
                     }
                 }
@@ -874,8 +879,7 @@ class ConversationViewController: UIViewController {
                 openAppCard(appCard: appCard, sendUserId: message.userId)
             } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
                 let vc = LocationPreviewViewController(location: location)
-                let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.location())
-                navigationController?.pushViewController(container, animated: true)
+                navigationController?.pushViewController(vc, animated: true)
             } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self)
@@ -1294,7 +1298,7 @@ class ConversationViewController: UIViewController {
         }
         switch TIP.status {
         case .ready, .needsMigrate:
-            let transfer = TransferOutViewController.instance(token: nil, to: .contact(user))
+            let transfer = TransferOutViewController(token: nil, to: .contact(user))
             navigationController?.pushViewController(transfer, animated: true)
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
@@ -1306,8 +1310,7 @@ class ConversationViewController: UIViewController {
     
     func showLocationPicker() {
         let vc = LocationPickerViewController(input: conversationInputViewController)
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.location())
-        navigationController?.pushViewController(container, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func showContactSelector() {
@@ -1390,6 +1393,15 @@ class ConversationViewController: UIViewController {
             messageIdToFlashAfterAnimationFinished = messageId
             reloadWithMessageId(messageId, scrollUpwards: true)
         }
+    }
+    
+}
+
+// MARK: - HomeNavigationController.NavigationBarStyling
+extension ConversationViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .hide
     }
     
 }

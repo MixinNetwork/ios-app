@@ -20,11 +20,6 @@ class AboutViewController: SettingsTableViewController {
     
     private var isShowingDiagnoseRow = false
     
-    class func instance() -> UIViewController {
-        let vc = AboutViewController()
-        return ContainerViewController.instance(viewController: vc, title: "")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableHeaderView = R.nib.aboutTableHeaderView(withOwner: self)
@@ -63,15 +58,12 @@ extension AboutViewController: UITableViewDelegate {
             UIApplication.shared.openURL(url: .privacy)
         case 5:
             let acknow = AcknowledgementListViewController()
-            let title = R.string.localizable.acknowledgements()
-            let container = ContainerViewController.instance(viewController: acknow, title: title)
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(acknow, animated: true)
         case 6:
             UIApplication.shared.openAppStorePage()
         case 7:
             let diagnose = DiagnoseViewController()
-            let container = ContainerViewController.instance(viewController: diagnose, title: R.string.localizable.diagnose())
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(diagnose, animated: true)
         default:
             break
         }

@@ -48,6 +48,12 @@ class LocationPreviewViewController: LocationViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.location()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_open_external(),
+            target: self,
+            action: #selector(openLocationInExternalMapApp)
+        )
         mapView.userTrackingMode = .none
         mapView.showsUserLocation = true
         mapView.delegate = self
@@ -82,7 +88,7 @@ class LocationPreviewViewController: LocationViewController {
         }
     }
     
-    private func openLocationInExternalMapApp() {
+    @objc private func openLocationInExternalMapApp() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if let url = googleMapUrl, UIApplication.shared.canOpenURL(url) {
             sheet.addAction(UIAlertAction(title: R.string.localizable.open_in_google_maps(), style: .default, handler: { (_) in
@@ -99,18 +105,6 @@ class LocationPreviewViewController: LocationViewController {
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
-    }
-    
-}
-
-extension LocationPreviewViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        openLocationInExternalMapApp()
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.ic_open_external()
     }
     
 }

@@ -68,6 +68,8 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.address()
+        
         tableHeaderView = R.nib.web3SendingDestinationHeaderView(withOwner: self)
         view.addSubview(tableView)
         tableView.backgroundColor = R.color.background()
@@ -148,8 +150,7 @@ final class Web3SendingDestinationViewController: KeyboardBasedLayoutViewControl
                 address: address
             )
             let input = Web3TransferInputAmountViewController(payment: payment)
-            let container = ContainerViewController.instance(viewController: input, title: R.string.localizable.send())
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(input, animated: true)
         } else {
             invalidAddressLabel.isHidden = false
             continueButton?.isEnabled = false
@@ -316,8 +317,7 @@ extension Web3SendingDestinationViewController {
                         }
                         self.continueButton?.isBusy = false
                         let input = Web3TransferInputAmountViewController(payment: payment)
-                        let container = ContainerViewController.instance(viewController: input, title: R.string.localizable.send())
-                        self.navigationController?.pushViewController(container, animated: true)
+                        self.navigationController?.pushViewController(input, animated: true)
                     }
                 } else {
                     throw PaymentError.noValidEntry

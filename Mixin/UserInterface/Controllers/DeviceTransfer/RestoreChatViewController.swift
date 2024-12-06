@@ -30,11 +30,6 @@ class RestoreChatViewController: UIViewController {
         AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
     }
     
-    class func instance() -> UIViewController {
-        let vc = RestoreChatViewController()
-        return LoneBackButtonNavigationController(rootViewController: vc)
-    }
-    
 }
 
 extension RestoreChatViewController: UITableViewDelegate, UITableViewDataSource {
@@ -66,9 +61,9 @@ extension RestoreChatViewController: UITableViewDelegate, UITableViewDataSource 
         tableView.deselectRow(at: indexPath, animated: true)
         let vc: UIViewController
         if indexPath.section == 0 {
-            vc = RestoreFromPhoneViewController.instance()
+            vc = RestoreFromPhoneViewController()
         } else {
-            vc = RestoreFromCloudViewController.instance()
+            vc = RestoreFromCloudViewController()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

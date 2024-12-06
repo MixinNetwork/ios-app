@@ -18,12 +18,6 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
         super.init()
     }
     
-    static func contained(action: Action) -> ContainerViewController {
-        let viewController = MobileNumberIntroductionViewController(action: action)
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = R.image.mobile_number()
@@ -53,7 +47,7 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
     }
     
     @objc private func continueToNext(_ sender: Any) {
-        let next = ChangeNumberPINValidationViewController.contained()
+        let next = ChangeNumberPINValidationViewController()
         navigationController?.pushViewController(replacingCurrent: next, animated: true)
     }
     

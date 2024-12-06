@@ -23,6 +23,13 @@ class AddressViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.address()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_add(),
+            target: self,
+            action: #selector(newAddressAction)
+        )
+        
         // UIButton with image and title failed to calculate intrinsicContentSize if bold text is turned on in iOS Display Settings
         // Set lineBreakMode to byClipping as a workaround. Tested on iOS 15.1
         newAddressButton.titleLabel?.lineBreakMode = .byClipping
@@ -67,20 +74,7 @@ class AddressViewController: UIViewController {
     class func instance(token: TokenItem) -> UIViewController {
         let vc = R.storyboard.wallet.address_list()!
         vc.token = token
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.address())
-        return container
-    }
-    
-}
-
-extension AddressViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        newAddressAction()
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        return R.image.ic_title_add()
+        return vc
     }
     
 }
@@ -107,9 +101,9 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
             return
         }
         let address = isSearching ? searchResult[indexPath.row] : addresses[indexPath.row]
-        let vc = TransferOutViewController.instance(token: token, to: .address(address))
+        let vc = TransferOutViewController(token: token, to: .address(address))
         var viewControllers = navigationController.viewControllers
-        if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
+        if let index = viewControllers.lastIndex(of: self) {
             viewControllers.remove(at: index)
         }
         viewControllers.append(vc)

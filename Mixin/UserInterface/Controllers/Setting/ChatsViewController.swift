@@ -16,13 +16,9 @@ class ChatsViewController: SettingsTableViewController {
         ]),
     ])
     
-    class func instance() -> UIViewController {
-        let vc = ChatsViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_chats())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.setting_chats()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -40,16 +36,16 @@ extension ChatsViewController: UITableViewDelegate {
                 alert(R.string.localizable.backup_disable_hint())
                 return
             } else {
-                vc = BackupViewController.instance()
+                vc = BackupViewController()
             }
         case 1:
             if indexPath.row == 0 {
-                vc = TransferToDesktopViewController.instance()
+                vc = TransferToDesktopViewController()
             } else {
-                vc = TransferToPhoneViewController.instance()
+                vc = TransferToPhoneViewController()
             }
         default:
-            vc = RestoreFromDesktopViewController.instance()
+            vc = RestoreFromDesktopViewController()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

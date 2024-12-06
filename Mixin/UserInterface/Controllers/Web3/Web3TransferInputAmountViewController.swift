@@ -19,10 +19,14 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.send()
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.send(),
+            subtitle: payment.toAddressCompactRepresentation
+        )
         tokenIconView.setIcon(web3Token: payment.token)
         tokenNameLabel.text = payment.token.name
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
-        container?.setSubtitle(subtitle: payment.toAddressCompactRepresentation)
         inputMaxValueButton.isHidden = payment.sendingNativeToken
     }
     

@@ -19,6 +19,12 @@ class InviteLinkViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.invite_to_group_via_link()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_more(),
+            target: self,
+            action: #selector(confirmRevokeLink(_:))
+        )
         iconImageView.setGroupImage(with: conversation.iconUrl)
         groupNameLabel.text = conversation.name
         updateUI()
@@ -55,38 +61,28 @@ class InviteLinkViewController: UIViewController {
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = R.storyboard.group.invite_link()!
         vc.conversation = conversation
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.invite_to_group_via_link())
+        return vc
     }
     
-}
-
-extension InviteLinkViewController: ContainerViewControllerDelegate {
-
-    func barRightButtonTappedAction() {
+    @objc private func confirmRevokeLink(_ button: BusyButton) {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: R.string.localizable.reset_link(), style: .default, handler: { [weak self] (_) in
-            self?.revokeLink()
+            self?.revokeLink(button: button)
         }))
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
-
-    func imageBarRightButton() -> UIImage? {
-        return R.image.ic_title_more()
-    }
-
-    private func revokeLink() {
-        guard !(container?.rightButton.isBusy ?? true) else {
+    
+    private func revokeLink(button: BusyButton) {
+        guard !button.isBusy else {
             return
         }
-
-        container?.rightButton.isBusy = true
+        button.isBusy = true
         ConversationAPI.updateCodeId(conversationId: conversation.conversationId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }
-
-            weakSelf.container?.rightButton.isBusy = false
+            button.isBusy = false
             switch result {
             case let .success(response):
                 DispatchQueue.global().async {

@@ -18,6 +18,7 @@ final class DeleteAccountSettingViewController: SettingsTableViewController, Log
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.delete_my_account()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         updateTableHeaderView()
@@ -35,11 +36,6 @@ final class DeleteAccountSettingViewController: SettingsTableViewController, Log
         if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
             updateTableHeaderView()
         }
-    }
-    
-    class func instance() -> UIViewController {
-        let vc = DeleteAccountSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.delete_my_account())
     }
     
 }
@@ -100,7 +96,7 @@ extension DeleteAccountSettingViewController {
     }
     
     private func changeNumber() {
-        let verify = ChangeNumberPINValidationViewController.contained()
+        let verify = ChangeNumberPINValidationViewController()
         navigationController?.pushViewController(verify, animated: true)
     }
     
@@ -163,7 +159,7 @@ extension DeleteAccountSettingViewController {
             switch result {
             case .success(let verification):
                 let context = DeleteAccountContext(phoneNumber: phone, verificationID: verification.id)
-                let vc = DeleteAccountVerifyCodeViewController.instance(context: context)
+                let vc = DeleteAccountVerifyCodeViewController(context: context)
                 self.navigationController?.pushViewController(vc, animated: true)
             case let .failure(error):
                 switch error {

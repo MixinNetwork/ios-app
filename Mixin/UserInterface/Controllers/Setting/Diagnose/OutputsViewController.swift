@@ -22,13 +22,15 @@ final class OutputsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Outputs"
+        navigationItem.rightBarButtonItem = .button(
+            title: "Force Sync",
+            target: self,
+            action: #selector(resync(_:))
+        )
         tableView.backgroundColor = .background
         tableView.register(R.nib.outputCell)
         loadMoreOutputsIfNeeded()
-        if let container {
-            container.rightButton.isEnabled = true
-            container.rightButton.isHidden = false
-        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -103,15 +105,7 @@ final class OutputsViewController: UITableViewController {
         }
     }
     
-}
-
-extension OutputsViewController: ContainerViewControllerDelegate {
-    
-    func textBarRightButton() -> String? {
-        "Force Sync"
-    }
-    
-    func barRightButtonTappedAction() {
+    @objc private func resync(_ sender: Any) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         self.hud = hud

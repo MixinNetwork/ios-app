@@ -76,17 +76,10 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(coin: MarketAlertCoin) -> ContainerViewController {
-        let alert = AddMarketAlertViewController(coin: coin)
-        let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.add_alert())
-        container.loadViewIfNeeded()
-        container.view.backgroundColor = R.color.background_secondary()
-        container.navigationBar.backgroundColor = R.color.background_secondary()
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = R.string.localizable.add_alert()
         
         for (i, percentage) in presetChangePercentages.enumerated() {
             let button = RoundOutlineButton(type: .system)
@@ -267,24 +260,28 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         }
         var controllers = navigationController.viewControllers
         var goesToAllMarketAlerts = false
-        controllers.removeAll { controller in
-            if let container = controller as? ContainerViewController {
-                if container.viewController is AllMarketAlertsViewController {
-                    goesToAllMarketAlerts = true
-                }
-                return container.viewController is MarketAlertViewController
-                || container.viewController is AddMarketAlertViewController
-            } else {
-                return false
+        controllers.removeAll { viewController in
+            if viewController is AllMarketAlertsViewController {
+                goesToAllMarketAlerts = true
             }
+            return viewController is MarketAlertViewController
+            || viewController is AddMarketAlertViewController
         }
         let alerts = if goesToAllMarketAlerts {
-            AllMarketAlertsViewController.contained()
+            AllMarketAlertsViewController()
         } else {
-            CoinMarketAlertsViewController.contained(coin: coin)
+            CoinMarketAlertsViewController(coin: coin)
         }
         controllers.append(alerts)
         navigationController.setViewControllers(controllers, animated: true)
+    }
+    
+}
+
+extension AddMarketAlertViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
     }
     
 }

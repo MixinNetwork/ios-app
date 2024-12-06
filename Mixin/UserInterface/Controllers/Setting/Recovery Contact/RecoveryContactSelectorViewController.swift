@@ -12,6 +12,11 @@ final class RecoveryContactSelectorViewController: UserItemPeerViewController<Pe
         self.pin = pin
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = R.string.localizable.select_emergency_contact()
+    }
+    
     override func catalog(users: [UserItem]) -> (titles: [String], models: [UserItem]) {
         let contacts = users.filter { !$0.isBot }
         return ([], contacts)
@@ -48,7 +53,7 @@ final class RecoveryContactSelectorViewController: UserItemPeerViewController<Pe
             case .success(let response):
                 hud.hide()
                 if let weakSelf = self {
-                    let vc = CreateRecoveryContactVerificationCodeViewController.contained(pin: weakSelf.pin, verificationId: response.id, identityNumber: identityNumber)
+                    let vc = CreateRecoveryContactVerificationCodeViewController(pin: weakSelf.pin, verificationId: response.id, identityNumber: identityNumber)
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 }
             case .failure(let error):

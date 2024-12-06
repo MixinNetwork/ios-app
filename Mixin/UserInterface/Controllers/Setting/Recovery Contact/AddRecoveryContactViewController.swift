@@ -9,17 +9,21 @@ final class AddRecoveryContactViewController: SettingsTableViewController {
         ]),
     ])
     
-    class func instance() -> UIViewController {
-        let vc = AddRecoveryContactViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.emergency_contact())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.emergency_contact()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_titlebar_help(),
+            target: self,
+            action: #selector(help(_:))
+        )
         tableView.tableHeaderView = R.nib.recoveryContactTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+    }
+    
+    @objc private func help(_ sender: Any) {
+        UIApplication.shared.openURL(url: .emergencyContact)
     }
     
 }
@@ -30,7 +34,7 @@ extension AddRecoveryContactViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch TIP.status {
         case .ready, .needsMigrate:
-            let introduction = RecoveryContactIntroduction1ViewController.contained()
+            let introduction = RecoveryContactIntroduction1ViewController()
             navigationController?.pushViewController(introduction, animated: true)
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .setEmergencyContact)
@@ -38,18 +42,6 @@ extension AddRecoveryContactViewController: UITableViewDelegate {
         case .unknown:
             break
         }
-    }
-    
-}
-
-extension AddRecoveryContactViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        UIApplication.shared.openURL(url: .emergencyContact)
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        return R.image.ic_titlebar_help()
     }
     
 }

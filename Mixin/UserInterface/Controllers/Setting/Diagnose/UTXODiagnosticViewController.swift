@@ -17,6 +17,7 @@ final class UTXODiagnosticViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "UTXO"
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -41,8 +42,7 @@ extension UTXODiagnosticViewController: UITableViewDelegate {
             present(authentication, animated: true)
         case (1, 0):
             let outputs = OutputsViewController(token: nil)
-            let container = ContainerViewController.instance(viewController: outputs, title: "Outputs")
-            navigationController?.pushViewController(container, animated: true)
+            navigationController?.pushViewController(outputs, animated: true)
         case (2, 0):
             AppGroupKeychain.encryptedSalt = nil
             Logger.general.warn(category: "UTXO", message: "Encrypted salt removed")

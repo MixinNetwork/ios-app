@@ -6,20 +6,6 @@ import Alamofire
 
 class LocationPickerViewController: LocationViewController {
     
-    @IBOutlet weak var searchBoxView: SearchBoxView? {
-        didSet {
-            if let textField = oldValue?.textField {
-                textField.removeTarget(self, action: nil, for: .editingChanged)
-                textField.delegate = nil
-            }
-            if let textField = searchBoxView?.textField {
-                textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
-                textField.returnKeyType = .search
-                textField.delegate = self
-            }
-        }
-    }
-    
     override var tableWrapperMaskHeight: CGFloat {
         didSet {
             pinImageViewIfLoaded?.center = pinImageViewCenter
@@ -58,14 +44,23 @@ class LocationPickerViewController: LocationViewController {
     private let locationManager = CLLocationManager()
     
     private lazy var geocoder = CLGeocoder()
-    private lazy var searchView = R.nib.locationSearchView(withOwner: self)!
     private lazy var mapViewPanRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
     private lazy var mapViewPinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(dragMapAction(_:)))
+    
+    private lazy var searchBoxView = {
+        let view = SearchBoxView()
+        view.textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
+        view.textField.returnKeyType = .search
+        view.textField.delegate = self
+        return view
+    }()
+    
     private lazy var pinImageView: UIImageView = {
         let view = UIImageView(image: pinImage)
         pinImageViewIfLoaded = view
         return view
     }()
+    
     private lazy var noSearchResultsView: LocationSearchNoResultView = {
         let view = R.nib.locationSearchNoResultView(withOwner: nil)!
         noSearchResultsViewIfLoaded = view
@@ -75,6 +70,7 @@ class LocationPickerViewController: LocationViewController {
     private weak var pinImageViewIfLoaded: UIImageView?
     private weak var noSearchResultsViewIfLoaded: LocationSearchNoResultView?
     
+    private var searchButtonItem: UIBarButtonItem!
     private var input: ConversationInputViewController!
     private var scrollToUserLocationButtonBottomConstraint: NSLayoutConstraint!
     private var permissionWasAuthorized: Bool?
@@ -103,11 +99,14 @@ class LocationPickerViewController: LocationViewController {
     }
     
     private var pinImageViewCenter: CGPoint {
-        CGPoint(x: view.bounds.midX, y: (view.bounds.height - tableWrapperMaskHeight) / 2 - pinImage.size.height / 2)
+        CGPoint(
+            x: view.bounds.midX,
+            y: (view.bounds.height - view.safeAreaInsets.top - tableWrapperMaskHeight - pinImage.size.height) / 2 + view.safeAreaInsets.top
+        )
     }
     
     private var trimmedKeyword: String? {
-        guard let trimmed = searchBoxView?.textField.text?.trimmingCharacters(in: .whitespaces) else {
+        guard let trimmed = searchBoxView.textField.text?.trimmingCharacters(in: .whitespaces) else {
             return nil
         }
         if trimmed.isEmpty {
@@ -141,6 +140,15 @@ class LocationPickerViewController: LocationViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = R.string.localizable.location()
+        let searchButtonItem: UIBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_search(),
+            target: self,
+            action: #selector(startSearching(_:))
+        )
+        navigationItem.rightBarButtonItem = searchButtonItem
+        self.searchButtonItem = searchButtonItem
         
         mapView.delegate = self
         mapView.register(SearchResultAnnotationView.self,
@@ -232,15 +240,16 @@ class LocationPickerViewController: LocationViewController {
         pickedSearchResult = nil
         tableView.reloadData()
         let headerSize = CGSize(width: tableView.frame.width,
-                                height: view.bounds.height - minTableWrapperMaskHeight)
+                                height: view.bounds.height - view.safeAreaInsets.top - minTableWrapperMaskHeight)
         tableHeaderView.frame = CGRect(origin: .zero, size: headerSize)
         tableView.tableHeaderView = tableHeaderView
         tableView.tableFooterView = nil
         tableView.layoutIfNeeded()
-        if let box = searchBoxView {
-            box.isBusy = false
-            box.textField.resignFirstResponder()
-        }
+        searchBoxView.isBusy = false
+        searchBoxView.textField.resignFirstResponder()
+        searchBoxView.textField.text = nil
+        navigationItem.titleView = nil
+        navigationItem.rightBarButtonItem = self.searchButtonItem
         let annotations: [MKAnnotation]
         if mapView.annotations.contains(where: { $0 is MKUserLocation }) {
             annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
@@ -249,7 +258,6 @@ class LocationPickerViewController: LocationViewController {
         }
         mapView.removeAnnotations(annotations)
         UIView.animate(withDuration: 0.3, animations: {
-            self.searchView.alpha = 0
             self.tableWrapperMaskHeight = self.minTableWrapperMaskHeight
             self.tableView.setContentOffset(.zero, animated: true)
             if !self.isAuthorized {
@@ -264,7 +272,6 @@ class LocationPickerViewController: LocationViewController {
             if self.isAuthorized {
                 self.mapView.setUserTrackingMode(.follow, animated: true)
             }
-            self.searchBoxView?.textField.text = nil
             let coordinate = self.userPickedLocation?.coordinate
                 ?? self.mapView.userLocation.location?.coordinate
             if let coor = coordinate {
@@ -330,7 +337,7 @@ class LocationPickerViewController: LocationViewController {
         }
         updateNoSearchResultsViewLayout(isKeyboardVisible: !keyboardWillBeInvisible)
         let headerSize = CGSize(width: tableView.bounds.width,
-                                height: view.bounds.height - minTableWrapperMaskHeight)
+                                height: view.bounds.height - view.safeAreaInsets.top - minTableWrapperMaskHeight)
         if tableHeaderView.frame.height != headerSize.height {
             tableHeaderView.frame = CGRect(origin: .zero, size: headerSize)
             tableView.tableHeaderView = tableHeaderView
@@ -350,7 +357,7 @@ class LocationPickerViewController: LocationViewController {
         lastSearchRequest?.cancel()
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         guard let keyword = trimmedKeyword else {
-            searchBoxView?.isBusy = false
+            searchBoxView.isBusy = false
             searchResults = nil
             tableView.reloadData()
             tableView.tableFooterView = nil
@@ -360,7 +367,7 @@ class LocationPickerViewController: LocationViewController {
     }
     
     @objc private func requestSearch(keyword: String) {
-        searchBoxView?.isBusy = true
+        searchBoxView.isBusy = true
         let coordinate: CLLocationCoordinate2D
         if let annotation = userPickedLocation {
             coordinate = annotation.coordinate
@@ -398,7 +405,7 @@ class LocationPickerViewController: LocationViewController {
             } else {
                 self.tableView.tableFooterView = nil
             }
-            self.searchBoxView?.isBusy = false
+            self.searchBoxView.isBusy = false
             let annotations = self.mapView.annotations.filter({ !($0 is MKUserLocation) })
             self.mapView.removeAnnotations(annotations)
             let resultAnnotations = locations.map(SearchResultAnnotation.init)
@@ -407,31 +414,18 @@ class LocationPickerViewController: LocationViewController {
         })
     }
     
-}
-
-extension LocationPickerViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
+    @objc private func startSearching(_ sender: Any) {
         if pinImageView.superview != nil {
             putUserPickedAnnotation()
         }
-        if searchView.superview == nil {
-            container?.navigationBar.addSubview(searchView)
-            searchView.snp.makeConstraints { (make) in
-                make.leading.trailing.bottom.equalToSuperview()
-                make.height.equalTo(44)
-            }
-        }
-        searchView.alpha = 0
-        UIView.animate(withDuration: 0.3) {
-            self.searchView.alpha = 1
-        }
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = .button(
+            title: R.string.localizable.cancel(),
+            target: self,
+            action: #selector(cancelSearchAction(_:))
+        )
         isShowingSearchBar = true
-        searchBoxView?.textField.becomeFirstResponder()
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.ic_title_search()
+        searchBoxView.textField.becomeFirstResponder()
     }
     
 }
@@ -616,7 +610,7 @@ extension LocationPickerViewController {
         guard userPickedLocation == nil else {
             return
         }
-        let point = CGPoint(x: mapView.frame.width / 2, y: (mapView.frame.height - tableWrapperMaskHeight) / 2)
+        let point = CGPoint(x: pinImageView.center.x, y: pinImageView.frame.maxY)
         let coordinate = mapView.convert(point, toCoordinateFrom: view)
         let userPickedLocation = UserPickedLocation(coordinate: coordinate)
         mapView.addAnnotation(userPickedLocation)

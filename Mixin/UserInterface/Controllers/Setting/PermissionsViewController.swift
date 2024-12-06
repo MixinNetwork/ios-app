@@ -25,6 +25,8 @@ final class PermissionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.permissions()
+        iconView.hasShadow = true
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.separatorStyle = .none
@@ -70,10 +72,10 @@ final class PermissionsViewController: UIViewController {
     class func instance(dataSource: DataSource) -> UIViewController {
         let vc = PermissionsViewController()
         vc.dataSource = dataSource
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.permissions())
+        return vc
     }
     
-    @objc func profileAction() {
+    @objc private func profileAction(_ sender: Any) {
         guard let app = app else {
             return
         }
@@ -89,19 +91,15 @@ final class PermissionsViewController: UIViewController {
     }
     
     private func reloadData(response: AuthorizationResponse) {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
-        iconView.addGestureRecognizer(tapRecognizer)
-        iconView.isUserInteractionEnabled = true
-        iconView.frame.size = iconView.intrinsicContentSize
-        iconView.hasShadow = true
+        if navigationItem.rightBarButtonItem == nil {
+            let item = UIBarButtonItem(customView: iconView)
+            item.target = self
+            item.action = #selector(profileAction(_:))
+            navigationItem.rightBarButtonItem = item
+        }
         iconView.setImage(with: response.app.iconUrl,
                           userId: response.app.appId,
                           name: response.app.name)
-        container?.navigationBar.addSubview(iconView)
-        iconView.snp.makeConstraints { (make) in
-            make.centerY.equalTo(container!.rightButton)
-            make.right.equalToSuperview().offset(-15)
-        }
         
         let createDate = DateFormatter.dateFull.string(from: response.createdAt.toUTCDate())
         let accessedDate = DateFormatter.dateFull.string(from: response.accessedAt.toUTCDate())

@@ -21,14 +21,9 @@ class DataAndStorageSettingsViewController: SettingsTableViewController {
         ])
     ])
     
-    class func instance() -> UIViewController {
-        let vc = DataAndStorageSettingsViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.data_and_storage_usage())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.data_and_storage_usage()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }

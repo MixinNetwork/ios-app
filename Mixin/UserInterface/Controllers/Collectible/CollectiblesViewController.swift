@@ -121,7 +121,7 @@ final class CollectiblesViewController: UIViewController {
     }
     
     @IBAction func openSettings(_ sender: Any) {
-        let settings = SettingsViewController.instance()
+        let settings = SettingsViewController()
         navigationController?.pushViewController(settings, animated: true)
     }
     

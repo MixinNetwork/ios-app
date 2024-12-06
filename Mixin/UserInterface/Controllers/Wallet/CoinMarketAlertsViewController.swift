@@ -15,15 +15,6 @@ final class CoinMarketAlertsViewController: MarketAlertViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(coin: MarketAlertCoin) -> ContainerViewController {
-        let alert = CoinMarketAlertsViewController(coin: coin)
-        let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.alert())
-        container.loadViewIfNeeded()
-        container.view.backgroundColor = R.color.background_secondary()
-        container.navigationBar.backgroundColor = R.color.background_secondary()
-        return container
-    }
-    
     override func loadView() {
         super.loadView()
         tableView.snp.makeEdgesEqualToSuperview()
@@ -31,6 +22,12 @@ final class CoinMarketAlertsViewController: MarketAlertViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.alert()
+        navigationItem.rightBarButtonItem = .button(
+            title: R.string.localizable.all(),
+            target: self,
+            action: #selector(showAllMarketAlerts(_:))
+        )
         addAlertButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
         addAlertButton.setTitleColor(.white, for: .normal)
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
@@ -60,26 +57,21 @@ final class CoinMarketAlertsViewController: MarketAlertViewController {
     }
     
     @objc private func addAlert(_ sender: RoundedButton) {
-        let addAlert = AddMarketAlertViewController.contained(coin: self.coin)
+        let addAlert = AddMarketAlertViewController(coin: self.coin)
         self.navigationController?.pushViewController(addAlert, animated: true)
+    }
+    
+    @objc private func showAllMarketAlerts(_ sender: Any) {
+        let allAlerts = AllMarketAlertsViewController()
+        navigationController?.pushViewController(allAlerts, animated: true)
     }
     
 }
 
-extension CoinMarketAlertsViewController: ContainerViewControllerDelegate {
+extension CoinMarketAlertsViewController: HomeNavigationController.NavigationBarStyling {
     
-    func textBarRightButton() -> String? {
-        R.string.localizable.all()
-    }
-    
-    func barRightButtonTappedAction() {
-        let allAlerts = AllMarketAlertsViewController.contained()
-        navigationController?.pushViewController(allAlerts, animated: true)
-    }
-    
-    func prepareBar(rightButton: StateResponsiveButton) {
-        rightButton.setTitleColor(.theme, for: .normal)
-        rightButton.isEnabled = true
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
     }
     
 }

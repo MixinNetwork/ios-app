@@ -67,7 +67,7 @@ class UrlWindow {
                 return true
             case let .swap(input, output):
                 if let navigationController = UIApplication.homeNavigationController {
-                    let swap = MixinSwapViewController(sendAssetID: input, receiveAssetID: output)
+                    let swap = MixinSwapViewController(sendAssetID: input, receiveAssetID: output ?? AssetID.erc20USDT)
                     navigationController.pushViewController(swap, animated: true)
                 }
                 return true

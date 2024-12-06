@@ -21,6 +21,8 @@ extension AppGroupUserDefaults {
              Additionally, there was previously a variable called `inscriptionOutputsReloaded` used to indicate the result of a full refresh after adding the inscription_hash to Outputs. Since the update to `sequence` now requires another full refresh, this previous flag is no longer relevant (as only one refresh is needed), and thus it has been removed.
              */
             case outputSequencesReloaded = "output_sequences_reloaded"
+            
+            case swapTokens = "swap_tokens"
         }
         
         @Default(namespace: .wallet, key: Key.lastPINVerifiedDate, defaultValue: nil)
@@ -46,6 +48,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.outputSequencesReloaded, defaultValue: false)
         public static var areOutputSequencesReloaded: Bool
+        
+        @Default(namespace: .wallet, key: Key.swapTokens, defaultValue: [])
+        public static var swapTokens: [String]
         
         internal static func migrate() {
             lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

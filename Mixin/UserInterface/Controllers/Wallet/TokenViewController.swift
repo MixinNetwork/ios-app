@@ -591,7 +591,7 @@ extension TokenViewController: TokenActionView.Delegate {
         case .send:
             send()
         case .swap:
-            let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: nil)
+            let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT)
             navigationController?.pushViewController(swap, animated: true)
         }
     }

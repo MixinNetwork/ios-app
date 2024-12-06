@@ -677,7 +677,7 @@ extension MarketViewController: PillActionView.Delegate {
                 alert(R.string.localizable.swap_not_supported(market.symbol))
             } else {
                 pickSingleToken { token in
-                    let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: nil)
+                    let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT)
                     self.navigationController?.pushViewController(swap, animated: true)
                 }
             }

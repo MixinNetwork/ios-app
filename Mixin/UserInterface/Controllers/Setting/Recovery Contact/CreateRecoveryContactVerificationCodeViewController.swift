@@ -17,12 +17,6 @@ class CreateRecoveryContactVerificationCodeViewController: VerificationCodeViewC
         self.identityNumber = identityNumber
     }
     
-    static func contained(pin: String, verificationId: String, identityNumber: String) -> ContainerViewController {
-        let viewController = CreateRecoveryContactVerificationCodeViewController(pin: pin, verificationId: verificationId, identityNumber: identityNumber)
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         helpButton.setTitle(R.string.localizable.cant_receive_the_code(), for: .normal)
@@ -97,16 +91,10 @@ class CreateRecoveryContactVerificationCodeViewController: VerificationCodeViewC
                 return
             }
             var viewControllers = navigationController.viewControllers
-            let index = viewControllers.firstIndex { viewController in
-                guard let container = viewController as? ContainerViewController else {
-                    return false
-                }
-                return container.viewController is RecoveryKitViewController
-            }
-            if let index {
+            if let index = viewControllers.firstIndex(where: { $0 is RecoveryKitViewController }) {
                 viewControllers.removeLast(viewControllers.count - index - 1)
             }
-            viewControllers.append(ViewRecoveryContactViewController.instance())
+            viewControllers.append(ViewRecoveryContactViewController())
             navigationController.setViewControllers(viewControllers, animated: true)
         }))
         present(alert, animated: true, completion: nil)

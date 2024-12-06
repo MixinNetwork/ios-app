@@ -14,13 +14,9 @@ final class AccountSettingViewController: SettingsTableViewController, LogoutHan
         ])
     ])
     
-    class func instance() -> UIViewController {
-        let vc = AccountSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.account())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.account()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -36,9 +32,9 @@ extension AccountSettingViewController: UITableViewDelegate {
         case 0:
             switch indexPath.row {
             case 0:
-                viewController = PrivacySettingViewController.instance()
+                viewController = PrivacySettingViewController()
             default:
-                viewController = SecuritySettingViewController.instance()
+                viewController = SecuritySettingViewController()
             }
         default:
             switch indexPath.row {
@@ -46,7 +42,7 @@ extension AccountSettingViewController: UITableViewDelegate {
                 presentLogoutConfirmationAlert()
                 return
             default:
-                viewController = DeleteAccountSettingViewController.instance()
+                viewController = DeleteAccountSettingViewController()
             }
         }
         navigationController?.pushViewController(viewController, animated: true)

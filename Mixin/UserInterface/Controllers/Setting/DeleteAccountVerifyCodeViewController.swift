@@ -66,11 +66,6 @@ final class DeleteAccountVerifyCodeViewController: VerificationCodeViewControlle
         }
     }
     
-    class func instance(context: DeleteAccountContext) -> UIViewController {
-        let vc = DeleteAccountVerifyCodeViewController(context: context)
-        return ContainerViewController.instance(viewController: vc, title: "")
-    }
-    
 }
 
 extension DeleteAccountVerifyCodeViewController {

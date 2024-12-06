@@ -2,12 +2,6 @@ import UIKit
 
 final class RecoveryContactIntroduction1ViewController: IntroductionViewController {
     
-    static func contained() -> ContainerViewController {
-        let viewController = RecoveryContactIntroduction1ViewController()
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = R.image.recovery_contact()
@@ -36,7 +30,7 @@ final class RecoveryContactIntroduction1ViewController: IntroductionViewControll
     }
     
     @objc private func continueToNext(_ sender: Any) {
-        let next = RecoveryContactIntroduction2ViewController.contained()
+        let next = RecoveryContactIntroduction2ViewController()
         navigationController?.pushViewController(replacingCurrent: next, animated: true)
     }
     

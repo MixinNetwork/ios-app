@@ -43,13 +43,9 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
     
-    class func instance() -> UIViewController {
-        let vc = NotificationAndConfirmationSettingsViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.settings())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.settings()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self,

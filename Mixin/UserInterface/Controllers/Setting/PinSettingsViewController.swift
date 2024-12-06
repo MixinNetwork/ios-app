@@ -18,13 +18,9 @@ final class PinSettingsViewController: SettingsTableViewController {
     
     private var isBiometricPaymentChangingInProgress = false
     
-    class func instance() -> UIViewController {
-        let vc = PinSettingsViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.pin())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.pin()
         if BiometryType.payment != .none {
             let biometricFooter = R.string.localizable.wallet_enable_biometric_pay(BiometryType.payment.localizedName)
             var rows = [biometricSwitchRow]

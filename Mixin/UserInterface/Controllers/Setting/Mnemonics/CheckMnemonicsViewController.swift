@@ -18,12 +18,6 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
         super.init()
     }
     
-    static func contained(mnemonics: Mnemonics) -> ContainerViewController {
-        let viewController = CheckMnemonicsViewController(mnemonics: mnemonics)
-        let container = ContainerViewController.instance(viewController: viewController, title: "")
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.check_mnemonic_phrase()

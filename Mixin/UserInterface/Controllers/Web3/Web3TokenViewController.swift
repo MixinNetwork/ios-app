@@ -24,6 +24,7 @@ final class Web3TokenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = token.name
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
@@ -94,14 +95,12 @@ final class Web3TokenViewController: UIViewController {
         }
         let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
         let selector = Web3SendingDestinationViewController(payment: payment)
-        let container = ContainerViewController.instance(viewController: selector, title: R.string.localizable.address())
-        navigationController?.pushViewController(container, animated: true)
+        navigationController?.pushViewController(selector, animated: true)
     }
     
     @objc private func receive(_ sender: Any) {
         let source = Web3ReceiveSourceViewController(kind: kind, address: address)
-        let container = ContainerViewController.instance(viewController: source, title: R.string.localizable.receive())
-        navigationController?.pushViewController(container, animated: true)
+        navigationController?.pushViewController(source, animated: true)
     }
     
 }
@@ -129,7 +128,7 @@ extension Web3TokenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let transaction = transactions?[indexPath.row] {
-            let viewController = Web3TransactionViewController.instance(web3Token: token, transaction: transaction)
+            let viewController = Web3TransactionViewController(token: token, transaction: transaction)
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

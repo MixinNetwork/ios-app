@@ -20,14 +20,14 @@ final class RecoveryContactViewController: UIViewController {
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
-    class func instance(user: User) -> UIViewController {
-        let viewController = RecoveryContactViewController(user: user)
-        let container = ContainerViewController.instance(viewController: viewController, title: R.string.localizable.view_emergency_contact())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.view_emergency_contact()
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_titlebar_info(),
+            target: self,
+            action: #selector(presentUserInfo(_:))
+        )
         avatarImageView.setImage(with: user.avatarUrl ?? "",
                                  userId: user.userId,
                                  name: user.fullName ?? "")
@@ -59,18 +59,10 @@ final class RecoveryContactViewController: UIViewController {
         descriptionTextView.attributedText = str
     }
     
-}
-
-extension RecoveryContactViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
+    @objc private func presentUserInfo(_ sender: Any) {
         let userItem = UserItem.createUser(from: user)
         let vc = UserProfileViewController(user: userItem)
         present(vc, animated: true, completion: nil)
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        return R.image.ic_titlebar_info()
     }
     
 }

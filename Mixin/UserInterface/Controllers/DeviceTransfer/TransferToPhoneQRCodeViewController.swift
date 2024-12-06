@@ -18,6 +18,12 @@ class TransferToPhoneQRCodeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.waiting_for_other_device()
+        navigationItem.leftBarButtonItem = .tintedIcon(
+            image: R.image.navigation_back(),
+            target: self,
+            action: #selector(goBack(_:))
+        )
         instructionsLabel.attributedText = makeInstructions()
         LoginManager.shared.inDeviceTransfer = true
     }
@@ -37,16 +43,7 @@ class TransferToPhoneQRCodeViewController: UIViewController {
         }
     }
     
-    class func instance() -> UIViewController {
-        let vc = TransferToPhoneQRCodeViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.waiting_for_other_device())
-    }
-    
-}
-
-extension TransferToPhoneQRCodeViewController: ContainerViewControllerDelegate {
-    
-    func barLeftButtonTappedAction() {
+    @objc private func goBack(_ sender: Any) {
         checkLogout(isBackAction: true)
     }
     

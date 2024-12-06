@@ -23,7 +23,7 @@ class ShowRecoveryContactValidationViewController: PinValidationViewController {
             switch result {
             case .success(let user):
                 weakSelf.dismiss(animated: true, completion: {
-                    let vc = RecoveryContactViewController.instance(user: user)
+                    let vc = RecoveryContactViewController(user: user)
                     UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
                 })
             case .failure(let error):

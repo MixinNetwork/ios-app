@@ -11,12 +11,6 @@ final class AddMobileNumberViewController: SettingsTableViewController {
     
     private let tableHeaderView = R.nib.imageTextTableHeaderView(withOwner: nil)!
     
-    class func instance() -> UIViewController {
-        let vc = AddMobileNumberViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.mobile_number())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableHeaderView.imageView.image = R.image.mobile_number()
@@ -50,7 +44,7 @@ extension AddMobileNumberViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let introduction = MobileNumberIntroductionViewController.contained(action: .add)
+        let introduction = MobileNumberIntroductionViewController(action: .add)
         navigationController?.pushViewController(introduction, animated: true)
     }
     

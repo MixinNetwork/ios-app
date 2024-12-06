@@ -393,6 +393,14 @@ class PhotoCaptureProcessor: NSObject, AVCapturePhotoCaptureDelegate {
     
 }
 
+extension CameraViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .hide
+    }
+    
+}
+
 extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
 
     func prepareRecord() {

@@ -34,6 +34,7 @@ class AcknowledgementListViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.acknowledgements()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -45,8 +46,7 @@ extension AcknowledgementListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let acknow = acknowledgements[indexPath.row]
         let viewController = AcknowledgementViewController(acknowledgement: acknow)
-        let container = ContainerViewController.instance(viewController: viewController, title: acknow.title)
-        navigationController?.pushViewController(container, animated: true)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

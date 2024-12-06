@@ -11,6 +11,8 @@ class StickerManagerViewController: UICollectionViewController {
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
     
+    private weak var rightBarButton: BusyButton?
+    
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
         let rowCount = floor(UIScreen.main.bounds.size.width / minWidth)
@@ -18,13 +20,29 @@ class StickerManagerViewController: UICollectionViewController {
         return CGSize(width: itemWidth, height: itemWidth)
     }()
     
+    private lazy var selectButton: UIBarButtonItem = .busyButton(
+        title: R.string.localizable.select(),
+        target: self,
+        action: #selector(selectItems(_:))
+    )
+    
+    private lazy var deleteButton: UIBarButtonItem = .busyButton(
+        title: R.string.localizable.delete(),
+        target: self,
+        action: #selector(deleteSelections(_:))
+    )
+    
     class func instance() -> UIViewController {
         let vc = R.storyboard.chat.sticker_manager()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_stickers())
+        vc.title = R.string.localizable.my_stickers()
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = selectButton
+        rightBarButton = navigationItem.rightBarButtonItem?.customView as? BusyButton
+        view.backgroundColor = R.color.background()
         fetchStickers()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(fetchStickers),
@@ -38,77 +56,63 @@ class StickerManagerViewController: UICollectionViewController {
             DispatchQueue.main.async {
                 self?.stickers = stickers
                 self?.collectionView?.reloadData()
-                self?.container?.rightButton.isEnabled = stickers.count > 0
+                self?.rightBarButton?.isEnabled = stickers.count > 0
             }
         }
     }
     
-}
-
-extension StickerManagerViewController: ContainerViewControllerDelegate {
-    
-    func prepareBar(rightButton: StateResponsiveButton) {
-        rightButton.isEnabled = true
-        rightButton.setTitleColor(.systemTint, for: .normal)
-    }
-    
-    func barRightButtonTappedAction() {
-        if isDeleteStickers {
-            guard
-                !(container?.rightButton.isBusy ?? true),
-                let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0
-            else {
-                container?.rightButton.setTitle(R.string.localizable.select(), for: .normal)
-                isDeleteStickers = false
-                collectionView?.allowsMultipleSelection = false
-                collectionView?.reloadData()
+    @objc private func deleteSelections(_ sender: BusyButton) {
+        guard !sender.isBusy, let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0 else {
+            navigationItem.rightBarButtonItem = selectButton
+            isDeleteStickers = false
+            collectionView?.allowsMultipleSelection = false
+            collectionView?.reloadData()
+            return
+        }
+        sender.isBusy = true
+        
+        let stickerIds: [String] = selectionCells.compactMap { (indexPath) -> String? in
+            guard indexPath.row < stickers.count else {
+                return nil
+            }
+            return stickers[indexPath.row].stickerId
+        }
+        
+        StickerAPI.removeSticker(stickerIds: stickerIds, completion: { [weak self] (result) in
+            guard let weakSelf = self else {
                 return
             }
-            container?.rightButton.isBusy = true
-            
-            let stickerIds: [String] = selectionCells.compactMap { (indexPath) -> String? in
-                guard indexPath.row < stickers.count else {
-                    return nil
-                }
-                return stickers[indexPath.row].stickerId
-            }
-            
-            StickerAPI.removeSticker(stickerIds: stickerIds, completion: { [weak self] (result) in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.container?.rightButton.isBusy = false
-                switch result {
-                case .success:
-                    DispatchQueue.global().async {
-                        if let album = AlbumDAO.shared.getPersonalAlbum() {
-                            StickerRelationshipDAO.shared.removeStickers(albumId: album.albumId, stickerIds: stickerIds)
-                        }
-                        
-                        DispatchQueue.main.async {
-                            guard let weakSelf = self else {
-                                return
-                            }
-                            weakSelf.container?.rightButton.setTitle(R.string.localizable.select(), for: .normal)
-                            weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
-                            weakSelf.collectionView?.allowsMultipleSelection = false
-                            weakSelf.fetchStickers()
-                        }
+            sender.isBusy = false
+            switch result {
+            case .success:
+                DispatchQueue.global().async {
+                    if let album = AlbumDAO.shared.getPersonalAlbum() {
+                        StickerRelationshipDAO.shared.removeStickers(albumId: album.albumId, stickerIds: stickerIds)
                     }
-                case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    
+                    DispatchQueue.main.async {
+                        guard let weakSelf = self else {
+                            return
+                        }
+                        weakSelf.navigationItem.rightBarButtonItem = weakSelf.selectButton
+                        weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
+                        weakSelf.collectionView?.allowsMultipleSelection = false
+                        weakSelf.fetchStickers()
+                    }
                 }
-            })
-        } else {
-            container?.rightButton.setTitle(R.string.localizable.delete(), for: .normal)
-            isDeleteStickers = true
-            collectionView?.allowsMultipleSelection = true
-            collectionView?.reloadData()
-        }
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
+        })
     }
     
-    func textBarRightButton() -> String? {
-        R.string.localizable.select()
+    @objc private func selectItems(_ sender: Any) {
+        navigationItem.rightBarButtonItem = deleteButton
+        navigationController?.navigationBar.setNeedsLayout()
+        navigationController?.navigationBar.layoutIfNeeded()
+        isDeleteStickers = true
+        collectionView?.allowsMultipleSelection = true
+        collectionView?.reloadData()
     }
     
 }

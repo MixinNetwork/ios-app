@@ -267,8 +267,7 @@ extension StaticMessagesViewController {
                 PostWebViewController.presentInstance(message: message, asChildOf: parent)
             } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
                 let vc = LocationPreviewViewController(location: location)
-                let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.location())
-                navigationController?.pushViewController(container, animated: true)
+                navigationController?.pushViewController(vc, animated: true)
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 guard let appId = appCard.appID, !appId.isEmpty, case let .v0(content) = appCard else {
                     return

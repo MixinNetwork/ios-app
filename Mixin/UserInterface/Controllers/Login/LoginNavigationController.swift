@@ -13,21 +13,8 @@ final class LoginNavigationController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let backIndicatorImage = R.image.navigation_back()
-        let backgroundColor = R.color.background()
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = backgroundColor
-        appearance.shadowColor = nil
-        appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
-        appearance.backButtonAppearance = {
-            let appearance = UIBarButtonItemAppearance()
-            appearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-            return appearance
-        }()
-        navigationBar.standardAppearance = appearance
-        navigationBar.scrollEdgeAppearance = appearance
+        navigationBar.standardAppearance = .general
+        navigationBar.scrollEdgeAppearance = .general
         navigationBar.tintColor = R.color.icon_tint()
     }
     

@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class DeleteAccountAbortWindow: BottomSheetView {
     
@@ -41,10 +42,11 @@ class DeleteAccountAbortWindow: BottomSheetView {
         R.nib.deleteAccountAbortWindow(withOwner: self)!
     }
     
-    func render(deactivatedAt: String, completion: @escaping CompletionHandler) {
+    func render(deactivation: Deactivation, completion: @escaping CompletionHandler) {
         self.completion = completion
-        let formatted = DateFormatter.deleteAccount.string(from: deactivatedAt.toUTCDate())
-        label.text = R.string.localizable.landing_delete_content(formatted)
+        let requestedAt = DateFormatter.deleteAccount.string(from: deactivation.requestedAt)
+        let effectiveAt = DateFormatter.deleteAccount.string(from: deactivation.effectiveAt)
+        label.text = R.string.localizable.landing_delete_content(requestedAt, effectiveAt)
         continueButton.setTitle("\(R.string.localizable.continue())(\(self.countDown))", for: .normal)
         continueButton.isEnabled = false
         cancelButton.isEnabled = false

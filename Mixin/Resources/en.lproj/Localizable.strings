@@ -638,7 +638,7 @@
 "joined_in" = "Joined on %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "Label";
-"landing_delete_content" = "Your account will be deleted on %@, if you continue to log in, the request to delete your account will be cancelled.";
+"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
 "landing_validation_title" = "Enter the 4-digit code sent to you at %@";
 "language" = "Language";

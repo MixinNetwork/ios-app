@@ -9,6 +9,7 @@ final class HiddenTokensViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.hide_asset()
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
         tableView.dataSource = self
@@ -49,9 +50,7 @@ final class HiddenTokensViewController: UIViewController {
     }
 
     class func instance() -> UIViewController {
-        let vc = R.storyboard.wallet.hidden_assets()!
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.hide_asset())
-        return container
+        R.storyboard.wallet.hidden_assets()!
     }
     
     private func updateTableViewContentInset() {
@@ -79,7 +78,7 @@ extension HiddenTokensViewController: UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(TokenViewController.contained(token: tokens[indexPath.row]), animated: true)
+        navigationController?.pushViewController(TokenViewController(token: tokens[indexPath.row]), animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -101,14 +100,6 @@ extension HiddenTokensViewController: UITableViewDataSource, UITableViewDelegate
         }
         action.backgroundColor = .theme
         return UISwipeActionsConfiguration(actions: [action])
-    }
-    
-}
-
-extension HiddenTokensViewController: ContainerViewControllerDelegate {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
     }
     
 }

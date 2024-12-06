@@ -17,15 +17,6 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained() -> ContainerViewController {
-        let alert = AllMarketAlertsViewController()
-        let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.all_alert())
-        container.loadViewIfNeeded()
-        container.view.backgroundColor = R.color.background_secondary()
-        container.navigationBar.backgroundColor = R.color.background_secondary()
-        return container
-    }
-    
     override func loadView() {
         super.loadView()
         let topActionsView = R.nib.allAlertsTopActionView(withOwner: self)!
@@ -44,6 +35,7 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.all_alert()
         assetFilterView.reloadData(coins: coins)
         assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
@@ -76,6 +68,14 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     
 }
 
+extension AllMarketAlertsViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
+    }
+    
+}
+
 extension AllMarketAlertsViewController: MarketAlertCoinPickerViewController.Delegate {
     
     func marketAlertCoinPickerViewController(
@@ -83,7 +83,7 @@ extension AllMarketAlertsViewController: MarketAlertCoinPickerViewController.Del
         didPickCoin coin: MarketAlertCoin
     ) {
         dismiss(animated: true) {
-            let addAlert = AddMarketAlertViewController.contained(coin: coin)
+            let addAlert = AddMarketAlertViewController(coin: coin)
             self.navigationController?.pushViewController(addAlert, animated: true)
         }
     }

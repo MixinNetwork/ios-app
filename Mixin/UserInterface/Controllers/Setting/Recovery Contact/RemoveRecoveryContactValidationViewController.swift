@@ -25,9 +25,7 @@ class RemoveRecoveryContactValidationViewController: PinValidationViewController
                 LoginManager.shared.setAccount(account)
                 if let navigationController = UIApplication.homeNavigationController {
                     var viewControllers = navigationController.viewControllers
-                    if let container = viewControllers.last as? ContainerViewController,
-                       container.viewController is ViewRecoveryContactViewController
-                    {
+                    if viewControllers.last is ViewRecoveryContactViewController {
                         viewControllers.removeLast()
                     }
                     navigationController.setViewControllers(viewControllers, animated: false)

@@ -86,7 +86,12 @@ extension LoginAccountHandler where Self: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         } else {
             AppGroupUserDefaults.Account.canRestoreFromPhone = true
-            AppDelegate.current.mainWindow.rootViewController = RestoreChatViewController.instance()
+            let restore = RestoreChatViewController()
+            let navigationController = UINavigationController(rootViewController: restore)
+            navigationController.navigationBar.standardAppearance = .general
+            navigationController.navigationBar.scrollEdgeAppearance = .general
+            navigationController.navigationBar.tintColor = R.color.icon_tint()
+            AppDelegate.current.mainWindow.rootViewController = navigationController
         }
         
         UIApplication.shared.setShortcutItemsEnabled(true)

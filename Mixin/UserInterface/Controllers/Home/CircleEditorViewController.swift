@@ -13,20 +13,30 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     private var oldMembers = Set<CircleMember>()
     private var selections: [CircleMember] = [] {
         didSet {
-            let subtitle = R.string.localizable.circle_subtitle_count(selections.count)
-            container?.setSubtitle(subtitle: subtitle)
+            titleView.subtitle = R.string.localizable.circle_subtitle_count(selections.count)
         }
     }
     
+    private weak var titleView: NavigationTitleView!
+    
     class func instance(name: String, circleId: String, isNewCreatedCircle: Bool) -> UIViewController {
-        let vc = CircleEditorViewController()
-        vc.name = name
-        vc.circleId = circleId
-        return ContainerViewController.instance(viewController: vc, title: name)
+        let editor = CircleEditorViewController()
+        editor.name = name
+        editor.circleId = circleId
+        let navigationController = UINavigationController(rootViewController: editor)
+        navigationController.navigationBar.standardAppearance = .general
+        navigationController.navigationBar.scrollEdgeAppearance = .general
+        navigationController.navigationBar.tintColor = R.color.icon_tint()
+        return navigationController
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let titleView = NavigationTitleView(title: name)
+        self.titleView = titleView
+        navigationItem.titleView = titleView
+        navigationItem.leftBarButtonItem = .tintedIcon(image: R.image.ic_title_close(), target: self, action: #selector(close(_:)))
+        navigationItem.rightBarButtonItem = .button(title: R.string.localizable.save(), target: self, action: #selector(save(_:)))
         tableView.allowsMultipleSelection = true
         collectionView.dataSource = self
         let circleId = self.circleId
@@ -42,15 +52,6 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
                 self.reloadTableViewSelections()
                 self.setCollectionViewHidden(members.isEmpty, animated: false)
             }
-        }
-    }
-    
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if let container = parent as? ContainerViewController {
-            container.leftButton.tintColor = R.color.icon_tint()
-            container.leftButton.setImage(R.image.ic_title_close(), for: .normal)
-            container.rightButton.isEnabled = true
         }
     }
     
@@ -161,15 +162,11 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         }
     }
     
-}
-
-extension CircleEditorViewController: ContainerViewControllerDelegate {
-    
-    func barLeftButtonTappedAction() {
-        dismiss(animated: true, completion: nil)
+    @objc private func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    func barRightButtonTappedAction() {
+    @objc private func save(_ sender: Any) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
 
@@ -197,10 +194,6 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
                 hud.scheduleAutoHidden()
             }
         }
-    }
-    
-    func textBarRightButton() -> String? {
-        R.string.localizable.save()
     }
     
 }

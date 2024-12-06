@@ -18,6 +18,7 @@ class AttachmentDiagnosticViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.clear_cache()
         DispatchQueue.global().async { [weak self] in
             func append(_ url: URL) -> Bool {
                 if let self = self {
@@ -71,21 +72,19 @@ class AttachmentDiagnosticViewController: UIViewController {
                     return
                 }
                 self.isSearching = false
-                self.container?.rightButton.setTitle(self.rightButtonTitle, for: .normal)
+                if let title = self.rightButtonTitle {
+                    self.navigationItem.rightBarButtonItem = .button(
+                        title: title,
+                        target: self,
+                        action: #selector(self.removeFiles(_:))
+                    )
+                }
                 self.textView.text.append("Searching finished. \(self.urls.count) items found.\n")
             }
         }
     }
     
-}
-
-extension AttachmentDiagnosticViewController: ContainerViewControllerDelegate {
-    
-    func textBarRightButton() -> String? {
-        rightButtonTitle
-    }
-    
-    func barRightButtonTappedAction() {
+    @objc private func removeFiles(_ sender: Any) {
         guard !isSearching && !urls.isEmpty else {
             return
         }
@@ -93,7 +92,7 @@ extension AttachmentDiagnosticViewController: ContainerViewControllerDelegate {
         try? urls.forEach(FileManager.default.removeItem(at:))
         urls = []
         textView.text.append("\(count) files removed\n")
-        container?.rightButton.setTitle(rightButtonTitle, for: .normal)
+        navigationItem.rightBarButtonItem = nil
     }
     
 }

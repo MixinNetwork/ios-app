@@ -10,11 +10,18 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
     class func instance(conversationInputViewController: ConversationInputViewController) -> UIViewController {
         let vc = ContactSelectorViewController()
         vc.conversationInputViewController = conversationInputViewController
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.share_contact())
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.share_contact()
+        navigationItem.rightBarButtonItem = .button(
+            title: R.string.localizable.send(),
+            target: self,
+            action: #selector(send(_:))
+        )
+        navigationItem.rightBarButtonItem?.isEnabled = false
         tableView.allowsMultipleSelection = true
     }
     
@@ -41,7 +48,7 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let userId = user(at: indexPath).userId
         selections.append(userId)
-        container?.rightButton.isEnabled = true
+        navigationItem.rightBarButtonItem?.isEnabled = true
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -50,22 +57,14 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
             selections.remove(at: idx)
         }
         if tableView.indexPathForSelectedRow == nil {
-            container?.rightButton.isEnabled = false
+            navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
     
-}
-
-extension ContactSelectorViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
+    @objc private func send(_ sender: Any) {
         conversationInputViewController?.sendContact(userIds: selections) {
             self.navigationController?.popViewController(animated: true)
         }
-    }
-    
-    func textBarRightButton() -> String? {
-        R.string.localizable.send()
     }
     
 }

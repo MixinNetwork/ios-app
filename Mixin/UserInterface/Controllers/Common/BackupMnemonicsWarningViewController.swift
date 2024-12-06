@@ -59,7 +59,7 @@ final class BackupMnemonicsWarningViewController: UIViewController {
     
     @IBAction func backup(_ sender: Any) {
         presentingViewController?.dismiss(animated: true) { [exportNavigationController] in
-            let introduction = ExportMnemonicPhrasesIntroductionViewController.contained()
+            let introduction = ExportMnemonicPhrasesIntroductionViewController()
             exportNavigationController?.pushViewController(introduction, animated: true)
         }
     }

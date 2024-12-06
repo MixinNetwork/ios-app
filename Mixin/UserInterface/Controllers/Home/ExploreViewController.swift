@@ -74,7 +74,7 @@ final class ExploreViewController: UIViewController {
     }
     
     @IBAction func openSettings(_ sender: Any) {
-        let settings = SettingsViewController.instance()
+        let settings = SettingsViewController()
         navigationController?.pushViewController(settings, animated: true)
     }
     
@@ -116,7 +116,7 @@ final class ExploreViewController: UIViewController {
         case .camera:
             UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: false)
         case .linkDesktop:
-            let desktop = DesktopViewController.instance()
+            let desktop = DesktopViewController()
             navigationController?.pushViewController(desktop, animated: true)
         case .customerService:
             if let user = UserDAO.shared.getUser(identityNumber: "7000") {
@@ -124,7 +124,7 @@ final class ExploreViewController: UIViewController {
                 navigationController?.pushViewController(conversation, animated: true)
             }
         case .editFavoriteApps:
-            let editApps = EditFavoriteAppsViewController.instance()
+            let editApps = EditFavoriteAppsViewController()
             navigationController?.pushViewController(editApps, animated: true)
         }
     }

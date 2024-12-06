@@ -1,31 +1,11 @@
 import UIKit
 import MixinServices
 
-class InConversationSearchViewController: SearchConversationViewController {
-    
-    override var navigationTitleLabel: UILabel? {
-        get {
-            return container?.titleLabel
-        }
-        set {
-            
-        }
-    }
+final class InConversationSearchViewController: SearchConversationViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         searchTextField.becomeFirstResponder()
-    }
-    
-    override func prepareNavigationBar() {
-        guard let container = container else {
-            return
-        }
-        container.navigationBar.addSubview(iconView)
-        iconView.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-20)
-        }
     }
     
     override func pushConversation(viewController: ConversationViewController) {

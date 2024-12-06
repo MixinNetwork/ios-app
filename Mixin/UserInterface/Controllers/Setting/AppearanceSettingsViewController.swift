@@ -33,14 +33,9 @@ class AppearanceSettingsViewController: SettingsTableViewController {
         ]),
     ])
     
-    class func instance() -> UIViewController {
-        let vc = AppearanceSettingsViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.appearance())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.appearance()
         updateCurrencySubtitle()
         updateUserInterfaceStyleSubtitle()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrencySubtitle), name: Currency.currentCurrencyDidChangeNotification, object: nil)

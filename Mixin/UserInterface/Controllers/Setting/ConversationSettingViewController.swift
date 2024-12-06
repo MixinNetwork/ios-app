@@ -16,6 +16,7 @@ class ConversationSettingViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.conversation()
         if let account = LoginManager.shared.account {
             switch account.receiveMessageSource {
             case ReceiveMessageSource.everybody.rawValue:
@@ -36,11 +37,6 @@ class ConversationSettingViewController: SettingsTableViewController {
         }
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-    }
-    
-    class func instance() -> UIViewController {
-        let vc = ConversationSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.conversation())
     }
     
 }

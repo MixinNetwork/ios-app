@@ -61,6 +61,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.withdrawal_addr_new(asset.symbol)
         addressTextView.delegate = self
         addressTextView.textContainerInset = .zero
         addressTextView.textContainer.lineFragmentPadding = 0
@@ -185,7 +186,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         let vc = R.storyboard.wallet.new_address()!
         vc.asset = asset
         vc.successCallback = successCallback
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.withdrawal_addr_new(asset.symbol))
+        return vc
     }
     
     private func updateMemoHint() {

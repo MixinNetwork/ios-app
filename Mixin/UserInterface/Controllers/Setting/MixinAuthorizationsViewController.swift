@@ -5,13 +5,9 @@ class MixinAuthorizationsViewController: AuthorizationsViewController<MixinAutho
     
     private var isDataLoaded = false
     
-    class func instance() -> UIViewController {
-        let authorizations = MixinAuthorizationsViewController(nibName: R.nib.authorizationsView.name, bundle: nil)
-        return ContainerViewController.instance(viewController: authorizations, title: R.string.localizable.authorizations())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.authorizations()
         searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         view.layoutIfNeeded()
     }

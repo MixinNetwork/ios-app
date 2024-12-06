@@ -28,11 +28,12 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = GroupParticipantsViewController()
         vc.conversation = conversation
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.participants())
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.participants()
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         let job = RefreshConversationJob(conversationId: conversation.conversationId)
@@ -90,6 +91,14 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
         present(alc, animated: true, completion: nil)
     }
     
+    private func updateRightBarButtonItem() {
+        if showAdminActions {
+            navigationItem.rightBarButtonItem = .tintedIcon(image: R.image.ic_title_add(), target: self, action: #selector(presentAdminActions))
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
 }
 
 extension GroupParticipantsViewController {
@@ -120,14 +129,7 @@ extension GroupParticipantsViewController {
         }
     }
     
-}
-
-extension GroupParticipantsViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        guard showAdminActions else {
-            return
-        }
+    @objc private func presentAdminActions() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: R.string.localizable.add_participants(), style: .default, handler: { (_) in
             let id = self.conversation.conversationId
@@ -140,10 +142,6 @@ extension GroupParticipantsViewController: ContainerViewControllerDelegate {
         }))
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alc, animated: true, completion: nil)
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        return showAdminActions ? R.image.ic_title_add() : nil
     }
     
 }
@@ -175,7 +173,7 @@ extension GroupParticipantsViewController {
                 }
                 viewController.models = participants
                 viewController.myRole = me?.role ?? ""
-                viewController.container?.reloadRightButton()
+                viewController.updateRightBarButtonItem()
                 if let keyword = viewController.searchingKeyword {
                     viewController.search(keyword: keyword)
                 } else {

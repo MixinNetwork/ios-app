@@ -30,43 +30,38 @@ final class TransactionHistoryViewController: UIViewController {
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: SafeSnapshotItem?
     
-    private init() {
+    init() {
         let nib = R.nib.transactionHistoryView
         super.init(nibName: nib.name, bundle: nib.bundle)
         self.queue.maxConcurrentOperationCount = 1
+    }
+    
+    convenience init(token: TokenItem) {
+        self.init()
+        self.filter.tokens = [token]
+    }
+    
+    convenience init(user: UserItem) {
+        self.init()
+        self.filter.users = [user]
+    }
+    
+    convenience init(address: AddressItem) {
+        self.init()
+        self.filter.addresses = [address]
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained() -> ContainerViewController {
-        let history = TransactionHistoryViewController()
-        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
-    }
-    
-    static func contained(token: TokenItem) -> ContainerViewController {
-        let history = TransactionHistoryViewController()
-        history.filter.tokens = [token]
-        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
-    }
-    
-    static func contained(user: UserItem) -> ContainerViewController {
-        let history = TransactionHistoryViewController()
-        history.filter.users = [user]
-        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
-    }
-    
-    static func contained(address: AddressItem) -> ContainerViewController {
-        let history = TransactionHistoryViewController()
-        history.filter.addresses = [address]
-        return ContainerViewController.instance(viewController: history, title: R.string.localizable.transaction_history())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.transaction_history()
+        navigationItem.titleView = NavigationTitleView(title: R.string.localizable.transaction_history())
         updateNavigationSubtitle(order: order)
+        reloadRightBarButtonItem(order: order)
         
         let typeFilterActions = typeFilterActions(selectedType: filter.type)
         typeFilterView.reloadData(type: filter.type)
@@ -132,7 +127,10 @@ final class TransactionHistoryViewController: UIViewController {
     }
     
     private func updateNavigationSubtitle(order: SafeSnapshot.Order) {
-        let subtitle = switch order {
+        guard let titleView = navigationItem.titleView as? NavigationTitleView else {
+            return
+        }
+        titleView.subtitle = switch order {
         case .newest:
             R.string.localizable.sort_by_recent()
         case .oldest:
@@ -142,7 +140,6 @@ final class TransactionHistoryViewController: UIViewController {
         case .biggestAmount:
             R.string.localizable.sort_by_amount()
         }
-        container?.setSubtitle(subtitle: subtitle)
     }
     
     private func orderActions(selectedOrder order: SafeSnapshot.Order) -> [UIAction] {
@@ -224,6 +221,18 @@ final class TransactionHistoryViewController: UIViewController {
         return actions
     }
     
+    private func reloadRightBarButtonItem(order: SafeSnapshot.Order) {
+        let rightBarButtonItem: UIBarButtonItem
+        if let item = navigationItem.rightBarButtonItem {
+            rightBarButtonItem = item
+        } else {
+            rightBarButtonItem = .tintedIcon(image: R.image.navigation_filter(), target: nil, action: nil)
+            navigationItem.rightBarButtonItem = rightBarButtonItem
+        }
+        let actions = orderActions(selectedOrder: order)
+        rightBarButtonItem.menu = UIMenu(children: actions)
+    }
+    
     private func reloadData(filterType type: SafeSnapshot.DisplayType?) {
         filter.type = type
         let actions = typeFilterActions(selectedType: filter.type)
@@ -234,9 +243,8 @@ final class TransactionHistoryViewController: UIViewController {
     
     private func reloadData(order: SafeSnapshot.Order) {
         self.order = order
-        let actions = orderActions(selectedOrder: order)
-        container?.rightButton.menu = UIMenu(children: actions)
         updateNavigationSubtitle(order: order)
+        reloadRightBarButtonItem(order: order)
         reloadData()
     }
     
@@ -259,22 +267,6 @@ final class TransactionHistoryViewController: UIViewController {
             text: R.string.localizable.no_transactions(),
             photo: R.image.emptyIndicator.ic_data()!
         )
-    }
-    
-}
-
-extension TransactionHistoryViewController: ContainerViewControllerDelegate {
-    
-    func imageBarRightButton() -> UIImage? {
-        R.image.navigation_filter()
-    }
-    
-    func prepareBar(rightButton: StateResponsiveButton) {
-        let actions = orderActions(selectedOrder: order)
-        rightButton.removeTarget(nil, action: nil, for: .touchUpInside)
-        rightButton.menu = UIMenu(children: actions)
-        rightButton.tintColor = R.color.icon_tint()
-        rightButton.showsMenuAsPrimaryAction = true
     }
     
 }
@@ -331,7 +323,7 @@ extension TransactionHistoryViewController: UITableViewDelegate {
                 nil
             }
             DispatchQueue.main.async {
-                let viewController = SafeSnapshotViewController.instance(
+                let viewController = SafeSnapshotViewController(
                     token: token,
                     snapshot: item,
                     messageID: nil,

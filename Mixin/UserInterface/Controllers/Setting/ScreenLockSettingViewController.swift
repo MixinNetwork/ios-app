@@ -16,13 +16,9 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
                                                       subtitle: ScreenLockTimeFormatter.string(from: AppGroupUserDefaults.User.lockScreenTimeoutInterval),
                                                       accessory: .disclosure)
     
-    class func instance() -> UIViewController {
-        let vc = ScreenLockSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.screen_lock())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.screen_lock()
         var rows = [biometricSwitchRow]
         if AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication {
             rows.append(timeoutIntervalRow)

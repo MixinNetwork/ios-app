@@ -336,18 +336,8 @@ final class AuthenticationViewController: UIViewController {
     @objc private func enableBiometricAuthentication(_ sender: Any) {
         intent.authenticationViewControllerWillDismiss(self)
         presentingViewController?.dismiss(animated: true) {
-            guard let navigationController = UIApplication.homeNavigationController else {
-                return
-            }
-            var viewControllers = navigationController.viewControllers.filter { (viewController) -> Bool in
-                if let container = viewController as? ContainerViewController {
-                    return !(container.viewController is TransferOutViewController)
-                } else {
-                    return true
-                }
-            }
-            viewControllers.append(PinSettingsViewController.instance())
-            navigationController.setViewControllers(viewControllers, animated: true)
+            let pinSettings = PinSettingsViewController()
+            UIApplication.homeNavigationController?.pushViewController(pinSettings, animated: true)
         }
     }
     

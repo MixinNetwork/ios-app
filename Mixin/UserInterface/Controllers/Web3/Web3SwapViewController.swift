@@ -24,6 +24,8 @@ final class Web3SwapViewController: SwapViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.swap()
+        
         // TODO: Unhide swap button and implement the function
         swapBackgroundView.isHidden = true
         swapButton.isHidden = true

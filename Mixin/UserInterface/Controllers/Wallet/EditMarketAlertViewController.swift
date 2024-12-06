@@ -28,17 +28,9 @@ final class EditMarketAlertViewController: AddMarketAlertViewController {
         fatalError("Storyboard is not supported")
     }
     
-    static func contained(coin: MarketAlertCoin, alert: MarketAlert) -> ContainerViewController {
-        let alert = EditMarketAlertViewController(coin: coin, alert: alert)
-        let container = ContainerViewController.instance(viewController: alert, title: R.string.localizable.edit_alert())
-        container.loadViewIfNeeded()
-        container.view.backgroundColor = R.color.background_secondary()
-        container.navigationBar.backgroundColor = R.color.background_secondary()
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.edit_alert()
         addAlertButton.setTitle(R.string.localizable.edit_alert(), for: .normal)
     }
     

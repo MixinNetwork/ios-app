@@ -638,7 +638,7 @@
 "joined_in" = "%@ 加入";
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";
 "label" = "標題";
-"landing_delete_content" = "您的賬戶將於 %@ 被刪除，如果您繼續登入，刪除您賬戶的請求將被取消。";
+"landing_delete_content" = "您在 %1$@ 申請了刪除賬號，賬號將於 %2$@ 被刪除，如果您繼續登入，刪除您賬戶的請求將被取消。";
 "landing_have_account" = "已有帳戶";
 "landing_validation_title" = "請輸入傳送至以下號碼的 4 位驗證碼：%@";
 "language" = "語言";

@@ -19,14 +19,9 @@ class DesktopViewController: SettingsTableViewController {
         }
     }
     
-    class func instance() -> UIViewController {
-        let vc = DesktopViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.mixin_messenger_desktop())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.mixin_messenger_desktop()
         tableView.tableHeaderView = R.nib.desktopTableHeaderView(withOwner: nil)
         reloadData()
         dataSource.tableViewDelegate = self

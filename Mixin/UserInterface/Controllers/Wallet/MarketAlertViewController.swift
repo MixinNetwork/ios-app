@@ -174,7 +174,7 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
         wantsToEdit alert: MarketAlert,
         coin: MarketAlertCoin
     ) {
-        let editor = EditMarketAlertViewController.contained(coin: coin, alert: alert)
+        let editor = EditMarketAlertViewController(coin: coin, alert: alert)
         navigationController?.pushViewController(editor, animated: true)
     }
     

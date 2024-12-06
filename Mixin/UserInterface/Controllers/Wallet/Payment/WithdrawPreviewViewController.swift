@@ -134,7 +134,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         }
         var viewControllers = navigation.viewControllers
         while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
-            if let _ = (viewControllers.last as? ContainerViewController)?.viewController as? TokenViewController {
+            if viewControllers.last is TokenViewController {
                 break
             }
             viewControllers.removeLast()

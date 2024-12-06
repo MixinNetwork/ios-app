@@ -9,20 +9,31 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     }
     
     private var messageContent: MessageContent!
-    private var selections = [MessageReceiver]() {
+    private var selections: [MessageReceiver] = [] {
         didSet {
-            container?.rightButton.isEnabled = selections.count > 0
+            sendButton?.isEnabled = selections.count > 0
         }
+    }
+    
+    private var sendButton: BusyButton? {
+        navigationItem.rightBarButtonItem?.customView as? BusyButton
     }
     
     class func instance(content: MessageContent) -> UIViewController {
         let vc = MessageReceiverViewController()
         vc.messageContent = content
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.share_to())
+        vc.title = R.string.localizable.share_to()
+        return vc
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .busyButton(
+            title: R.string.localizable.send(),
+            target: self,
+            action: #selector(send(_:))
+        )
+        selections = [] // Disable the button
         tableView.allowsMultipleSelection = true
         collectionView.dataSource = self
     }
@@ -144,14 +155,10 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     
 }
 
-extension MessageReceiverViewController: ContainerViewControllerDelegate {
+extension MessageReceiverViewController {
     
-    func textBarRightButton() -> String? {
-        R.string.localizable.send()
-    }
-    
-    func barRightButtonTappedAction() {
-        container?.rightButton.isBusy = true
+    @objc private func send(_ sender: Any) {
+        sendButton?.isBusy = true
         let content = self.messageContent!
         let selections = self.selections
         DispatchQueue.global().async { [weak self] in

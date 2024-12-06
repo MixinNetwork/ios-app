@@ -143,9 +143,9 @@ extension LoginWithMnemonicViewController {
                     verificationID: verification.id
                 )
                 self.loginContext = context
-                if let deactivatedAt = verification.deactivatedAt {
+                if let deactivation = verification.deactivation {
                     let window = DeleteAccountAbortWindow.instance()
-                    window.render(deactivatedAt: deactivatedAt) { abort in
+                    window.render(deactivation: deactivation) { abort in
                         if abort {
                             self.navigationController?.popToRootViewController(animated: true)
                         } else {

@@ -32,19 +32,9 @@ final class SafeSnapshotViewController: RowListViewController {
         fatalError("Storyboard is not supported")
     }
     
-    class func instance(
-        token: TokenItem,
-        snapshot: SafeSnapshotItem,
-        messageID: String?,
-        inscription: InscriptionItem?
-    ) -> UIViewController {
-        let snapshot = SafeSnapshotViewController(token: token, snapshot: snapshot, messageID: messageID, inscription: inscription)
-        let container = ContainerViewController.instance(viewController: snapshot, title: R.string.localizable.transaction())
-        return container
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.transaction()
         tableHeaderView = R.nib.snapshotTableHeaderView(withOwner: self)
         tableView.tableHeaderView = tableHeaderView
         amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
@@ -175,13 +165,12 @@ final class SafeSnapshotViewController: RowListViewController {
             return
         }
         if let viewController = viewControllers
-            .compactMap({ $0 as? ContainerViewController })
-            .compactMap({ $0.viewController as? TokenViewController })
-            .first(where: { $0.token.assetID == token.assetID })?.container
+            .compactMap({ $0 as? TokenViewController })
+            .first(where: { $0.token.assetID == token.assetID })
         {
             navigationController?.popToViewController(viewController, animated: true)
         } else {
-            let viewController = TokenViewController.contained(token: token)
+            let viewController = TokenViewController(token: token)
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

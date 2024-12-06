@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="d14-iP-KzK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Photo Asset Picker Navigation Controller-->
-        <scene sceneID="lvS-zy-qGW">
-            <objects>
-                <navigationController navigationBarHidden="YES" id="d14-iP-KzK" customClass="PhotoAssetPickerNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xjc-hR-fol">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4ak-eo-KCu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-642" y="134"/>
-        </scene>
         <!--Album View Controller-->
         <scene sceneID="Vao-S5-a8g">
             <objects>
@@ -31,10 +19,10 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="cell_identifier_album" rowHeight="90" id="oBx-wl-CJk" customClass="AlbumCell" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="90"/>
+                                <rect key="frame" x="0.0" y="50" width="375" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oBx-wl-CJk" id="pPC-XY-cLZ">
-                                    <rect key="frame" x="0.0" y="0.0" width="348" height="90"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="348.5" height="90"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zcj-Ts-d9O">
@@ -139,22 +127,22 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uzx-g5-IOw">
-                                                    <rect key="frame" x="0.0" y="40" width="100" height="60"/>
+                                                    <rect key="frame" x="0.0" y="70" width="100" height="30"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_album_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="ctd-3k-mur">
-                                                            <rect key="frame" x="0.0" y="0.0" width="100" height="60"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="100" height="30"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PT3-9X-yM2">
-                                                            <rect key="frame" x="4" y="41.5" width="19.5" height="14.5"/>
+                                                            <rect key="frame" x="4" y="11.5" width="19.5" height="14.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_album_video" translatesAutoresizingMaskIntoConstraints="NO" id="THY-JP-a2k">
-                                                            <rect key="frame" x="6" y="34" width="32" height="20"/>
+                                                            <rect key="frame" x="6" y="14" width="16" height="10"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0iM-r2-DkY">
-                                                            <rect key="frame" x="72" y="41.5" width="24" height="14.5"/>
+                                                            <rect key="frame" x="72" y="11.5" width="24" height="14.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -200,6 +188,7 @@
                                 </connections>
                             </collectionView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="en8-nb-O5W"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="EKz-lh-EfC" firstAttribute="top" secondItem="ReP-M8-fa5" secondAttribute="bottom" id="4MY-No-d0e"/>
@@ -211,7 +200,6 @@
                             <constraint firstAttribute="trailing" secondItem="ReP-M8-fa5" secondAttribute="trailing" id="u3X-3I-RhI"/>
                             <constraint firstItem="ReP-M8-fa5" firstAttribute="top" secondItem="oOU-O2-zx1" secondAttribute="top" priority="750" id="xtH-Ny-bDi"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="en8-nb-O5W"/>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="q6o-1w-9D3" id="cEp-W8-gxQ"/>
@@ -236,7 +224,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -177,6 +177,16 @@ final class HomeTabBarController: UIViewController {
         if let newChild = newChild as? HomeTabBarControllerChild {
             newChild.viewControllerDidSwitchToFront()
         }
+        title = switch id {
+        case .chat:
+            "Mixin"
+        case .wallet:
+            R.string.localizable.wallet()
+        case .collectibles:
+            R.string.localizable.collectibles()
+        case .more:
+            R.string.localizable.more()
+        }
     }
     
     private func switchToChildAfterValidated(with id: ChildID) {
@@ -217,6 +227,14 @@ extension HomeTabBarController: TabBarDelegate {
     func tabBar(_ tabBar: TabBar, didSelect item: TabBar.Item) {
         let id = ChildID(rawValue: item.id)!
         switchToChildAfterValidated(with: id)
+    }
+    
+}
+
+extension HomeTabBarController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .hide
     }
     
 }

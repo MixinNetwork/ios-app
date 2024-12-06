@@ -9,15 +9,11 @@ class TransferToPhoneViewController: DeviceTransferSettingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.transfer_to_another_phone()
         tableHeaderView.imageView.image = R.image.setting.ic_transfer_phone()
         tableHeaderView.label.text = R.string.localizable.transfer_hint()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-    }
-    
-    class func instance() -> UIViewController {
-        let vc = TransferToPhoneViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.transfer_to_another_phone())
     }
     
 }
@@ -31,7 +27,7 @@ extension TransferToPhoneViewController: UITableViewDelegate {
             alert(R.string.localizable.devices_on_same_network())
             return
         }
-        let controller = TransferToPhoneQRCodeViewController.instance()
+        let controller = TransferToPhoneQRCodeViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
     

@@ -57,13 +57,10 @@ class BackupViewController: SettingsTableViewController {
         timer?.invalidate()
     }
     
-    class func instance() -> UIViewController {
-        let vc = BackupViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_backup())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let titleView = NavigationTitleView(title: R.string.localizable.chat_backup())
+        navigationItem.titleView = titleView
         tableView.tableHeaderView = R.nib.backupTableHeaderView(withOwner: nil)
         updateAutoBackupSubtitle()
         updateActionSectionFooter()
@@ -93,8 +90,8 @@ class BackupViewController: SettingsTableViewController {
         
         reportRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(showReportMenuAction))
         reportRecognizer.minimumPressDuration = 2
-        container?.titleLabel.isUserInteractionEnabled = true
-        container?.titleLabel.addGestureRecognizer(reportRecognizer)
+        titleView.isUserInteractionEnabled = true
+        titleView.addGestureRecognizer(reportRecognizer)
     }
     
     @objc func backupChanged() {

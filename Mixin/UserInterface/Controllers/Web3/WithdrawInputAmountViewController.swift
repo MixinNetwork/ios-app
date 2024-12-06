@@ -27,16 +27,20 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let address = Address.compactRepresentation(of: web3WalletAddress)
+        title = R.string.localizable.send()
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.send(),
+            subtitle: address
+        )
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
         tokenBalanceLabel.text = tokenItem.localizedBalanceWithSymbol
-        let address = Address.compactRepresentation(of: web3WalletAddress)
-        container?.setSubtitle(subtitle: address)
         reloadWithdrawFee(with: tokenItem, address: web3WalletAddress)
     }
     
     override func review(_ sender: Any) {
-        guard let fee, let container else {
+        guard let fee else {
             return
         }
         reviewButton.isBusy = true
@@ -49,7 +53,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
                               fiatMoneyAmount: fiatMoneyAmount,
                               memo: "")
         let destination: Payment.WithdrawalDestination = .web3(address: web3WalletAddress, chain: web3WalletChainName)
-        payment.checkPreconditions(withdrawTo: destination, fee: fee, on: container) { reason in
+        payment.checkPreconditions(withdrawTo: destination, fee: fee, on: self) { reason in
             self.reviewButton.isBusy = false
             switch reason {
             case .userCancelled:

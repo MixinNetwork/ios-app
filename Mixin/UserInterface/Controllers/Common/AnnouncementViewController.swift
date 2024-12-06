@@ -15,10 +15,15 @@ class AnnouncementViewController: KeyboardBasedLayoutViewController {
         return ""
     }
 
-    convenience init() {
-        self.init(nib: R.nib.announcementView)
+    init() {
+        let nib = R.nib.announcementView
+        super.init(nibName: nib.name, bundle: nib.bundle)
     }
-
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         textView.layer.cornerRadius = 8

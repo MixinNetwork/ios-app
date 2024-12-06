@@ -12,13 +12,12 @@ final class StorageUsageViewController: UIViewController {
     private var conversations = [ConversationStorageUsage]()
     
     class func instance() -> UIViewController {
-        let vc = R.storyboard.setting.storage_usage()!
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.storage_usage())
-        return container
+        R.storyboard.setting.storage_usage()!
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.storage_usage()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()

@@ -6,6 +6,7 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     
+    let titleLabel = UILabel()
     let iconView = NavigationAvatarIconView()
     
     var conversationId = ""
@@ -13,7 +14,11 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
     var inheritedKeyword: String?
     var lastKeyword: String?
     
-    lazy var navigationTitleLabel: UILabel? = UILabel()
+    override var title: String? {
+        didSet {
+            titleLabel.text = title
+        }
+    }
     
     var searchTextField: UITextField! {
         return searchBoxView.textField
@@ -47,12 +52,20 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold), adjustForContentSize: true)
+        titleLabel.textColor = R.color.text()!
+        titleLabel.text = title
+        navigationItem.titleView = titleLabel
+        navigationItem.rightBarButtonItem = {
+            let item = UIBarButtonItem(customView: iconView)
+            item.width = 44
+            return item
+        }()
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
         iconView.addGestureRecognizer(tapRecognizer)
         iconView.frame.size = iconView.intrinsicContentSize
         iconView.isUserInteractionEnabled = true
         iconView.hasShadow = true
-        prepareNavigationBar()
         searchTextField.text = inheritedKeyword
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
@@ -97,17 +110,6 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         tableView.reloadData()
     }
     
-    func prepareNavigationBar() {
-        navigationTitleLabel?.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold),
-                                      adjustForContentSize: true)
-        navigationTitleLabel?.textColor = R.color.text()!
-        let rightButton = UIBarButtonItem(customView: iconView)
-        rightButton.width = 44
-        navigationItem.title = ""
-        navigationItem.titleView = navigationTitleLabel
-        navigationItem.rightBarButtonItem = rightButton
-    }
-    
     func pushConversation(viewController: ConversationViewController) {
         homeNavigationController?.pushViewController(viewController, animated: true)
     }
@@ -122,7 +124,7 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         default:
             break
         }
-        navigationTitleLabel?.text = searchResult.title?.string
+        title = searchResult.title?.string
     }
     
     @objc func searchAction(_ sender: Any) {

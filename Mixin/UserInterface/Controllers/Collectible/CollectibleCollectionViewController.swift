@@ -25,17 +25,6 @@ final class CollectibleCollectionViewController: UIViewController {
         
         view.backgroundColor = R.color.background()
         
-        let backButton = UIButton(type: .system)
-        backButton.setImage(R.image.ic_title_back(), for: .normal)
-        backButton.tintColor = R.color.icon_tint()
-        view.addSubview(backButton)
-        backButton.snp.makeConstraints { make in
-            make.width.height.equalTo(44)
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalTo(view.safeAreaLayoutGuide)
-        }
-        backButton.addTarget(self, action: #selector(goBack(_:)), for: .touchUpInside)
-        
         collectionViewLayout.minimumInteritemSpacing = 15
         collectionViewLayout.minimumLineSpacing = 15
         collectionViewLayout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 0, right: 20)
@@ -44,10 +33,7 @@ final class CollectibleCollectionViewController: UIViewController {
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
         view.addSubview(collectionView)
         collectionView.backgroundColor = R.color.background()
-        collectionView.snp.makeConstraints { make in
-            make.top.equalTo(backButton.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
+        collectionView.snp.makeEdgesEqualToSuperview()
         self.collectionView = collectionView
         
         collectionView.register(R.nib.collectibleCell)
@@ -100,10 +86,6 @@ final class CollectibleCollectionViewController: UIViewController {
             collectionViewLayout.headerReferenceSize = CGSize(width: view.bounds.width, height: 195)
             collectionViewLayout.invalidateLayout()
         }
-    }
-    
-    @objc private func goBack(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
     }
     
     @objc private func reloadData() {

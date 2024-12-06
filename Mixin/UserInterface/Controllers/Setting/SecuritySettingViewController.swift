@@ -20,13 +20,9 @@ final class SecuritySettingViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.security()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-    }
-
-    class func instance() -> UIViewController {
-        let vc = SecuritySettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.security())
     }
     
 }
@@ -39,7 +35,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
         case 0:
             switch TIP.status {
             case .ready, .needsMigrate:
-                vc = PinSettingsViewController.instance()
+                vc = PinSettingsViewController()
             case .needsInitialize:
                 let tip = TIPNavigationViewController(intent: .create, destination: nil)
                 present(tip, animated: true)
@@ -50,7 +46,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
         case 1:
             switch TIP.status {
             case .ready, .needsMigrate:
-                vc = RecoveryKitViewController.instance()
+                vc = RecoveryKitViewController()
             case .needsInitialize:
                 let tip = TIPNavigationViewController(intent: .create, destination: nil)
                 present(tip, animated: true)
@@ -59,7 +55,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
                 return
             }
         case 2:
-            vc = MixinAuthorizationsViewController.instance()
+            vc = MixinAuthorizationsViewController()
         default:
             vc = LogViewController.instance(category: .all)
         }

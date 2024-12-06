@@ -638,7 +638,7 @@
 "joined_in" = "%@ 加入";
 "keep_running_foreground" = "不要关闭屏幕并保持 Mixin 在前台运行";
 "label" = "标题";
-"landing_delete_content" = "您的账户将于 %@ 被删除，如果您继续登录，删除您账户的请求将被取消。";
+"landing_delete_content" = "您在 %1$@ 申请了删除账号，账号将于 %2$@ 被删除，如果您继续登录，删除您账户的请求将被取消。";
 "landing_have_account" = "已有帐户";
 "landing_validation_title" = "请输入发送至以下号码的 4 位验证码：%@";
 "language" = "语言";

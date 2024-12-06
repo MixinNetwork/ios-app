@@ -638,7 +638,7 @@
 "joined_in" = "%@からMixinを利用しています";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "label" = "ラベル";
-"landing_delete_content" = "あなたのアカウントは(%@) 後に消去されます。ログインを継続する場合、あなたのアカウント消去はキャンセルされます。";
+"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
 "landing_validation_title" = "%@に送信された4桁のコードを入力してください";
 "language" = "言語";

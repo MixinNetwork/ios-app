@@ -66,7 +66,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
                 let context = PhoneNumberVerificationContext(
                     phoneNumber: phoneNumber,
                     displayPhoneNumber: displayPhoneNumber,
-                    deactivatedAt: verification.deactivatedAt,
+                    deactivation: verification.deactivation,
                     verificationID: verification.id,
                     hasEmergencyContact: verification.hasEmergencyContact
                 )

@@ -9,6 +9,9 @@ class BusyButton: UIButton {
     
     var isBusy = false {
         didSet {
+            guard isBusy != oldValue else {
+                return
+            }
             if isBusy {
                 isUserInteractionEnabled = false
                 normalTitleColor = titleColor(for: .normal)

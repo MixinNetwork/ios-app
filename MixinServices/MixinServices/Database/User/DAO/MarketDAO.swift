@@ -87,6 +87,7 @@ public final class MarketDAO: UserDatabaseDAO {
         FROM markets m
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
         WHERE (m.name LIKE :keyword OR m.symbol LIKE :keyword)
+        ORDER BY CAST(m.market_cap_rank AS REAL) ASC
         """
         if let limit {
             sql += "\nLIMIT \(limit)"

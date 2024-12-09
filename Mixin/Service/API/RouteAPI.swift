@@ -70,6 +70,14 @@ final class RouteAPI {
         request(method: .post, path: "/markets/fetch", with: ids, queue: queue, completion: completion)
     }
     
+    static func markets(
+        keyword: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Market]>) -> Void
+    ) {
+        request(method: .get, path: "/markets/search/" + keyword, queue: queue, completion: completion)
+    }
+    
     static func favoriteMarket(
         coinID: String,
         completion: @escaping (MixinAPI.Result<Empty>) -> Void

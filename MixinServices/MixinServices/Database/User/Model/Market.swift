@@ -41,7 +41,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     public let iconURL: String
     public let currentPrice: String
     public let marketCap: String
-    public let marketCapRank: String?
+    public let marketCapRank: String
     public let totalVolume: String
     public let high24H: String
     public let low24H: String
@@ -71,10 +71,11 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     )
     
     public private(set) lazy var numberedRank: String? = {
-        guard let marketCapRank, !marketCapRank.isEmpty else {
-            return nil
+        if marketCapRank.isEmpty  {
+            nil
+        } else {
+            "#" + marketCapRank
         }
-        return "#" + marketCapRank
     }()
     
     public private(set) lazy var localizedUSDPrice = CurrencyFormatter.localizedString(
@@ -96,7 +97,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     public private(set) lazy var localizedPriceChangePercentage7D = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage7D / 100)
     public private(set) lazy var sparklineIn7DURL = URL(string: sparklineIn7D)
     
-    private init(
+    init(
         coinID: String, name: String, symbol: String, iconURL: String, currentPrice: String,
         marketCap: String, marketCapRank: String, totalVolume: String, high24H: String,
         low24H: String, priceChange24H: String, priceChangePercentage1H: String,
@@ -268,12 +269,12 @@ extension Market {
         
     }
     
-    var rankStorage: MarketCapRankStorage? {
-        if let rank = marketCapRank  {
-            MarketCapRankStorage(coinID: coinID, marketCapRank: rank, updatedAt: updatedAt)
-        } else {
-            nil
-        }
+    var rankStorage: MarketCapRankStorage {
+        MarketCapRankStorage(
+            coinID: coinID,
+            marketCapRank: marketCapRank,
+            updatedAt: updatedAt
+        )
     }
     
 }

@@ -8,6 +8,9 @@ PODS:
   - AppCenter/Core (5.0.5)
   - AppCenter/Crashes (5.0.5):
     - AppCenter/Core
+  - AppsFlyerFramework (6.15.3):
+    - AppsFlyerFramework/Main (= 6.15.3)
+  - AppsFlyerFramework/Main (6.15.3)
   - CocoaLumberjack (3.8.5):
     - CocoaLumberjack/Core (= 3.8.5)
   - CocoaLumberjack/Core (3.8.5)
@@ -211,6 +214,7 @@ PODS:
   - Zip (2.1.2)
 
 DEPENDENCIES:
+  - AppsFlyerFramework
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Crashlytics
@@ -229,6 +233,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AppCenter
+    - AppsFlyerFramework
     - CocoaLumberjack
     - Firebase
     - FirebaseABTesting
@@ -284,6 +289,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   AppCenter: 994875ea7941b9e168babb98299f900a94bcef13
+  AppsFlyerFramework: ad7ff0d22aa36c7f8cc4f71a5424e19b89ccb8ae
   CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
   Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
   FirebaseABTesting: 2104d957ce33888a3d6f3bde298cdee376dde8f1
@@ -319,6 +325,6 @@ SPEC CHECKSUMS:
   SVGKit: 3f02ad9c8227831e508e2e37ecc4005d2f0496a5
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 019ffb554e194c3eabf68f051377b508ec9fce68
+PODFILE CHECKSUM: c31dfe8b8bc965abc120c5da9f2fa74f8cd49002
 
 COCOAPODS: 1.15.2

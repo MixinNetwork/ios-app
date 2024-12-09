@@ -6,3 +6,4 @@
 "NSFaceIDUsageDescription" = "Mixin 使用面容识别来验证支付";
 "NSLocationWhenInUseUsageDescription" = "允许获取位置让您可以在对话中发送当前的位置或附近的地点。";
 "NSLocalNetworkUsageDescription" = "Mixin 使用本地网络同步或恢复您的聊天记录";
+"NSUserTrackingUsageDescription" = "Mixin 使用跟踪数据进行个性化分析，以向您提供更好的服务。";

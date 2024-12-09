@@ -414,12 +414,12 @@ extension MarketViewController: UITableViewDataSource {
         case .chart:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
             if let market {
-                cell.titleLabel.text = market.name
+                cell.titleLabel.text = market.symbol
                 cell.rankLabel.text = market.numberedRank
                 cell.tokenIconView.setIcon(market: market)
                 cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: chartPoints)
             } else if let token = tokens?.first {
-                cell.titleLabel.text = token.name
+                cell.titleLabel.text = token.symbol
                 cell.rankLabel.text = nil
                 cell.tokenIconView.setIcon(token: token)
                 cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: chartPoints)
@@ -444,7 +444,13 @@ extension MarketViewController: UITableViewDataSource {
             switch StatsRow(rawValue: indexPath.row)! {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
-                cell.label.text = R.string.localizable.stats()
+                cell.label.text = if let market {
+                    market.name
+                } else if let token = tokens?.first {
+                    token.name
+                } else {
+                    nil
+                }
                 cell.disclosureIndicatorView.isHidden = true
                 if let rank = market?.numberedRank {
                     cell.subtitle = .rank(rank)

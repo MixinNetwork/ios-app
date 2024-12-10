@@ -123,7 +123,7 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         let category = self.category
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
-            usleep(200 * 1000)
+            Thread.sleep(forTimeInterval: 0.5)
             guard !op.isCancelled, self != nil else {
                 return
             }
@@ -140,18 +140,65 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
                     return
                 }
                 self.models = models
-                self.tableView.reloadData()
-                self.tableView.checkEmpty(
-                    dataCount: models.count,
-                    text: R.string.localizable.no_results(),
-                    photo: R.image.emptyIndicator.ic_search_result()!
-                )
-                self.tableView.tableHeaderView?.isHidden = models.isEmpty
+                self.reloadTableViewData(showEmptyIndicatorIfEmpty: false)
                 self.lastKeyword = keyword
                 self.navigationSearchBoxView?.isBusy = false
             }
+            
+            switch category {
+            case .bot:
+                break
+            case .asset:
+                let localMarkets = models as! [FavorableMarket]
+                Logger.general.debug(category: "ExploreSearch", message: "Search remote markets for: \(keyword)")
+                RouteAPI.markets(keyword: keyword, queue: .global()) { result in
+                    guard let self else {
+                        return
+                    }
+                    switch result {
+                    case .failure:
+                        break
+                    case .success(let markets):
+                        MarketDAO.shared.save(markets: markets)
+                        var remoteMarkets = markets.reduce(into: [:]) { results, market in
+                            results[market.coinID] = market
+                        }
+                        let combinedMarkets = localMarkets.map { market in
+                            if let remoteMarket = remoteMarkets.removeValue(forKey: market.coinID) {
+                                FavorableMarket(market: remoteMarket, isFavorite: market.isFavorite)
+                            } else {
+                                market
+                            }
+                        } + remoteMarkets.values.map { market in
+                            FavorableMarket(market: market, isFavorite: false)
+                        }
+                        DispatchQueue.main.async {
+                            guard keyword == self.lastKeyword else {
+                                return
+                            }
+                            Logger.general.debug(category: "ExploreSearch", message: "Showing remote markets for: \(markets.map(\.symbol))")
+                            self.models = combinedMarkets
+                            self.reloadTableViewData(showEmptyIndicatorIfEmpty: true)
+                        }
+                    }
+                }
+            }
         }
         queue.addOperation(op)
+    }
+    
+    private func reloadTableViewData(showEmptyIndicatorIfEmpty: Bool) {
+        tableView.reloadData()
+        if showEmptyIndicatorIfEmpty {
+            tableView.checkEmpty(
+                dataCount: models.count,
+                text: R.string.localizable.no_results(),
+                photo: R.image.emptyIndicator.ic_search_result()!
+            )
+        } else {
+            tableView.removeEmptyIndicator()
+        }
+        tableView.tableHeaderView?.isHidden = models.isEmpty
     }
     
 }

@@ -120,7 +120,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         let limit = maxResultsCount + 1
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
-            usleep(200 * 1000)
+            Thread.sleep(forTimeInterval: 0.5)
             guard !op.isCancelled else {
                 return
             }
@@ -140,10 +140,6 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
                     dapp.matches(keyword: keyword)
                 }
             }
-            let dataCount = (quickAccess == nil ? 0 : 1)
-            + assetSearchResults.count
-            + botSearchResults.count
-            + dappSearchResults.count
             DispatchQueue.main.sync {
                 guard !op.isCancelled else {
                     return
@@ -153,14 +149,41 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
                 self.assetSearchResults = assetSearchResults
                 self.botSearchResults = botSearchResults
                 self.dappSearchResults = dappSearchResults
-                self.tableView.reloadData()
-                self.tableView.checkEmpty(
-                    dataCount: dataCount,
-                    text: R.string.localizable.no_results(),
-                    photo: R.image.emptyIndicator.ic_search_result()!
-                )
+                self.reloadTableViewData(showEmptyIndicatorIfEmpty: false)
                 self.navigationSearchBoxView.isBusy = false
                 self.recommendationViewController.view.isHidden = true
+            }
+            
+            if !op.isCancelled, assetSearchResults.count < limit {
+                Logger.general.debug(category: "ExploreAggregatedSearch", message: "Search remote markets for: \(keyword)")
+                RouteAPI.markets(keyword: keyword, queue: .global()) { result in
+                    switch result {
+                    case .failure:
+                        break
+                    case .success(let markets):
+                        MarketDAO.shared.save(markets: markets)
+                        var remoteMarkets = markets.reduce(into: [:]) { results, market in
+                            results[market.coinID] = market
+                        }
+                        let combinedSearchResults = assetSearchResults.map { market in
+                            if let remoteMarket = remoteMarkets.removeValue(forKey: market.coinID) {
+                                FavorableMarket(market: remoteMarket, isFavorite: market.isFavorite)
+                            } else {
+                                market
+                            }
+                        } + remoteMarkets.values.map { market in
+                            FavorableMarket(market: market, isFavorite: false)
+                        }
+                        DispatchQueue.main.async {
+                            guard keyword == self.lastKeyword else {
+                                return
+                            }
+                            Logger.general.debug(category: "ExploreAggregatedSearch", message: "Showing remote markets for: \(markets.map(\.symbol))")
+                            self.assetSearchResults = combinedSearchResults
+                            self.reloadTableViewData(showEmptyIndicatorIfEmpty: true)
+                        }
+                    }
+                }
             }
         }
         queue.addOperation(op)
@@ -203,6 +226,23 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
             !botSearchResults.isEmpty && !dappSearchResults.isEmpty
         case .dapp:
             false
+        }
+    }
+    
+    private func reloadTableViewData(showEmptyIndicatorIfEmpty: Bool) {
+        tableView.reloadData()
+        if showEmptyIndicatorIfEmpty {
+            let dataCount = (quickAccess == nil ? 0 : 1)
+            + assetSearchResults.count
+            + botSearchResults.count
+            + dappSearchResults.count
+            tableView.checkEmpty(
+                dataCount: dataCount,
+                text: R.string.localizable.no_results(),
+                photo: R.image.emptyIndicator.ic_search_result()!
+            )
+        } else {
+            tableView.removeEmptyIndicator()
         }
     }
     

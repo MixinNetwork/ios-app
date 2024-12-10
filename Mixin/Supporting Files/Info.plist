@@ -92,6 +92,8 @@
 	<string>Mixin uses the photo library to set profile photo, and send photo to your contact in chat.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Mixin uses the local network to transfer or restore your chat history.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Mixin uses tracking data for personalized analysis to provide you with better services.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>INSendMessageIntent</string>
@@ -142,5 +144,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSAdvertisingAttributionReportEndpoint</key>
+	<string>https://appsflyer-skadnetwork.com/</string>
 </dict>
 </plist>

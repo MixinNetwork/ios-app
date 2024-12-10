@@ -1,5 +1,8 @@
 import UIKit
 import StoreKit
+import AppTrackingTransparency
+import AdSupport
+import AppsFlyerLib
 import MixinServices
 
 class HomeViewController: UIViewController {
@@ -58,6 +61,7 @@ class HomeViewController: UIViewController {
     }
     
     private weak var bulletinContentViewIfLoaded: BulletinContentView?
+    private weak var appsFlyerStartingObserver: AnyObject?
     
     private lazy var circlesViewController = R.storyboard.home.circles()!
     private lazy var bulletinContentView: BulletinContentView = {
@@ -168,6 +172,17 @@ class HomeViewController: UIViewController {
             let initialization = InitializeTIPViewController()
             let authentication = AuthenticationViewController(intent: initialization)
             present(authentication, animated: true)
+        }
+        if UIApplication.shared.applicationState == .active {
+            startAppsFlyer()
+        } else {
+            appsFlyerStartingObserver = NotificationCenter.default.addObserver(
+                forName: UIApplication.didBecomeActiveNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.startAppsFlyer()
+            }
         }
     }
     
@@ -364,6 +379,31 @@ class HomeViewController: UIViewController {
     
     @objc private func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
+    }
+    
+    private func startAppsFlyer() {
+        let flyer: AppsFlyerLib = .shared()
+        flyer.customerUserID = myUserId
+        flyer.waitForATTUserAuthorization(timeoutInterval: 60)
+        flyer.start()
+        ATTrackingManager.requestTrackingAuthorization { (status) in
+            switch status {
+            case .notDetermined:
+                Logger.general.debug(category: "Home", message: "Tracking auth: notDetermined")
+            case .restricted:
+                Logger.general.debug(category: "Home", message: "Tracking auth: restricted")
+            case .denied:
+                Logger.general.debug(category: "Home", message: "Tracking auth: denied")
+            case .authorized:
+                let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+                Logger.general.debug(category: "Home", message: "Tracking auth: \(idfa)")
+            @unknown default:
+                Logger.general.debug(category: "Home", message: "Tracking auth: \(status)")
+            }
+        }
+        if let observer = appsFlyerStartingObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     func setNeedsRefresh() {

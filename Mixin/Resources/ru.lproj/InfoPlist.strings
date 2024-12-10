@@ -6,3 +6,4 @@
 "NSFaceIDUsageDescription" = "Mixin использует Face ID для авторизации платежа";
 "NSLocationWhenInUseUsageDescription" = "Включите службы определения местоположения, чтобы передавать в разговоре ваше текущее местоположение или близлежащие места.";
 "NSLocalNetworkUsageDescription" = "Mixin uses the local network to transfer or restore your chat history.";
+"NSUserTrackingUsageDescription" = "Mixin uses tracking data for personalized analysis to provide you with better services.";

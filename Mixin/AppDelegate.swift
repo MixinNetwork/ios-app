@@ -6,6 +6,7 @@ import FirebaseCore
 import FirebaseAnalytics
 import FirebasePerformance
 import FirebaseCrashlytics
+import AppsFlyerLib
 import SDWebImage
 import SDWebImageLottieCoder
 import SDWebImageSVGKitPlugin
@@ -32,6 +33,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinService.callMessageCoordinator = CallService.shared
         reporterClass = CrashlyticalReporter.self
         reporter.configure()
+        if let key = MixinKeys.appsFlyer {
+            AppsFlyerLib.shared().appsFlyerDevKey = key
+        } else {
+            assertionFailure("Missing AppsFlyer key")
+        }
+        AppsFlyerLib.shared().appleAppID = appID
+#if DEBUG
+        AppsFlyerLib.shared().isDebug = true
+#endif
         AppGroupUserDefaults.migrateIfNeeded()
         updateImageManagerConfig()
         _ = ReachabilityManger.shared

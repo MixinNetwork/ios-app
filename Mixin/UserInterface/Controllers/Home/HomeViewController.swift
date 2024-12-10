@@ -1,6 +1,7 @@
 import UIKit
 import StoreKit
 import AppTrackingTransparency
+import AdSupport
 import AppsFlyerLib
 import MixinServices
 
@@ -386,7 +387,19 @@ class HomeViewController: UIViewController {
         flyer.waitForATTUserAuthorization(timeoutInterval: 60)
         flyer.start()
         ATTrackingManager.requestTrackingAuthorization { (status) in
-            Logger.general.debug(category: "Home", message: "Tracking auth: \(status)")
+            switch status {
+            case .notDetermined:
+                Logger.general.debug(category: "Home", message: "Tracking auth: notDetermined")
+            case .restricted:
+                Logger.general.debug(category: "Home", message: "Tracking auth: restricted")
+            case .denied:
+                Logger.general.debug(category: "Home", message: "Tracking auth: denied")
+            case .authorized:
+                let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+                Logger.general.debug(category: "Home", message: "Tracking auth: \(idfa)")
+            @unknown default:
+                Logger.general.debug(category: "Home", message: "Tracking auth: \(status)")
+            }
         }
         if let observer = appsFlyerStartingObserver {
             NotificationCenter.default.removeObserver(observer)

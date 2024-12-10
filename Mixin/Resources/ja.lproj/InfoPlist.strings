@@ -6,3 +6,4 @@
 "NSFaceIDUsageDescription" = "Face IDでの支払いを許可";
 "NSLocationWhenInUseUsageDescription" = "位置情報へのアクセスは、位置情報の共有に使用されます。";
 "NSLocalNetworkUsageDescription" = "Mixin uses the local network to transfer or restore your chat history.";
+"NSUserTrackingUsageDescription" = "Mixin uses tracking data for personalized analysis to provide you with better services.";

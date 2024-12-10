@@ -2,6 +2,7 @@ import UIKit
 import StoreKit
 import AppTrackingTransparency
 import AdSupport
+import FirebaseAnalytics
 import AppsFlyerLib
 import MixinServices
 
@@ -382,10 +383,12 @@ class HomeViewController: UIViewController {
     }
     
     private func startAppsFlyer() {
-        let flyer: AppsFlyerLib = .shared()
-        flyer.customerUserID = myUserId
-        flyer.waitForATTUserAuthorization(timeoutInterval: 60)
-        flyer.start()
+        AppsFlyerLib.shared().customerUserID = myUserId
+        if let id = FirebaseAnalytics.Analytics.appInstanceID() {
+            AppsFlyerLib.shared().customData = ["app_instance_id": id]
+        }
+        AppsFlyerLib.shared().waitForATTUserAuthorization(timeoutInterval: 60)
+        AppsFlyerLib.shared().start()
         ATTrackingManager.requestTrackingAuthorization { (status) in
             switch status {
             case .notDetermined:

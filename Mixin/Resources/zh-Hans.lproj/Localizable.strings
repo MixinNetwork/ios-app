@@ -434,6 +434,8 @@
 "deposit_tip_trx" = "支持 TRX 和所有符合 TRC-10、TRC-20 标准的代币。";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址将随着系统或网络升级而自动更新，旧的地址仍可充值并会自动入账，但是不推荐使用。";
+"desktop_login" = "登录 Mixin Messenger 桌面端";
+"desktop_logout" = "退出 Mixin Messenger 桌面端";
 "desktop_on_hint" = "桌面版已登入。";
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
 "detect_qr_tip" = "检测到一个 Mixin 二维码，点击识别";
@@ -1112,7 +1114,6 @@
 "setting_delete_account_pin_content" = "如果您继续，您的个人资料和账户信息将在%@被删除。阅读我们的文档以了解更多。";
 "setting_delete_account_send" = "我们将发送 4 位验证码到手机 %@";
 "setting_delete_account_tip" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
-"setting_desktop_confirm" = "确认登录 Mixin Messenger 桌面端";
 "setting_duplicate_transfer_desc" = "当你在 6 个小时内给相同的人转相同的金额时显示确认弹窗。";
 "setting_emergency_change_mobile" = "立即修改手机号？";
 "setting_emergency_content" = "恢复联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";

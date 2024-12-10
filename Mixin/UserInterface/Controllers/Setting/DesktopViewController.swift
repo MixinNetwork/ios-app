@@ -13,12 +13,6 @@ class DesktopViewController: SettingsTableViewController {
         SettingsRow(title: R.string.localizable.log_out_from_desktop(), titleStyle: .highlighted)
     ])
     
-    private var isLogoutInProgress = false {
-        didSet {
-            logoutSection.rows[0].accessory = isLogoutInProgress ? .busy : .none
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.mixin_messenger_desktop()
@@ -63,23 +57,17 @@ extension DesktopViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let sessionId = AppGroupUserDefaults.Account.extensionSession {
-            guard !isLogoutInProgress else {
-                return
+        if let sessionID = AppGroupUserDefaults.Account.extensionSession {
+            let desktopSession = DesktopSessionValidationViewController(intent: .logout(sessionID: sessionID))
+            desktopSession.onSuccess = { [weak self] in
+                // Update user interface immediately
+                // Other operations executes when session message is received
+                // See `ReceiveMessageService.processSystemSessionMessage(data:)`
+                AppGroupUserDefaults.Account.extensionSession = nil
+                self?.reloadData()
             }
-            isLogoutInProgress = true
-            AccountAPI.logoutSession(sessionId: sessionId) { [weak self](result) in
-                guard let self = self else {
-                    return
-                }
-                self.isLogoutInProgress = false
-                switch result {
-                case .success:
-                    self.reloadData()
-                case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
-            }
+            let authentication = AuthenticationViewController(intent: desktopSession)
+            present(authentication, animated: true)
         } else {
             let vc = CameraViewController.instance()
             vc.asQrCodeScanner = true

@@ -183,9 +183,6 @@ extension Payment {
                     preconditions = [
                         NoPendingTransactionPrecondition(token: token),
                         AlreadyPaidPrecondition(traceID: traceID),
-                        LargeAmountPrecondition(token: token,
-                                                tokenAmount: tokenAmount,
-                                                fiatMoneyAmount: fiatMoneyAmount),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
                 case .none:

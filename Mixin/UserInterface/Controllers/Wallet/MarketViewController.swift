@@ -452,11 +452,6 @@ extension MarketViewController: UITableViewDataSource {
                     nil
                 }
                 cell.disclosureIndicatorView.isHidden = true
-                if let rank = market?.numberedRank {
-                    cell.subtitle = .rank(rank)
-                } else {
-                    cell.subtitle = nil
-                }
                 return cell
             case .marketCap:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
@@ -484,7 +479,6 @@ extension MarketViewController: UITableViewDataSource {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.my_balance()
-                cell.subtitle = nil
                 cell.disclosureIndicatorView.isHidden = tokens?.isEmpty ?? true
                 return cell
             case .content:

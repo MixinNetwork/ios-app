@@ -59,13 +59,6 @@ extension DesktopViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if let sessionID = AppGroupUserDefaults.Account.extensionSession {
             let desktopSession = DesktopSessionValidationViewController(intent: .logout(sessionID: sessionID))
-            desktopSession.onSuccess = { [weak self] in
-                // Update user interface immediately
-                // Other operations executes when session message is received
-                // See `ReceiveMessageService.processSystemSessionMessage(data:)`
-                AppGroupUserDefaults.Account.extensionSession = nil
-                self?.reloadData()
-            }
             let authentication = AuthenticationViewController(intent: desktopSession)
             present(authentication, animated: true)
         } else {

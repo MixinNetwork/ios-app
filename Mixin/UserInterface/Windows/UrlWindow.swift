@@ -477,7 +477,12 @@ class UrlWindow {
     class func checkDevice(id: String, publicKey: String) {
         switch TIP.status {
         case .ready, .needsMigrate:
-            LoginConfirmWindow.instance().render(id: id, publicKey: publicKey).presentView()
+            let desktopSession = DesktopSessionValidationViewController(intent: .login(id: id, publicKey: publicKey))
+            desktopSession.onSuccess = {
+                showAutoHiddenHud(style: .notification, text: R.string.localizable.logined())
+            }
+            let authentication = AuthenticationViewController(intent: desktopSession)
+            UIApplication.homeNavigationController?.present(authentication, animated: true)
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)

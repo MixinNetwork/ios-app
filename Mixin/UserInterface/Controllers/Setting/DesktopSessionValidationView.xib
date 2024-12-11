@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DesktopSessionValidationViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="label" destination="rmC-zV-Qad" id="oJA-Fv-pEe"/>
+                <outlet property="view" destination="iN0-l3-epB" id="eGJ-UP-X2S"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="153"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_desktop" translatesAutoresizingMaskIntoConstraints="NO" id="gav-3e-EME">
+                    <rect key="frame" x="130.66666666666666" y="0.0" width="131.99999999999997" height="76"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rmC-zV-Qad">
+                    <rect key="frame" x="50" y="100" width="293" height="43"/>
+                    <string key="text">Confirm login to 
+Mixin Messenger Desktop</string>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_desktop_confirm"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="rmC-zV-Qad" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="0Qd-QS-ni4"/>
+                <constraint firstItem="gav-3e-EME" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1uB-lQ-tdN"/>
+                <constraint firstAttribute="bottom" secondItem="rmC-zV-Qad" secondAttribute="bottom" constant="10" id="PMj-v3-eBA"/>
+                <constraint firstItem="rmC-zV-Qad" firstAttribute="top" secondItem="gav-3e-EME" secondAttribute="bottom" constant="24" id="Wx5-O2-Ufg"/>
+                <constraint firstItem="gav-3e-EME" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="siI-uh-NFX"/>
+                <constraint firstAttribute="trailing" secondItem="rmC-zV-Qad" secondAttribute="trailing" constant="50" id="zNT-aV-LH6"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="36" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Setting/ic_desktop" width="132" height="76"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

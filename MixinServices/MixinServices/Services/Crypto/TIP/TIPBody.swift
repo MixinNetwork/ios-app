@@ -92,7 +92,10 @@ enum TIPBody {
         try hashData("TIP:USER:EXPORT:PRIVATE:", userID)
     }
     
-    @inline(__always)
+    static func logoutSession(sessionID: String) throws -> Data {
+        try hashData("TIP:SESSION:LOGOUT:", sessionID)
+    }
+    
     private static func hashData(_ arguments: String?...) throws -> Data {
         let string = arguments.compactMap({ $0 }).joined()
         guard let data = string.data(using: .utf8) else {

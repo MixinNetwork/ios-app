@@ -71,11 +71,11 @@ final class RecoveryKitViewController: SettingsTableViewController {
     }
     
     private func reloadTableFooterView() {
-        tableView.tableFooterView = tableFooterView
+        tableView.tableFooterView = nil
         tableView.layoutIfNeeded()
         let sizeToFit = CGSize(width: view.bounds.width, height: UIView.layoutFittingExpandedSize.height)
         let contentSize = tableFooterView.sizeThatFits(sizeToFit)
-        let emptyHeight = tableView.bounds.height - tableView.contentSize.height - 20 // XXX: Don't know the reason, just make it work
+        let emptyHeight = tableView.frame.height - tableView.safeAreaInsets.vertical - tableView.contentSize.height
         tableFooterView.frame.size = CGSize(width: contentSize.width, height: max(contentSize.height, emptyHeight))
         tableView.tableFooterView = tableFooterView
     }

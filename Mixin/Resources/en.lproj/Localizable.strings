@@ -434,6 +434,8 @@
 "deposit_tip_trx" = "This address supports all TRC-10 and TRC-20 tokens.";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
+"desktop_login" = "Login to Mixin Messenger Desktop";
+"desktop_logout" = "Logout Mixin Messenger Desktop";
 "desktop_on_hint" = "You have your desktop logged in";
 "desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
 "detect_qr_tip" = "Detected a Mixin QR code, tap to recognize";
@@ -1112,7 +1114,6 @@
 "setting_delete_account_pin_content" = "If you continue, your profile and account details will be delete on %@. read our document to learn more.";
 "setting_delete_account_send" = "We will send a 4-digit code to %@";
 "setting_delete_account_tip" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges. Once the account is cancelled, these assets will be abandoned along with the wallet and cannot be recovered.";
-"setting_desktop_confirm" = "Confirm login to Mixin Messenger Desktop";
 "setting_duplicate_transfer_desc" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
 "setting_emergency_change_mobile" = "Do you want to change your mobile number now?";
 "setting_emergency_content" = "The recovery contact is designed to help you log in to your account if you are lost and can not retrieve your mobile number.";

@@ -13,7 +13,6 @@ public final class AccountAPI: MixinAPI {
         static func verifications(id: String) -> String {
             return "/verifications/\(id)"
         }
-        static let logout = "/logout"
         static let preferences = "/me/preferences"
         
         static let session = "/session"
@@ -313,8 +312,24 @@ public final class AccountAPI: MixinAPI {
         request(method: .get, path: Path.logs(offset: offset, category: category, limit: limit), completion: completion)
     }
     
-    public static func logoutSession(sessionId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        request(method: .post, path: Path.logout, parameters: ["session_id": sessionId], completion: completion)
+    public static func logout(
+        sessionID: String,
+        pin: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.logoutSession(sessionID: sessionID)
+        }, onFailure: completion) { (encryptedPin) in
+            let parameters = [
+                "session_id": sessionID,
+                "pin_base64": encryptedPin,
+            ]
+            request(method: .post,
+                    path: "/logout",
+                    parameters: parameters,
+                    options: .disableRetryOnRequestSigningTimeout,
+                    completion: completion)
+        }
     }
     
     public static func deactiveVerification(

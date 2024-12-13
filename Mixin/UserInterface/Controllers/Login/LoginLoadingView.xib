@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginLoadingViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="activityIndicator" destination="GHF-fd-1FX" id="Zds-hf-Jkm"/>
+                <outlet property="bottomStackView" destination="1hM-1U-2aX" id="CK0-zk-tuE"/>
+                <outlet property="descriptionLabel" destination="GBu-hh-nII" id="Vey-lp-ghX"/>
+                <outlet property="view" destination="8eF-bh-ziB" id="JbJ-vx-WZg"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="8eF-bh-ziB">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="XyQ-Dj-wtM">
+                    <rect key="frame" x="156.66666666666666" y="153" width="80" height="80"/>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1hM-1U-2aX">
+                    <rect key="frame" x="0.0" y="712" width="393" height="46"/>
+                    <subviews>
+                        <view opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="GHF-fd-1FX" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="186.66666666666666" y="0.0" width="20" height="20"/>
+                            <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBu-hh-nII">
+                            <rect key="frame" x="162.33333333333334" y="28" width="68.333333333333343" height="18"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                            <color key="textColor" name="text_tertiary"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="initializing"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                </stackView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages between users are protected with an end- to-end encryption" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9z2-2l-kxA">
+                    <rect key="frame" x="36" y="249.00000000000003" width="321" height="38.333333333333343"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="message_encryption_hint"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Vmd-4x-KUI"/>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="Vmd-4x-KUI" firstAttribute="bottom" secondItem="1hM-1U-2aX" secondAttribute="bottom" constant="60" id="1O0-xT-8ud" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="60"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="XyQ-Dj-wtM" firstAttribute="top" secondItem="Vmd-4x-KUI" secondAttribute="top" constant="94" id="JDS-bm-T1S" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="60"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="1hM-1U-2aX" secondAttribute="trailing" id="JDl-Qr-6a2"/>
+                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="9z2-2l-kxA" secondAttribute="trailing" constant="36" id="Q5Z-2o-Y07"/>
+                <constraint firstItem="9z2-2l-kxA" firstAttribute="top" secondItem="XyQ-Dj-wtM" secondAttribute="bottom" constant="16" id="cK0-qM-64J"/>
+                <constraint firstItem="1hM-1U-2aX" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" id="fbe-bn-rdM"/>
+                <constraint firstItem="9z2-2l-kxA" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" constant="36" id="rQ9-2F-8sg"/>
+                <constraint firstItem="XyQ-Dj-wtM" firstAttribute="centerX" secondItem="Vmd-4x-KUI" secondAttribute="centerX" id="w4X-O4-XPN"/>
+            </constraints>
+            <point key="canvasLocation" x="-24" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Setting/ic_about_app" width="80" height="80"/>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -65,7 +65,7 @@ extension ViewRecoveryContactViewController {
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .setEmergencyContact)
             present(tip, animated: true)
-        case .unknown:
+        case .none:
             break
         }
     }

@@ -2,7 +2,7 @@ import UIKit
 import Alamofire
 import MixinServices
 
-class TIPIntroViewController: IntroViewController {
+final class TIPIntroViewController: IntroViewController {
     
     enum Interruption {
         case unknown
@@ -144,7 +144,7 @@ class TIPIntroViewController: IntroViewController {
                     fromLegacy = false
                 case .needsMigrate:
                     fromLegacy = true
-                case .unknown, .needsInitialize:
+                case .none, .needsInitialize:
                     Logger.tip.error(category: "TIPIntro", message: "Invalid status: \(TIP.status)")
                     assertionFailure("Invalid TIP status")
                     return
@@ -154,7 +154,7 @@ class TIPIntroViewController: IntroViewController {
             case .migrate:
                 let validator = TIPPopupInputViewController(action: .migrate({ pin in
                     let action = TIPActionViewController(action: .migrate(pin: pin))
-                    self.navigationController?.pushViewController(action, animated: true)
+                    self.navigationController?.setViewControllers([action], animated: true)
                 }))
                 present(validator, animated: true)
             }
@@ -221,7 +221,6 @@ extension TIPIntroViewController {
                         navigationController?.setViewControllers([intro], animated: true)
                     } else {
                         interruption = .none
-                        tipNavigationController?.updateBackButtonAlpha(animated: true)
                         updateNextButtonAndStatusLabel(with: .waitingForUser)
                     }
                 }

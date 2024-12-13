@@ -130,8 +130,11 @@ extension AppGroupUserDefaults {
     public static var appUpdateBulletinDismissalDate: Date?
     
     // Key is chain id
-    @Default(namespace: .wallet, key: "web3_rpc", defaultValue: [:])
+    @Default(namespace: nil, key: "web3_rpc", defaultValue: [:])
     public static var web3RPCURL: [String: String]
+    
+    @Default(namespace: nil, key: "clock_skew", defaultValue: false)
+    public static var isClockSkewed: Bool
     
 }
 

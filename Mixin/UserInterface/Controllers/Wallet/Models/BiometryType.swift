@@ -24,7 +24,7 @@ enum BiometryType {
             return .none
         }
         switch TIP.status {
-        case .needsInitialize, .unknown:
+        case .needsInitialize, .none:
             return .none
         case .needsMigrate, .ready:
             break

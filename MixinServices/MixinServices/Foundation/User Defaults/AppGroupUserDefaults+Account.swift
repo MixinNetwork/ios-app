@@ -8,7 +8,6 @@ extension AppGroupUserDefaults {
             case account
             case sessionSecret = "session_secret"
             case pinToken = "pin_token"
-            case isClockSkewed = "clock_skew"
             case canRestoreFromPhone = "can_restore_from_phone"
             case canRestoreMedia = "can_restore_media"
             case hasUnfinishedBackup = "has_unfinished_backup"
@@ -28,9 +27,6 @@ extension AppGroupUserDefaults {
         @available(*, deprecated, message: "Use only for migration")
         @Default(namespace: .account, key: Key.pinToken, defaultValue: nil)
         public static var pinToken: String?
-        
-        @Default(namespace: .account, key: Key.isClockSkewed, defaultValue: false)
-        public static var isClockSkewed: Bool
         
         @Default(namespace: .account, key: Key.canRestoreFromPhone, defaultValue: false)
         public static var canRestoreFromPhone: Bool
@@ -69,7 +65,6 @@ extension AppGroupUserDefaults {
             serializedAccount = AccountUserDefault.shared.serializedAccount
             sessionSecret = AccountUserDefault.shared.getToken()
             pinToken = AccountUserDefault.shared.getPinToken()
-            isClockSkewed = AccountUserDefault.shared.hasClockSkew
             canRestoreMedia = AccountUserDefault.shared.hasRestoreMedia
             hasUnfinishedBackup = AccountUserDefault.shared.hasRebackup
             extensionSession = AccountUserDefault.shared.extensionSession

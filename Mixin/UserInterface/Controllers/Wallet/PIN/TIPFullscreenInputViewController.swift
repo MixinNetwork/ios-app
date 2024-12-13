@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TIPFullscreenInputViewController: ContinueButtonViewController {
+final class TIPFullscreenInputViewController: ContinueButtonViewController {
     
     enum Action: CustomDebugStringConvertible {
         
@@ -160,13 +160,13 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
                 })
                 return
             }
-            let next: UIViewController
             if step == confirmationSteps - 1 {
-                next = TIPActionViewController(action: .create(pin: pin))
+                let action = TIPActionViewController(action: .create(pin: pin))
+                navigationController?.setViewControllers([action], animated: true)
             } else {
-                next = TIPFullscreenInputViewController(action: .create(.confirmation(step: step + 1, previous: pin)))
+                let next = TIPFullscreenInputViewController(action: .create(.confirmation(step: step + 1, previous: pin)))
+                navigationController?.pushViewController(next, animated: true)
             }
-            navigationController?.pushViewController(next, animated: true)
         case let .change(fromLegacy, .verify):
             isBusy = true
             AccountAPI.verify(pin: pin) { result in
@@ -195,7 +195,6 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
                 })
                 return
             }
-            let next: UIViewController
             if step == confirmationSteps - 1 {
                 let action: TIPActionViewController.Action
                 if fromLegacy {
@@ -203,11 +202,12 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
                 } else {
                     action = .change(old: .tip(old), new: new)
                 }
-                next = TIPActionViewController(action: action)
+                let viewController = TIPActionViewController(action: action)
+                navigationController?.setViewControllers([viewController], animated: true)
             } else {
-                next = TIPFullscreenInputViewController(action: .change(fromLegacy, .confirmation(step: step + 1, old: old, new: new)))
+                let next = TIPFullscreenInputViewController(action: .change(fromLegacy, .confirmation(step: step + 1, old: old, new: new)))
+                navigationController?.pushViewController(next, animated: true)
             }
-            navigationController?.pushViewController(next, animated: true)
         }
     }
     

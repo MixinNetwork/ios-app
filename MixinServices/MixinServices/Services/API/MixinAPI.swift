@@ -216,7 +216,7 @@ extension MixinAPI {
                     completion(.failure(.requestSigningTimeout))
                 }
             } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
-                AppGroupUserDefaults.Account.isClockSkewed = true
+                AppGroupUserDefaults.isClockSkewed = true
                 DispatchQueue.main.async {
                     WebSocketService.shared.disconnect()
                     NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)

@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 import MixinServices
 
 protocol LoginAccountHandler {
@@ -25,7 +26,12 @@ extension LoginAccountHandler where Self: UIViewController {
             AppGroupKeychain.mnemonics = nil
             Logger.general.info(category: "Login", message: "AppGroupKeychain.mnemonics cleared")
         }
+        AppGroupKeychain.encryptedTIPPriv = nil
+        AppGroupKeychain.ephemeralSeed = nil
+        AppGroupKeychain.encryptedSalt = nil
+        Logger.tip.info(category: "Login", message: "TIP Secrets cleared")
         LoginManager.shared.setAccount(account, updateUserTable: false)
+        
         if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
             AppGroupUserDefaults.migrateUserSpecificDefaults()
         }
@@ -80,19 +86,12 @@ extension LoginAccountHandler where Self: UIViewController {
         OutputDAO.shared.deleteAll()
         RawTransactionDAO.shared.deleteAll()
         TokenExtraDAO.shared.nullifyAllBalances()
+        WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         
-        if account.fullName.isEmpty {
-            let vc = UsernameViewController()
-            self.navigationController?.pushViewController(vc, animated: true)
-        } else {
+        if !account.fullName.isEmpty {
             AppGroupUserDefaults.Account.canRestoreFromPhone = true
-            let restore = RestoreChatViewController()
-            let navigationController = UINavigationController(rootViewController: restore)
-            navigationController.navigationBar.standardAppearance = .general
-            navigationController.navigationBar.scrollEdgeAppearance = .general
-            navigationController.navigationBar.tintColor = R.color.icon_tint()
-            AppDelegate.current.mainWindow.rootViewController = navigationController
         }
+        AppDelegate.current.checkSessionEnvironment(freshAccount: account)
         
         UIApplication.shared.setShortcutItemsEnabled(true)
         return nil

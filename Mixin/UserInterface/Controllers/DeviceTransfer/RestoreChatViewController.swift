@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class RestoreChatViewController: UIViewController {
+final class RestoreChatViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -27,7 +27,11 @@ class RestoreChatViewController: UIViewController {
         Logger.general.info(category: "RestoreChat", message: "Restoration skipped")
         AppGroupUserDefaults.Account.canRestoreFromPhone = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
-        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+        if let parent = navigationController?.parent as? CheckSessionEnvironmentViewController {
+            parent.check()
+        } else {
+            assertionFailure()
+        }
     }
     
 }

@@ -567,6 +567,7 @@
 "floats_allows_up_to_count" = "フロート数の上限 %d";
 "follow_us_on_facebook" = "FacebookでMixinをフォロー";
 "follow_us_on_x" = "XでMixinをフォロー";
+"forget_pin" = "Forget PIN?";
 "forward" = "転送";
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "free" = "FREE";
@@ -1193,6 +1194,7 @@
 "swap_not_supported" = "%@ swapping is not supported.";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
+"switch_account" = "Switch Account";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

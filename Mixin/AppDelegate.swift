@@ -289,16 +289,24 @@ extension AppDelegate {
     }
     
     @objc func handleClockSkew() {
-        if let viewController = mainWindow.rootViewController as? ClockSkewViewController {
-            viewController.checkFailed()
+        if let controller = mainWindow.rootViewController as? CheckSessionEnvironmentViewController,
+           controller.contentViewController is ClockSkewViewController
+        {
+            // Do nothing, the view controller can handle the error by itself
+        } else if let account = LoginManager.shared.account {
+            mainWindow.rootViewController = CheckSessionEnvironmentViewController(localAccount: account)
         } else {
-            mainWindow.rootViewController = makeInitialViewController()
+            mainWindow.rootViewController = LoginNavigationController()
         }
     }
     
 }
 
 extension AppDelegate {
+    
+    func checkSessionEnvironment(freshAccount account: Account) {
+        mainWindow.rootViewController = CheckSessionEnvironmentViewController(freshAccount: account)
+    }
     
     private func updateFirstLaunch(isProtectedDataAvailable: Bool) {
         guard isProtectedDataAvailable else {
@@ -314,8 +322,8 @@ extension AppDelegate {
     
     private func checkLogin() {
         mainWindow.backgroundColor = .black
-        if LoginManager.shared.isLoggedIn {
-            mainWindow.rootViewController = makeInitialViewController()
+        if let account = LoginManager.shared.account {
+            mainWindow.rootViewController = CheckSessionEnvironmentViewController(localAccount: account)
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.upload(contacts: ContactsManager.shared.contacts)

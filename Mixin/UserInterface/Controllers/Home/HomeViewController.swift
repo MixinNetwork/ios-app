@@ -166,14 +166,8 @@ class HomeViewController: UIViewController {
             }))
             present(alert, animated: true, completion: nil)
         }
-        if AppGroupUserDefaults.User.isTIPInitialized {
-            ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
-            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-        } else {
-            let initialization = InitializeTIPViewController()
-            let authentication = AuthenticationViewController(intent: initialization)
-            present(authentication, animated: true)
-        }
+        ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
+        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         if UIApplication.shared.applicationState == .active {
             startAppsFlyer()
         } else {
@@ -558,7 +552,7 @@ extension HomeViewController {
                 return
             }
             WebSocketService.shared.disconnect()
-            AppDelegate.current.mainWindow.rootViewController = UpdateViewController.instance()
+            AppDelegate.current.mainWindow.rootViewController = UpdateViewController()
         }
     }
     

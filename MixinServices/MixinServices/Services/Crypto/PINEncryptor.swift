@@ -21,7 +21,7 @@ enum PINEncryptor {
         onSuccess: @escaping (String) -> Void
     ) {
         switch TIP.status {
-        case .unknown, .needsInitialize:
+        case .none, .needsInitialize:
             Logger.tip.error(category: "PINEncryptor", message: "Invalid status: \(TIP.status)")
             assertionFailure("Invalid TIP status")
         case .needsMigrate:

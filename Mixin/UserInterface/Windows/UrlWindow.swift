@@ -486,7 +486,7 @@ class UrlWindow {
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
-        case .unknown:
+        case .none:
             break
         }
     }
@@ -510,7 +510,7 @@ class UrlWindow {
                 let tip = TIPNavigationViewController(intent: .create, destination: nil)
                 UIApplication.homeNavigationController?.present(tip, animated: true)
                 return
-            case .unknown, .needsMigrate:
+            case .none, .needsMigrate:
                 break
             }
         }
@@ -543,7 +543,7 @@ class UrlWindow {
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
             return
-        case .unknown:
+        case .none:
             return
         }
         let memo = transfer.memo ?? ""
@@ -588,7 +588,7 @@ class UrlWindow {
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
             return
-        case .unknown:
+        case .none:
             return
         }
         
@@ -704,7 +704,7 @@ class UrlWindow {
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
             return true
-        case .unknown:
+        case .none:
             return true
         }
         let queries = url.getKeyVals()
@@ -1064,10 +1064,11 @@ class UrlWindow {
                                           remotePlatform: command.platform)
         client.start()
         let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))
-        if let navigationController = AppDelegate.current.mainWindow.rootViewController as? UINavigationController {
+        if let rootViewController = AppDelegate.current.mainWindow.rootViewController,
+           let checkEnvironment = rootViewController as? CheckSessionEnvironmentViewController,
+           let navigationController = checkEnvironment.contentViewController as? UINavigationController
+        {
             navigationController.pushViewController(progress, animated: true)
-        } else {
-            AppDelegate.current.mainWindow.rootViewController?.present(progress, animated: true)
         }
         return true
     }
@@ -1780,7 +1781,7 @@ extension UrlWindow {
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
             fallthrough
-        case .unknown:
+        case .none:
             DispatchQueue.main.async(execute: hud.hide)
             return
         }
@@ -1818,7 +1819,7 @@ extension UrlWindow {
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
             fallthrough
-        case .unknown:
+        case .none:
             DispatchQueue.main.async(execute: hud.hide)
             return
         }
@@ -1873,7 +1874,7 @@ extension UrlWindow {
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             UIApplication.homeNavigationController?.present(tip, animated: true)
             fallthrough
-        case .unknown:
+        case .none:
             DispatchQueue.main.async(execute: hud.hide)
             return
         }

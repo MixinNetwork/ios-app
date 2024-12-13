@@ -16,8 +16,13 @@ class FullscreenPINValidationViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    convenience init() {
-        self.init(nib: R.nib.fullscreenPINValidationView)
+    init() {
+        let nib = R.nib.fullscreenPINValidationView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {

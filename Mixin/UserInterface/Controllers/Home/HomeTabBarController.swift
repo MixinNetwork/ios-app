@@ -214,7 +214,7 @@ final class HomeTabBarController: UIViewController {
             case .needsInitialize:
                 let tip = TIPNavigationViewController(intent: .create, destination: .wallet)
                 navigationController?.present(tip, animated: true)
-            case .unknown:
+            case .none:
                 break
             }
         }

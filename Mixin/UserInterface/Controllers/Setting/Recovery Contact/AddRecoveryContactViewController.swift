@@ -39,7 +39,7 @@ extension AddRecoveryContactViewController: UITableViewDelegate {
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .setEmergencyContact)
             navigationController?.present(tip, animated: true)
-        case .unknown:
+        case .none:
             break
         }
     }

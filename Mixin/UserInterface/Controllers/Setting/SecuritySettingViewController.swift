@@ -40,7 +40,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
                 let tip = TIPNavigationViewController(intent: .create, destination: nil)
                 present(tip, animated: true)
                 return
-            case .unknown:
+            case .none:
                 return
             }
         case 1:
@@ -51,7 +51,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
                 let tip = TIPNavigationViewController(intent: .create, destination: nil)
                 present(tip, animated: true)
                 return
-            case .unknown:
+            case .none:
                 return
             }
         case 2:

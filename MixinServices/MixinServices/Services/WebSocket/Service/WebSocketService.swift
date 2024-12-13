@@ -206,7 +206,7 @@ extension WebSocketService: WebSocketProviderDelegate {
                 if -signingDate.timeIntervalSinceNow > 60 {
                     reconnect(sendDisconnectToRemote: true)
                 } else {
-                    AppGroupUserDefaults.Account.isClockSkewed = true
+                    AppGroupUserDefaults.isClockSkewed = true
                     disconnect()
                     NotificationCenter.default.post(onMainThread: MixinService.clockSkewDetectedNotification, object: self)
                 }
@@ -247,7 +247,7 @@ extension WebSocketService: WebSocketProviderDelegate {
                 messageHandlers.removeValue(forKey: message.id)
                 handler(.failure(.response(error)))
             }
-            if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.Account.isClockSkewed {
+            if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.isClockSkewed {
                 LoginManager.shared.logout(reason: "WS access unauthroized")
             }
         } else {

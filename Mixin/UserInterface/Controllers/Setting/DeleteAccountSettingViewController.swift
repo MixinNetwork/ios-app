@@ -60,7 +60,7 @@ extension DeleteAccountSettingViewController: UITableViewDelegate {
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             present(tip, animated: true)
-        case .unknown:
+        case .none:
             break
         }
     }

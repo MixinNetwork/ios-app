@@ -59,7 +59,7 @@ extension ExportMnemonicPhrasesViewController: UITableViewDelegate {
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: nil)
             navigationController?.present(tip, animated: true)
-        case .unknown:
+        case .none:
             break
         }
     }

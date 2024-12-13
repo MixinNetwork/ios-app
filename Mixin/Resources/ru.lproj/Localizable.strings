@@ -567,6 +567,7 @@
 "floats_allows_up_to_count" = "Поплавки позволяют использовать до %d единиц.";
 "follow_us_on_facebook" = "Следите за нами на Фейсбуке";
 "follow_us_on_x" = "Следите за нами на X";
+"forget_pin" = "Forget PIN?";
 "forward" = "Перенаправить";
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
 "free" = "FREE";
@@ -1193,6 +1194,7 @@
 "swap_not_supported" = "%@ swapping is not supported.";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
+"switch_account" = "Switch Account";
 "symbol" = "Символ";
 "symbol_withdrawal" = "%@ Снятие средств";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

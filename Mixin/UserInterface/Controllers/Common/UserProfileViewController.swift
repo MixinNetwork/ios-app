@@ -359,7 +359,7 @@ extension UserProfileViewController {
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .changePhone)
             present(tip, animated: true)
-        case .unknown:
+        case .none:
             break
         }
     }
@@ -397,7 +397,7 @@ extension UserProfileViewController {
         case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .transfer(user: user))
             present(tip, animated: true)
-        case .unknown:
+        case .none:
             break
         }
     }

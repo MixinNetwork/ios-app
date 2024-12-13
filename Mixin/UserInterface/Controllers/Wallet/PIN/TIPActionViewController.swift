@@ -2,7 +2,7 @@ import UIKit
 import AppCenterCrashes
 import MixinServices
 
-class TIPActionViewController: UIViewController {
+final class TIPActionViewController: UIViewController {
     
     enum PIN {
         case legacy(String)
@@ -78,13 +78,16 @@ class TIPActionViewController: UIViewController {
 #endif
             Task {
                 do {
-                    try await TIP.createTIPPriv(pin: pin,
-                                                failedSigners: [],
-                                                legacyPIN: nil,
-                                                forRecover: false,
-                                                progressHandler: showProgress)
+                    let (_, account) = try await TIP.createTIPPriv(
+                        pin: pin,
+                        failedSigners: [],
+                        legacyPIN: nil,
+                        forRecover: false,
+                        progressHandler: showProgress
+                    )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                    try await TIP.initializeIfNeeded(account: nil, pin: pin)
+                    try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
+                    AppGroupUserDefaults.User.isTIPInitialized = true
                     await MainActor.run {
                         finish()
                     }
@@ -102,26 +105,31 @@ class TIPActionViewController: UIViewController {
 #endif
             Task {
                 do {
-                    switch old {
+                    let account = switch old {
                     case let .legacy(old):
-                        try await TIP.createTIPPriv(pin: new,
-                                                    failedSigners: [],
-                                                    legacyPIN: old,
-                                                    forRecover: false,
-                                                    progressHandler: showProgress)
+                        try await TIP.createTIPPriv(
+                            pin: new,
+                            failedSigners: [],
+                            legacyPIN: old,
+                            forRecover: false,
+                            progressHandler: showProgress
+                        ).account
                     case let .tip(old):
-                        try await TIP.updateTIPPriv(oldPIN: old,
-                                                    newPIN: new,
-                                                    isCounterBalanced: true,
-                                                    failedSigners: [],
-                                                    progressHandler: showProgress)
+                        try await TIP.updateTIPPriv(
+                            oldPIN: old,
+                            newPIN: new,
+                            isCounterBalanced: true,
+                            failedSigners: [],
+                            progressHandler: showProgress
+                        )
                     }
                     if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                         Keychain.shared.storePIN(pin: new)
                     }
                     AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                    try await TIP.initializeIfNeeded(account: nil, pin: new)
+                    try await TIP.registerToSafeIfNeeded(account: account, pin: new)
+                    AppGroupUserDefaults.User.isTIPInitialized = true
                     await MainActor.run {
                         finish()
                     }
@@ -139,13 +147,16 @@ class TIPActionViewController: UIViewController {
 #endif
             Task {
                 do {
-                    try await TIP.createTIPPriv(pin: pin,
-                                                failedSigners: [],
-                                                legacyPIN: pin,
-                                                forRecover: false,
-                                                progressHandler: showProgress)
+                    let (_, account) = try await TIP.createTIPPriv(
+                        pin: pin,
+                        failedSigners: [],
+                        legacyPIN: pin,
+                        forRecover: false,
+                        progressHandler: showProgress
+                    )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                    try await TIP.initializeIfNeeded(account: nil, pin: pin)
+                    try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
+                    AppGroupUserDefaults.User.isTIPInitialized = true
                     await MainActor.run {
                         finish()
                     }

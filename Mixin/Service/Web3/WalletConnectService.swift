@@ -18,7 +18,7 @@ final class WalletConnectService {
         switch TIP.status {
         case .ready:
             return true
-        case .needsMigrate, .needsInitialize, .unknown:
+        case .needsMigrate, .needsInitialize, .none:
             return false
         }
     }

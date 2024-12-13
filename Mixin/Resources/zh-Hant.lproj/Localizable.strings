@@ -567,6 +567,7 @@
 "floats_allows_up_to_count" = "最多支援 %d 個浮窗";
 "follow_us_on_facebook" = "關注我們的 Facebook";
 "follow_us_on_x" = "關注我們的 X";
+"forget_pin" = "忘記 PIN？";
 "forward" = "轉發";
 "fourth_pin_confirm_hint" = "這是最後一次確認 PIN，記住：PIN 丟失將永遠無法找回！";
 "free" = "免手續費";
@@ -1193,6 +1194,7 @@
 "swap_not_supported" = "不支援 %@ 交易。";
 "swap_receive" = "獲得";
 "swap_send" = "支付";
+"switch_account" = "切換賬號";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";
 "syncing_and_verifying_tip" = "正在驗證並同步金鑰分片到 TIP 網路，請保持應用在前臺，設定過程中不要強制關閉應用";

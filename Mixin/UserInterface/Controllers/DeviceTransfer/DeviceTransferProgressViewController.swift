@@ -141,7 +141,11 @@ class DeviceTransferProgressViewController: UIViewController {
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
-            AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+            if let parent = navigationController?.parent as? CheckSessionEnvironmentViewController {
+                parent.check()
+            } else {
+                assertionFailure()
+            }
         case .cloud:
             AppGroupUserDefaults.Account.canRestoreMedia = true
             AppGroupUserDefaults.Database.isFTSInitialized = false
@@ -149,7 +153,11 @@ class DeviceTransferProgressViewController: UIViewController {
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
             OutputDAO.shared.deleteAll()
-            AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+            if let parent = navigationController?.parent as? CheckSessionEnvironmentViewController {
+                parent.check()
+            } else {
+                assertionFailure()
+            }
         }
     }
     

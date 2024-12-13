@@ -3,6 +3,10 @@ import MixinServices
 
 final class CheckSessionEnvironmentViewController: UIViewController {
     
+    private(set) weak var contentViewController: UIViewController?
+    
+    private lazy var restoreChatNavigationHandler = RestoreChatNavigationHandler()
+    
     private var account: Account
     private var isAccountFresh: Bool
     
@@ -11,8 +15,6 @@ final class CheckSessionEnvironmentViewController: UIViewController {
     private var allUsersInitialBots: [String] {
         [BotUserID.teamMixin]
     }
-    
-    private(set) weak var contentViewController: UIViewController?
     
     init(freshAccount account: Account) {
         self.account = account
@@ -60,6 +62,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             Logger.general.debug(category: "CheckSessionEnvironment", message: "Restore chat")
             let restore = RestoreChatViewController()
             let navigationController = GeneralAppearanceNavigationController(rootViewController: restore)
+            navigationController.delegate = restoreChatNavigationHandler
             reload(content: navigationController)
         } else if DatabaseUpgradeViewController.needsUpgrade {
             Logger.general.debug(category: "CheckSessionEnvironment", message: "Upgrade db")
@@ -118,6 +121,49 @@ final class CheckSessionEnvironmentViewController: UIViewController {
         content.view.snp.makeEdgesEqualToSuperview()
         content.didMove(toParent: self)
         self.contentViewController = content
+    }
+    
+}
+
+extension CheckSessionEnvironmentViewController {
+    
+    final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
+        
+        private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
+        
+        func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+            if viewController is CameraViewController && !navigationController.isNavigationBarHidden {
+                navigationController.setNavigationBarHidden(true, animated: animated)
+            } else if !(viewController is CameraViewController) && navigationController.isNavigationBarHidden {
+                navigationController.setNavigationBarHidden(false, animated: animated)
+            }
+        }
+        
+        func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+            if operation == .push {
+                if let targetVC = toVC as? MixinNavigationAnimating {
+                    switch targetVC.pushAnimation {
+                    case .push:
+                        return nil
+                    case .present:
+                        presentFromBottomAnimator.operation = operation
+                        return presentFromBottomAnimator
+                    }
+                }
+            } else if operation == .pop {
+                if let targetVC = fromVC as? MixinNavigationAnimating {
+                    switch targetVC.popAnimation {
+                    case .pop:
+                        return nil
+                    case .dismiss:
+                        presentFromBottomAnimator.operation = operation
+                        return presentFromBottomAnimator
+                    }
+                }
+            }
+            return nil
+        }
+        
     }
     
 }

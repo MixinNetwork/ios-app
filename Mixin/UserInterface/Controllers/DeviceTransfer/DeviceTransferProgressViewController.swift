@@ -147,6 +147,7 @@ class DeviceTransferProgressViewController: UIViewController {
                 assertionFailure()
             }
         case .cloud:
+            AppGroupUserDefaults.Account.canRestoreFromPhone = false
             AppGroupUserDefaults.Account.canRestoreMedia = true
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.needsRebuildDatabase = true

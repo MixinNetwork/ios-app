@@ -896,8 +896,8 @@
 		9457F7702B6F2376008FC98F /* AuthenticationPreviewDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457F76F2B6F2376008FC98F /* AuthenticationPreviewDialogView.swift */; };
 		9457F7722B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */; };
 		9458A06F2CC8E72900A51154 /* NSAttributedString+Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A06E2CC8E72000A51154 /* NSAttributedString+Constant.swift */; };
-		9458A0752CC8EA2F00A51154 /* CustomerServiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9458A0742CC8EA2F00A51154 /* CustomerServiceView.xib */; };
-		9458A0762CC8EA2F00A51154 /* CustomerServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A0732CC8EA2F00A51154 /* CustomerServiceViewController.swift */; };
+		9458A0752CC8EA2F00A51154 /* PopupTitledWebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9458A0742CC8EA2F00A51154 /* PopupTitledWebView.xib */; };
+		9458A0762CC8EA2F00A51154 /* PopupTitledWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A0732CC8EA2F00A51154 /* PopupTitledWebViewController.swift */; };
 		9458A08D2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A08C2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift */; };
 		9458A0932CC9450C00A51154 /* MnemonicsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9458A0922CC9450C00A51154 /* MnemonicsView.xib */; };
 		9458A0942CC9450C00A51154 /* MnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A0912CC9450C00A51154 /* MnemonicsViewController.swift */; };
@@ -1004,6 +1004,7 @@
 		947FA4D429957A4600EF13A0 /* AuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947FA4D329957A4600EF13A0 /* AuthorizationsContentViewController.swift */; };
 		9480FB422BC6D623001B5D57 /* Web3SignOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */; };
 		94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94812DD926E082C400213F79 /* mixin_condensed.otf */; };
+		94818F472D0C86C100F852CC /* CustomerServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94818F462D0C86C100F852CC /* CustomerServiceViewController.swift */; };
 		9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 9481C03B2A49A9AA0009DAF8 /* Starscream */; };
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
@@ -2370,8 +2371,8 @@
 		9457F76F2B6F2376008FC98F /* AuthenticationPreviewDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewDialogView.swift; sourceTree = "<group>"; };
 		9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewSingleButtonTrayView.swift; sourceTree = "<group>"; };
 		9458A06E2CC8E72000A51154 /* NSAttributedString+Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Constant.swift"; sourceTree = "<group>"; };
-		9458A0732CC8EA2F00A51154 /* CustomerServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerServiceViewController.swift; sourceTree = "<group>"; };
-		9458A0742CC8EA2F00A51154 /* CustomerServiceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomerServiceView.xib; sourceTree = "<group>"; };
+		9458A0732CC8EA2F00A51154 /* PopupTitledWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTitledWebViewController.swift; sourceTree = "<group>"; };
+		9458A0742CC8EA2F00A51154 /* PopupTitledWebView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupTitledWebView.xib; sourceTree = "<group>"; };
 		9458A08C2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpWithMobileNumberViewController.swift; sourceTree = "<group>"; };
 		9458A0912CC9450C00A51154 /* MnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicsViewController.swift; sourceTree = "<group>"; };
 		9458A0922CC9450C00A51154 /* MnemonicsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MnemonicsView.xib; sourceTree = "<group>"; };
@@ -2495,6 +2496,7 @@
 		947FA4D329957A4600EF13A0 /* AuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsContentViewController.swift; sourceTree = "<group>"; };
 		9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SignOperation.swift; sourceTree = "<group>"; };
 		94812DD926E082C400213F79 /* mixin_condensed.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin_condensed.otf; sourceTree = "<group>"; };
+		94818F462D0C86C100F852CC /* CustomerServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerServiceViewController.swift; sourceTree = "<group>"; };
 		948374802A5D49110011A2CA /* PopupSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSelectorViewController.swift; sourceTree = "<group>"; };
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
@@ -3266,8 +3268,9 @@
 				94CF4E112CDDEE86005B69D4 /* LoginNavigationController.swift */,
 				943CAA052CC6908F00346677 /* OnboardingView.xib */,
 				943CAA002CC68AEA00346677 /* OnboardingViewController.swift */,
-				9458A0742CC8EA2F00A51154 /* CustomerServiceView.xib */,
-				9458A0732CC8EA2F00A51154 /* CustomerServiceViewController.swift */,
+				9458A0742CC8EA2F00A51154 /* PopupTitledWebView.xib */,
+				9458A0732CC8EA2F00A51154 /* PopupTitledWebViewController.swift */,
+				94818F462D0C86C100F852CC /* CustomerServiceViewController.swift */,
 				7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */,
 				7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */,
 				943CAA252CC8309F00346677 /* SignInWithMobileNumberViewController.swift */,
@@ -5584,7 +5587,7 @@
 				7BAB3058247E8248005D6C3F /* call.caf in Resources */,
 				946C9CC72BCAA2CB00407203 /* Web3AccountHeaderView.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
-				9458A0752CC8EA2F00A51154 /* CustomerServiceView.xib in Resources */,
+				9458A0752CC8EA2F00A51154 /* PopupTitledWebView.xib in Resources */,
 				944C61F42B6BF97B00C7DF06 /* PaymentUserGroupCell.xib in Resources */,
 				944BC2E02C7DB9E9008700A8 /* ExploreGlobalMarketCell.xib in Resources */,
 				94A72CA52C2EBFF9001E8782 /* InscriptionTraitCell.xib in Resources */,
@@ -6483,6 +6486,7 @@
 				944C61072B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.swift in Sources */,
 				842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */,
 				7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */,
+				94818F472D0C86C100F852CC /* CustomerServiceViewController.swift in Sources */,
 				942F25BD274903550040E585 /* WebPImageDecoder.swift in Sources */,
 				9459693628B28F18006F5421 /* TIPNavigationController.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
@@ -6994,7 +6998,7 @@
 				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,
 				94AC15602C3D77CD0029E1AB /* AppButtonGroupView.swift in Sources */,
 				7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */,
-				9458A0762CC8EA2F00A51154 /* CustomerServiceViewController.swift in Sources */,
+				9458A0762CC8EA2F00A51154 /* PopupTitledWebViewController.swift in Sources */,
 				E0E3301F23962B2100276746 /* EditFavoriteAppsHeaderView.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveRecoveryContactValidationViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,

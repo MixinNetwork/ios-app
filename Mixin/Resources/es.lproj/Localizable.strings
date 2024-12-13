@@ -1322,7 +1322,14 @@
 "upload_mobile_contacts" = "Cargar contactos móviles";
 "uploading" = "Cargando...";
 "uploading_progress" = "Cargando: %@ de %@ (%@)";
+"url_delete_account" = "https://support.mixin.one/en/article/how-to-delete-my-account-19fkagl/";
+"url_deposit" = "https://support.mixin.one/en/article/how-to-deposit-assets-to-mixin-messenger-1usvjod/";
+"url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
+"url_disappearing_message" = "https://support.mixin.one/en/article/how-to-enable-disappearing-messages-2nzaz8/";
+"url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
+"url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
 "url_unrecognized_hint" = "%@ no se ha podido reconocer, actualiza Mixin a la última versión o comunícate con el desarrollador para verificar el enlace";
+"url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
 "use_biometry" = "Usar %@";
 "use_system_text_size" = "Usar tamaño de texto del sistema";
 "user_delete_hint" = "The user has deleted his own account.";

@@ -16,7 +16,7 @@ class UnknownMessageViewModel: TextMessageViewModel {
         let location = (R.string.localizable.message_not_support() as NSString).length
         let length = (R.string.localizable.learn_more() as NSString).length
         let range = NSRange(location: location, length: length)
-        return [Link.Range(range: range, url: .unknownCategory)]
+        return [Link.Range(range: range, url: .unsupportedMessage)]
     }
     
 }

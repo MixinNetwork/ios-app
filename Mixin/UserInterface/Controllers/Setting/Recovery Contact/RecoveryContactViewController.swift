@@ -54,7 +54,7 @@ final class RecoveryContactViewController: UIViewController {
         let linkRange = (text as NSString)
             .range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
-            str.addAttribute(.link, value: URL.emergencyContact, range: linkRange)
+            str.addAttribute(.link, value: URL.recoveryContact, range: linkRange)
         }
         descriptionTextView.attributedText = str
     }

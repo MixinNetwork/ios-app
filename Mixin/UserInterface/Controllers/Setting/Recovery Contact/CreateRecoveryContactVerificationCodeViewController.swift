@@ -36,7 +36,7 @@ class CreateRecoveryContactVerificationCodeViewController: VerificationCodeViewC
     }
 
      @objc func helpAction() {
-        UIApplication.shared.open(URL.emergencyContact, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL.recoveryContact, options: [:], completionHandler: nil)
     }
 
     override func layout(for keyboardFrame: CGRect) {

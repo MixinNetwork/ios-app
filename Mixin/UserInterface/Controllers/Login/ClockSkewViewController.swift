@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class ClockSkewViewController: UIViewController {
+final class ClockSkewViewController: UIViewController, CheckSessionEnvironmentChild {
     
     @IBOutlet weak var continueButton: RoundedButton!
     @IBOutlet weak var tipsLabel: UILabel!
@@ -22,11 +22,7 @@ final class ClockSkewViewController: UIViewController {
                 Logger.general.info(category: "ClockSkew", message: "Clock fixed")
                 AppGroupUserDefaults.isClockSkewed = false
                 LoginManager.shared.setAccount(account)
-                if let parent = self?.parent as? CheckSessionEnvironmentViewController {
-                    parent.check(freshAccount: account)
-                } else {
-                    assertionFailure()
-                }
+                self?.checkSessionEnvironmentAgain(freshAccount: account)
             case .failure(.clockSkewDetected):
                 Logger.general.error(category: "ClockSkew", message: "Still skewed")
                 if let self {

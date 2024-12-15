@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class DatabaseUpgradeViewController: UIViewController {
+final class DatabaseUpgradeViewController: UIViewController, CheckSessionEnvironmentChild {
     
     class var needsUpgrade: Bool {
         !AppGroupUserDefaults.isDocumentsMigrated
@@ -73,11 +73,7 @@ final class DatabaseUpgradeViewController: UIViewController {
             
             let delay = max(0, 2 + startTime.timeIntervalSinceNow)
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                if let parent = self.parent as? CheckSessionEnvironmentViewController {
-                    parent.check()
-                } else {
-                    assertionFailure()
-                }
+                self.checkSessionEnvironmentAgain()
             }
         }
     }

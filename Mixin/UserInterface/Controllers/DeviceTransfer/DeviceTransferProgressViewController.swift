@@ -2,7 +2,7 @@ import UIKit
 import Combine
 import MixinServices
 
-class DeviceTransferProgressViewController: UIViewController {
+class DeviceTransferProgressViewController: UIViewController, CheckSessionEnvironmentChild {
     
     enum Remote {
         case phone
@@ -141,11 +141,7 @@ class DeviceTransferProgressViewController: UIViewController {
             AppGroupUserDefaults.Database.isFTSInitialized = false
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
-            if let parent = navigationController?.parent as? CheckSessionEnvironmentViewController {
-                parent.check()
-            } else {
-                assertionFailure()
-            }
+            checkSessionEnvironmentAgain()
         case .cloud:
             AppGroupUserDefaults.Account.canRestoreFromPhone = false
             AppGroupUserDefaults.Account.canRestoreMedia = true
@@ -154,11 +150,7 @@ class DeviceTransferProgressViewController: UIViewController {
             AppGroupUserDefaults.User.isCircleSynchronized = false
             UserDatabase.reloadCurrent()
             OutputDAO.shared.deleteAll()
-            if let parent = navigationController?.parent as? CheckSessionEnvironmentViewController {
-                parent.check()
-            } else {
-                assertionFailure()
-            }
+            checkSessionEnvironmentAgain()
         }
     }
     

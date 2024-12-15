@@ -1,6 +1,24 @@
 import UIKit
 import MixinServices
 
+protocol CheckSessionEnvironmentChild {
+    
+}
+
+extension CheckSessionEnvironmentChild where Self: UIViewController {
+    
+    func checkSessionEnvironmentAgain(freshAccount: Account? = nil) {
+        let checker = parent as? CheckSessionEnvironmentViewController
+        ?? navigationController?.parent as? CheckSessionEnvironmentViewController
+        if let checker {
+            checker.check(freshAccount: freshAccount)
+        } else {
+            assertionFailure()
+        }
+    }
+    
+}
+
 final class CheckSessionEnvironmentViewController: UIViewController {
     
     private(set) weak var contentViewController: UIViewController?
@@ -127,7 +145,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
 
 extension CheckSessionEnvironmentViewController {
     
-    final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
+    private final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
         
         private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
         

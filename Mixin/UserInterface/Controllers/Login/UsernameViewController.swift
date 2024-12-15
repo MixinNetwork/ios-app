@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class UsernameViewController: LoginInfoInputViewController {
+final class UsernameViewController: LoginInfoInputViewController, CheckSessionEnvironmentChild {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,11 +17,7 @@ final class UsernameViewController: LoginInfoInputViewController {
             switch account {
             case let .success(account):
                 LoginManager.shared.setAccount(account)
-                if let parent = self?.parent as? CheckSessionEnvironmentViewController {
-                    parent.check(freshAccount: account)
-                } else {
-                    assertionFailure()
-                }
+                self?.checkSessionEnvironmentAgain(freshAccount: account)
             case let .failure(error):
                 reporter.report(error: error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

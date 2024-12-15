@@ -137,7 +137,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
-                AppGroupUserDefaults.User.isTIPInitialized = true
+                AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run(body: onSuccess)
             } catch {
                 Crashes.trackError(error, properties: ["error": "\(error)", "location": "PI.ContinueCreate"], attachments: nil)
@@ -201,7 +201,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 }
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                AppGroupUserDefaults.User.isTIPInitialized = true
+                AppGroupUserDefaults.User.loginPINValidated = true
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {

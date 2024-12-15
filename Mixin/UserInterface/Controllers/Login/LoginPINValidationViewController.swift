@@ -49,7 +49,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 } else {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 }
-                AppGroupUserDefaults.User.isTIPInitialized = true
+                AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
                 }
@@ -80,7 +80,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
             // FIXME: Forget PIN Document
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.switch_account(), style: .default, handler: { _ in
-            LoginManager.shared.logout(reason: "PIN Validate")
+            LoginManager.shared.logout(reason: "Switch Account")
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
         present(sheet, animated: true)

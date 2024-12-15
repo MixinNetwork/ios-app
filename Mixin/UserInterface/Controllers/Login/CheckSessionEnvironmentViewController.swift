@@ -109,7 +109,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             let root: UIViewController
             switch TIP.Status(account: account) {
             case .ready:
-                if AppGroupUserDefaults.User.isTIPInitialized {
+                if AppGroupUserDefaults.User.loginPINValidated {
                     Logger.general.debug(category: "CheckSessionEnvironment", message: "Go home")
                     root = HomeContainerViewController()
                 } else {

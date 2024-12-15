@@ -10,7 +10,7 @@ extension AppGroupUserDefaults {
             case lastUpdateOrInstallDate = "last_update_or_install_date"
             case lastUpdateOrInstallVersion = "last_update_or_install_version"
             
-            case isTIPInitialized = "tip_initialized"
+            case loginPINValidated = "tip_initialized"
             case hasShownRecallTips = "session_secret"
             case hasPerformedTransfer = "has_performed_transfer"
             
@@ -112,8 +112,8 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.hasShownRecallTips, defaultValue: false)
         public static var hasShownRecallTips: Bool
         
-        @Default(namespace: .user, key: Key.isTIPInitialized, defaultValue: false)
-        public static var isTIPInitialized: Bool
+        @Default(namespace: .user, key: Key.loginPINValidated, defaultValue: false)
+        public static var loginPINValidated: Bool
         
         @Default(namespace: .user, key: Key.hasPerformedTransfer, defaultValue: false)
         public static var hasPerformedTransfer: Bool

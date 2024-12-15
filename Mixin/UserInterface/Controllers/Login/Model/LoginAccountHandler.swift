@@ -43,7 +43,7 @@ extension LoginAccountHandler where Self: UIViewController {
         if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
         }
-        AppGroupUserDefaults.User.isTIPInitialized = false
+        AppGroupUserDefaults.User.loginPINValidated = false
         
         if account.fullName.isEmpty {
             reporter.report(event: .signUp)

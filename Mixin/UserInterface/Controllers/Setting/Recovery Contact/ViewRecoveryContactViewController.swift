@@ -40,44 +40,20 @@ extension ViewRecoveryContactViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case 0:
-            viewEmergencyContact()
+            let validator = ShowRecoveryContactValidationViewController()
+            present(validator, animated: true, completion: nil)
         case 1:
-            changeEmergencyContact()
-        default:
-            removeEmergencyContact()
-        }
-    }
-    
-}
-
-extension ViewRecoveryContactViewController {
-    
-    private func viewEmergencyContact() {
-        let validator = ShowRecoveryContactValidationViewController()
-        present(validator, animated: true, completion: nil)
-    }
-    
-    private func changeEmergencyContact() {
-        switch TIP.status {
-        case .ready, .needsMigrate:
             let verifyPIN = RecoveryContactVerifyPINViewController()
             navigationController?.pushViewController(verifyPIN, animated: true)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: .setEmergencyContact)
-            present(tip, animated: true)
-        case .none:
-            break
+        default:
+            let alert = UIAlertController(title: R.string.localizable.remove_emergency_contact_for_sure(), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.delete(), style: .destructive, handler: { (_) in
+                let validator = RemoveRecoveryContactValidationViewController()
+                self.present(validator, animated: true, completion: nil)
+            }))
+            present(alert, animated: true, completion: nil)
         }
-    }
-    
-    private func removeEmergencyContact() {
-        let alert = UIAlertController(title: R.string.localizable.remove_emergency_contact_for_sure(), message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.delete(), style: .destructive, handler: { (_) in
-            let validator = RemoveRecoveryContactValidationViewController()
-            self.present(validator, animated: true, completion: nil)
-        }))
-        present(alert, animated: true, completion: nil)
     }
     
 }

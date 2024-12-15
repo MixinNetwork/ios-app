@@ -38,7 +38,7 @@ final class TIPLoadingViewController: LoginLoadingViewController {
                 await MainActor.run {
                     if let context {
                         let intro = TIPIntroViewController(context: context)
-                        let navigation = TIPNavigationViewController(intro: intro, destination: .home)
+                        let navigation = TIPNavigationController(intro: intro)
                         AppDelegate.current.mainWindow.rootViewController = navigation
                     } else {
                         let validation = LoginPINValidationViewController(account: account)

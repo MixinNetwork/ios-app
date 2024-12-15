@@ -77,27 +77,16 @@ class AuthorizationWindow: BottomSheetView {
 extension AuthorizationWindow: AuthorizationScopePreviewViewDelegate {
     
     func authorizationScopePreviewViewDidReviewScopes(_ controller: AuthorizationScopePreviewView) {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            scopeConfirmationView.dataSource = dataSource
-            scopeConfirmationView.delegate = self
-            scopeConfirmationView.resetInput()
-            showScopePreviewViewConstraint.priority = .defaultLow
-            showScopeConfirmationViewConstraint.priority = .defaultHigh
-            UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) {
-                self.scopePreviewView.isHidden = true
-                self.scopeConfirmationView.isHidden = false
-            } completion: { _ in
-                self.scopeConfirmationView.tableView.flashScrollIndicators()
-            }
-        case .needsInitialize:
-            guard let navigationController = UIApplication.homeNavigationController else {
-                return
-            }
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            navigationController.present(tip, animated: true)
-        case .none:
-            break
+        scopeConfirmationView.dataSource = dataSource
+        scopeConfirmationView.delegate = self
+        scopeConfirmationView.resetInput()
+        showScopePreviewViewConstraint.priority = .defaultLow
+        showScopeConfirmationViewConstraint.priority = .defaultHigh
+        UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) {
+            self.scopePreviewView.isHidden = true
+            self.scopeConfirmationView.isHidden = false
+        } completion: { _ in
+            self.scopeConfirmationView.tableView.flashScrollIndicators()
         }
     }
     

@@ -37,8 +37,8 @@ final class TIPActionViewController: UIViewController {
     
     private let action: Action
     
-    private var tipNavigationController: TIPNavigationViewController? {
-        navigationController as? TIPNavigationViewController
+    private var tipNavigationController: TIPNavigationController? {
+        navigationController as? TIPNavigationController
     }
     
     init(action: Action) {
@@ -180,7 +180,7 @@ final class TIPActionViewController: UIViewController {
             title = R.string.localizable.upgrade_tip_successfully()
         }
         alert(title) { (_) in
-            self.tipNavigationController?.dismissToDestination(animated: true)
+            self.tipNavigationController?.finish()
         }
     }
     
@@ -202,7 +202,7 @@ final class TIPActionViewController: UIViewController {
                     if accountCounterAfter == accountCounterBefore {
                         Logger.tip.error(category: "TIPAction", message: "Nothing changed")
                         let intro = TIPIntroViewController(action: action, changedNothingWith: error)
-                        tipNavigationController?.setViewControllers([intro], animated: true)
+                        navigationController?.setViewControllers([intro], animated: true)
                     } else {
                         Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
                         finish()

@@ -49,26 +49,6 @@ public enum TIP {
         case migrate
     }
     
-    @frozen public enum Status {
-        
-        case ready
-        case needsInitialize
-        case needsMigrate
-        
-        public init(account: Account) {
-            if account.tipCounter == 0 {
-                if account.hasPIN {
-                    self = .needsMigrate
-                } else {
-                    self = .needsInitialize
-                }
-            } else {
-                self = .ready
-            }
-        }
-        
-    }
-    
     @frozen public enum Progress {
         case creating
         case connecting
@@ -98,17 +78,6 @@ public enum TIP {
         #if DEBUG
         case mock
         #endif
-    }
-    
-    public static let didUpdateNotification = Notification.Name("one.mixin.service.tip.update")
-    
-    // Nil if not logged in
-    public static var status: Status? {
-        if let account = LoginManager.shared.account {
-            Status(account: account)
-        } else {
-            nil
-        }
     }
     
 }
@@ -201,9 +170,6 @@ extension TIP {
         
         try encryptAndSaveTIPPriv(pinData: pinData, tipPriv: tipPriv, aesKey: aesKey)
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
-        await MainActor.run {
-            NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
-        }
         return (tipPriv: tipPriv, account: account)
     }
     
@@ -343,9 +309,6 @@ extension TIP {
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
         AppGroupKeychain.encryptedSalt = encryptedSaltToSave
         Logger.tip.info(category: "TIP", message: "Encrypted salt(\(encryptedSaltToSave == nil)) is saved")
-        await MainActor.run {
-            NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
-        }
         return account
     }
     

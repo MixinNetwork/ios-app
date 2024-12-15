@@ -1296,16 +1296,8 @@ class ConversationViewController: UIViewController {
         guard let user = ownerUser else {
             return
         }
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            let transfer = TransferOutViewController(token: nil, to: .contact(user))
-            navigationController?.pushViewController(transfer, animated: true)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            present(tip, animated: true)
-        case .none:
-            break
-        }
+        let transfer = TransferOutViewController(token: nil, to: .contact(user))
+        navigationController?.pushViewController(transfer, animated: true)
     }
     
     func showLocationPicker() {

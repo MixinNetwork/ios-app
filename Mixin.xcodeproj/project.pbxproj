@@ -901,7 +901,7 @@
 		9458A08D2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A08C2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift */; };
 		9458A0932CC9450C00A51154 /* MnemonicsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9458A0922CC9450C00A51154 /* MnemonicsView.xib */; };
 		9458A0942CC9450C00A51154 /* MnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A0912CC9450C00A51154 /* MnemonicsViewController.swift */; };
-		9459693628B28F18006F5421 /* TIPNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693528B28F18006F5421 /* TIPNavigationViewController.swift */; };
+		9459693628B28F18006F5421 /* TIPNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693528B28F18006F5421 /* TIPNavigationController.swift */; };
 		9459693928B28FF8006F5421 /* TIPActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693728B28FF8006F5421 /* TIPActionViewController.swift */; };
 		9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9459693828B28FF8006F5421 /* TIPActionView.xib */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
@@ -2375,7 +2375,7 @@
 		9458A08C2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpWithMobileNumberViewController.swift; sourceTree = "<group>"; };
 		9458A0912CC9450C00A51154 /* MnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicsViewController.swift; sourceTree = "<group>"; };
 		9458A0922CC9450C00A51154 /* MnemonicsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MnemonicsView.xib; sourceTree = "<group>"; };
-		9459693528B28F18006F5421 /* TIPNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPNavigationViewController.swift; sourceTree = "<group>"; };
+		9459693528B28F18006F5421 /* TIPNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPNavigationController.swift; sourceTree = "<group>"; };
 		9459693728B28FF8006F5421 /* TIPActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPActionViewController.swift; sourceTree = "<group>"; };
 		9459693828B28FF8006F5421 /* TIPActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPActionView.xib; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
@@ -4134,7 +4134,7 @@
 		94E9795E2D0C151B00FFCC12 /* PIN */ = {
 			isa = PBXGroup;
 			children = (
-				9459693528B28F18006F5421 /* TIPNavigationViewController.swift */,
+				9459693528B28F18006F5421 /* TIPNavigationController.swift */,
 				948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */,
 				94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */,
 				9459693728B28FF8006F5421 /* TIPActionViewController.swift */,
@@ -6484,7 +6484,7 @@
 				842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */,
 				7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */,
 				942F25BD274903550040E585 /* WebPImageDecoder.swift in Sources */,
-				9459693628B28F18006F5421 /* TIPNavigationViewController.swift in Sources */,
+				9459693628B28F18006F5421 /* TIPNavigationController.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
 				7BF196B12411625300CC8325 /* UserInterfaceStyle.swift in Sources */,
 				7C1E798029DAB701006A07A2 /* ChatsViewController.swift in Sources */,

@@ -290,7 +290,6 @@ class PayWindow: BottomSheetView {
         errorView.isHidden = true
         successView.isHidden = true
         pinField.clear()
-        let needsInitializeTIP = TIP.status == .needsInitialize
         if isAllowBiometricPay {
             if BiometryType.payment == .faceID {
                 biometricButton.setImage(R.image.ic_pay_face(), for: .normal)
@@ -298,10 +297,10 @@ class PayWindow: BottomSheetView {
                 biometricButton.setImage(R.image.ic_pay_touch(), for: .normal)
             }
             biometricButton.isHidden = false
-            resultViewPlaceHeightConstraint.constant = needsInitializeTIP ? 30 : 20
+            resultViewPlaceHeightConstraint.constant = 20
         } else {
             biometricButton.isHidden = true
-            resultViewPlaceHeightConstraint.constant = needsInitializeTIP ? 10 : 0
+            resultViewPlaceHeightConstraint.constant = 0
         }
         pinField.becomeFirstResponder()
     }

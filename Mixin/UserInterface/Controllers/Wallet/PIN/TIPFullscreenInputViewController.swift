@@ -69,8 +69,8 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
         }
     }
     
-    private var tipNavigationController: TIPNavigationViewController? {
-        navigationController as? TIPNavigationViewController
+    private var tipNavigationController: TIPNavigationController? {
+        navigationController as? TIPNavigationController
     }
     
     init(action: Action) {

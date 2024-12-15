@@ -30,36 +30,17 @@ final class SecuritySettingViewController: SettingsTableViewController {
 extension SecuritySettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc: UIViewController
-        switch indexPath.section {
+        let next = switch indexPath.section {
         case 0:
-            switch TIP.status {
-            case .ready, .needsMigrate:
-                vc = PinSettingsViewController()
-            case .needsInitialize:
-                let tip = TIPNavigationViewController(intent: .create, destination: nil)
-                present(tip, animated: true)
-                return
-            case .none:
-                return
-            }
+            PinSettingsViewController()
         case 1:
-            switch TIP.status {
-            case .ready, .needsMigrate:
-                vc = RecoveryKitViewController()
-            case .needsInitialize:
-                let tip = TIPNavigationViewController(intent: .create, destination: nil)
-                present(tip, animated: true)
-                return
-            case .none:
-                return
-            }
+            RecoveryKitViewController()
         case 2:
-            vc = MixinAuthorizationsViewController()
+            MixinAuthorizationsViewController()
         default:
-            vc = LogViewController.instance(category: .all)
+            LogViewController.instance(category: .all)
         }
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(next, animated: true)
     }
     
 }

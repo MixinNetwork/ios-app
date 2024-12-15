@@ -194,28 +194,20 @@ final class HomeTabBarController: UIViewController {
         case .chat, .collectibles, .more:
             switchToChild(with: id)
         case .wallet:
-            switch TIP.status {
-            case .ready, .needsMigrate:
-                let shouldValidatePIN: Bool
-                if let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate {
-                    shouldValidatePIN = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
-                } else {
-                    AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-                    shouldValidatePIN = true
-                }
-                if shouldValidatePIN {
-                    let validator = PinValidationViewController(onSuccess: { (_) in
-                        self.switchToChild(with: .wallet)
-                    })
-                    present(validator, animated: true, completion: nil)
-                } else {
-                    switchToChild(with: .wallet)
-                }
-            case .needsInitialize:
-                let tip = TIPNavigationViewController(intent: .create, destination: .wallet)
-                navigationController?.present(tip, animated: true)
-            case .none:
-                break
+            let shouldValidatePIN: Bool
+            if let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate {
+                shouldValidatePIN = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
+            } else {
+                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                shouldValidatePIN = true
+            }
+            if shouldValidatePIN {
+                let validator = PinValidationViewController(onSuccess: { (_) in
+                    self.switchToChild(with: .wallet)
+                })
+                present(validator, animated: true, completion: nil)
+            } else {
+                switchToChild(with: .wallet)
             }
         }
     }

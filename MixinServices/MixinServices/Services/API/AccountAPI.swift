@@ -278,28 +278,6 @@ public final class AccountAPI: MixinAPI {
         }
     }
     
-    public static func updatePINWithoutTIP(old: String?, new: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        func encryptNewPinThenStartRequest() {
-            PINEncryptor.encrypt(pin: new, tipBody: {
-                throw PINEncryptor.Error.legacyPINAfterTIPSet
-            }, onFailure: completion) { encryptedPin in
-                param["pin_base64"] = encryptedPin
-                request(method: .post, path: Path.updatePin, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
-            }
-        }
-        var param: [String: String] = [:]
-        if let old = old {
-            PINEncryptor.encrypt(pin: old, tipBody: {
-                throw PINEncryptor.Error.legacyPINAfterTIPSet
-            }, onFailure: completion) { encryptedPin in
-                param["old_pin_base64"] = encryptedPin
-                encryptNewPinThenStartRequest()
-            }
-        } else {
-            encryptNewPinThenStartRequest()
-        }
-    }
-    
     static func updatePIN(request pinRequest: PINRequest) async throws -> Account {
         try await withCheckedThrowingContinuation { continuation in
             request(method: .post, path: Path.updatePin, parameters: pinRequest, options: .disableRetryOnRequestSigningTimeout) { result in

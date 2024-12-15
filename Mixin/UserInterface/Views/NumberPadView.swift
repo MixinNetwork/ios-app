@@ -7,25 +7,18 @@ class NumberPadView: UIView, XibDesignable {
     
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var tipViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var tipTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var buttonsTopConstraint: NSLayoutConstraint!
     
     weak var target: UIKeyInput?
     
     private let contentBottomMargin: CGFloat = 2
     
     private var contentHeight: CGFloat {
-        var height: CGFloat
         switch ScreenHeight.current {
         case .short, .medium, .long:
-            height = 216
+            246
         case .extraLong:
-            height = 226
+            256
         }
-        if !tipView.isHidden {
-            height += tipViewHeightConstraint.constant
-        }
-        return height
     }
     
     private var bottomSafeAreaInset: CGFloat {
@@ -74,16 +67,6 @@ class NumberPadView: UIView, XibDesignable {
     private func prepare() {
         loadXib()
         backgroundColor = R.color.keyboard_background_14()
-        switch TIP.status {
-        case .ready:
-            tipView.isHidden = false
-            tipTopConstraint.priority = .defaultHigh
-            buttonsTopConstraint.priority = .defaultLow
-        default:
-            tipView.isHidden = true
-            tipTopConstraint.priority = .defaultLow
-            buttonsTopConstraint.priority = .defaultHigh
-        }
         contentViewBottomConstraint.constant = contentBottomMargin + bottomSafeAreaInset
         self.bounds = CGRect(x: 0,
                              y: 0,

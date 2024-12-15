@@ -32,16 +32,8 @@ extension AddRecoveryContactViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            let introduction = RecoveryContactIntroduction1ViewController()
-            navigationController?.pushViewController(introduction, animated: true)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: .setEmergencyContact)
-            navigationController?.present(tip, animated: true)
-        case .none:
-            break
-        }
+        let introduction = RecoveryContactIntroduction1ViewController()
+        navigationController?.pushViewController(introduction, animated: true)
     }
     
 }

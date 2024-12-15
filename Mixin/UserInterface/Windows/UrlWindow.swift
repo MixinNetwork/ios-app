@@ -475,20 +475,12 @@ class UrlWindow {
     }
 
     class func checkDevice(id: String, publicKey: String) {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            let desktopSession = DesktopSessionValidationViewController(intent: .login(id: id, publicKey: publicKey))
-            desktopSession.onSuccess = {
-                showAutoHiddenHud(style: .notification, text: R.string.localizable.logined())
-            }
-            let authentication = AuthenticationViewController(intent: desktopSession)
-            UIApplication.homeNavigationController?.present(authentication, animated: true)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-        case .none:
-            break
+        let desktopSession = DesktopSessionValidationViewController(intent: .login(id: id, publicKey: publicKey))
+        desktopSession.onSuccess = {
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.logined())
         }
+        let authentication = AuthenticationViewController(intent: desktopSession)
+        UIApplication.homeNavigationController?.present(authentication, animated: true)
     }
     
     class func checkQrCodeDetection(string: String, clearNavigationStack: Bool = true) {
@@ -502,17 +494,8 @@ class UrlWindow {
             return
         }
         if let uri = try? WalletConnectURI(uriString: string) {
-            switch TIP.status {
-            case .ready:
-                WalletConnectService.shared.connect(to: uri)
-                return
-            case .needsInitialize:
-                let tip = TIPNavigationViewController(intent: .create, destination: nil)
-                UIApplication.homeNavigationController?.present(tip, animated: true)
-                return
-            case .none, .needsMigrate:
-                break
-            }
+            WalletConnectService.shared.connect(to: uri)
+            return
         }
         RecognizeWindow.instance().presentWindow(text: string)
     }
@@ -536,16 +519,6 @@ class UrlWindow {
     }
     
     class func performInternalTransfer(_ transfer: LegacyInternalTransfer) {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            return
-        case .none:
-            return
-        }
         let memo = transfer.memo ?? ""
         let traceId = transfer.traceID
         let recipientId = transfer.recipientID
@@ -578,17 +551,6 @@ class UrlWindow {
     
     class func performExternalTransfer(_ transfer: ExternalTransfer) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
-            return
-        }
-        
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            return
-        case .none:
             return
         }
         
@@ -697,16 +659,6 @@ class UrlWindow {
     }
     
     class func checkAddress(url: URL) -> Bool {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            return true
-        case .none:
-            return true
-        }
         let queries = url.getKeyVals()
         guard let assetID = queries["asset"], UUID.isValidLowercasedUUIDString(assetID) else {
             return false
@@ -1774,17 +1726,6 @@ extension UrlWindow {
     }
     
     private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            fallthrough
-        case .none:
-            DispatchQueue.main.async(execute: hud.hide)
-            return
-        }
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: multisig.assetId, hud: hud) else {
                 return
@@ -1812,17 +1753,6 @@ extension UrlWindow {
     }
 
     private static func presentPayment(payment: PaymentCodeResponse, hud: Hud) {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            fallthrough
-        case .none:
-            DispatchQueue.main.async(execute: hud.hide)
-            return
-        }
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: payment.assetId, hud: hud) else {
                 return
@@ -1867,17 +1797,6 @@ extension UrlWindow {
     }
 
     private static func presentCollectible(collectible: CollectibleResponse, hud: Hud) {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            break
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            UIApplication.homeNavigationController?.present(tip, animated: true)
-            fallthrough
-        case .none:
-            DispatchQueue.main.async(execute: hud.hide)
-            return
-        }
         DispatchQueue.global().async {
             guard let token = collectibleToken(tokenId: collectible.tokenId, hud: hud) else {
                 return

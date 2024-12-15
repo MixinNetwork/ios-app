@@ -348,19 +348,11 @@ extension UserProfileViewController {
     }
     
     @objc func changeNumber() {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            let verify = ChangeNumberPINValidationViewController()
-            if parent != nil {
-                navigationController?.pushViewController(verify, animated: true)
-            } else {
-                dismissAndPush(verify)
-            }
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: .changePhone)
-            present(tip, animated: true)
-        case .none:
-            break
+        let verify = ChangeNumberPINValidationViewController()
+        if let navigationController {
+            navigationController.pushViewController(verify, animated: true)
+        } else {
+            dismissAndPush(verify)
         }
     }
     
@@ -390,16 +382,8 @@ extension UserProfileViewController {
     }
     
     @objc func transfer() {
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            let viewController = TransferOutViewController(token: nil, to: .contact(user))
-            dismissAndPush(viewController)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: .transfer(user: user))
-            present(tip, animated: true)
-        case .none:
-            break
-        }
+        let viewController = TransferOutViewController(token: nil, to: .contact(user))
+        dismissAndPush(viewController)
     }
     
     @objc func editAlias() {

@@ -49,6 +49,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 } else {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 }
+                AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()

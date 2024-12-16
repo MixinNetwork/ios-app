@@ -1,7 +1,7 @@
 import UIKit
 import SafariServices
 
-final class LegacyPINViewController: UIViewController {
+final class LegacySessionSecretViewController: UIViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!

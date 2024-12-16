@@ -1190,8 +1190,8 @@
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
 		94E978B32D09818B00FFCC12 /* ClockSkewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978B22D09818B00FFCC12 /* ClockSkewView.xib */; };
 		94E978C52D09842000FFCC12 /* DatabaseUpgradeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978C42D09842000FFCC12 /* DatabaseUpgradeView.xib */; };
-		94E978D12D09B7D600FFCC12 /* LegacyPINView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978D02D09B7D600FFCC12 /* LegacyPINView.xib */; };
-		94E978D22D09B7D600FFCC12 /* LegacyPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E978CF2D09B7D600FFCC12 /* LegacyPINViewController.swift */; };
+		94E978D12D09B7D600FFCC12 /* LegacySessionSecretView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978D02D09B7D600FFCC12 /* LegacySessionSecretView.xib */; };
+		94E978D22D09B7D600FFCC12 /* LegacySessionSecretViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E978CF2D09B7D600FFCC12 /* LegacySessionSecretViewController.swift */; };
 		94E979232D0B408100FFCC12 /* LoginLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E979222D0B407B00FFCC12 /* LoginLoadingViewController.swift */; };
 		94E979252D0B40B000FFCC12 /* LoginPINStatusCheckingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E979242D0B40AB00FFCC12 /* LoginPINStatusCheckingViewController.swift */; };
 		94E9792D2D0B43B100FFCC12 /* UpdateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E9792C2D0B43B100FFCC12 /* UpdateView.xib */; };
@@ -2676,8 +2676,8 @@
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		94E978B22D09818B00FFCC12 /* ClockSkewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClockSkewView.xib; sourceTree = "<group>"; };
 		94E978C42D09842000FFCC12 /* DatabaseUpgradeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseUpgradeView.xib; sourceTree = "<group>"; };
-		94E978CF2D09B7D600FFCC12 /* LegacyPINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyPINViewController.swift; sourceTree = "<group>"; };
-		94E978D02D09B7D600FFCC12 /* LegacyPINView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LegacyPINView.xib; sourceTree = "<group>"; };
+		94E978CF2D09B7D600FFCC12 /* LegacySessionSecretViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacySessionSecretViewController.swift; sourceTree = "<group>"; };
+		94E978D02D09B7D600FFCC12 /* LegacySessionSecretView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LegacySessionSecretView.xib; sourceTree = "<group>"; };
 		94E979222D0B407B00FFCC12 /* LoginLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLoadingViewController.swift; sourceTree = "<group>"; };
 		94E979242D0B40AB00FFCC12 /* LoginPINStatusCheckingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPINStatusCheckingViewController.swift; sourceTree = "<group>"; };
 		94E9792C2D0B43B100FFCC12 /* UpdateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpdateView.xib; sourceTree = "<group>"; };
@@ -3295,8 +3295,8 @@
 				94E979662D0C16C300FFCC12 /* LoginPINValidationViewController.swift */,
 				94E9792C2D0B43B100FFCC12 /* UpdateView.xib */,
 				DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */,
-				94E978D02D09B7D600FFCC12 /* LegacyPINView.xib */,
-				94E978CF2D09B7D600FFCC12 /* LegacyPINViewController.swift */,
+				94E978D02D09B7D600FFCC12 /* LegacySessionSecretView.xib */,
+				94E978CF2D09B7D600FFCC12 /* LegacySessionSecretViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -5748,7 +5748,7 @@
 				7B7B5DB7230EC16A00D0F463 /* CurrencyCell.xib in Resources */,
 				E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */,
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
-				94E978D12D09B7D600FFCC12 /* LegacyPINView.xib in Resources */,
+				94E978D12D09B7D600FFCC12 /* LegacySessionSecretView.xib in Resources */,
 				7B8A6A752456E0EC00ADC9EB /* SharedMediaPostCell.xib in Resources */,
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
@@ -7058,7 +7058,7 @@
 				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,
 				7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */,
 				7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */,
-				94E978D22D09B7D600FFCC12 /* LegacyPINViewController.swift in Sources */,
+				94E978D22D09B7D600FFCC12 /* LegacySessionSecretViewController.swift in Sources */,
 				947FA4CD299577B700EF13A0 /* AuthorizationsViewController.swift in Sources */,
 				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
 				7B4CBDC22528533600BA66D0 /* ClipSwitcher.swift in Sources */,

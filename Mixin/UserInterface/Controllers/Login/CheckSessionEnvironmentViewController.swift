@@ -115,7 +115,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             let root: UIViewController
             if hasLegacySessionSecret {
                 Logger.general.debug(category: "CheckSessionEnvironment", message: "RSA")
-                root = LegacyPINViewController()
+                root = LegacySessionSecretViewController()
             } else if account.hasPIN {
                 if AppGroupUserDefaults.User.loginPINValidated {
                     Logger.general.debug(category: "CheckSessionEnvironment", message: "Go home")

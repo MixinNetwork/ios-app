@@ -282,7 +282,6 @@ extension AppDelegate {
         let oldRootViewController = mainWindow.rootViewController
         mainWindow.rootViewController = LoginNavigationController()
         oldRootViewController?.navigationController?.removeFromParent()
-        SignalProtocol.shared.initSignal()
     }
     
     @objc func handleClockSkew() {
@@ -328,7 +327,6 @@ extension AppDelegate {
             }
         } else {
             if UIApplication.shared.isProtectedDataAvailable {
-                SignalProtocol.shared.initSignal()
                 let navigationController = LoginNavigationController()
                 mainWindow.rootViewController = navigationController
                 if isFirstLaunch ?? false {

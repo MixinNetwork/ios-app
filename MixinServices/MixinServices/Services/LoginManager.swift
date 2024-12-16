@@ -41,13 +41,7 @@ public final class LoginManager {
     }
     
     private var hasValidSessionSecret: Bool {
-        if let secret = AppGroupUserDefaults.Account.sessionSecret {
-            return !secret.isEmpty
-        } else if let secret = AppGroupKeychain.sessionSecret {
-            return true
-        } else {
-            return false
-        }
+        AppGroupKeychain.sessionSecret != nil
     }
     
     private init() {

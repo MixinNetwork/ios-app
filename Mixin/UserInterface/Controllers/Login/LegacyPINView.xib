@@ -11,8 +11,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LegacyPINViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="descriptionLabel" destination="aKU-Oi-cKp" id="51z-sv-AG9"/>
                 <outlet property="titleLabel" destination="a03-36-ZKV" id="gu6-Hp-IK8"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="viewDocumentButton" destination="nEF-xR-X2Q" id="eWc-Ol-g3U"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -34,7 +36,7 @@
                     </connections>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="KyD-CQ-BNU">
-                    <rect key="frame" x="37" y="133" width="319" height="166"/>
+                    <rect key="frame" x="37" y="133" width="319" height="165"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_tip" translatesAutoresizingMaskIntoConstraints="NO" id="QSl-QX-CW5">
                             <rect key="frame" x="0.0" y="0.0" width="319" height="76"/>
@@ -48,14 +50,22 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKU-Oi-cKp">
-                            <rect key="frame" x="0.0" y="145.66666666666669" width="319" height="20.333333333333343"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKU-Oi-cKp">
+                            <rect key="frame" x="0.0" y="145.66666666666669" width="319" height="19.333333333333343"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <color key="textColor" name="error_red"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                 </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nEF-xR-X2Q" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="159" y="763.66666666666663" width="75" height="34.333333333333371"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                    <connections>
+                        <action selector="viewDocument:" destination="-1" eventType="touchUpInside" id="ZDo-mM-fdx"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background"/>
@@ -65,6 +75,8 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="nsU-Dd-4y6" secondAttribute="trailing" constant="10" id="RE7-Xi-iMl"/>
                 <constraint firstItem="KyD-CQ-BNU" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="37" id="SVs-i7-gq9"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="KyD-CQ-BNU" secondAttribute="trailing" constant="37" id="cmr-r1-KXD"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="nEF-xR-X2Q" secondAttribute="bottom" constant="20" id="joz-tj-zOn"/>
+                <constraint firstItem="nEF-xR-X2Q" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="pSX-Wz-zvJ"/>
             </constraints>
             <point key="canvasLocation" x="56" y="42"/>
         </view>

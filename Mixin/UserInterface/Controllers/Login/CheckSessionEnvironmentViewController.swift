@@ -106,16 +106,17 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             }
             reload(content: signalLoading)
         } else {
-            let root: UIViewController
-            if account.tipCounter == 0 {
-                if account.hasPIN {
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Legacy PIN")
-                    root = LegacyPINViewController()
-                } else {
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Create PIN")
-                    root = TIPNavigationController(intent: .create)
-                }
+            let hasLegacySessionSecret: Bool // RSA
+            if let secret = AppGroupUserDefaults.Account.sessionSecret {
+                hasLegacySessionSecret = !secret.isEmpty
             } else {
+                hasLegacySessionSecret = false
+            }
+            let root: UIViewController
+            if hasLegacySessionSecret {
+                Logger.general.debug(category: "CheckSessionEnvironment", message: "RSA")
+                root = LegacyPINViewController()
+            } else if account.hasPIN {
                 if AppGroupUserDefaults.User.loginPINValidated {
                     Logger.general.debug(category: "CheckSessionEnvironment", message: "Go home")
                     root = HomeContainerViewController()
@@ -124,6 +125,9 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                     let freshAccount = isAccountFresh ? account : nil
                     root = LoginPINStatusCheckingViewController(freshAccount: freshAccount)
                 }
+            } else {
+                Logger.general.debug(category: "CheckSessionEnvironment", message: "Create PIN")
+                root = TIPNavigationController(intent: .create)
             }
             AppDelegate.current.mainWindow.rootViewController = root
         }

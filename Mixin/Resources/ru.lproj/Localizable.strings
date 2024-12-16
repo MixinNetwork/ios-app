@@ -510,8 +510,10 @@
 "error_invalid_address_plain" = "ОШИБКА 30102: Недопустимый формат адреса.";
 "error_invalid_code_too_frequent" = "ОШИБКА 20129: Код подтверждения отправляется слишком часто. Повторите попытку позже.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid recovery contact";
+"error_invalid_pin_format" = "ОШИБКА 20118: Неверный формат PIN-кода. ";
 "error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
 "error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
+"error_legacy_pin" = "ERROR 20118: To enhance the security of the Mixin network, Mixin API has temporarily suspended the upgrading from D3M-PIN to TIP. Please refer to the documentation for details and register for processing.";
 "error_network_task_failed" = "Не удалось подключиться к сети. Проверьте или переключите сеть и повторите попытку.";
 "error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
 "error_not_found" = "Ошибка 404: Не найдено";
@@ -1322,6 +1324,7 @@
 "upload_mobile_contacts" = "Загрузить мобильные контакты";
 "uploading" = "Загрузка...";
 "uploading_progress" = "Загрузка: %@ из %@ (%@)";
+"url_api_upgrade" = "https://support.mixin.one/en/article/mixin-api-upgrade-notification-1cfmdc9/";
 "url_delete_account" = "https://support.mixin.one/en/article/how-to-delete-my-account-19fkagl/";
 "url_deposit" = "https://support.mixin.one/en/article/how-to-deposit-assets-to-mixin-messenger-1usvjod/";
 "url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
@@ -1347,6 +1350,7 @@
 "videos" = "Видео";
 "view_all" = "View All";
 "view_authorization" = "Просмотр авторизации";
+"view_document" = "View Document";
 "view_emergency_contact" = "View recovery contact";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";

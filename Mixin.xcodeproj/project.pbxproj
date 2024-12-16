@@ -364,7 +364,6 @@
 		7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB06F44228EA7720048C2D6 /* NotificationView.xib */; };
 		7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F46228EA78F0048C2D6 /* NotificationController.swift */; };
 		7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F48228ED8650048C2D6 /* NotificationView.swift */; };
-		7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0B29F25022FA7006D2C20 /* EdDSAMigration+Migrate.swift */; };
 		7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */; };
 		7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */; };
 		7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */; };
@@ -1832,7 +1831,6 @@
 		7BB06F44228EA7720048C2D6 /* NotificationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationView.xib; sourceTree = "<group>"; };
 		7BB06F46228EA78F0048C2D6 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7BB06F48228ED8650048C2D6 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
-		7BB0B29F25022FA7006D2C20 /* EdDSAMigration+Migrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdDSAMigration+Migrate.swift"; sourceTree = "<group>"; };
 		7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleEditorViewController.swift; sourceTree = "<group>"; };
 		7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPeerCell.swift; sourceTree = "<group>"; };
 		7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CircleMember+Convenience.swift"; sourceTree = "<group>"; };
@@ -4491,7 +4489,6 @@
 				DFB6CE2423C48A8E00FB6615 /* DateExtension.swift */,
 				9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */,
 				7BFCB8A7241CF1B800E7BC43 /* LocationExtensions.swift */,
-				7BB0B29F25022FA7006D2C20 /* EdDSAMigration+Migrate.swift */,
 				94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */,
 				94CEEAC2277E06A9001E7A24 /* Date+Holiday.swift */,
 				940764C429B26B0B00B779A6 /* PropertyListEncoder+Global.swift */,
@@ -6354,7 +6351,6 @@
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */,
-				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
 				942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,

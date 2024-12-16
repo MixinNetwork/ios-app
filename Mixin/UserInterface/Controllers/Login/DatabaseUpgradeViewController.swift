@@ -44,9 +44,6 @@ final class DatabaseUpgradeViewController: UIViewController, CheckSessionEnviron
             if localVersion < 18 {
                 AppGroupUserDefaults.User.hasRecoverMedia = true
             }
-            if localVersion < 25 {
-                EdDSAMigration.migrate()
-            }
             if localVersion < 26 {
                 AppGroupUserDefaults.User.isCircleSynchronized = true
             }

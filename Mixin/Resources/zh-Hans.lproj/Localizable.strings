@@ -510,8 +510,10 @@
 "error_invalid_address_plain" = "错误 30102：地址格式错误。";
 "error_invalid_code_too_frequent" = "错误 20129：发送验证码太频繁，请稍后再试";
 "error_invalid_emergency_contact" = "错误 20130：恢复联系人不正确";
+"error_invalid_pin_format" = "错误 20118：PIN 格式不正确";
 "error_invalid_quote_amount" = "错误 10614: 输入金额太小或太大，请重新输入。";
 "error_invalid_swap" = "错误 10611: 暂无报价，请稍后重试。";
+"error_legacy_pin" = "错误 20118：为了加强 Mixin 网络的安全，Mixin API 现已暂停 D3M-PIN 升级到TIP，详情请查看文档并登记等待处理。";
 "error_network_task_failed" = "网络连接失败。检查或切换网络并重试";
 "error_no_available_quote" = "错误 10615: 暂不支持该交易对，请尝试切换币种。";
 "error_not_found" = "错误 404：没有找到相应的信息";
@@ -1322,6 +1324,7 @@
 "upload_mobile_contacts" = "上传通讯录找好友";
 "uploading" = "备份中...";
 "uploading_progress" = "上传中：%@ / %@（%@）";
+"url_api_upgrade" = "https://support.mixin.one/zh/article/mixin-api-l4jruq/";
 "url_delete_account" = "https://support.mixin.one/zh/article/5aac5l2v5yig6zmk6lsm5y377yf-1uteq30/";
 "url_deposit" = "https://support.mixin.one/zh/article/mixin-messenger-5ynqjm/";
 "url_deposit_suspended" = "https://support.mixin.one/zh/article/5ywz5lqo5pq56en6lwe5lqn5lin5psv5oyb5ywf5yc855qe6k05pio-1sh1z50/";
@@ -1347,6 +1350,7 @@
 "videos" = "视频";
 "view_all" = "查看全部";
 "view_authorization" = "查看授权";
+"view_document" = "查看文档";
 "view_emergency_contact" = "查看恢复联系人";
 "view_on_explorer" = "在浏览器中查看";
 "view_on_marketplace" = "在市场中查看";

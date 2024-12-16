@@ -18,6 +18,7 @@ extension URL {
     static let deposit              = URL(string: R.string.localizable.url_deposit())!
     static let depositSuspended     = URL(string: R.string.localizable.url_deposit_suspended())!
     static let forgetPIN            = URL(string: R.string.localizable.url_forget_pin())!
+    static let apiUpgrade           = URL(string: R.string.localizable.url_api_upgrade())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

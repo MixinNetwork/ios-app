@@ -82,6 +82,7 @@ extension LoginAccountHandler where Self: UIViewController {
             Logger.general.info(category: "LoginRestore", message: logs.joined(separator: "\n"))
         }
         
+        UserDatabase.current.clearSentSenderKey()
         UserDAO.shared.updateAccount(account: account)
         OutputDAO.shared.deleteAll()
         RawTransactionDAO.shared.deleteAll()
